@@ -30,8 +30,10 @@ Al terminar podrás:
 
 ## Módulos
 
-- **01 · [Resolución de problemas y diseño de algoritmos](01-problem-solving.md)** — mentalidad, proceso de 7 pasos, algoritmos, diagramas de flujo, pseudocódigo.
-- **02 · [Fundamentos de programación](02-programming-foundations.md)** — qué es programar, lenguajes, componentes de la computadora, paradigmas.
+- **01 · [Resolución de problemas](01-problem-solving.md)** — los cuatro pilares del Pensamiento Computacional, el proceso de 7 pasos, ejemplo trabajado de punta a punta.
+- **02 · [Diagramas de flujo](02-flowcharts.md)** — gramática de formas, 6 ejemplos con diagramas renderizados en vivo (suma, par/impar, mayor de tres, ciclos, login, promedio).
+- **03 · [Pseudocódigo](03-pseudocode.md)** — convenciones, palabras clave, ejemplos lado a lado con sus diagramas, funciones.
+- **04 · [Fundamentos de programación](04-programming-foundations.md)** — qué es programar, lenguajes, componentes de la computadora, compiladores, paradigmas.
 
 ## Dónde encaja en el plan
 

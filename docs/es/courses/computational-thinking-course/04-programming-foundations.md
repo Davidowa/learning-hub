@@ -1,8 +1,8 @@
-# 02 · Fundamentos de programación
+# 04 · Fundamentos de programación
 
 <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/microchip.svg" width="48" height="48" alt="">
 
-Ya analizaste problemas y diseñaste soluciones en papel. Ahora toca aprender qué es **programar**, qué está haciendo la computadora, y qué tipos de lenguajes existen.
+Ya analizaste problemas (Módulo 01), los dibujaste como diagramas de flujo (Módulo 02) y los expresaste en pseudocódigo (Módulo 03). Ahora toca aprender qué es **programar**, qué hace la computadora, y qué tipos de lenguajes existen.
 
 ---
 
@@ -168,14 +168,14 @@ Ya tienes el mapa completo:
 
 1. Un **problema** real.
 2. Analizado con el **proceso de 7 pasos** (Módulo 01).
-3. Expresado como un **algoritmo** (Módulo 01).
-4. Dibujado como **diagrama de flujo** o escrito como **pseudocódigo** (Módulo 01).
+3. Dibujado como **diagrama de flujo** (Módulo 02).
+4. Expresado como **pseudocódigo** (Módulo 03).
 5. Implementado en un **lenguaje de alto nivel** (este módulo).
 6. Traducido por un **compilador / intérprete** a código máquina (este módulo).
 7. Ejecutado por la **CPU**, usando **RAM** y la **ALU** (este módulo).
 
 Siguiente curso en la escalera: **CS (C#)** — tomarás todo lo de este mapa y lo ejecutarás en un lenguaje real.
 
-## Cierre del Módulo 02
+## Cierre del Módulo 04
 
 Programar no es memorizar sintaxis. Es pensar claro, describir la solución con precisión y dejar que la computadora haga lo repetitivo. Entre más claro tu pensamiento, mejores tus programas — sin importar el lenguaje que termines usando.

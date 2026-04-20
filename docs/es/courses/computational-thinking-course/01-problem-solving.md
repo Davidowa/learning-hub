@@ -1,205 +1,218 @@
-# 01 · Resolución de problemas y diseño de algoritmos
+# 01 · Resolución de problemas
 
 <img src="assets/problem-solving.png" alt="Secuencia doodle: preocupado → pensando → eureka" width="100%">
 
-Todo programa nace de un **problema**. Este módulo enseña la mentalidad necesaria *antes* de escribir código.
+Todo programa nace de un **problema**. Antes de tocar el teclado, quien programa con oficio recorre un proceso mental para **entender** el problema y **diseñar** una solución. Este módulo enseña ese proceso.
 
 ## Los tres estados de quien resuelve problemas
 
-El doodle de arriba captura lo que pasa cada vez que enfrentas un problema real:
+El doodle captura lo que pasa cada vez que enfrentas un problema real:
 
 1. **Preocupado.** Ves el problema pero aún no sabes cómo abordarlo.
 2. **Pensando.** Lo descompones, reúnes información, comparas opciones.
 3. **Eureka.** Aparece una solución candidata. Listo para diseñarla y probarla.
 
-Programar sigue exactamente ese arco. Vamos a hacerlo **repetible** en lugar de azaroso.
+Programar sigue exactamente ese arco. Nuestro trabajo es hacerlo **repetible** en lugar de un accidente afortunado.
 
 ---
 
-## 1. Resolución de problemas
+## Qué cuenta como "problema"
 
-> **Definición:** proceso de identificar y resolver retos de forma lógica y efectiva.
+No toda pregunta es un problema que resuelvas igual. Dos distinciones útiles:
 
-Antes de construir software, hay que entender el problema. Escribir código antes de entenderlo es la razón más común por la que los programas fallan.
+### Bien definido vs mal definido
 
-### Los 7 pasos
+- **Bien definido** — entradas, meta y restricciones claras. *Calcular el área de un rectángulo dado ancho y alto.*
+- **Mal definido** — meta difusa, datos incompletos, éxito subjetivo. *Hacer que la app se sienta más rápida.*
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/magnifying-glass.svg" width="18" height="18" alt=""> **1. Identificar y definir el problema**
+La mayoría de los problemas reales empiezan mal definidos. Tu primera tarea suele ser **convertir un problema mal definido en uno bien definido**.
 
-- Entiéndelo con claridad. ¿Puedes decirlo en una oración?
-- Divídelo en partes manejables.
-- Encuentra la causa principal, no solo los síntomas.
+### Tratable vs intratable
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/box-archive.svg" width="18" height="18" alt=""> **2. Reunir información**
+- **Tratable** — existe un algoritmo razonable que corre en tiempo razonable.
+- **Intratable** — los algoritmos conocidos requieren tiempo o recursos desmedidos al crecer la entrada (el viajante de comercio con 1000 ciudades, por ejemplo).
 
-- Investiga lo que ya se sabe.
-- Recolecta datos.
-- Habla con quienes han vivido la situación.
+Para problemas intratables solemos aceptar soluciones "suficientemente buenas" (heurísticas, aproximaciones) en vez de perfectas.
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/chart-line.svg" width="18" height="18" alt=""> **3. Analizar el problema**
+---
 
-- Examina la información reunida.
-- Busca patrones, restricciones y causas.
-- Usa herramientas — diagramas causa-efecto, FODA — cuando ayuden.
+## Los cuatro pilares del Pensamiento Computacional
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/lightbulb.svg" width="18" height="18" alt=""> **4. Desarrollar posibles soluciones**
+Antes del proceso de 7 pasos, conoce las cuatro jugadas mentales que quien piensa computacionalmente usa todo el tiempo. Las vas a aplicar en cada paso que sigue.
 
-- Brainstorm de varias alternativas.
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/puzzle-piece.svg" width="20" height="20" alt=""> Descomposición
+
+Dividir un problema grande y aterrador en piezas pequeñas y manejables.
+
+> Organizar un grupo de estudio de 10 personas → (a) encuestar horarios, (b) encontrar traslapes, (c) elegir sala, (d) decidir qué estudiar, (e) compartir material.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/shapes.svg" width="20" height="20" alt=""> Reconocimiento de patrones
+
+Detectar similitudes — con problemas pasados o dentro del problema actual.
+
+> Contar vocales en una oración y contar consonantes usan la *misma* estructura de ciclo; solo cambia la condición.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wand-magic-sparkles.svg" width="20" height="20" alt=""> Abstracción
+
+Quedarse solo con lo que importa; ignorar el resto.
+
+> Una app de rutas de autobús no necesita modelar el color del autobús ni el nombre del chofer — solo paradas, horarios y capacidad.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/list-ol.svg" width="20" height="20" alt=""> Pensamiento algorítmico
+
+Describir la solución como una secuencia clara y repetible de pasos.
+
+> Una receta para "encontrar el número más grande en una lista" funciona igual con 5 elementos que con 5 millones.
+
+**Cada problema que resuelves usa los cuatro pilares**, a menudo en ciclos. Descompones, detectas un patrón, abstraes la realidad desordenada, diseñas un algoritmo — y vuelves a descomponer cualquier paso que aún sea demasiado grande.
+
+---
+
+## El proceso de 7 pasos
+
+Un proceso estructurado para pasar de "estoy atorado" a "aquí hay una solución que puedo defender".
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/magnifying-glass.svg" width="18" height="18" alt=""> 1. Identificar y definir el problema
+
+- Enuncia el problema en **una oración**. Si no puedes, aún no lo entiendes.
+- Divídelo en partes manejables (descomposición).
+- Encuentra la **causa principal**, no solo los síntomas.
+- Escribe: **dado** qué, **encontrar** qué, **sujeto a** qué restricciones.
+
+> **Antipatrón:** saltar directo a "uso Python con base de datos" sin saber qué debe hacer el programa.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/box-archive.svg" width="18" height="18" alt=""> 2. Reunir información
+
+- Investiga lo que ya se sabe. ¿Alguien lo ha resuelto antes?
+- Recolecta datos representativos (entradas de muestra y salidas esperadas).
+- Habla con quienes han vivido la situación — usuarios, colegas, mentores.
+- Revisa restricciones que pudiste pasar por alto: presupuesto, tiempo, hardware, legales.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/chart-line.svg" width="18" height="18" alt=""> 3. Analizar el problema
+
+- Examina todo lo reunido. ¿Qué forma tiene el problema?
+- Busca **patrones**, **restricciones** y **causas raíz**.
+- Identifica casos borde — las entradas raras que rompen soluciones ingenuas.
+- Usa herramientas cuando ayuden: causa-efecto, FODA, 5-porqués.
+
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/lightbulb.svg" width="18" height="18" alt=""> 4. Desarrollar posibles soluciones
+
+- Genera **varias** alternativas. La primera idea rara vez es la mejor.
 - Combina enfoques creativos y estructurados.
-- No te enamores de la primera idea.
+- Para cada candidata, esboza cómo maneja las entradas principales y los casos borde.
+- No evalúes aún — solo genera.
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/scale-balanced.svg" width="18" height="18" alt=""> **5. Evaluar las soluciones**
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/scale-balanced.svg" width="18" height="18" alt=""> 5. Evaluar las soluciones
 
 - Compara pros y contras.
-- Considera factibilidad, costo, impacto.
-- Elige la opción más prometedora.
+- Considera: factibilidad, costo, tiempo de construcción, mantenibilidad, impacto en usuarios.
+- Considera riesgos — ¿qué se rompe si el supuesto X es falso?
+- Elige la **más prometedora** (no necesariamente la más brillante).
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/hammer.svg" width="18" height="18" alt=""> **6. Implementar la solución**
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/hammer.svg" width="18" height="18" alt=""> 6. Implementar la solución
 
-- Plan de acción.
-- Asignar responsabilidades.
-- Definir cronograma.
-- En programación, esto se convierte en escribir la aplicación.
+- Planea primero, escribe después. Muchos saltan este paso y pagan luego.
+- Asigna responsabilidades si es trabajo en equipo.
+- Define cronograma con hitos.
+- En programación, **aquí diseñas el algoritmo** (módulos siguientes: diagramas de flujo y pseudocódigo).
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/arrows-rotate.svg" width="18" height="18" alt=""> **7. Monitorear y ajustar**
+### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/arrows-rotate.svg" width="18" height="18" alt=""> 7. Monitorear y ajustar
 
-- ¿Funciona realmente?
+- ¿Funciona en entradas reales, no solo en el demo?
 - Detecta errores. Recoge retroalimentación.
-- Ajusta cuando sea necesario.
-
-### Escenarios cotidianos para practicar
-
-Aplica los 7 pasos a situaciones que aún no tienen que ver con computadoras:
-
-- Organizar un viaje grupal con presupuestos y preferencias distintas.
-- Diagnosticar por qué una computadora se volvió lenta.
-- Decidir el menú de una fiesta con restricciones alimentarias.
-- Arreglar una bicicleta a la que se le sale la cadena.
-- Empacar eficientemente para un viaje de una semana con solo equipaje de mano.
-
-Si puedes recorrer los 7 pasos en papel para cada escenario, ya estás pensando como programador.
+- Ajusta cuando sea necesario. Acepta que la primera solución rara vez es la final.
+- Documenta lo que aprendiste para la próxima.
 
 ---
 
-## 2. Algoritmos
+## Ejemplo trabajado — organizar un grupo de estudio
 
-> **Definición:** descripción paso a paso de cómo resolver un problema.
+Caminemos los 7 pasos de punta a punta en un escenario deliberadamente no técnico. **La misma estructura aplica a problemas de software.**
 
-Una vez entendido el problema, describes la secuencia de acciones que lo resuelve. Esa secuencia es el algoritmo.
+### Paso 1 · Identificar y definir
 
-### La analogía de la receta
+> *"Cinco compañeros y yo queremos estudiar juntos para el examen final, pero los horarios y temas favoritos difieren. ¿Cómo lo logramos?"*
 
-<img src="assets/doodle-thinking-blushed-algo.png" alt="Doodle de una persona pensando en 'algo' en un pizarrón" width="320">
+Oración: **"Planear una sesión de estudio que entre en la agenda de todos, cubra todos los temas del examen y deje a la gente sintiéndose preparada."**
 
-Un algoritmo es como una **receta**. Una receta lista ingredientes y el orden exacto de pasos. Un algoritmo lista entradas y el orden exacto de acciones. Omite un paso, cambia el orden, y el resultado cambia.
+Descomposición:
 
-### Algoritmos cotidianos
+- (a) Tiempos libres de cada quien.
+- (b) Temas a cubrir.
+- (c) Lugar de reunión.
+- (d) Material (apuntes, problemas de práctica).
+- (e) Forma de correr la sesión para que la gente aprenda, no solo se siente.
 
-- Preparar un sándwich.
-- Lavar una tanda de ropa.
-- Hacer té.
-- Convertir Fahrenheit a Celsius.
-- Buscar un libro específico en una repisa.
+### Paso 2 · Reunir información
 
-### Algoritmos en programación
+- Encuesta de horarios de los próximos 7 días.
+- Lista de temas del temario oficial.
+- Pregunta en qué tema cada quien se siente más débil (para emparejar fuerte + débil).
+- Revisa salas disponibles en la biblioteca.
 
-En cómputo los algoritmos definen los pasos que luego se traducen a código. Una app de navegación usa un algoritmo para:
+### Paso 3 · Analizar
 
-1. Identificar origen y destino.
-2. Calcular rutas posibles.
-3. Seleccionar la más corta (o la más rápida).
+- Patrón: 3 de 6 personas comparten miércoles y viernes por la tarde. Los otros 3 comparten martes y jueves.
+- Restricción: el examen es el lunes — solo una semana.
+- Causa raíz de "los horarios son imposibles": buscamos un único slot para todos en vez de dos sesiones más chicas.
 
-La misma idea de tres pasos, ya sea para un humano o una computadora.
+### Paso 4 · Desarrollar soluciones
 
----
+1. **Una sesión grande de 6 personas** en el único traslape (domingo 6 p. m.).
+2. **Dos sesiones más chicas** (miércoles + jueves) cubriendo mitades del temario.
+3. **Estudio asíncrono** — compartir apuntes y solo reunirse domingo para Q&A.
+4. **Parejas rotativas** — cada persona enseña un tema a una pareja.
 
-## 3. Diagramas de flujo
+### Paso 5 · Evaluar
 
-> **Definición:** forma visual de representar un algoritmo usando formas estándar.
+| Opción | Pros | Contras |
+|--------|------|---------|
+| 1 · Sesión grande | Todos juntos | 2 h no alcanzan para 6 temas |
+| 2 · Dos sesiones | Más tiempo por tema | Riesgo de perder material entre ellas |
+| 3 · Asíncrono + Q&A | Flexibilidad máxima | Los más débiles necesitan ayuda en vivo |
+| 4 · Parejas rotativas | Aprendizaje activo, todos enseñan | Más coordinación |
 
-Los diagramas de flujo son la primera representación **formal** de un algoritmo. Son dibujos con una gramática estricta — quien sabe leerlos entiende el algoritmo sin importar el idioma.
+Elegimos **opción 2** (sesiones separadas) con pedacitos de la 4 (una persona lidera cada tema en su sesión).
 
-### Formas principales
+### Paso 6 · Implementar
 
-| Forma | Significado |
-|-------|-------------|
-| Óvalo | Inicio / Fin del proceso |
-| Rectángulo | Proceso / Tarea (acción a realizar) |
-| Paralelogramo | Entrada / Salida (dato que entra o sale) |
-| Rombo | Decisión (sí/no que bifurca el flujo) |
-| Círculo | Conector (salta a otra parte del diagrama) |
-| Flecha | Dirección y orden |
+- Mié 6–9 p. m., biblioteca sala 3 — temas A, B, C, líderes asignados.
+- Jue 6–9 p. m., biblioteca sala 3 — temas D, E, F, líderes asignados.
+- Documento compartido con apuntes, enlaces, exámenes anteriores.
+- Dom 5 p. m. — 1 h de repaso conjunto + Q&A.
 
-### Por qué importan
+### Paso 7 · Monitorear y ajustar
 
-Ayudan a:
-
-- Visualizar un proceso con claridad.
-- Entender el orden de los pasos.
-- Detectar decisiones y bifurcaciones.
-- Simplificar lo que parece complejo.
-
-### Diagramas de práctica
-
-Dibuja uno para cada escenario:
-
-- Ir a una tienda a comprar una pluma (decide: ¿está abierta?, ¿tienen plumas?, ¿tienes dinero?).
-- Calcular el promedio de dos números.
-- Imprimir los números del 1 al 5.
-
-### Herramientas
-
-- [diagrams.net](https://app.diagrams.net/) — gratuita, funciona en el navegador.
-- [Lucidchart](https://www.lucidchart.com/) — tiene nivel gratuito.
-- Lápiz y papel — sigue siendo la forma más rápida de iterar.
+- Mitad del miércoles: el tema B se alarga. Recortar el C y moverlo al Q&A del domingo.
+- Viernes: 2 personas quedaron perdidas con el tema D. Moverlo al inicio del domingo.
+- Después del examen: ¿qué funcionó? Escríbelo para el siguiente semestre.
 
 ---
 
-## 4. Pseudocódigo
+## Escenarios de práctica
 
-> **Definición:** forma estructurada e independiente del lenguaje para describir un algoritmo.
+Corre los 7 pasos en papel para cada uno. Enfócate en los pasos 1–5; el paso 6 se desarrolla en los siguientes módulos.
 
-El pseudocódigo es la segunda representación principal. Parece código pero no es ejecutable en ningún lenguaje real — su único trabajo es describir la lógica con claridad para que los humanos la revisen antes de comprometerse a una sintaxis.
-
-### Por qué importa
-
-Ayuda a:
-
-- Enfocarte en la **lógica** antes que en la **sintaxis**.
-- Describir algoritmos en formato limpio y legible.
-- Discutir soluciones con otros sin importar el lenguaje.
-- Detectar errores antes de escribir el código real.
-
-### Acciones típicas
-
-- `INICIO / FIN`
-- `LEER <variable>`
-- `ESCRIBIR <expresión>`
-- `<variable> = <expresión>` (asignación)
-- Aritmética: `+`, `-`, `*`, `/`
-- Condiciones: `SI <condición> ENTONCES ... SINO ... FIN SI`
-- Ciclos: `MIENTRAS <condición> HACER ... FIN MIENTRAS`
-
-### Ejemplo — suma de dos números
-
-```text
-INICIO
-  LEER a
-  LEER b
-  suma = a + b
-  ESCRIBIR suma
-FIN
-```
-
-### Pseudocódigo de práctica
-
-- Suma de dos números (arriba).
-- Imprimir números del 1 al 5.
-- Conversión de Fahrenheit a Celsius.
-- Iniciar sesión en una red social (leer usuario, leer contraseña, verificar coincidencia, permitir o denegar).
+- Tu laptop se volvió muy lenta de repente. Diagnostica por qué.
+- 8 amigos quieren cenar en un restaurante, pero tienen 3 dietas distintas (vegetariana, sin gluten, alergia a nueces).
+- A tu bici se le sale la cadena. Arréglalo.
+- Empacar para un viaje de una semana con solo equipaje de mano y clima frío + cálido en el destino.
+- Un formulario en línea acepta números de teléfono inválidos. Diseña cómo impedirlo.
 
 ---
 
-## Cierre del Módulo 01
+## Errores comunes
 
-Combinando **resolución de problemas**, **algoritmos**, **diagramas de flujo** y **pseudocódigo**, empiezas a pensar como programador **antes** de escribir una sola línea de código real. Siguiente módulo: qué es programar realmente, qué lenguajes usamos y qué está haciendo la computadora por debajo.
+- **Saltar a modo solución en el paso 1.** Si tu primer pensamiento es "uso base de datos", frena — aún no definiste el problema.
+- **Saltarse el paso 2.** Investigar y hablar con usuarios toma tiempo pero ahorra muchísimo después.
+- **Evaluar mientras haces brainstorm.** La crítica mata ideas. Genera primero, evalúa después.
+- **Elegir la opción más llamativa.** Tecnología más nueva ≠ mejor solución. Soluciones aburridas que funcionan le ganan a soluciones emocionantes que no.
+- **Sin paso 7.** Entregar no es terminar. Los problemas reales evolucionan; las soluciones requieren mantenimiento.
+
+---
+
+## Idea de cierre
+
+La resolución de problemas es el **fundamento de todo lo demás** del curso. Algoritmos, diagramas de flujo, pseudocódigo y programación son solo herramientas para ejecutar la solución que diseñaste aquí. Si el diseño está mal, ningún código elegante lo salvará.
+
+**Siguiente:** [Módulo 02 — Diagramas de flujo](02-flowcharts.md) — la primera forma formal de dibujar la solución que diseñaste.

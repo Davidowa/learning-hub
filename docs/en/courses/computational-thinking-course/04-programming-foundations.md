@@ -1,8 +1,8 @@
-# 02 · Programming Foundations
+# 04 · Programming Foundations
 
 <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/microchip.svg" width="48" height="48" alt="">
 
-You've analyzed problems and designed solutions on paper. Time to learn what **programming** is, what a computer is actually doing, and which kinds of languages exist.
+You've analyzed problems (Module 01), drawn them as flowcharts (Module 02), and expressed them in pseudocode (Module 03). Time to learn what **programming** is, what a computer is actually doing, and which kinds of languages exist.
 
 ---
 
@@ -168,14 +168,14 @@ You now have the full map:
 
 1. A **problem** in the real world.
 2. Analyzed via the **7-step process** (Module 01).
-3. Expressed as an **algorithm** (Module 01).
-4. Drawn as a **flowchart** or written as **pseudocode** (Module 01).
+3. Drawn as a **flowchart** (Module 02).
+4. Expressed as **pseudocode** (Module 03).
 5. Implemented in a **high-level language** (this module).
 6. Translated by a **compiler / interpreter** to machine code (this module).
 7. Executed by the **CPU**, using **RAM** and the **ALU** (this module).
 
 Next course in the ladder: **CS (C#)** — you'll take everything on this map and actually run it in a real language.
 
-## Module 02 closing idea
+## Module 04 closing idea
 
 Programming is not about memorizing syntax. It's about thinking clearly, describing the solution precisely, and letting the computer do the repetitive part. The clearer your thinking, the better your programs — regardless of the language you end up using.

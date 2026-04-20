@@ -30,8 +30,10 @@ By the end of this course you will be able to:
 
 ## Modules
 
-- **01 · [Problem Solving & Algorithm Design](01-problem-solving.md)** — mindset, 7-step problem solving, algorithms, flowcharts, pseudocode.
-- **02 · [Programming Foundations](02-programming-foundations.md)** — what programming is, languages, computer components, paradigms.
+- **01 · [Problem Solving](01-problem-solving.md)** — the four Computational Thinking pillars, the 7-step process, worked end-to-end example.
+- **02 · [Flowcharts](02-flowcharts.md)** — shape grammar, 6 worked examples with live-rendered diagrams (sum, even/odd, largest-of-three, loops, login, average).
+- **03 · [Pseudocode](03-pseudocode.md)** — conventions, keywords, side-by-side examples with their flowcharts, functions.
+- **04 · [Programming Foundations](04-programming-foundations.md)** — what programming is, languages, computer components, compilers, paradigms.
 
 ## Where this fits in the curriculum
 
