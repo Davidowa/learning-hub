@@ -1,7 +1,11 @@
 # Cursos
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/python.svg" width="24" height="24" alt="Python">
+Tres cursos, diseñados para conectar uno con otro.
 
-**[Python](python-course/index.md)** — intro → intermedio. Bases, POO, archivos, SQLite, GUI, avanzado, actividades.
+<img src="computational-thinking-course/assets/problem-solving.png" alt="Doodle de resolución de problemas" width="100%">
 
-Más cursos en camino.
+- **[Pensamiento Computacional](computational-thinking-course/index.md)** — fundamento. Pensar con claridad sobre los problemas antes de escribir código.
+- **[CS (C#)](cs-course/index.md)** — primer lenguaje de implementación. *En construcción.*
+- **[Python](python-course/index.md)** — segundo lenguaje, caja de herramientas más amplia.
+
+Más cursos llegarán con el tiempo.
