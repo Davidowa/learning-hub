@@ -1,0 +1,179 @@
+/* ============================================================
+   Learning Hub — brand identity overrides for Material for MkDocs
+   Inherited from davidowa.github.io (Inter + blue/teal/purple palette)
+   ============================================================ */
+
+:root {
+  /* Brand palette (mirrors davidowa.github.io :root vars) */
+  --brand-primary: #2563eb;
+  --brand-primary-hover: #1d4ed8;
+  --brand-accent: #30cfd0;
+  --brand-accent-deep: #330867;
+  --brand-bg: #fafbff;
+  --brand-surface: #ffffff;
+  --brand-surface-alt: #f4f6fb;
+  --brand-text: #0f172a;
+  --brand-text-muted: #5b6478;
+  --brand-border: #e6e8ef;
+
+  /* Signature gradient */
+  --brand-gradient: linear-gradient(100deg, #30cfd0 0%, #2563eb 50%, #330867 100%);
+}
+
+/* ---------- Material theme color overrides ---------- */
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--brand-primary);
+  --md-primary-fg-color--light: color-mix(in srgb, var(--brand-primary) 80%, white);
+  --md-primary-fg-color--dark: var(--brand-primary-hover);
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #ffffffcc;
+
+  --md-accent-fg-color: var(--brand-accent);
+  --md-accent-fg-color--transparent: color-mix(in srgb, var(--brand-accent) 10%, transparent);
+
+  --md-default-bg-color: var(--brand-bg);
+  --md-default-fg-color: var(--brand-text);
+  --md-default-fg-color--light: var(--brand-text-muted);
+  --md-typeset-a-color: var(--brand-primary);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #60a5fa;
+  --md-primary-fg-color--light: #93c5fd;
+  --md-primary-fg-color--dark: #2563eb;
+  --md-accent-fg-color: #30cfd0;
+  --md-typeset-a-color: #60a5fa;
+}
+
+/* ---------- Typography (Inter) ---------- */
+body,
+.md-typeset {
+  font-family: "Inter", "Heebo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Make H1 pop with gradient on landing + course pages */
+.md-typeset h1 {
+  background: var(--brand-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1 {
+  background: linear-gradient(100deg, #60a5fa 0%, #30cfd0 50%, #c084fc 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- Header polish ---------- */
+.md-header {
+  background: color-mix(in srgb, var(--brand-primary) 96%, black);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.md-tabs {
+  background: var(--brand-primary-hover);
+}
+
+/* ---------- Links + buttons ---------- */
+.md-typeset a {
+  color: var(--brand-primary);
+  transition: color 0.15s;
+}
+.md-typeset a:hover {
+  color: var(--brand-primary-hover);
+}
+
+.md-button--primary {
+  background: var(--brand-primary) !important;
+  border-color: var(--brand-primary) !important;
+}
+.md-button--primary:hover {
+  background: var(--brand-primary-hover) !important;
+  border-color: var(--brand-primary-hover) !important;
+}
+
+/* ---------- Code blocks ---------- */
+.md-typeset code {
+  background: color-mix(in srgb, var(--brand-accent) 10%, transparent);
+  color: var(--brand-accent-deep);
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+}
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background: color-mix(in srgb, var(--brand-accent) 20%, transparent);
+  color: #c0f5f6;
+}
+
+/* ---------- Cards / admonitions ---------- */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 14px;
+  border-left-width: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+/* ---------- Images get soft shadow ---------- */
+.md-typeset img {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* Font Awesome inline icons stay crisp without the shadow */
+.md-typeset img[src*="raw.githubusercontent.com/FortAwesome"] {
+  box-shadow: none;
+  border-radius: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ---------- Tables ---------- */
+.md-typeset table:not([class]) {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.md-typeset table:not([class]) th {
+  background: var(--brand-surface-alt);
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+/* ---------- Nav sidebar ---------- */
+.md-nav__title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.md-nav__item .md-nav__link--active {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+/* ---------- Footer ---------- */
+.md-footer-meta {
+  background: color-mix(in srgb, var(--brand-accent-deep) 90%, black);
+}
+
+/* ---------- Mermaid diagrams — fit the palette ---------- */
+.md-typeset .mermaid {
+  background: var(--brand-surface-alt);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}

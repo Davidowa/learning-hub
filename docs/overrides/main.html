@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <meta name="author" content="David Escobar-Castillejos" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Learning Hub" />
+
+  <link rel="manifest" href="{{ 'assets/manifest/site.webmanifest' | url }}" />
+  <link rel="icon" type="image/x-icon" href="{{ 'assets/images/favicon.ico' | url }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ 'assets/images/favicon-16x16.png' | url }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'assets/images/favicon-32x32.png' | url }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ 'assets/images/apple-touch-icon.png' | url }}" />
+
+  <meta property="og:title" content="{{ page.title | default(config.site_name) }} | Learning Hub" />
+  <meta property="og:description" content="{{ config.site_description }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ page.canonical_url | default(config.site_url) }}" />
+  <meta property="og:image" content="{{ 'assets/images/Avatar_Cartoon.png' | url }}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ page.title | default(config.site_name) }} | Learning Hub" />
+  <meta name="twitter:description" content="{{ config.site_description }}" />
+  <meta name="twitter:image" content="{{ 'assets/images/Avatar_Cartoon.png' | url }}" />
+{% endblock %}
