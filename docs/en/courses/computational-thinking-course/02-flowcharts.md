@@ -19,6 +19,8 @@ They help you:
 
 ## The shape grammar
 
+<img src="assets/CT-05.png" alt="Doodle cheat sheet of flowchart shapes: Start oval, Process rectangle, I/O parallelogram, Decision diamond" width="100%">
+
 These are the core shapes. Every flowchart in this course uses only these.
 
 | Shape | Meaning | Mermaid syntax |

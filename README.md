@@ -12,8 +12,7 @@ Live site: <https://davidowa.github.io/learning-hub/>
   - 03 · Pseudocode — conventions, keyword table, side-by-side examples with flowcharts, functions
   - 04 · Programming Foundations — what programming is, languages, CPU/RAM/GPU, compilers, paradigms
 - [`cs-course`](courses/cs-course/) — CS in C# · [EN](docs/en/courses/cs-course/index.md) · [ES](docs/es/courses/cs-course/index.md) *(under construction)*
-- [`python-course`](courses/python-course/) — Python (basics → advanced) · [EN](docs/en/courses/python-course/index.md) · [ES](docs/es/courses/python-course/index.md)
-  - 01 · Basics · 02 · OOP · 03 · Paths & Files · 04 · SQLite · 05 · GUI · 06 · Advanced · 07 · Activities
+- Python · [EN](docs/en/courses/python-course/index.md) · [ES](docs/es/courses/python-course/index.md) *(runnable code + lesson markdown live under `docs/en/courses/python-course/`; improvements pending)*
 
 **Suggested path:** Computational Thinking → CS (C#) → Python.
 
@@ -21,11 +20,14 @@ Live site: <https://davidowa.github.io/learning-hub/>
 
 ```text
 learning-hub/
-├── docs/                     # markdown source (rendered by MkDocs)
+├── docs/                     # markdown source + runnable code (rendered by MkDocs)
 │   ├── en/                   # English content
-│   └── es/                   # Spanish content
-├── courses/                  # runnable code per course
-├── resources/                # shared supplementary material
+│   │   └── courses/
+│   │       ├── computational-thinking-course/
+│   │       ├── cs-course/
+│   │       └── python-course/   # lessons + runnable .py code, assets, notebooks
+│   └── es/                   # Spanish content (lesson markdown only)
+├── courses/                  # per-course source material + assets (doodles, PDFs, etc.)
 ├── assets/                   # shared media
 ├── templates/                # assignment/project templates
 ├── mkdocs.yml                # site config
@@ -56,8 +58,8 @@ One-time setup in repo Settings → Pages:
 ## Contributing
 
 - Add lesson markdown under `docs/{en,es}/courses/<slug>/`.
-- Keep parallel structure between languages (missing pages fall back to English).
-- Code samples go under `courses/<slug>/`.
+- Keep parallel structure between languages (missing pages fall back to English via the `mkdocs-static-i18n` plugin).
+- Runnable code for a course can live alongside its `en` docs (`docs/en/courses/<slug>/`) or in a dedicated `courses/<slug>/` folder if it shouldn't be published to the site.
 
 ## License
 

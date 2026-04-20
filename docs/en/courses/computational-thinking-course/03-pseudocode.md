@@ -1,6 +1,6 @@
 # 03 · Pseudocode
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/code.svg" width="48" height="48" alt="">
+<img src="assets/CT-06.png" alt="Doodle: pseudocode on notebook page on the left, real code on a screen on the right, lightbulb arrow between" width="100%">
 
 Flowcharts are pictures. Pseudocode is **structured text** that describes the same logic in a way that reads almost like code — but isn't tied to any real programming language.
 

@@ -42,11 +42,15 @@ Before the 7-step process, meet the four mental moves a computational thinker us
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/puzzle-piece.svg" width="20" height="20" alt=""> Decomposition
 
+<img src="assets/CT-01.png" alt="Doodle: a tangled ball of problem being pulled apart into smaller neat pieces" width="420">
+
 Break a big, scary problem into smaller, manageable pieces.
 
 > Organizing a 10-person study group → (a) poll schedules, (b) find overlaps, (c) pick a space, (d) decide what to study, (e) share materials.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/shapes.svg" width="20" height="20" alt=""> Pattern recognition
+
+<img src="assets/CT-02.png" alt="Doodle: mixed shapes on the left being grouped by type on the right" width="420">
 
 Spot similarities — with past problems, or within the current problem.
 
@@ -54,11 +58,15 @@ Spot similarities — with past problems, or within the current problem.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wand-magic-sparkles.svg" width="20" height="20" alt=""> Abstraction
 
+<img src="assets/CT-03.png" alt="Doodle: a detailed coffee mug simplifying across stages into a minimal icon" width="420">
+
 Keep only what matters; ignore the rest.
 
 > A bus route app doesn't need to model the bus's paint color or the driver's name — just stops, times, and capacity.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/list-ol.svg" width="20" height="20" alt=""> Algorithmic thinking
+
+<img src="assets/CT-04.png" alt="Doodle: a recipe card labeled ALGORITHM with numbered steps and tiny icons" width="420">
 
 Describe the solution as a clear, repeatable sequence of steps.
 

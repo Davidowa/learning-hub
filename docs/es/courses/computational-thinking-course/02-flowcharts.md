@@ -19,6 +19,8 @@ Ayudan a:
 
 ## Gramática de formas
 
+<img src="assets/CT-05.png" alt="Doodle con formas de diagrama: óvalo de inicio, rectángulo de proceso, paralelogramo de E/S, rombo de decisión" width="100%">
+
 Estas son las formas centrales. Cada diagrama del curso usa solo estas.
 
 | Forma | Significado | Sintaxis Mermaid |

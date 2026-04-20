@@ -4,7 +4,7 @@ Slides, code, and resources for Computer Science courses at **Universidad Paname
 
 ## Courses
 
-<img src="courses/computational-thinking-course/assets/problem-solving.png" alt="Doodle sequence: worried, thinking, eureka" width="100%">
+<img src="courses/computational-thinking-course/assets/computational-thinking-banner.png" alt="Computational Thinking banner" width="100%">
 
 **[Computational Thinking](courses/computational-thinking-course/index.md)** — think before you code. Problem solving, algorithms, flowcharts, pseudocode, programming foundations.
 

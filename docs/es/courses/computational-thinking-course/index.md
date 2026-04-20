@@ -1,6 +1,6 @@
 # Pensamiento Computacional
 
-<img src="assets/problem-solving.png" alt="Secuencia doodle: preocupado, pensando, eureka" width="100%">
+<img src="assets/computational-thinking-banner.png" alt="Banner del curso de Pensamiento Computacional" width="100%">
 
 Piensa **antes** de programar. Este curso es el puente entre un problema real y un programa funcional — todavía sin lenguaje, sin sintaxis, solo razonamiento claro.
 

@@ -1,6 +1,6 @@
 # Computational Thinking
 
-<img src="assets/problem-solving.png" alt="Doodle sequence: worried, thinking, eureka" width="100%">
+<img src="assets/computational-thinking-banner.png" alt="Computational Thinking course banner" width="100%">
 
 Think **before** you code. This course is the bridge between a real-world problem and a working program — no language yet, no syntax, just clear reasoning.
 

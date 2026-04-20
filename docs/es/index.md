@@ -4,7 +4,7 @@ Diapositivas, código y recursos para cursos de Ciencias de la Computación en *
 
 ## Cursos
 
-<img src="courses/computational-thinking-course/assets/problem-solving.png" alt="Secuencia doodle: preocupado, pensando, eureka" width="100%">
+<img src="courses/computational-thinking-course/assets/computational-thinking-banner.png" alt="Banner de Pensamiento Computacional" width="100%">
 
 **[Pensamiento Computacional](courses/computational-thinking-course/index.md)** — pensar antes de programar. Resolución de problemas, algoritmos, diagramas de flujo, pseudocódigo, fundamentos de programación.
 
