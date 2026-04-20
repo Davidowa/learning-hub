@@ -1,8 +1,10 @@
-# CS (C#)
+# C sharp (C#)
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/microsoft.svg" width="48" height="48" alt="C#">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" width="64" height="64" alt="C sharp">
 
-Language-specific implementation course. Builds directly on the algorithms, flowcharts, and pseudocode from [Computational Thinking](../computational-thinking-course/index.md).
+**C sharp (C#)** is a general-purpose, multi-paradigm language developed by Microsoft. Statically typed, memory-managed, object-oriented at its core with strong functional and asynchronous features layered on top. Runs on .NET — cross-platform, open-source, and production-proven in games (Unity), desktop (.NET, MAUI, WPF), web (ASP.NET Core), mobile (Xamarin / MAUI), cloud (Azure), and embedded.
+
+Builds directly on the algorithms, flowcharts, and pseudocode from [Computational Thinking](../computational-thinking-course/index.md).
 
 ## Status
 

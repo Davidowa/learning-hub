@@ -8,13 +8,13 @@ Slides, code, and resources for Computer Science courses at **Universidad Paname
 
 **[Computational Thinking](courses/computational-thinking-course/index.md)** — think before you code. Problem solving, algorithms, flowcharts, pseudocode, programming foundations.
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/microsoft.svg" width="28" height="28" alt="C#">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" width="28" height="28" alt="C sharp">
 
-**[CS (C#)](courses/cs-course/index.md)** — put the thinking to work. C# syntax, control flow, functions, collections, structs. *Under construction.*
+**[C sharp (C#)](courses/cs-course/index.md)** — multi-paradigm, statically-typed language from Microsoft. Strong tooling; powers games (Unity), desktop (.NET, MAUI), web (ASP.NET), and mobile. *Under construction.*
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/python.svg" width="28" height="28" alt="Python">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="28" height="28" alt="Python">
 
-**[Python](courses/python-course/index.md)** — a second language and broader toolkit. Basics, OOP, files, SQLite, GUI, advanced topics, and hands-on activities.
+**[Python](courses/python-course/index.md)** — high-level, dynamically-typed language known for its readable syntax. Popular for scripting, data, web, automation, and teaching. *Under construction.*
 
 ## How to use this site
 

@@ -141,6 +141,23 @@ body,
   vertical-align: middle;
 }
 
+/* Font Awesome solid/regular icons ship as black SVGs.
+   Light mode: black on light bg — keep as-is.
+   Dark mode: invert so they render near-white on dark bg. */
+[data-md-color-scheme="slate"] .md-typeset img[src*="FortAwesome/Font-Awesome/6.x/svgs/solid/"],
+[data-md-color-scheme="slate"] .md-typeset img[src*="FortAwesome/Font-Awesome/6.x/svgs/regular/"] {
+  filter: invert(1) brightness(1.1);
+}
+
+/* Devicon brand SVGs (python, csharp, etc.) are already full-color —
+   keep them untouched in both themes. */
+.md-typeset img[src*="devicons/devicon"] {
+  box-shadow: none;
+  border-radius: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /* ---------- Tables ---------- */
 .md-typeset table:not([class]) {
   border-radius: 12px;

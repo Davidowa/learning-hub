@@ -11,10 +11,10 @@ Live site: <https://davidowa.github.io/learning-hub/>
   - 02 · Flowcharts — shape grammar + 6 Mermaid-rendered worked examples
   - 03 · Pseudocode — conventions, keyword table, side-by-side examples with flowcharts, functions
   - 04 · Programming Foundations — what programming is, languages, CPU/RAM/GPU, compilers, paradigms
-- [`cs-course`](courses/cs-course/) — CS in C# · [EN](docs/en/courses/cs-course/index.md) · [ES](docs/es/courses/cs-course/index.md) *(under construction)*
-- Python · [EN](docs/en/courses/python-course/index.md) · [ES](docs/es/courses/python-course/index.md) *(runnable code + lesson markdown live under `docs/en/courses/python-course/`; improvements pending)*
+- [`cs-course`](courses/cs-course/) — C sharp (C#) — statically-typed multi-paradigm language from Microsoft · [EN](docs/en/courses/cs-course/index.md) · [ES](docs/es/courses/cs-course/index.md) *(under construction)*
+- [`docs/en/courses/python-course`](docs/en/courses/python-course/) — Python — dynamically-typed, readable-first language · [EN](docs/en/courses/python-course/index.md) · [ES](docs/es/courses/python-course/index.md) *(under construction)*
 
-**Suggested path:** Computational Thinking → CS (C#) → Python.
+**Suggested path:** Computational Thinking → C sharp (C#) → Python.
 
 ## Repo layout
 

@@ -1,8 +1,10 @@
 # Python
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/python.svg" width="48" height="48" alt="Python">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="64" height="64" alt="Python">
 
-Curso completo de Python — desde el primer `print` hasta apps de escritorio con base de datos. Cada módulo trae código ejecutable, ejercicios cortos y actividades abiertas.
+> <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/hard-hat.svg" width="18" height="18" alt=""> **En construcción** — los módulos de abajo son marcadores mientras se reescribe el contenido.
+
+**Python** es un lenguaje de alto nivel, de tipado dinámico e interpretado, diseñado alrededor de la legibilidad. Multiparadigma — procedural, orientado a objetos y funcional. Librería estándar potente, ecosistema enorme de terceros (PyPI) y herramientas de primer nivel. Dominante en scripting, ciencia de datos, aprendizaje automático, backends web, automatización, cómputo científico y enseñanza.
 
 ## Para quién es
 

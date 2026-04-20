@@ -1,8 +1,10 @@
-# CS (C#)
+# C sharp (C#)
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/microsoft.svg" width="48" height="48" alt="C#">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" width="64" height="64" alt="C sharp">
 
-Curso de implementación específico al lenguaje. Se basa directamente en los algoritmos, diagramas de flujo y pseudocódigo del curso de [Pensamiento Computacional](../computational-thinking-course/index.md).
+**C sharp (C#)** es un lenguaje de propósito general y multiparadigma desarrollado por Microsoft. De tipado estático, con gestión automática de memoria, orientado a objetos en su núcleo y con características funcionales y asíncronas integradas. Corre sobre .NET — multiplataforma, open-source y probado en producción en videojuegos (Unity), escritorio (.NET, MAUI, WPF), web (ASP.NET Core), móvil (Xamarin / MAUI), nube (Azure) y embebidos.
+
+Se basa directamente en los algoritmos, diagramas de flujo y pseudocódigo del curso de [Pensamiento Computacional](../computational-thinking-course/index.md).
 
 ## Estado
 

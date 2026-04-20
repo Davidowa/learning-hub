@@ -8,13 +8,13 @@ Diapositivas, código y recursos para cursos de Ciencias de la Computación en *
 
 **[Pensamiento Computacional](courses/computational-thinking-course/index.md)** — pensar antes de programar. Resolución de problemas, algoritmos, diagramas de flujo, pseudocódigo, fundamentos de programación.
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/microsoft.svg" width="28" height="28" alt="C#">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" width="28" height="28" alt="C sharp">
 
-**[CS (C#)](courses/cs-course/index.md)** — pon a trabajar el pensamiento. Sintaxis de C#, control de flujo, funciones, colecciones, estructuras. *En construcción.*
+**[C sharp (C#)](courses/cs-course/index.md)** — lenguaje multiparadigma de tipado estático creado por Microsoft. Herramientas robustas; impulsa videojuegos (Unity), escritorio (.NET, MAUI), web (ASP.NET) y móvil. *En construcción.*
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/python.svg" width="28" height="28" alt="Python">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="28" height="28" alt="Python">
 
-**[Python](courses/python-course/index.md)** — segundo lenguaje y caja de herramientas más amplia. Bases, POO, archivos, SQLite, GUI, temas avanzados y actividades prácticas.
+**[Python](courses/python-course/index.md)** — lenguaje de alto nivel y tipado dinámico conocido por su sintaxis legible. Popular para scripts, ciencia de datos, web, automatización y enseñanza. *En construcción.*
 
 ## Cómo usar este sitio
 

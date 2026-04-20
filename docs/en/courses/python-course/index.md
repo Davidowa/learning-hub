@@ -1,8 +1,10 @@
 # Python
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/python.svg" width="48" height="48" alt="Python">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="64" height="64" alt="Python">
 
-A complete Python course — from first `print` to database-backed desktop apps. Every module ships with runnable code, short exercises, and open activities.
+> <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/hard-hat.svg" width="18" height="18" alt=""> **Under construction** — modules below are placeholders while lesson content is being rewritten.
+
+**Python** is a high-level, dynamically-typed, interpreted language designed around readability. Multi-paradigm — procedural, object-oriented, and functional. Strong standard library, huge third-party ecosystem (PyPI), and first-class tooling. Dominant in scripting, data science, machine learning, web backends, automation, scientific computing, and teaching.
 
 ## Who this is for
 
