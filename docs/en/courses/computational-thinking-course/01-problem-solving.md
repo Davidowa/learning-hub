@@ -1,6 +1,6 @@
 # 01 · Problem Solving
 
-<img src="assets/problem-solving.png" alt="Worried → thinking → eureka doodle sequence" width="100%">
+<img src="../assets/problem-solving.png" alt="Worried → thinking → eureka doodle sequence" width="100%">
 
 Every program is born from a **problem**. Before touching a keyboard, a skilled programmer walks through a mental process to **understand** that problem and **design** a solution. This module teaches that process.
 
@@ -42,7 +42,7 @@ Before the 7-step process, meet the four mental moves a computational thinker us
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/puzzle-piece.svg" width="20" height="20" alt=""> Decomposition
 
-<img src="assets/CT-01.png" alt="Doodle: a tangled ball of problem being pulled apart into smaller neat pieces" width="420">
+<img src="../assets/CT-01.png" alt="Doodle: a tangled ball of problem being pulled apart into smaller neat pieces" width="420">
 
 Break a big, scary problem into smaller, manageable pieces.
 
@@ -50,7 +50,7 @@ Break a big, scary problem into smaller, manageable pieces.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/shapes.svg" width="20" height="20" alt=""> Pattern recognition
 
-<img src="assets/CT-02.png" alt="Doodle: mixed shapes on the left being grouped by type on the right" width="420">
+<img src="../assets/CT-02.png" alt="Doodle: mixed shapes on the left being grouped by type on the right" width="420">
 
 Spot similarities — with past problems, or within the current problem.
 
@@ -58,7 +58,7 @@ Spot similarities — with past problems, or within the current problem.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wand-magic-sparkles.svg" width="20" height="20" alt=""> Abstraction
 
-<img src="assets/CT-03.png" alt="Doodle: a detailed coffee mug simplifying across stages into a minimal icon" width="420">
+<img src="../assets/CT-03.png" alt="Doodle: a detailed coffee mug simplifying across stages into a minimal icon" width="420">
 
 Keep only what matters; ignore the rest.
 
@@ -66,7 +66,7 @@ Keep only what matters; ignore the rest.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/list-ol.svg" width="20" height="20" alt=""> Algorithmic thinking
 
-<img src="assets/CT-04.png" alt="Doodle: a recipe card labeled ALGORITHM with numbered steps and tiny icons" width="420">
+<img src="../assets/CT-04.png" alt="Doodle: a recipe card labeled ALGORITHM with numbered steps and tiny icons" width="420">
 
 Describe the solution as a clear, repeatable sequence of steps.
 

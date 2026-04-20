@@ -43,7 +43,7 @@ These languages build websites, mobile apps, desktop software, games, robotics, 
 
 ## 3. Computer components
 
-<img src="assets/CT-07.png" alt="Doodle trio: CPU character with conductor's baton, RAM with stack of papers, GPU with multiple arms drawing" width="100%">
+<img src="../assets/CT-07.png" alt="Doodle trio: CPU character with conductor's baton, RAM with stack of papers, GPU with multiple arms drawing" width="100%">
 
 To understand what your program is actually running on, meet the main parts of a computer.
 
@@ -86,7 +86,7 @@ Specialized for **highly parallel** work: graphics rendering, modern AI training
 
 ## 4. Types of programming languages
 
-<img src="assets/CT-09.png" alt="Doodle: person on top rung of ladder labeled Python/JS/C# (relaxed), another at bottom labeled Assembly/Machine Code (hard hat)" width="100%">
+<img src="../assets/CT-09.png" alt="Doodle: person on top rung of ladder labeled Python/JS/C# (relaxed), another at bottom labeled Assembly/Machine Code (hard hat)" width="100%">
 
 ### High-level languages
 
@@ -112,7 +112,7 @@ Start high-level. You'll understand **what** the computer should do before worry
 
 ## 5. Compilers
 
-<img src="assets/CT-08.png" alt="Doodle: person speaking English on the left, robot receiving 0s and 1s on the right, COMPILER character in the middle pointing both ways" width="100%">
+<img src="../assets/CT-08.png" alt="Doodle: person speaking English on the left, robot receiving 0s and 1s on the right, COMPILER character in the middle pointing both ways" width="100%">
 
 A compiler is a **translator** between the programmer and the computer.
 
@@ -132,7 +132,7 @@ This is why programmers work in high-level languages instead of writing machine 
 
 ## 6. Programming paradigms
 
-<img src="assets/CT-10.png" alt="Doodle: central sun labeled PROGRAMMING with 6 rays ending in icons for imperative, procedural, declarative, OOP, event-driven, visual" width="100%">
+<img src="../assets/CT-10.png" alt="Doodle: central sun labeled PROGRAMMING with 6 rays ending in icons for imperative, procedural, declarative, OOP, event-driven, visual" width="100%">
 
 > **Definition:** a way of **structuring and thinking** about programs.
 

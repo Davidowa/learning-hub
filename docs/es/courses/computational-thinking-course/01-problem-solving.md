@@ -1,6 +1,6 @@
 # 01 · Resolución de problemas
 
-<img src="assets/problem-solving.png" alt="Secuencia doodle: preocupado → pensando → eureka" width="100%">
+<img src="../assets/problem-solving.png" alt="Secuencia doodle: preocupado → pensando → eureka" width="100%">
 
 Todo programa nace de un **problema**. Antes de tocar el teclado, quien programa con oficio recorre un proceso mental para **entender** el problema y **diseñar** una solución. Este módulo enseña ese proceso.
 
@@ -42,7 +42,7 @@ Antes del proceso de 7 pasos, conoce las cuatro jugadas mentales que quien piens
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/puzzle-piece.svg" width="20" height="20" alt=""> Descomposición
 
-<img src="assets/CT-01.png" alt="Doodle: un problema enredado partiéndose en piezas más pequeñas y ordenadas" width="420">
+<img src="../assets/CT-01.png" alt="Doodle: un problema enredado partiéndose en piezas más pequeñas y ordenadas" width="420">
 
 Dividir un problema grande y aterrador en piezas pequeñas y manejables.
 
@@ -50,7 +50,7 @@ Dividir un problema grande y aterrador en piezas pequeñas y manejables.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/shapes.svg" width="20" height="20" alt=""> Reconocimiento de patrones
 
-<img src="assets/CT-02.png" alt="Doodle: formas mezcladas a la izquierda siendo agrupadas por tipo a la derecha" width="420">
+<img src="../assets/CT-02.png" alt="Doodle: formas mezcladas a la izquierda siendo agrupadas por tipo a la derecha" width="420">
 
 Detectar similitudes — con problemas pasados o dentro del problema actual.
 
@@ -58,7 +58,7 @@ Detectar similitudes — con problemas pasados o dentro del problema actual.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wand-magic-sparkles.svg" width="20" height="20" alt=""> Abstracción
 
-<img src="assets/CT-03.png" alt="Doodle: una taza de café detallada simplificándose en etapas a un ícono mínimo" width="420">
+<img src="../assets/CT-03.png" alt="Doodle: una taza de café detallada simplificándose en etapas a un ícono mínimo" width="420">
 
 Quedarse solo con lo que importa; ignorar el resto.
 
@@ -66,7 +66,7 @@ Quedarse solo con lo que importa; ignorar el resto.
 
 ### <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/list-ol.svg" width="20" height="20" alt=""> Pensamiento algorítmico
 
-<img src="assets/CT-04.png" alt="Doodle: tarjeta de receta titulada ALGORITMO con pasos numerados e iconos pequeños" width="420">
+<img src="../assets/CT-04.png" alt="Doodle: tarjeta de receta titulada ALGORITMO con pasos numerados e iconos pequeños" width="420">
 
 Describir la solución como una secuencia clara y repetible de pasos.
 

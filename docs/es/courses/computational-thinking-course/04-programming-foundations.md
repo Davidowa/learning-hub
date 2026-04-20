@@ -43,7 +43,7 @@ Con estos lenguajes se construyen sitios web, apps móviles, software de escrito
 
 ## 3. Componentes de la computadora
 
-<img src="assets/CT-07.png" alt="Doodle: trío de personajes chip etiquetados CPU (con batuta de director), RAM (con pila de papeles), GPU (con varios brazos dibujando)" width="100%">
+<img src="../assets/CT-07.png" alt="Doodle: trío de personajes chip etiquetados CPU (con batuta de director), RAM (con pila de papeles), GPU (con varios brazos dibujando)" width="100%">
 
 Para entender sobre qué corre realmente tu programa, conoce las partes principales.
 
@@ -86,7 +86,7 @@ Especializada en trabajo **altamente paralelo**: renderizado gráfico, entrenami
 
 ## 4. Tipos de lenguajes
 
-<img src="assets/CT-09.png" alt="Doodle: escalera con persona arriba etiquetada Python/JS/C# (relajada), otra abajo etiquetada Assembly/Código máquina (con casco)" width="100%">
+<img src="../assets/CT-09.png" alt="Doodle: escalera con persona arriba etiquetada Python/JS/C# (relajada), otra abajo etiquetada Assembly/Código máquina (con casco)" width="100%">
 
 ### Lenguajes de alto nivel
 
@@ -112,7 +112,7 @@ Empieza por alto nivel. Entenderás **qué** debe hacer la computadora antes de 
 
 ## 5. Compiladores
 
-<img src="assets/CT-08.png" alt="Doodle: persona hablando en inglés a la izquierda, robot recibiendo 0s y 1s a la derecha, personaje COMPILADOR en medio apuntando en ambas direcciones" width="100%">
+<img src="../assets/CT-08.png" alt="Doodle: persona hablando en inglés a la izquierda, robot recibiendo 0s y 1s a la derecha, personaje COMPILADOR en medio apuntando en ambas direcciones" width="100%">
 
 Un compilador es un **traductor** entre quien programa y la computadora.
 
@@ -132,7 +132,7 @@ Por eso se programa en lenguajes de alto nivel en lugar de escribir código máq
 
 ## 6. Paradigmas de programación
 
-<img src="assets/CT-10.png" alt="Doodle: sol central etiquetado PROGRAMACIÓN con 6 rayos terminando en íconos de imperativo, procedural, declarativo, POO, orientado a eventos, visual" width="100%">
+<img src="../assets/CT-10.png" alt="Doodle: sol central etiquetado PROGRAMACIÓN con 6 rayos terminando en íconos de imperativo, procedural, declarativo, POO, orientado a eventos, visual" width="100%">
 
 > **Definición:** una forma de **estructurar y pensar** los programas.
 

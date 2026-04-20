@@ -1,6 +1,6 @@
 # 03 · Pseudocódigo
 
-<img src="assets/CT-06.png" alt="Doodle: pseudocódigo en hoja de cuaderno a la izquierda, código real en pantalla a la derecha, flecha con foco en medio" width="100%">
+<img src="../assets/CT-06.png" alt="Doodle: pseudocódigo en hoja de cuaderno a la izquierda, código real en pantalla a la derecha, flecha con foco en medio" width="100%">
 
 Los diagramas de flujo son imágenes. El pseudocódigo es **texto estructurado** que describe la misma lógica de forma que se lee casi como código — pero sin atarlo a ningún lenguaje real.
 
