@@ -1,0 +1,312 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 7
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 07 · Tema 4.4 · Selección anidada y operadores lógicos
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Combinar varias condiciones, preguntar por pertenencia y decidir cuándo una decisión vive dentro de otra.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 7 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Operadores lógicos
+          desc: and, or y not, con su tabla de verdad completa
+        - title: Pertenencia
+          desc: Preguntar si un valor está en una lista, sin escribir diez comparaciones
+        - title: Anidar
+          desc: Una decisión dentro de otra, y cuándo eso sobra
+        - title: Tu turno
+          desc: Una política de tu área que necesita más de una condición
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Usar los tres operadores lógicos
+          sub: and exige las dos, or se conforma con una, not invierte el resultado
+        - head: Leer una tabla de verdad
+          sub: Y predecir el resultado de una condición compuesta sin ejecutarla
+        - head: Preguntar por pertenencia
+          sub: Con in y not in, en lugar de encadenar comparaciones con or
+        - head: Distinguir is de ==
+          sub: Uno pregunta si es el mismo objeto, el otro si valen lo mismo
+        - head: Decidir cuándo anidar
+          sub: Y reconocer el anidado que en realidad era un and
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: now
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Combinar condiciones
+      lede: Tres operadores, y con ellos se arma cualquier regla por complicada que suene al decirla en voz alta.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Lógicos
+      title: Los tres operadores lógicos, completos
+      headers: [Operador, Qué exige, Ejemplo]
+      rows:
+        - ["and", "Que las dos condiciones sean verdaderas", "conversion >= 0.03 and clics > 1000"]
+        - ["or", "Que al menos una sea verdadera", "canal == 'Meta' or canal == 'Google'"]
+        - ["not", "Invierte el resultado de la condición", "not campana_activa"]
+
+  - table:
+      eyebrow: Bloque 01 · Tabla de verdad
+      title: Los cuatro casos posibles de and y or
+      headers: [A, B, "A and B", "A or B"]
+      rows:
+        - ["True", "True", "True", "True"]
+        - ["True", "False", "False", "True"]
+        - ["False", "True", "False", "True"]
+        - ["False", "False", "False", "False"]
+
+  - code:
+      eyebrow: Bloque 01 · En contexto
+      title: Una regla con dos condiciones
+      filename: politica.py
+      source: |
+        conversion = 0.0342
+        clics = 5074
+        canal = "Instagram"
+
+        if conversion >= 0.03 and clics > 1000:
+            print("La campaña califica para más presupuesto.")
+        else:
+            print("La campaña se mantiene igual.")
+      annotations:
+        - label: Las dos
+          text: Con and, si una sola falla, la regla completa falla. No hay término medio.
+        - label: Por qué el volumen
+          text: Una conversión alta sobre cien clics no significa nada. La segunda condición filtra el ruido.
+        - label: Evaluación corta
+          text: Si la primera es falsa, Python ni siquiera lee la segunda. Ahorra trabajo y evita errores.
+        - label: Riesgo
+          text: Cambiar el and por un or aprueba campañas con mucho volumen y conversión pésima.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Pertenencia e identidad
+      lede: Cuatro operadores más, y dos de ellos te van a ahorrar escribir la misma comparación cinco veces.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Pertenencia e identidad
+      title: Los cuatro operadores restantes
+      headers: [Operador, Pregunta, Ejemplo, Resultado]
+      rows:
+        - ["in", "¿Está dentro?", "canal in ['Meta', 'Google']", "False"]
+        - ["not in", "¿Está fuera?", "canal not in ['TikTok']", "True"]
+        - ["is", "¿Es el mismo objeto?", "costo is None", "True"]
+        - ["is not", "¿Es otro objeto?", "costo is not None", "False"]
+
+  - compare:
+      eyebrow: Bloque 02 · La diferencia
+      title: Cinco comparaciones, o una
+      before:
+        label: Con or
+        file: largo.py
+        code: |
+          if (canal == "Meta" or
+              canal == "Google" or
+              canal == "Instagram" or
+              canal == "TikTok"):
+              print("Canal digital")
+      after:
+        label: Con in
+        file: corto.py
+        code: |
+          digitales = ["Meta", "Google",
+                       "Instagram", "TikTok"]
+
+          if canal in digitales:
+              print("Canal digital")
+      note: >-
+        La de la derecha se lee de un vistazo y, sobre todo, la lista se puede cambiar sin
+        tocar la condición. Agregar un canal es agregar un elemento.
+
+  - code_output:
+      eyebrow: Bloque 02 · is contra ==
+      title: Valen lo mismo, y no son el mismo objeto
+      filename: identidad.py
+      source: |
+        a = [1, 2, 3]
+        b = [1, 2, 3]
+
+        print(a == b)
+        print(a is b)
+      output: |
+        True
+        False
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Anidar una decisión
+      lede: Una decisión dentro de otra. A veces es lo correcto, y a veces es un and escrito de la forma más larga posible.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cuándo anidar y cuándo combinar
+      lead: >-
+        Se anida cuando la segunda pregunta solo tiene sentido si la primera se cumplió, y
+        cuando cada rama hace algo distinto. Si las dos ramas internas terminan haciendo
+        lo mismo, o si la segunda pregunta se puede hacer siempre, entonces no era un
+        anidado: era una sola condición unida con and.
+      panel:
+        label: La prueba
+        title: Si las dos ramas hacen lo mismo, era un and
+        note: >-
+          Es la revisión más rentable que puedes hacerle a tu propio código. Convierte
+          cuatro niveles de sangría en una línea legible.
+      steps:
+        - text: La primera condición decide si sigues
+        - text: Dentro, la segunda decide qué haces
+        - text: Cada rama hace algo distinto
+          loop: ↺ y si no, colapsa las dos en un and
+
+  - code:
+      eyebrow: Bloque 03 · Anidado
+      title: Un anidado que sí gana algo
+      filename: anidado.py
+      source: |
+        if campana_activa:
+            if conversion >= 0.05:
+                accion = "Subir presupuesto"
+            elif conversion >= 0.03:
+                accion = "Mantener"
+            else:
+                accion = "Pausar y revisar"
+        else:
+            accion = "Reactivar antes de evaluar"
+
+        print(accion)
+      annotations:
+        - label: La primera pregunta
+          text: Si la campaña está apagada, su conversión no significa nada. Preguntarla sería un error.
+        - label: Tres salidas dentro
+          text: Cada rama interna hace algo distinto, así que el anidado gana algo real.
+        - label: El else de afuera
+          text: Cubre el caso apagado completo, sin necesidad de repetir las tres categorías.
+        - label: La sangría
+          text: Ocho espacios para el segundo nivel. Pasando de tres niveles, conviene repensar la estructura.
+
+  - trace:
+      eyebrow: Bloque 03 · Traza
+      title: Campaña apagada con conversión excelente
+      headers: [Paso, Condición, Resultado, accion]
+      rows:
+        - ['1', "campana_activa", "False", '–']
+        - ['2', "Todo el bloque interno", "No se evalúa", '–']
+        - ['3', "else de afuera", "Se ejecuta", "Reactivar antes de evaluar"]
+      verdict: La conversión del 6 % nunca se mira. El anidado la protege de una decisión que no tendría sentido tomar.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro trampas de las condiciones compuestas
+      items:
+        - label: Error 01
+          title: Escribir and cuando querías or
+          desc: Léela en voz alta. «Las dos» es and, «cualquiera de las dos» es or. La mitad de los errores se atrapan así.
+        - label: Error 02
+          title: Comparar contra dos valores de golpe
+          desc: canal == "Meta" or "Google" no hace lo que parece. Hay que repetir la variable, o usar in.
+        - label: Error 03
+          title: Usar is para comparar valores
+          desc: is pregunta si es el mismo objeto en memoria. Para números y texto, usa siempre el doble igual.
+        - label: Error 04
+          title: Anidar sin necesidad
+          desc: Tres niveles de sangría casi siempre son dos condiciones unidas con and y una rama que sobra.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime, si el canal es Instagram?
+      filename: trampa.py
+      source: |
+        canal = "Instagram"
+
+        if canal == "Meta" or "Google":
+            print("Coincide")
+        else:
+            print("No coincide")
+      options:
+        - "No coincide, porque no es ninguno de los dos"
+        - "Coincide, porque un texto no vacío se evalúa como verdadero"
+        - "Un error, porque falta una comparación"
+        - "Coincide, porque Python compara con los dos"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una política que necesita dos condiciones
+      brief: Escribe una regla de tu área que dependa de al menos dos datos, como aprobar un crédito por ingreso y antigüedad, o priorizar un pedido por monto y por cliente. Que use and, or e in al menos una vez cada uno.
+      blocks:
+        - label: Entrega
+          text: El archivo .py y una tabla con los cuatro casos de la tabla de verdad probados
+        - label: Restricción
+          text: Máximo dos niveles de sangría. Si necesitas tres, colapsa con and.
+        - label: La prueba
+          text: Léela en voz alta a un compañero. Si tiene que preguntar «y o o», la condición está mal escrita.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: and exige las dos, or se conforma con una
+          desc: Leer la condición en voz alta atrapa la mitad de los errores antes de correr el programa
+        - title: in reemplaza una fila de or
+          desc: Y deja que la lista de valores válidos cambie sin tocar una sola línea de la condición
+        - title: Si las dos ramas hacen lo mismo, era un and
+          desc: La revisión más rentable que le puedes hacer a tu código, y convierte cuatro niveles en uno
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Toma la política del laboratorio y escríbela dos veces, una con anidamiento y otra combinando con operadores lógicos, y explica en tres renglones cuál de las dos leerías mejor dentro de seis meses.
+      meta:
+        - [Entrega, Antes de la semana 8]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Equivalencia", "40 %", "Las dos versiones dan el mismo resultado en todos los casos probados"]
+        - ["Operadores", "40 %", "and, or e in aparecen al menos una vez y están bien usados"]
+        - ["Argumento", "20 %", "La justificación habla de legibilidad, no de gusto personal"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, repetición y primer examen parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

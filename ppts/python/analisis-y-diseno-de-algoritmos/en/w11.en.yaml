@@ -1,0 +1,306 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 11
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 11 · Unit 5 · Arguments, built-in functions and modules
+      title: Analysis and Design of Algorithms
+      subtitle: Default values, keyword arguments, and the tools that ship with Python without installing anything.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 11 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Arguments
+          desc: By position, by keyword, and with a default value
+        - title: Already included
+          desc: The functions Python ships with, that you were using without knowing
+        - title: Modules
+          desc: Bringing tools in with import, without installing anything
+        - title: Your turn
+          desc: A flexible function, with the optional parts genuinely optional
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Pass arguments by keyword
+          sub: So a call with five values reads without counting positions
+        - head: Define default values
+          sub: And explain why optional parameters always come last
+        - head: Use the built-in functions
+          sub: len, sum, max, min, round and sorted, instead of writing them yourself
+        - head: Import a module
+          sub: With both forms of import and the difference between them
+        - head: Read the official documentation
+          sub: And find there what a function you do not know takes and returns
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: How arguments get passed
+      lede: Three ways, and the difference between them shows up once a function has more than three parameters.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Ways
+      title: The three ways to pass an argument
+      headers: [Way, How it looks, When it suits]
+      rows:
+        - ["By position", "f(250000, 0.18, 36)", "Two or three obvious values"]
+        - ["By keyword", "f(principal=250000, months=36)", "When there are many or they are unclear"]
+        - ["By default", "def f(insurance=0.0)", "What nearly always has the same value"]
+
+  - code:
+      eyebrow: Block 01 · In context
+      title: A loan with optional costs
+      filename: loan.py
+      source: |
+        def monthly_payment(principal, annual_rate, months,
+                            fee=0.0, insurance=0.0):
+            i = annual_rate / 12
+            factor = (1 + i) ** months
+            base = principal * (i * factor) / (factor - 1)
+
+            return base + principal * fee / months + insurance
+
+
+        print(monthly_payment(250000, 0.18, 36))
+        print(monthly_payment(250000, 0.18, 36, insurance=350))
+      annotations:
+        - label: The required ones
+          text: The first three have no default, so they have to be supplied every time.
+        - label: The optional ones
+          text: fee and insurance are zero unless you mention them. The short call still works.
+        - label: By keyword
+          text: The second call skips fee and names insurance. Without the name it would have to pass both.
+        - label: Risk
+          text: A parameter with a default before one without is a SyntaxError. Optional ones go last.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: The same function, with and without the extras
+      filename: loan.py
+      source: |
+        print(monthly_payment(250000, 0.18, 36))
+        print(monthly_payment(250000, 0.18, 36, insurance=350))
+      output: |
+        9038.098883979254
+        9388.098883979254
+
+  - divider:
+      eyebrow: Block 02
+      title: What Python already ships with
+      lede: Half a dozen functions you were already using, and now you know they are functions like the ones you write.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Built-ins
+      title: The six you will use daily
+      headers: [Function, What it returns, Example]
+      rows:
+        - ["len", "How many items there are", "len(payments)"]
+        - ["sum", "The total of them all", "sum(payments)"]
+        - ["max", "The largest", "max(payments)"]
+        - ["min", "The smallest", "min(payments)"]
+        - ["round", "The number rounded", "round(average, 2)"]
+        - ["sorted", "A sorted copy", "sorted(payments)"]
+
+  - code_output:
+      eyebrow: Block 02 · Over a list
+      title: Five questions, five functions
+      filename: builtins.py
+      source: |
+        payments = [9038.10, 6344.53, 7220.66,
+                    4180.25, 11902.44]
+
+        print(len(payments), round(sum(payments), 2))
+        print(max(payments), min(payments))
+        print(sorted(payments)[0])
+      output: |
+        5 38685.98
+        11902.44 4180.25
+        4180.25
+
+  - divider:
+      eyebrow: Block 03
+      title: Modules
+      lede: Tools that exist, are not loaded, and arrive in one line. It is the same door pandas comes through.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: A module is a file full of functions
+      lead: >-
+        Python ships with hundreds of functions it does not load up front, because loading
+        all of them would slow every program down. They are grouped by subject into
+        modules, and import brings them in when you need them. The standard library comes
+        with the installation, so importing from it downloads nothing.
+      panel:
+        label: What this opens
+        title: pandas is imported in exactly the same way
+        note: >-
+          The difference is that pandas does not ship with Python and has to be installed
+          once. The import, and the idea behind it, are identical.
+      steps:
+        - text: The module exists but is not loaded
+        - text: import brings it into the program
+        - text: Its functions become available
+          loop: ↺ and the import always goes at the top of the file
+
+  - table:
+      eyebrow: Block 03 · The course modules
+      title: The five modules you will import
+      headers: [Module, What it is for, When it arrives]
+      rows:
+        - ["statistics", "Mean, median, mode", "Today"]
+        - ["math", "Roots, powers, rounding", "Today"]
+        - ["datetime", "Dates and the gaps between them", "Week 14"]
+        - ["csv", "Reading and writing data files", "Week 14"]
+        - ["pandas", "Whole tables, and not included", "Week 15"]
+
+  - compare:
+      eyebrow: Block 03 · The two forms
+      title: Bring the module, or bring the function
+      before:
+        label: The whole module
+        file: module.py
+        code: |
+          import statistics
+
+          average = statistics.mean(payments)
+          middle = statistics.median(payments)
+      after:
+        label: Only what you use
+        file: function.py
+        code: |
+          from statistics import mean, median
+
+          average = mean(payments)
+          middle = median(payments)
+      note: >-
+        The left one makes it obvious where each function came from, which is why it is
+        preferred once you import from several modules. The right one is less typing.
+
+  - code_output:
+      eyebrow: Block 03 · In context
+      title: Mean and median do not say the same thing
+      filename: summary.py
+      source: |
+        from statistics import mean, median
+
+        print(round(mean(payments), 2))
+        print(median(payments))
+      output: |
+        7737.2
+        7220.66
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four argument and module errors
+      items:
+        - label: Error 01
+          title: Putting the optional before the required
+          desc: Python rejects it with SyntaxError as it reads the file. Defaulted parameters go last.
+        - label: Error 02
+          title: Skipping a parameter without naming it
+          desc: Omit one in the middle and the next value lands in the wrong slot, with no warning at all.
+        - label: Error 03
+          title: Importing inside a function
+          desc: It works, and it hides the dependency. The import goes at the top, where a reader finds it.
+        - label: Error 04
+          title: Naming your file after a module
+          desc: A file called math.py makes import math bring in yours, and the resulting error makes no sense.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does the second call print?
+      filename: defaults.py
+      source: |
+        def total(base, tax=0.16, shipping=0):
+            return base * (1 + tax) + shipping
+
+
+        print(total(1000))
+        print(total(1000, 50))
+      options:
+        - "1160.0 and 1210.0"
+        - "1160.0 and 51000"
+        - "1160.0 and an error, arguments missing"
+        - "1160.0 and 1050.0"
+
+  - lab:
+      eyebrow: Lab
+      title: A function with the optional parts optional
+      brief: Take last week's function and give it two parameters with default values, so the short call keeps working exactly as before. Call it three times, each with a different combination.
+      blocks:
+        - label: Deliverable
+          text: The .py file with the function and the three calls, commented
+        - label: Constraint
+          text: The third call has to pass one argument by keyword while skipping another
+        - label: The test
+          text: The call without optional arguments has to give exactly the number it gave last week
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The optional ones go last
+          desc: A defaulted parameter before an undefaulted one is a syntax error, not a matter of style
+        - title: Naming the argument reads better
+          desc: Once a function passes three parameters, counting positions stops being workable
+        - title: import is the door to everything
+          desc: What brings in statistics today is exactly what will bring in pandas in week 15
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Find a function in the statistics module on docs.python.org that we did not cover, explain in three lines what it takes and what it returns, and run it over the five payments from the session.
+      meta:
+        - [Due, Before week 12]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Source", "40 %", "The explanation comes from the official documentation and cites the page"]
+        - ["Use", "40 %", "The function runs over the data and its result makes sense"]
+        - ["Reading", "20 %", "You say what that number tells you that the others did not"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, lists and tuples, which are the column of your spreadsheet.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

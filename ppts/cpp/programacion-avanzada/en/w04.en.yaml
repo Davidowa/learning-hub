@@ -17,20 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 4 of 17]
-      notes: |
-        First session of the functions and classes block. Until today everything fitted
-        inside main, and from here on that stops being a reasonable option.
-
-        There are still no control structures. They are unit 6 and arrive in week 7, so
-        every function today has a single route from top to bottom with no branches. That is
-        a real constraint when writing the examples, and it is also the reason today's
-        functions can be understood completely in one reading.
-
-        The block of compiler errors on the missing prototype slide is real and trimmed. The
-        full run on Visual Studio Community 2026 produced thirty-three lines from one
-        misplaced identifier.
-
-        Reading: Malik, eighth edition, chapter 6.
 
   - agenda:
       eyebrow: Agenda
@@ -146,14 +132,6 @@ slides:
           text: The definition. Here a, b and c are the parameters, the names the body uses.
         - label: Line 12
           text: total is a double, so the division on the next line is already between reals
-      notes: |
-        The #include for iostream goes above and was left off the slide so the whole
-        function would fit on one card.
-
-        Worth pointing out that the name average appears three times and means something
-        different each time: on line 1 it is an announcement, on line 5 an order, and on
-        line 10 the recipe. Students who confuse prototype with definition almost always do
-        so because nobody separated those three jobs for them.
 
   - code_output:
       eyebrow: Running it
@@ -167,13 +145,6 @@ slides:
         std::cout << p << "\n";
       output: |
         84.6667
-      notes: |
-        84.6667 and not 84. The difference from last week is the line declaring total as a
-        double before the division, so by the time the division happens there is already a
-        real involved.
-
-        cout prints six significant digits by default. The stored value carries more
-        precision than what is shown, and controlling how many appear is a unit 11 topic.
 
   - table:
       eyebrow: The parts
@@ -187,10 +158,6 @@ slides:
         - ["Body", "What it does, inside braces", "total / 3"]
         - ["return", "Hands back and ends the function", "return total / 3;"]
         - ["Prototype", "The announcement, above main", "double average(int, int, int);"]
-      notes: |
-        In the prototype the parameter names are optional, the types alone are enough.
-        Writing them the same as in the definition costs nothing and tells whoever reads the
-        header what each slot means.
 
   - code_output:
       eyebrow: When the announcement is missing
@@ -215,17 +182,6 @@ slides:
         error C2593: 'operator <<'
         is ambiguous
         ... 29 more lines of notes
-      notes: |
-        The compiler reads top to bottom. By the time it reaches line 3 it has not seen the
-        definition of twice, so it does not know what it returns or whether it exists.
-
-        The first error is the only one that matters. The second appears because, not
-        knowing what twice returns, it cannot pick which version of << to use, and behind it
-        come twenty-nine notes listing every one it tried. The real run gave thirty-three
-        lines.
-
-        There are two fixes and both are valid: put the prototype above main, or move the
-        whole definition up. The first scales better once several functions call each other.
 
   - method:
       eyebrow: Criterion

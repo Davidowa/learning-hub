@@ -1,0 +1,321 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 6
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 06 · Unit 4.4 · Selection structures
+      title: Analysis and Design of Algorithms
+      subtitle: Comparing, deciding and taking different paths. The structure that turns a calculation into a business rule.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 6 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Comparing
+          desc: The six operators that produce true or false
+        - title: Deciding
+          desc: if, else, and the indentation that says what belongs to which branch
+        - title: Several paths
+          desc: elif, and why the order you write them in changes the result
+        - title: Your turn
+          desc: A business rule from your own field, written as code that runs
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Use the six comparison operators
+          sub: Equal, not equal, greater, less, and the two that include the boundary
+        - head: Read a boolean expression
+          sub: And know its result is always True or False, and nothing else
+        - head: Write a simple and a double decision
+          sub: if on its own, and if with else, and what changes between them
+        - head: Chain several cases with elif
+          sub: And explain why only the first branch that holds gets executed
+        - head: Recognise the boundary error
+          sub: The difference between greater than and greater or equal, in a real case
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: now
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Comparing
+      lede: >-
+        Before deciding you have to ask. A comparison always answers the same thing:
+        true or false.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Comparison
+      title: The six comparison operators, in order
+      headers: [Operator, Question, Example, Result]
+      rows:
+        - ["==", "Are they equal?", "conversion == 0.0342", "True"]
+        - ["!=", "Are they different?", "channel != 'TikTok'", "True"]
+        - [">", "Is it greater?", "clicks > 5000", "True"]
+        - ["<", "Is it less?", "clicks < 5000", "False"]
+        - [">=", "Is it greater or equal?", "conversion >= 0.03", "True"]
+        - ["<=", "Is it less or equal?", "spend <= 38500", "True"]
+
+  - concept:
+      eyebrow: Key concept
+      title: A boolean expression has only two answers
+      lead: >-
+        Whatever you compare, the result is True or False. There is no «almost» and no
+        «it depends». That is the entire raw material of a decision, and it is why a
+        condition that looks complicated can nearly always be split into two simple
+        comparisons and put back together.
+      panel:
+        label: The beginner's error
+        title: One equals stores, two equals ask
+        note: >-
+          Writing a single equals sign inside an if is a syntax error in Python, and that
+          strictness is protecting you from a far worse bug.
+      steps:
+        - text: On the left, a value
+        - text: In the middle, the operator
+        - text: On the right, what it is compared against
+          loop: ↺ and the result feeds the decision
+
+  - code_output:
+      eyebrow: Block 01 · Check
+      title: A comparison returns a value, like any calculation
+      filename: comparison.py
+      source: |
+        conversion = 0.0342
+        target = 0.03
+
+        print(conversion >= target)
+        print(type(conversion >= target))
+      output: |
+        True
+        <class 'bool'>
+
+  - divider:
+      eyebrow: Block 02
+      title: Deciding
+      lede: The same structure you already use in a spreadsheet, written across two lines instead of inside one long formula.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · Translation
+      title: The IF function, said in Python
+      before:
+        label: In the sheet
+        file: campaigns.xlsx
+        lang: excel
+        code: |
+          =IF(D2>=0.03, "Acceptable", "Review")
+      after:
+        label: In Python
+        file: classify.py
+        code: |
+          if conversion >= 0.03:
+              status = "Acceptable"
+          else:
+              status = "Review"
+      note: >-
+        The formula packs the question and both answers into one line. Python separates
+        them, which is why each branch can hold several lines instead of just one.
+
+  - code:
+      eyebrow: Block 02 · Double decision
+      title: Classifying a campaign
+      filename: classify.py
+      source: |
+        impressions = 148230
+        clicks = 5074
+
+        conversion = clicks / impressions
+
+        if conversion >= 0.03:
+            status = "Acceptable"
+            print("The campaign stays live.")
+        else:
+            status = "Review"
+            print("The targeting needs a look.")
+
+        print(f"{conversion:.2%} · {status}")
+      annotations:
+        - label: The colon
+          text: It closes the condition. Without it Python reports SyntaxError right there.
+        - label: The indentation
+          text: Those four spaces are what say which lines belong to which branch. They are not decoration.
+        - label: Only one branch runs
+          text: Either the if block or the else block. Never both, and always one of the two.
+        - label: After the if
+          text: The last line sits outside the indentation, so it prints whatever happened above.
+
+  - code_output:
+      eyebrow: Block 02 · Result
+      title: At 3.42 % it takes the first branch
+      filename: classify.py
+      source: |
+        if conversion >= 0.03:
+            status = "Acceptable"
+        else:
+            status = "Review"
+      output: |
+        The campaign stays live.
+        3.42% · Acceptable
+
+  - table:
+      eyebrow: Block 02 · Forms
+      title: The three forms of selection
+      headers: [Form, When it is used, Structure]
+      rows:
+        - ["Simple", "There is only something to do if it holds", "if condition:"]
+        - ["Double", "There are two paths and one is always taken", "if / else"]
+        - ["Multiple", "There are three or more exclusive bands", "if / elif / else"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Several paths
+      lede: Three bands, and the order you write them in decides which one wins.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · elif
+      title: Three bands, evaluated top to bottom
+      filename: bands.py
+      source: |
+        conversion = 0.0342
+
+        if conversion >= 0.05:
+            status = "Excellent"
+        elif conversion >= 0.03:
+            status = "Acceptable"
+        else:
+            status = "Review"
+
+        print(f"{conversion:.2%} · {status}")
+      annotations:
+        - label: Top to bottom
+          text: The first condition is checked. If it fails, the second. Once one holds, the rest are not even read.
+        - label: The order
+          text: From the most demanding to the least. Reversed, everything good would land in the weak band.
+        - label: else at the end
+          text: It catches whatever entered no band. It is optional, and leaving it out leaves cases unclassified.
+        - label: Risk
+          text: Put the 0.03 before the 0.05 and an excellent campaign never gets called excellent.
+          accent: true
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: What happens with a 3.42 % conversion
+      headers: [Step, Condition, "Does it hold?", status]
+      rows:
+        - ['1', "0.0342 >= 0.05", "No", '–']
+        - ['2', "0.0342 >= 0.03", "Yes", "Acceptable"]
+        - ['3', "else", "Not evaluated", "Acceptable"]
+      verdict: With the order reversed, step 1 would be 0.0342 >= 0.03 and also give Acceptable. The damage shows up on a 6 % campaign.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four errors on the first decision
+      items:
+        - label: Error 01
+          title: One equals instead of two
+          desc: One stores, two ask. Python flags it as a syntax error, and that is what saves you.
+        - label: Error 02
+          title: Forgetting the colon
+          desc: Every condition ends in a colon. It is the most frequent syntax error of the term.
+        - label: Error 03
+          title: Getting the boundary wrong
+          desc: Greater than excludes whoever landed exactly on target. Greater or equal includes them. Decide which you meant.
+        - label: Error 04
+          title: Writing the conditions backwards
+          desc: Most demanding to least. Reversed, the first branch swallows every case there is.
+
+  - quiz:
+      eyebrow: Quick check
+      question: With a conversion of exactly 0.03, which status prints?
+      filename: boundary.py
+      source: |
+        conversion = 0.03
+
+        if conversion > 0.03:
+            status = "Acceptable"
+        else:
+            status = "Review"
+
+        print(status)
+      options:
+        - "Acceptable, because it reached the target"
+        - "Review, because the operator asks for strictly greater"
+        - "An error, because there is no elif"
+        - "Both, because it satisfies both conditions"
+
+  - lab:
+      eyebrow: Lab
+      title: A business rule from your own field
+      brief: Write a program that classifies something from your discipline into at least three bands, such as a customer by tenure, a supplier by compliance, or an expense by amount. Have it read the value from the keyboard.
+      blocks:
+        - label: Deliverable
+          text: The .py file and the three runs that land in each band
+        - label: Constraint
+          text: The bands have to be exclusive. No case may land in two of them.
+        - label: The test
+          text: Try the exact boundary value. That is where you find out whether you meant greater or greater-or-equal.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A comparison returns True or False
+          desc: Never «almost» and never «it depends». That is the whole raw material a decision is built from
+        - title: The indentation is the structure
+          desc: Those four spaces are the only thing saying which lines belong to which branch of the if
+        - title: The order of the elif decides
+          desc: Most demanding to least. Reversing it lets the first branch swallow every case
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Extend the lab classifier to five bands and add a check that rejects an impossible value, such as a negative percentage or one above a hundred.
+      meta:
+        - [Due, Before week 7]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Bands", "40 %", "All five are exclusive and written in the right order"]
+        - ["Validation", "40 %", "An impossible value is rejected with a clear message"]
+        - ["Boundaries", "20 %", "You document what happens at the exact value of each boundary"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, how to combine several conditions and what happens when a decision lives inside another.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

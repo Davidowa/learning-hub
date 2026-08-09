@@ -17,20 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 8 de 17]
-      notes: |
-        Sesión doble. Se cierra la unidad 6 con repetición y se cierra el bloque del primer
-        parcial. No es una sesión de repaso: el tema nuevo se enseña completo y la logística
-        va al final.
-
-        El parcial es acumulativo. Cubre desde la unidad 1 hasta la 6, que es todo lo visto
-        hasta hoy, y conviene decirlo con esas palabras. La tabla de calificaciones del
-        syllabus dice "acumulativo" para los tres parciales, no lista unidades por parcial.
-
-        Todas las salidas de los ciclos se midieron compilando cada fragmento tal como
-        aparece, en Visual Studio Community 2026. El do-while con la condición falsa desde
-        el principio imprime una vez, y esa corrida está en la lámina.
-
-        Lectura: Malik, octava edición, capítulo 5.
 
   - agenda:
       eyebrow: Agenda
@@ -101,12 +87,6 @@ slides:
         }
       output: |
         w0w1w2
-      notes: |
-        Tres cosas tienen que estar presentes y en su lugar: la variable inicializada antes
-        del ciclo, la condición en el encabezado, y el avance dentro del cuerpo.
-
-        Si falta la tercera, el ciclo no termina nunca. Es el error más común de la sesión y
-        se nota porque el programa se queda callado con el cursor parpadeando.
 
   - code_output:
       eyebrow: do-while
@@ -124,14 +104,6 @@ slides:
         } while (j < 3);
       output: |
         d3
-      notes: |
-        La condición es falsa desde antes de entrar y aun así imprimió una vez. Esa es la
-        única diferencia real con while, y es la razón de que exista.
-
-        Sirve para lo que tiene que ocurrir al menos una vez, como mostrar un menú antes de
-        preguntar si el usuario quiere salir. Fuera de ese caso, while se lee mejor.
-
-        El punto y coma después del paréntesis final es obligatorio.
 
   - code_output:
       eyebrow: for
@@ -146,13 +118,6 @@ slides:
         }
       output: |
         f0f1f2
-      notes: |
-        Inicialización, condición y avance en un solo renglón. No hace nada que while no
-        pueda hacer, pero pone las tres piezas donde se ven juntas y por eso es más difícil
-        olvidar una.
-
-        La variable k se declara en el encabezado y solo existe dentro del ciclo. Al salir
-        deja de existir, que es exactamente lo que se quiere casi siempre.
 
   - table:
       eyebrow: Cuál usar
@@ -162,12 +127,6 @@ slides:
         - ["for", "Se sabe cuántas vueltas", "Cero veces"]
         - ["while", "No se sabe, depende de algo", "Cero veces"]
         - ["do-while", "Tiene que pasar al menos una", "Una vez"]
-      notes: |
-        La columna de la derecha es la que decide entre los dos primeros y el tercero. Los
-        dos de arriba revisan antes de entrar, así que pueden no ejecutarse nunca.
-
-        Entre for y while la elección es de legibilidad, no de capacidad. Cualquiera de los
-        dos hace lo del otro.
 
   - divider:
       eyebrow: Bloque 02
@@ -191,12 +150,6 @@ slides:
         std::cout << suma << "\n";
       output: |
         18
-      notes: |
-        El cuerpo corre seis veces, tres por dos. Los productos son 1, 2, 2, 4, 3 y 6, que
-        suman 18. Medido en una corrida real.
-
-        La cuenta que importa no es el 18, es el seis. Con tres por dos no se nota; con mil
-        por mil son un millón de vueltas, y ahí es donde un programa deja de responder.
 
   - table:
       eyebrow: Control fino
@@ -205,12 +158,6 @@ slides:
       rows:
         - ["break", "Sale del ciclo por completo", "Solo del más interno"]
         - ["continue", "Salta a la siguiente vuelta", "El avance se puede saltar"]
-      notes: |
-        El cuidado de continue es real y produce ciclos infinitos. En un while donde el
-        avance está al final del cuerpo, un continue se lo salta y la condición nunca cambia.
-
-        En un for eso no pasa, porque el avance vive en el encabezado y corre siempre. Es
-        una razón más para preferir for cuando hay un contador.
 
   - pitfalls:
       eyebrow: Diagnóstico

@@ -17,24 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 16 of 17]
-      notes: |
-        The last content session. The unit asks for recursion in detail and threads as an
-        overview, and the session split respects that proportion: two blocks of recursion and
-        a short one on threads.
-
-        Everything about threads was checked on this machine before it was written. jthread
-        is present in the toolset Visual Studio 2026 ships, the headers compile under
-        /std:c++20, and no extra linker option is needed.
-
-        One warning about the interleaved-output demonstration: it does happen, and it is
-        less dramatic than expected. In a four-hundred-line run, two came out torn. If you
-        are projecting it, push the loop into the hundreds and warn that the result changes
-        on every run.
-
-        Malik has no threading chapter in any edition. This part comes from cppreference and
-        Microsoft Learn.
-
-        Reading: Malik, eighth edition, chapter 15, for the recursion part.
 
   - agenda:
       eyebrow: Agenda
@@ -106,17 +88,6 @@ slides:
         std::cout << factorial(5) << "\n";
       output: |
         120
-      notes: |
-        Two parts and both are compulsory. The base case, which returns without calling
-        again, and the recursive case, which calls with an argument closer to the base.
-
-        If the base case is missing, or the argument does not move towards it, the recursion
-        never ends. It does not hang like an infinite loop: the stack runs out and the
-        program dies on the spot.
-
-        Anything recursion can do a loop can do, and the other way round. The choice is about
-        clarity. To walk an array, the loop. For a tree or for Hanoi, recursion reads far
-        better.
 
   - figure:
       eyebrow: Diagnosis
@@ -214,17 +185,6 @@ slides:
         AAAA 149
         BBBBAAAA 0
         AAAA 150 0
-      notes: |
-        The last two output lines are torn. One thread wrote half of its line, the other got
-        in, and the result is not what either of them meant to print.
-
-        Measured on this machine, with Visual Studio Community 2026 and /std:c++20. In a
-        four-hundred-line run, two came out torn. Not dramatic, and that is precisely the
-        dangerous part: a bug appearing twice in four hundred is not something testing finds.
-
-        jthread is used rather than thread because jthread joins itself on destruction. A
-        std::thread whose join is forgotten calls terminate, and a student's first concurrent
-        program then crashes for a reason that has nothing to do with concurrency.
 
   - concept:
       eyebrow: The fix

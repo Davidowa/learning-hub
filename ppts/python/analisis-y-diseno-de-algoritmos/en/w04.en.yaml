@@ -1,0 +1,335 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 4
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 04 · Unit 3 · Data, data types and primitive operations
+      title: Analysis and Design of Algorithms
+      subtitle: The five data types, the operators in full, and why a postal code is not a number.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 4 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The five types
+          desc: What each one holds and which one belongs to each column of your table
+        - title: The operators
+          desc: The seven arithmetic and the assignment ones, complete and in order
+        - title: Conversion
+          desc: When Python converts on its own and when it leaves it to you
+        - title: Your turn
+          desc: A real campaign, correctly typed from the very first line
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Pick the type each value deserves
+          sub: Integer, decimal, text, boolean, or the absence of a value
+        - head: Declare variables with useful names
+          sub: A name that says what it holds, not a single letter
+        - head: Use the seven arithmetic operators
+          sub: Add, subtract, multiply, both divisions, remainder and power
+        - head: Apply precedence correctly
+          sub: And use parentheses whenever the order is not obvious at a glance
+        - head: Convert between types
+          sub: And recognise when a conversion fails rather than warns
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: now
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The five data types
+      lede: An Excel cell guesses its format. Python does not guess, and that difference is half the errors of the term.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A variable is a cell with a name
+      lead: >-
+        It holds a value and it is called something, so you can find it again. Two things
+        separate it from a cell: you choose the name and the name says what it holds, and
+        the value has a type Python takes literally. B7 says nothing at all;
+        campaign_spend does.
+      panel:
+        label: What to know
+        title: The name has no type, the value does
+        note: >-
+          The same variable can hold a number today and text tomorrow. Python does not
+          complain then. It complains later, when somebody does arithmetic on it.
+      steps:
+        - text: You pick a name that describes the data
+        - text: You assign a value with the equals sign
+        - text: Python attaches the type to the value
+          loop: ↺ and every reassignment can change that type
+
+  - table:
+      eyebrow: Block 01 · Types
+      title: The five types you will use all term
+      headers: [Type, What it holds, Campaign example]
+      rows:
+        - ["int", "Whole numbers, with no size limit", "impressions = 148230"]
+        - ["float", "Decimals, with limited precision", "conversion_rate = 0.0342"]
+        - ["str", "Text, always inside quotes", "channel = 'Instagram'"]
+        - ["bool", "True or false, nothing in between", "campaign_live = True"]
+        - ["NoneType", "The absence of a value", "cost_per_click = None"]
+
+  - code:
+      eyebrow: Block 01 · In context
+      title: One campaign, every value in its type
+      filename: campaign.py
+      source: |
+        channel = "Instagram"
+        impressions = 148230
+        clicks = 5074
+        spend = 38500.00
+        campaign_live = True
+
+        print(type(channel), type(impressions))
+        print(type(spend), type(campaign_live))
+      annotations:
+        - label: The names
+          text: Each one says what it holds. In three weeks you will be grateful when you reread it.
+        - label: type
+          text: It returns the type of a value. Use it to check what Python understood, not in the finished program.
+        - label: The decimal point
+          text: 38500.00 is a float and 38500 is an int. The difference shows up when you divide.
+        - label: Risk
+          text: Writing "148230" in quotes makes it text. Adding it raises no error, it glues digits together.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: What Python understood about each value
+      filename: campaign.py
+      source: |
+        print(type(channel), type(impressions))
+        print(type(spend), type(campaign_live))
+      output: |
+        <class 'str'> <class 'int'>
+        <class 'float'> <class 'bool'>
+
+  - divider:
+      eyebrow: Block 02
+      title: The operators, in full
+      lede: Seven arithmetic and eight assignment. All of them, not only the ones used daily.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Arithmetic · 1 of 2
+      title: The four you already use daily
+      headers: [Operator, What it does, Example, Result]
+      rows:
+        - ["+", "Addition", "5074 + 320", "5394"]
+        - ["-", "Subtraction", "5074 - 320", "4754"]
+        - ["*", "Multiplication", "5074 * 2", "10148"]
+        - ["/", "Decimal division", "5074 / 4", "1268.5"]
+
+  - table:
+      eyebrow: Block 02 · Arithmetic · 2 of 2
+      title: The three Excel does not have this way
+      headers: [Operator, What it does, Example, Result]
+      rows:
+        - ["//", "Integer division", "5074 // 4", "1268"]
+        - ["%", "Remainder", "5074 % 4", "2"]
+        - ["**", "Power", "2 ** 10", "1024"]
+
+  - table:
+      eyebrow: Block 02 · Assignment · 1 of 2
+      title: Storing, and the four common shorthands
+      headers: [Operator, Equivalent to, Example]
+      rows:
+        - ["=", "Store a value", "clicks = 5074"]
+        - ["+=", "x = x + y", "clicks += 320"]
+        - ["-=", "x = x - y", "clicks -= 12"]
+        - ["*=", "x = x * y", "spend *= 1.16"]
+        - ["/=", "x = x / y", "spend /= 30"]
+
+  - table:
+      eyebrow: Block 02 · Assignment · 2 of 2
+      title: And the three that remain, for completeness
+      headers: [Operator, Equivalent to, Example]
+      rows:
+        - ["//=", "x = x // y", "impressions //= 1000"]
+        - ["%=", "x = x % y", "position %= 7"]
+        - ["**=", "x = x ** y", "base **= 2"]
+
+  - code:
+      eyebrow: Block 02 · Precedence
+      title: The order Python resolves an expression in
+      filename: precedence.py
+      source: |
+        # 1. Parentheses  2. Power  3. * / // %  4. + -
+        spend = 38500
+        clicks = 5074
+
+        cpc_wrong = spend / clicks + 100
+        cpc_right = spend / (clicks + 100)
+
+        print(round(cpc_wrong, 2), round(cpc_right, 2))
+      annotations:
+        - label: The same order
+          text: It is the order of arithmetic and the order of Excel. Nothing new to memorise.
+        - label: The difference
+          text: The first line adds 100 to the cost. The second adds 100 to the clicks. Two different questions.
+        - label: The parentheses
+          text: They cost nothing and remove all doubt. Add them even when they are not required.
+        - label: Risk
+          text: Both lines run and return a number. Only one answers the question you meant to ask.
+          accent: true
+
+  - trace:
+      eyebrow: Block 02 · Trace
+      title: The two expressions, step by step
+      headers: [Expression, First, Then, Result]
+      rows:
+        - ["spend / clicks + 100", "38500 / 5074", "7.59 + 100", "107.59"]
+        - ["spend / (clicks + 100)", "5074 + 100", "38500 / 5174", "7.44"]
+      verdict: Seven pesos forty-four per click, or one hundred and seven. The difference is a pair of parentheses.
+
+  - divider:
+      eyebrow: Block 03
+      title: Type conversion
+      lede: Python converts on its own only when there is no doubt. The moment there is, it leaves it to you.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: Implicit and explicit
+      lead: >-
+        When you add an integer to a decimal, Python converts the integer for you, because
+        there is no other reading. When what it has is text, it stops: converting "5074"
+        to a number is obvious to you and ambiguous to it, because the text could carry
+        spaces, commas or a currency symbol.
+      panel:
+        label: Where it will hit you
+        title: Anything from the keyboard or from a file arrives as text
+        note: >-
+          input returns text, always. A CSV stores text, always. Converting is your job,
+          and forgetting it is the most common error of the early weeks.
+      steps:
+        - text: int() converts to a whole number
+        - text: float() converts to a decimal
+        - text: str() converts to text
+          loop: ↺ and each one fails if the content does not match
+
+  - code_output:
+      eyebrow: Block 03 · The classic case
+      title: Adding two pieces of text does not add
+      filename: conversion.py
+      source: |
+        clicks_text = "5074"
+        extra_text = "320"
+
+        print(clicks_text + extra_text)
+        print(int(clicks_text) + int(extra_text))
+      output: |
+        5074320
+        5394
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four type traps that cost an afternoon
+      items:
+        - label: Error 01
+          title: Treating a postal code as a number
+          desc: Mexico City's 01000 becomes 1000 the moment you convert it. An identifier is text, even when it is made of digits.
+        - label: Error 02
+          title: Comparing text against a number
+          desc: The "5074" from the file will never equal the 5074 in the program. Convert before comparing.
+        - label: Error 03
+          title: Trusting decimal equality
+          desc: 0.1 plus 0.2 is not exactly 0.3. For money, compare with a tolerance or work in whole cents.
+        - label: Error 04
+          title: Forgetting that None is not zero
+          desc: None is an absent value, and adding it raises TypeError. Zero is a measured value and it is worth zero.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this program print?
+      filename: division.py
+      source: |
+        impressions = 148230
+        ads = 7
+
+        print(impressions // ads)
+        print(impressions % ads)
+      options:
+        - "21175.71 and 0.71"
+        - "21175 and 5"
+        - "21176 and 5"
+        - "An error, because it does not divide evenly"
+
+  - lab:
+      eyebrow: Lab
+      title: Type a real campaign
+      brief: Take the numbers from a campaign or a report you have actually seen and declare at least eight variables with the right type. Compute the conversion rate and the cost per click, and round both to two decimals.
+      blocks:
+        - label: Deliverable
+          text: A .py file that runs and prints both metrics with a label
+        - label: Constraint
+          text: No single-letter names. The name has to say what it holds.
+        - label: The test
+          text: Print the type of every variable. If something comes back str where you expected a number, there is the bug.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The name has no type, the value does
+          desc: And reassigning a variable can change that type without anything warning you at the time
+        - title: An identifier is text
+          desc: Postal codes, reference numbers, customer IDs. Being made of digits does not make them numbers
+        - title: Parentheses cost nothing
+          desc: Both versions run and return a number. Only one answers the question you asked
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write a program that takes the reach, the clicks and the spend of a campaign from the keyboard, and computes the conversion rate, the cost per click and the cost per thousand impressions.
+      meta:
+        - [Due, Before week 5]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Conversion", "40 %", "What comes from input is converted before any arithmetic"]
+        - ["Calculations", "40 %", "All three metrics are correct and rounded"]
+        - ["Names", "20 %", "Every variable is named after the data it holds"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, how data gets into a program and how results get out of it.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

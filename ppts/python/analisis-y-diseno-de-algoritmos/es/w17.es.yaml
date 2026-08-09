@@ -1,0 +1,180 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 17
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 17 · Repaso y examen final
+      title: Análisis y Diseño de Algoritmos
+      subtitle: El semestre completo en un mapa, los seis errores que más se cobran, y la logística del examen final.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 17 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Dos bloques y las dudas
+      cards:
+        - title: El mapa
+          desc: Los ocho temas del semestre y cómo se encadenan
+        - title: Lo que más se cobra
+          desc: Seis errores que aparecen en cada entrega y en cada examen
+        - title: El examen
+          desc: Qué entra, cómo es y qué puedes llevar
+        - title: Sus dudas
+          desc: La segunda mitad de la sesión, con lo que trajeron por escrito
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Ubicar cada tema en el mapa
+          sub: Y explicar de qué depende cada uno de los que vienen después
+        - head: Reconocer los seis errores caros
+          sub: Los que se repiten en todas las entregas del semestre
+        - head: Resolver un ejercicio integrador
+          sub: De archivo a hallazgo, sin saltarse la inspección
+        - head: Llegar preparado al examen
+          sub: Sabiendo qué entra, qué se permite y cómo se entrega
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: El semestre completo
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Algoritmos, diagramas y el primer programa
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El semestre en un mapa
+      lede: Nada de lo que vimos está suelto. Cada tema es la pieza que hace posible el siguiente.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Encadenamiento
+      title: De qué depende cada tema
+      headers: [Tema, Se apoya en, Lo habilita]
+      rows:
+        - ["Tipos y operadores", "El algoritmo en papel", "Cualquier cálculo correcto"]
+        - ["Selección", "Comparaciones booleanas", "Reglas de negocio"]
+        - ["Repetición", "Selección", "Recorrer una tabla entera"]
+        - ["Funciones", "Repetición", "Código que se puede probar"]
+        - ["Colecciones", "Funciones", "Listas, y el diccionario de groupby"]
+        - ["Archivos y pandas", "Colecciones", "El análisis sobre datos reales"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La cadena que atraviesa todo el curso
+      lead: >-
+        Una lista es una columna. Una columna con índice es una Series. Varias Series
+        emparejadas son un DataFrame. Un diccionario es un BUSCARV, y agrupar por llave es
+        lo que hace una tabla dinámica. Cada una de esas frases es la misma idea vista con
+        más herramienta encima, y por eso lo de la semana 12 sigue sirviendo en la 15.
+      panel:
+        label: Lo que esto significa para el examen
+        title: No hay que memorizar pandas por separado
+        note: >-
+          Si sabes qué hace un ciclo con acumulador, sabes qué hace un groupby. La sintaxis
+          cambia, la idea es la misma.
+      steps:
+        - text: Lista, columna con posiciones
+        - text: Series, columna con etiquetas
+        - text: DataFrame, columnas emparejadas
+          loop: ↺ y groupby es el diccionario acumulando
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Lo que más se cobra
+      lede: Seis errores. No son los más difíciles, son los que aparecieron en cada entrega del semestre.
+      block: 2
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Los cuatro primeros
+      title: Los que cambian el resultado sin avisar
+      items:
+        - label: Error 01
+          title: Contar desde uno
+          desc: El primer elemento es el índice 0, y el último de una lista de cinco es el 4. Todo lo demás se recorre.
+        - label: Error 02
+          title: Calcular sin convertir
+          desc: Lo que llega de input o de un archivo es texto. Sumarlo concatena y el total sale absurdo sin error.
+        - label: Error 03
+          title: Confundir modificar con devolver
+          desc: sort ordena y devuelve None, sorted devuelve una lista nueva. Guardar lo que devuelve sort borra datos.
+        - label: Error 04
+          title: Declarar el acumulador adentro
+          desc: Se reinicia en cada vuelta y al final vale lo del último registro. El programa corre y el número está mal.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Los dos de pandas
+      title: Los que cuestan una tarde entera
+      items:
+        - label: Error 05
+          title: La asignación encadenada
+          desc: Desde pandas 3.0 no hace nada y no lanza error. Todo lo que escriba en la tabla va con loc, en un paso.
+        - label: Error 06
+          title: Agrupar antes de limpiar
+          desc: Ocho regiones donde hay cuatro. Los totales se parten y cada mitad se ve perfectamente razonable.
+
+  - table:
+      eyebrow: Examen final
+      title: Qué entra, y cómo es
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Las ocho unidades, con peso en archivos, pandas y visualización"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Formato", "En la computadora del salón, y se sube comprimido a Blackboard"]
+        - ["Puedes llevar", "Apuntes, tareas, libros y lo que hayas generado con IA antes"]
+        - ["No puedes", "Teléfono, audífonos, lentes con IA ni mensajería"]
+
+  - lab:
+      eyebrow: Ejercicio integrador
+      title: De archivo a hallazgo, en una sesión
+      brief: Carga sales.csv, inspecciónalo, límpialo, agrupa por región y por canal, y contesta con una frase cuál combinación conviene atender primero. Justifica con dos cifras.
+      blocks:
+        - label: El orden
+          text: Inspeccionar, limpiar, agrupar, concluir. Saltarse el primero es cómo se llega a un número equivocado
+        - label: La trampa
+          text: Si agrupas antes de normalizar la región, vas a reportar ocho regiones y cuatro no existen
+        - label: La respuesta
+          text: Una frase con dos cifras. No una tabla, no una gráfica. La conclusión, dicha
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para el semestre entero
+      items:
+        - title: Programar es escribir el procedimiento
+          desc: Y por eso el análisis se puede repetir, revisar y defender cuando alguien pregunte en marzo
+        - title: Limpiar antes de calcular
+          desc: Un número equivocado nunca se anuncia solo, y siempre se ve tan razonable como el correcto
+        - title: El hallazgo va en el título
+          desc: Lo que el lector no puede ver por su cuenta es qué encontraste tú, y eso es todo tu trabajo
+
+  - closing:
+      title: Gracias
+      subtitle: Cualquier duda sobre la calificación o sobre qué sigue, por correo o por Google Chat.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

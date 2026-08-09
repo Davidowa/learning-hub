@@ -17,20 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 12 of 17]
-      notes: |
-        The heaviest session of the course. Two large topics the syllabus puts in one unit:
-        dynamic memory and polymorphism. Worth not rushing the first to reach the second.
-
-        Every result was measured on Visual Studio Community 2026. The pair on the virtual
-        slide is the most important thing in the deck: the same pointer, two calls, 9 and
-        minus 1.
-
-        The syllabus asks for raw pointers with new and delete, and for smart ones too. The
-        raw ones come first because that is what the unit asks for and what the book uses,
-        with unique_ptr afterwards as what is used today.
-
-        Reading: Malik, eighth edition, chapter 12. The course documents cite 14, right for
-        the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -109,17 +95,6 @@ slides:
       output: |
         42 42
         99
-      notes: |
-        The ampersand on line 2 is not the one from week 5. There it declared a reference,
-        here it takes the address of a variable. One symbol with two jobs, and it is worth
-        saying so before somebody asks.
-
-        The last line is the one that matters. n was modified without writing n, through the
-        pointer. That is exactly what lets a function change something belonging to its
-        caller, which makes week 5's pass by reference and this close relatives.
-
-        A pointer can point at nothing. That value is written nullptr, and reaching the value
-        of a null pointer stops the program dead.
 
   - divider:
       eyebrow: Block 02
@@ -149,16 +124,6 @@ slides:
         d = nullptr;
       output: |
         7
-      notes: |
-        new reserves memory on the heap and hands back its address. delete releases it. The
-        two go in a pair and the pair has to close on every path through the program.
-
-        Setting the pointer to nullptr after the delete is not required and is a good habit.
-        Without it you are left with a pointer aimed at memory that is no longer yours, and
-        using it is not an error, it is undefined behaviour.
-
-        If the new had brackets, the delete needs them too. new int[10] is released with
-        delete[], and mixing them is one of the mistakes that does not warn you.
 
   - code_output:
       eyebrow: What is used today
@@ -173,16 +138,6 @@ slides:
         std::cout << *u << "\n";
       output: |
         5
-      notes: |
-        unique_ptr behaves like a pointer and calls delete by itself, when the variable goes
-        out of scope. There is no way to forget it, because there is nothing to write.
-
-        It needs the memory header. It is called unique because it cannot be copied: only one
-        unique_ptr can own an object at a time, which is precisely what prevents the double
-        delete.
-
-        This course teaches both because the unit asks for new and delete and because the
-        book is written that way. In new code, the advice is to start with the smart one.
 
   - divider:
       eyebrow: Block 03
@@ -205,16 +160,6 @@ slides:
       output: |
         9
         -1
-      notes: |
-        The pointer is the same and the object is the same. The only thing that differs is
-        that area is declared virtual in Shape and areaNonVirtual is not.
-
-        Without virtual, the compiler picks the function from the type of the pointer, which
-        is Shape, and that is why minus 1 comes out. With virtual, the choice is made while
-        running by looking at the real object, which is a Square, and 9 comes out.
-
-        This slide is the whole session. If one thing survives today, let it be the pair 9
-        and minus 1.
 
   - figure:
       eyebrow: How it works
@@ -262,10 +207,6 @@ slides:
         - ["override", "Checks that you replace", "In the child"]
         - ["= 0", "Makes it pure and abstract", "In the base"]
         - ["virtual ~", "Destroys the child's part", "In the base, always"]
-      notes: |
-        The last row is a rule with no practical exceptions: if a class has any virtual
-        function, its destructor must be virtual too. It is free and it prevents a silent
-        leak.
 
   - quiz:
       eyebrow: Quick question

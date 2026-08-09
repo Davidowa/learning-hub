@@ -1,0 +1,344 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 15.2
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 15 · 2 of 3 · Unit 8.1.2 · Selecting, filtering and cleaning
+      title: Analysis and Design of Algorithms
+      subtitle: The AutoFilter written down, and the four repairs every real file needs before its total means anything.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 15 · 2 of 3]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Choosing
+          desc: Columns by name, rows by condition
+        - title: Filtering
+          desc: The AutoFilter, written. And the two rules that avoid the confusing error
+        - title: Cleaning
+          desc: Duplicates, inconsistent text, numbers that were text, and holes
+        - title: Your turn
+          desc: Your file, cleaned, with every decision written down
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Choose columns and rows
+          sub: By name with brackets, and by label or position with loc and iloc
+        - head: Build a boolean mask
+          sub: A column of true and false handed back to the table
+        - head: Combine conditions
+          sub: With the symbols, never the words, and always in parentheses
+        - head: Clean the four kinds of dirt
+          sub: Duplicates, capitalisation, currency format and blank cells
+        - head: Assign with loc
+          sub: And explain why chained assignment does nothing at all
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Choosing and filtering
+      lede: You describe what you want and get a new table. The original is never touched, so you can experiment without fear.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · Translation
+      title: The AutoFilter, written down
+      before:
+        label: In the sheet
+        file: sales.xlsx
+        lang: excel
+        code: |
+          Data > Filter
+          region = "North"
+          amount > 50000
+      after:
+        label: In pandas
+        file: filter.py
+        code: |
+          north = sales[
+              (sales["region"] == "North") &
+              (sales["amount"] > 50000)
+          ]
+      note: >-
+        The AutoFilter hides rows and you have to remember to clear it. The mask returns a
+        new table, and the original stays intact and available.
+
+  - code:
+      eyebrow: Block 01 · The mask
+      title: A condition returns a column of true or false
+      filename: mask.py
+      source: |
+        mask = sales["amount"] > 50000
+
+        print(mask.head(3))
+        print(mask.sum())
+
+        large = sales[mask]
+        print(len(large))
+      annotations:
+        - label: The mask
+          text: One True or False per row. It is week 6 applied to the whole column at once.
+        - label: sum over booleans
+          text: True is one and False is zero, so summing the mask counts how many satisfy it.
+        - label: Handing it back
+          text: In brackets, the mask selects the marked rows. A new table comes out.
+        - label: Risk
+          text: Using the words and and or instead of the symbols raises an error that seems to make no sense.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · Combining
+      title: The four ways to combine conditions
+      headers: [Symbol, Means, Rule]
+      rows:
+        - ["&", "Both of them", "Never the word and"]
+        - ["|", "Either one", "Never the word or"]
+        - ["~", "The opposite", "It goes before the condition"]
+        - ["isin", "It is in the list", "Replaces a row of pipes"]
+
+  - code_output:
+      eyebrow: Block 01 · With conditions
+      title: Northern and large, at the same time
+      filename: filter.py
+      source: |
+        sel = sales[(sales["region"] == "North") &
+                    (sales["amount"] > 50000)]
+
+        print(len(sel))
+        print(sorted(sel["channel"].unique()))
+      output: |
+        22
+        ['Online', 'Retail', 'Wholesale']
+
+  - divider:
+      eyebrow: Block 02
+      title: The four repairs
+      lede: The file's four defects, fixed one at a time, and every fix said out loud.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Plan
+      title: What is wrong and what fixes it
+      headers: [Defect, How many, Fixed with]
+      rows:
+        - ["Duplicated rows", "7", "drop_duplicates"]
+        - ["Badly captured region", "8 forms", "str.strip and str.title"]
+        - ["Price stored as text", "324", "str.replace and astype"]
+        - ["Blank unit counts", "11", "dropna or fillna"]
+
+  - code:
+      eyebrow: Block 02 · Text
+      title: Four regions that looked like eight
+      filename: clean.py
+      source: |
+        print(sales["region"].nunique())
+
+        sales["region"] = (sales["region"]
+                           .str.strip()
+                           .str.title())
+
+        print(sales["region"].nunique())
+      annotations:
+        - label: .str
+          text: It applies any string method to the whole column. It is the week 8 loop, unwritten.
+        - label: strip
+          text: It removes the surrounding spaces. " North" and "North " become the same value.
+        - label: title
+          text: It normalises the capitalisation. north, NORTH and North all end up identical.
+        - label: Why it matters
+          text: Without this, a groupby by region reports eight regions, four of which do not exist.
+
+  - code:
+      eyebrow: Block 02 · Numbers
+      title: Stripping the format off the price
+      filename: clean.py
+      source: |
+        sales["unit_price"] = (
+            sales["unit_price"]
+            .str.replace("$", "", regex=False)
+            .str.replace(",", "", regex=False)
+            .str.strip()
+            .astype(float)
+        )
+
+        sales["date"] = pd.to_datetime(sales["date"])
+      annotations:
+        - label: regex=False
+          text: It treats the currency sign as a literal character. Otherwise it reads as a pattern symbol.
+        - label: Two replaces
+          text: The symbol and the thousands comma, separately. Both are format, neither is the value.
+        - label: astype
+          text: Only at this point can the text become a number. Before it, any conversion fails.
+        - label: to_datetime
+          text: The date stops being text and starts being comparable, subtractable and groupable by month.
+
+  - code_output:
+      eyebrow: Block 02 · The holes
+      title: Three honest answers, and you pick one
+      filename: clean.py
+      source: |
+        print(sales["units"].isna().sum())
+
+        sales = sales.dropna(subset=["units"])
+        sales["units"] = sales["units"].astype(int)
+
+        print(len(sales), sales["units"].dtype)
+      output: |
+        11
+        306 int64
+
+  - divider:
+      eyebrow: Block 03
+      title: The trap worth meeting once
+      lede: Since pandas 3.0 there is a way of writing into the table that writes nothing, and says nothing.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: Copy-on-Write
+      lead: >-
+        When you chain two operations to assign, the first half builds a temporary table of
+        the matching rows. The assignment lands on that temporary copy, which is discarded
+        on the next line. No error is raised and nothing changes. It is a silent operation
+        that does absolutely nothing.
+      panel:
+        label: The correct form
+        title: With loc, in one step, rows first
+        note: >-
+          sales.loc[condition, "column"] = value. A single statement, and pandas knows you
+          mean to write into the original table.
+      steps:
+        - text: The condition picks the rows
+        - text: The name picks the column
+        - text: The assignment writes into the original
+          loop: ↺ and all of that in one statement
+
+  - compare:
+      eyebrow: Block 03 · Demonstration
+      title: The same intention, two results
+      before:
+        label: Does nothing
+        file: chained.py
+        code: |
+          sales[sales["region"] == "North"] \
+              ["channel"] = "Retail"
+
+          # no error, no change
+      after:
+        label: Actually works
+        file: with_loc.py
+        code: |
+          sales.loc[
+              sales["region"] == "North",
+              "channel"] = "Retail"
+      note: >-
+        The left one runs clean and changes nothing. That silence is what makes it
+        dangerous: it looks like it worked until you check the result.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four cleaning errors
+      items:
+        - label: Error 01
+          title: Calculating before cleaning
+          desc: A sum over dirty data returns a number, and that number is wrong without ever telling you.
+        - label: Error 02
+          title: Using and instead of &
+          desc: The error talks about the truth value of a Series and helps with nothing. Use the symbols.
+        - label: Error 03
+          title: Forgetting the parentheses
+          desc: Without them Python evaluates in the wrong order. Each condition goes in its own parentheses.
+        - label: Error 04
+          title: Filling holes without saying so
+          desc: Putting zero where a value was missing is a business decision. Make it on purpose and write it down.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What happens after this line runs?
+      filename: chained.py
+      source: |
+        sales[sales["region"] == "North"]["channel"] = "Retail"
+
+        print(sales["channel"].value_counts())
+      options:
+        - "Every northern row is now Retail"
+        - "Nothing changes, and no error is raised either"
+        - "KeyError is raised because channel does not exist"
+        - "A new column called channel is created"
+
+  - lab:
+      eyebrow: Lab
+      title: Clean your file and leave a record
+      brief: Apply whatever repairs your own CSV needs and save a clean version. For every fix, write one line saying what you found, what you decided, and how many records it affected.
+      blocks:
+        - label: Deliverable
+          text: The notebook, the clean file, and the log of decisions
+        - label: Constraint
+          text: No chained assignment. Everything that writes into the table goes through loc.
+        - label: The test
+          text: Compare the total before and after. If it did not change, either the file was clean or you did not clean it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A filter is a column of true and false
+          desc: Handed back in brackets it keeps only the marked rows, and it never touches the original
+        - title: Clean before you calculate
+          desc: A sum over dirty data returns a number, and a wrong number never announces itself
+        - title: Write with loc, in one step
+          desc: Chained assignment does nothing and raises nothing, which is the worst possible combination
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Run script 04 of module A05 and report the year's total before cleaning, after dropping duplicates, and after resolving the holes. Explain which of the three you would report.
+      meta:
+        - [Due, Before session 15.3]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The three totals", "40 %", "All three numbers are reported with their row counts"]
+        - ["The decision", "40 %", "One is chosen and justified with a business argument"]
+        - ["The log", "20 %", "Every cleaning step is documented with what it affected"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, grouping and joining. The PivotTable and the VLOOKUP, one line each.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

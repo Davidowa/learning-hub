@@ -1,0 +1,294 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 15.1
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 15 · 1 de 3 · Tema 8.1 · Series, DataFrame y carga
+      title: Análisis y Diseño de Algoritmos
+      subtitle: La hoja de cálculo, dentro de Python. Qué es una Series, qué es un DataFrame y cómo se mira un archivo antes de tocarlo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 15 · 1 de 3]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los dos objetos
+          desc: Series y DataFrame, y a qué corresponde cada uno en tu hoja
+        - title: Cargar
+          desc: read_csv hace en una línea todo lo de la semana pasada
+        - title: Mirar antes de tocar
+          desc: Los cuatro comandos que se corren siempre, y en ese orden
+        - title: Tu turno
+          desc: Tu archivo, cargado e inspeccionado, con su diagnóstico escrito
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué es una Series
+          sub: Una columna con un índice encima, que es la lista de la semana 12
+        - head: Construir un DataFrame
+          sub: Desde un diccionario de columnas, y desde un archivo
+        - head: Cargar un CSV en una línea
+          sub: Con read_csv, y saber qué hizo con cada columna
+        - head: Inspeccionar antes de analizar
+          sub: head, info, shape y describe, siempre en ese orden
+        - head: Detectar la suciedad
+          sub: Valores faltantes, duplicados y categorías mal capturadas
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los dos objetos
+      lede: Todo pandas está construido sobre dos cosas. Una es la columna, la otra es la hoja completa.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Equivalencias
+      title: La correspondencia es exacta
+      headers: [En la hoja, En pandas, Lo que ya sabías]
+      rows:
+        - ["Una columna", "Series", "Una lista, con índice"]
+        - ["La hoja completa", "DataFrame", "Varias listas emparejadas"]
+        - ["El número de fila", "El índice", "La posición, que empieza en 0"]
+        - ["El encabezado", "columns", "Las llaves de un diccionario"]
+
+  - code:
+      eyebrow: Bloque 01 · Series
+      title: Una columna con etiquetas
+      filename: series.py
+      source: |
+        import pandas as pd
+
+        mensual = pd.Series(
+            [42000, 51500, 38900, 60100],
+            index=["ene", "feb", "mar", "abr"],
+        )
+
+        print(mensual["mar"])
+        print(mensual.sum(), mensual.idxmax())
+      annotations:
+        - label: pd
+          text: El alias de la comunidad entera. Toda la documentación y toda respuesta en línea lo usa así.
+        - label: El índice
+          text: No tiene que ser un contador. Con etiquetas, la Series se comporta como un rango con nombre.
+        - label: Los métodos
+          text: sum, mean, max e idxmax. Son las funciones de resumen de tu hoja, escritas como método.
+        - label: Sin ciclo
+          text: mensual * 1.16 aplica el impuesto a los cuatro meses de golpe. No hay for, ni hay que arrastrar.
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: Etiqueta, total y mejor mes
+      filename: series.py
+      source: |
+        print(mensual["mar"])
+        print(mensual.sum(), mensual.idxmax())
+      output: |
+        38900
+        192500 abr
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cargar el archivo
+      lede: Una línea reemplaza todo el módulo de la semana pasada. Y sigue sin adivinar lo que no puede saber.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · La reducción
+      title: Lo mismo, dos veces
+      before:
+        label: Semana 14
+        file: manual.py
+        code: |
+          import csv
+
+          with ruta.open(encoding="utf-8") as f:
+              filas = list(csv.DictReader(f))
+
+          for fila in filas:
+              fila["units"] = int(fila["units"] or 0)
+      after:
+        label: Con pandas
+        file: pandas_carga.py
+        code: |
+          import pandas as pd
+
+          ventas = pd.read_csv(ruta)
+      note: >-
+        read_csv abre, lee el encabezado, arma la tabla y hasta intenta adivinar los tipos.
+        Lo que no puede adivinar es qué querías que significara una celda vacía.
+
+  - code_output:
+      eyebrow: Bloque 02 · Primer vistazo
+      title: head muestra los primeros renglones
+      filename: cargar.py
+      source: |
+        ventas = pd.read_csv(DATOS / "sales.csv")
+
+        print(ventas.head(3))
+      output: |
+        date   region  channel   units
+        2025-12-08  South   Online  15.0
+        2025-05-26  South   Wholes  18.0
+        2025-06-02   West   Online   5.0
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Mirar antes de tocar
+      lede: Dos minutos de inspección ahorran la tarde entera. Es la costumbre más rentable del curso.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · info
+      title: El comando más útil del archivo
+      filename: inspeccionar.py
+      source: |
+        print(ventas.dtypes)
+        print(ventas.shape)
+      output: |
+        date            str
+        region          str
+        channel         str
+        units       float64
+        unit_price      str
+        (324, 6)
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Lo que dicen esos tipos
+      lead: >-
+        units salió float y no entero, porque once celdas están vacías y el marcador de
+        vacío solo existe en una columna decimal. unit_price salió texto, porque el signo
+        de pesos y la coma de miles son formato, no valor. Y date salió texto, porque un
+        CSV no tiene tipo fecha. Ninguna de las tres es una falla de pandas.
+      panel:
+        label: La consecuencia
+        title: Las unidades se van a imprimir como 15.0, no como 15
+        note: >-
+          No es un error, es el precio de que la columna tenga huecos. Se arregla después
+          de decidir qué hacer con esos huecos, no antes.
+      steps:
+        - text: Cargas el archivo
+        - text: Lees los tipos que infirió
+        - text: Decides qué significa cada hueco
+          loop: ↺ y solo entonces conviertes
+
+  - code_output:
+      eyebrow: Bloque 03 · La suciedad
+      title: Cuatro regiones capturadas de ocho formas
+      filename: diagnostico.py
+      source: |
+        print(ventas["region"].value_counts())
+        print(ventas.isna().sum().sum())
+        print(ventas.duplicated().sum())
+      output: |
+        West 81   North 75   Centre 73
+        South 71   " North" 7   north 7
+        "North " 5   NORTH 5
+        11
+        7
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores al cargar
+      items:
+        - label: Error 01
+          title: Analizar antes de inspeccionar
+          desc: El resultado sale, se ve razonable y está mal. head, info y describe cuestan dos minutos.
+        - label: Error 02
+          title: Confiar en el tipo inferido
+          desc: pandas adivina bien casi siempre. Ese casi es donde vive el error que nadie encuentra.
+        - label: Error 03
+          title: No revisar las categorías
+          desc: value_counts sobre una columna de texto delata la captura inconsistente antes de que parta tus grupos.
+        - label: Error 04
+          title: Suponer que shape es el número de datos
+          desc: 324 renglones con siete duplicados son 317 hechos distintos, y el total cambia según cuál cuentes.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Por qué la columna units salió float64 y no int64?
+      filename: tipos.py
+      source: |
+        print(ventas["units"].dtype)
+        print(ventas["units"].isna().sum())
+      options:
+        - "Porque las unidades traen decimales en el archivo"
+        - "Porque once celdas vacías necesitan NaN, que solo existe en float"
+        - "Porque read_csv siempre usa float por seguridad"
+        - "Porque la columna tiene más de trescientos renglones"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Carga y diagnostica tu archivo
+      brief: Carga con pandas el CSV de tu proyecto y escribe un diagnóstico de media cuartilla, cubriendo cuántos renglones tiene, qué tipo infirió cada columna, cuántos valores faltan y cuántos duplicados hay.
+      blocks:
+        - label: Entrega
+          text: El cuaderno o el .py con la carga, y el diagnóstico en texto
+        - label: Restricción
+          text: Todavía no limpies nada. Hoy solo se mira y se anota.
+        - label: La prueba
+          text: Por cada columna que salió de tipo texto, di si eso está bien o si algo hay que convertir
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una Series es una columna con índice
+          desc: Es la lista de la semana 12 con etiquetas, y todo lo que aprendiste ahí sigue valiendo aquí
+        - title: read_csv no adivina lo que no puede
+          desc: Infiere tipos bien casi siempre, y no puede saber qué querías que significara una celda vacía
+        - title: Inspeccionar antes de analizar
+          desc: head, info, shape y describe. Dos minutos que evitan un resultado equivocado que se ve razonable
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Corre los scripts 01 y 02 del módulo A05 del repositorio sobre sales.csv y explica en tres renglones por qué describe solo resume una columna.
+      meta:
+        - [Entrega, Antes de la sesión 15.2]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Ejecución", "40 %", "Los dos scripts corren y se muestra su salida completa"]
+        - ["Diagnóstico", "40 %", "Se nombran las tres columnas que salieron texto y por qué"]
+        - ["Explicación", "20 %", "Se dice qué tendría que pasar para que describe resumiera más columnas"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, seleccionar, filtrar y limpiar. Ahí se arregla todo lo que hoy diagnosticamos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

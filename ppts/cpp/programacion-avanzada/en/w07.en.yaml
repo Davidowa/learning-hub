@@ -17,19 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 7 of 17]
-      notes: |
-        The constraint the last six sessions carried is lifted. Worth saying at the start:
-        last week's mutator, which only assigned, can now check what it receives.
-
-        Every result in this deck was measured by building each program exactly as it
-        appears on its slide, on Visual Studio Community 2026. The switch without a break
-        and the real-number comparison came from real runs, not from memory.
-
-        The slide about real numbers is the most important of the session and the most
-        easily forgotten. 0.1 plus 0.2 does not equal 0.3, and cout still prints 0.3. Worth
-        running live.
-
-        Reading: Malik, eighth edition, chapter 4.
 
   - agenda:
       eyebrow: Agenda
@@ -102,12 +89,6 @@ slides:
         - [">", "Greater than", "3 > 7", "false"]
         - ["<=", "Less or equal", "7 <= 7", "true"]
         - [">=", "Greater or equal", "3 >= 7", "false"]
-      notes: |
-        All six give back a bool. Since bool converts to an integer without asking, cout
-        prints them as 1 and 0 unless told otherwise.
-
-        The first one causes the most trouble, and not because it is hard. It is written
-        with two signs and the one-sign version compiles too, which is the next slide.
 
   - table:
       eyebrow: Logical
@@ -117,13 +98,6 @@ slides:
         - ["&&", "And", "Both conditions are true"]
         - ["||", "Or", "At least one is true"]
         - ["!", "Not", "The condition is false"]
-      notes: |
-        C++ evaluates in short circuit. With &&, if the first condition is false the second
-        is never evaluated; with ||, if the first is true the second is skipped too.
-
-        That is not an invisible optimisation, it is guaranteed behaviour and it gets used
-        on purpose. Putting the cheap check on the left and the expensive one on the right
-        changes what the program costs.
 
   - code_output:
       eyebrow: The classic mistake
@@ -137,13 +111,6 @@ slides:
         std::cout << (x = 6) << " " << x << "\n";
       output: |
         6 6
-      notes: |
-        The single sign assigns and hands back the assigned value. Since 6 is not zero, that
-        counts as true inside an if, so the condition always holds and the variable has been
-        modified into the bargain.
-
-        It compiles, it runs, and no warning reports it under the options a default project
-        ships with. When an if always fires, this is the first thing to check.
 
   - divider:
       eyebrow: Block 02
@@ -191,15 +158,6 @@ slides:
         std::cout << (d == 0.3) << " " << d << "\n";
       output: |
         0 0.3
-      notes: |
-        The first number is the comparison and it is false. The second is the value, printed
-        as 0.3. Both are true at the same time.
-
-        0.1 and 0.2 cannot be represented exactly in binary, so the sum lands a tiny
-        distance from 0.3. cout rounds to six digits when printing and hides the difference.
-
-        The practical rule is not to compare reals with equality. Compare the absolute
-        difference against a small tolerance instead, say smaller than 0.000001.
 
   - divider:
       eyebrow: Block 03
@@ -224,16 +182,6 @@ slides:
       output: |
         two
         three
-      notes: |
-        A switch does not choose a case, it chooses where to come in. From there it runs
-        everything that follows until it meets a break or reaches the end.
-
-        Which is why with option set to 2 it prints two and three, but neither one nor
-        other. Measured on a real run.
-
-        This is called fall-through and it is sometimes wanted, so two cases can share the
-        same code. When it is deliberate, write a comment saying so, or the next person to
-        read it will assume it was an oversight.
 
   - table:
       eyebrow: Which to use
@@ -243,10 +191,6 @@ slides:
         - ["if", "One condition, one path", "The braces once it grows"]
         - ["if-else", "Two exclusive paths", "Nesting past two levels"]
         - ["switch", "One variable, many values", "The break on each case"]
-      notes: |
-        switch only works with integers and with types that convert to integer, such as char
-        and enum. It does not accept double or std::string, which is the first limitation
-        anyone hits trying to use it for a text menu.
 
   - quiz:
       eyebrow: Quick question

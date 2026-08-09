@@ -1,0 +1,294 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 13
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 13 · Unit 6 · Sets and dictionaries · Second midterm
+      title: Analysis and Design of Algorithms
+      subtitle: Python's VLOOKUP and the fastest way to find how many distinct values there are. Plus the second midterm logistics.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 13 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The dictionary
+          desc: One key, one value. It is the VLOOKUP you already use daily
+        - title: The set
+          desc: Distinct values, with no order and no duplicates
+        - title: Which to use
+          desc: Four collections and the question that decides between them
+        - title: The midterm
+          desc: What it covers, what it looks like, and what you may bring
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Create and query a dictionary
+          sub: By key, and with get for when the key may not be there
+        - head: Walk keys, values and pairs
+          sub: With keys, values and items, depending on what the loop needs
+        - head: Drop duplicates with a set
+          sub: In one line, instead of a loop with a helper list
+        - head: Use the four set operations
+          sub: Union, intersection, difference and symmetric difference
+        - head: Choose the right collection
+          sub: By the question it will answer, not by habit
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The dictionary
+      lede: A two-column table where the first column is unique. It is what VLOOKUP looks up, without column number three.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · Translation
+      title: VLOOKUP, said in Python
+      before:
+        label: In the sheet
+        file: rates.xlsx
+        lang: excel
+        code: |
+          =VLOOKUP(B2, Catalogue, 2, FALSE)
+      after:
+        label: In Python
+        file: rates.py
+        code: |
+          rates = {"AAA": 0.12, "AA": 0.18,
+                   "A": 0.24, "B": 0.32}
+
+          rate = rates["AA"]
+      note: >-
+        VLOOKUP asks for the range, the column number and the exact-match flag. The
+        dictionary asks for the key and nothing else. Column three does not exist.
+
+  - code:
+      eyebrow: Block 01 · In context
+      title: The rate each credit grade earns
+      filename: rates.py
+      source: |
+        rates = {"AAA": 0.12, "AA": 0.18,
+                 "A": 0.24, "B": 0.32}
+
+        print(rates["AA"])
+        print(rates.get("C"))
+        print(rates.get("C", 0.40))
+      annotations:
+        - label: Key and value
+          text: The key sits left of the colon, the value right of it. Keys never repeat.
+        - label: Direct access
+          text: With square brackets, just like a list, except the index is the key instead of a number.
+        - label: get
+          text: It returns None when the key is missing instead of crashing. And it takes a default.
+        - label: Risk
+          text: rates["C"] with a key that does not exist raises KeyError and stops the program right there.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: The three lookups
+      filename: rates.py
+      source: |
+        print(rates["AA"])
+        print(rates.get("C"))
+        print(rates.get("C", 0.40))
+      output: |
+        0.18
+        None
+        0.4
+
+  - table:
+      eyebrow: Block 01 · Walking it
+      title: The three ways to walk a dictionary
+      headers: [Method, What it hands you, When it is used]
+      rows:
+        - ["keys", "Only the keys", "When knowing which exist is enough"]
+        - ["values", "Only the values", "To add up or average"]
+        - ["items", "The complete pairs", "To print the whole table"]
+
+  - code_output:
+      eyebrow: Block 01 · items
+      title: The whole table, in three lines
+      filename: walk.py
+      source: |
+        for key, value in rates.items():
+            print(f"{key:<4} {value:.0%}")
+      output: |
+        AAA  12%
+        AA   18%
+        A    24%
+        B    32%
+
+  - divider:
+      eyebrow: Block 02
+      title: The set
+      lede: Distinct values, no duplicates and no order. It is dropping duplicates in one line.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Duplicates
+      title: How many regions there actually are
+      filename: regions.py
+      source: |
+        regions = ["North", "Centre", "North",
+                   "South", "Centre", "North"]
+
+        unique = set(regions)
+
+        print(sorted(unique))
+        print(len(unique), "of", len(regions))
+      output: |
+        ['Centre', 'North', 'South']
+        3 of 6
+
+  - table:
+      eyebrow: Block 02 · Operations
+      title: The four set operations
+      headers: [Operation, Symbol, What it returns]
+      rows:
+        - ["Union", "|", "Whatever is in either of the two"]
+        - ["Intersection", "&", "Only what is in both of them"]
+        - ["Difference", "-", "What the first has and the second does not"]
+        - ["Symmetric difference", "^", "What is in one but not in both"]
+
+  - code_output:
+      eyebrow: Block 02 · In context
+      title: This year's regions against last year's
+      filename: compare.py
+      source: |
+        this_year = {"North", "Centre", "South"}
+        last_year = {"Centre", "South", "East"}
+
+        print(sorted(this_year & last_year))
+        print(sorted(this_year - last_year))
+        print(sorted(this_year ^ last_year))
+      output: |
+        ['Centre', 'South']
+        ['North']
+        ['East', 'North']
+
+  - figure:
+      eyebrow: Block 02 · All four
+      title: The four collections, side by side
+      image: img/en/collections.png
+      caption: List, tuple, set and dictionary. What separates them is whether they keep order, allow duplicates, and can be changed.
+      alt: Four hand-drawn containers, one for each kind of collection
+
+  - divider:
+      eyebrow: Block 03
+      title: Which to use, and the midterm
+      lede: Four collections and a single question that decides between them.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Decision
+      title: The question that picks the collection
+      headers: [If you need, Use, Why]
+      rows:
+        - ["Order and duplicates", "List", "It is the column of your table"]
+        - ["Nobody to change it", "Tuple", "The terms of a contract"]
+        - ["Distinct values", "Set", "It drops duplicates on its own"]
+        - ["Lookup by key", "Dictionary", "It is VLOOKUP, and it is instant"]
+
+  - table:
+      eyebrow: Second midterm
+      title: What it covers, and what the exam looks like
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "Units 4, 5 and 6: repetition, functions and collections"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Format", "On the classroom computer, uploaded compressed to Blackboard"]
+        - ["You may bring", "Notes, assignments, books and anything generated with AI beforehand"]
+        - ["You may not", "Phone, headphones, AI glasses or messaging"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does the last line print?
+      filename: keys.py
+      source: |
+        counts = {"North": 3, "South": 1}
+        counts["North"] = 5
+        counts["East"] = 2
+
+        print(len(counts))
+      options:
+        - "4, because two entries were added"
+        - "3, because North already existed and was overwritten"
+        - "2, because a dictionary does not grow"
+        - "An error, because East did not exist"
+
+  - lab:
+      eyebrow: Lab
+      title: A catalogue from your own field
+      brief: Build a dictionary that translates a code from your discipline into its description or its value, with at least six entries. Walk it printing the table, and use a set to count how many distinct values it holds.
+      blocks:
+        - label: Deliverable
+          text: The .py file with the printed table and the count of distinct values
+        - label: Constraint
+          text: The lookup has to use get with a default, not square brackets
+        - label: The test
+          text: Look up a key that does not exist. The program has to keep running.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A dictionary is a VLOOKUP
+          desc: The key, the value, and no column number three. In week 15 this is what groupby does inside
+        - title: get does not crash
+          desc: Square brackets raise KeyError on a missing key, and get hands back whatever you decide
+        - title: A set drops duplicates on its own
+          desc: One line replaces the loop with a helper list that almost everyone writes the first time
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Using the campaign lists from the course, build a dictionary from channel to spend, compute the total from values, and print which channels appear this year and not last, using sets.
+      meta:
+        - [Due, Before week 14]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Dictionary", "40 %", "It is built from the lists, not typed out by hand"]
+        - ["Total", "30 %", "The total comes from values, not from walking the lists again"]
+        - ["Sets", "30 %", "The comparison uses a set operation, not a loop with an if"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, files. That is where data stops being typed by hand and starts being read for real.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

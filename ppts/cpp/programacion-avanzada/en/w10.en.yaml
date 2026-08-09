@@ -17,19 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 10 of 17]
-      notes: |
-        This session introduces the first C++ mistake that produces no message at all.
-        Running off the end of an array compiles, runs, and hands back a number. Worth
-        letting the group watch it happen before telling them.
-
-        The value that comes out of an out-of-range read changes on every run and on every
-        machine. The one on the slide came from one concrete run on Visual Studio Community
-        2026, and it is labelled as such.
-
-        The second project checkpoint falls this week on the syllabus calendar.
-
-        Reading: Malik, eighth edition, chapter 8. The course documents cite 9, which is
-        right for the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -107,17 +94,6 @@ slides:
         78
         88
         6
-      notes: |
-        The size in brackets is fixed and decided at compile time. It cannot change later,
-        and it cannot depend on a variable read from the user. Dynamic containers are what
-        that needs, and they arrive with new in week 12.
-
-        The third line is the classic way to count elements: the total size of the array over
-        the size of one. It works because the cells are identical and packed together.
-
-        It stops working the moment the array is passed to a function, which is on the
-        pitfalls slide. There the array becomes an address and sizeof measures the address,
-        not the array.
 
   - concept:
       eyebrow: Key concept
@@ -156,17 +132,6 @@ slides:
         std::cout << marks[6] << "\n";
       output: |
         -1715304422
-      notes: |
-        No compile error, no warning, no crash. It handed back whatever memory sat just past
-        the array, read as an integer.
-
-        That number changes on every run. On another machine it might be zero, or the program
-        might stop dead, or it might carry on working with garbage for half an hour before
-        failing somewhere else entirely.
-
-        Writing out of range is worse than reading, because it modifies memory belonging to
-        another variable. That is where a program starts doing things that cannot be
-        explained.
 
   - table:
       eyebrow: Alternatives
@@ -176,14 +141,6 @@ slides:
         - ["array[i]", "No", "Reads someone else's memory"]
         - ["vector.at(i)", "Yes", "Throws an exception"]
         - ["vector[i]", "No", "Reads someone else's memory"]
-      notes: |
-        std::vector is the array that grows and knows its own size. This course uses it only
-        in passing, because the syllabus asks for C arrays, but it is worth naming.
-
-        The difference between the last two lines surprises people. The vector has both
-        forms of access and only one of them checks. The one that checks costs a little more
-        and reports when something is wrong, which is exactly the week 15 bargain with
-        exceptions.
 
   - divider:
       eyebrow: Block 03
@@ -212,21 +169,6 @@ slides:
         std::cout << vowels << "\n";
       output: |
         3
-      notes: |
-        This is the first time three separate weeks meet in one program: the string from week
-        3, the loop from week 8 and the selection from week 7.
-
-        The vowels in programming are o, a and i, which is three. The count deliberately
-        avoids accented characters, because an accented character takes more than one byte
-        and the index count stops matching what you can see.
-
-        length() returns an unsigned type. Comparing it against a signed int, as the loop
-        above does, raises no warning on this compiler, not even at /W4. That was checked.
-
-        Where it does bite is subtraction. On an empty string, length() minus one is not
-        minus one, it is the maximum of the type, the same trip round the clock as the
-        unsigned example in week 3. A loop running to length() minus one works for every
-        string except the empty one, and there it takes billions of passes.
 
   - quiz:
       eyebrow: Quick question

@@ -1,0 +1,322 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 10
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 10 · Tema 5 · Funciones definidas por el usuario
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Empaquetar un cálculo con un nombre, para no volver a escribirlo y para poder confiar en él.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 10 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Por qué existen
+          desc: El costo real de tener el mismo cálculo escrito en cinco lugares
+        - title: Cómo se escriben
+          desc: def, parámetros, cuerpo y return, con sus reglas
+        - title: Dónde vive cada nombre
+          desc: Lo que pasa dentro de la función se queda dentro
+        - title: Tu turno
+          desc: Un cálculo de tu área, empaquetado y probado con tres casos
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué resuelve una función
+          sub: Y por qué el argumento fuerte no es ahorrar líneas
+        - head: Definir una función con def
+          sub: Nombre, parámetros entre paréntesis, dos puntos y cuerpo con sangría
+        - head: Distinguir parámetro de argumento
+          sub: Uno es el hueco que dejas, el otro el valor que llega al llamarla
+        - head: Devolver un valor con return
+          sub: Y explicar la diferencia entre devolver e imprimir
+        - head: Reconocer el ámbito de un nombre
+          sub: Lo declarado dentro de la función no existe fuera de ella
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué existen las funciones
+      lede: No para escribir menos. Para tener un solo lugar donde el cálculo pueda estar bien o estar mal.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un cálculo con nombre y con dirección
+      lead: >-
+        Una función encierra un cálculo, le pone un nombre y define qué necesita recibir y
+        qué devuelve. A partir de ahí, quien la usa no tiene que saber cómo funciona por
+        dentro. Es exactamente lo que haces cuando escribes PROMEDIO en una celda: no te
+        importa cómo suma y divide, te importa que puedas confiar en el resultado.
+      panel:
+        label: El argumento de verdad
+        title: Una función se puede probar sola
+        note: >-
+          La misma fórmula pegada en trescientas celdas no se puede probar. Solo se puede
+          revisar celda por celda, y nadie lo hace.
+      steps:
+        - text: Se define una vez, con nombre
+        - text: Se llama tantas veces como haga falta
+        - text: Se corrige en un solo lugar
+          loop: ↺ y la corrección llega a todas las llamadas
+
+  - compare:
+      eyebrow: Bloque 01 · El costo
+      title: El mismo cálculo, tres veces
+      before:
+        label: Repetido
+        file: repetido.py
+        code: |
+          i = 0.18 / 12
+          pago_a = 250000 * (i * (1+i)**36) / \
+                   ((1+i)**36 - 1)
+
+          i = 0.24 / 12
+          pago_b = 120000 * (i * (1+i)**24) / \
+                   ((1+i)**24 - 1)
+      after:
+        label: Con función
+        file: credito.py
+        code: |
+          pago_a = pago_mensual(250000, 0.18, 36)
+          pago_b = pago_mensual(120000, 0.24, 24)
+      note: >-
+        Si la fórmula está mal, en la izquierda hay que encontrar y arreglar cada copia. En
+        la derecha se arregla una vez, y las dos llamadas quedan correctas.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se escribe una función
+      lede: Cinco partes, y cada una tiene una regla que no se negocia.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Anatomía
+      title: El pago mensual de un crédito
+      filename: credito.py
+      source: |
+        def pago_mensual(capital, tasa_anual, meses):
+            """Calcula el pago fijo mensual de un crédito."""
+            i = tasa_anual / 12
+            factor = (1 + i) ** meses
+
+            return capital * (i * factor) / (factor - 1)
+
+
+        pago = pago_mensual(250000, 0.18, 36)
+        print(f"Pago mensual: ${pago:,.2f}")
+      annotations:
+        - label: def y el nombre
+          text: El nombre dice qué devuelve, no qué hace por dentro. pago_mensual, no calcular_cosas.
+        - label: Los parámetros
+          text: Los tres huecos que la función necesita. Al llamarla se llenan en ese mismo orden.
+        - label: La cadena de abajo
+          text: El docstring. Explica para qué sirve, y lo lee quien la use sin abrir el cuerpo.
+        - label: return
+          text: Devuelve el resultado y termina la función ahí mismo. Lo que venga después no corre.
+
+  - table:
+      eyebrow: Bloque 02 · Partes
+      title: Las cinco partes de una función
+      headers: [Parte, Qué es, En el ejemplo]
+      rows:
+        - ["def", "La palabra que la declara", "def"]
+        - ["Nombre", "Cómo se le llama después", "pago_mensual"]
+        - ["Parámetros", "Los huecos que hay que llenar", "capital, tasa_anual, meses"]
+        - ["Cuerpo", "El cálculo, con sangría", "Las tres líneas de adentro"]
+        - ["return", "Lo que entrega al terminar", "El pago calculado"]
+
+  - code_output:
+      eyebrow: Bloque 02 · Reutilizada
+      title: Tres créditos, una sola fórmula
+      filename: credito.py
+      source: |
+        for capital, tasa, meses in creditos:
+            pago = pago_mensual(capital, tasa, meses)
+            print(f"{capital:>8,} {tasa:.0%} {meses:>3}"
+                  f" -> {pago:>10,.2f}")
+      output: |
+        250,000 18%  36 ->   9,038.10
+        120,000 24%  24 ->   6,344.53
+         80,000 15%  12 ->   7,220.66
+
+  - compare:
+      eyebrow: Bloque 02 · La distinción clave
+      title: Devolver no es imprimir
+      before:
+        label: Con print
+        file: imprime.py
+        code: |
+          def pago(capital, tasa, meses):
+              print(capital * tasa / meses)
+
+
+          total = pago(250000, 0.18, 36)
+          # total vale None
+      after:
+        label: Con return
+        file: devuelve.py
+        code: |
+          def pago(capital, tasa, meses):
+              return capital * tasa / meses
+
+
+          total = pago(250000, 0.18, 36)
+          # total vale el número
+      note: >-
+        La de la izquierda muestra el número en pantalla y no lo entrega. No se puede sumar,
+        ni guardar, ni graficar. Una función que solo imprime es un callejón sin salida.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Dónde vive cada nombre
+      lede: Lo que se declara dentro de una función existe solo mientras esa función corre.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Ámbito local
+      lead: >-
+        Las variables que nacen dentro de una función son suyas. Se crean cuando la llamas
+        y desaparecen cuando termina. Fuera de ella no existen, y si intentas usarlas
+        Python lanza NameError. Eso no es una limitación, es la garantía de que una función
+        no puede romper el resto del programa por accidente.
+      panel:
+        label: La consecuencia buena
+        title: Puedes reusar el mismo nombre sin miedo
+        note: >-
+          El factor de una función y el factor de otra son dos variables distintas que
+          nunca se van a estorbar entre sí.
+      steps:
+        - text: Se crea al entrar a la función
+        - text: Vive mientras la función corre
+        - text: Desaparece al terminar
+          loop: ↺ y la siguiente llamada la crea de nuevo
+
+  - code_output:
+      eyebrow: Bloque 03 · Comprobación
+      title: La variable de adentro no sale
+      filename: ambito.py
+      source: |
+        def calcular(capital):
+            comision = capital * 0.02
+            return capital + comision
+
+
+        print(calcular(250000))
+        print(comision)
+      output: |
+        255000.0
+        NameError: name 'comision'
+        is not defined
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de la primera función
+      items:
+        - label: Error 01
+          title: Olvidar el return
+          desc: La función corre, calcula bien y devuelve None. El error aparece líneas después, al operar con ese None.
+        - label: Error 02
+          title: Imprimir en lugar de devolver
+          desc: El número se ve en pantalla y no se puede usar para nada más. Devuelve, y que quien llame decida si imprime.
+        - label: Error 03
+          title: Llamarla antes de definirla
+          desc: Python lee de arriba abajo. La definición tiene que estar antes de la primera llamada.
+        - label: Error 04
+          title: Confiar en variables de fuera
+          desc: Si la función usa un nombre que no recibió como parámetro, deja de funcionar en cuanto la mueves de archivo.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime este programa?
+      filename: retorno.py
+      source: |
+        def duplicar(n):
+            n * 2
+
+
+        resultado = duplicar(21)
+        print(resultado)
+      options:
+        - "42, porque multiplica por dos"
+        - "None, porque a la función le falta el return"
+        - "21, porque n no cambió"
+        - "Un error, porque la función no hace nada"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Empaqueta un cálculo de tu área
+      brief: Escribe una función que resuelva un cálculo real de tu carrera, con al menos dos parámetros y un return. Escribe su docstring y pruébala con tres casos distintos, incluido uno en el límite.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con la función, su docstring y las tres llamadas de prueba
+        - label: Restricción
+          text: La función no puede imprimir nada. Solo recibe y devuelve.
+        - label: La prueba
+          text: Bórrale una línea al cuerpo. Si las tres pruebas siguen pasando, tus casos no probaban nada.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una función se puede probar sola
+          desc: Ese es el argumento de verdad. Ahorrar líneas es apenas el efecto secundario más visible
+        - title: Devolver no es imprimir
+          desc: Una función que solo imprime entrega None, y ese None revienta tres líneas más abajo
+        - title: Lo de adentro se queda adentro
+          desc: Y por eso puedes reusar los mismos nombres en dos funciones sin que se estorben
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe dos funciones, una que calcule el pago mensual de un crédito y otra que use la primera para reportar el total pagado y los intereses de todo el plazo.
+      meta:
+        - [Entrega, Antes de la semana 11]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Composición", "40 %", "La segunda función llama a la primera en lugar de repetir la fórmula"]
+        - ["Retorno", "40 %", "Las dos devuelven, ninguna imprime desde dentro"]
+        - ["Docstrings", "20 %", "Cada una explica qué recibe y qué entrega"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, argumentos por omisión, funciones predefinidas y los módulos que ya vienen con Python.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

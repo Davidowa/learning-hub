@@ -17,19 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 15 de 17]
-      notes: |
-        El tema conecta con casi todo lo anterior. La división entre cero de la semana 2, el
-        archivo que no abre de la semana 13 y el índice fuera de rango de la semana 10 son
-        los tres ejemplos naturales, y el grupo ya los vivió.
-
-        Conviene ser honesto sobre el alcance: las excepciones no reemplazan la validación.
-        Un dato que el programa puede revisar se revisa con un if. La excepción es para lo
-        que la función no puede resolver por su cuenta.
-
-        Las salidas se midieron en Visual Studio Community 2026.
-
-        Lectura: Malik, octava edición, capítulo 14. Los documentos del curso citan el 16,
-        correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -126,16 +113,6 @@ slides:
         }
       output: |
         division entre cero
-      notes: |
-        throw termina la función de inmediato. No se ejecuta ni una línea más del bloque
-        try, se salta directamente al catch que corresponda.
-
-        what devuelve el texto que se le dio al construir la excepción. Es una función de la
-        clase base, así que todas las de la biblioteca estándar la tienen.
-
-        Necesita la cabecera stdexcept. Este ejemplo lanza y atrapa en el mismo lugar por
-        claridad; el caso real es que el throw viva dentro de una función y el catch varios
-        niveles arriba.
 
   - code_output:
       eyebrow: De la biblioteca
@@ -156,13 +133,6 @@ slides:
         }
       output: |
         fuera de rango
-      notes: |
-        at es la función de la semana 10 que sí revisa el índice. Aquí se ve qué hace cuando
-        el índice no existe: lanza out_of_range, que es una clase de la biblioteca estándar.
-
-        Con corchetes no habría pasado nada de esto. Se habría leído memoria ajena en
-        silencio, como el arreglo de la semana 10. Esa es la diferencia que se paga con un
-        poco de tiempo de ejecución.
 
   - table:
       eyebrow: Los tipos
@@ -173,12 +143,6 @@ slides:
         - ["invalid_argument", "Un argumento no sirve", "stoi con texto no numérico"]
         - ["runtime_error", "Falla algo al ejecutar", "Uso general"]
         - ["bad_alloc", "No hay memoria", "new, cuando no puede reservar"]
-      notes: |
-        Las cuatro descienden de std::exception, así que un catch de esa clase base los
-        atrapa todos. Sirve como red al final, y no sustituye a los específicos.
-
-        Lanzar tipos propios es válido y común en proyectos grandes. Para este curso basta
-        con los de la biblioteca, que ya traen el mensaje y la jerarquía resuelta.
 
   - divider:
       eyebrow: Bloque 03

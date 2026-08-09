@@ -17,24 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 16 de 17]
-      notes: |
-        Última sesión de contenido. La unidad pide recursión con detalle y multihilos como
-        panorama, y el reparto de la sesión respeta esa proporción: dos bloques de recursión
-        y uno corto de hilos.
-
-        Todo lo de hilos se comprobó en esta máquina antes de escribirlo. jthread existe en
-        el juego de herramientas que trae Visual Studio 2026, las cabeceras compilan con
-        /std:c++20 y no hace falta ninguna opción de enlace adicional.
-
-        Una advertencia sobre la demostración de la salida entreverada: sí ocurre, y es
-        menos escandalosa de lo que uno espera. En una corrida de cuatrocientas líneas
-        salieron dos rotas. Si la van a proyectar, súbanle a cientos de vueltas y adviertan
-        que el resultado cambia en cada corrida.
-
-        Malik no tiene capítulo de hilos en ninguna edición. El material de esta parte sale
-        de cppreference y de Microsoft Learn.
-
-        Lectura: Malik, octava edición, capítulo 15, para la parte de recursión.
 
   - agenda:
       eyebrow: Agenda
@@ -106,17 +88,6 @@ slides:
         std::cout << factorial(5) << "\n";
       output: |
         120
-      notes: |
-        Dos partes y las dos son obligatorias. El caso base, que devuelve sin volver a
-        llamar, y el caso recursivo, que llama con un argumento más cerca del base.
-
-        Si falta el caso base, o si el argumento no se acerca a él, la recursión no termina.
-        No se queda colgada como un ciclo infinito: se acaba la pila y el programa muere de
-        golpe.
-
-        Todo lo que se puede hacer con recursión se puede hacer con un ciclo, y al revés. La
-        elección es de claridad. Para recorrer un arreglo, el ciclo. Para un árbol o para
-        Hanoi, la recursión se lee mucho mejor.
 
   - figure:
       eyebrow: Diagnóstico
@@ -214,18 +185,6 @@ slides:
         AAAA 149
         BBBBAAAA 0
         AAAA 150 0
-      notes: |
-        Las dos últimas líneas de la salida están rotas. Un hilo escribió a medias, el otro
-        se metió, y el resultado no es lo que ninguno de los dos quería imprimir.
-
-        Medido en esta máquina, con Visual Studio Community 2026 y /std:c++20. En una corrida
-        de cuatrocientas líneas salieron dos rotas. No es escandaloso, y esa es justamente la
-        parte peligrosa: un error que aparece dos veces de cada cuatrocientas no se encuentra
-        probando.
-
-        Se usa jthread y no thread porque jthread se une solo al destruirse. Un std::thread
-        cuyo join se olvida llama a terminate, y el primer programa concurrente de un alumno
-        se cae por una razón que no tiene nada que ver con la concurrencia.
 
   - concept:
       eyebrow: La solución

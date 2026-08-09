@@ -17,18 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 14 of 17]
-      notes: |
-        The last block of the course begins. Today's two topics are what explain why the
-        standard library looks the way it does: vector, string and everything else are built
-        from templates and overloaded operators.
-
-        The comparison with week 0 is worth making. The slide showing the 1979 stack against
-        the C++20 one was exactly this difference, and today the group can read both.
-
-        The outputs were measured on Visual Studio Community 2026.
-
-        Reading: Malik, eighth edition, chapter 13. The course documents cite 15, right for
-        the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -104,16 +92,6 @@ slides:
         Vector2 v = Vector2(1, 2) + Vector2(3, 4);
       output: |
         4 6
-      notes: |
-        operator+ is the function's name. The only special thing is that the compiler looks
-        for it when it meets a plus sign between two objects of that type.
-
-        As a member function, the object on the left receives the call and the one on the
-        right arrives as a parameter. Which is why it takes one argument and not two.
-
-        Taking the parameter by value copies the object on every addition. With a large type
-        that shows, and the correct signature carries const and an ampersand, which is week 5
-        material.
 
   - table:
       eyebrow: The limits
@@ -124,13 +102,6 @@ slides:
         - ["== != < >", "The scope operator", "It is part of how things are named"]
         - ["[] () << >>", "The ternary", "The language reserves it"]
         - ["++ -- =", "Inventing signs", "Only the existing ones exist"]
-      notes: |
-        The list of what you may is long and the list of what you may not is short. The
-        interesting question is not which ones, it is which ones are worth it.
-
-        The practical rule: overload an operator only when the meaning is obvious to anyone
-        reading the code without asking. Adding two vectors is obvious. Adding two students
-        means nothing, and there a named function is better.
 
   - divider:
       eyebrow: Block 02
@@ -157,17 +128,6 @@ slides:
         std::cout << larger(2.5, 1.5) << "\n";
       output: |
         9 2.5
-      notes: |
-        The first call handed back an integer and the second a double. No conversion is
-        involved: the compiler generated two separate functions from the same template, one
-        with T as int and one with T as double.
-
-        That happens at compile time, not while running. A template nobody calls generates no
-        code at all, which is why its errors only appear at the first call.
-
-        The only requirement on T is that it supports whatever the body does with it. Here,
-        that it can be compared with greater-than. Called with a type lacking that, the error
-        comes out long, and that is the cost week 0 warned about.
 
   - code:
       eyebrow: Class templates

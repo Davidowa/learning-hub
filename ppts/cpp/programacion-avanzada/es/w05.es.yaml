@@ -17,21 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 5 de 17]
-      notes: |
-        La sesión resuelve la limitación que quedó anunciada la semana pasada. Un parámetro
-        era una copia y no había manera de que una función cambiara la variable de quien la
-        llamó. Hoy sí la hay, y son cuatro caracteres de diferencia.
-
-        Todas las salidas de este deck se midieron compilando cada programa tal como aparece
-        en su lámina, en Visual Studio Community 2026. El programa del contador estático se
-        corrió con las tres llamadas que muestra la traza.
-
-        Siguen sin existir estructuras de control. Es la última sesión con esa limitación
-        antes de las clases, y la semana 7 la levanta.
-
-        Lectura: Malik, octava edición, capítulo 6. Los documentos del curso citan el
-        capítulo 7, que es correcto en la quinta edición; la octava fusionó los dos
-        capítulos de funciones en uno.
 
   - agenda:
       eyebrow: Agenda
@@ -135,13 +120,6 @@ slides:
         std::cout << a << " " << b << "\n";
       output: |
         10 20
-      notes: |
-        Las dos llamadas se escriben igual. La única manera de saber cuál modifica su
-        argumento es ir a leer la firma de la función, y ese es el costo real del paso por
-        referencia.
-
-        Por eso la convención más útil es que una función que modifica su parámetro lo
-        anuncie en el nombre. calcularTotal no debería cambiar nada; acumularEn sí.
 
   - concept:
       eyebrow: Criterio
@@ -199,17 +177,6 @@ slides:
       output: |
         99
         0
-      notes: |
-        Adentro de la función gana la local. La global sigue existiendo y sigue valiendo
-        cero, simplemente quedó tapada mientras dure ese bloque.
-
-        Esto compila sin una sola advertencia y es una de las causas más frecuentes de un
-        programa que hace algo distinto de lo que su autor leyó. La recomendación no es
-        aprender la regla para aprovecharla, es no repetir nombres.
-
-        Las variables globales son parte del temario y conviene decir en voz alta que casi
-        siempre son un error de diseño. Cualquier función puede cambiarlas y ninguna firma
-        lo anuncia.
 
   - code_output:
       eyebrow: static
@@ -231,13 +198,6 @@ slides:
         1 1
         2 1
         3 1
-      notes: |
-        La línea que declara llamadas se ejecuta una sola vez en toda la vida del programa,
-        en la primera llamada. En las siguientes se salta, y la variable conserva lo que
-        tenía.
-
-        normal, en cambio, nace y muere en cada llamada, que es lo que hace cualquier local
-        normal. Las dos líneas están una debajo de la otra a propósito.
 
   - pitfalls:
       eyebrow: Diagnóstico
@@ -297,14 +257,6 @@ slides:
         - ["Solo el nombre", "f(int a) y f(int b)", "No"]
         - ["Solo el retorno", "int f(int) y double f(int)", "No"]
         - ["Valor o referencia", "f(int) y f(int&)", "No, da C2668"]
-      notes: |
-        Los renglones tercero y cuarto son la misma idea. El compilador elige por lo que ve
-        en la llamada, y ahí no aparece ni el nombre del parámetro ni el tipo que devuelve,
-        así que no le sirven para decidir.
-
-        El último se mide fácil y sorprende. Declarar duplicar(int) y duplicar(int&) compila
-        las dos definiciones sin problema, y revienta en la llamada con "ambiguous call to
-        overloaded function", porque un int con nombre encaja igual de bien en las dos.
 
   - code:
       eyebrow: Valores por omisión

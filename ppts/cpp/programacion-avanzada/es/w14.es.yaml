@@ -17,18 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 14 de 17]
-      notes: |
-        Empieza el último bloque del curso. Los dos temas de hoy son los que explican por qué
-        la biblioteca estándar se ve como se ve: vector, string y todo lo demás están
-        construidos con plantillas y con operadores sobrecargados.
-
-        La comparación con la semana 0 vale la pena. La lámina de la pila de 1979 contra la
-        de C++20 mostraba exactamente esta diferencia, y hoy el grupo ya puede leer las dos.
-
-        Las salidas se midieron en Visual Studio Community 2026.
-
-        Lectura: Malik, octava edición, capítulo 13. Los documentos del curso citan el 15,
-        correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -104,15 +92,6 @@ slides:
         Vector2 v = Vector2(1, 2) + Vector2(3, 4);
       output: |
         4 6
-      notes: |
-        operator+ es el nombre de la función. Lo único especial es que el compilador la
-        busca cuando encuentra un signo de más entre dos objetos de ese tipo.
-
-        Como función miembro, el objeto de la izquierda es el que recibe la llamada y el de
-        la derecha llega como parámetro. Por eso solo lleva un argumento y no dos.
-
-        Recibir el parámetro por valor copia el objeto en cada suma. Con un tipo grande eso
-        se nota, y la firma correcta lleva const y ampersand, que es lo de la semana 5.
 
   - table:
       eyebrow: Los límites
@@ -123,13 +102,6 @@ slides:
         - ["== != < >", "El ámbito", "Es parte de cómo se nombran las cosas"]
         - ["[] () << >>", "El ternario", "El lenguaje lo reserva"]
         - ["++ -- =", "Inventar signos", "Solo existen los que ya hay"]
-      notes: |
-        La lista de lo que se puede es larga y la de lo que no es corta. La pregunta
-        interesante no es cuáles, es cuáles conviene.
-
-        La regla práctica: sobrecargar un operador solo cuando el significado sea obvio para
-        cualquiera que lea el código sin preguntar. Sumar dos vectores es obvio. Sumar dos
-        alumnos no significa nada, y ahí una función con nombre es mejor.
 
   - divider:
       eyebrow: Bloque 02
@@ -156,17 +128,6 @@ slides:
         std::cout << mayor(2.5, 1.5) << "\n";
       output: |
         9 2.5
-      notes: |
-        La primera llamada devolvió un entero y la segunda un double. No hay conversión de
-        por medio: el compilador generó dos funciones distintas a partir de la misma
-        plantilla, una con T igual a int y otra con T igual a double.
-
-        Eso ocurre al compilar, no al ejecutar. Una plantilla que nadie llama no genera
-        ningún código, y por eso sus errores aparecen hasta la primera llamada.
-
-        El único requisito sobre T es que soporte lo que el cuerpo hace con él. Aquí, que se
-        pueda comparar con el operador mayor que. Si se llama con un tipo que no lo tiene, el
-        error sale largo, y ese es el costo que anunciaba la semana 0.
 
   - code:
       eyebrow: Plantillas de clase

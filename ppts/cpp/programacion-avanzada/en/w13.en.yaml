@@ -17,21 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 13 of 17]
-      notes: |
-        Another double session. Unit 11 closes with files and the second partial logistics go
-        at the end.
-
-        The topic is short on syntax and carries one large trap: a file that could not be
-        opened raises nothing at all. The program carries on and reads nothing. That is the
-        slide to make stick.
-
-        The outputs were measured on Visual Studio Community 2026. The file was written and
-        read back in the same run, and the attempt to open a file that does not exist gave
-        zero from is_open.
-
-        The third project checkpoint falls this week on the syllabus calendar.
-
-        Reading: Malik, eighth edition, chapter 3.
 
   - agenda:
       eyebrow: Agenda
@@ -106,16 +91,6 @@ slides:
         std::cout << name << " " << mark << "\n";
       output: |
         Ana 95
-      notes: |
-        This needs the fstream header. ofstream is for output and ifstream for input, and
-        both use the operators you have known since week 1.
-
-        The input operator splits on whitespace, so name received Ana and mark received 95,
-        each converted to its own type. To read a whole line, spaces included, there is
-        std::getline.
-
-        Opening an existing file with ofstream empties it. Adding to the end has to be asked
-        for explicitly through the open mode.
 
   - figure:
       eyebrow: Access
@@ -142,16 +117,6 @@ slides:
         std::cout << in.is_open() << "\n";
       output: |
         0
-      notes: |
-        No exception, no message, no crash. The object was constructed, the file was not
-        opened, and the program carried on as though nothing had happened.
-
-        If a read is attempted after that line, the variables keep whatever they held before.
-        If they were never initialised, they keep garbage, which is the week 2 problem
-        arriving through another door.
-
-        Which is why the check is not optional. Every file open is checked before reading,
-        every time, and it is the line most often left out of the final project.
 
   - code:
       eyebrow: The right shape
@@ -193,14 +158,6 @@ slides:
         - ["eof()", "The end was reached", "Almost never, see the note"]
         - ["fail()", "The last read failed", "When a type does not match"]
         - ["good()", "Everything is fine", "As a general condition"]
-      notes: |
-        eof is the one that gets misused. Writing a loop conditioned on not having reached
-        the end produces one extra pass, because the flag is only raised after a read has
-        been attempted and failed.
-
-        The correct shape is to put the read itself in the loop condition, which is what the
-        previous slide does. There the read is attempted and its result decides whether to
-        carry on.
 
   - divider:
       eyebrow: Block 03
@@ -241,17 +198,6 @@ slides:
         - '0, because a failed read sets the variable to zero'
         - 'Garbage, because the file does not exist'
         - 'The program ends with an exception'
-      notes: |
-        Measured on Visual Studio Community 2026 with C++20: it prints 7, is_open gives 0
-        and fail gives 1.
-
-        The distinction is fine and worth making. Since C++11, an extraction that is
-        attempted and fails does write zero into the variable. But here the stream was
-        already in a failed state from not opening the file, so the operator returns
-        immediately without attempting anything, and the variable keeps what it had.
-
-        The practical result is the worse of the two: the program carries on working with an
-        old value that looks perfectly legitimate.
 
   - trace:
       eyebrow: Answer

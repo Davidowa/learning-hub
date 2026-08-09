@@ -17,20 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 4 de 17]
-      notes: |
-        Primera sesión del bloque de funciones y clases. Hasta hoy todo cabía en main, y a
-        partir de aquí eso deja de ser una opción razonable.
-
-        Sigue sin haber estructuras de control. Son la unidad 6 y llegan en la semana 7, así
-        que todas las funciones de hoy tienen una sola ruta de arriba abajo, sin ramas. Es
-        una limitación real al escribir los ejemplos, y también la razón por la que las
-        funciones de hoy se entienden completas de una lectura.
-
-        El bloque de errores del compilador que aparece en la diapositiva del prototipo
-        faltante es real y está recortado. La corrida completa en Visual Studio Community
-        2026 entregó treinta y tres líneas por un solo identificador mal puesto.
-
-        Lectura: Malik, octava edición, capítulo 6.
 
   - agenda:
       eyebrow: Agenda
@@ -146,14 +132,6 @@ slides:
           text: La definición. Aquí a, b y c son los parámetros, los nombres que usa el cuerpo.
         - label: Línea 12
           text: suma es double, así que la división de la línea siguiente ya es entre reales
-      notes: |
-        El #include de iostream va arriba y se omitió en la lámina para que la función
-        completa cupiera en una sola tarjeta.
-
-        Vale la pena señalar que el nombre promedio aparece tres veces y significa algo
-        distinto cada vez: en la línea 1 es un anuncio, en la 5 es una orden y en la 10 es la
-        receta. Los alumnos que confunden prototipo con definición casi siempre es porque
-        nadie les separó esos tres papeles.
 
   - code_output:
       eyebrow: Ejecución
@@ -167,13 +145,6 @@ slides:
         std::cout << p << "\n";
       output: |
         84.6667
-      notes: |
-        84.6667 y no 84. La diferencia con la semana pasada es la línea que declara suma
-        como double antes de dividir, así que cuando llega la división ya hay un real de por
-        medio.
-
-        cout imprime seis cifras significativas por omisión. El valor guardado tiene más
-        precisión que la que se ve, y controlar cuántas se muestran es tema de la unidad 11.
 
   - table:
       eyebrow: Las partes
@@ -187,10 +158,6 @@ slides:
         - ["Cuerpo", "Lo que hace, entre llaves", "suma / 3"]
         - ["return", "Entrega y termina la función", "return suma / 3;"]
         - ["Prototipo", "El anuncio, antes de main", "double promedio(int, int, int);"]
-      notes: |
-        En el prototipo los nombres de los parámetros son opcionales, basta con los tipos.
-        Ponerlos igual que en la definición cuesta nada y le dice a quien lea la cabecera
-        qué significa cada hueco.
 
   - code_output:
       eyebrow: Cuando falta el anuncio
@@ -215,18 +182,6 @@ slides:
         error C2593: 'operator <<'
         is ambiguous
         ... 29 lineas mas de notas
-      notes: |
-        El compilador lee de arriba abajo. Al llegar a la línea 3 todavía no ha visto la
-        definición de duplica, así que no sabe qué tipo devuelve ni si existe.
-
-        El primer error es el único que importa. El segundo sale porque, al no saber qué
-        devuelve duplica, tampoco puede decidir cuál versión de << usar, y detrás vienen
-        veintinueve notas listando todas las que probó. La corrida real dio treinta y tres
-        líneas.
-
-        Se arregla de dos maneras, y las dos son válidas: poner el prototipo antes de main,
-        o mover la definición completa arriba. La primera escala mejor cuando hay varias
-        funciones que se llaman entre sí.
 
   - method:
       eyebrow: Criterio

@@ -17,22 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 2 de 17]
-      notes: |
-        La sesión cierra la unidad 1. Lo que quedó abierto la semana pasada, la división que
-        dio 63, se resuelve en el bloque 3 y conviene anunciarlo desde el principio para que
-        el grupo espere la respuesta.
-
-        Todos los resultados numéricos de este deck se midieron compilando en Visual Studio
-        Community 2026, juego de herramientas 14.51. El valor de la variable sin inicializar
-        cambia en cada corrida y en cada máquina; el 237 de la diapositiva es lo que salió
-        una vez, no un número que se pueda prometer.
-
-        Todavía no existen if ni ciclos. Las estructuras de control son la unidad 6 y llegan
-        hasta la semana 7, así que todo el código de hoy es de flujo recto. Si alguien
-        pregunta cómo se valida que el promedio sea mayor que siete, la respuesta honesta es
-        que falta una herramienta y llega en cinco semanas.
-
-        Lectura: Malik, octava edición, capítulo 2.
 
   - agenda:
       eyebrow: Agenda
@@ -167,15 +151,6 @@ slides:
       output: |
         237
         0
-      notes: |
-        237 fue el resultado de una corrida concreta. La siguiente puede dar otro número, y
-        en otra máquina seguro da otro. Ese es exactamente el problema: el comportamiento no
-        está definido, así que no se puede depender de él ni para fallar igual dos veces.
-
-        El compilador sí avisa. Sale la advertencia C4700, uninitialized local variable
-        'declarada' used. Vale la pena mostrar la Lista de errores con las advertencias
-        visibles, porque muchos alumnos las tienen filtradas sin saberlo y esta es de las
-        que hay que leer.
 
   - divider:
       eyebrow: Bloque 02
@@ -193,12 +168,6 @@ slides:
         - ["*", "Multiplica", "7 * 2", "14"]
         - ["/", "Divide", "7 / 2", "3"]
         - ["%", "Residuo", "7 % 2", "1"]
-      notes: |
-        El cuarto renglón es el que sorprende. Entre dos enteros la división da un entero y
-        la fracción se tira, no se redondea. 7 entre 2 da 3, y no 3.5 ni 4.
-
-        El residuo solo funciona con enteros. Si alguien intenta 7.5 % 2 el compilador lo
-        rechaza, y ese error de tipos aparece en el bloque siguiente.
 
   - table:
       eyebrow: Asignación
@@ -211,10 +180,6 @@ slides:
         - ["*=", "Multiplica y asigna", "x = x * 5"]
         - ["/=", "Divide y asigna", "x = x / 5"]
         - ["%=", "Residuo y asigna", "x = x % 5"]
-      notes: |
-        La columna de la derecha es literal. No son atajos que hagan algo distinto, escriben
-        exactamente la misma operación con menos texto, y por eso heredan la trampa de la
-        división entera sin avisar.
 
   - code_output:
       eyebrow: Precedencia
@@ -229,13 +194,6 @@ slides:
         std::cout << p << " " << q << "\n";
       output: |
         14 20
-      notes: |
-        La multiplicación y la división corren antes que la suma y la resta, igual que en
-        álgebra. Los paréntesis ganan sobre todo lo demás.
-
-        La recomendación práctica no es memorizar la tabla completa de precedencia, que
-        tiene diecisiete niveles. Es poner paréntesis cuando la expresión mezcle más de dos
-        operadores, porque quien lea el código no va a consultar la tabla tampoco.
 
   - code_output:
       eyebrow: Incremento
@@ -255,14 +213,6 @@ slides:
       output: |
         6 5
         6 6
-      notes: |
-        Las dos variables incrementadas terminan en 6. Lo que cambia es lo que la expresión
-        entrega a quien la está leyendo. El sufijo entrega el valor viejo y luego incrementa;
-        el prefijo incrementa y entrega el nuevo.
-
-        Si el incremento va solo en su renglón, los dos hacen lo mismo y da igual cuál se
-        escriba. La diferencia solo importa cuando el resultado se usa en la misma línea, y
-        esa es justamente la línea que conviene no escribir.
 
   - quiz:
       eyebrow: Pregunta rápida
@@ -309,14 +259,6 @@ slides:
         std::cout << media << "\n";
       output: |
         84
-      notes: |
-        La variable es double y aun así imprime 84. La división ocurre antes de que el
-        resultado se guarde, y en ese momento los dos operandos son enteros, así que el
-        lenguaje usa división entera y tira la fracción. Guardar el 84 en un double no
-        recupera lo que ya se perdió.
-
-        Este es el momento de la sesión que conviene no apurar. Es el mismo error que
-        apareció en la semana 1 con el depurador, y ahora tiene explicación completa.
 
   - code:
       eyebrow: La corrección
@@ -352,13 +294,6 @@ slides:
         - ["double", "int", "Se tira la fracción, no se redondea"]
         - ["char", "int", "Queda su número de código"]
         - ["int", "char", "Se pierde si no cabe en un byte"]
-      notes: |
-        static_cast<int>(8.9) da 8, no 9. Truncar y redondear no son lo mismo y el lenguaje
-        hace lo primero.
-
-        static_cast<int>('A') da 65. El catálogo completo de tipos, con char, bool y los
-        modificadores, es la sesión de la próxima semana. Hoy basta con saber que un char
-        guarda un número y que ese número se puede ver.
 
   - pitfalls:
       eyebrow: Diagnóstico

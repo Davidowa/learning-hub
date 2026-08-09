@@ -17,22 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 2 of 17]
-      notes: |
-        This session closes unit 1. What was left hanging last week, the division that came
-        out at 63, is settled in block 3, and it is worth announcing at the start so the
-        group is waiting for the answer.
-
-        Every numeric result in this deck was measured by building on Visual Studio
-        Community 2026, toolset 14.51. The value of the uninitialised variable changes on
-        every run and on every machine; the 237 on the slide is what came out once, not a
-        number anyone can promise.
-
-        There is still no if and there are no loops. Control structures are unit 6 and
-        arrive in week 7, so all of today's code runs straight down. If somebody asks how to
-        check that the average is above seven, the honest answer is that a tool is missing
-        and it arrives in five weeks.
-
-        Reading: Malik, eighth edition, chapter 2.
 
   - agenda:
       eyebrow: Agenda
@@ -167,14 +151,6 @@ slides:
       output: |
         237
         0
-      notes: |
-        237 was the result of one particular run. The next one can give another number, and
-        on another machine it certainly will. That is exactly the problem: the behaviour is
-        undefined, so it cannot even be relied on to fail the same way twice.
-
-        The compiler does warn. It raises C4700, uninitialized local variable 'declared'
-        used. Worth showing the Error List with warnings visible, because plenty of students
-        have them filtered out without knowing, and this is one of the ones to read.
 
   - divider:
       eyebrow: Block 02
@@ -192,13 +168,6 @@ slides:
         - ["*", "Multiplies", "7 * 2", "14"]
         - ["/", "Divides", "7 / 2", "3"]
         - ["%", "Remainder", "7 % 2", "1"]
-      notes: |
-        The fourth row is the surprising one. Between two integers, division gives an
-        integer and the fraction is thrown away rather than rounded. 7 over 2 is 3, not 3.5
-        and not 4.
-
-        The remainder only works on integers. Try 7.5 % 2 and the compiler refuses, and that
-        type error turns up in the next block.
 
   - table:
       eyebrow: Assignment
@@ -211,10 +180,6 @@ slides:
         - ["*=", "Multiply and assign", "x = x * 5"]
         - ["/=", "Divide and assign", "x = x / 5"]
         - ["%=", "Remainder and assign", "x = x % 5"]
-      notes: |
-        The right-hand column is literal. These are not shortcuts that behave differently,
-        they write exactly the same operation with less text, which is why they inherit the
-        integer division trap without announcing it.
 
   - code_output:
       eyebrow: Precedence
@@ -229,14 +194,6 @@ slides:
         std::cout << p << " " << q << "\n";
       output: |
         14 20
-      notes: |
-        Multiplication and division run before addition and subtraction, the same as in
-        algebra. Parentheses beat everything else.
-
-        The practical advice is not to memorise the full precedence table, which has
-        seventeen levels. It is to add parentheses whenever an expression mixes more than
-        two operators, because whoever reads the code is not going to consult the table
-        either.
 
   - code_output:
       eyebrow: Increment
@@ -256,14 +213,6 @@ slides:
       output: |
         6 5
         6 6
-      notes: |
-        Both incremented variables end at 6. What changes is the value the expression hands
-        to whoever is reading it. Postfix hands back the old value and then increments;
-        prefix increments and hands back the new one.
-
-        If the increment sits alone on its own line, the two do the same thing and it makes
-        no difference which one you write. The difference only matters when the result is
-        used on the same line, and that is precisely the line worth not writing.
 
   - quiz:
       eyebrow: Quick question
@@ -310,14 +259,6 @@ slides:
         std::cout << mean << "\n";
       output: |
         84
-      notes: |
-        The variable is a double and it still prints 84. The division happens before the
-        result is stored, and at that moment both operands are integers, so the language
-        uses integer division and throws the fraction away. Storing 84 in a double does not
-        recover what was already lost.
-
-        This is the moment of the session not to rush. It is the same bug that turned up in
-        week 1 under the debugger, and now it has a complete explanation.
 
   - code:
       eyebrow: The fix
@@ -353,13 +294,6 @@ slides:
         - ["double", "int", "The fraction is dropped, not rounded"]
         - ["char", "int", "You get its code number"]
         - ["int", "char", "Lost if it does not fit in one byte"]
-      notes: |
-        static_cast<int>(8.9) gives 8, not 9. Truncating and rounding are not the same thing
-        and the language does the first.
-
-        static_cast<int>('A') gives 65. The full catalogue of types, with char, bool and the
-        modifiers, is next week's session. Today it is enough to know that a char holds a
-        number and that the number can be looked at.
 
   - pitfalls:
       eyebrow: Diagnosis

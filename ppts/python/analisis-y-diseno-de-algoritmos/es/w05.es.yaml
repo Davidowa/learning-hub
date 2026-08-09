@@ -1,0 +1,318 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 5
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 05 · Tema 4 · Instrucciones, entrada y salida
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Cómo entran los datos al programa, cómo salen los resultados y cómo se presentan para que se entiendan.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 5 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Tipos de instrucción
+          desc: Las cuatro cosas que puede hacer una línea de un programa
+        - title: Entrada
+          desc: Leer del teclado, convertir y validar antes de operar
+        - title: Salida
+          desc: f-strings, formato de miles, decimales y porcentajes
+        - title: Tu turno
+          desc: Un reporte de campaña que cualquiera pueda leer sin explicación
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Clasificar los tipos de instrucción
+          sub: Asignación, entrada, salida y control, y para qué sirve cada una
+        - head: Leer datos desde el teclado
+          sub: Con input, y convirtiendo antes de hacer cualquier operación
+        - head: Componer texto con f-strings
+          sub: Mezclando texto fijo y valores calculados en una sola línea
+        - head: Dar formato a un número
+          sub: Separador de miles, decimales fijos y porcentaje con un solo código
+        - head: Escribir una salida que se entienda
+          sub: Con etiquetas, alineación y unidades, no solo números sueltos
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: now
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué puede hacer una línea
+      lede: Cuatro tipos de instrucción, y con ellos se arma cualquier programa del semestre.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Instrucciones
+      title: Los cuatro tipos, y cuándo se usa cada uno
+      headers: [Tipo, Qué hace, Ejemplo]
+      rows:
+        - ["Asignación", "Guarda un valor en un nombre", "clics = 5074"]
+        - ["Entrada", "Trae un dato desde fuera del programa", "canal = input('Canal: ')"]
+        - ["Salida", "Muestra un resultado", "print(costo_por_clic)"]
+        - ["Control", "Decide o repite, y llega la semana que entra", "if, else, while, for"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un programa es entrada, proceso y salida
+      lead: >-
+        Toda la estructura cabe en tres partes. Primero se consiguen los datos, ya sea del
+        teclado, de un archivo o escritos en el propio código. Después se calculan los
+        resultados. Al final se muestran. Cuando un programa no funciona, la primera
+        pregunta útil es en cuál de las tres partes se rompió.
+      panel:
+        label: Por qué separarlas
+        title: Mezclar las tres partes es lo que impide probarlas
+        note: >-
+          Si el cálculo está enredado con los print, no puedes revisar el número sin
+          volver a correr todo y leer la pantalla.
+      steps:
+        - text: Entrada, consigues los datos
+        - text: Proceso, calculas lo que importa
+        - text: Salida, lo presentas legible
+          loop: ↺ y cada parte se revisa por separado
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Entrada de datos
+      lede: Todo lo que llega de fuera llega como texto. Sin excepción, y sin avisar.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · input
+      title: Leer tres datos de una campaña
+      filename: captura.py
+      source: |
+        canal = input("Canal de la campaña: ")
+        clics = int(input("Clics registrados: "))
+        inversion = float(input("Inversión en pesos: "))
+
+        costo_por_clic = inversion / clics
+
+        print(canal, costo_por_clic)
+      annotations:
+        - label: El mensaje
+          text: Lo que va dentro de input se muestra antes de esperar. Sin él, el programa parece colgado.
+        - label: La conversión
+          text: int y float envuelven al input. El canal no se convierte porque ya es texto.
+        - label: El orden
+          text: El programa se detiene en cada input hasta que alguien escribe algo y presiona Enter.
+        - label: Riesgo
+          text: Si el usuario escribe «cinco mil», int lanza ValueError y el programa se detiene ahí mismo.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Sesión
+      title: Cómo se ve al correrlo
+      filename: captura.py
+      source: |
+        canal = input("Canal de la campaña: ")
+        clics = int(input("Clics registrados: "))
+      output: |
+        Canal de la campaña: Instagram
+        Clics registrados: 5074
+        Inversión en pesos: 38500
+        Instagram 7.587702010248325
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Salida de resultados
+      lede: El número correcto mal presentado es un número que nadie va a usar.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: f-strings
+      lead: >-
+        Una cadena que empieza con f permite meter valores dentro del texto, encerrados
+        entre llaves. Lo que va dentro de las llaves se evalúa y se sustituye por su
+        resultado. Reemplaza a concatenar con signos de más, que obliga a convertir todo a
+        texto a mano y se vuelve ilegible en cuanto hay tres valores.
+      panel:
+        label: El formato
+        title: Después de dos puntos va cómo se ve el número
+        note: >-
+          Es el mismo tipo de código que el formato de celda de una hoja de cálculo, solo
+          que escrito en lugar de elegido en un menú.
+      steps:
+        - text: La f va antes de la comilla
+        - text: El valor va entre llaves
+        - text: Después de dos puntos, el formato
+          loop: ↺ y el valor original nunca se modifica
+
+  - table:
+      eyebrow: Bloque 03 · Formato
+      title: Los cinco códigos de formato que vas a usar
+      headers: [Código, Qué hace, Entrada, Se ve como]
+      rows:
+        - [":,", "Separador de miles", "148230", "148,230"]
+        - [":.2f", "Dos decimales fijos", "7.588490", "7.59"]
+        - [":,.2f", "Miles y dos decimales", "38500", "38,500.00"]
+        - [":.1%", "Porcentaje con un decimal", "0.0342", "3.4%"]
+        - [":>10", "Alineado a la derecha en diez espacios", "5074", "      5074"]
+
+  - code:
+      eyebrow: Bloque 03 · En contexto
+      title: El mismo reporte, presentado
+      filename: reporte.py
+      source: |
+        canal = "Instagram"
+        impresiones = 148230
+        clics = 5074
+        inversion = 38500.00
+
+        conversion = clics / impresiones
+        cpc = inversion / clics
+
+        print(f"Canal: {canal}")
+        print(f"Impresiones: {impresiones:,}")
+        print(f"Conversión: {conversion:.2%}")
+        print(f"Costo por clic: ${cpc:,.2f}")
+      annotations:
+        - label: Las llaves
+          text: Dentro puede ir una variable o una expresión completa, como clics / impresiones.
+        - label: El formato
+          text: Va después de los dos puntos y no cambia el valor, solo cómo se muestra en esa línea.
+        - label: Las unidades
+          text: El signo de pesos es texto fijo dentro de la cadena. La etiqueta también.
+        - label: La cuenta
+          text: 5074 entre 148230 da 0.03423, y el código de porcentaje ya lo multiplica por cien.
+
+  - code_output:
+      eyebrow: Bloque 03 · Resultado
+      title: Un reporte que se lee sin explicación
+      filename: reporte.py
+      source: |
+        print(f"Impresiones: {impresiones:,}")
+        print(f"Conversión: {conversion:.2%}")
+        print(f"Costo por clic: ${cpc:,.2f}")
+      output: |
+        Canal: Instagram
+        Impresiones: 148,230
+        Conversión: 3.42%
+        Costo por clic: $7.59
+
+  - compare:
+      eyebrow: Bloque 03 · La diferencia
+      title: El mismo número, con y sin formato
+      before:
+        label: Sin formato
+        file: crudo.py
+        code: |
+          print("Conversion:", conversion)
+          print("Costo:", cpc)
+      after:
+        label: Con f-string
+        file: reporte.py
+        code: |
+          print(f"Conversión: {conversion:.2%}")
+          print(f"Costo por clic: ${cpc:,.2f}")
+      note: >-
+        La primera imprime 0.034230587600350804 y 7.587702010248325. Los dos números son
+        correctos, y ninguno de los dos sirve para un reporte.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de entrada y salida
+      items:
+        - label: Error 01
+          title: Olvidar la f
+          desc: Sin ella la cadena imprime las llaves literales. No es un error, es una salida silenciosamente inútil.
+        - label: Error 02
+          title: Convertir después de operar
+          desc: int va envolviendo al input, no al resultado. Convertir tarde ya no arregla la suma equivocada.
+        - label: Error 03
+          title: Un input sin mensaje
+          desc: El programa se queda esperando con la pantalla en blanco y parece congelado.
+        - label: Error 04
+          title: Imprimir sin etiqueta ni unidad
+          desc: Un 7.59 suelto no dice si son pesos, clics o días. Quien lo lea va a preguntar.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime esta línea?
+      filename: formato.py
+      source: |
+        tasa = 0.0342
+
+        print(f"Conversión: {tasa:.1%}")
+      options:
+        - "Conversión: 0.0%"
+        - "Conversión: 3.4%"
+        - "Conversión: 0.034%"
+        - "Conversión: 34.2%"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un reporte que se pueda mandar
+      brief: Escribe un programa que pida por teclado el nombre de la campaña, las impresiones, los clics y la inversión, y que imprima un reporte de cinco líneas con miles, porcentaje y símbolo de moneda donde corresponda.
+      blocks:
+        - label: Entrega
+          text: El archivo .py y una captura de la salida ya formateada
+        - label: Restricción
+          text: Nada de concatenar con el signo de más. Solo f-strings.
+        - label: La prueba
+          text: Enséñaselo a alguien que no tomó la clase. Si pregunta qué es un número, falta una etiqueta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Entrada, proceso y salida
+          desc: Separar las tres partes es lo que después te deja encontrar en cuál se rompió el programa
+        - title: input siempre devuelve texto
+          desc: Convertir es tu responsabilidad, y hacerlo tarde no arregla la operación ya hecha
+        - title: El formato es parte del resultado
+          desc: Un 0.03423 correcto y un 3.42% correcto no valen lo mismo para quien recibe el reporte
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía el reporte del laboratorio para que también calcule el costo por mil impresiones y el gasto diario suponiendo una campaña de treinta días, y alinea las cuatro métricas en columna.
+      meta:
+        - [Entrega, Antes de la semana 6]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Formato", "40 %", "Miles, decimales y porcentaje aplicados donde corresponde"]
+        - ["Cálculos", "40 %", "Las cuatro métricas son correctas"]
+        - ["Legibilidad", "20 %", "Las etiquetas y las unidades permiten leerlo sin preguntar"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, cómo hacer que el programa tome caminos distintos según los datos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

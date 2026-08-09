@@ -1,0 +1,322 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 10
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 10 · Unit 5 · User-defined functions
+      title: Analysis and Design of Algorithms
+      subtitle: Packaging a calculation under a name, so you never write it again and so you can trust it.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 10 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Why they exist
+          desc: The real cost of having the same calculation written in five places
+        - title: How they are written
+          desc: def, parameters, body and return, each with its rule
+        - title: Where each name lives
+          desc: What happens inside the function stays inside it
+        - title: Your turn
+          desc: A calculation from your field, packaged and tested with three cases
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what a function solves
+          sub: And why the strong argument is not saving lines
+        - head: Define a function with def
+          sub: Name, parameters in parentheses, a colon, and an indented body
+        - head: Tell a parameter from an argument
+          sub: One is the slot you leave, the other the value that arrives on the call
+        - head: Return a value with return
+          sub: And explain the difference between returning and printing
+        - head: Recognise the scope of a name
+          sub: What is declared inside the function does not exist outside it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why functions exist
+      lede: Not to write less. To have a single place where the calculation can be right or wrong.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A calculation with a name and an address
+      lead: >-
+        A function wraps a calculation, gives it a name, and states what it needs to
+        receive and what it hands back. From then on, whoever uses it does not have to know
+        how it works inside. It is exactly what you do when you type AVERAGE into a cell:
+        you do not care how it adds and divides, you care that you can trust the answer.
+      panel:
+        label: The real argument
+        title: A function can be tested on its own
+        note: >-
+          The same formula pasted into three hundred cells cannot be tested. It can only be
+          checked cell by cell, and nobody does that.
+      steps:
+        - text: It is defined once, with a name
+        - text: It is called as many times as needed
+        - text: It is fixed in a single place
+          loop: ↺ and the fix reaches every call site
+
+  - compare:
+      eyebrow: Block 01 · The cost
+      title: The same calculation, three times over
+      before:
+        label: Repeated
+        file: repeated.py
+        code: |
+          i = 0.18 / 12
+          pay_a = 250000 * (i * (1+i)**36) / \
+                  ((1+i)**36 - 1)
+
+          i = 0.24 / 12
+          pay_b = 120000 * (i * (1+i)**24) / \
+                  ((1+i)**24 - 1)
+      after:
+        label: With a function
+        file: loan.py
+        code: |
+          pay_a = monthly_payment(250000, 0.18, 36)
+          pay_b = monthly_payment(120000, 0.24, 24)
+      note: >-
+        If the formula is wrong, on the left you have to find and fix every copy. On the
+        right you fix it once, and both calls come out correct.
+
+  - divider:
+      eyebrow: Block 02
+      title: How a function is written
+      lede: Five parts, and every one of them has a rule that is not negotiable.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Anatomy
+      title: The monthly payment on a loan
+      filename: loan.py
+      source: |
+        def monthly_payment(principal, annual_rate, months):
+            """Return the fixed monthly payment on a loan."""
+            i = annual_rate / 12
+            factor = (1 + i) ** months
+
+            return principal * (i * factor) / (factor - 1)
+
+
+        payment = monthly_payment(250000, 0.18, 36)
+        print(f"Monthly payment: ${payment:,.2f}")
+      annotations:
+        - label: def and the name
+          text: The name says what it returns, not what it does inside. monthly_payment, not do_stuff.
+        - label: The parameters
+          text: The three slots the function needs. On the call they are filled in that same order.
+        - label: The string below
+          text: The docstring. It explains what the function is for, and it is read without opening the body.
+        - label: return
+          text: It hands the result back and ends the function right there. Anything after it does not run.
+
+  - table:
+      eyebrow: Block 02 · Parts
+      title: The five parts of a function
+      headers: [Part, What it is, In the example]
+      rows:
+        - ["def", "The word that declares it", "def"]
+        - ["Name", "What you call it by afterwards", "monthly_payment"]
+        - ["Parameters", "The slots to be filled", "principal, annual_rate, months"]
+        - ["Body", "The calculation, indented", "The three lines inside"]
+        - ["return", "What it hands back", "The computed payment"]
+
+  - code_output:
+      eyebrow: Block 02 · Reused
+      title: Three loans, one formula
+      filename: loan.py
+      source: |
+        for principal, rate, months in loans:
+            pay = monthly_payment(principal, rate, months)
+            print(f"{principal:>8,} {rate:.0%} {months:>3}"
+                  f" -> {pay:>10,.2f}")
+      output: |
+        250,000 18%  36 ->   9,038.10
+        120,000 24%  24 ->   6,344.53
+         80,000 15%  12 ->   7,220.66
+
+  - compare:
+      eyebrow: Block 02 · The key distinction
+      title: Returning is not printing
+      before:
+        label: With print
+        file: prints.py
+        code: |
+          def pay(principal, rate, months):
+              print(principal * rate / months)
+
+
+          total = pay(250000, 0.18, 36)
+          # total holds None
+      after:
+        label: With return
+        file: returns.py
+        code: |
+          def pay(principal, rate, months):
+              return principal * rate / months
+
+
+          total = pay(250000, 0.18, 36)
+          # total holds the number
+      note: >-
+        The one on the left shows the number on screen and hands nothing back. It cannot be
+        added, stored or charted. A function that only prints is a dead end.
+
+  - divider:
+      eyebrow: Block 03
+      title: Where each name lives
+      lede: What is declared inside a function exists only while that function is running.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: Local scope
+      lead: >-
+        Variables born inside a function belong to it. They are created when you call it
+        and they vanish when it ends. Outside it they do not exist, and trying to use them
+        raises NameError. That is not a limitation, it is the guarantee that a function
+        cannot break the rest of the program by accident.
+      panel:
+        label: The good consequence
+        title: You can reuse the same name without fear
+        note: >-
+          The factor in one function and the factor in another are two separate variables
+          that will never get in each other's way.
+      steps:
+        - text: It is created on entering the function
+        - text: It lives while the function runs
+        - text: It disappears when the function ends
+          loop: ↺ and the next call creates it again
+
+  - code_output:
+      eyebrow: Block 03 · Check
+      title: The variable inside does not come out
+      filename: scope.py
+      source: |
+        def compute(principal):
+            fee = principal * 0.02
+            return principal + fee
+
+
+        print(compute(250000))
+        print(fee)
+      output: |
+        255000.0
+        NameError: name 'fee'
+        is not defined
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four errors on your first function
+      items:
+        - label: Error 01
+          title: Forgetting the return
+          desc: The function runs, computes correctly, and hands back None. The error surfaces lines later, on that None.
+        - label: Error 02
+          title: Printing instead of returning
+          desc: The number appears on screen and can be used for nothing else. Return it, and let the caller decide.
+        - label: Error 03
+          title: Calling it before defining it
+          desc: Python reads top to bottom. The definition has to come before the first call.
+        - label: Error 04
+          title: Relying on variables from outside
+          desc: If the function uses a name it never received as a parameter, it stops working the moment you move it.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this program print?
+      filename: returning.py
+      source: |
+        def double(n):
+            n * 2
+
+
+        result = double(21)
+        print(result)
+      options:
+        - "42, because it multiplies by two"
+        - "None, because the function has no return"
+        - "21, because n did not change"
+        - "An error, because the function does nothing"
+
+  - lab:
+      eyebrow: Lab
+      title: Package a calculation from your field
+      brief: Write a function that solves a real calculation from your discipline, with at least two parameters and a return. Write its docstring and test it with three different cases, one of them at a boundary.
+      blocks:
+        - label: Deliverable
+          text: The .py file with the function, its docstring, and the three test calls
+        - label: Constraint
+          text: The function may not print anything. It only receives and returns.
+        - label: The test
+          text: Delete one line of the body. If all three tests still pass, your cases were testing nothing.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A function can be tested alone
+          desc: That is the real argument. Saving lines is only the most visible side effect of it
+        - title: Returning is not printing
+          desc: A function that only prints hands back None, and that None blows up three lines later
+        - title: What is inside stays inside
+          desc: Which is why you can reuse the same names in two functions without them colliding
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write two functions, one that computes the monthly payment on a loan and another that uses the first to report the total paid and the interest over the whole term.
+      meta:
+        - [Due, Before week 11]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Composition", "40 %", "The second function calls the first instead of repeating the formula"]
+        - ["Returning", "40 %", "Both return, neither prints from inside"]
+        - ["Docstrings", "20 %", "Each one states what it receives and what it hands back"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, default arguments, built-in functions, and the modules that already ship with Python.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

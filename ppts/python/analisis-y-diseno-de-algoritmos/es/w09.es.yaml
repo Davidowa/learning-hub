@@ -1,0 +1,314 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 9
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 09 · Tema 4.5 · Acumuladores, banderas y ciclos anidados
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Los tres patrones que resuelven casi todo lo que se hace dentro de un ciclo, y qué pasa cuando uno vive dentro de otro.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 9 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los tres patrones
+          desc: Acumular, contar y marcar. Con esos tres se resuelve casi todo
+        - title: Romper el flujo
+          desc: break, continue y el else del for, que casi nadie conoce
+        - title: Ciclos anidados
+          desc: Uno dentro de otro, y por qué las vueltas se multiplican
+        - title: Tu turno
+          desc: Un reporte por categoría, calculado con un ciclo dentro de otro
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un acumulador
+          sub: Una variable fuera del ciclo que va sumando lo que pasa dentro
+        - head: Escribir un contador
+          sub: Cuántos casos cumplen algo, que no es lo mismo que cuánto suman
+        - head: Usar una bandera
+          sub: Para responder si existe al menos uno, sin recorrer de más
+        - head: Interrumpir o saltar una vuelta
+          sub: break sale del ciclo, continue salta a la siguiente
+        - head: Leer un ciclo anidado
+          sub: Y predecir cuántas vueltas da en total antes de ejecutarlo
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: now
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los tres patrones
+      lede: Acumular, contar y marcar. Reconocer cuál pide el enunciado es la mitad de resolverlo.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Patrones
+      title: Los tres, y la pregunta que contesta cada uno
+      headers: [Patrón, La pregunta, Valor inicial, Dentro del ciclo]
+      rows:
+        - ["Acumulador", "¿Cuánto suman?", "0", "total += valor"]
+        - ["Contador", "¿Cuántos cumplen?", "0", "if condición: n += 1"]
+        - ["Bandera", "¿Existe al menos uno?", "False", "if condición: hallado = True"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La variable vive fuera, el trabajo pasa dentro
+      lead: >-
+        Los tres patrones comparten la misma estructura. Se declara una variable antes del
+        ciclo, con un valor inicial que representa «todavía nada». Dentro del ciclo se
+        actualiza en cada vuelta. Al terminar, esa variable tiene la respuesta. Ponerla
+        dentro del ciclo la reinicia en cada vuelta, y ese es el error clásico.
+      panel:
+        label: El error clásico
+        title: Declararla adentro la reinicia en cada vuelta
+        note: >-
+          El programa corre, no marca error, y al final el total vale lo que valía el
+          último registro. Un resultado equivocado que parece correcto.
+      steps:
+        - text: Antes del ciclo, el valor inicial
+        - text: Dentro, la actualización por vuelta
+        - text: Después del ciclo, la respuesta
+          loop: ↺ y la sangría es lo que decide cuál es cuál
+
+  - code:
+      eyebrow: Bloque 01 · Los tres juntos
+      title: Un solo recorrido, tres respuestas
+      filename: patrones.py
+      source: |
+        total_inversion = 0
+        campanas_grandes = 0
+        hay_cara = False
+
+        for i in range(len(campanas)):
+            total_inversion += inversion[i]
+
+            if clics[i] > 5000:
+                campanas_grandes += 1
+
+            if inversion[i] / clics[i] > 7.75:
+                hay_cara = True
+      annotations:
+        - label: Los tres afuera
+          text: Las tres variables se declaran antes del for, y por eso sobreviven a todas las vueltas.
+        - label: Acumulador
+          text: total_inversion suma cuánto. Contesta una pregunta de magnitud.
+        - label: Contador
+          text: campanas_grandes suma uno. Contesta una pregunta de cuántos, no de cuánto.
+        - label: Bandera
+          text: hay_cara solo pasa de False a True, y ya nunca regresa. Contesta si existe alguno.
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: Las tres respuestas del mismo recorrido
+      filename: patrones.py
+      source: |
+        print(f"Inversión total: ${total_inversion:,}")
+        print(f"Campañas grandes: {campanas_grandes}")
+        print(f"Hay alguna cara: {hay_cara}")
+      output: |
+        Inversión total: $129,100
+        Campañas grandes: 2
+        Hay alguna cara: True
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Romper el flujo
+      lede: Tres instrucciones que cambian el recorrido normal de un ciclo. La tercera casi nadie la conoce.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Control del ciclo
+      title: Las tres instrucciones que alteran un ciclo
+      headers: [Instrucción, Qué hace, Cuándo se usa]
+      rows:
+        - ["break", "Sale del ciclo de inmediato", "Ya encontraste lo que buscabas y seguir es desperdicio"]
+        - ["continue", "Salta a la siguiente vuelta", "Este registro no aplica y no quieres anidar un if enorme"]
+        - ["else del for", "Corre solo si el ciclo terminó sin break", "Para decir «recorrí todo y no encontré nada»"]
+
+  - code:
+      eyebrow: Bloque 02 · En contexto
+      title: Buscar la primera campaña cara
+      filename: buscar.py
+      source: |
+        for i in range(len(campanas)):
+            if clics[i] < 2000:
+                continue
+
+            if inversion[i] / clics[i] > 7.75:
+                print(f"Primera cara: {campanas[i]}")
+                break
+        else:
+            print("Ninguna campaña rebasa el umbral.")
+      annotations:
+        - label: continue
+          text: Las campañas con menos de 2000 clics no tienen suficiente volumen para juzgarlas. Se saltan.
+        - label: break
+          text: En cuanto encuentra la primera, sale. Recorrer las demás no cambiaría la respuesta.
+        - label: El else
+          text: Va alineado con el for, no con el if. Corre solo si el ciclo llegó al final sin toparse con un break.
+        - label: Riesgo
+          text: Si el else se alinea con el if por error, se imprime el mensaje aunque sí haya encontrado una.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 02 · Traza
+      title: Qué pasa en cada vuelta
+      headers: [i, Campaña, clics, Qué hace]
+      rows:
+        - ['0', "Instagram", '5074', "Pasa el filtro. 7.59 no rebasa 7.75, sigue"]
+        - ['1', "Meta", '3820', "Pasa el filtro. 7.80 sí rebasa, imprime y sale"]
+        - ['2', "Google", '6910', "No se evalúa, el break ya salió"]
+        - ['3', "TikTok", '1240', "No se evalúa"]
+      verdict: El else del for no corre, porque el ciclo salió por break. Ese es exactamente su propósito.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Ciclos anidados
+      lede: Un ciclo dentro de otro. El de adentro da todas sus vueltas por cada vuelta del de afuera.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Anidado
+      title: Cada región contra cada canal
+      filename: cruce.py
+      source: |
+        regiones = ["Norte", "Centro"]
+        canales = ["Retail", "Online"]
+
+        for region in regiones:
+            for canal in canales:
+                print(f"{region} · {canal}")
+      annotations:
+        - label: Sin índice
+          text: Cuando solo necesitas el valor y no la posición, el for puede recorrer la lista directamente.
+        - label: La multiplicación
+          text: Dos regiones por dos canales dan cuatro vueltas. Con cuatro y tres serían doce.
+        - label: El orden
+          text: El de afuera avanza una posición solo cuando el de adentro terminó todas las suyas.
+        - label: El límite
+          text: Cien por cien son diez mil vueltas. Anidar tres niveles sobre listas largas se vuelve lento rápido.
+
+  - code_output:
+      eyebrow: Bloque 03 · Resultado
+      title: Cuatro combinaciones, en ese orden
+      filename: cruce.py
+      source: |
+        for region in regiones:
+            for canal in canales:
+                print(f"{region} · {canal}")
+      output: |
+        Norte · Retail
+        Norte · Online
+        Centro · Retail
+        Centro · Online
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de acumuladores y anidados
+      items:
+        - label: Error 01
+          title: Reiniciar el acumulador adentro
+          desc: total = 0 dentro del ciclo lo borra en cada vuelta. Al final vale lo del último registro y nadie avisa.
+        - label: Error 02
+          title: Confundir contar con sumar
+          desc: Cuántas campañas superan la meta es un contador. Cuánto suman esas campañas es un acumulador.
+        - label: Error 03
+          title: Reusar la variable del ciclo interno
+          desc: Si los dos for usan i, el de adentro pisa al de afuera y el recorrido se descompone.
+        - label: Error 04
+          title: Anidar cuando bastaba con un filtro
+          desc: Antes de meter un ciclo dentro de otro, pregunta si un continue en el primero resolvía lo mismo.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Cuánto vale total al terminar?
+      filename: acumulador.py
+      source: |
+        ventas = [100, 200, 300]
+
+        for v in ventas:
+            total = 0
+            total += v
+
+        print(total)
+      options:
+        - "600, porque suma las tres"
+        - "300, porque se reinicia en cada vuelta"
+        - "0, porque el total se declara al final"
+        - "Un error, porque total no existe antes del ciclo"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un reporte cruzado
+      brief: Con dos listas de categorías de tu área, por ejemplo región y producto, escribe un ciclo anidado que imprima cada combinación con una métrica calculada. Agrega un acumulador y un contador al recorrido.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con la tabla impresa y las dos cifras de resumen al final
+        - label: Restricción
+          text: Las variables de los dos ciclos tienen que llamarse distinto y decir qué recorren
+        - label: La prueba
+          text: Cuenta a mano cuántas líneas debería imprimir. Si no coincide, el anidado está mal.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La variable vive fuera del ciclo
+          desc: Declararla adentro la reinicia en cada vuelta, y el resultado equivocado se ve perfectamente normal
+        - title: Contar y sumar no son lo mismo
+          desc: Cuántos cumplen es un contador, cuánto suman es un acumulador, y el enunciado casi siempre lo dice
+        - title: Las vueltas se multiplican
+          desc: Dos por dos son cuatro, y cien por cien son diez mil. Ahí es donde un anidado deja de ser gratis
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Recorre las cuatro campañas y produce un reporte con la inversión total, cuántas superan la meta de conversión, si existe alguna con costo por clic mayor a ocho pesos, y la mejor de todas.
+      meta:
+        - [Entrega, Antes de la semana 10]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Patrones", "40 %", "Aparecen el acumulador, el contador y la bandera, cada uno bien colocado"]
+        - ["Un solo recorrido", "40 %", "Las cuatro respuestas salen de un mismo for, no de cuatro"]
+        - ["Salida", "20 %", "El reporte se lee sin abrir el código"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, cómo empaquetar un cálculo para no volver a escribirlo nunca.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

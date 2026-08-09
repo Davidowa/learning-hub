@@ -17,21 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 13 de 17]
-      notes: |
-        Sesión doble otra vez. Se cierra la unidad 11 con archivos y va la logística del
-        segundo parcial al final.
-
-        El tema es corto de sintaxis y tiene una trampa grande: un archivo que no se pudo
-        abrir no lanza ningún error. El programa sigue y lee nada. Esa es la lámina que hay
-        que dejar clara.
-
-        Las salidas se midieron en Visual Studio Community 2026. El archivo se escribió y se
-        volvió a leer en la misma corrida, y el intento de abrir un archivo inexistente
-        devolvió cero en is_open.
-
-        Esta semana cae el tercer avance del proyecto según el calendario del syllabus.
-
-        Lectura: Malik, octava edición, capítulo 3.
 
   - agenda:
       eyebrow: Agenda
@@ -106,16 +91,6 @@ slides:
         std::cout << nombre << " " << calificacion << "\n";
       output: |
         Ana 95
-      notes: |
-        Necesita la cabecera fstream. ofstream es de salida y ifstream de entrada, y los dos
-        usan los operadores que ya conocen desde la semana 1.
-
-        El operador de entrada corta por espacios, así que nombre recibió Ana y calificacion
-        recibió 95, cada uno convertido a su tipo. Para leer una línea completa, con espacios
-        incluidos, está std::getline.
-
-        Abrir con ofstream un archivo que ya existe lo vacía. Para agregar al final hay que
-        pedirlo explícitamente con el modo de apertura.
 
   - figure:
       eyebrow: Acceso
@@ -142,16 +117,6 @@ slides:
         std::cout << in.is_open() << "\n";
       output: |
         0
-      notes: |
-        Ni excepción, ni mensaje, ni caída. El objeto se construyó, el archivo no se abrió, y
-        el programa siguió como si nada.
-
-        Si después de esa línea se intenta leer, las variables se quedan con lo que tuvieran
-        antes. Si nunca se inicializaron, con basura, que es el mismo problema de la semana 2
-        llegando por otra puerta.
-
-        Por eso la comprobación no es opcional. Toda apertura de archivo se revisa antes de
-        leer, siempre, y esa es la línea que más se olvida en el proyecto final.
 
   - code:
       eyebrow: La forma correcta
@@ -193,13 +158,6 @@ slides:
         - ["eof()", "Se llegó al final", "Casi nunca, ver la nota"]
         - ["fail()", "La última lectura falló", "Al leer un tipo que no cuadra"]
         - ["good()", "Todo va bien", "Como condición general"]
-      notes: |
-        eof es la que se usa mal. Escribir un ciclo con la condición de que no se haya
-        llegado al final produce una vuelta de más, porque la bandera se enciende hasta
-        después de intentar leer y fallar.
-
-        La forma correcta es poner la lectura como condición del ciclo, que es lo que hace
-        la lámina anterior. Ahí la lectura se intenta y su resultado decide si se sigue.
 
   - divider:
       eyebrow: Bloque 03
@@ -240,17 +198,6 @@ slides:
         - '0, porque una lectura fallida pone la variable en cero'
         - 'Basura, porque el archivo no existe'
         - 'El programa termina con una excepción'
-      notes: |
-        Medido en Visual Studio Community 2026 con C++20: imprime 7, is_open devuelve 0 y
-        fail devuelve 1.
-
-        La distinción es fina y vale la pena. Desde C++11, una extracción que se intenta y
-        falla sí escribe cero en la variable. Pero aquí el flujo ya venía en estado de fallo
-        desde que no pudo abrir el archivo, así que el operador se sale de inmediato sin
-        intentar nada, y la variable se queda con lo que tenía.
-
-        El resultado práctico es el peor de los dos: el programa sigue trabajando con un
-        valor viejo que parece legítimo.
 
   - trace:
       eyebrow: Respuesta

@@ -17,20 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 8 of 17]
-      notes: |
-        A double session. Unit 6 closes with repetition and the first partial block closes
-        with it. This is not a revision session: the new material is taught in full and the
-        logistics go at the end.
-
-        The partial is cumulative. It covers unit 1 through unit 6, which is everything seen
-        so far, and it is worth saying in those words. The grading table in the syllabus says
-        "cumulative" for all three partials, it does not list units per exam.
-
-        All the loop outputs were measured by building each fragment exactly as it appears,
-        on Visual Studio Community 2026. The do-while whose condition is false from the
-        start prints once, and that run is on the slide.
-
-        Reading: Malik, eighth edition, chapter 5.
 
   - agenda:
       eyebrow: Agenda
@@ -101,12 +87,6 @@ slides:
         }
       output: |
         w0w1w2
-      notes: |
-        Three things have to be present and in place: the variable initialised before the
-        loop, the condition in the header, and the step inside the body.
-
-        Leave out the third and the loop never ends. It is the most common mistake of the
-        session and it shows up as a program sitting silent with the cursor blinking.
 
   - code_output:
       eyebrow: do-while
@@ -124,14 +104,6 @@ slides:
         } while (j < 3);
       output: |
         d3
-      notes: |
-        The condition was false before entering and it still printed once. That is the only
-        real difference from while, and it is the reason the form exists.
-
-        It suits anything that has to happen at least once, such as showing a menu before
-        asking whether the user wants to quit. Outside that case, while reads better.
-
-        The semicolon after the closing parenthesis is required.
 
   - code_output:
       eyebrow: for
@@ -146,13 +118,6 @@ slides:
         }
       output: |
         f0f1f2
-      notes: |
-        Initialisation, condition and step on one line. It does nothing while cannot do, but
-        it puts the three pieces where they are seen together, which makes one of them
-        harder to forget.
-
-        The variable k is declared in the header and only exists inside the loop. It stops
-        existing on the way out, which is what you want almost every time.
 
   - table:
       eyebrow: Which to use
@@ -162,12 +127,6 @@ slides:
         - ["for", "The number of passes is known", "Zero times"]
         - ["while", "Not known, it depends", "Zero times"]
         - ["do-while", "It must happen at least once", "Once"]
-      notes: |
-        The right-hand column is what decides between the first two and the third. The top
-        two check before coming in, so they may never run at all.
-
-        Between for and while the choice is about readability, not capability. Either one
-        does the other's job.
 
   - divider:
       eyebrow: Block 02
@@ -191,13 +150,6 @@ slides:
         std::cout << total << "\n";
       output: |
         18
-      notes: |
-        The body runs six times, three by two. The products are 1, 2, 2, 4, 3 and 6, adding
-        up to 18. Measured on a real run.
-
-        The number that matters is not the 18, it is the six. At three by two nobody
-        notices; at a thousand by a thousand it is a million passes, and that is where a
-        program stops responding.
 
   - table:
       eyebrow: Fine control
@@ -206,13 +158,6 @@ slides:
       rows:
         - ["break", "Leaves the loop entirely", "Only the innermost one"]
         - ["continue", "Jumps to the next pass", "The step can be skipped"]
-      notes: |
-        The warning about continue is real and it produces infinite loops. In a while whose
-        step sits at the end of the body, a continue skips it and the condition never
-        changes.
-
-        In a for that cannot happen, because the step lives in the header and always runs.
-        One more reason to prefer for whenever there is a counter.
 
   - pitfalls:
       eyebrow: Diagnosis

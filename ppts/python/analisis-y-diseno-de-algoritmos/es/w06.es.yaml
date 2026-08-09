@@ -1,0 +1,321 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 6
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 06 · Tema 4.4 · Estructuras de selección
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Comparar, decidir y tomar caminos distintos. La estructura que convierte un cálculo en una regla de negocio.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 6 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Comparar
+          desc: Los seis operadores que producen verdadero o falso
+        - title: Decidir
+          desc: if, else y la sangría que dice qué pertenece a qué rama
+        - title: Varios caminos
+          desc: elif, y por qué el orden en que se escriben cambia el resultado
+        - title: Tu turno
+          desc: Una regla de negocio de tu área, escrita como código que corre
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Usar los seis operadores de comparación
+          sub: Igual, distinto, mayor, menor, y los dos que incluyen el límite
+        - head: Leer una expresión booleana
+          sub: Y saber que su resultado es siempre True o False, nada más
+        - head: Escribir una decisión simple y una doble
+          sub: if solo, e if con else, y qué cambia entre las dos
+        - head: Encadenar varios casos con elif
+          sub: Y explicar por qué solo se ejecuta la primera rama que se cumple
+        - head: Reconocer el error del límite
+          sub: La diferencia entre mayor que y mayor o igual que, en un caso real
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: now
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Comparar
+      lede: >-
+        Antes de decidir hay que preguntar. Una comparación siempre contesta lo mismo:
+        verdadero o falso.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Comparación
+      title: Los seis operadores de comparación, en orden
+      headers: [Operador, Pregunta, Ejemplo, Resultado]
+      rows:
+        - ["==", "¿Son iguales?", "conversion == 0.0342", "True"]
+        - ["!=", "¿Son distintos?", "canal != 'TikTok'", "True"]
+        - [">", "¿Es mayor?", "clics > 5000", "True"]
+        - ["<", "¿Es menor?", "clics < 5000", "False"]
+        - [">=", "¿Es mayor o igual?", "conversion >= 0.03", "True"]
+        - ["<=", "¿Es menor o igual?", "inversion <= 38500", "True"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una expresión booleana solo tiene dos respuestas
+      lead: >-
+        Compares lo que compares, el resultado es True o False. No hay «casi», no hay
+        «depende». Esa es toda la materia prima de una decisión, y por eso una condición
+        que parece complicada casi siempre se puede partir en dos comparaciones simples y
+        volver a juntarlas.
+      panel:
+        label: El error de los principiantes
+        title: Un igual guarda, dos iguales preguntan
+        note: >-
+          Escribir un solo igual dentro de un if es un error de sintaxis en Python, y ese
+          rigor te está protegiendo de un error mucho peor.
+      steps:
+        - text: A la izquierda, un valor
+        - text: En medio, el operador
+        - text: A la derecha, con qué se compara
+          loop: ↺ y el resultado alimenta la decisión
+
+  - code_output:
+      eyebrow: Bloque 01 · Comprobación
+      title: Una comparación devuelve un valor, como cualquier cálculo
+      filename: comparacion.py
+      source: |
+        conversion = 0.0342
+        meta = 0.03
+
+        print(conversion >= meta)
+        print(type(conversion >= meta))
+      output: |
+        True
+        <class 'bool'>
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Decidir
+      lede: La misma estructura que ya usas en una hoja de cálculo, escrita en dos renglones en lugar de en una fórmula larga.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · Traducción
+      title: La función SI, dicha en Python
+      before:
+        label: En la hoja
+        file: campanas.xlsx
+        lang: excel
+        code: |
+          =SI(D2>=0.03; "Aceptable"; "Revisar")
+      after:
+        label: En Python
+        file: clasificar.py
+        code: |
+          if conversion >= 0.03:
+              estado = "Aceptable"
+          else:
+              estado = "Revisar"
+      note: >-
+        La fórmula mete la pregunta y las dos respuestas en un renglón. Python las separa,
+        y por eso cada rama puede tener varias líneas en lugar de una sola.
+
+  - code:
+      eyebrow: Bloque 02 · Decisión doble
+      title: Clasificar una campaña
+      filename: clasificar.py
+      source: |
+        impresiones = 148230
+        clics = 5074
+
+        conversion = clics / impresiones
+
+        if conversion >= 0.03:
+            estado = "Aceptable"
+            print("La campaña se queda al aire.")
+        else:
+            estado = "Revisar"
+            print("Hay que revisar la segmentación.")
+
+        print(f"{conversion:.2%} · {estado}")
+      annotations:
+        - label: Los dos puntos
+          text: Cierran la condición. Sin ellos Python marca SyntaxError justo ahí.
+        - label: La sangría
+          text: Los cuatro espacios son los que dicen qué líneas pertenecen a cada rama. No son decoración.
+        - label: Una sola rama corre
+          text: O el bloque del if o el del else. Nunca los dos, y siempre uno de los dos.
+        - label: Después del if
+          text: La última línea está fuera de la sangría, así que se imprime pase lo que pase.
+
+  - code_output:
+      eyebrow: Bloque 02 · Resultado
+      title: Con 3.42 % entra por la primera rama
+      filename: clasificar.py
+      source: |
+        if conversion >= 0.03:
+            estado = "Aceptable"
+        else:
+            estado = "Revisar"
+      output: |
+        La campaña se queda al aire.
+        3.42% · Aceptable
+
+  - table:
+      eyebrow: Bloque 02 · Formas
+      title: Las tres formas de la selección
+      headers: [Forma, Cuándo se usa, Estructura]
+      rows:
+        - ["Simple", "Solo hay algo que hacer si se cumple", "if condición:"]
+        - ["Doble", "Hay dos caminos y siempre se toma uno", "if / else"]
+        - ["Múltiple", "Hay tres o más categorías excluyentes", "if / elif / else"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Varios caminos
+      lede: Tres categorías, y el orden en que las escribes decide cuál gana.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · elif
+      title: Tres categorías, evaluadas de arriba abajo
+      filename: categorias.py
+      source: |
+        conversion = 0.0342
+
+        if conversion >= 0.05:
+            estado = "Excelente"
+        elif conversion >= 0.03:
+            estado = "Aceptable"
+        else:
+            estado = "Revisar"
+
+        print(f"{conversion:.2%} · {estado}")
+      annotations:
+        - label: De arriba abajo
+          text: Se evalúa la primera condición. Si falla, la segunda. En cuanto una se cumple, las demás ni se leen.
+        - label: El orden
+          text: Va de lo más exigente a lo menos. Al revés, todo lo bueno caería en la categoría floja.
+        - label: else al final
+          text: Recoge lo que no entró en ninguna. Es opcional, y omitirlo deja casos sin clasificar.
+        - label: Riesgo
+          text: Si pones el 0.03 antes que el 0.05, una campaña excelente nunca llega a llamarse excelente.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 03 · Traza
+      title: Qué pasa con una conversión de 3.42 %
+      headers: [Paso, Condición, "¿Se cumple?", estado]
+      rows:
+        - ['1', "0.0342 >= 0.05", "No", '–']
+        - ['2', "0.0342 >= 0.03", "Sí", "Aceptable"]
+        - ['3', "else", "No se evalúa", "Aceptable"]
+      verdict: Con el orden invertido, el paso 1 sería 0.0342 >= 0.03 y también daría Aceptable. El problema aparece con una campaña del 6 %.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de la primera decisión
+      items:
+        - label: Error 01
+          title: Un igual en lugar de dos
+          desc: El de uno guarda, el de dos pregunta. Python lo marca como error de sintaxis, y eso te salva.
+        - label: Error 02
+          title: Olvidar los dos puntos
+          desc: Toda condición termina en dos puntos. Es el error de sintaxis más frecuente del semestre.
+        - label: Error 03
+          title: Equivocar el límite
+          desc: Mayor que deja fuera al que está justo en la meta. Mayor o igual lo incluye. Decide cuál quieres.
+        - label: Error 04
+          title: Escribir las condiciones al revés
+          desc: De lo más exigente a lo menos. Al revés, la primera rama se traga todos los casos.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Con una conversión de exactamente 0.03, ¿qué estado imprime?
+      filename: limite.py
+      source: |
+        conversion = 0.03
+
+        if conversion > 0.03:
+            estado = "Aceptable"
+        else:
+            estado = "Revisar"
+
+        print(estado)
+      options:
+        - "Aceptable, porque llegó a la meta"
+        - "Revisar, porque el operador pide estrictamente mayor"
+        - "Un error, porque no hay elif"
+        - "Los dos, porque cumple las dos condiciones"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una regla de negocio de tu área
+      brief: Escribe un programa que clasifique algo de tu carrera en al menos tres categorías, como un cliente por su antigüedad, un proveedor por su cumplimiento o un gasto por su monto. Que pida el dato por teclado.
+      blocks:
+        - label: Entrega
+          text: El archivo .py y las tres corridas que caen en cada categoría
+        - label: Restricción
+          text: Las categorías tienen que ser excluyentes. Ningún caso puede caer en dos.
+        - label: La prueba
+          text: Prueba con el valor exacto del límite. Ahí es donde se descubre si querías mayor o mayor o igual.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una comparación devuelve True o False
+          desc: Nunca «casi» ni «depende». Esa es toda la materia prima con la que se construye una decisión
+        - title: La sangría es la estructura
+          desc: Los cuatro espacios son lo único que dice qué líneas pertenecen a cada rama del if
+        - title: El orden del elif decide
+          desc: De lo más exigente a lo menos. Invertirlo hace que la primera rama se trague todos los casos
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía el clasificador del laboratorio a cinco categorías y agrega una validación que rechace un dato imposible, como un porcentaje negativo o mayor que cien.
+      meta:
+        - [Entrega, Antes de la semana 7]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Categorías", "40 %", "Las cinco son excluyentes y están en el orden correcto"]
+        - ["Validación", "40 %", "Un dato imposible se rechaza con un mensaje claro"]
+        - ["Límites", "20 %", "Se documenta qué pasa con el valor exacto de cada frontera"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, cómo combinar varias condiciones y qué pasa cuando una decisión vive dentro de otra.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

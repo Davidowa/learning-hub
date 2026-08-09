@@ -1,0 +1,306 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 11
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 11 · Tema 5 · Argumentos, funciones predefinidas y módulos
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Valores por omisión, argumentos por nombre, y las herramientas que ya vienen con Python sin instalar nada.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 11 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Argumentos
+          desc: Por posición, por nombre y con valor por omisión
+        - title: Ya viene incluido
+          desc: Las funciones que Python trae puestas y que ya usabas sin saberlo
+        - title: Módulos
+          desc: Traer herramientas de fuera con import, sin instalar nada
+        - title: Tu turno
+          desc: Una función flexible, con lo opcional realmente opcional
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Pasar argumentos por nombre
+          sub: Para que una llamada con cinco valores se lea sin contar posiciones
+        - head: Definir valores por omisión
+          sub: Y explicar por qué los parámetros opcionales van siempre al final
+        - head: Usar las funciones predefinidas
+          sub: len, sum, max, min, round y sorted, sin escribirlas a mano
+        - head: Importar un módulo
+          sub: Con las dos formas de import y la diferencia entre ellas
+        - head: Leer la documentación oficial
+          sub: Y encontrar ahí qué recibe y qué devuelve una función que no conoces
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Cómo se pasan los argumentos
+      lede: Tres formas, y la diferencia entre ellas se nota cuando la función tiene más de tres parámetros.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Formas
+      title: Las tres formas de pasar un argumento
+      headers: [Forma, Cómo se ve, Cuándo conviene]
+      rows:
+        - ["Por posición", "f(250000, 0.18, 36)", "Dos o tres valores obvios"]
+        - ["Por nombre", "f(capital=250000, meses=36)", "Cuando hay muchos o son ambiguos"]
+        - ["Por omisión", "def f(seguro=0.0)", "Lo que casi siempre vale lo mismo"]
+
+  - code:
+      eyebrow: Bloque 01 · En contexto
+      title: Un crédito con costos opcionales
+      filename: credito.py
+      source: |
+        def pago_mensual(capital, tasa_anual, meses,
+                         comision=0.0, seguro=0.0):
+            i = tasa_anual / 12
+            factor = (1 + i) ** meses
+            base = capital * (i * factor) / (factor - 1)
+
+            return base + capital * comision / meses + seguro
+
+
+        print(pago_mensual(250000, 0.18, 36))
+        print(pago_mensual(250000, 0.18, 36, seguro=350))
+      annotations:
+        - label: Los obligatorios
+          text: Los tres primeros no tienen valor por omisión, así que hay que darlos siempre.
+        - label: Los opcionales
+          text: comision y seguro valen cero si no los mencionas. La llamada corta sigue funcionando.
+        - label: Por nombre
+          text: La segunda llamada salta comision y nombra seguro. Sin nombrarlo tendría que pasar los dos.
+        - label: Riesgo
+          text: Un parámetro con valor por omisión antes de uno sin él es SyntaxError. Los opcionales van al final.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: La misma función, con y sin lo opcional
+      filename: credito.py
+      source: |
+        print(pago_mensual(250000, 0.18, 36))
+        print(pago_mensual(250000, 0.18, 36, seguro=350))
+      output: |
+        9038.098883979254
+        9388.098883979254
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Lo que Python ya trae puesto
+      lede: Media docena de funciones que ya usabas, y que ahora sabes que son funciones como las que escribes tú.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Predefinidas
+      title: Las seis que vas a usar a diario
+      headers: [Función, Qué devuelve, Ejemplo]
+      rows:
+        - ["len", "Cuántos elementos hay", "len(pagos)"]
+        - ["sum", "La suma de todos", "sum(pagos)"]
+        - ["max", "El mayor", "max(pagos)"]
+        - ["min", "El menor", "min(pagos)"]
+        - ["round", "El número redondeado", "round(promedio, 2)"]
+        - ["sorted", "Una copia ordenada", "sorted(pagos)"]
+
+  - code_output:
+      eyebrow: Bloque 02 · Sobre una lista
+      title: Cinco preguntas, cinco funciones
+      filename: predefinidas.py
+      source: |
+        pagos = [9038.10, 6344.53, 7220.66,
+                 4180.25, 11902.44]
+
+        print(len(pagos), round(sum(pagos), 2))
+        print(max(pagos), min(pagos))
+        print(sorted(pagos)[0])
+      output: |
+        5 38685.98
+        11902.44 4180.25
+        4180.25
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Módulos
+      lede: Herramientas que existen, no vienen cargadas, y se traen con una línea. Es la misma puerta por la que entra pandas.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un módulo es un archivo de funciones
+      lead: >-
+        Python trae cientos de funciones que no carga de entrada, porque cargarlas todas
+        haría lento cada programa. Están agrupadas por tema en módulos, y se traen con
+        import cuando hacen falta. La biblioteca estándar viene con la instalación, así que
+        importar de ahí no requiere descargar nada.
+      panel:
+        label: Lo que abre esto
+        title: pandas se importa exactamente igual
+        note: >-
+          La diferencia es que pandas no viene con Python y hay que instalarlo una vez. El
+          import, y la idea detrás, son idénticos.
+      steps:
+        - text: El módulo existe pero no está cargado
+        - text: import lo trae al programa
+        - text: Sus funciones quedan disponibles
+          loop: ↺ y el import va siempre hasta arriba del archivo
+
+  - table:
+      eyebrow: Bloque 03 · Los del curso
+      title: Los cinco módulos que vas a importar
+      headers: [Módulo, Para qué sirve, Cuándo llega]
+      rows:
+        - ["statistics", "Promedio, mediana, moda", "Hoy"]
+        - ["math", "Raíz, potencias, redondeos", "Hoy"]
+        - ["datetime", "Fechas y diferencias entre ellas", "Semana 14"]
+        - ["csv", "Leer y escribir archivos de datos", "Semana 14"]
+        - ["pandas", "Tablas completas, y no viene incluido", "Semana 15"]
+
+  - compare:
+      eyebrow: Bloque 03 · Las dos formas
+      title: Traer el módulo, o traer la función
+      before:
+        label: El módulo entero
+        file: modulo.py
+        code: |
+          import statistics
+
+          promedio = statistics.mean(pagos)
+          medio = statistics.median(pagos)
+      after:
+        label: Solo lo que usas
+        file: funcion.py
+        code: |
+          from statistics import mean, median
+
+          promedio = mean(pagos)
+          medio = median(pagos)
+      note: >-
+        La izquierda deja claro de dónde salió cada función, y por eso es la que se prefiere
+        cuando importas de varios módulos. La derecha se escribe menos.
+
+  - code_output:
+      eyebrow: Bloque 03 · En contexto
+      title: Promedio y mediana no dicen lo mismo
+      filename: resumen.py
+      source: |
+        from statistics import mean, median
+
+        print(round(mean(pagos), 2))
+        print(median(pagos))
+      output: |
+        7737.2
+        7220.66
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de argumentos y módulos
+      items:
+        - label: Error 01
+          title: Poner lo opcional antes de lo obligatorio
+          desc: Python lo rechaza con SyntaxError al leer el archivo. Los parámetros con valor por omisión van al final.
+        - label: Error 02
+          title: Saltarse un parámetro sin nombrarlo
+          desc: Si omites uno de en medio, el siguiente valor cae en el lugar equivocado y nadie te avisa.
+        - label: Error 03
+          title: Importar dentro de una función
+          desc: Funciona, y esconde la dependencia. El import va hasta arriba, donde quien lea el archivo lo encuentre.
+        - label: Error 04
+          title: Nombrar tu archivo como un módulo
+          desc: Un archivo llamado math.py hace que import math traiga el tuyo, y el error resultante no tiene sentido.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime la segunda llamada?
+      filename: omision.py
+      source: |
+        def total(base, iva=0.16, envio=0):
+            return base * (1 + iva) + envio
+
+
+        print(total(1000))
+        print(total(1000, 50))
+      options:
+        - "1160.0 y 1210.0"
+        - "1160.0 y 51000"
+        - "1160.0 y un error, faltan argumentos"
+        - "1160.0 y 1050.0"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una función con lo opcional opcional
+      brief: Toma la función que escribiste la semana pasada y agrégale dos parámetros con valor por omisión, de forma que la llamada corta siga funcionando igual que antes. Úsala tres veces, cada una con distinta combinación.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con la función y las tres llamadas comentadas
+        - label: Restricción
+          text: La tercera llamada tiene que pasar un argumento por nombre saltándose otro
+        - label: La prueba
+          text: La llamada sin argumentos opcionales tiene que dar exactamente el mismo número que la semana pasada
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Lo opcional va al final
+          desc: Un parámetro con valor por omisión antes de uno sin él es un error de sintaxis, no una decisión de estilo
+        - title: Nombrar el argumento se lee mejor
+          desc: En cuanto la función pasa de tres parámetros, contar posiciones deja de ser viable
+        - title: import es la puerta a todo
+          desc: Lo que hoy trae statistics es exactamente lo que en la semana 15 va a traer pandas
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Busca en docs.python.org una función del módulo statistics que no vimos en clase, explica en tres renglones qué recibe y qué devuelve, y úsala sobre los cinco pagos de la sesión.
+      meta:
+        - [Entrega, Antes de la semana 12]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Fuente", "40 %", "La explicación sale de la documentación oficial y se cita la página"]
+        - ["Uso", "40 %", "La función corre sobre los datos y su resultado tiene sentido"]
+        - ["Interpretación", "20 %", "Dices qué te dice ese número que los otros no decían"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, listas y tuplas, que son la columna de tu hoja de cálculo.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

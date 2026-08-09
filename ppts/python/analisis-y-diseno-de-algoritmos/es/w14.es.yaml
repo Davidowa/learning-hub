@@ -1,0 +1,304 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 14
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 14 · Tema 7 · Archivos de texto y CSV
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Aquí dejan de escribirse los datos a mano. Abrir un archivo, leerlo por columna, convertirlo y volver a guardarlo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 14 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Abrir y cerrar
+          desc: El bloque with, y por qué cerrar el archivo no debería ser tu problema
+        - title: Leer un CSV
+          desc: Por posición o por nombre de columna, y cuál sobrevive a un archivo editado
+        - title: Convertir
+          desc: Un archivo guarda texto. Los tipos los pones tú, siempre
+        - title: Tu turno
+          desc: Tu propio archivo, cargado, limpiado y resumido
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Abrir un archivo con with
+          sub: Y explicar por qué esa forma cierra el archivo aunque el programa falle
+        - head: Reconocer los cuatro modos
+          sub: Leer, escribir, agregar y crear, y cuál de ellos borra lo que había
+        - head: Leer un CSV por nombre de columna
+          sub: Con DictReader, en lugar de contar posiciones que cambian
+        - head: Convertir lo que llega del archivo
+          sub: Porque un CSV guarda texto y no sabe qué era un número
+        - head: Escribir un archivo de salida
+          sub: Para que el resultado del análisis se pueda abrir en otro programa
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Abrir un archivo
+      lede: Un archivo abierto es un recurso prestado. Hay que devolverlo, y hay una forma de que eso pase solo.
+      block: 1
+
+  - figure:
+      eyebrow: Bloque 01 · El ciclo
+      title: Abrir, usar, cerrar
+      image: img/es/file-lifecycle.png
+      caption: Tres pasos, y el tercero es el que se olvida. El bloque with lo hace por ti aunque el programa reviente a la mitad.
+      alt: El ciclo de vida de un archivo dibujado a mano, de abrir a cerrar
+
+  - code:
+      eyebrow: Bloque 01 · with
+      title: Leer un archivo de texto completo
+      filename: leer.py
+      source: |
+        from pathlib import Path
+
+        DATOS = Path(__file__).resolve().parent / "data"
+
+        with (DATOS / "ventas.csv").open(encoding="utf-8") as f:
+            primera = f.readline()
+
+        print(primera)
+      annotations:
+        - label: La ruta
+          text: Se arma desde la ubicación del archivo, no desde donde abriste la terminal. Así corre en cualquier máquina.
+        - label: with
+          text: Al salir del bloque el archivo se cierra solo, aunque una línea de adentro lance un error.
+        - label: encoding
+          text: utf-8 explícito. Sin él, un archivo con acentos se lee distinto en Windows y en Mac.
+        - label: Riesgo
+          text: Fuera del with el archivo ya está cerrado. Leerlo ahí lanza ValueError sobre un archivo cerrado.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · Modos
+      title: Los cuatro modos de apertura
+      headers: [Modo, Qué hace, Si el archivo existe]
+      rows:
+        - ["r", "Leer, y es el modo por omisión", "Lo abre"]
+        - ["w", "Escribir desde cero", "Borra todo su contenido"]
+        - ["a", "Agregar al final", "Conserva lo que había"]
+        - ["x", "Crear uno nuevo", "Falla con FileExistsError"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Leer un CSV
+      lede: El formato que exporta cualquier hoja de cálculo y lee cualquier herramienta. Texto plano, separado por comas.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · Dos formas
+      title: Por posición, o por nombre de columna
+      before:
+        label: Por posición
+        file: posicion.py
+        code: |
+          import csv
+
+          lector = csv.reader(f)
+          encabezado = next(lector)
+
+          for fila in lector:
+              region = fila[1]
+      after:
+        label: Por nombre
+        file: nombre.py
+        code: |
+          import csv
+
+          lector = csv.DictReader(f)
+
+          for fila in lector:
+              region = fila["region"]
+      note: >-
+        La de la izquierda se rompe en cuanto alguien inserta una columna. La de la derecha
+        usa el encabezado, y sobrevive a un archivo reordenado.
+
+  - code:
+      eyebrow: Bloque 02 · DictReader
+      title: Leer el archivo de ventas por nombre
+      filename: leer_csv.py
+      source: |
+        import csv
+        from pathlib import Path
+
+        DATOS = Path(__file__).resolve().parent / "data"
+
+        with (DATOS / "sales.csv").open(encoding="utf-8") as f:
+            filas = list(csv.DictReader(f))
+
+        print(len(filas))
+        print(filas[0]["region"], filas[0]["units"])
+      annotations:
+        - label: DictReader
+          text: Convierte cada renglón en un diccionario, con las llaves del encabezado. Es la semana 13 aplicada.
+        - label: list
+          text: Sin él solo puedes recorrer una vez. Con él quedan en memoria y se pueden revisar.
+        - label: El archivo real
+          text: sales.csv está en el repositorio, en 06 - Advanced/data, y trae 324 renglones.
+        - label: Riesgo
+          text: Los 324 renglones incluyen siete duplicados y once celdas vacías. El archivo real siempre viene sucio.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Resultado
+      title: Lo que devuelve, y de qué tipo
+      filename: leer_csv.py
+      source: |
+        print(len(filas))
+        print(filas[0]["region"], filas[0]["units"])
+        print(type(filas[0]["units"]))
+      output: |
+        324
+        South 15
+        <class 'str'>
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Convertir y guardar
+      lede: El archivo entrega texto. Decidir qué era cada cosa, y qué hacer con lo que falta, es trabajo tuyo.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Conversión
+      title: De texto a número, con las celdas vacías incluidas
+      filename: convertir.py
+      source: |
+        def a_entero(texto):
+            texto = texto.strip()
+            return int(texto) if texto else 0
+
+
+        def a_decimal(texto):
+            limpio = texto.replace("$", "").replace(",", "")
+            return float(limpio.strip())
+      annotations:
+        - label: La celda vacía
+          text: int de una cadena vacía lanza ValueError. Aquí se decide que vacío vale cero, y se deja escrito.
+        - label: El símbolo
+          text: 2,082.50 con signo de pesos no es un número. La coma de miles y el símbolo son formato, no valor.
+        - label: Una función
+          text: Cada regla de limpieza en su propia función. Así se prueba sola y se reusa en todo el archivo.
+        - label: La decisión
+          text: Que vacío valga cero es una decisión de negocio. Podría ser descartar el renglón, y se justifica.
+
+  - code_output:
+      eyebrow: Bloque 03 · El resumen
+      title: Lo mismo que hace una tabla dinámica, a mano
+      filename: resumir.py
+      source: |
+        for region, monto in sorted(por_region.items()):
+            print(f"{region:<10}{monto:>16,.2f}")
+      output: |
+        Centre      3,918,978.30
+        North       4,351,976.40
+        South       1,553,002.85
+        West        3,030,019.45
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores con archivos
+      items:
+        - label: Error 01
+          title: Abrir en modo w para leer
+          desc: El modo w borra el contenido en el instante en que abre. El archivo original se pierde sin preguntar.
+        - label: Error 02
+          title: Rutas escritas a mano
+          desc: C:\\Users\\tu_nombre\\datos.csv no corre en ninguna otra máquina. Usa pathlib y rutas relativas.
+        - label: Error 03
+          title: Sumar sin convertir
+          desc: Los valores llegan como texto. Sumarlos concatena y el total sale absurdo sin lanzar error.
+        - label: Error 04
+          title: Olvidar newline al escribir
+          desc: Al escribir un CSV en Windows sin newline vacío, el archivo sale con un renglón en blanco entre cada dato.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué pasa con el archivo al correr esta línea?
+      filename: modos.py
+      source: |
+        with open("ventas.csv", "w") as f:
+            contenido = f.read()
+      options:
+        - "Lee el contenido y lo guarda en la variable"
+        - "Borra el archivo al abrirlo y luego falla al leer"
+        - "Falla porque el archivo ya existe"
+        - "Agrega una línea vacía al final"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tu propio archivo, de principio a fin
+      brief: Toma el CSV que trajiste en la semana 1, léelo con DictReader, convierte al menos dos columnas al tipo correcto, y produce un resumen por categoría escrito en un archivo nuevo.
+      blocks:
+        - label: Entrega
+          text: El .py, el CSV de entrada y el archivo de salida que produce
+        - label: Restricción
+          text: Ninguna ruta absoluta. El programa tiene que correr en la máquina del salón
+        - label: La prueba
+          text: Bórrale un valor a una celda del archivo. Tu programa tiene que seguir corriendo y decir qué hizo con ella
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un archivo guarda texto
+          desc: Los tipos los pones tú. Es la misma lección de la semana 4, ahora con un archivo de 324 renglones
+        - title: Lee por nombre de columna
+          desc: Contar posiciones se rompe en cuanto alguien inserta una columna, y nadie te va a avisar
+        - title: Qué hacer con lo que falta es tu decisión
+          desc: Descartar, rellenar o ignorar dan tres respuestas distintas, y las tres se tienen que poder defender
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Clona el módulo A04 del repositorio, corre los dos scripts sobre sales.csv, y escribe media cuartilla explicando por qué el total cambia si no quitas los siete renglones duplicados.
+      meta:
+        - [Entrega, Antes de la semana 15]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Ejecución", "40 %", "Los dos scripts corren y se muestra su salida"]
+        - ["Diferencia", "40 %", "Se reporta el total con y sin duplicados, y la diferencia exacta"]
+        - ["Argumento", "20 %", "Se explica por qué un duplicado infla el total y no el promedio por igual"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, pandas. Todo lo que hicimos hoy a mano, en ocho líneas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

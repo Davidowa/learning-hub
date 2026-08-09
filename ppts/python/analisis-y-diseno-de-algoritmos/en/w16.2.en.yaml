@@ -1,0 +1,318 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 16.2
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 16 · 2 of 2 · Unit 8.2.3 · seaborn and the project close
+      title: Analysis and Design of Algorithms
+      subtitle: Statistical charts in one line, what an average hides, and the delivery of the integrative project.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 16 · 2 of 2]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: seaborn
+          desc: You hand it the DataFrame and the names, and it groups on its own
+        - title: What an average hides
+          desc: Box plots, and why two areas with the same average differ
+        - title: The project
+          desc: What is handed in, how it is graded, what gets asked at the presentation
+        - title: Your turn
+          desc: The presentation, today
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Chart straight from a DataFrame
+          sub: By passing column names, with no data preparation first
+        - head: Choose the right estimator
+          sub: Because seaborn averages by default and you nearly always want the total
+        - head: Bring in a third variable
+          sub: With hue, which splits by colour and builds the legend itself
+        - head: Read a box plot
+          sub: Median, middle half, range and the outliers
+        - head: Present a finding
+          sub: With the conclusion first and the evidence behind it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: seaborn
+      lede: It sits on top of matplotlib and takes the DataFrame directly. You say which columns to use and it works out the rest.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · The difference
+      title: Preparing the data, or naming the columns
+      before:
+        label: matplotlib
+        file: mpl.py
+        code: |
+          by_region = (sales
+                       .groupby("region")["amount"]
+                       .sum())
+
+          ax.bar(by_region.index,
+                 by_region.values)
+      after:
+        label: seaborn
+        file: sns.py
+        code: |
+          sns.barplot(data=sales, x="region",
+                      y="amount", estimator="sum",
+                      errorbar=None, ax=ax)
+      note: >-
+        matplotlib asks for x values and y values. seaborn asks which columns to use and
+        does the grouping itself. The price is that you have to know what it is grouping.
+
+  - code:
+      eyebrow: Block 01 · The theme
+      title: Set once, and it applies to everything
+      filename: theme.py
+      source: |
+        import seaborn as sns
+
+        sns.set_theme(style="whitegrid", palette="deep")
+
+        sns.barplot(data=sales, x="region", y="amount",
+                    estimator="sum", errorbar=None,
+                    hue="region", legend=False, ax=ax)
+      annotations:
+        - label: set_theme
+          text: It fixes grid, type and palette for every chart that follows. That is why they look consistent.
+        - label: estimator
+          text: It averages by default. If you wanted the total you have to say so, and it is mistake number one.
+        - label: errorbar
+          text: Without this it draws a confidence interval on every bar, which is almost never what you wanted.
+        - label: Risk
+          text: A bar showing an average when the reader expected a total is a correct number that misleads.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · The finding
+      title: The same data, two different rankings
+      filename: sum_mean.py
+      source: |
+        print((sales.groupby("region")["amount"]
+               .agg(["sum", "mean"]) / 1000).round(0))
+      output: |
+        region     sum    mean
+        Centre  3919.0    56.0
+        North   4352.0    47.0
+        South   1553.0    23.0
+        West    3030.0    40.0
+
+  - concept:
+      eyebrow: Key concept
+      title: Total and average answer different questions
+      lead: >-
+        North sells more than Centre over the year. Centre sells bigger on every deal. Both
+        statements are true and both come from the same table, and the chart you pick
+        decides which one your reader sees. Picking without noticing is how an honest
+        report ends up saying something you did not mean.
+      panel:
+        label: The practical consequence
+        title: North sells often, Centre sells large
+        note: >-
+          That sentence is the finding, and it appears in neither chart on its own. It
+          comes from putting the two side by side.
+      steps:
+        - text: The total answers how much came in
+        - text: The average answers how large
+        - text: The count answers how often
+          loop: ↺ and the three together tell the story
+
+  - divider:
+      eyebrow: Block 02
+      title: What an average hides
+      lede: Two areas with the same average salary can look nothing alike. A box plot shows it at a glance.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Box plots
+      title: The whole shape, not just the centre
+      filename: box.py
+      source: |
+        order = (employees.groupby("area")["monthly_salary"]
+                 .median()
+                 .sort_values(ascending=False).index)
+
+        sns.boxplot(data=employees, x="area",
+                    y="monthly_salary", order=order,
+                    hue="area", legend=False, ax=ax)
+      annotations:
+        - label: The box
+          text: It holds the middle half of the values. The line inside is the median, not the average.
+        - label: The whiskers
+          text: They reach the typical range. The loose points beyond them are the outliers.
+        - label: order
+          text: Sorting by median makes the ranking read itself, exactly like sorting the bars.
+        - label: Why the median
+          text: One very high salary drags the average and leaves the median alone. That is why the box is more honest.
+
+  - table:
+      eyebrow: Block 02 · The five of seaborn
+      title: The charts that cost one line
+      headers: [Function, What it is for, Note]
+      rows:
+        - ["barplot", "Comparing categories", "Averages unless you say estimator"]
+        - ["lineplot", "Change over time", "hue splits several series"]
+        - ["boxplot", "The whole spread", "Shows what the average hides"]
+        - ["heatmap", "A grid, shaded", "It is the PivotTable in colour"]
+        - ["pairplot", "Everything against everything", "For exploring, not for the report"]
+
+  - code:
+      eyebrow: Block 02 · heatmap
+      title: The PivotTable, shaded
+      filename: heat.py
+      source: |
+        grid = sales.pivot_table(
+            index="region", columns="channel",
+            values="amount", aggfunc="sum") / 1000
+
+        sns.heatmap(grid, annot=True, fmt=".0f",
+                    cmap="Blues", ax=ax)
+      annotations:
+        - label: The input
+          text: It takes the grid pivot_table produced last session. No extra preparation at all.
+        - label: annot
+          text: It writes the value inside each cell. Without it the colour forces an estimate off the side bar.
+        - label: The colour
+          text: It does the ranking for you. You see where the high values are without comparing figures one by one.
+        - label: fmt
+          text: It controls how the written value is rounded. In thousands with no decimals it fits comfortably.
+
+  - divider:
+      eyebrow: Block 03
+      title: The integrative project
+      lede: It is handed in and presented today. It is worth twenty per cent, and grading is individual.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Delivery
+      title: What is handed in and how it is graded
+      headers: [Aspect, Detail]
+      rows:
+        - ["What", "Notebook or code, the data set used, and a PDF report"]
+        - ["Where", "Blackboard. Email submissions are not graded"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Code and analysis", "70 %: it runs and answers, cleaning is right, charts are honest"]
+        - ["Report", "30 %: narrative, justified decisions and integrated evidence"]
+
+  - method:
+      eyebrow: Block 03 · The presentation
+      title: The conclusion first, the evidence behind it
+      statement: Start by saying what you found. Then show how you got it, and end with what you would do about it.
+      points:
+        - label: The three minutes
+          text: One for the question and the finding, one for the method, one for the recommendation
+        - label: What gets asked
+          text: What you decided about the missing data, and why that chart and not another
+        - label: What does not count
+          text: Reading the code out loud. If you cannot explain a line, that line is not yours
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to lose points on delivery
+      items:
+        - label: Error 01
+          title: The notebook does not run from scratch
+          desc: Restart it and run it end to end before handing in. If it breaks, the maximum grade is 30 %.
+        - label: Error 02
+          title: Absolute paths to the file
+          desc: It works on your machine and on no other. Hand in the data next to the code and use a relative path.
+        - label: Error 03
+          title: Charts with no title and no source
+          desc: It is the first thing checked, and the cheapest thing in the whole project to fix.
+        - label: Error 04
+          title: Cleaning without leaving a record
+          desc: If the report does not say what you did with the holes and duplicates, the analysis cannot be defended.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this line draw if you do not pass estimator?
+      filename: estimator.py
+      source: |
+        sns.barplot(data=sales, x="region",
+                    y="amount", ax=ax)
+      options:
+        - "The total by region"
+        - "The average by region, which is the default"
+        - "The count of rows by region"
+        - "An error, because the estimator is missing"
+
+  - lab:
+      eyebrow: Lab
+      title: Present your project
+      brief: Three minutes per team. The question, the finding, how you got there, and what you would recommend. Two charts on screen at most, and both with their full title.
+      blocks:
+        - label: Deliverable
+          text: Everything uploaded to Blackboard before the presentations start
+        - label: Constraint
+          text: At most two charts. If you need five, you do not yet know what the finding is.
+        - label: What is graded
+          text: That every member can explain any part, not only the one they wrote
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: seaborn averages by default
+          desc: If you wanted the total and did not say estimator, the bar shows a correct number that misleads
+        - title: An average hides the shape
+          desc: Two areas with the same average salary can be spread in ways that look nothing alike
+        - title: The conclusion comes first
+          desc: Whoever is listening decides in the first thirty seconds whether to attend to the rest
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Hand in the complete integrative project before presenting, and prepare the review session by bringing, in writing, the three questions you want resolved before the final exam.
+      meta:
+        - [Due, "Today, before presenting"]
+        - [Format, "Blackboard · notebook, data and .pdf"]
+        - [Weight, 20 % of the course]
+      rubric:
+        - ["Code and analysis", "70 %", "It runs from scratch, the cleaning is right and the charts are honest"]
+        - ["Report", "30 %", "Clear narrative, justified decisions and integrated evidence"]
+        - ["Questions", "Required", "The three questions arrive in writing before week 17"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, review and the final exam.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

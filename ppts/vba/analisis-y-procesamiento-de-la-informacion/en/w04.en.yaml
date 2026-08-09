@@ -17,27 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, TIA503 · Empresariales]
         - [Session, 4 of 17]
-      notes: |
-        Ninety minutes. Twenty on operators, twenty-five on the differences with the
-        sheet, the rest naming the ranges of the amortization table.
-
-        This session has one finding worth not giving away early. The same expression
-        written in a cell and written in VBA returns different results, and not in some
-        edge case: it happens with a negative raised to a power, with the remainder of a
-        negative, and with the sum of two strings. All three are verified in Excel 16.0,
-        both ways, and they carry the table in block 2. Let the room bet first.
-
-        The other hit is the monthly rate. Everyone expects 0.0094 and VBA prints
-        9.48879293458305E-03. It is not an error, it is scientific notation, and Format
-        fixes it.
-
-        The code comes from
-        docs/en/courses/vba-course/03 - Arithmetic Operators/ (both modules) and
-        04 - Name Cells/DefineNameCells.bas.
-
-        Careful with that last file: it declares Sub DefineNameCells twice in the same
-        module, so it does not compile as it stands. The slides quote the second version,
-        which is the one carrying the code.
 
   - agenda:
       eyebrow: Agenda
@@ -183,9 +162,6 @@ slides:
         monthlyRate = ((1 + annualRate) ^ (1 / 12)) - 1
       output: |
         9.48879293458305E-03
-      notes: |
-        Verified. The same sum in a cell shows 0.009489, because the cell carries a
-        format. In VBA the number is identical; what changes is how it is written out.
 
   - code:
       eyebrow: Block 02 · The fix

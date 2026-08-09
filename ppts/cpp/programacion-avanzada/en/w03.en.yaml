@@ -17,19 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 3 of 17]
-      notes: |
-        This closes the foundations block. From next session onwards there are functions, so
-        this is the last time everything fits inside main without feeling strange.
-
-        The sizes in the table were measured with sizeof on Visual Studio Community 2026,
-        building for x64. They are not the standard's numbers, they are this platform's, and
-        that difference is the subject of one of the slides.
-
-        There is still no if and there are no loops. Today's string operations were chosen
-        precisely because none of them needs one.
-
-        Reading: Malik, eighth edition, chapters 2 and 7. The course documents cite chapter
-        8, which is the right number in the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -96,13 +83,6 @@ slides:
         - ["long long", "Integers too big for int", "8"]
         - ["float", "Single precision real", "4"]
         - ["double", "The everyday real", "8"]
-      notes: |
-        Measured with sizeof on this platform, x64 with MSVC. The practical advice is to use
-        int and double unless there is a concrete reason for something else, because those
-        are the ones the processor handles most comfortably.
-
-        float exists and is rarely worth it. It carries seven significant digits against
-        double's fifteen, and saving four bytes seldom pays for that.
 
   - code_output:
       eyebrow: Verification
@@ -124,14 +104,6 @@ slides:
         4
         4
         8
-      notes: |
-        The middle row is the interesting one. long is 4 bytes here and 8 on Linux with gcc,
-        from the same code under the same standard. The standard only requires long to hold
-        at least 32 bits and to be no smaller than int, and Windows stayed at the minimum.
-
-        The practical consequence: a program that stores a large value in a long works on
-        one machine and overflows on the other. When the size genuinely matters, int32_t and
-        int64_t live in cstdint and say their size in the name.
 
   - concept:
       eyebrow: Key concept
@@ -164,14 +136,6 @@ slides:
         std::cout << u - 1 << "\n";
       output: |
         4294967295
-      notes: |
-        unsigned holds only non-negative values, so subtracting one from zero wraps the
-        result round to the type's maximum. This is not a compiler bug, it is defined that
-        way in the standard and it is what has to happen.
-
-        Which is why unsigned is a poor fit for quantities that get subtracted, even ones
-        that should never go negative. The day a subtraction crosses zero, the program does
-        not fail, it hands back four billion and keeps working with that number.
 
   - divider:
       eyebrow: Block 02
@@ -320,14 +284,6 @@ slides:
         - ["a.find(\"gram\")", "Where the searched text starts", "3"]
         - ["a.empty()", "Whether it has no characters", "true or false"]
         - ["a == b", "Compares the contents", "true or false"]
-      notes: |
-        Every value in the right-hand column comes from applying the operation to the string
-        "Programacion", measured on a real run.
-
-        find returns std::string::npos when it finds nothing, which is the largest value the
-        type can hold rather than minus one. Comparing against npos is the correct way to
-        ask whether there was a result, and from week 7 that comparison can sit inside an
-        if.
 
   - quiz:
       eyebrow: Quick question

@@ -17,24 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 9 of 17]
-      notes: |
-        First session after the partial. Worth opening with the most frequent mistakes from
-        the exam before starting the new topic, because everything that went wrong there
-        comes back in the second partial.
-
-        This session has a design decision at its centre, not a piece of syntax. Inheritance
-        is taught in full and then the argument is made for why composition usually wins.
-        Students arriving from other courses tend to believe the opposite.
-
-        All outputs were measured by building the slide programs on Visual Studio Community
-        2026.
-
-        The protected access slide is the one that justifies that level existing. Without
-        inheritance, protected and private look identical from outside, and that was the
-        right-hand column of the week 6 figure.
-
-        Reading: Malik, eighth edition, chapter 11. The course documents cite 13, right for
-        the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -139,12 +121,6 @@ slides:
         std::cout << a.getName() << "\n";
       output: |
         Luis
-      notes: |
-        getName appears nowhere inside Student and can still be called on a Student object.
-        That is exactly what the inheritance line bought.
-
-        Worth pointing out that there is only one object. There is no Person sitting inside
-        a Student as though they were two objects; there is one object carrying both parts.
 
   - figure:
       eyebrow: Access
@@ -179,15 +155,6 @@ slides:
         };
       output: |
         engine running
-      notes: |
-        Car does not descend from Engine, it has one. The difference reads on the private
-        member line, and it changes everything else.
-
-        Changing the engine means replacing that member. No other class notices, because the
-        engine is not part of what Car promises to the outside.
-
-        A car has an engine. A car is not an engine. That sentence is the whole decision rule
-        of this session.
 
   - table:
       eyebrow: The decision
@@ -199,13 +166,6 @@ slides:
         - ["Changing the part", "Touches the whole branch", "One line"]
         - ["Coupling", "High and permanent", "Low"]
         - ["When it suits", "A real, stable relationship", "Almost always"]
-      notes: |
-        The last row is a defensible opinion rather than a dogma, and it is worth presenting
-        that way. Inheritance earns its place when there is a genuine "is a" relationship and
-        when polymorphism will be used, which is the week 12 topic.
-
-        Outside that case, inheriting just to reuse three functions ties two classes together
-        forever in exchange for saving a few lines.
 
   - divider:
       eyebrow: Block 03

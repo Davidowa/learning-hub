@@ -17,19 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 3 de 17]
-      notes: |
-        Cierra el bloque de fundamentos. A partir de la próxima sesión se escriben funciones,
-        así que esta es la última vez que todo cabe dentro de main sin que se sienta raro.
-
-        Los tamaños de la tabla se midieron con sizeof en Visual Studio Community 2026,
-        compilando para x64. No son los del estándar, son los de esta plataforma, y la
-        diferencia es el tema de una de las diapositivas.
-
-        Siguen sin existir if ni ciclos. Las operaciones de string de hoy se eligieron
-        justamente porque ninguna los necesita.
-
-        Lectura: Malik, octava edición, capítulos 2 y 7. Los documentos del curso citan el
-        capítulo 8, que es el número correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -96,13 +83,6 @@ slides:
         - ["long long", "Enteros que no caben en int", "8"]
         - ["float", "Real de precisión sencilla", "4"]
         - ["double", "El real de uso diario", "8"]
-      notes: |
-        Medidos con sizeof en esta plataforma, x64 con MSVC. La recomendación práctica es
-        usar int y double salvo que haya una razón concreta para otra cosa, porque son los
-        que el procesador maneja más cómodo.
-
-        float existe y casi nunca conviene. Tiene siete cifras significativas contra las
-        quince de double, y el ahorro de cuatro bytes rara vez compensa.
 
   - code_output:
       eyebrow: Comprobación
@@ -124,14 +104,6 @@ slides:
         4
         4
         8
-      notes: |
-        El renglón de en medio es el interesante. long mide 4 bytes aquí y 8 en Linux con
-        gcc, con el mismo código y el mismo estándar. El estándar solo exige que long tenga
-        al menos 32 bits y que no sea menor que int, y Windows se quedó en el mínimo.
-
-        La consecuencia práctica: un programa que guarda un valor grande en un long funciona
-        en una máquina y se desborda en la otra. Cuando el tamaño importe de verdad, están
-        int32_t e int64_t en cstdint, que sí dicen su tamaño en el nombre.
 
   - concept:
       eyebrow: Concepto clave
@@ -164,14 +136,6 @@ slides:
         std::cout << u - 1 << "\n";
       output: |
         4294967295
-      notes: |
-        unsigned guarda solo valores no negativos, así que al restarle uno a cero el
-        resultado da la vuelta hasta el máximo del tipo. No es un error del compilador, está
-        definido así en el estándar y es lo que tiene que pasar.
-
-        Por eso conviene no usar unsigned para cantidades que se restan, aunque nunca vayan
-        a ser negativas. El día que una resta se pase de cero, el programa no falla, entrega
-        cuatro mil millones y sigue trabajando con ese número.
 
   - divider:
       eyebrow: Bloque 02
@@ -253,10 +217,6 @@ slides:
         - label: Riesgo
           text: enum sin class deja los nombres sueltos y se convierte a int solo.
           accent: true
-      notes: |
-        Usen siempre enum class. La forma sin class es la que traía C, deja los nombres de
-        los valores sueltos en el espacio que la rodea, y los convierte a entero sin que
-        nadie lo pida, que es justo lo que causa los choques que el enum venía a evitar.
 
   - pitfalls:
       eyebrow: Diagnóstico
@@ -324,14 +284,6 @@ slides:
         - ["a.find(\"gram\")", "Dónde empieza el texto buscado", "3"]
         - ["a.empty()", "Si no tiene caracteres", "true o false"]
         - ["a == b", "Compara el contenido", "true o false"]
-      notes: |
-        Todos los valores de la columna derecha salen de aplicar la operación sobre la
-        cadena "Programacion", medidos en una corrida real.
-
-        find devuelve std::string::npos cuando no encuentra nada, que es el valor más grande
-        que cabe en el tipo, no menos uno. Compararlo contra npos es la forma correcta de
-        preguntar si hubo resultado, y en la semana 7 esa comparación ya podrá ir dentro de
-        un if.
 
   - quiz:
       eyebrow: Pregunta rápida

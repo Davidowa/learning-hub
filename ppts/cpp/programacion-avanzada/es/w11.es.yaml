@@ -17,20 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 11 de 17]
-      notes: |
-        La sesión es corta de sintaxis y larga de criterio. struct es casi idéntico a class y
-        la pregunta interesante es cuándo se usa cada uno.
-
-        En C++ la única diferencia técnica entre struct y class es el nivel de acceso por
-        omisión. Todo lo demás es convención, y conviene decirlo así en vez de inventar una
-        distinción que el lenguaje no hace.
-
-        Los tamaños y las salidas se midieron en Visual Studio Community 2026. El sizeof del
-        registro de dos doubles da 16, que es la suma de sus partes, y conviene advertir que
-        eso no siempre ocurre por el relleno de alineación.
-
-        Lectura: Malik, octava edición, capítulo 9. Los documentos del curso citan el 11, que
-        es correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -108,15 +94,6 @@ slides:
         }
       output: |
         3 4
-      notes: |
-        El punto entre el nombre del objeto y el del campo es el mismo operador que se usa
-        para llamar a una función miembro. No es casualidad: un struct es una clase.
-
-        El punto y coma después de la llave final es obligatorio, igual que en class, y es
-        el mismo olvido de la semana 6.
-
-        q se declaró sin inicializar sus campos. Hasta las dos asignaciones, x e y contienen
-        basura, exactamente como una variable suelta.
 
   - code_output:
       eyebrow: Copias
@@ -134,16 +111,6 @@ slides:
         std::cout << q.x << " " << r.x << "\n";
       output: |
         3 99
-      notes: |
-        La asignación copió el registro completo, campo por campo. Cambiar r no tocó a q,
-        que es lo que uno espera y no siempre es lo que ocurre en otros lenguajes.
-
-        Esto es la semántica de valor, la misma que tenían los parámetros de la semana 4.
-        Vale la pena decir que con registros grandes esa copia cuesta, y que por eso se
-        pasan como const referencia a las funciones.
-
-        Cuando el registro contenga un puntero, en la semana 12, esta copia va a dejar de
-        ser suficiente. Conviene anunciarlo hoy.
 
   - divider:
       eyebrow: Bloque 02
@@ -232,17 +199,6 @@ slides:
         std::cout << sizeof(Punto) << "\n";
       output: |
         16
-      notes: |
-        Dos doubles de ocho bytes dan dieciséis, así que aquí la cuenta cuadra. No siempre
-        cuadra.
-
-        El compilador puede insertar relleno entre los campos para que cada uno empiece en
-        una dirección alineada con su tamaño. Un struct con un char y un int suele ocupar
-        ocho bytes y no cinco.
-
-        La consecuencia práctica es que no se debe suponer el tamaño de un registro ni
-        escribirlo a un archivo binario dando por hecho su disposición. Eso importa en la
-        semana 13.
 
   - quiz:
       eyebrow: Pregunta rápida

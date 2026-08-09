@@ -1,0 +1,294 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 15.1
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 15 · 1 of 3 · Unit 8.1 · Series, DataFrame and loading
+      title: Analysis and Design of Algorithms
+      subtitle: The spreadsheet, inside Python. What a Series is, what a DataFrame is, and how a file gets looked at before it gets touched.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 15 · 1 of 3]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The two objects
+          desc: Series and DataFrame, and what each maps to in your sheet
+        - title: Loading
+          desc: read_csv does all of last week in a single line
+        - title: Look before touching
+          desc: The four commands that always get run, and in that order
+        - title: Your turn
+          desc: Your file, loaded and inspected, with its diagnosis written out
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what a Series is
+          sub: A column with an index on top, which is the list from week 12
+        - head: Build a DataFrame
+          sub: From a dictionary of columns, and from a file
+        - head: Load a CSV in one line
+          sub: With read_csv, and know what it did to each column
+        - head: Inspect before analysing
+          sub: head, info, shape and describe, always in that order
+        - head: Spot the dirt
+          sub: Missing values, duplicates and badly captured categories
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The two objects
+      lede: All of pandas is built on two things. One is the column, the other is the whole sheet.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Equivalences
+      title: The mapping is exact
+      headers: [In the sheet, In pandas, What you already knew]
+      rows:
+        - ["One column", "Series", "A list, with an index"]
+        - ["The whole sheet", "DataFrame", "Several paired lists"]
+        - ["The row number", "The index", "The position, starting at 0"]
+        - ["The header", "columns", "The keys of a dictionary"]
+
+  - code:
+      eyebrow: Block 01 · Series
+      title: A column with labels
+      filename: series.py
+      source: |
+        import pandas as pd
+
+        monthly = pd.Series(
+            [42000, 51500, 38900, 60100],
+            index=["jan", "feb", "mar", "apr"],
+        )
+
+        print(monthly["mar"])
+        print(monthly.sum(), monthly.idxmax())
+      annotations:
+        - label: pd
+          text: The alias of the entire community. All the documentation and every answer online uses it.
+        - label: The index
+          text: It need not be a counter. With labels, a Series behaves like a named range.
+        - label: The methods
+          text: sum, mean, max and idxmax. They are your sheet's summary functions, written as methods.
+        - label: No loop
+          text: monthly * 1.16 applies the tax to all four months at once. No for, and nothing to drag.
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: Label, total and best month
+      filename: series.py
+      source: |
+        print(monthly["mar"])
+        print(monthly.sum(), monthly.idxmax())
+      output: |
+        38900
+        192500 apr
+
+  - divider:
+      eyebrow: Block 02
+      title: Loading the file
+      lede: One line replaces the whole of last week. And it still does not guess what it cannot know.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · The reduction
+      title: The same thing, twice
+      before:
+        label: Week 14
+        file: manual.py
+        code: |
+          import csv
+
+          with path.open(encoding="utf-8") as f:
+              rows = list(csv.DictReader(f))
+
+          for row in rows:
+              row["units"] = int(row["units"] or 0)
+      after:
+        label: With pandas
+        file: pandas_load.py
+        code: |
+          import pandas as pd
+
+          sales = pd.read_csv(path)
+      note: >-
+        read_csv opens it, reads the header, builds the table and even tries to infer the
+        types. What it cannot infer is what you wanted a blank cell to mean.
+
+  - code_output:
+      eyebrow: Block 02 · First look
+      title: head shows the first rows
+      filename: load.py
+      source: |
+        sales = pd.read_csv(DATA / "sales.csv")
+
+        print(sales.head(3))
+      output: |
+        date   region  channel   units
+        2025-12-08  South   Online  15.0
+        2025-05-26  South   Wholes  18.0
+        2025-06-02   West   Online   5.0
+
+  - divider:
+      eyebrow: Block 03
+      title: Look before touching
+      lede: Two minutes of inspection save the whole afternoon. It is the highest-return habit of the course.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · info
+      title: The single most useful command
+      filename: inspect.py
+      source: |
+        print(sales.dtypes)
+        print(sales.shape)
+      output: |
+        date            str
+        region          str
+        channel         str
+        units       float64
+        unit_price      str
+        (324, 6)
+
+  - concept:
+      eyebrow: Key concept
+      title: What those types are telling you
+      lead: >-
+        units came back float and not integer, because eleven cells are blank and the
+        marker for blank only exists in a decimal column. unit_price came back as text,
+        because the currency sign and the thousands comma are format, not value. And date
+        came back as text, because a CSV has no date type. None of the three is a failure.
+      panel:
+        label: The consequence
+        title: The unit counts will print as 15.0, not as 15
+        note: >-
+          It is not an error, it is the price of the column having holes. It gets fixed
+          after you decide what those holes mean, not before.
+      steps:
+        - text: You load the file
+        - text: You read the types it inferred
+        - text: You decide what each hole means
+          loop: ↺ and only then do you convert
+
+  - code_output:
+      eyebrow: Block 03 · The dirt
+      title: Four regions, captured eight ways
+      filename: diagnose.py
+      source: |
+        print(sales["region"].value_counts())
+        print(sales.isna().sum().sum())
+        print(sales.duplicated().sum())
+      output: |
+        West 81   North 75   Centre 73
+        South 71   " North" 7   north 7
+        "North " 5   NORTH 5
+        11
+        7
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four loading errors
+      items:
+        - label: Error 01
+          title: Analysing before inspecting
+          desc: The result comes out, it looks reasonable, and it is wrong. head, info and describe cost two minutes.
+        - label: Error 02
+          title: Trusting the inferred type
+          desc: pandas guesses right nearly every time. That "nearly" is where the bug nobody finds lives.
+        - label: Error 03
+          title: Not checking the categories
+          desc: value_counts on a text column exposes inconsistent capture before it splits your groups in two.
+        - label: Error 04
+          title: Taking shape as the number of facts
+          desc: 324 rows with seven duplicates are 317 distinct facts, and the total changes with which you count.
+
+  - quiz:
+      eyebrow: Quick check
+      question: Why did the units column come back as float64 and not int64?
+      filename: types.py
+      source: |
+        print(sales["units"].dtype)
+        print(sales["units"].isna().sum())
+      options:
+        - "Because the unit counts carry decimals in the file"
+        - "Because eleven blank cells need NaN, which only exists in float"
+        - "Because read_csv always uses float to be safe"
+        - "Because the column has more than three hundred rows"
+
+  - lab:
+      eyebrow: Lab
+      title: Load and diagnose your file
+      brief: Load your project CSV with pandas and write a half-page diagnosis covering how many rows it has, what type each column was inferred as, how many values are missing and how many duplicates there are.
+      blocks:
+        - label: Deliverable
+          text: The notebook or .py with the load, and the diagnosis in prose
+        - label: Constraint
+          text: Do not clean anything yet. Today is only looking and writing down.
+        - label: The test
+          text: For every column that came back as text, say whether that is right or whether something needs converting
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A Series is a column with an index
+          desc: It is the list from week 12 with labels, and everything you learned there still holds here
+        - title: read_csv cannot guess what it cannot
+          desc: It infers types well nearly always, and it cannot know what you wanted a blank cell to mean
+        - title: Inspect before analysing
+          desc: head, info, shape and describe. Two minutes that prevent a wrong result that looks reasonable
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Run scripts 01 and 02 of module A05 from the repository against sales.csv and explain in three lines why describe only summarises one column.
+      meta:
+        - [Due, Before session 15.2]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Execution", "40 %", "Both scripts run and their full output is shown"]
+        - ["Diagnosis", "40 %", "The three columns that came back as text are named, with the reason"]
+        - ["Explanation", "20 %", "You say what would have to change for describe to summarise more columns"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, selecting, filtering and cleaning. That is where everything diagnosed today gets fixed.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

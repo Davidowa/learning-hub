@@ -17,19 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 10 de 17]
-      notes: |
-        Esta sesión introduce el primer error de C++ que no da ningún mensaje. Salirse de un
-        arreglo compila, corre y devuelve un número. Conviene que el grupo lo vea pasar en
-        vivo antes de que se los digan.
-
-        El valor que sale al leer fuera de rango cambia en cada corrida y en cada máquina. El
-        de la lámina salió de una corrida concreta en Visual Studio Community 2026, y viene
-        etiquetado como tal.
-
-        Esta semana cae el segundo avance del proyecto según el calendario del syllabus.
-
-        Lectura: Malik, octava edición, capítulo 8. Los documentos del curso citan el 9, que
-        es correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -107,18 +94,6 @@ slides:
         78
         88
         6
-      notes: |
-        El tamaño entre llaves es fijo y se decide al compilar. No se puede cambiar después,
-        y no puede depender de una variable que se lea del usuario. Para eso están los
-        contenedores dinámicos, que llegan con new en la semana 12.
-
-        La tercera línea es la manera clásica de contar los elementos: el tamaño total del
-        arreglo entre el tamaño de uno. Funciona porque las casillas son idénticas y están
-        pegadas.
-
-        Deja de funcionar en cuanto el arreglo se pasa a una función, que es la lámina de
-        los tropiezos. Ahí el arreglo se convierte en una dirección y sizeof mide la
-        dirección, no el arreglo.
 
   - concept:
       eyebrow: Concepto clave
@@ -157,16 +132,6 @@ slides:
         std::cout << notas[6] << "\n";
       output: |
         -1715304422
-      notes: |
-        Ni error de compilación, ni advertencia, ni caída del programa. Devolvió el contenido
-        de la memoria que estaba justo después del arreglo, interpretado como entero.
-
-        Ese número cambia en cada corrida. En otra máquina puede salir cero, o el programa
-        puede terminar de golpe, o puede seguir trabajando con basura durante media hora
-        antes de fallar en otro lado.
-
-        Escribir fuera de rango es peor que leer, porque modifica memoria que le pertenece a
-        otra variable. Ahí es donde un programa empieza a hacer cosas imposibles de explicar.
 
   - table:
       eyebrow: Alternativas
@@ -176,13 +141,6 @@ slides:
         - ["arreglo[i]", "No", "Lee memoria ajena"]
         - ["vector.at(i)", "Sí", "Lanza una excepción"]
         - ["vector[i]", "No", "Lee memoria ajena"]
-      notes: |
-        std::vector es el arreglo que crece y que conoce su propio tamaño. Este curso lo usa
-        de pasada porque el temario pide arreglos de C, pero conviene nombrarlo.
-
-        La diferencia entre las dos últimas líneas sorprende. El vector tiene las dos formas
-        de acceso, y solo una revisa. La que revisa cuesta un poco más y avisa cuando algo
-        va mal, que es exactamente el trato de la semana 15 con las excepciones.
 
   - divider:
       eyebrow: Bloque 03
@@ -211,22 +169,6 @@ slides:
         std::cout << vocales << "\n";
       output: |
         5
-      notes: |
-        Es la primera vez que se juntan tres semanas distintas en un solo programa: la cadena
-        de la semana 3, el ciclo de la 8 y la selección de la 7.
-
-        Las vocales de programacion son o, a, a, i y o, que son cinco. El conteo se hizo sin
-        acentos a propósito, porque un carácter acentuado ocupa más de un byte y la cuenta
-        por índice deja de coincidir con lo que se ve.
-
-        length() devuelve un tipo sin signo. Compararlo contra un int con signo, como hace
-        el ciclo de arriba, no produce ninguna advertencia en este compilador, ni siquiera
-        con /W4. Se comprobó.
-
-        Donde sí muerde es al restar. Sobre una cadena vacía, length() menos uno no da menos
-        uno, da el máximo del tipo, que es la misma vuelta al reloj de la semana 3 con
-        unsigned. Un ciclo que recorra hasta length() menos uno funciona con cualquier
-        cadena salvo con la vacía, y ahí se va a dar miles de millones de vueltas.
 
   - quiz:
       eyebrow: Pregunta rápida

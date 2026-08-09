@@ -1,0 +1,306 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 1.1
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Puente · De Excel a Python
+      title: Análisis y Diseño de Algoritmos
+      subtitle: Lo que ya sabes de hojas de cálculo, dicho en Python. Y los cuatro puntos donde la analogía deja de servir.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, Puente · Semana 1]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El diccionario
+          desc: Cada cosa que ya haces en una hoja tiene un nombre en Python
+        - title: Dónde se rompe
+          desc: Cuatro diferencias que cuestan horas si nadie las dice a tiempo
+        - title: El primer script
+          desc: Doce meses de ventas resumidos sin abrir la hoja de cálculo
+        - title: Tu turno
+          desc: Un caso de tu área, traducido a papel antes de traducirlo a código
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Traducir una fórmula a una expresión
+          sub: Lo que escribes después del igual es casi lo mismo en los dos lados
+        - head: Nombrar los datos en lugar de señalarlos
+          sub: Una variable dice qué guarda; la celda B7 no dice absolutamente nada
+        - head: Reconocer los cuatro quiebres
+          sub: Índice cero, recálculo, tipos y el rastro que deja el trabajo
+        - head: Resumir una tabla sin abrir Excel
+          sub: Sumar, promediar y encontrar el máximo con cinco líneas
+        - head: Explicar por qué vale la pena
+          sub: Lo que una hoja de cálculo deja de poder cuando la tabla crece
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: todo
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Ya programas, solo que en otra sintaxis
+      lede: Una hoja de cálculo es un lenguaje. Tiene valores, nombres, funciones y condiciones. Lo que cambia es dónde se escribe.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una fórmula ya es un programa
+      lead: >-
+        Cuando escribes el producto de dos celdas estás haciendo lo mismo que hace
+        cualquier programa: tomas datos de entrada, aplicas una operación y guardas el
+        resultado en un lugar que tiene nombre. Python no te pide una idea nueva, te pide
+        escribir esa misma idea de otra forma.
+      panel:
+        label: Lo que sí cambia
+        title: El resultado va a un nombre, no a una celda
+        note: >-
+          En la hoja, el resultado vive donde escribiste la fórmula. En Python le pones
+          nombre y decides tú dónde vive y cuánto dura.
+      steps:
+        - text: Eliges los datos de entrada
+        - text: Escribes la operación que los combina
+        - text: Le pones nombre al resultado
+          loop: ↺ y ese nombre se usa en la línea siguiente
+
+  - table:
+      eyebrow: Bloque 01 · Equivalencias · 1 de 2
+      title: El diccionario, primera mitad
+      headers: [Concepto, En la hoja de cálculo, En Python]
+      rows:
+        - ["Dato con nombre", "Una celda con nombre", "Una variable"]
+        - ["Fórmula", "Precio por cantidad", "importe = precio * cantidad"]
+        - ["Función", "PROMEDIO sobre un rango", "mean() sobre una lista"]
+        - ["Condición", "SI con dos salidas", "if y else"]
+
+  - table:
+      eyebrow: Bloque 01 · Equivalencias · 2 de 2
+      title: El diccionario, segunda mitad
+      headers: [Concepto, En la hoja de cálculo, En Python]
+      rows:
+        - ["Columna", "El rango B2:B500", "Una lista"]
+        - ["Tabla de búsqueda", "BUSCARV en un catálogo", "Un diccionario"]
+        - ["La hoja completa", "Filas, columnas y encabezados", "Un DataFrame"]
+
+  - compare:
+      eyebrow: Bloque 01 · Traducción
+      title: Las mismas cuatro operaciones, escritas dos veces
+      before:
+        label: En la hoja
+        file: ventas.xlsx
+        lang: excel
+        code: |
+          =B2*C2
+          =SUMA(D2:D13)
+          =PROMEDIO(D2:D13)
+          =SI(D2>50000; "meta"; "abajo")
+      after:
+        label: En Python
+        file: ventas.py
+        code: |
+          importe = precio * cantidad
+          total = sum(importes)
+          promedio = total / len(importes)
+          estado = "meta" if importe > 50000 else "abajo"
+      note: >-
+        El igual de la hoja abre una fórmula. El igual de Python guarda un resultado. Es
+        la única diferencia de puntuación que importa hoy.
+
+  - figure:
+      eyebrow: Bloque 01 · Perspectiva
+      title: Los dos viven en el mismo peldaño
+      image: img/es/ct-09.png
+      caption: Ni la hoja ni Python le hablan a la máquina directamente. Los dos son lenguajes de alto nivel, y por eso se parecen tanto.
+      alt: Una escalera de niveles de abstracción, con el lenguaje de alto nivel arriba y el código máquina al pie
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Dónde deja de parecerse
+      lede: Cuatro diferencias reales. Ninguna es difícil, todas cuestan una tarde si nadie las dice a tiempo.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Diferencias
+      title: Los cuatro quiebres que hay que saber desde hoy
+      headers: [Punto, En la hoja de cálculo, En Python]
+      rows:
+        - ["Primer elemento", "La fila número 1", "El índice 0"]
+        - ["Recálculo", "Automático al cambiar un dato", "Solo cuando vuelves a ejecutar"]
+        - ["Tipos", "La celda adivina el formato", "El valor tiene tipo y no se adivina"]
+        - ["Rastro", "El clic no queda registrado", "El script es la receta completa"]
+        - ["Tamaño", "Se arrastra y deja de responder", "Millones de filas sin problema"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro trampas para quien viene de Excel
+      items:
+        - label: Error 01
+          title: Contar desde el uno
+          desc: La primera fila de tu tabla es la 1 en la hoja y el índice 0 en Python. Todo lo demás se recorre un lugar.
+        - label: Error 02
+          title: Esperar que se recalcule solo
+          desc: Cambiar un dato no actualiza nada. O vuelves a ejecutar el script, o el número que ves ya está viejo.
+        - label: Error 03
+          title: Dar el tipo por hecho
+          desc: >-
+            Un código postal leído de un archivo llega como texto. Sumarlo no da error:
+            pega los dígitos uno tras otro.
+        - label: Error 04
+          title: Trabajar sin guardar el cómo
+          desc: El clic no deja rastro. Si el análisis no está escrito, no se puede repetir ni defender frente a nadie.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: La lista tiene doce meses. ¿Qué devuelve meses[12]?
+      filename: indices.py
+      source: |
+        meses = ["ene", "feb", "mar", "abr", "may", "jun",
+                 "jul", "ago", "sep", "oct", "nov", "dic"]
+
+        print(meses[12])
+      options:
+        - "dic, porque diciembre es el mes número doce"
+        - "ene, porque la lista vuelve a empezar"
+        - "IndexError, porque el último índice es 11"
+        - "None, porque esa posición está vacía"
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El primer script
+      lede: Doce meses de ventas, resumidos en cinco líneas y sin abrir la hoja de cálculo una sola vez.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Ventas
+      title: Dos columnas y tres preguntas
+      filename: ventas.py
+      source: |
+        meses = ["ene", "feb", "mar", "abr", "may", "jun"]
+        ventas = [42000, 51500, 38900, 60100, 55300, 47800]
+
+        total = sum(ventas)
+        promedio = total / len(ventas)
+        mejor = meses[ventas.index(max(ventas))]
+      annotations:
+        - label: Dos columnas
+          text: Cada lista es una columna de tu hoja. La posición 0 de una corresponde a la posición 0 de la otra.
+        - label: Las mismas funciones
+          text: sum es SUMA, len es CONTAR, y la división que las junta es exactamente la de siempre.
+        - label: El máximo y su mes
+          text: max da el valor más alto, index da su posición, y esa posición te da el mes que le toca.
+        - label: Riesgo
+          text: Si las dos listas dejan de tener el mismo largo, el emparejamiento se rompe sin avisar.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Resultado
+      title: Lo que imprime, y por qué esos números
+      filename: ventas.py
+      source: |
+        print(f"Total: {total:,.0f}")
+        print(f"Promedio: {promedio:,.0f}")
+        print(f"Mejor mes: {mejor}")
+      output: |
+        Total: 295,600
+        Promedio: 49,267
+        Mejor mes: abr
+
+  - compare:
+      eyebrow: Bloque 03 · A dónde vamos
+      title: Lo mismo, cuando la tabla ya no cabe en la cabeza
+      before:
+        label: Hoy · listas
+        file: ventas.py
+        code: |
+          total = sum(ventas)
+          promedio = total / len(ventas)
+          mejor = meses[ventas.index(max(ventas))]
+      after:
+        label: Semana 15 · pandas
+        file: 05_group_and_aggregate.py
+        code: |
+          import pandas as pd
+
+          df = pd.read_csv("sales_clean.csv")
+          print(df["amount"].sum())
+          print(df.groupby("region")["amount"].mean())
+      note: >-
+        Es la misma idea. pandas te quita el trabajo de mantener las columnas emparejadas
+        a mano, que es justo donde se rompe cuando la tabla crece.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Traduce tu propia hoja
+      brief: >-
+        Toma una hoja de cálculo que uses de verdad y escribe en papel, sin código, qué
+        hace cada fórmula: qué datos entran, qué operación se aplica y cómo se llamaría
+        el resultado.
+      blocks:
+        - label: Entrega
+          text: Una hoja de papel con tres fórmulas traducidas a esas tres partes
+        - label: Restricción
+          text: Sin abrir Python. Hoy solo se traduce la idea, no la sintaxis.
+        - label: Pista
+          text: Empieza por la fórmula más larga. Casi siempre son tres operaciones apiladas en una.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una fórmula ya es un programa
+          desc: Entrada, operación y resultado con nombre. Python cambia dónde lo escribes, no cómo lo piensas
+        - title: El índice empieza en cero
+          desc: Es el error que más tiempo cuesta en las primeras semanas, y el más fácil de evitar sabiéndolo
+        - title: Nada se recalcula solo
+          desc: El script es la receta. Por eso el análisis se puede repetir, revisar y defender meses después
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Trae un archivo .csv de tu área con al menos treinta filas y cinco columnas, y escribe en tres renglones qué pregunta te gustaría contestar con él.
+      meta:
+        - [Entrega, Antes de la semana 2]
+        - [Formato, Blackboard · .csv y .txt]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Datos", "50 %", "El archivo abre, trae encabezados y tiene al menos treinta filas"]
+        - ["Pregunta", "30 %", "La pregunta se puede contestar con las columnas que traes"]
+        - ["Origen", "20 %", "Dices de dónde salió el archivo y de qué periodo es"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, cómo se resuelve un problema antes de escribir una sola línea de código.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

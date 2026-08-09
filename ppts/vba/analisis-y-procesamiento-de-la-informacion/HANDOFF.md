@@ -1,8 +1,8 @@
 # TIA503: the state of the decks
 
-Week 1 exists in both languages. Sixteen weeks are still unwritten. This file
-records what was decided, what turned out to be wrong in the source material,
-and the limits that only show up once a card refuses to fit.
+Weeks 1 to 10 exist in both languages. Seven weeks are still unwritten. This
+file records what was decided, what turned out to be wrong in the source
+material, and the limits that only show up once a card refuses to fit.
 
 Read [`../../README.md`](../../README.md) for the layout catalogue and
 [`../../HANDOFF.md`](../../HANDOFF.md) for the conventions the whole repository
@@ -15,7 +15,7 @@ to TIA503.
 ppts/vba/analisis-y-procesamiento-de-la-informacion/
   syllabus-tia503.xlsx
   Análisis y Procesamiento de la Información.pdf
-  es/  w01  (.yaml + .pptx)
+  es/  w01 … w10  (.yaml + .pptx)
   en/  same
 ```
 
@@ -28,8 +28,15 @@ python -m kit.sizes      vba
 python -m kit.preview vba/analisis-y-procesamiento-de-la-informacion/es/w01.es.pptx w01 --cols 4
 ```
 
-All four come back clean on both decks, and adding the VBA palette left the
-eighty-six Python lessons and the eleven C++ decks clean as well.
+All four come back clean on all twenty decks, and the Python and C++ courses
+stay clean alongside them.
+
+**The decks carry no speaker notes.** Every `notes:` block was removed from the
+twenty lesson files on the instructor's instruction, and the built `.pptx` have
+an empty notes pane. Timings, sources and verification caveats live in this file
+instead, which is why the source table and the verified-results tables below are
+the record rather than a duplicate of it. Nothing else in any lesson changed: the
+strip was checked slide by slide, layout by layout, key by key.
 
 **The syllabus moved.** It was under `ppts/office/analisis-y-procesamiento-de-la-informacion/`
 along with the course PDF. Both now sit in the subject folder above `es/` and
@@ -38,16 +45,20 @@ along with the course PDF. Both now sit in the subject folder above `es/` and
 
 ## The colour
 
-`kit/tokens.py` gained a `VBA` palette and an entry in `PALETTES`. The three
-that were already there were not touched.
+`kit/tokens.py` carries a `VBA` palette and an `EXCEL` one. The palette started
+on `#217346`, which is not a published Excel green; a later pass replaced it with
+the four official greens, each on the surface where it clears AA. Measured
+independently, and the figures match:
 
 | Slot | Value | Why |
 |---|---|---|
-| `BLUE` structure text | `#217346` | Excel brand green, 5.5:1 on paper, no darkening needed |
-| `BLUE_FILL` chips and bars | `#217346` | white text on it is 5.8:1 |
-| `BLUE_DEEP` | `#185C37` | the darker green of the same icon, 7.5:1 |
-| `ACCENT` on navy | `#E8871E` | duck orange, 6.4:1 |
-| `ACCENT_LO` on paper | `#B4530A` | duck orange, 4.7:1 |
+| `BLUE` structure text | `#107C41` | Excel forest green, 4.96:1 on paper |
+| `BLUE_FILL` chips and bars | `#107C41` | white text on it is 5.27:1 |
+| `BLUE_DEEP` | `#185C37` | the darkest of the four, 7.53:1 |
+| `DARK_CODE.kw` | `#33C481` | 2.11:1 on paper and useless there, 6.87:1 on the green canvas |
+| not used | `#21A366` | 3.04:1 on paper and 4.77:1 on the canvas, it fits nowhere |
+| `ACCENT` on the canvas | `#E8871E` | duck orange, 5.81:1 |
+| `ACCENT_LO` on paper | `#B4530A` | duck orange, 4.73:1 |
 
 VBA has no second brand colour, so the accent pair stays the academy's duck
 orange, exactly as C++ does. Two greens would have collapsed the one thing the
@@ -236,7 +247,7 @@ computes it.
 `Total_Payment__Monthly` and `Principal_Amount`, the double-underscore names
 defined in `amortization_table.xlsx` in the same folder. Pasted into a fresh
 workbook it stops with error 1004. The deck renames them to `SaldoFinal` and
-`PagoMensual` and the speaker notes say why.
+`PagoMensual`, and this file is where the reason is recorded.
 
 ## Variable ranges, verified
 
@@ -323,7 +334,7 @@ not 512 in either.
 **Locale note for the Spanish deck.** The verification ran on an English Excel,
 where the function is `MOD` and the argument separator is a comma. The Spanish
 slide writes `RESIDUO(-5;3)`, which is what the room will see. The value is the
-same and the speaker notes say so.
+same, and this file is where that is recorded.
 
 Other results this week, all run:
 
@@ -381,8 +392,8 @@ error verbatim, take a screenshot by hand.
 **Error text follows the Office UI language.** This machine reports `Overflow`
 and `Type mismatch`. A Spanish Excel says `Desbordamiento` and `No coinciden los
 tipos`. The Spanish decks show the English string, because that is what the
-repository and the reference use, and the speaker notes say what the Spanish
-Excel will show instead.
+repository and the reference use. What a Spanish Excel shows instead is recorded
+here rather than on the slide.
 
 **Watch the labels, not just the values.** Writing `"5 - 3"` into a cell as a
 label turns it into a date. Prefix any label that looks like an expression with
@@ -443,7 +454,7 @@ regional settings, running that line renders `£500,000.00`, because an unquoted
 workbook's own stored format is `"$"#,##0.00`, with the dollar sign quoted, and
 that one does stay a dollar sign. Nothing in week 1 puts a currency format on
 screen for this reason. When a later week needs one, quote the symbol, and say
-in the notes that the displayed result depends on the machine's region.
+here that the displayed result depends on the machine's region.
 
 **The 600 on the `stat` slide.** `amortization_table.xlsx`, sheet `Example`,
 range `B10:DQ14`: 120 period columns by 5 rows. Counted from the file, not

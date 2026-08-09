@@ -1,0 +1,318 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 16.1
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 16 · 1 of 2 · Unit 8.2 · Visualisation and matplotlib
+      title: Analysis and Design of Algorithms
+      subtitle: Which chart answers which question, and what it takes for somebody to understand it without you in the room.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 16 · 1 of 2]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Choosing the chart
+          desc: Each shape answers a different question, and the wrong one lies
+        - title: The two objects
+          desc: Figure and Axes, and why every chart starts the same way
+        - title: Making it readable
+          desc: A title with the finding, readable axes, colour that survives greyscale
+        - title: Your turn
+          desc: One chart from your project, genuinely finished
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Choose the chart from the question
+          sub: Bar, line, scatter or histogram, depending on what you are asking
+        - head: Build a chart with matplotlib
+          sub: With a figure and axes, and save it as an image
+        - head: Title it with the finding
+          sub: Not with the axis names, which the reader is already looking at
+        - head: Format the axes
+          sub: So nobody has to count digits on screen
+        - head: Choose accessible colour
+          sub: And never let colour be the only signal that separates things
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Which chart
+      lede: It is not a style decision. Each shape answers a question, and using the wrong one makes a true number say something false.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Choosing
+      title: Four shapes, four questions
+      headers: [Chart, The question, Course example]
+      rows:
+        - ["Bar", "How do these compare?", "Revenue by product"]
+        - ["Line", "How did it change over time?", "Revenue by month"]
+        - ["Scatter", "Do these move together?", "Salary against tenure"]
+        - ["Histogram", "How are they spread out?", "Distribution of salaries"]
+
+  - concept:
+      eyebrow: Key concept
+      title: A line claims the order means something
+      lead: >-
+        Connecting two points with a line tells the reader there is a journey between them.
+        That is true between January and February, and false between North and South. Using
+        a line across categories suggests a path that is not there, and the reader will
+        believe it, because the shape is telling them so.
+      panel:
+        label: The other rule
+        title: Bars and lines start at zero
+        note: >-
+          Cutting the axis exaggerates the difference. Doing it on purpose is the most
+          common way to lie with a chart that contains nothing but correct numbers.
+      steps:
+        - text: You write the question first
+        - text: The question picks the shape
+        - text: The shape decides what can be read
+          loop: ↺ and never the other way round
+
+  - compare:
+      eyebrow: Block 01 · The one that rarely works
+      title: Pie against bars, on the same data
+      before:
+        label: Pie
+        file: pie.py
+        code: |
+          ax.pie(values, labels=names,
+                 autopct="%1.0f%%")
+
+          # which two are closest?
+      after:
+        label: Sorted bars
+        file: bars.py
+        code: |
+          ax.barh(names, values)
+
+          # the order already answered it
+      note: >-
+        A pie asks you to compare angles, which people do badly. Past three slices it stops
+        being readable, and the same figures as bars are understood at a glance.
+
+  - divider:
+      eyebrow: Block 02
+      title: How one gets built
+      lede: Two objects, and every matplotlib chart starts with the same line.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Figure and Axes
+      title: The sheet of paper and the axes drawn on it
+      filename: first.py
+      source: |
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+        ax.plot(MONTHS, monthly.values / 1000,
+                marker="o", linewidth=2)
+
+        fig.savefig("monthly.png", dpi=150,
+                    bbox_inches="tight")
+        plt.close(fig)
+      annotations:
+        - label: subplots
+          text: It hands you both at once. It is how practically every chart you will write begins.
+        - label: Figure and Axes
+          text: The figure is the paper, the axes are the pair of axes drawn on it. You draw on the axes.
+        - label: savefig
+          text: You save the figure, not the axes. 150 dots per inch is plenty to project.
+        - label: close
+          text: Close the figure when done. A loop that draws fifty and never closes them keeps all fifty in memory.
+
+  - table:
+      eyebrow: Block 02 · The minimum
+      title: What a freshly made chart is missing
+      headers: [Element, What it adds, Method]
+      rows:
+        - ["Title", "The finding, in one sentence", "set_title"]
+        - ["Axis label", "What is measured, and in what unit", "set_ylabel"]
+        - ["Zero baseline", "So the difference is not exaggerated", "set_ylim"]
+        - ["Source", "Where the numbers came from", "fig.text"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Readable without you
+      lede: The chart will travel alone in an email. Anything you would have to say out loud is missing from it in writing.
+      block: 3
+
+  - compare:
+      eyebrow: Block 03 · The title
+      title: Describing the axes, or stating the finding
+      before:
+        label: Describes the axes
+        file: describes.py
+        code: |
+          ax.set_title("Revenue by month")
+
+          # the reader could see that
+      after:
+        label: States the finding
+        file: finding.py
+        code: |
+          ax.set_title(
+              "December carried 20 % of "
+              "the year's revenue")
+      note: >-
+        The first gets stared at until somebody explains it. The second is read once. The
+        subtitle is where the description goes, now that the title says what matters.
+
+  - code:
+      eyebrow: Block 03 · Emphasis and format
+      title: One strong bar, and axes that read
+      filename: annotated.py
+      source: |
+        bars = ax.bar(MONTHS, monthly.values, color="#C7D6E8")
+        bars[peak - 1].set_color("#2B5F8F")
+
+        ax.yaxis.set_major_formatter(
+            ticker.FuncFormatter(
+                lambda v, _: f"{v / 1_000_000:.1f}M"))
+      annotations:
+        - label: One strong one
+          text: The bar carrying the argument gets the deep colour. If everything is emphasised, nothing is.
+        - label: The formatter
+          text: It changes only the axis labels. The underlying values are not touched.
+        - label: Why
+          text: 2567118.5 forces the reader to count digits. 2.6M reads without thinking.
+        - label: The rest in grey
+          text: The other eleven bars are still there and still comparable. They just stopped competing for attention.
+
+  - table:
+      eyebrow: Block 03 · Accessibility
+      title: Four rules that cost one line each
+      headers: [Rule, Why, How]
+      rows:
+        - ["Blue against orange", "Red and green do not separate for everyone", "Pick the palette"]
+        - ["Line style", "Colour is lost when printed in grey", "linestyle and marker"]
+        - ["Label at the end", "The eye never leaves the data to find the legend", "annotate"]
+        - ["Alternative text", "For anyone using a screen reader", "Write it yourself"]
+
+  - concept:
+      eyebrow: Key concept
+      title: The alt text is the sentence you would say
+      lead: >-
+        If the image failed to load, what would you tell somebody over the phone. That is
+        the alternative text: what the chart shows and what it shows you. And it is written
+        looking at the table, not from memory, because describing a trend the data does not
+        have is the easiest way to make an accessible chart say something false.
+      panel:
+        label: An example from the course
+        title: Every number in the description can be checked
+        note: >-
+          Wholesale goes from 322 thousand in November to 1,611 thousand in December. That
+          is in the table, which is why it can be written without hesitation.
+      steps:
+        - text: You say what kind of chart it is
+        - text: You say what range each series covers
+        - text: You say what visibly happens
+          loop: ↺ and every figure is checked against the table
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to ruin a correct chart
+      items:
+        - label: Error 01
+          title: Cutting the vertical axis
+          desc: A two per cent difference looks like fifty. The numbers are right and the chart is lying.
+        - label: Error 02
+          title: Unsorted bars
+          desc: The reader has to do the ranking by eye. Sorting is free and answers the question by itself.
+        - label: Error 03
+          title: A line across categories
+          desc: Connecting North to South suggests a journey that is not there. Categories get bars.
+        - label: Error 04
+          title: Leaving the default title
+          desc: A chart with no title and no source is an opinion. With both of them it is evidence.
+
+  - quiz:
+      eyebrow: Quick check
+      question: You want to show how the company's salaries are spread out. Which chart?
+      filename: choosing.py
+      source: |
+        salaries = employees["monthly_salary"]
+      options:
+        - "Bars, one per employee"
+        - "Histogram, because it shows how one column is spread"
+        - "Line, to see the trend"
+        - "Pie, with one slice per band"
+
+  - lab:
+      eyebrow: Lab
+      title: One chart from your project, finished
+      brief: Produce a chart from your project data, with a title that states the finding, a descriptive subtitle, formatted axes, one highlighted element and the source at the foot. Write its alternative text too.
+      blocks:
+        - label: Deliverable
+          text: The image, the code that generates it, and the alt text
+        - label: Constraint
+          text: No pie charts, and the vertical axis starts at zero
+        - label: The test
+          text: Show it without saying anything. If your classmate asks what it shows, the title lacks the finding.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The question picks the chart
+          desc: Bar compares, line changes over time, scatter relates and histogram spreads out
+        - title: Title with the finding
+          desc: The axis names are already visible. What the reader cannot see alone is what you found
+        - title: Colour never travels alone
+          desc: Line style, marker or a direct label. All of those survive being printed in grey
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Run scripts 01 to 03 of module A06, take the chart the first one produces, the one with no title and no labels, and fix it until it reads without explanation.
+      meta:
+        - [Due, Before session 16.2]
+        - [Format, Blackboard · .png and .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Before and after", "40 %", "Both versions of the same chart are shown"]
+        - ["The four elements", "40 %", "Title with the finding, labels, zero baseline and source"]
+        - ["Alt text", "20 %", "It is written, and every figure can be verified in the data"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, seaborn and the close of the integrative project.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

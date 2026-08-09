@@ -17,23 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 1 of 17]
-      notes: |
-        This session is taught with Visual Studio open and projected. Every block has a live
-        demonstration, and the group should be creating their own project during the first
-        block rather than watching one being created.
-
-        The code examples in this course are written for the course. There is no source
-        folder in the repository like the one COM102 has, so do not promise a file students
-        can clone. What is on the slide is what there is.
-
-        The __cplusplus and _MSVC_LANG values on the verification slide were measured on
-        Visual Studio Community 2026, toolset 14.51, _MSC_VER 1951. The C2143 message is
-        copied from a real build. If the room has a different version, measure again before
-        stating it.
-
-        The reading for the week is Malik, eighth edition, chapters 1 and 2. The course
-        documents cite the fifth edition, where it is chapter 2. The PDF in the repository
-        is the eighth.
 
   - agenda:
       eyebrow: Agenda
@@ -209,17 +192,6 @@ slides:
       output: |
         __cplusplus 199711
         _MSVC_LANG  202002
-      notes: |
-        Measured on Visual Studio Community 2026, toolset 14.51, _MSC_VER 1951.
-
-        The first number looks like it says the project is on C++98, and it is not true.
-        MSVC keeps __cplusplus frozen at 199711 for compatibility with old code, and only
-        reports the real value if /Zc:__cplusplus is added. The macro that tells the truth
-        with nothing configured is _MSVC_LANG, and 202002 is C++20.
-
-        Worth running live. It is the first time they will see the compiler answer something
-        other than what they expected, and the explanation is historical rather than a
-        mistake of theirs.
 
   - code_output:
       eyebrow: When it will not build
@@ -239,13 +211,6 @@ slides:
         broken.cpp(6): error C2143:
         syntax error: missing ';'
         before 'return'
-      notes: |
-        The semicolon is missing on line 5 and the message says line 6. That is not a defect
-        in the compiler. Until the semicolon shows up the statement is still open, so the
-        first thing that does not belong turns up on the following line.
-
-        This message is copied from a real command line build. Inside the environment it
-        looks almost the same, with the column added in the parentheses.
 
   - pitfalls:
       eyebrow: Diagnosis
@@ -320,10 +285,6 @@ slides:
         - ["Watch", "Only the expressions you add yourself", "When there are many variables and two of them matter"]
         - ["Call Stack", "Who called whom to get here", "From unit 3 onwards, once there are functions"]
         - ["Immediate", "Evaluates whatever you type, without rebuilding", "For testing a fix before you write it"]
-      notes: |
-        On a Spanish installation these are Locales, Inspección, Pila de llamadas and
-        Inmediato. Worth saying both names, because any answer they find online will use
-        the English ones.
 
   - quiz:
       eyebrow: Quick question

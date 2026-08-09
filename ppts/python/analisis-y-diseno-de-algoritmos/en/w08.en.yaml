@@ -1,0 +1,281 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 8
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 08 · Unit 4.5 · Repetition · First midterm
+      title: Analysis and Design of Algorithms
+      subtitle: The two loops, when each one is used, and the logistics of the first midterm exam.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 8 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Why repeat
+          desc: Dragging the formula down, said in a single instruction
+        - title: The for loop
+          desc: When you know how many times, or you have a list to walk through
+        - title: The while loop
+          desc: When you do not know how many, only the condition to stop on
+        - title: The midterm
+          desc: What it covers, what it looks like, and what you may bring
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what a loop is for
+          sub: And recognise the repeated work you already do by hand in a sheet
+        - head: Walk a list with for
+          sub: Item by item, without knowing in advance how many there are
+        - head: Use range in its three forms
+          sub: One argument, two, and three when the step is not one
+        - head: Write a while that terminates
+          sub: With a condition that something inside the body changes
+        - head: Choose between the two
+          sub: By the question they answer, not by habit
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: now
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why a loop exists
+      lede: Because repeated work done by hand gets things wrong, and because four campaigns today are four hundred next year.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · Translation
+      title: Dragging the formula, said in two lines
+      before:
+        label: In the sheet
+        file: campaigns.xlsx
+        lang: excel
+        code: |
+          =C2/B2
+          # and you drag it down to row 500
+      after:
+        label: In Python
+        file: cpc.py
+        code: |
+          for i in range(len(campaigns)):
+              cpc = spend[i] / clicks[i]
+      note: >-
+        Dragging is repeating the same operation with the row number changing. A for loop
+        does exactly that, and it does not stop at row 500 because you ran out of patience.
+
+  - table:
+      eyebrow: Block 01 · The two loops
+      title: Which to use, and why
+      headers: [Loop, When it is used, The question it answers]
+      rows:
+        - ["for", "You know how many, or you have something to walk", "For each one of these?"]
+        - ["while", "You do not know how many, only when to stop", "While this holds?"]
+
+  - divider:
+      eyebrow: Block 02
+      title: The for loop
+      lede: It walks through something, item by item, and stops on its own once there are none left.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · for
+      title: Cost per click across four campaigns
+      filename: cpc.py
+      source: |
+        campaigns = ["Instagram", "Meta", "Google", "TikTok"]
+        clicks = [5074, 3820, 6910, 1240]
+        spend = [38500, 29800, 51200, 9600]
+
+        for i in range(len(campaigns)):
+            cpc = spend[i] / clicks[i]
+            print(f"{campaigns[i]:<12} ${cpc:>6.2f}")
+      annotations:
+        - label: Three lists
+          text: Each one is a column. Position 0 in all three belongs to the same campaign.
+        - label: range with len
+          text: len gives how many, range produces positions 0, 1, 2 and 3. The list can grow without touching the loop.
+        - label: The variable i
+          text: It is 0 on the first pass, 1 on the second, and so on. It is the loop's row number.
+        - label: Risk
+          text: If one list has one item fewer than the others, the loop raises IndexError when it gets to the end.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Result
+      title: Four passes, four lines
+      filename: cpc.py
+      source: |
+        for i in range(len(campaigns)):
+            cpc = spend[i] / clicks[i]
+            print(f"{campaigns[i]:<12} ${cpc:>6.2f}")
+      output: |
+        Instagram    $  7.59
+        Meta         $  7.80
+        Google       $  7.41
+        TikTok       $  7.74
+
+  - table:
+      eyebrow: Block 02 · range
+      title: The three forms of range, in full
+      headers: [Form, What it produces, Example, Gives]
+      rows:
+        - ["range(n)", "From 0 up to n, n excluded", "range(4)", "0, 1, 2, 3"]
+        - ["range(a, b)", "From a up to b, b excluded", "range(1, 5)", "1, 2, 3, 4"]
+        - ["range(a, b, s)", "From a up to b, in steps of s", "range(0, 10, 3)", "0, 3, 6, 9"]
+
+  - divider:
+      eyebrow: Block 03
+      title: The while loop
+      lede: It repeats while the condition is true. If nothing in the body changes it, it repeats forever.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · while
+      title: How many days the budget lasts
+      filename: budget.py
+      source: |
+        budget = 100000
+        daily_spend = 12500
+        day = 0
+
+        while budget > 0:
+            budget -= daily_spend
+            day += 1
+
+        print(f"The budget lasts {day} days.")
+      annotations:
+        - label: The condition
+          text: It is checked before each pass. If it is false from the start, the body never runs at all.
+        - label: What changes
+          text: The subtraction on the first line of the body. Without it the condition would stay true forever.
+        - label: The counter
+          text: day starts at zero and climbs by one per pass. That is how you count how many times something repeated.
+        - label: Risk
+          text: Remove the subtraction and the program never ends. Control C stops it, and it is worth seeing once.
+          accent: true
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: The last passes of the loop
+      headers: [Pass, On entry, "> 0?", On exit, day]
+      rows:
+        - ['6', '37500', "Yes", '25000', '6']
+        - ['7', '25000', "Yes", '12500', '7']
+        - ['8', '12500', "Yes", '0', '8']
+        - ['–', '0', "No", '0', '8']
+      verdict: The condition is checked before each pass, so a ninth one never starts. The budget covers exactly eight days.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four loop errors
+      items:
+        - label: Error 01
+          title: The infinite loop
+          desc: Nothing in the body changes the condition. The program keeps running until you stop it yourself.
+        - label: Error 02
+          title: Off by one
+          desc: range(4) gives four passes, from 0 to 3. The 4 never shows up, and that is correct.
+        - label: Error 03
+          title: Declaring the accumulator inside
+          desc: If total = 0 sits inside the loop, it resets every pass and at the end it holds only the last one.
+        - label: Error 04
+          title: Walking lists of different lengths
+          desc: Three columns with different row counts break the pairing and raise IndexError.
+
+  - table:
+      eyebrow: First midterm
+      title: What it covers, and what the exam looks like
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "Units 1 to 4: algorithms, paradigms, types, operators, selection and repetition"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Format", "Taken on the classroom computer and uploaded compressed to Blackboard"]
+        - ["You may bring", "Your notes, your assignments, the books, and anything you generated with AI beforehand"]
+        - ["You may not", "Phone, headphones, AI glasses, or any messaging channel"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: How many times does this print something?
+      filename: passes.py
+      source: |
+        for i in range(2, 10, 3):
+            print(i)
+      options:
+        - "Eight times, from 2 to 9"
+        - "Three times: 2, 5 and 8"
+        - "Four times: 2, 5, 8 and 11"
+        - "Ten times, from 0 to 9"
+
+  - lab:
+      eyebrow: Lab
+      title: Walk a table of your own
+      brief: Take six records from your field as three parallel lists and walk them with a for loop, computing one metric per row and printing it aligned. Then write a while loop that counts how many exceed a threshold.
+      blocks:
+        - label: Deliverable
+          text: The .py file with both versions and its aligned output
+        - label: Constraint
+          text: No repeated magic numbers. If the threshold appears twice, make it a variable.
+        - label: The test
+          text: Add a seventh record. If you had to touch the loop, the loop was badly written.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A for loop is dragging the formula
+          desc: The same operation applied to every row, and it does not stop where your patience ran out
+        - title: for when you know how many
+          desc: And while when you only know when to stop. Choose by the question, not by habit
+        - title: Something inside has to change
+          desc: If the body of the while never touches the condition, the loop never ends
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write a program that walks the four campaigns from class and reports which has the best cost per click, which the worst, and the combined cost per click of all four together.
+      meta:
+        - [Due, Before week 9]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The walk", "40 %", "The loop still works if a fifth campaign is added"]
+        - ["The combined figure", "40 %", "It divides the total by the total, not the average of the four costs"]
+        - ["Output", "20 %", "All three answers read with a label and with currency formatting"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, accumulators, flags, and loops that live inside other loops.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

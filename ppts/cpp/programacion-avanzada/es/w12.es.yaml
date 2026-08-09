@@ -17,21 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 12 de 17]
-      notes: |
-        La sesión más pesada del curso. Son dos temas grandes que el temario junta en una
-        unidad: la memoria dinámica y el polimorfismo. Conviene no acelerar el primero para
-        alcanzar el segundo.
-
-        Todos los resultados se midieron en Visual Studio Community 2026. El par de la
-        lámina de virtual es el más importante del deck: el mismo puntero, dos llamadas,
-        9 y menos 1.
-
-        El temario pide punteros crudos con new y delete, y también los inteligentes. Se dan
-        los crudos primero porque son los que la unidad pide y los que aparecen en el libro,
-        y unique_ptr después como lo que se usa hoy.
-
-        Lectura: Malik, octava edición, capítulo 12. Los documentos del curso citan el 14,
-        correcto en la quinta edición.
 
   - agenda:
       eyebrow: Agenda
@@ -110,17 +95,6 @@ slides:
       output: |
         42 42
         99
-      notes: |
-        El ampersand de la línea 2 no es el de la semana 5. Ahí declaraba una referencia,
-        aquí toma la dirección de una variable. Es el mismo símbolo con dos trabajos, y
-        conviene decirlo antes de que alguien lo pregunte.
-
-        La última línea es la que importa. Se modificó n sin escribir n, a través del
-        puntero. Eso es exactamente lo que hace posible que una función cambie algo de
-        quien la llamó, y por eso el paso por referencia de la semana 5 y esto son primos.
-
-        Un puntero puede no apuntar a nada. Ese valor se escribe nullptr, y llegar al valor
-        de un puntero nulo termina el programa de golpe.
 
   - divider:
       eyebrow: Bloque 02
@@ -150,16 +124,6 @@ slides:
         d = nullptr;
       output: |
         7
-      notes: |
-        new reserva memoria en el montón y devuelve su dirección. delete la libera. Los dos
-        van en pareja y la pareja tiene que cerrarse en todos los caminos del programa.
-
-        Poner el puntero en nullptr después del delete no es obligatorio y sí es buena
-        costumbre. Sin eso queda un puntero que apunta a memoria que ya no es suya, y usarlo
-        no da error, da comportamiento indefinido.
-
-        Si el new fue con corchetes, el delete también. new int[10] se libera con delete[],
-        y mezclarlos es uno de los errores que no avisa.
 
   - code_output:
       eyebrow: Lo que se usa hoy
@@ -174,16 +138,6 @@ slides:
         std::cout << *u << "\n";
       output: |
         5
-      notes: |
-        unique_ptr se comporta como un puntero y llama a delete solo, cuando la variable
-        sale de su alcance. No hay manera de olvidarlo, porque no hay nada que escribir.
-
-        Necesita la cabecera memory. Se llama único porque no se puede copiar: solo un
-        unique_ptr puede ser dueño de un objeto a la vez, y eso es justamente lo que evita
-        el doble delete.
-
-        Este curso enseña los dos porque la unidad pide new y delete y porque el libro está
-        escrito así. En código nuevo, la recomendación es empezar por el inteligente.
 
   - divider:
       eyebrow: Bloque 03
@@ -206,16 +160,6 @@ slides:
       output: |
         9
         -1
-      notes: |
-        El puntero es el mismo y el objeto es el mismo. Lo único que cambia es que area está
-        declarada virtual en Figura y areaNoVirtual no.
-
-        Sin virtual, el compilador decide qué función llamar viendo el tipo del puntero, que
-        es Figura, y por eso sale menos 1. Con virtual, la decisión se toma al ejecutar
-        mirando el objeto real, que es un Cuadrado, y sale 9.
-
-        Esta lámina es la sesión completa. Si algo se les queda de hoy, que sea el par 9 y
-        menos 1.
 
   - figure:
       eyebrow: Cómo funciona
@@ -263,10 +207,6 @@ slides:
         - ["override", "Verifica que sustituyas", "En la hija"]
         - ["= 0", "La vuelve pura y abstrae", "En la base"]
         - ["virtual ~", "Destruye la parte de la hija", "En la base, siempre"]
-      notes: |
-        El último renglón es una regla sin excepciones prácticas: si una clase tiene alguna
-        función virtual, su destructor también debe ser virtual. Es gratis y evita una fuga
-        silenciosa.
 
   - quiz:
       eyebrow: Pregunta rápida

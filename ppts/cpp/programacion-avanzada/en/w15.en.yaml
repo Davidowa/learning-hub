@@ -17,19 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 15 of 17]
-      notes: |
-        The topic connects to nearly everything before it. Division by zero from week 2, the
-        file that would not open from week 13, and the out-of-range index from week 10 are
-        the three natural examples, and the group has already lived through all three.
-
-        Worth being honest about the scope: exceptions do not replace validation. Data the
-        program can check gets checked with an if. The exception is for what the function
-        cannot resolve on its own.
-
-        The outputs were measured on Visual Studio Community 2026.
-
-        Reading: Malik, eighth edition, chapter 14. The course documents cite 16, right for
-        the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -126,16 +113,6 @@ slides:
         }
       output: |
         division by zero
-      notes: |
-        throw ends the function immediately. Not one more line of the try block runs, it
-        jumps straight to the matching catch.
-
-        what returns the text given when the exception was constructed. It is a function on
-        the base class, so every standard library exception has one.
-
-        This needs the stdexcept header. The example throws and catches in one place for
-        clarity; the real case has the throw inside a function and the catch several levels
-        above.
 
   - code_output:
       eyebrow: From the library
@@ -156,13 +133,6 @@ slides:
         }
       output: |
         out of range
-      notes: |
-        at is the week 10 function that does check the index. Here you can see what it does
-        when the index is not there: it throws out_of_range, a standard library class.
-
-        With brackets none of this would have happened. It would have read someone else's
-        memory in silence, exactly like the week 10 array. That is the difference bought with
-        a little run time.
 
   - table:
       eyebrow: The types
@@ -173,13 +143,6 @@ slides:
         - ["invalid_argument", "An argument is unusable", "stoi on non-numeric text"]
         - ["runtime_error", "Something fails while running", "General use"]
         - ["bad_alloc", "There is no memory", "new, when it cannot reserve"]
-      notes: |
-        All four descend from std::exception, so a catch on that base class catches every
-        one. It works as a net at the end, and it does not replace the specific ones.
-
-        Throwing your own types is valid and common on large projects. For this course the
-        library ones are enough, since they arrive with the message and the hierarchy already
-        settled.
 
   - divider:
       eyebrow: Block 03

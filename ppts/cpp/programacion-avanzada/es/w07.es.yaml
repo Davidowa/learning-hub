@@ -17,19 +17,6 @@ slides:
         - [Profesor, David Escobar-Castillejos]
         - [Clave, COM103 · Semestre 2]
         - [Sesión, 7 de 17]
-      notes: |
-        Se levanta la limitación que arrastraron las seis sesiones anteriores. Vale la pena
-        decirlo de entrada: el mutador de la semana pasada, que solo asignaba, hoy ya puede
-        revisar lo que recibe.
-
-        Todos los resultados de este deck se midieron compilando cada programa tal como
-        aparece en su lámina, en Visual Studio Community 2026. El caso del switch sin break y
-        el de la comparación de reales salieron de corridas reales, no de memoria.
-
-        La lámina de los reales es la más importante de la sesión y la que más se olvida.
-        0.1 más 0.2 no es igual a 0.3, y aun así cout imprime 0.3. Conviene correrlo en vivo.
-
-        Lectura: Malik, octava edición, capítulo 4.
 
   - agenda:
       eyebrow: Agenda
@@ -102,12 +89,6 @@ slides:
         - [">", "Mayor que", "3 > 7", "false"]
         - ["<=", "Menor o igual", "7 <= 7", "true"]
         - [">=", "Mayor o igual", "3 >= 7", "false"]
-      notes: |
-        Los seis devuelven un bool. Como bool se convierte a entero sin pedir permiso, cout
-        los imprime como 1 y 0 salvo que se le pida lo contrario.
-
-        El primero es el que más problemas da, y no por difícil. Se escribe con dos signos y
-        el de uno solo también compila, que es la lámina siguiente.
 
   - table:
       eyebrow: Lógicos
@@ -117,13 +98,6 @@ slides:
         - ["&&", "Y", "Las dos condiciones son ciertas"]
         - ["||", "O", "Al menos una es cierta"]
         - ["!", "No", "La condición es falsa"]
-      notes: |
-        C++ evalúa en corto circuito. Con && , si la primera condición es falsa, la segunda
-        ni siquiera se evalúa; con ||, si la primera es cierta, tampoco.
-
-        Eso no es una optimización invisible, es comportamiento garantizado y se usa a
-        propósito. Escribir la comprobación barata a la izquierda y la cara a la derecha
-        cambia lo que cuesta el programa.
 
   - code_output:
       eyebrow: El error clásico
@@ -137,14 +111,6 @@ slides:
         std::cout << (x = 6) << " " << x << "\n";
       output: |
         6 6
-      notes: |
-        El signo simple asigna y entrega el valor asignado. Como 6 no es cero, dentro de un
-        if eso cuenta como verdadero, así que la condición se cumple siempre y además la
-        variable quedó modificada.
-
-        Compila, corre y no hay ninguna advertencia que lo denuncie con las opciones que
-        traen los proyectos por omisión. Cuando un if se cumple siempre, esta es la primera
-        cosa que hay que revisar.
 
   - divider:
       eyebrow: Bloque 02
@@ -192,16 +158,6 @@ slides:
         std::cout << (d == 0.3) << " " << d << "\n";
       output: |
         0 0.3
-      notes: |
-        El primer número es la comparación y vale falso. El segundo es el valor, y se
-        imprime como 0.3. Las dos cosas son ciertas al mismo tiempo.
-
-        0.1 y 0.2 no se pueden representar exactamente en binario, así que la suma queda a
-        una distancia mínima de 0.3. cout redondea a seis cifras al mostrar y esconde la
-        diferencia.
-
-        La regla práctica es no comparar reales con igualdad. Se compara la diferencia
-        absoluta contra una tolerancia pequeña, por ejemplo que sea menor a 0.000001.
 
   - divider:
       eyebrow: Bloque 03
@@ -226,16 +182,6 @@ slides:
       output: |
         dos
         tres
-      notes: |
-        El switch no elige un caso, elige por dónde entrar. A partir de ahí ejecuta todo lo
-        que sigue hasta encontrar un break o llegar al final.
-
-        Por eso con opcion igual a 2 imprime dos y tres, pero no uno ni otro. Medido en una
-        corrida real.
-
-        Esto se llama caída y a veces se quiere a propósito, para que dos casos compartan el
-        mismo código. Cuando es a propósito conviene escribir un comentario que lo diga, o
-        el siguiente que lo lea va a creer que es un olvido.
 
   - table:
       eyebrow: Cuál usar
@@ -245,10 +191,6 @@ slides:
         - ["if", "Una condición, un camino", "Las llaves cuando crezca"]
         - ["if-else", "Dos caminos excluyentes", "Anidar más de dos niveles"]
         - ["switch", "Una variable, muchos valores", "El break de cada caso"]
-      notes: |
-        switch solo funciona con enteros y con tipos que se convierten a entero, como char y
-        enum. No acepta double ni std::string, que es la primera limitación con la que se
-        topa quien lo intenta usar para un menú de texto.
 
   - quiz:
       eyebrow: Pregunta rápida

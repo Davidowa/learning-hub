@@ -17,20 +17,6 @@ slides:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
         - [Session, 11 of 17]
-      notes: |
-        Short on syntax and long on judgement. struct is almost identical to class and the
-        interesting question is when to use which.
-
-        In C++ the only technical difference between struct and class is the default access
-        level. Everything else is convention, and it is worth saying so rather than inventing
-        a distinction the language does not make.
-
-        The sizes and outputs were measured on Visual Studio Community 2026. sizeof on a
-        record of two doubles gives 16, the sum of its parts, and it is worth warning that
-        this does not always happen because of alignment padding.
-
-        Reading: Malik, eighth edition, chapter 9. The course documents cite 11, which is
-        right for the fifth edition.
 
   - agenda:
       eyebrow: Agenda
@@ -108,15 +94,6 @@ slides:
         }
       output: |
         3 4
-      notes: |
-        The dot between the object name and the field name is the same operator used to call
-        a member function. That is no coincidence: a struct is a class.
-
-        The semicolon after the closing brace is required, exactly as with class, and it is
-        the same thing forgotten in week 6.
-
-        q was declared without initialising its fields. Until those two assignments, x and y
-        hold garbage, exactly like a loose variable.
 
   - code_output:
       eyebrow: Copies
@@ -134,16 +111,6 @@ slides:
         std::cout << q.x << " " << r.x << "\n";
       output: |
         3 99
-      notes: |
-        The assignment copied the whole record, field by field. Changing r did not touch q,
-        which is what you expect and is not always what happens in other languages.
-
-        This is value semantics, the same the parameters had back in week 4. Worth saying
-        that with large records the copy costs, and that this is why they are passed to
-        functions as const references.
-
-        Once the record contains a pointer, in week 12, this copy will stop being enough.
-        Worth announcing today.
 
   - divider:
       eyebrow: Block 02
@@ -232,16 +199,6 @@ slides:
         std::cout << sizeof(Point) << "\n";
       output: |
         16
-      notes: |
-        Two doubles of eight bytes give sixteen, so the arithmetic works out here. It does
-        not always work out.
-
-        The compiler may insert padding between fields so each one starts at an address
-        aligned to its size. A struct with a char and an int usually takes eight bytes rather
-        than five.
-
-        The practical consequence is that you must not assume a record's size, nor write it
-        to a binary file assuming its layout. That matters in week 13.
 
   - quiz:
       eyebrow: Quick question

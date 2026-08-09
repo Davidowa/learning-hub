@@ -1,0 +1,330 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: python
+  week: 15.3
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 15 · 3 de 3 · Tema 8.1.3 · Agrupar, resumir y unir
+      title: Análisis y Diseño de Algoritmos
+      subtitle: La tabla dinámica y el BUSCARV, una línea cada uno. Y la revisión que ninguna hoja de cálculo te deja hacer.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 2]
+        - [Sesión, 15 · 3 de 3]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Agrupar
+          desc: groupby es la tabla dinámica. Partir, resumir y volver a juntar
+        - title: La rejilla
+          desc: pivot_table pone esos mismos números en forma de cuadrícula
+        - title: Unir
+          desc: merge es BUSCARV, y además te dice qué no encontró
+        - title: Tu turno
+          desc: Tu pregunta de negocio, contestada con una agrupación
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Agrupar y resumir en una línea
+          sub: groupby seguido de la columna y de la función de resumen
+        - head: Pedir varios resúmenes a la vez
+          sub: Con agg, y con nombres de columna que tú eliges
+        - head: Armar una rejilla
+          sub: Con pivot_table, índice, columnas y valores, más los totales
+        - head: Unir dos tablas
+          sub: Con merge, y saber por qué el modo izquierdo es el seguro
+        - head: Auditar una unión
+          sub: Con indicator, revisando las dos direcciones antes de confiar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Agrupar
+      lede: Partir los renglones que comparten un valor, resumir cada montón, y volver a juntar los resultados. Eso es todo.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · La reducción
+      title: Ochenta líneas, u ocho
+      before:
+        label: Semana 14, a mano
+        file: manual.py
+        code: |
+          from collections import defaultdict
+
+          por_region = defaultdict(float)
+
+          for r in registros:
+              por_region[r["region"]] += r["amount"]
+      after:
+        label: Con pandas
+        file: agrupar.py
+        code: |
+          por_region = (ventas
+                        .groupby("region")["amount"]
+                        .sum())
+      note: >-
+        Los dos dan los mismos cuatro totales, hasta el centavo. La diferencia es que uno
+        se puede leer de un vistazo y el otro hay que revisarlo línea por línea.
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: Los cuatro totales, en miles
+      filename: agrupar.py
+      source: |
+        por_region = (ventas.groupby("region")["amount"]
+                      .sum()
+                      .sort_values(ascending=False))
+
+        print((por_region / 1000).round(0))
+      output: |
+        region
+        North     4352.0
+        Centre    3919.0
+        West      3030.0
+        South     1553.0
+
+  - code:
+      eyebrow: Bloque 01 · Varios resúmenes
+      title: Cuánto, cuántas veces y de qué tamaño
+      filename: resumen.py
+      source: |
+        detalle = ventas.groupby("region").agg(
+            ingreso=("amount", "sum"),
+            unidades=("units", "sum"),
+            ventas=("amount", "count"),
+            promedio=("amount", "mean"),
+        ).round(2)
+
+        print(detalle.sort_values("ingreso", ascending=False))
+      annotations:
+        - label: agg
+          text: Recibe cuántos resúmenes quieras, y cada uno sale como una columna del reporte.
+        - label: El patrón
+          text: nombre_nuevo igual a la columna de origen y la función. Tú eliges cómo se llama cada columna.
+        - label: Cuánto y cuántos
+          text: sum contesta magnitud, count contesta frecuencia. Son las dos preguntas de la semana 9.
+        - label: El hallazgo
+          text: La región que más vende no es la que tiene la venta promedio más alta. Ahí está la historia.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La rejilla
+      lede: Los mismos números, acomodados como los ves en pantalla cuando abres una tabla dinámica.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · pivot_table
+      title: Los cuatro argumentos, y qué es cada uno
+      filename: rejilla.py
+      source: |
+        rejilla = ventas.pivot_table(
+            index="region",      # lo que baja por el lado
+            columns="channel",   # lo que cruza arriba
+            values="amount",     # lo que llena las celdas
+            aggfunc="sum",       # cómo se resumen
+        )
+
+        print((rejilla / 1000).round(0))
+      annotations:
+        - label: index
+          text: El campo que arrastrarías a las filas de la tabla dinámica.
+        - label: columns
+          text: El que arrastrarías a las columnas. Cada valor distinto se vuelve una columna.
+        - label: values y aggfunc
+          text: Qué se resume y con qué función. Por omisión promedia, así que casi siempre hay que decirlo.
+        - label: margins
+          text: Agrégalo en verdadero y aparecen los totales de fila y de columna, como el total general.
+
+  - code_output:
+      eyebrow: Bloque 02 · Resultado
+      title: Región contra canal, en miles
+      filename: rejilla.py
+      source: |
+        print((rejilla / 1000).round(0))
+      output: |
+        channel  Online  Retail  Wholesale
+        Centre   1292.0   490.0     2137.0
+        North     978.0  1331.0     2042.0
+        South     420.0   271.0      862.0
+        West      589.0   738.0     1703.0
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Unir dos tablas
+      lede: BUSCARV trae una columna por fórmula. merge trae todas de golpe, y además te dice qué no encontró.
+      block: 3
+
+  - compare:
+      eyebrow: Bloque 03 · Traducción
+      title: BUSCARV, dicho una vez
+      before:
+        label: En la hoja
+        file: ventas.xlsx
+        lang: excel
+        code: |
+          =BUSCARV(B2; Regiones; 2; FALSO)
+          =BUSCARV(B2; Regiones; 3; FALSO)
+          =BUSCARV(B2; Regiones; 4; FALSO)
+      after:
+        label: En pandas
+        file: unir.py
+        code: |
+          unida = ventas.merge(regiones,
+                               on="region",
+                               how="left")
+      note: >-
+        Tres fórmulas por cada columna que quieras traer, o una sola instrucción que las
+        trae todas. Y sin escribir el número de columna, que es donde BUSCARV se rompe.
+
+  - table:
+      eyebrow: Bloque 03 · Modos
+      title: Los cuatro modos de unión
+      headers: [Modo, Qué conserva, Cuándo]
+      rows:
+        - ["left", "Todos los renglones de la izquierda", "El seguro, y el que imita a BUSCARV"]
+        - ["inner", "Solo los que coinciden", "Cuando lo que no cruza no interesa"]
+        - ["right", "Todos los de la derecha", "Raro, es un left al revés"]
+        - ["outer", "Todos los de ambos lados", "Para auditar qué no coincidió"]
+
+  - code_output:
+      eyebrow: Bloque 03 · La auditoría
+      title: Lo que ninguna hoja de cálculo te deja revisar
+      filename: auditar.py
+      source: |
+        auditoria = ventas.merge(regiones, on="region",
+                                 how="outer", indicator=True)
+
+        print(auditoria["_merge"].value_counts())
+      output: |
+        _merge
+        both          306
+        right_only      1
+        left_only       0
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Las dos direcciones se revisan por separado
+      lead: >-
+        right_only en uno significa que el catálogo tiene una región sin ninguna venta.
+        Eso casi siempre está bien: una plaza nueva, o una que cerró. left_only en cero
+        significa que ninguna venta quedó huérfana, y eso sí importa: una venta con una
+        región que el catálogo no conoce es un problema de datos que hay que reportar.
+      panel:
+        label: La diferencia con BUSCARV
+        title: N/A esparcido en la hoja no se cuenta solo
+        note: >-
+          Con una fórmula tendrías que contar los errores a mano y en una sola dirección.
+          Aquí el conteo viene incluido y cubre las dos.
+      steps:
+        - text: Unes con indicator en verdadero
+        - text: Cuentas de dónde vino cada renglón
+        - text: Investigas lo que no cruzó
+          loop: ↺ y solo entonces confías en el resultado
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores al agrupar y unir
+      items:
+        - label: Error 01
+          title: Agrupar sin haber limpiado
+          desc: Ocho regiones donde hay cuatro. Los totales se parten y cada mitad se ve perfectamente razonable.
+        - label: Error 02
+          title: Suponer que pivot_table suma
+          desc: Por omisión promedia. Si esperabas totales y no dijiste aggfunc, el número está mal.
+        - label: Error 03
+          title: Unir con inner sin darte cuenta
+          desc: Los renglones que no cruzan desaparecen en silencio, y tu total baja sin que nada lo explique.
+        - label: Error 04
+          title: Confiar en la unión sin auditarla
+          desc: indicator en verdadero cuesta una palabra y te dice exactamente cuántos renglones quedaron sueltos.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué devuelve esta línea si no dices aggfunc?
+      filename: aggfunc.py
+      source: |
+        rejilla = ventas.pivot_table(
+            index="region",
+            columns="channel",
+            values="amount",
+        )
+      options:
+        - "La suma por región y canal"
+        - "El promedio, que es lo que hace por omisión"
+        - "El conteo de renglones"
+        - "Un error, porque aggfunc es obligatorio"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Contesta tu pregunta de negocio
+      brief: Con tu archivo limpio, contesta la pregunta que planteaste en la semana 1 usando una agrupación. Produce además una rejilla que cruce dos categorías, y únela con una tabla de catálogo si tu caso lo pide.
+      blocks:
+        - label: Entrega
+          text: El cuaderno con la agrupación, la rejilla y la respuesta escrita en una frase
+        - label: Restricción
+          text: Si hay unión, tiene que venir auditada con indicator y comentada
+        - label: La prueba
+          text: Suma la rejilla completa y compárala con el total de la tabla. Si no coinciden, algo se perdió.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: groupby es la tabla dinámica
+          desc: Partir, resumir y volver a juntar. Las ochenta líneas de la semana 14, en ocho y sin errores
+        - title: pivot_table promedia por omisión
+          desc: Si querías totales tienes que decirlo, y ese olvido produce un número que se ve razonable
+        - title: Una unión se audita
+          desc: indicator cuesta una palabra y contesta en las dos direcciones qué renglones no encontraron pareja
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Corre los scripts 05 y 06 del módulo A05 y compara sus cuatro totales por región contra los que produjo el script manual de la semana 14. Explica por qué coinciden hasta el centavo.
+      meta:
+        - [Entrega, Antes de la sesión 16.1]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Comparación", "40 %", "Las dos salidas aparecen lado a lado y los cuatro totales coinciden"]
+        - ["Explicación", "40 %", "Se dice qué hace groupby por dentro y por qué da lo mismo que el diccionario"]
+        - ["Auditoría", "20 %", "Se reporta el resultado de indicator y qué significa el right_only"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, gráficas. Cómo se ve un número para que alguien lo entienda sin que se lo expliques.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,342 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: python
+  week: 2
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 02 · Unit 1 · Algorithm design
+      title: Analysis and Design of Algorithms
+      subtitle: How a problem gets solved before a single line is written. Algorithms, flowcharts and pseudocode.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 2]
+        - [Session, 2 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What an algorithm is
+          desc: And why an everyday instruction almost never qualifies
+        - title: How it gets written
+          desc: Flowcharts to see it, pseudocode to write it down
+        - title: How a problem is attacked
+          desc: Breaking a big one apart until every piece is obvious
+        - title: Your turn
+          desc: A process from your own field, turned into steps anyone can follow
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Define what an algorithm is
+          sub: And tell it apart from an instruction that sounds clear and is not
+        - head: Name the five properties
+          sub: Finite, precise, definite, with input and with output
+        - head: Read and draw a flowchart
+          sub: The four symbols and what each one means
+        - head: Write pseudocode
+          sub: A plan anyone can follow, with no syntax from any language
+        - head: Decompose a problem
+          sub: Split a large one into parts that can be solved separately
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: todo
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What an algorithm is
+      lede: A sequence of steps that solves a problem, written precisely enough that whoever follows it has nothing left to decide.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Precision is the requirement, not the detail
+      lead: >-
+        An algorithm is a finite sequence of steps that solves a problem. What separates it
+        from any other instruction is not its length or its vocabulary. It is that nothing
+        is left to the judgement of whoever runs it. Two people following the same
+        algorithm on the same data have to arrive at the same result.
+      panel:
+        label: The test
+        title: If two people get different results, it was not an algorithm
+        note: >-
+          That is the practical test, and it works for a payroll calculation as well as
+          for a documented company process.
+      steps:
+        - text: It takes some input data
+        - text: It runs steps with no ambiguity
+        - text: It produces a result and stops
+          loop: ↺ and on the same data it always produces the same thing
+
+  - figure:
+      eyebrow: Block 01 · The idea
+      title: A numbered recipe, with no room to interpret
+      image: img/en/ct-04.png
+      caption: Every step says exactly what to do and in what order. Nobody following it has to guess.
+      alt: A hand-drawn recipe with numbered, unambiguous steps
+
+  - table:
+      eyebrow: Block 01 · Properties
+      title: The five properties it has to satisfy
+      headers: [Property, What it means, How it breaks]
+      rows:
+        - ["Finite", "It ends in countable steps", "«Repeat until it looks right»"]
+        - ["Precise", "No step admits a second reading", "«Apply the usual discount»"]
+        - ["Definite", "Same data, same result", "A step that depends on the reader"]
+        - ["With input", "It takes zero or more values", "A calculation with no source"]
+        - ["With output", "It produces at least one result", "It ends without stating what it found"]
+
+  - compare:
+      eyebrow: Block 01 · The difference
+      title: The same instruction, said twice
+      before:
+        label: An instruction
+        file: email.txt
+        lang: text
+        code: |
+          Work out the year-end bonus
+          for each employee based on
+          tenure and performance.
+      after:
+        label: An algorithm
+        file: bonus.txt
+        lang: text
+        code: |
+          IF tenure < 12 months:
+              bonus = 0
+          ELSE IF rating >= 4.5:
+              bonus = salary * 0.20
+          ELSE:
+              bonus = salary * 0.10
+      note: >-
+        The one on the left sounds clear and is not. How much «based on tenure» means is
+        decided by whoever reads it, and two people will decide differently.
+
+  - divider:
+      eyebrow: Block 02
+      title: How an algorithm gets written
+      lede: >-
+        Two forms, and both serve the same purpose: making it clear before it is
+        translated into any language.
+      block: 2
+
+  - figure:
+      eyebrow: Block 02 · Flowcharts
+      title: The four symbols worth knowing
+      image: img/en/ct-05.png
+      caption: An oval for start and end, a rectangle for a process, a diamond for a decision, a parallelogram for input and output.
+      alt: The four flowchart symbols, hand-drawn and labelled
+
+  - table:
+      eyebrow: Block 02 · Symbols
+      title: What each shape draws
+      headers: [Symbol, What it stands for, Example from the case]
+      rows:
+        - ["Oval", "The start or the end of the algorithm", "START · END"]
+        - ["Parallelogram", "Data coming in or a result going out", "READ tenure · WRITE bonus"]
+        - ["Rectangle", "A process: a calculation or an assignment", "bonus = salary * 0.20"]
+        - ["Diamond", "A decision with two ways out", "is tenure under 12?"]
+        - ["Arrow", "The order in which the steps are followed", "From the diamond to one of its two paths"]
+
+  - figure:
+      eyebrow: Block 02 · The full set
+      title: The other nine that do exist
+      image: img/en/flow-symbols.png
+      caption: Predefined process, preparation, both connectors, stored data, document, manual input, display and manual operation.
+      alt: The nine remaining flowchart symbols, each with its name and its use
+
+  - figure:
+      eyebrow: Block 02 · When it no longer fits
+      title: A long chart gets cut, not squeezed
+      image: img/en/flow-connector.png
+      caption: The lettered circle says where the line stops and where it picks up again. The letter is all that joins them.
+      alt: A flowchart cut in two, joined by a circular connector holding the letter A
+
+  - code:
+      eyebrow: Block 02 · Pseudocode
+      title: The same calculation, written to be read
+      filename: annual_bonus.txt
+      lang: text
+      source: |
+        START
+            READ salary, tenure, rating
+
+            IF tenure < 12 THEN
+                bonus = 0
+            ELSE IF rating >= 4.5 THEN
+                bonus = salary * 0.20
+            ELSE
+                bonus = salary * 0.10
+
+            WRITE bonus
+        END
+      annotations:
+        - label: No language
+          text: This is not Python or anything else. It is the plan, which is why somebody who does not program can read it.
+        - label: The indentation
+          text: It marks which instructions belong to which branch. That is the only structure it has.
+        - label: Order matters
+          text: Tenure is checked first. An employee with eleven months never reaches the rating at all.
+        - label: Risk
+          text: Swapping the two conditions changes who gets paid, and the pseudocode looks just as correct.
+          accent: true
+
+  - compare:
+      eyebrow: Block 02 · The translation
+      title: From the plan to the language, almost line for line
+      before:
+        label: Pseudocode
+        file: annual_bonus.txt
+        lang: text
+        code: |
+          IF tenure < 12 THEN
+              bonus = 0
+          ELSE IF rating >= 4.5 THEN
+              bonus = salary * 0.20
+          ELSE
+              bonus = salary * 0.10
+      after:
+        label: Python
+        file: annual_bonus.py
+        code: |
+          if tenure < 12:
+              bonus = 0
+          elif rating >= 4.5:
+              bonus = salary * 0.20
+          else:
+              bonus = salary * 0.10
+      note: >-
+        Five words change and a colon appears at the end of each condition. The plan is
+        the same, which is why getting it right on paper is half the work.
+
+  - divider:
+      eyebrow: Block 03
+      title: How a large problem is attacked
+      lede: By splitting it until every piece is something you already know how to solve.
+      block: 3
+
+  - figure:
+      eyebrow: Block 03 · Decomposition
+      title: A tangle gets solved by untangling it
+      image: img/en/ct-01.png
+      caption: No serious problem is solved in one move. It is pulled apart until each piece is obvious.
+      alt: A tangle of thread separated into tidy coils, hand-drawn
+
+  - steps:
+      eyebrow: Block 03 · Method
+      title: The five stages of solving a problem
+      items:
+        - label: '01'
+          title: Understand the problem
+          desc: What exactly is being asked, and what is not being asked
+        - label: '02'
+          title: Identify the data
+          desc: What comes in, what goes out, and what is still missing
+        - label: '03'
+          title: Design the solution
+          desc: The algorithm on paper, as pseudocode or as a chart
+        - label: '04'
+          title: Write it as code
+          desc: The translation, which is the most mechanical part of all
+        - label: '05'
+          title: Test it and fix it
+          desc: With ordinary cases and with the edge cases that break everything
+
+  - quiz:
+      eyebrow: Quick check
+      question: An employee with 11 months and a rating of 5.0. What bonus do they get?
+      filename: annual_bonus.txt
+      lang: text
+      source: |
+        IF tenure < 12 THEN
+            bonus = 0
+        ELSE IF rating >= 4.5 THEN
+            bonus = salary * 0.20
+        ELSE
+            bonus = salary * 0.10
+      options:
+        - "20 %, because their rating is excellent"
+        - "Zero, because tenure is checked first"
+        - "10 %, because they fail one of the two"
+        - "It depends on their salary"
+
+  - trace:
+      eyebrow: Answer
+      title: The trace settles it without argument
+      headers: [Step, Instruction, tenure, rating, bonus]
+      rows:
+        - ['1', "READ the data", '11', "5.0", '–']
+        - ['2', "is 11 < 12?", '11', "5.0", '–']
+        - ['3', "Yes, take the first branch", '11', "5.0", '0']
+        - ['4', "The other branches are not evaluated", '11', "5.0", '0']
+        - ['5', "WRITE bonus", '11', "5.0", '0']
+      verdict: The rating of 5.0 is never looked at. Once a branch is taken, the rest are not read.
+
+  - lab:
+      eyebrow: Lab
+      title: A process from your field, written as an algorithm
+      brief: Pick a process that already exists in your discipline, such as approving an expense, scoring a supplier or segmenting a customer, and write it as pseudocode with at least one decision.
+      blocks:
+        - label: Deliverable
+          text: Half a page on paper, with the pseudocode and its input data
+        - label: Constraint
+          text: No computer and no syntax from any language. Only the plan.
+        - label: The test
+          text: Swap pages with a classmate. If they get a different result, something was ambiguous.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: An algorithm leaves nothing to judgement
+          desc: If two people following your steps get different results, it is not an algorithm yet
+        - title: Condition order is a business decision
+          desc: Checking tenure before performance changes who gets paid, and the paper looks equally correct
+        - title: The code is the mechanical part
+          desc: The plan is the hard part. Once it is clear on paper, translating it is a matter of syntax
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Turn the pseudocode from the lab into a flowchart using the four symbols, and add an edge case that your in-class version did not cover.
+      meta:
+        - [Due, Before week 3]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Symbols", "40 %", "Each shape is used for what it stands for and the flow can be followed"]
+        - ["Decision", "30 %", "The diamond has both exits labelled and both lead somewhere"]
+        - ["Edge case", "30 %", "The added case broke the earlier version, and you explain why"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, why programming paradigms exist and what a language does with what you write.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]
