@@ -1,0 +1,389 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 8
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 08 · Tema 3 · Propiedades fundamentales
+      title: Programación Orientada a Objetos
+      subtitle: El mismo mensaje contestado de formas distintas, el contrato que obliga a contestarlo, y el cierre de las tres primeras unidades.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 8 de 17]
+      notes: |
+        Cierra el tema 3 y cierra el parcial. Conviene dejar el bloque 3 completo para la
+        logística del examen aunque el bloque 2 quede corto: la duda que llega por correo
+        el domingo es siempre sobre el formato, no sobre las clases abstractas.
+
+        Los ejemplos salen de docs/en/courses/python-course/02 - POO/6th Module:
+        Animal, Perro y Gato con hablar sobrescrito son de Code027.py; la clase abstracta
+        Stream con abstractmethod es de Code026.py; Forma, Círculo y Rectángulo salen del
+        cierre de Code020.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Polimorfismo
+          desc: Un mismo mensaje, una respuesta distinta por cada clase
+        - title: Sobrescritura
+          desc: Reemplazar el método del padre, o extenderlo con super
+        - title: Abstractas e interfaces
+          desc: Declarar el contrato sin escribir todavía el cuerpo
+        - title: Primer parcial
+          desc: Qué entra, cómo se entrega y cómo se califica
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Sobrescribir un método
+          sub: Reemplazar el cuerpo en la hija, y decidir si conviene extender el del padre con super
+        - head: Recorrer objetos distintos por igual
+          sub: Escribir un ciclo que llame al mismo método sin preguntar de qué clase es cada objeto
+        - head: Declarar una clase abstracta
+          sub: ABC más @abstractmethod, y qué falla exactamente si falta uno de los dos
+        - head: Presentarse al primer parcial
+          sub: Con las unidades 1, 2 y 3 practicadas a máquina y no leídas
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: now
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Polimorfismo y sobrescritura
+      lede: Muchas formas de contestar lo mismo. Es el pilar que hace que agregar una clase no obligue a tocar nada de lo anterior.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es el polimorfismo
+      lead: >-
+        Que objetos de clases distintas respondan al mismo mensaje, cada uno a su manera, y
+        que quien los llama no tenga que saber de cuál se trata. Es lo que permite agregar
+        una clase nueva sin tocar una sola línea del código que ya funcionaba.
+      panel:
+        label: Dónde se nota
+        title: En el ciclo que llama, no en la clase
+        note: >-
+          El polimorfismo no se ve en la clase que lo implementa, sino en el ciclo que llama
+          a todas por igual. Si en ese ciclo hay un if por tipo, todavía no lo estás usando.
+      steps:
+        - text: El padre declara el método
+        - text: Cada hija escribe el suyo
+        - text: Quien llama no pregunta el tipo
+          loop: ↺ una clase nueva entra sin modificar el ciclo
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Una llamada, tres respuestas
+      image: img/es/polymorphism.png
+      caption: La línea del ciclo no cambia nunca. Lo que cambia es la clase del objeto que le toca en cada vuelta.
+      alt: Un ciclo que envía el mismo mensaje a tres objetos, y cada uno responde con un sonido distinto
+
+  - code:
+      eyebrow: Sobrescritura
+      title: Tres clases y un método con el mismo nombre
+      filename: animales.py
+      lang: python
+      source: |
+        class Animal:
+            def hablar(self) -> None:
+                print("Sonido de animal")
+
+
+        class Perro(Animal):
+            def hablar(self) -> None:
+                print("Guau")
+
+
+        class Gato(Animal):
+            def hablar(self) -> None:
+                print("Miau")
+      annotations:
+        - label: Línea 6
+          text: Perro vuelve a definir hablar. Para un perro, la versión del padre queda tapada.
+        - label: Línea 11
+          text: Gato hace lo mismo con otro cuerpo, y ninguna de las dos sabe que la otra existe
+        - label: Ojo con el nombre
+          text: Sobrescribir cambia el cuerpo en la hija. Sobrecargar sería tener dos firmas, y eso Python no lo hace.
+
+  - code_output:
+      eyebrow: Demostración
+      title: El ciclo que no pregunta de qué clase es cada objeto
+      filename: coro.py
+      lang: python
+      output_label: Salida
+      source: |
+        animales = [Perro(), Gato(), Perro()]
+
+        for animal in animales:
+            animal.hablar()
+      output: |
+        Guau
+        Miau
+        Guau
+
+  - code:
+      eyebrow: Extender en vez de reemplazar
+      title: Cuando la hija quiere lo del padre y algo más
+      filename: factura.py
+      lang: python
+      source: |
+        class Documento:
+            def guardar(self) -> None:
+                print("Validando campos")
+
+
+        class Factura(Documento):
+            def guardar(self) -> None:
+                super().guardar()
+                print("Timbrando la factura")
+
+
+        Factura().guardar()
+      annotations:
+        - label: Línea 8
+          text: super().guardar() corre primero lo del padre y luego lo propio. Extiende, no reemplaza.
+        - label: Cuándo omitirlo
+          text: Cuando la hija hace algo completamente distinto y el trabajo del padre estorbaría
+        - label: El orden importa
+          text: Poner la llamada a super al final invierte la secuencia. Decídelo a propósito, no por costumbre.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Clases abstractas e interfaces
+      lede: Una clase que existe para obligar a otras a escribir un método. No se instancia, y ahí está toda su utilidad.
+      block: 2
+
+  - code:
+      eyebrow: Python
+      title: Un padre que no se puede construir
+      filename: streams.py
+      lang: python
+      source: |
+        from abc import ABC, abstractmethod
+
+
+        class Stream(ABC):
+            def abrir(self) -> None:
+                self.abierto = True
+
+            @abstractmethod
+            def leer(self) -> None:
+                ...
+
+
+        class MemoriaStream(Stream):
+            def leer(self) -> None:
+                print("Leyendo de memoria")
+      annotations:
+        - label: Línea 4
+          text: Heredar de ABC marca la clase como abstracta, y con eso deja de poder instanciarse
+        - label: Línea 8
+          text: El decorador obliga a cada hija a escribir leer. Si falta, el error salta al construirla.
+        - label: Riesgo
+          text: Sin heredar de ABC el decorador no impide nada. Los dos tienen que estar juntos.
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: La hija se construye, el padre no
+      filename: probar_stream.py
+      lang: python
+      output_label: Salida
+      source: |
+        s = MemoriaStream()
+        s.abrir()
+        s.leer()
+
+        otro = Stream()
+      output: |
+        Leyendo de memoria
+        TypeError: Can't instantiate
+        abstract class Stream
+
+  - table:
+      eyebrow: Vocabulario
+      title: Cuatro maneras de declarar un contrato
+      headers: ["Tipo de clase", "Se instancia", "Trae código", "En Python"]
+      rows:
+        - ["Concreta", "Sí", "Todo", "class Perro(Animal):"]
+        - ["Abstracta", "No", "Una parte", "class Stream(ABC):"]
+        - ["Interfaz", "No", "Nada", "Solo @abstractmethod"]
+        - ["Protocolo", "No aplica", "Nada", "typing.Protocol"]
+
+  - diagram:
+      eyebrow: Diagrama
+      title: Quién declara, quién implementa y quién confía
+      blocks:
+        - label: El padre abstracto
+          title: Declara
+          desc: Dice qué métodos tendrá todo el que se cuelgue de él, sin decir cómo
+        - label: Cada hija
+          title: Implementa
+          desc: Escribe el cuerpo de cada método abstracto, a su manera y por su cuenta
+          dark: true
+        - label: Quien lo usa
+          title: Confía
+          desc: Llama al método sin preguntar de qué clase concreta es el objeto
+      note: >-
+        Ese es todo el contrato. El que llama depende del padre abstracto y de ninguna hija,
+        así que sumar una hija nueva no toca ni una línea de su código.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de romper el contrato
+      items:
+        - label: Error 01
+          title: Sobrescribir cambiando la firma
+          desc: Si la hija pide otros argumentos, el ciclo polimórfico revienta en el tercer objeto
+        - label: Error 02
+          title: '@abstractmethod sin heredar de ABC'
+          desc: El decorador no impide nada por su cuenta, y la clase se instancia como si nada
+        - label: Error 03
+          title: Preguntar el tipo antes de llamar
+          desc: Un if isinstance por clase es polimorfismo hecho a mano, y hay que tocarlo en cada clase nueva
+        - label: Error 04
+          title: Una abstracta con un solo hijo
+          desc: Si nunca habrá un segundo, la abstracción es una capa extra que no abstrae nada
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: mostrar está escrito en Forma. ¿Qué area se ejecuta?
+      filename: formas.py
+      lang: python
+      source: |
+        class Forma:
+            def area(self):
+                return 0
+
+            def mostrar(self):
+                print(self.area())
+
+        class Circulo(Forma):
+            def area(self):
+                return 12.56
+
+        Circulo().mostrar()
+      options:
+        - '0, porque mostrar vive en Forma y usa el area de Forma'
+        - '12.56, porque self es un Circulo y su area gana'
+        - 'AttributeError, Circulo no tiene mostrar'
+        - 'TypeError, area recibe un argumento de más'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 12.56, porque self nunca cambia de tipo
+      headers: ["Paso", "Instrucción", "Tipo de self", "Método que corre"]
+      rows:
+        - ["1", "Circulo()", "Circulo", "–"]
+        - ["2", ".mostrar()", "Circulo", "Forma.mostrar"]
+        - ["3", "self.area()", "Circulo", "Circulo.area"]
+        - ["4", "print(...)", "Circulo", "imprime 12.56"]
+      verdict: mostrar se heredó de Forma, pero self sigue siendo un Círculo. Python busca area empezando por la clase real del objeto, no por la clase donde estaba escrito el método.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Primer parcial
+      lede: Cierra las unidades 1, 2 y 3. Todo lo que entra ya se practicó en un laboratorio.
+      block: 3
+
+  - tiers:
+      eyebrow: Alcance del examen
+      title: Lo que entra, unidad por unidad
+      items:
+        - key: U1
+          title: Introducción a la POO
+          desc: Paradigmas, concepto de objeto, ventajas del enfoque y los casos donde estorba
+        - key: U2
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos, propiedades, acceso, constructores y miembros de clase
+        - key: U3
+          title: Propiedades fundamentales
+          desc: Encapsulamiento, ocultamiento, reutilización, herencia, jerarquía, polimorfismo y abstractas
+        - key: Fuera
+          title: Lo que no entra
+          desc: Archivos, interfaces gráficas y bases de datos, que son materia del segundo parcial
+
+  - method:
+      eyebrow: Cómo prepararse
+      title: El parcial pide escribir clases, no describirlas
+      statement: Si no puedes teclear de memoria una clase con constructor, atributo privado, propiedad y una hija que sobrescribe un método, todavía no la sabes.
+      points:
+        - label: Qué practicar
+          text: Los laboratorios de las semanas 4, 6 y 7, resueltos otra vez sin abrir la solución
+        - label: Qué revisar
+          text: Las diapositivas de diagnóstico. Los cuatro errores de cada una son los del examen.
+        - label: Qué no hacer
+          text: Memorizar definiciones. Ninguna pregunta pide la definición de encapsulamiento.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Simulacro del parcial, en parejas
+      brief: Cada pareja escribe tres preguntas de código al estilo de las que vimos, las intercambia con otra pareja y califica las respuestas con una rúbrica de dos líneas.
+      blocks:
+        - label: Restricciones
+          text: Una pregunta por unidad, y ninguna que se pueda contestar con una definición
+        - label: Entregable
+          text: Las tres preguntas, las respuestas de la otra pareja y la calificación justificada
+        - label: Criterio
+          text: Que cada pregunta tenga una respuesta correcta y una trampa que suene razonable
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Sobrescribir cambia el cuerpo, no el nombre
+          desc: La hija reemplaza el método del padre y quien llama no se entera de que hubo un cambio
+        - title: Una clase abstracta declara el contrato
+          desc: Dice qué métodos habrá sin escribir el cómo, y obliga a cada hija a completarlo
+        - title: El polimorfismo borra el if de tipos
+          desc: Agregar una clase nueva no toca ni una línea del código que ya la va a usar
+
+  - homework:
+      eyebrow: Primer parcial
+      title: Entrega y criterios de evaluación
+      brief: El examen cubre las unidades 1, 2 y 3, y se presenta durante esta misma semana. Es a máquina, con el repositorio del curso abierto y sin ayuda de terceros.
+      meta:
+        - [Momento, Semana 8]
+        - [Formato, Blackboard · un .py por pregunta]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - ["Modelado", "30 %", "Las clases corresponden al enunciado y respetan los niveles de acceso"]
+        - ["Herencia", "30 %", "Las jerarquías pasan la prueba de es un y encadenan constructores"]
+        - ["Polimorfismo", "25 %", "El código recorre objetos distintos sin preguntar por su tipo"]
+        - ["Ejecución", "15 %", "Cada archivo corre y produce la salida que pide el enunciado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, funciones avanzadas, modularidad y recursividad.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

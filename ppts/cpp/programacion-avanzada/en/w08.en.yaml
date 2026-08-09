@@ -1,0 +1,329 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 8
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 08 · Unit 6 · Control structures II
+      title: Advanced Programming
+      subtitle: The three loops, when each one suits, and the logistics of the first partial exam.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 8 of 17]
+      notes: |
+        A double session. Unit 6 closes with repetition and the first partial block closes
+        with it. This is not a revision session: the new material is taught in full and the
+        logistics go at the end.
+
+        The partial is cumulative. It covers unit 1 through unit 6, which is everything seen
+        so far, and it is worth saying in those words. The grading table in the syllabus says
+        "cumulative" for all three partials, it does not list units per exam.
+
+        All the loop outputs were measured by building each fragment exactly as it appears,
+        on Visual Studio Community 2026. The do-while whose condition is false from the
+        start prints once, and that run is on the slide.
+
+        Reading: Malik, eighth edition, chapter 5.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Repeating
+          desc: The three loops in the language and what separates them
+        - title: Which one
+          desc: When the number of passes is known ahead and when it is not
+        - title: Fine control
+          desc: break, continue and nested loops
+        - title: The partial
+          desc: What it covers, what it looks like, and what you may bring
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write all three loops
+          sub: while, do-while and for, with the condition and the step in the right place
+        - head: Choose the right loop
+          sub: By whether the number of repetitions is known before entering or not
+        - head: Avoid the infinite loop
+          sub: Recognising the three ways to forget that the condition has to change
+        - head: Nest two loops
+          sub: And work out how many times the inner body runs in total
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The three loops
+      lede: Three ways to write the same thing, and one real difference between two of them that shows in a single case.
+      block: 1
+
+  - code_output:
+      eyebrow: while
+      title: It checks before coming in
+      filename: loops.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int i = 0;
+
+        while (i < 3)
+        {
+            std::cout << "w" << i;
+            i++;
+        }
+      output: |
+        w0w1w2
+      notes: |
+        Three things have to be present and in place: the variable initialised before the
+        loop, the condition in the header, and the step inside the body.
+
+        Leave out the third and the loop never ends. It is the most common mistake of the
+        session and it shows up as a program sitting silent with the cursor blinking.
+
+  - code_output:
+      eyebrow: do-while
+      title: It runs before it checks
+      filename: loops.cpp
+      lang: cpp
+      output_label: Output with j at 3
+      source: |
+        int j = 3;
+
+        do
+        {
+            std::cout << "d" << j;
+            j++;
+        } while (j < 3);
+      output: |
+        d3
+      notes: |
+        The condition was false before entering and it still printed once. That is the only
+        real difference from while, and it is the reason the form exists.
+
+        It suits anything that has to happen at least once, such as showing a menu before
+        asking whether the user wants to quit. Outside that case, while reads better.
+
+        The semicolon after the closing parenthesis is required.
+
+  - code_output:
+      eyebrow: for
+      title: All three parts together in the header
+      filename: loops.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        for (int k = 0; k < 3; k++)
+        {
+            std::cout << "f" << k;
+        }
+      output: |
+        f0f1f2
+      notes: |
+        Initialisation, condition and step on one line. It does nothing while cannot do, but
+        it puts the three pieces where they are seen together, which makes one of them
+        harder to forget.
+
+        The variable k is declared in the header and only exists inside the loop. It stops
+        existing on the way out, which is what you want almost every time.
+
+  - table:
+      eyebrow: Which to use
+      title: Three loops, and the question that decides
+      headers: ["Loop", "When", "Minimum runs"]
+      rows:
+        - ["for", "The number of passes is known", "Zero times"]
+        - ["while", "Not known, it depends", "Zero times"]
+        - ["do-while", "It must happen at least once", "Once"]
+      notes: |
+        The right-hand column is what decides between the first two and the third. The top
+        two check before coming in, so they may never run at all.
+
+        Between for and while the choice is about readability, not capability. Either one
+        does the other's job.
+
+  - divider:
+      eyebrow: Block 02
+      title: Nesting and controlling
+      lede: A loop inside a loop multiplies rather than adds. It is the first time in this course that the cost of a program takes off.
+      block: 2
+
+  - code_output:
+      eyebrow: Nested
+      title: Two loops, and how often the body runs
+      filename: nested.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int total = 0;
+
+        for (int a = 1; a <= 3; a++)
+            for (int b = 1; b <= 2; b++)
+                total = total + a * b;
+
+        std::cout << total << "\n";
+      output: |
+        18
+      notes: |
+        The body runs six times, three by two. The products are 1, 2, 2, 4, 3 and 6, adding
+        up to 18. Measured on a real run.
+
+        The number that matters is not the 18, it is the six. At three by two nobody
+        notices; at a thousand by a thousand it is a million passes, and that is where a
+        program stops responding.
+
+  - table:
+      eyebrow: Fine control
+      title: Two statements that break the loop's flow
+      headers: ["Statement", "What it does", "Watch out"]
+      rows:
+        - ["break", "Leaves the loop entirely", "Only the innermost one"]
+        - ["continue", "Jumps to the next pass", "The step can be skipped"]
+      notes: |
+        The warning about continue is real and it produces infinite loops. In a while whose
+        step sits at the end of the body, a continue skips it and the condition never
+        changes.
+
+        In a for that cannot happen, because the step lives in the header and always runs.
+        One more reason to prefer for whenever there is a counter.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to write an infinite loop
+      items:
+        - label: Error 01
+          title: Forgetting the step
+          desc: The condition never changes and the program sits still, with no error and no output
+        - label: Error 02
+          title: A semicolon after the for
+          desc: The body becomes the empty statement and the block below runs exactly once
+        - label: Error 03
+          title: continue before the step
+          desc: In a while, it skips the line that advanced the variable and the loop jams
+        - label: Error 04
+          title: Comparing with exact equality
+          desc: If the variable steps over the target value the condition never holds and it never ends
+
+  - quiz:
+      eyebrow: Quick question
+      question: How many times does it print, with j starting at 3?
+      filename: dowhile.cpp
+      lang: cpp
+      source: |
+        int j = 3;
+
+        do
+        {
+            std::cout << "d" << j;
+            j++;
+        } while (j < 3);
+      options:
+        - 'Once, because it checks after running'
+        - 'Never, because 3 is not less than 3'
+        - 'Three times, because j starts at 3'
+        - 'Forever, because j grows and is never less than 3'
+
+  - trace:
+      eyebrow: Answer
+      title: The body runs before the first check exists
+      headers: ["Step", "What happens", "j", "Prints"]
+      rows:
+        - ["1", "Enters the body unchecked", "3", "d3"]
+        - ["2", "j++", "4", "–"]
+        - ["3", "Checks 4 < 3", "4", "–"]
+        - ["4", "False, it leaves", "4", "–"]
+      verdict: A while with that same condition would have printed nothing. The difference between the two loops is exactly this run.
+
+  - divider:
+      eyebrow: Block 03
+      title: First partial exam
+      lede: Tuesday 8 September. Cumulative, as all three of them are.
+      block: 3
+
+  - tiers:
+      eyebrow: The exam
+      title: Four things worth knowing beforehand
+      items:
+        - key: '01'
+          title: It covers units 1 to 6
+          desc: Everything seen so far. Environment, types, operators, functions, classes and control.
+        - key: '02'
+          title: It is cumulative, and all three are
+          desc: The second partial will include this again, and the third will include the whole course
+        - key: '03'
+          title: You answer it by writing code
+          desc: It is not multiple choice. It has to compile and it has to work.
+        - key: '04'
+          title: Debugging is on it
+          desc: Finding the bug in a given program counts the same as writing a new one
+
+  - method:
+      eyebrow: How to prepare
+      title: Redoing the exercises beats rereading the slides
+      statement: This exam is answered by writing, so it is prepared by writing. Doing the labs again without looking at the solution is the only practice that resembles the exam.
+      points:
+        - label: What to redo
+          text: The four labs and the homework. Same mechanics, different numbers.
+        - label: What to review
+          text: The compiler errors you have already met. C2065, C2143, C2248 and LNK2019 come back.
+        - label: What not to do
+          text: Reading other people's code without writing it. It makes sense on the page and will not come out on the keyboard.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: do-while runs at least once
+          desc: It checks after the body, and that is the only real difference from while
+        - title: Nesting multiplies the passes
+          desc: Three by two is six, and a thousand by a thousand is a million. The cost stops being free.
+        - title: The partial is cumulative
+          desc: It covers units 1 to 6, and today's material comes back in the other two
+
+  - homework:
+      eyebrow: For the next session
+      title: Repetition practice and preparation for the partial
+      brief: Write a program that uses all three loops for the same job, computing the average of ten marks entered by the user, plus a short paragraph explaining which of the three you would keep and why.
+      meta:
+        - [Due, Before session 9]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["All three loops", "Required", "The three versions give the same result"]
+        - ["No infinite loops", "Required", "All three end for any valid input"]
+        - ["Criterion", "Required", "The paragraph justifies the choice on readability"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, inheritance and composition. Reusing a class without writing it again.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

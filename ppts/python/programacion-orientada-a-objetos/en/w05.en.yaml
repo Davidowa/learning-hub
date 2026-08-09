@@ -1,0 +1,392 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 5
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 05 · Topic 2 · Building blocks
+      title: Object-Oriented Programming
+      subtitle: One name for several ways of calling, where each class lives once the project grows, and how a written brief turns into a model.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 5 of 17]
+      notes: |
+        Half the room arrives convinced Python overloads methods, because they saw it in
+        the Java course. Knock that down with the quiz before explaining anything: a
+        TypeError you predicted wrong yourself sticks better than a paragraph.
+
+        The examples come from docs/en/courses/python-course: the Point with __str__,
+        __eq__ and __add__ is from 02 - POO/6th Module/Code022.py, and the modules and
+        packages block comes from 06 - Advanced/A02 - Modules and A03 - Packages. The
+        long reference on magic methods is MagicMethods.md, in the module 6 folder.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Overloaded methods
+          desc: What other languages solve with signatures and Python solves with arguments
+        - title: Your own operators
+          desc: The magic methods that give your class syntax everyone already knows
+        - title: Organisation
+          desc: Modules, packages and the one file that actually runs
+        - title: Modelling
+          desc: From the brief to the boxes, and from the boxes to the code
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Explain why the second def wins
+          sub: A method name is a dictionary entry, and an entry only holds one value
+        - head: Cover several shapes with one method
+          sub: Defaults for what is optional, *args for positional, **kwargs for named
+        - head: Overload operators
+          sub: __str__, __eq__ and __add__ make print, == and + work on your own objects
+        - head: Spread classes across files
+          sub: What justifies a new module, what justifies a package, and what runs on import
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: now
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: todo
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Overloaded methods
+      lede: The overloading taught in Java does not exist in Python. What does exist is better, and it is worth knowing why.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What overloading a method means
+      lead: >-
+        In Java or C# you can write two methods with the same name and different signatures,
+        and the compiler picks which one to call from the arguments. Python does not do that.
+        A method name is one more entry in a dictionary, and an entry holds one value.
+      panel:
+        label: What Python offers instead
+        title: A single method that accepts more shapes
+        note: >-
+          A default value, *args for the positional ones and **kwargs for the named ones cover
+          almost every case where another language would declare three separate signatures.
+      steps:
+        - text: One method, one responsibility
+        - text: Optional cases, through defaults
+        - text: Different types, through isinstance
+          loop: ↺ if the body fills up with type checks, those were two methods with two names
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: calculator.py
+      lang: python
+      source: |
+        class Calculator:
+            def add(self, a, b):
+                return a + b
+
+            def add(self, a, b, c):
+                return a + b + c
+
+
+        c = Calculator()
+        print(c.add(1, 2))
+      options:
+        - '3, because Python picks the two-parameter method'
+        - 'TypeError, one positional argument is missing'
+        - '6, because c is zero when it is not passed'
+        - 'SyntaxError, add is defined twice'
+
+  - compare:
+      eyebrow: Answer
+      title: The second def erases the first
+      before:
+        label: Imaginary overloading
+        file: calculator.py
+        code: |
+          class Calculator:
+              def add(self, a, b):
+                  return a + b
+
+              def add(self, a, b, c):
+                  return a + b + c
+      after:
+        label: A single method
+        file: calculator.py
+        code: |
+          class Calculator:
+              def add(self, a, b, c=0):
+                  return a + b + c
+      note: Defining add twice is like assigning a variable twice. The second value wins, and the two-argument call raises TypeError for the missing c.
+
+  - code:
+      eyebrow: Variable arguments
+      title: When you do not know how many will arrive
+      filename: cart.py
+      lang: python
+      source: |
+        class Cart:
+            def __init__(self, owner: str) -> None:
+                self.owner = owner
+                self.items: list[str] = []
+
+            def add(self, *skus: str, **options: bool) -> None:
+                for sku in skus:
+                    self.items.append(sku)
+                if options.get("notify"):
+                    print(f"{len(skus)} items added")
+
+
+        c = Cart("Ana")
+        c.add("X1", "X2", "X3", notify=True)
+      annotations:
+        - label: The single star
+          text: '*skus collects however many positional arguments arrive, in a tuple, even none'
+        - label: The double star
+          text: '**options collects the named ones in a dictionary, such as notify=True'
+        - label: Risk
+          text: A method that accepts anything tells nobody what may be passed to it. Use it sparingly.
+          accent: true
+
+  - table:
+      eyebrow: Equivalences
+      title: The same need, answered two different ways
+      headers: ["The need", "In Java or C#", "In Python"]
+      rows:
+        - ["An optional parameter", "Two methods with different signatures", "def greet(self, formal=False)"]
+        - ["However many values", "One method per count", "def add(self, *skus)"]
+        - ["Named options", "A configuration object", "def create(self, **options)"]
+        - ["Different types", "One signature per type", "isinstance or functools.singledispatch"]
+        - ["Your own operators", "operator overloading", "__add__ · __eq__ · __str__"]
+
+  - code:
+      eyebrow: Operator overloading
+      title: Three magic methods that do change the syntax
+      filename: point.py
+      lang: python
+      source: |
+        class Point:
+            def __init__(self, x: int, y: int) -> None:
+                self.x = x
+                self.y = y
+
+            def __str__(self) -> str:
+                return f"({self.x}, {self.y})"
+
+            def __eq__(self, other) -> bool:
+                return self.x == other.x and self.y == other.y
+
+            def __add__(self, other) -> "Point":
+                return Point(self.x + other.x, self.y + other.y)
+      annotations:
+        - label: Line 6
+          text: __str__ is what print uses. Without it you get the class and a memory address.
+        - label: Line 9
+          text: Without __eq__ the == operator compares identity, so two equal points come out different
+        - label: Line 12
+          text: __add__ returns a new point. An operator that mutates its operands surprises whoever reads it.
+
+  - code_output:
+      eyebrow: Demonstration
+      title: What print, equals and plus gain from it
+      filename: use_point.py
+      lang: python
+      output_label: Output
+      source: |
+        p1 = Point(1, 2)
+        p2 = Point(3, 4)
+
+        print(p1)
+        print(p1 == Point(1, 2))
+        print(p1 + p2)
+      output: |
+        (1, 2)
+        True
+        (4, 6)
+
+  - divider:
+      eyebrow: Block 02
+      title: Organising classes
+      lede: A thousand-line file runs exactly as well as ten hundred-line ones. The difference shows up when you have to find something.
+      block: 2
+
+  - diagram:
+      eyebrow: Diagram
+      title: From a loose file to a package
+      blocks:
+        - label: One file
+          title: Module
+          desc: A .py holding the functions and classes that solve the same thing
+        - label: One folder
+          title: Package
+          desc: Several modules under one name, marked by an __init__.py
+          dark: true
+        - label: The one you run
+          title: Script
+          desc: The file you execute, where __name__ holds "__main__"
+      note: >-
+        A module earns its place when two classes in the same file stop reading well together.
+        A package earns its place when the module names start repeating the same prefix.
+
+  - code:
+      eyebrow: Importing
+      title: Three ways to bring in the same class
+      filename: app.py
+      lang: python
+      source: |
+        import store.cart
+        from store.cart import Cart
+        from store import cart as ct
+
+        a = store.cart.Cart("Ana")
+        b = Cart("Luis")
+        d = ct.Cart("Sofia")
+      annotations:
+        - label: Line 1
+          text: Brings the whole module. Calls run long, but you can see where each name came from.
+        - label: Line 2
+          text: Brings a single name. It is the common form and the quietest one inside a file.
+        - label: Risk
+          text: from store.cart import * brings everything, and two modules can bring the same name without warning
+          accent: true
+
+  - code:
+      eyebrow: Module and script
+      title: The line that separates importing from running
+      filename: sales.py
+      lang: python
+      source: |
+        TAX_RATE = 0.16
+
+
+        def calculate_tax(amount: float) -> float:
+            return amount * TAX_RATE
+
+
+        if __name__ == "__main__":
+            print(calculate_tax(100))
+      annotations:
+        - label: Line 8
+          text: The block runs when you execute the file, and stays quiet when somebody imports it
+        - label: Why it matters
+          text: Without that line, importing the module fires its tests, its prints and anything else lying loose
+        - label: The convention
+          text: Any module in the project should be importable without anything visible happening
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to organise a project badly
+      items:
+        - label: Error 01
+          title: One file holding everything
+          desc: Past three hundred lines, finding a class costs more than writing it again
+        - label: Error 02
+          title: One file per class, no exceptions
+          desc: Ten files of fifteen lines are ten files to open before one idea makes sense
+        - label: Error 03
+          title: Circular imports
+          desc: If cart imports customer and customer imports cart, Python fails mid-load with ImportError
+        - label: Error 04
+          title: Loose code in a module
+          desc: Anything outside a function or a class runs at import time, every single time
+
+  - divider:
+      eyebrow: Block 03
+      title: Basic object-oriented modelling
+      lede: 'The step almost nobody takes, and the one that decides half the result: draw before you type.'
+      block: 3
+
+  - figure:
+      eyebrow: Notation
+      title: The box you draw before the code
+      image: img/en/uml-class.png
+      caption: Name on top, what it remembers in the middle, what it can do at the bottom. Each compartment is a line of Python.
+      alt: A three-compartment UML class box with arrows to the matching lines of Python
+
+  - steps:
+      eyebrow: Modelling method
+      title: From the brief to the boxes, in five steps
+      items:
+        - label: Step 01
+          title: Underline the nouns
+          desc: Every concrete noun in the brief is a candidate class
+        - label: Step 02
+          title: Drop the ones with no memory
+          desc: If it holds nothing between one call and the next, it was a function
+        - label: Step 03
+          title: List what it remembers
+          desc: The values that outlive an operation are the attributes of the constructor
+        - label: Step 04
+          title: Underline the verbs
+          desc: The verbs acting on those values are the methods of that class
+        - label: Step 05
+          title: Draw the box
+          desc: If the three compartments do not fit on half a page, the class does too much
+
+  - lab:
+      eyebrow: Lab
+      title: From a brief to a model, in pairs
+      brief: 'Model the library loan: who borrows, what gets lent, when it falls due and who collects the fine. Hand in the boxes before the code.'
+      blocks:
+        - label: Constraints
+          text: At most four classes and three attributes each, with the methods declared and their bodies empty
+        - label: Deliverable
+          text: A diagram of the boxes and a .py file with the classes and the signatures of their methods
+        - label: Criterion
+          text: No class may be called Manager, Handler or System, because none of the three is a noun from the problem
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Python does not overload by signature
+          desc: The second def overwrites the first, and default values cover the case you actually had
+        - title: Operators do overload
+          desc: __str__, __eq__ and __add__ give your class the syntax everybody already knows
+        - title: The model gets drawn before it gets written
+          desc: Nouns into boxes, verbs into methods, and only then the code editor
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the lab model with __str__ and __eq__ on every class, and add a paragraph defending why you chose those classes and not others.
+      meta:
+        - [Due, Before session 6]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Modelling", "40 %", "The classes come from nouns in the brief and none of them does everything"]
+        - ["Operators", "30 %", "__str__ prints something readable and __eq__ compares the data, not identity"]
+        - ["Justification", "30 %", "The paragraph defends the decisions and names one alternative you dropped"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, encapsulation, information hiding and reuse.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

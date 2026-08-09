@@ -1,0 +1,317 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 10
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 10 · Unidad 8 · Arreglos y cadenas
+      title: Programación Avanzada
+      subtitle: Muchos valores del mismo tipo bajo un solo nombre, y el índice que nadie revisa por ti.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 10 de 17]
+      notes: |
+        Esta sesión introduce el primer error de C++ que no da ningún mensaje. Salirse de un
+        arreglo compila, corre y devuelve un número. Conviene que el grupo lo vea pasar en
+        vivo antes de que se los digan.
+
+        El valor que sale al leer fuera de rango cambia en cada corrida y en cada máquina. El
+        de la lámina salió de una corrida concreta en Visual Studio Community 2026, y viene
+        etiquetado como tal.
+
+        Esta semana cae el segundo avance del proyecto según el calendario del syllabus.
+
+        Lectura: Malik, octava edición, capítulo 8. Los documentos del curso citan el 9, que
+        es correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El arreglo
+          desc: Declararlo, llenarlo y saber cuántos elementos tiene
+        - title: El índice
+          desc: Por qué empieza en cero y dónde está el último
+        - title: Fuera de rango
+          desc: Lo que pasa cuando el índice se pasa, que no es un error
+        - title: Cadenas
+          desc: Recorrer texto ahora que existen los ciclos
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar y recorrer un arreglo
+          sub: Con un for cuyo límite se calcula y no se escribe a mano
+        - head: Calcular el número de elementos
+          sub: Con sizeof del arreglo entre sizeof de un elemento, y saber cuándo deja de funcionar
+        - head: Reconocer un desbordamiento
+          sub: Y explicar por qué no aparece ningún mensaje de error al provocarlo
+        - head: Recorrer una cadena carácter por carácter
+          sub: Combinando lo de la semana 3 con los ciclos de la semana 8
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Muchos valores, un nombre
+      lede: Seis calificaciones no necesitan seis variables. Necesitan una, con seis lugares.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Cómo se ve un arreglo en memoria
+      image: img/es/array-memory.png
+      caption: Las casillas van pegadas y el índice es cuántos lugares hay que avanzar desde la primera. Por eso la primera es la cero.
+      alt: Seis casillas contiguas con su índice debajo, y una séptima tachada fuera del arreglo
+
+  - code_output:
+      eyebrow: Declaración
+      title: Seis lugares, y cómo saber que son seis
+      filename: notas.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int notas[6] = {78, 85, 91, 64, 73, 88};
+
+        std::cout << notas[0] << "\n";
+        std::cout << notas[5] << "\n";
+        std::cout << sizeof(notas) / sizeof(notas[0]) << "\n";
+      output: |
+        78
+        88
+        6
+      notes: |
+        El tamaño entre llaves es fijo y se decide al compilar. No se puede cambiar después,
+        y no puede depender de una variable que se lea del usuario. Para eso están los
+        contenedores dinámicos, que llegan con new en la semana 12.
+
+        La tercera línea es la manera clásica de contar los elementos: el tamaño total del
+        arreglo entre el tamaño de uno. Funciona porque las casillas son idénticas y están
+        pegadas.
+
+        Deja de funcionar en cuanto el arreglo se pasa a una función, que es la lámina de
+        los tropiezos. Ahí el arreglo se convierte en una dirección y sizeof mide la
+        dirección, no el arreglo.
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El índice no es la posición, es la distancia
+      lead: >-
+        El primer elemento está a cero casillas del inicio, el segundo a una. Por eso los
+        índices van de cero a cinco en un arreglo de seis, y por eso el último no es el
+        seis, cosa que nadie recuerda a la primera.
+      panel:
+        label: La cuenta que se repite todo el semestre
+        title: El último índice es el tamaño menos uno
+        note: >-
+          Un arreglo de n elementos tiene índices válidos de 0 a n menos 1. Escribir el ciclo
+          con menor que n y no con menor o igual evita el error de una unidad.
+      steps:
+        - text: El primero es el índice cero
+        - text: El último es el tamaño menos uno
+        - text: El ciclo va con menor que
+          loop: ↺ menor o igual se sale exactamente por uno
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Salirse del arreglo
+      lede: El error más caro del lenguaje, y el único de este curso que no produce ningún mensaje.
+      block: 2
+
+  - code_output:
+      eyebrow: Demostración
+      title: Pedir el elemento que no existe
+      filename: fuera.cpp
+      lang: cpp
+      output_label: Una corrida, de muchas posibles
+      source: |
+        int notas[6] = {78, 85, 91, 64, 73, 88};
+
+        std::cout << notas[6] << "\n";
+      output: |
+        -1715304422
+      notes: |
+        Ni error de compilación, ni advertencia, ni caída del programa. Devolvió el contenido
+        de la memoria que estaba justo después del arreglo, interpretado como entero.
+
+        Ese número cambia en cada corrida. En otra máquina puede salir cero, o el programa
+        puede terminar de golpe, o puede seguir trabajando con basura durante media hora
+        antes de fallar en otro lado.
+
+        Escribir fuera de rango es peor que leer, porque modifica memoria que le pertenece a
+        otra variable. Ahí es donde un programa empieza a hacer cosas imposibles de explicar.
+
+  - table:
+      eyebrow: Alternativas
+      title: Tres formas de acceder, y cuál avisa
+      headers: ["Forma", "Revisa el índice", "Si se pasa"]
+      rows:
+        - ["arreglo[i]", "No", "Lee memoria ajena"]
+        - ["vector.at(i)", "Sí", "Lanza una excepción"]
+        - ["vector[i]", "No", "Lee memoria ajena"]
+      notes: |
+        std::vector es el arreglo que crece y que conoce su propio tamaño. Este curso lo usa
+        de pasada porque el temario pide arreglos de C, pero conviene nombrarlo.
+
+        La diferencia entre las dos últimas líneas sorprende. El vector tiene las dos formas
+        de acceso, y solo una revisa. La que revisa cuesta un poco más y avisa cuando algo
+        va mal, que es exactamente el trato de la semana 15 con las excepciones.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cadenas
+      lede: Una cadena es texto, y también es una sucesión de caracteres con índice. Las dos cosas sirven.
+      block: 3
+
+  - code_output:
+      eyebrow: Recorrer
+      title: Contar las vocales de una palabra
+      filename: vocales.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        std::string palabra = "programacion";
+        int vocales = 0;
+
+        for (int i = 0; i < palabra.length(); i++)
+        {
+            char c = palabra.at(i);
+            if (c == 'a' || c == 'e' || c == 'i' ||
+                c == 'o' || c == 'u')
+                vocales++;
+        }
+
+        std::cout << vocales << "\n";
+      output: |
+        5
+      notes: |
+        Es la primera vez que se juntan tres semanas distintas en un solo programa: la cadena
+        de la semana 3, el ciclo de la 8 y la selección de la 7.
+
+        Las vocales de programacion son o, a, a, i y o, que son cinco. El conteo se hizo sin
+        acentos a propósito, porque un carácter acentuado ocupa más de un byte y la cuenta
+        por índice deja de coincidir con lo que se ve.
+
+        length() devuelve un tipo sin signo. Compararlo contra un int con signo, como hace
+        el ciclo de arriba, no produce ninguna advertencia en este compilador, ni siquiera
+        con /W4. Se comprobó.
+
+        Donde sí muerde es al restar. Sobre una cadena vacía, length() menos uno no da menos
+        uno, da el máximo del tipo, que es la misma vuelta al reloj de la semana 3 con
+        unsigned. Un ciclo que recorra hasta length() menos uno funciona con cualquier
+        cadena salvo con la vacía, y ahí se va a dar miles de millones de vueltas.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuántas veces corre el cuerpo del ciclo?
+      filename: recorrido.cpp
+      lang: cpp
+      source: |
+        int notas[6] = {78, 85, 91, 64, 73, 88};
+
+        for (int i = 0; i <= 6; i++)
+            std::cout << notas[i] << " ";
+      options:
+        - 'Siete, y la última lee fuera del arreglo'
+        - 'Seis, porque el arreglo tiene seis elementos'
+        - 'Seis, porque el índice seis no existe y se salta'
+        - 'El programa falla al llegar al índice seis'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El menor o igual añade exactamente una vuelta de más
+      headers: ["i", "Índice válido", "Qué imprime", "Sigue"]
+      rows:
+        - ["0 a 4", "Sí", "78 85 91 64 73", "Sí"]
+        - ["5", "Sí, es el último", "88", "Sí"]
+        - ["6", "No, ya no existe", "Basura", "Sí"]
+        - ["7", "–", "–", "No, sale"]
+      verdict: El programa no falla y por eso el error sobrevive. Imprime siete números y el séptimo es lo que hubiera en esa memoria. Cambiar el menor o igual por un menor que lo arregla.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Recorrer con menor o igual
+          desc: Añade una vuelta y lee la casilla que sigue al arreglo, sin ningún aviso
+        - label: Error 02
+          title: sizeof dentro de una función
+          desc: El arreglo llega como dirección y sizeof mide la dirección, así que el conteo da mal
+        - label: Error 03
+          title: Escribir fuera de rango
+          desc: Modifica la memoria de otra variable, y el síntoma aparece lejos de la causa
+        - label: Error 04
+          title: Tamaño desde una variable
+          desc: El tamaño entre llaves se decide al compilar y no puede depender de lo que se lea
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Estadísticas de un grupo, en parejas
+      brief: Escriban un programa que reciba diez calificaciones en un arreglo y calcule el promedio, la más alta, la más baja y cuántas están arriba del promedio. El límite de cada ciclo tiene que calcularse, no escribirse a mano.
+      blocks:
+        - label: Restricción
+          text: Ningún número seis ni diez escrito dentro de un ciclo. El tamaño se calcula una vez y se reutiliza.
+        - label: Entregable
+          text: Un .cpp con las cuatro estadísticas y una prueba con un arreglo de tamaño distinto
+        - label: Criterio
+          text: Que cambiar el tamaño del arreglo no obligue a tocar ninguna otra línea
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El índice es distancia, no posición
+          desc: Por eso el primero es cero y el último es el tamaño menos uno
+        - title: Nadie revisa el índice
+          desc: Salirse compila, corre y devuelve un número. No hay mensaje que lo denuncie.
+        - title: El tamaño se calcula una vez
+          desc: sizeof del arreglo entre sizeof de un elemento, y deja de servir dentro de una función
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Las estadísticas terminadas y un desbordamiento provocado
+      brief: Terminen el laboratorio y agreguen al final un programa corto que lea a propósito una casilla fuera del arreglo, con un comentario que explique qué se imprimió en su máquina y por qué el compilador no dijo nada.
+      meta:
+        - [Entrega, Antes de la sesión 11]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Recorrido", "Requisito", "Los ciclos usan menor que y el tamaño calculado"]
+        - ["Estadísticas", "Requisito", "Las cuatro son correctas con cualquier arreglo"]
+        - ["Desbordamiento", "Requisito", "El comentario explica por qué no hubo error"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, registros. Juntar datos de tipos distintos bajo un mismo nombre.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

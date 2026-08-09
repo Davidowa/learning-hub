@@ -1,0 +1,380 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 1
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 01 · Encuadre y la primera macro grabada
+      title: Análisis y Procesamiento de la Información
+      subtitle: Cómo se evalúa el semestre, y la primera macro. Grabar lo que ya haces con el ratón y leer el código que quedó escrito.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 1 de 17]
+      notes: |
+        Noventa minutos. Veinticinco para el encuadre, veinte para la evaluación, y el
+        resto en la máquina grabando.
+
+        La ventaja de esta materia sobre cualquier curso de programación es que el alumno
+        ya vive dentro de la herramienta. No viene a cambiar de programa, viene a dejar de
+        repetir a mano lo que ya sabe hacer. Ese es el encuadre, y conviene decirlo tal
+        cual en los primeros cinco minutos.
+
+        La evaluación y la normativa salen del syllabus TIA503. Cinco componentes de
+        veinte por ciento y nada de punto extra: esta materia no tiene certificación
+        externa, a diferencia de Análisis de Datos.
+
+        El código de la sesión sale de
+        docs/en/courses/vba-course/00 - Record Macro - Amortization Table/,
+        del módulo Module2 del archivo amortization_table_macros.xlsm. Las dos macros de
+        ese módulo las escribió la grabadora, y se nota en el encabezado de comentarios.
+
+        Verificado en Excel 16.0 antes de la clase: HideColumn corre sin error y deja la
+        columna D visible, porque oculta y vuelve a mostrar. Es el ejemplo central de hoy.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Por qué esta materia
+          desc: Qué deja de poder el ratón y qué empieza a poder una macro sobre la misma hoja
+        - title: Cómo se evalúa
+          desc: Cinco componentes, el proyecto de la semana 16 y las reglas de operación
+        - title: La primera macro
+          desc: Habilitar el entorno, grabar, leer el código y corregir lo que sobra
+        - title: Tu turno
+          desc: La tabla de amortización del módulo 00, con su primera macro grabada
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué resuelve esta materia
+          sub: Por qué automatizar Excel vale más que aprender a programar por deporte
+        - head: Dejar el entorno listo
+          sub: Pestaña Programador visible, archivo .xlsm y macros habilitadas
+        - head: Grabar una macro y ejecutarla
+          sub: El ciclo completo, del primer clic al botón que lo repite
+        - head: Leer el código que escribió la grabadora
+          sub: Reconocer el objeto, la propiedad y el valor en cada renglón
+        - head: Ubicar cada evaluación del semestre
+          sub: Qué se evalúa, cuándo, cuánto pesa y qué hay que entregar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cuatro bloques, diecisiete semanas
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: now
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: todo
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué esta materia existe
+      lede: No para volverlos programadores. Para que dejen de repetir a mano lo que la hoja ya sabe hacer sola.
+      block: 1
+
+  - stat:
+      eyebrow: La tabla de amortización del módulo 00
+      value: '600'
+      text: >-
+        son las celdas que ocupa esa tabla: ciento veinte periodos, cinco renglones cada uno.
+      note: Ninguna de las seiscientas es difícil. El problema es que son seiscientas, que el mes que entra hay que rehacerlas con otro monto y otra tasa, y que después nadie puede decir qué se movió.
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Lo que un clic no deja
+      lead: >-
+        Formatear una columna con el ratón y formatearla con una macro dan exactamente el
+        mismo resultado en pantalla. La diferencia aparece al mes siguiente. El clic no
+        dejó nada: hay que acordarse de qué se hizo y volver a hacerlo. La macro dejó el
+        procedimiento escrito, y correrlo otra vez cuesta un segundo.
+      panel:
+        label: La consecuencia
+        title: Un procedimiento que no queda escrito no se puede revisar
+        note: >-
+          En una auditoría o frente a un cliente la pregunta rara vez es cuál fue el
+          número. Es cómo se obtuvo, y quién lo puede repetir si tú no estás.
+      steps:
+        - text: Haces el trabajo una vez con el ratón
+        - text: La grabadora lo escribe como código
+        - text: El mes que entra corres el código
+          loop: ↺ y sale igual, con datos nuevos y sin volver a dar un solo clic
+
+  - diagram:
+      eyebrow: Bloque 01 · El ciclo del curso
+      title: Grabar, leer, editar, correr
+      blocks:
+        - label: Grabar
+          title: Excel lo escribe
+          desc: Una vez con el ratón, y Excel anota
+        - label: Leer
+          title: Lees lo que anotó
+          desc: Un objeto, una propiedad y un valor
+        - label: Editar
+          title: Tú lo corriges
+          desc: Aquí vive el resto del semestre
+          dark: true
+        - label: Correr
+          title: Un botón
+          desc: Otro mes, otra región, sin tocar nada
+      note: >-
+        Microsoft describe su propia grabadora como un puente estable entre lo que ya
+        sabes como usuario y lo que vas a saber como programador, y le pone una
+        advertencia en la misma página: el código que genera puede confundir, porque la
+        grabadora supone qué querías hacer y no siempre acierta.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se evalúa y cómo trabajamos
+      lede: Cinco componentes de veinte por ciento cada uno, un proyecto que corre solo, y reglas que se aplican desde hoy.
+      block: 2
+
+  - table:
+      eyebrow: Evaluación del curso
+      title: Cinco componentes, veinte por ciento cada uno
+      headers: [Componente, Contenido, Momento, Peso]
+      rows:
+        - ["Parcial 1", "Unidades 1, 2 y 3", "Semana 8", "20 %"]
+        - ["Parcial 2", "Unidades 3 y 4", "Semana 13", "20 %"]
+        - ["Proyecto", "Automatización integradora en VBA", "Semana 16", "20 %"]
+        - ["Examen final", "Todas las unidades", "Semana 17", "20 %"]
+        - ["Tareas", "Trabajo fuera de clase", "Todo el curso", "20 %"]
+
+  - concept:
+      eyebrow: Proyecto integrador
+      title: Qué se entrega en la semana 16
+      lead: >-
+        Un libro de Excel que automatiza de punta a punta una tarea real de tu área. Toma
+        datos crudos, los limpia y los ordena con macros, calcula lo que el problema pide
+        y reporta el resultado. La regla que lo define en una línea: todo lo que el
+        usuario toca corre desde VBA, no a mano.
+      panel:
+        label: Cómo se califica
+        title: Setenta por ciento el código, treinta el reporte
+        note: >-
+          Si el libro no corre, su calificación máxima es 30 %. Se califica individual
+          aunque el trabajo sea en equipo, y cada integrante tiene que poder explicar la
+          solución completa.
+      steps:
+        - text: Eliges la tarea y los datos de tu área
+        - text: La automatizas con macros, de principio a fin
+        - text: La presentas y defiendes tus decisiones
+          loop: ↺ y tiene que correr con datos que nunca vio
+
+  - steps:
+      eyebrow: Reglas de operación
+      title: Lo que hay que saber desde hoy
+      items:
+        - label: '01'
+          title: Asistencia
+          desc: Se registra en los primeros cinco minutos de la sesión
+        - label: '02'
+          title: Retardo
+          desc: Del minuto cinco al quince. Dos retardos equivalen a una falta, y se pide antes de que acabe esa misma clase.
+        - label: '03'
+          title: Después del minuto dieciséis
+          desc: No hay acceso al aula y se registra falta
+        - label: '04'
+          title: Dispositivos
+          desc: Teléfono, audífonos y lentes con IA guardados durante toda la sesión
+        - label: '05'
+          title: Entregas
+          desc: Solo por Blackboard y en la fecha establecida. Las tareas y los quizzes no tienen reposición.
+
+  - method:
+      eyebrow: Código de Honor
+      title: Qué cuenta como trabajo propio
+      statement: Puedes apoyarte en inteligencia artificial para entender. No puedes entregar código que no sabes explicar.
+      points:
+        - label: Permitido
+          text: Pedirle que te explique un error, una propiedad o un objeto que no reconoces
+        - label: No permitido
+          text: Entregar una macro generada que no puedas leer renglón por renglón si te lo pido
+        - label: Cómo se revisa
+          text: En la revisión te pido que expliques una parte a mi elección. Leerla en voz alta no es explicarla.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La primera macro
+      lede: Excel trae la grabadora escondida detrás de una pestaña que viene apagada. Encenderla es el primer paso del semestre.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · Antes de grabar
+      title: Cuatro pasos para dejar el entorno listo
+      items:
+        - label: '01'
+          title: Enciende la pestaña Programador
+          desc: Archivo, Opciones, Personalizar cinta de opciones, Pestañas principales, y marca Programador
+        - label: '02'
+          title: Guarda como .xlsm
+          desc: Un .xlsx no puede guardar código. Excel te avisa y lo borra al guardar.
+        - label: '03'
+          title: Habilita las macros al abrir
+          desc: Excel las deshabilita por omisión y ofrece encenderlas en una barra sobre la hoja
+        - label: '04'
+          title: Abre el editor
+          desc: Alt + F11, o el botón Visual Basic de la pestaña Programador. Ahí vive el código.
+
+  - code:
+      eyebrow: Bloque 03 · Lo que escribió la grabadora
+      title: Una macro que nadie escribió a mano
+      filename: Modulo2.bas
+      lang: vba
+      source: |
+        Sub HideColumn()
+        '
+        ' HideColumn Macro
+        '
+
+        '
+            Columns("D:D").EntireColumn.Hidden = True
+            Columns("D:D").EntireColumn.Hidden = False
+        End Sub
+      annotations:
+        - label: El encabezado
+          text: Los renglones que empiezan con apóstrofo son comentarios. Los escribió la grabadora sola y VBA los ignora al correr.
+        - label: Sub y End Sub
+          text: Delimitan un procedimiento. Todo lo que se ejecuta en VBA vive dentro de uno.
+        - label: Dos renglones
+          text: Ocultaste la columna D y la volviste a mostrar. La grabadora anotó las dos cosas, en orden.
+        - label: Riesgo
+          text: >-
+            La macro corre sin error y no deja nada hecho. Verificado en Excel: al
+            terminar, la columna D sigue visible.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 03 · Cómo se lee un renglón
+      title: Objeto, propiedad y valor
+      headers: [Pieza, En gramática, En el renglón de arriba]
+      rows:
+        - ["Objeto", "El sustantivo", "Columns(\"D:D\")"]
+        - ["Propiedad", "El adjetivo", "Hidden"]
+        - ["Valor", "Lo que le asignas", "True"]
+        - ["Método", "El verbo, cuando lo hay", "Select, Copy, Delete"]
+        - ["El punto", "El posesivo, se lee «de»", "De esa columna, su EntireColumn"]
+
+  - compare:
+      eyebrow: Bloque 03 · La edición
+      title: La grabadora arranca el trabajo, tú lo terminas
+      before:
+        label: Lo que grabó
+        file: Modulo2.bas
+        lang: vba
+        code: |
+          Sub HideColumn()
+              Columns("D:D").EntireColumn.Hidden = True
+              Columns("D:D").EntireColumn.Hidden = False
+          End Sub
+      after:
+        label: Lo que queda al editarlo
+        file: Modulo2.bas
+        lang: vba
+        code: |
+          Sub HideColumn()
+              Columns("D:D").EntireColumn.Hidden = True
+          End Sub
+      note: >-
+        Un renglón menos, y la macro por fin hace lo que su nombre promete. Esta es la
+        operación que se repite todo el semestre: grabar para no escribir desde cero, y
+        leer para quitar lo que la grabadora anotó de más.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de perder la macro
+      items:
+        - label: Error 01
+          title: Guardar en .xlsx
+          desc: El formato normal no guarda código. Excel avisa, y si aceptas, el archivo queda limpio y la macro desaparece.
+        - label: Error 02
+          title: Confiar en lo que grabaste
+          desc: La grabadora anota cada acción, incluida la que deshiciste. Lee el código antes de darlo por bueno.
+        - label: Error 03
+          title: Grabar sobre una celda concreta
+          desc: Anota la celda exacta que tocaste. Si el mes que entra los datos empiezan más abajo, escribe en el lugar equivocado.
+        - label: Error 04
+          title: Abrir el archivo sin habilitar
+          desc: El botón no hace nada y no aparece ningún error. La advertencia estaba en la barra de arriba y se cerró sin leerla.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué deja hecho esta macro cuando termina?
+      filename: Modulo2.bas
+      lang: vba
+      source: |
+        Sub HideColumn()
+            Columns("D:D").EntireColumn.Hidden = True
+            Columns("D:D").EntireColumn.Hidden = False
+        End Sub
+      options:
+        - "La columna D queda oculta"
+        - "La columna D queda visible, como antes de correrla"
+        - "Marca error, porque asigna la propiedad dos veces"
+        - "Oculta la columna D y también la fila 4"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Graba tu primera macro
+      brief: Abre la tabla de amortización del módulo 00, guárdala como .xlsm y graba una macro que dé formato de porcentaje a las dos celdas de tasa. Detén la grabación, abre el editor y lee renglón por renglón lo que quedó escrito.
+      blocks:
+        - label: Entrega
+          text: El archivo .xlsm con la macro grabada, subido a Blackboard
+        - label: Restricción
+          text: Borra del código cualquier renglón que corresponda a un clic que deshiciste mientras grababas
+        - label: Si falla
+          text: Si el botón no hace nada, revisa que hayas habilitado las macros al abrir el archivo
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La grabadora es el puente
+          desc: Escribe el código por ti, y lo único que te toca al principio es leerlo y quitarle lo que sobra
+        - title: Un clic no deja rastro, una macro sí
+          desc: El mismo resultado en pantalla, pero solo uno de los dos se puede repetir, revisar y defender el mes que entra
+        - title: El código vive en un .xlsm
+          desc: Guardar en .xlsx lo borra, y al abrirlo Excel lo deshabilita hasta que tú decides encenderlo
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Deja Excel listo para el semestre y entrega el libro de amortización con una macro grabada que puedas ejecutar dos veces seguidas y obtener el mismo resultado.
+      meta:
+        - [Entrega, Antes de la semana 2]
+        - [Formato, Blackboard · archivo .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Entorno", "30 %", "La pestaña Programador está visible y el archivo es .xlsm"]
+        - ["Macro", "40 %", "Corre desde el cuadro de macros y hace lo que su nombre dice"]
+        - ["Lectura", "30 %", "El código no tiene renglones sobrantes de clics deshechos"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, el editor por dentro: proyecto, módulos y procedimientos, y
+        cómo se corre una línea a la vez.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

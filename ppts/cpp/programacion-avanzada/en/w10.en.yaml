@@ -1,0 +1,317 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 10
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 10 · Unit 8 · Arrays and strings
+      title: Advanced Programming
+      subtitle: Many values of one type under a single name, and the index nobody checks for you.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 10 of 17]
+      notes: |
+        This session introduces the first C++ mistake that produces no message at all.
+        Running off the end of an array compiles, runs, and hands back a number. Worth
+        letting the group watch it happen before telling them.
+
+        The value that comes out of an out-of-range read changes on every run and on every
+        machine. The one on the slide came from one concrete run on Visual Studio Community
+        2026, and it is labelled as such.
+
+        The second project checkpoint falls this week on the syllabus calendar.
+
+        Reading: Malik, eighth edition, chapter 8. The course documents cite 9, which is
+        right for the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The array
+          desc: Declaring it, filling it, and knowing how many elements it has
+        - title: The index
+          desc: Why it starts at zero and where the last one sits
+        - title: Out of range
+          desc: What happens when the index runs past the end, which is not an error
+        - title: Strings
+          desc: Walking through text now that loops exist
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and walk an array
+          sub: With a for whose limit is computed rather than typed in by hand
+        - head: Work out the element count
+          sub: With sizeof of the array over sizeof of one element, and know when that stops working
+        - head: Recognise an overrun
+          sub: And explain why provoking one produces no error message at all
+        - head: Walk a string character by character
+          sub: Combining week 3 with the loops from week 8
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Many values, one name
+      lede: Six marks do not need six variables. They need one, with six places in it.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnosis
+      title: What an array looks like in memory
+      image: img/en/array-memory.png
+      caption: The cells sit next to each other and the index is how many places to move from the first. Which is why the first one is zero.
+      alt: Six contiguous cells with their index underneath, and a seventh crossed out past the end
+
+  - code_output:
+      eyebrow: Declaration
+      title: Six places, and how to know there are six
+      filename: marks.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int marks[6] = {78, 85, 91, 64, 73, 88};
+
+        std::cout << marks[0] << "\n";
+        std::cout << marks[5] << "\n";
+        std::cout << sizeof(marks) / sizeof(marks[0]) << "\n";
+      output: |
+        78
+        88
+        6
+      notes: |
+        The size in brackets is fixed and decided at compile time. It cannot change later,
+        and it cannot depend on a variable read from the user. Dynamic containers are what
+        that needs, and they arrive with new in week 12.
+
+        The third line is the classic way to count elements: the total size of the array over
+        the size of one. It works because the cells are identical and packed together.
+
+        It stops working the moment the array is passed to a function, which is on the
+        pitfalls slide. There the array becomes an address and sizeof measures the address,
+        not the array.
+
+  - concept:
+      eyebrow: Key concept
+      title: The index is not the position, it is the distance
+      lead: >-
+        The first element sits zero cells from the start, the second sits one. Which is why
+        the indices run from zero to five in an array of six, and why the last one is not
+        six, something nobody remembers first time.
+      panel:
+        label: The sum that repeats all term
+        title: The last index is the size minus one
+        note: >-
+          An array of n elements has valid indices from 0 to n minus 1. Writing the loop with
+          less-than n rather than less-or-equal avoids the off-by-one.
+      steps:
+        - text: The first is index zero
+        - text: The last is size minus one
+        - text: The loop uses less-than
+          loop: ↺ less-or-equal overruns by exactly one
+
+  - divider:
+      eyebrow: Block 02
+      title: Running off the end
+      lede: The most expensive mistake in the language, and the only one in this course that produces no message.
+      block: 2
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Asking for the element that is not there
+      filename: overrun.cpp
+      lang: cpp
+      output_label: One run, out of many possible
+      source: |
+        int marks[6] = {78, 85, 91, 64, 73, 88};
+
+        std::cout << marks[6] << "\n";
+      output: |
+        -1715304422
+      notes: |
+        No compile error, no warning, no crash. It handed back whatever memory sat just past
+        the array, read as an integer.
+
+        That number changes on every run. On another machine it might be zero, or the program
+        might stop dead, or it might carry on working with garbage for half an hour before
+        failing somewhere else entirely.
+
+        Writing out of range is worse than reading, because it modifies memory belonging to
+        another variable. That is where a program starts doing things that cannot be
+        explained.
+
+  - table:
+      eyebrow: Alternatives
+      title: Three ways to reach an element, and which one checks
+      headers: ["Form", "Checks the index", "If it overruns"]
+      rows:
+        - ["array[i]", "No", "Reads someone else's memory"]
+        - ["vector.at(i)", "Yes", "Throws an exception"]
+        - ["vector[i]", "No", "Reads someone else's memory"]
+      notes: |
+        std::vector is the array that grows and knows its own size. This course uses it only
+        in passing, because the syllabus asks for C arrays, but it is worth naming.
+
+        The difference between the last two lines surprises people. The vector has both
+        forms of access and only one of them checks. The one that checks costs a little more
+        and reports when something is wrong, which is exactly the week 15 bargain with
+        exceptions.
+
+  - divider:
+      eyebrow: Block 03
+      title: Strings
+      lede: A string is text, and also a sequence of characters with indices. Both readings are useful.
+      block: 3
+
+  - code_output:
+      eyebrow: Walking it
+      title: Counting the vowels in a word
+      filename: vowels.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        std::string word = "programming";
+        int vowels = 0;
+
+        for (int i = 0; i < word.length(); i++)
+        {
+            char c = word.at(i);
+            if (c == 'a' || c == 'e' || c == 'i' ||
+                c == 'o' || c == 'u')
+                vowels++;
+        }
+
+        std::cout << vowels << "\n";
+      output: |
+        3
+      notes: |
+        This is the first time three separate weeks meet in one program: the string from week
+        3, the loop from week 8 and the selection from week 7.
+
+        The vowels in programming are o, a and i, which is three. The count deliberately
+        avoids accented characters, because an accented character takes more than one byte
+        and the index count stops matching what you can see.
+
+        length() returns an unsigned type. Comparing it against a signed int, as the loop
+        above does, raises no warning on this compiler, not even at /W4. That was checked.
+
+        Where it does bite is subtraction. On an empty string, length() minus one is not
+        minus one, it is the maximum of the type, the same trip round the clock as the
+        unsigned example in week 3. A loop running to length() minus one works for every
+        string except the empty one, and there it takes billions of passes.
+
+  - quiz:
+      eyebrow: Quick question
+      question: How many times does the loop body run?
+      filename: walk.cpp
+      lang: cpp
+      source: |
+        int marks[6] = {78, 85, 91, 64, 73, 88};
+
+        for (int i = 0; i <= 6; i++)
+            std::cout << marks[i] << " ";
+      options:
+        - 'Seven, and the last one reads past the array'
+        - 'Six, because the array has six elements'
+        - 'Six, because index six does not exist and is skipped'
+        - 'The program crashes when it reaches index six'
+
+  - trace:
+      eyebrow: Answer
+      title: The less-or-equal adds exactly one extra pass
+      headers: ["i", "Valid index", "What it prints", "Carries on"]
+      rows:
+        - ["0 to 4", "Yes", "78 85 91 64 73", "Yes"]
+        - ["5", "Yes, the last one", "88", "Yes"]
+        - ["6", "No, past the end", "Garbage", "Yes"]
+        - ["7", "–", "–", "No, it leaves"]
+      verdict: The program does not crash, which is how the bug survives. It prints seven numbers and the seventh is whatever sat in that memory. Changing less-or-equal to less-than fixes it.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Walking with less-or-equal
+          desc: Adds one pass and reads the cell after the array, with no warning at all
+        - label: Error 02
+          title: sizeof inside a function
+          desc: The array arrives as an address and sizeof measures the address, so the count is wrong
+        - label: Error 03
+          title: Writing out of range
+          desc: Modifies another variable's memory, and the symptom shows far from the cause
+        - label: Error 04
+          title: Size from a variable
+          desc: The size in brackets is decided at compile time and cannot depend on what is read
+
+  - lab:
+      eyebrow: Lab
+      title: Statistics for one group, in pairs
+      brief: Write a program that takes ten marks in an array and computes the average, the highest, the lowest, and how many sit above the average. Every loop limit has to be computed rather than typed.
+      blocks:
+        - label: Constraint
+          text: No six or ten written inside a loop. The size is computed once and reused.
+        - label: Deliverable
+          text: A .cpp with the four statistics and a test using an array of a different size
+        - label: Criterion
+          text: That changing the array size forces no other line to change
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The index is distance, not position
+          desc: Which is why the first is zero and the last is the size minus one
+        - title: Nobody checks the index
+          desc: Overrunning compiles, runs and hands back a number. No message reports it.
+        - title: The size is computed once
+          desc: sizeof of the array over sizeof of an element, and it stops working inside a function
+
+  - homework:
+      eyebrow: For the next session
+      title: The statistics finished and one deliberate overrun
+      brief: Finish the lab and add a short program at the end that deliberately reads one cell past the array, with a comment explaining what was printed on your machine and why the compiler said nothing.
+      meta:
+        - [Due, Before session 11]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Walking", "Required", "The loops use less-than and the computed size"]
+        - ["Statistics", "Required", "All four are correct for any array"]
+        - ["Overrun", "Required", "The comment explains why there was no error"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, records. Putting values of different types together under one name.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

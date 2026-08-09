@@ -1,0 +1,317 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 16
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 16 · Tema 7 · Bases de datos y proyecto
+      title: Programación Orientada a Objetos
+      subtitle: Guardar datos que se buscan, se filtran y sobreviven al programa. Y la sesión en la que todo lo del semestre se junta en una sola entrega.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 16 de 17]
+      notes: |
+        Sesión doble de carga. Conviene reservar el bloque 3 completo para el proyecto y no
+        recortarlo aunque el bloque de consultas se alargue: es la última clase antes de la
+        entrega y las dudas de alcance salen ahí o salen por correo el domingo.
+
+        Los ejemplos salen de docs/en/courses/python-course/04 - SQLite/8th Module/Code036.py,
+        que crea la base, inserta desde un JSON y consulta con cursor. El formulario de
+        acceso que junta PyQt6 con sqlite3 es 05 - GUI/9th Module/Code044.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Bases de datos
+          desc: Qué resuelve una tabla que un archivo de texto no
+        - title: Acceso
+          desc: Conexión, cursor, commit, y el cierre que no se puede olvidar
+        - title: Consultas
+          desc: SELECT, parámetros, y por qué nunca se pegan cadenas
+        - title: Proyecto integrador
+          desc: Alcance, entrega y cómo se reparte la calificación
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Decidir entre archivo y base de datos
+          sub: Por cómo se va a consultar el dato, no por cuántos registros va a haber
+        - head: Crear una tabla e insertar
+          sub: Con sqlite3, dentro de un with, y sabiendo qué hace commit y qué pasa sin él
+        - head: Consultar con parámetros
+          sub: Usando marcadores en lugar de pegar cadenas, y explicar qué evita eso
+        - head: Planear el proyecto integrador
+          sub: Repartiendo POO, persistencia e interfaz en piezas que se puedan probar por separado
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Bases de datos
+      lede: Un archivo guarda datos. Una base de datos guarda datos y además sabe contestar preguntas sobre ellos.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué resuelve una tabla que un archivo no
+      lead: >-
+        En un archivo, buscar significa leerlo entero. En una tabla, buscar significa
+        preguntar, y el motor decide cómo llegar al dato. Esa diferencia no se nota con cien
+        registros y decide el programa completo cuando son cien mil.
+      panel:
+        label: Las tres piezas del modelo
+        title: Tabla, renglón y llave primaria
+        note: >-
+          Cada tabla guarda una sola clase de cosa. Cada renglón es un objeto de esa clase. Y
+          la llave primaria es el atributo que distingue a un renglón de todos los demás.
+      steps:
+        - text: Una tabla por sustantivo
+        - text: Una columna por atributo
+        - text: Una llave que identifique
+          loop: ↺ es el mismo modelado de la semana 5, con otra sintaxis
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: El camino que recorre una consulta
+      image: img/es/db-access.png
+      caption: El cursor no trae las filas. Apunta a ellas y las va entregando, igual que recorrer un archivo línea por línea.
+      alt: Un programa que se conecta a una base, ejecuta SQL y recibe un cursor que entrega filas
+
+  - table:
+      eyebrow: Tabla de decisión
+      title: Cuándo alcanza un archivo y cuándo no
+      headers: ["Necesidad", "Archivo de texto", "Base de datos"]
+      rows:
+        - ["Guardar y volver a leer", "Suficiente", "También sirve"]
+        - ["Buscar un registro", "Lee todo el archivo", "Contesta sin leer todo"]
+        - ["Filtrar y ordenar", "Lo programas tú", "Va en la consulta"]
+        - ["Dos programas a la vez", "Se pisan", "El motor lo resuelve"]
+        - ["Cambiar el formato", "Reescribes el archivo", "Alteras la tabla"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Acceso y consultas
+      lede: Una conexión se abre, se usa y se cierra. Es el mismo ciclo de vida de un archivo, con una trampa extra que se llama commit.
+      block: 2
+
+  - code:
+      eyebrow: sqlite3
+      title: Crear la tabla y meter los primeros datos
+      filename: crear.py
+      lang: python
+      source: |
+        import sqlite3
+        from pathlib import Path
+
+        ruta = Path("datos") / "peliculas.db"
+
+        with sqlite3.connect(ruta) as conexion:
+            conexion.execute(
+                "CREATE TABLE IF NOT EXISTS Peliculas ("
+                "id INTEGER PRIMARY KEY, titulo TEXT NOT NULL)")
+            conexion.execute(
+                "INSERT INTO Peliculas VALUES (?, ?)", (1, "Coco"))
+            conexion.commit()
+      annotations:
+        - label: Línea 6
+          text: El with cierra la conexión al salir, igual que hace con un archivo abierto
+        - label: Línea 11
+          text: Los signos de interrogación son marcadores. Los valores viajan aparte, en una tupla.
+        - label: Riesgo
+          text: Sin commit, lo insertado se pierde al cerrar. El with no lo hace por ti.
+          accent: true
+
+  - code_output:
+      eyebrow: Consultar
+      title: El cursor entrega una fila a la vez
+      filename: consultar.py
+      lang: python
+      output_label: Salida
+      source: |
+        with sqlite3.connect(ruta) as conexion:
+            cursor = conexion.execute(
+                "SELECT id, titulo FROM Peliculas ORDER BY titulo")
+            for fila in cursor:
+                print(fila)
+      output: |
+        (19, 'Coco')
+        (15, 'Inside Out')
+        (10, 'Up')
+
+  - code:
+      eyebrow: Parámetros
+      title: Por qué nunca se pega el dato dentro de la consulta
+      filename: parametros.py
+      lang: python
+      source: |
+        buscado = input("Título: ")
+
+        # Nunca hagas esto
+        malo = f"SELECT * FROM Peliculas WHERE titulo = '{buscado}'"
+
+        # Haz esto
+        with sqlite3.connect(ruta) as conexion:
+            cursor = conexion.execute(
+                "SELECT * FROM Peliculas WHERE titulo = ?", (buscado,))
+            print(cursor.fetchall())
+      annotations:
+        - label: Línea 4
+          text: Si alguien teclea una comilla, la consulta cambia de forma y hace algo que no querías
+        - label: Línea 9
+          text: Con el marcador, el valor nunca se interpreta como SQL. Es un dato y se queda como dato.
+        - label: La coma
+          text: '(buscado,) con coma es una tupla de uno. Sin la coma es solo un paréntesis.'
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores con bases de datos
+      items:
+        - label: Error 01
+          title: Olvidar el commit
+          desc: Los INSERT corren, el programa no se queja, y al volver a abrir la base no hay nada
+        - label: Error 02
+          title: Pegar valores con f-strings
+          desc: Una comilla en el dato rompe la consulta, y a propósito la convierte en otra distinta
+        - label: Error 03
+          title: SQL repartido por toda la ventana
+          desc: Si cada slot escribe su propio SELECT, cambiar una columna obliga a revisar el proyecto entero
+        - label: Error 04
+          title: Guardar el cursor para después
+          desc: Al cerrarse la conexión el cursor deja de servir, y el error aparece lejos de donde se causó
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Proyecto integrador
+      lede: La entrega que junta las siete unidades. Se califica el código y el reporte, y el código pesa más del doble.
+      block: 3
+
+  - tiers:
+      eyebrow: Alcance
+      title: Las cuatro piezas que el proyecto tiene que tener
+      items:
+        - key: '01'
+          title: Modelado orientado a objetos
+          desc: Clases con estado propio, encapsulamiento y al menos una relación de herencia justificada
+        - key: '02'
+          title: Persistencia
+          desc: Archivos o base de datos, con los datos sobreviviendo a que el programa se cierre
+        - key: '03'
+          title: Interfaz gráfica
+          desc: Una ventana en PyQt6 que no contenga reglas de negocio dentro de sus slots
+        - key: '04'
+          title: Reporte escrito
+          desc: Qué problema resuelve, qué se decidió y por qué, con evidencias integradas en el texto
+
+  - method:
+      eyebrow: Cómo repartir el trabajo
+      title: Tres piezas que se prueban por separado
+      statement: Empieza por las clases del dominio, sin ventana y sin base de datos. Si esas clases corren desde la terminal, el resto es conectar cables.
+      points:
+        - label: Primero
+          text: Las clases del problema, probadas con un script de consola que imprime resultados
+        - label: Después
+          text: La persistencia, con las mismas clases guardando y recuperando su estado
+        - label: Al final
+          text: La ventana, que solo lee controles y llama a lo que ya funcionaba antes de existir
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué queda guardado en la base al terminar?
+      filename: commit.py
+      lang: python
+      source: |
+        with sqlite3.connect(ruta) as c:
+            c.execute("INSERT INTO Peliculas VALUES (1, 'Up')")
+
+        with sqlite3.connect(ruta) as c:
+            cursor = c.execute("SELECT COUNT(*) FROM Peliculas")
+            print(cursor.fetchone())
+      options:
+        - "(1,), porque el with hace commit al salir"
+        - "(0,), porque nunca se llamó a commit"
+        - 'Un error, la conexión ya estaba cerrada'
+        - "(1,), porque sqlite3 guarda cada INSERT al instante"
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime (0,), y el with no es el culpable
+      headers: ["Paso", "Instrucción", "En memoria", "En disco"]
+      rows:
+        - ["1", "connect(ruta)", "transacción abierta", "vacío"]
+        - ["2", "execute(INSERT)", "1 fila pendiente", "vacío"]
+        - ["3", "sale del with", "se descarta", "vacío"]
+        - ["4", "SELECT COUNT(*)", "0", "vacío"]
+      verdict: El with de sqlite3 cierra la transacción, no la confirma. Sin una llamada explícita a commit, lo insertado se descarta al salir del bloque.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: De las clases a la tabla, en parejas
+      brief: Tomen dos clases de su proyecto y escriban el CREATE TABLE que les corresponde, más los métodos guardar y cargar que las convierten en filas y de vuelta.
+      blocks:
+        - label: Restricciones
+          text: Todo el SQL vive en una sola clase de acceso a datos, y ninguna otra lo escribe
+        - label: Entregable
+          text: Un archivo .py con las clases y un script de prueba que guarda, cierra, abre y recupera
+        - label: Criterio
+          text: Que las clases del dominio sigan corriendo sin importar sqlite3 ni PyQt6
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una tabla contesta, un archivo solo guarda
+          desc: La diferencia aparece cuando hay que buscar, filtrar u ordenar sin leerlo todo
+        - title: Sin commit no hay nada en disco
+          desc: El with cierra la conexión, y cerrar sin confirmar descarta todo lo que estaba pendiente
+        - title: Los valores viajan como parámetros
+          desc: El marcador mantiene el dato como dato, y una comilla deja de poder cambiar la consulta
+
+  - homework:
+      eyebrow: Proyecto integrador
+      title: Entrega y criterios de evaluación
+      brief: Aplicación que integre programación orientada a objetos, persistencia en archivos o base de datos e interfaz gráfica, resolviendo un problema concreto. Se entrega esta semana.
+      meta:
+        - [Momento, Semana 16]
+        - [Formato, Blackboard · código completo + reporte PDF]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - ["Ejecución", "40 %", "La aplicación corre y hace lo que el reporte dice que hace"]
+        - ["POO y estructura", "20 %", "El modelado se sostiene y la interfaz no contiene reglas de negocio"]
+        - ["Buenas prácticas", "10 %", "Organización, nombres y manejo de errores previsibles"]
+        - ["Reporte escrito", "30 %", "Narrativa, decisiones de diseño y evidencias bien integradas"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, repaso general y examen final integrador.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

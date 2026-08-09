@@ -1,0 +1,314 @@
+meta:
+  course: Data Analysis
+  code: TIA502
+  lang: en
+  language: python
+  week: 14
+  footer: DATA ANALYSIS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 14 · Unit 7 · Text and CSV files
+      title: Data Analysis
+      subtitle: Here data stops being typed by hand. Opening a file, reading it by column, converting it and writing it back.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA502 · Business]
+        - [Session, 14 of 17]
+      notes: |
+        The real-data block starts here, and with it the international business case: sales
+        by region and channel, with their region catalogue.
+
+        Today's code is module A04 of the repository, in 06 - Advanced/A04 - Tabular Data.
+        The data sits in 06 - Advanced/data and can be cloned. It is worth running the
+        script in class against the real 324-row file.
+
+        The argument of the session is that a CSV has no types. It was said in week 4; here
+        they watch it happen on a real file, and that is when it lands.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Opening and closing
+          desc: The with block, and why closing the file should not be your problem
+        - title: Reading a CSV
+          desc: By position or by column name, and which survives an edited file
+        - title: Converting
+          desc: A file stores text. The types are yours to supply, every time
+        - title: Your turn
+          desc: Your own file, loaded, cleaned and summarised
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Open a file with with
+          sub: And explain why that form closes the file even when the program fails
+        - head: Recognise the four modes
+          sub: Read, write, append and create, and which of them erases what was there
+        - head: Read a CSV by column name
+          sub: With DictReader, instead of counting positions that shift
+        - head: Convert what comes out of the file
+          sub: Because a CSV stores text and does not know what used to be a number
+        - head: Write an output file
+          sub: So the result of the analysis can be opened somewhere else
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Opening a file
+      lede: An open file is a borrowed resource. It has to be given back, and there is a way to make that happen on its own.
+      block: 1
+
+  - figure:
+      eyebrow: Block 01 · The cycle
+      title: Open, use, close
+      image: img/en/file-lifecycle.png
+      caption: Three steps, and the third is the one that gets forgotten. The with block does it for you even if the program blows up halfway.
+      alt: The life cycle of a file drawn by hand, from opening to closing
+
+  - code:
+      eyebrow: Block 01 · with
+      title: Reading a whole text file
+      filename: read.py
+      source: |
+        from pathlib import Path
+
+        DATA = Path(__file__).resolve().parent / "data"
+
+        with (DATA / "sales.csv").open(encoding="utf-8") as f:
+            first = f.readline()
+
+        print(first)
+      annotations:
+        - label: The path
+          text: Built from where this file lives, not from where you opened the terminal. That is what makes it portable.
+        - label: with
+          text: On leaving the block the file closes itself, even if a line inside raises an error.
+        - label: encoding
+          text: utf-8, stated explicitly. Without it a file with accents reads differently on Windows and on Mac.
+        - label: Risk
+          text: Outside the with the file is already closed. Reading there raises ValueError on a closed file.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · Modes
+      title: The four opening modes
+      headers: [Mode, What it does, If the file exists]
+      rows:
+        - ["r", "Read, and it is the default", "It opens it"]
+        - ["w", "Write from scratch", "It erases all its contents"]
+        - ["a", "Append at the end", "It keeps what was there"]
+        - ["x", "Create a new one", "It fails with FileExistsError"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Reading a CSV
+      lede: The format every spreadsheet exports and every tool reads. Plain text, separated by commas.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · Two ways
+      title: By position, or by column name
+      before:
+        label: By position
+        file: position.py
+        code: |
+          import csv
+
+          reader = csv.reader(f)
+          header = next(reader)
+
+          for row in reader:
+              region = row[1]
+      after:
+        label: By name
+        file: name.py
+        code: |
+          import csv
+
+          reader = csv.DictReader(f)
+
+          for row in reader:
+              region = row["region"]
+      note: >-
+        The one on the left breaks the moment somebody inserts a column. The one on the
+        right uses the header, and survives a reordered file.
+
+  - code:
+      eyebrow: Block 02 · DictReader
+      title: Reading the sales file by name
+      filename: read_csv.py
+      source: |
+        import csv
+        from pathlib import Path
+
+        DATA = Path(__file__).resolve().parent / "data"
+
+        with (DATA / "sales.csv").open(encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+
+        print(len(rows))
+        print(rows[0]["region"], rows[0]["units"])
+      annotations:
+        - label: DictReader
+          text: It turns each line into a dictionary, keyed by the header. It is week 13 put to work.
+        - label: list
+          text: Without it you can only walk once. With it they stay in memory and can be looked at again.
+        - label: The real file
+          text: sales.csv lives in the repository, in 06 - Advanced/data, and carries 324 rows.
+        - label: Risk
+          text: Those 324 rows include seven duplicates and eleven blank cells. A real file always arrives dirty.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Result
+      title: What it returns, and of what type
+      filename: read_csv.py
+      source: |
+        print(len(rows))
+        print(rows[0]["region"], rows[0]["units"])
+        print(type(rows[0]["units"]))
+      output: |
+        324
+        South 15
+        <class 'str'>
+
+  - divider:
+      eyebrow: Block 03
+      title: Converting and saving
+      lede: The file hands you text. Deciding what each thing was, and what to do with what is missing, is your job.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · Conversion
+      title: From text to number, blank cells included
+      filename: convert.py
+      source: |
+        def to_int(text):
+            text = text.strip()
+            return int(text) if text else 0
+
+
+        def to_float(text):
+            clean = text.replace("$", "").replace(",", "")
+            return float(clean.strip())
+      annotations:
+        - label: The blank cell
+          text: int of an empty string raises ValueError. Here blank is decided to be zero, and it is written down.
+        - label: The symbol
+          text: 2,082.50 with a currency sign is not a number. The thousands comma and the symbol are format, not value.
+        - label: One function each
+          text: Every cleaning rule in its own function. That way it can be tested alone and reused across the file.
+        - label: The decision
+          text: Blank meaning zero is a business decision. It could be dropping the row, and it has to be justified.
+
+  - code_output:
+      eyebrow: Block 03 · The summary
+      title: What a PivotTable does, done by hand
+      filename: summarise.py
+      source: |
+        for region, amount in sorted(by_region.items()):
+            print(f"{region:<10}{amount:>16,.2f}")
+      output: |
+        Centre      3,918,978.30
+        North       4,351,976.40
+        South       1,553,002.85
+        West        3,030,019.45
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four file errors
+      items:
+        - label: Error 01
+          title: Opening in mode w to read
+          desc: Mode w erases the contents the instant it opens. The original file is gone, with no question asked.
+        - label: Error 02
+          title: Paths typed by hand
+          desc: C:\\Users\\your_name\\data.csv runs on no other machine. Use pathlib and relative paths.
+        - label: Error 03
+          title: Adding up without converting
+          desc: Values arrive as text. Adding them glues them together and the total is absurd, with no error raised.
+        - label: Error 04
+          title: Forgetting newline when writing
+          desc: Writing a CSV on Windows without an empty newline gives a file with a blank line between every record.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What happens to the file when this line runs?
+      filename: modes.py
+      source: |
+        with open("sales.csv", "w") as f:
+            content = f.read()
+      options:
+        - "It reads the contents into the variable"
+        - "It erases the file on opening, then fails on the read"
+        - "It fails because the file already exists"
+        - "It adds a blank line at the end"
+
+  - lab:
+      eyebrow: Lab
+      title: Your own file, end to end
+      brief: Take the CSV you brought in week 1, read it with DictReader, convert at least two columns to the right type, and produce a summary by category written out to a new file.
+      blocks:
+        - label: Deliverable
+          text: The .py, the input CSV, and the output file it produces
+        - label: Constraint
+          text: No absolute paths. The program has to run on the classroom machine
+        - label: The test
+          text: Blank out one cell in the file. Your program has to keep running and say what it did with it
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A file stores text
+          desc: The types are yours to supply. Same lesson as week 4, now on a file with 324 rows in it
+        - title: Read by column name
+          desc: Counting positions breaks the moment somebody inserts a column, and nothing will warn you
+        - title: What to do with what is missing is your call
+          desc: Dropping, filling and ignoring give three different answers, and all three have to be defensible
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Clone module A04 from the repository, run both scripts against sales.csv, and write half a page explaining why the total changes if you do not drop the seven duplicated rows.
+      meta:
+        - [Due, Before week 15]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Execution", "40 %", "Both scripts run and their output is shown"]
+        - ["The difference", "40 %", "The total with and without duplicates is reported, and the exact gap"]
+        - ["Argument", "20 %", "You explain why a duplicate inflates the total but not the average the same way"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, pandas. Everything we did by hand today, in eight lines.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

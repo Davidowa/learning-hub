@@ -1,0 +1,378 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 6
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 06 · Topic 3 · Core properties
+      title: Object-Oriented Programming
+      subtitle: Keeping data beside whatever looks after it, deciding what shows from outside, and reusing code without inheriting.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 6 of 17]
+      notes: |
+        The KeyError demonstration is the whole session in thirty seconds. Run it live, with
+        the file open, and let the group propose the fix before you show it. The difference
+        between encapsulating and hiding lands there, not in the definition.
+
+        The examples come from docs/en/courses/python-course/02 - POO/6th Module:
+        the tag cloud, open and closed, is Code023.py; the computer assembled by
+        composition is the last part of Code021.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Encapsulation
+          desc: The data and the behaviour that looks after it, in the same class
+        - title: Information hiding
+          desc: What is part of the contract and what is a detail free to change
+        - title: The public interface
+          desc: Brackets, len and the methods someone who did not write the class may use
+        - title: Reuse
+          desc: Function, composition or inheritance, and why it is nearly always the middle one
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Tell encapsulating from hiding
+          sub: The first puts data and behaviour together; the second decides what leans outwards
+        - head: Design a public interface
+          sub: Choose which methods are the contract and leave the rest as a replaceable detail
+        - head: Spot a leak
+          sub: A getter that returns the internal structure undoes all the encapsulation work
+        - head: Reuse through composition
+          sub: Take the parts in the constructor instead of inheriting them from a parent class
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: now
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Encapsulation
+      lede: The word sounds like a padlock, but to begin with it only means the data and the functions that touch it live together.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Encapsulating is not the same as hiding
+      lead: >-
+        Encapsulating is putting a value and the behaviour that looks after it in the same
+        class. Hiding is the later, separate decision not to let that value be seen from
+        outside. You can encapsulate without hiding anything, and that is where trouble starts.
+      panel:
+        label: The question that separates them
+        title: Who has to remember this rule?
+        note: >-
+          If the rule lives inside the class, nobody using it has to remember. If it lives
+          outside, every file using the class has to remember, and one of them will not.
+      steps:
+        - text: Put the value with its rules
+        - text: Decide what the class exposes
+        - text: Close whatever might change
+          loop: ↺ whatever stayed open is a promise you will have to keep
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The three levels again, now as a design decision
+      image: img/en/access-levels.png
+      caption: The question is not which one is safest, but which of the three you are willing to keep unchanged.
+      alt: Outside code reading three attributes of an Account class, with the private one blocked
+
+  - code:
+      eyebrow: The problem
+      title: A class whose one rule nobody outside knows about
+      filename: open_cloud.py
+      lang: python
+      source: |
+        class TagCloud:
+            def __init__(self) -> None:
+                self.tags = {}
+
+            def add(self, tag: str) -> None:
+                key = tag.lower()
+                current = self.tags.get(key, 0)
+                self.tags[key] = current + 1
+
+
+        cloud = TagCloud()
+        cloud.add("Python")
+        cloud.add("python")
+      annotations:
+        - label: Line 3
+          text: The dictionary is public, so anyone can read and write it without going through the class
+        - label: Line 6
+          text: Lowercasing is the only rule the class has, and it lives inside add
+        - label: Risk
+          text: Anyone writing cloud.tags["Python"] from outside skips the rule without noticing
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The second line blows up and the first one does not
+      filename: open_cloud.py
+      lang: python
+      output_label: Output
+      source: |
+        print(cloud.tags["python"])
+        print(cloud.tags["c++"])
+      output: |
+        2
+        Traceback (most recent call last):
+          File "open_cloud.py", line 2
+        KeyError: 'c++'
+
+  - compare:
+      eyebrow: The fix
+      title: The same lookup, through the front door
+      before:
+        label: Direct access
+        file: open_cloud.py
+        code: |
+          cloud.tags["c++"]
+
+          cloud.tags["Python"] = 99
+      after:
+        label: Through the interface
+        file: cloud.py
+        code: |
+          cloud["c++"]
+
+          cloud["Python"] = 99
+      note: The second goes through __getitem__ and __setitem__, so it returns zero instead of blowing up and normalises the key. The rule ends up in exactly one place.
+
+  - divider:
+      eyebrow: Block 02
+      title: Information hiding
+      lede: Everything you leave visible is a promise. The smaller the interface, the fewer promises to keep.
+      block: 2
+
+  - code:
+      eyebrow: The solution
+      title: The dictionary stops existing as far as the world knows
+      filename: cloud.py
+      lang: python
+      source: |
+        class TagCloud:
+            def __init__(self) -> None:
+                self.__tags: dict[str, int] = {}
+
+            def add(self, tag: str) -> None:
+                key = tag.lower()
+                current = self.__tags.get(key, 0)
+                self.__tags[key] = current + 1
+
+            def __getitem__(self, tag: str) -> int:
+                return self.__tags.get(tag.lower(), 0)
+
+            def __setitem__(self, tag, count) -> None:
+                self.__tags[tag.lower()] = count
+      annotations:
+        - label: Line 3
+          text: The dictionary leaves the contract. Tomorrow it can be a list and nobody outside can tell.
+        - label: Line 10
+          text: __getitem__ makes cloud["python"] work, and returns zero instead of raising KeyError
+        - label: Two more to go
+          text: __len__ and __iter__ are added the same way, and with them len(cloud) and for start working
+
+  - table:
+      eyebrow: Interface design
+      title: What is contract and what is detail
+      headers: ["Member", "What it is", "Who uses it"]
+      rows:
+        - ["add", "Public contract", "Anyone"]
+        - ["__getitem__", "Public contract", "The bracket operator"]
+        - ["__len__", "Public contract", "The len function"]
+        - ["__tags", "Internal detail", "The class only"]
+        - ["tag.lower()", "Internal detail", "The class only"]
+
+  - figure:
+      eyebrow: Abstraction
+      title: Keeping only what the problem needs to know
+      image: img/en/ct-03.png
+      caption: Hiding information is drawing the mug without the decoration, because the problem only asks for a handle.
+      alt: A decorated mug simplified in two steps down to its outline
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to encapsulate halfway
+      items:
+        - label: Error 01
+          title: Encapsulating, then handing it back whole
+          desc: A getter that returns the internal list lets anyone modify it without touching your rules
+        - label: Error 02
+          title: Confusing encapsulating with hiding
+          desc: Putting two underscores on everything is not design. The question is which promise you want to keep.
+        - label: Error 03
+          title: Closing everything on day one
+          desc: A class where nothing is public is no use to anybody, and you will open it on the first request
+        - label: Error 04
+          title: The rule repeated outside the class
+          desc: If three files call .lower() before calling the method, the rule is not living where it should
+
+  - divider:
+      eyebrow: Block 03
+      title: Reuse
+      lede: Three ways of not writing the same code twice, in order of how much they commit you.
+      block: 3
+
+  - diagram:
+      eyebrow: Diagram
+      title: Three ways to reuse, and what each one costs
+      blocks:
+        - label: The simplest
+          title: Function
+          desc: The behaviour depends on no state at all, so it does not need a class
+        - label: The most flexible
+          title: Composition
+          desc: The class takes instances of others and delegates the work that is not its own
+          dark: true
+        - label: The most rigid
+          title: Inheritance
+          desc: The class takes the parent's behaviour and is tied to every change the parent makes
+      note: >-
+        Composition is preferred because one part can change without touching the others.
+        Inheritance earns its place when there really is an "is a" and not just a "uses a".
+
+  - code:
+      eyebrow: Composition
+      title: A computer that inherits from nothing
+      filename: computer.py
+      lang: python
+      source: |
+        class Disk:
+            def read(self, file: str) -> None:
+                print(f"Reading {file}...")
+
+
+        class Computer:
+            def __init__(self, cpu, disk) -> None:
+                self.cpu = cpu
+                self.disk = disk
+
+            def start(self, program: str) -> None:
+                self.disk.read(f"{program}.exe")
+                self.cpu.execute()
+      annotations:
+        - label: Line 1
+          text: Disk and CPU are loose classes that know nothing about each other and test separately
+        - label: Line 6
+          text: Computer inherits from nobody. It takes the finished parts and delegates the work.
+        - label: To swap the disk
+          text: Hand it another object with a read method. Not one line of Computer changes.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: leak.py
+      lang: python
+      source: |
+        class Cart:
+            def __init__(self):
+                self.__items = []
+
+            def get_items(self):
+                return self.__items
+
+
+        c = Cart()
+        c.get_items().append("X1")
+        print(len(c.get_items()))
+      options:
+        - '0, because __items is private'
+        - '1, because the getter handed back the real list'
+        - 'AttributeError, get_items cannot reach __items'
+        - 'TypeError, you cannot append to a method'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 1, and the double underscore did not stop it
+      headers: ["Step", "Statement", "What it returns", "__items"]
+      rows:
+        - ["1", "c = Cart()", "–", "[]"]
+        - ["2", "c.get_items()", "the list itself", "[]"]
+        - ["3", ".append('X1')", "None", "['X1']"]
+        - ["4", "len(c.get_items())", "1", "['X1']"]
+      verdict: The getter returned a reference to the internal list, not a copy. Encapsulating the attribute name does not encapsulate the object inside it.
+
+  - method:
+      eyebrow: Design criterion
+      title: The change test
+      statement: A value is properly encapsulated when you can change how it is stored inside without touching a single line outside the class.
+      points:
+        - label: How to run it
+          text: Swap the dictionary for a list of pairs and run the tests again without editing them
+        - label: If it passes
+          text: That value was an internal detail and it was kept in the right place
+        - label: If it fails
+          text: Somebody outside depended on the shape of the data, and that is exactly what to close
+
+  - lab:
+      eyebrow: Lab
+      title: Closing an inventory, in pairs
+      brief: You get an Inventory class with a public dictionary of products and a test file. Close the class without changing a single line of the test file.
+      blocks:
+        - label: Constraints
+          text: The dictionary goes private and the class exposes add, brackets and len
+        - label: Deliverable
+          text: A .py file with the closed class, and the test file exactly as it was handed to you
+        - label: Criterion
+          text: Asking for a product that is not there returns zero instead of raising KeyError
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Encapsulating groups, hiding decides
+          desc: The first puts data and behaviour in the same class; the second chooses what leans out
+        - title: A getter can undo the encapsulation
+          desc: Return the internal structure and anyone can modify it without touching a single rule of yours
+        - title: Composition reuses better than inheritance
+          desc: Changing a part you were handed costs one line; changing a parent costs the whole branch
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Take the lab inventory and swap the internal dictionary for a list of tuples, without touching the test file. Explain in one paragraph what you had to change.
+      meta:
+        - [Due, Before session 7]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Encapsulation", "40 %", "The test file runs without a single modification"]
+        - ["Interface", "30 %", "The class exposes add, brackets and len, and nothing else"]
+        - ["Reflection", "30 %", "The paragraph explains what would have happened with a public dictionary"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, inheritance, class hierarchies and the protected modifier.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

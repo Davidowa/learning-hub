@@ -1,0 +1,225 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 17
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 17 · Final assessment
+      title: Object-Oriented Programming
+      subtitle: The closing session. What the final exam covers, where each topic was practised, and the four costliest mistakes so far.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 17 of 17]
+      notes: |
+        This deck is short on purpose. The session is review and rules, and the time goes on
+        the group's questions rather than on slides. Have both marked midterms open so you
+        can quote real mistakes instead of imagined ones.
+
+        If time is left over, the best use of it is solving live one first-midterm question
+        that most submissions got wrong.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four moments in the session
+      cards:
+        - title: Scope
+          desc: The seven units and what gets asked about each
+        - title: Review
+          desc: The mistakes that cost the most marks, with their fixes
+        - title: Rules
+          desc: Format, permitted materials and how it is submitted
+        - title: Closing
+          desc: What comes after this course
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Locate every exam topic
+          sub: Knowing which session covered it and which lab practised it
+        - head: Recognise the frequent mistakes
+          sub: The four that turned up in most submissions across both midterms
+        - head: Prepare with a method
+          sub: Practising at the keyboard rather than rereading slides
+        - head: Sit the exam with no format doubts
+          sub: With the submission rules and permitted materials already settled
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Scope of the final exam
+      lede: Integrating means one question can touch three units. There are no sections split up by topic.
+      block: 1
+
+  - tiers:
+      eyebrow: Syllabus
+      title: The four halves of the course, in order
+      items:
+        - key: T1
+          title: Paradigm and building blocks
+          desc: When a class is worth it, plus classes, objects, attributes, methods, access and properties
+        - key: T2
+          title: Core properties
+          desc: Encapsulation, hiding, reuse, inheritance, polymorphism and abstract classes
+        - key: T3
+          title: Functions, collections and errors
+          desc: Parameters, modularity, recursion, the four collections and exception handling
+        - key: T4
+          title: Files, interfaces and data
+          desc: Paths, modes, text and binary, windows with PyQt6, and tables with sqlite3
+
+  - table:
+      eyebrow: Where to review
+      title: Every topic, with the session and the lab that practised it
+      headers: ["Topic", "Sessions", "Reference lab"]
+      rows:
+        - ["Classes and access", "3 and 4", "The bank account from session 4"]
+        - ["Inheritance and polymorphism", "7 and 8", "The transport hierarchy from 7"]
+        - ["Collections and errors", "10 and 11", "The grade reader from 11"]
+        - ["Files", "12 and 13", "The report from CSV in 12"]
+        - ["Interface and data", "14 to 16", "The data entry form from 15"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Review of what went wrong
+      lede: Four concrete mistakes that turned up in most of the submissions across both midterms.
+      block: 2
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: The four that cost the most marks
+      items:
+        - label: First midterm
+          title: Child constructor without super
+          desc: The object is born without the parent's attributes and breaks on the first line using one
+        - label: First midterm
+          title: Attribute declared outside __init__
+          desc: It sticks to the class and every object shares the same list or the same counter
+        - label: Second midterm
+          title: A file opened without with
+          desc: The writes never reach disk when something fails between the open and the close
+        - label: Second midterm
+          title: An except with no type
+          desc: It catches the unexpected, hides the real error, and leaves the submission undebuggable
+
+  - quiz:
+      eyebrow: Lightning review
+      question: What does the last line print?
+      filename: review.py
+      lang: python
+      source: |
+        class Base:
+            def __init__(self):
+                self.items = []
+
+        class Child(Base):
+            def __init__(self):
+                self.name = "x"
+
+        c = Child()
+        print(len(c.items))
+      options:
+        - '0, because the list was created empty'
+        - 'AttributeError, items was never created'
+        - 'TypeError, Child is missing arguments'
+        - '1, because name was added to the list'
+
+  - trace:
+      eyebrow: Answer
+      title: AttributeError, and it is the error of the semester
+      headers: ["Step", "Statement", "c.name", "c.items"]
+      rows:
+        - ["1", "Child()", "–", "–"]
+        - ["2", "Child.__init__ runs", "x", "does not exist"]
+        - ["3", "Base.__init__", "never called", "does not exist"]
+        - ["4", "len(c.items)", "x", "AttributeError"]
+      verdict: Defining __init__ in the child replaces the parent's. The missing line is super().__init__(), and without it the Base constructor never runs at all.
+
+  - method:
+      eyebrow: How to prepare
+      title: This exam is studied by typing
+      statement: No question asks for a definition. Every one asks for code that runs, so the only preparation that helps is solving the labs again without looking at the solution.
+      points:
+        - label: What to practise
+          text: One lab per unit, solved from scratch and without opening the solution file
+        - label: What to review
+          text: The diagnosis slides. The four errors on each one are the errors on the exam.
+        - label: What not to do
+          text: Rereading the concept slides. They make sense on reading and vanish on writing.
+
+  - tiers:
+      eyebrow: Rules
+      title: What to know before sitting down
+      items:
+        - key: '01'
+          title: Format
+          desc: At the keyboard, one .py file per question, named as the brief specifies
+        - key: '02'
+          title: Materials
+          desc: The course repository and the official Python documentation, open
+        - key: '03'
+          title: No outside help
+          desc: No people and no assistants. The University Honour Code applies.
+        - key: '04'
+          title: Submission
+          desc: Through Blackboard, within the exam window. Email submissions are not accepted.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take from the semester
+      items:
+        - title: The class describes, the object remembers
+          desc: Everything else in the course leans on that distinction, the application half included
+        - title: Whatever gets opened gets closed
+          desc: A file, a connection and a window share one life cycle and one and the same trap
+        - title: Testable code is the code that lasts
+          desc: Pulling logic out of slots and loops is what lets you fix it without guessing
+
+  - homework:
+      eyebrow: Final exam
+      title: Sitting and grading criteria
+      brief: Final integrating exam across all seven units of the course. One question can touch modelling, files and persistence at the same time.
+      meta:
+        - [When, Week 17]
+        - [Format, Blackboard · one .py per question]
+        - [Weight, 20 % of the final grade]
+      rubric:
+        - ["Modelling", "30 %", "The classes match the brief and respect the access levels"]
+        - ["Application", "35 %", "Collections, files and errors used where the brief asks for them"]
+        - ["Robustness", "20 %", "Foreseeable errors are caught by type and with a message that helps"]
+        - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]
+
+  - closing:
+      title: Thank you
+      subtitle: The course repository stays open. Data structures come next, and all of this is the ground it stands on.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

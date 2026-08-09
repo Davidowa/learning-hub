@@ -1,0 +1,396 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 1
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Unidad 1 · Elementos básicos de C++
+      title: Programación Avanzada
+      subtitle: El entorno, qué pasa entre que escribes y que corre, y cómo se lee un programa de C++ línea por línea.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 1 de 17]
+      notes: |
+        Esta sesión se da con Visual Studio abierto y proyectado. Cada bloque tiene su
+        demostración en vivo, y el grupo debería estar creando su propio proyecto durante
+        el primer bloque en lugar de verlo.
+
+        Los ejemplos de código de este curso están escritos para el curso. No hay una
+        carpeta de fuentes en el repositorio como la que tiene COM102, así que no prometan
+        un archivo que el alumno pueda clonar. Lo que está en la diapositiva es lo que hay.
+
+        Los valores de __cplusplus y _MSVC_LANG que aparecen en la diapositiva de
+        comprobación se midieron en Visual Studio Community 2026, con el juego de
+        herramientas 14.51 y _MSC_VER 1951. El mensaje C2143 también está copiado de una
+        compilación real. Si el salón tiene otra versión, vuelvan a medirlo antes de
+        afirmarlo.
+
+        La lectura de la semana es Malik, octava edición, capítulos 1 y 2. Los documentos
+        del curso citan la quinta edición, donde el capítulo es el 2. El PDF que está en el
+        repositorio es el de la octava.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El entorno
+          desc: Solución, proyecto, archivos y las dos configuraciones de compilación
+        - title: De código a ejecutable
+          desc: Qué hacen el preprocesador, el compilador y el enlazador, en ese orden
+        - title: Anatomía
+          desc: Las partes que tiene cualquier programa de C++, incluido el más corto
+        - title: Depuración
+          desc: Detener el programa a media ejecución y ver qué valen sus variables
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Configurar un proyecto de consola
+          sub: Con el estándar fijado en C++20, que no viene puesto de fábrica en ninguna configuración
+        - head: Explicar qué corre antes que su programa
+          sub: Preprocesador, compilador y enlazador, y cuál de los tres es el que se está quejando
+        - head: Leer un programa de C++ completo
+          sub: El include, la función main, el valor de retorno y de dónde sale el nombre std
+        - head: Encontrar un error con el depurador
+          sub: Punto de ruptura, avance paso a paso y la ventana de variables locales
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: now
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: todo
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El entorno de trabajo
+      lede: Media hora bien invertida hoy evita el problema que aparece en la semana nueve y que nadie relaciona con esta sesión.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una solución contiene proyectos y un proyecto contiene archivos
+      lead: >-
+        La solución es la carpeta de trabajo. Adentro va al menos un proyecto, y el proyecto
+        es el que sabe qué archivos se compilan, con qué opciones y qué produce. Los dos
+        niveles existen porque un programa real casi nunca es un solo ejecutable.
+      panel:
+        label: Al día siguiente
+        title: Abre el .sln, no el .cpp
+        note: >-
+          Si abres el .cpp suelto, Visual Studio lo edita pero no tiene proyecto que
+          compilar, y la mitad de las opciones aparecen en gris sin decirte por qué.
+      steps:
+        - text: La solución agrupa proyectos
+        - text: El proyecto guarda las opciones
+        - text: El archivo guarda tu código
+          loop: ↺ el estándar del lenguaje se fija en el nivel de en medio
+
+  - table:
+      eyebrow: El disco
+      title: Qué archivo es cuál, y a cuál le vas a meter mano
+      headers: ["Archivo", "Qué es", "Qué tan seguido lo tocas"]
+      rows:
+        - [".sln", "La solución y su lista de proyectos", "Casi nunca, y nunca a mano"]
+        - [".vcxproj", "El proyecto y sus opciones", "Desde la ventana de propiedades"]
+        - [".cpp", "El código fuente que escribes", "Todo el tiempo"]
+        - [".h", "Lo que comparten varios .cpp", "A partir de la unidad 3"]
+        - ['x64\Debug\', "Lo que produce la compilación", "Nunca, y no se entrega"]
+
+  - steps:
+      eyebrow: Configuración
+      title: Fijar el estándar en C++20, en cinco pasos
+      items:
+        - label: Paso 01
+          title: Abre propiedades
+          desc: Clic derecho sobre el proyecto, no sobre la solución. Son ventanas distintas.
+        - label: Paso 02
+          title: Todas las configuraciones
+          desc: Cámbialo arriba antes de tocar nada, o Release se queda como estaba
+        - label: Paso 03
+          title: Entra a Lenguaje
+          desc: C/C++, Lenguaje, Estándar de lenguaje de C++
+        - label: Paso 04
+          title: Elige C++20
+          desc: La opción se lee ISO C++20 Standard y por debajo pasa la marca /std:c++20
+        - label: Paso 05
+          title: Recompila todo
+          desc: Compilar, Recompilar solución. Cambiar el estándar no rehace lo ya compilado.
+
+  - diagram:
+      eyebrow: Configuraciones
+      title: El mismo código, compilado de dos maneras distintas
+      blocks:
+        - label: Mientras aprendes
+          title: Debug
+          desc: Sin optimizar y con información de símbolos. El depurador puede detener el programa y enseñarte cada variable.
+          dark: true
+        - label: Cuando entregas
+          title: Release
+          desc: Optimizado y sin símbolos. Corre más rápido y el depurador deja de servirte casi por completo.
+      note: >-
+        Casi todas las opciones del proyecto se guardan por configuración, incluida la del
+        estándar. Ese es el motivo del paso 02, y también el motivo por el que un proyecto
+        compila en la máquina de quien lo escribió y falla en la de al lado.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: De código fuente a ejecutable
+      lede: C++ es compilado, y eso quiere decir que dos programas ajenos revisan el tuyo antes de que corra una sola línea.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Quién se está quejando cuando algo no compila
+      image: img/es/compilation.png
+      caption: El compilador trabaja archivo por archivo. El enlazador es el único que ve el programa completo, y por eso sus errores se ven distintos.
+      alt: Tres cajas, el archivo fuente, el objeto y el ejecutable, unidas por el compilador y el enlazador
+
+  - code:
+      eyebrow: Anatomía
+      title: El programa más corto que ya sirve de algo
+      filename: hola.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "Hola, Programacion Avanzada\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 1
+          text: El preprocesador pega aquí el contenido de iostream antes de que el compilador vea nada
+        - label: Línea 3
+          text: main es por donde entra el sistema operativo. Un programa tiene exactamente una.
+        - label: Línea 6
+          text: El cero le avisa al sistema que todo salió bien. Cualquier otro número quiere decir que no.
+        - label: Riesgo
+          text: El texto va sin acentos a propósito. La consola de Windows no usa UTF-8 por omisión y la ó sale como basura.
+          accent: true
+
+  - code_output:
+      eyebrow: Comprobación
+      title: Cómo saber de verdad qué estándar quedó puesto
+      filename: estandar.cpp
+      lang: cpp
+      output_label: Con /std:c++20 puesto
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "__cplusplus " << __cplusplus << "\n";
+            std::cout << "_MSVC_LANG  " << _MSVC_LANG << "\n";
+            return 0;
+        }
+      output: |
+        __cplusplus 199711
+        _MSVC_LANG  202002
+      notes: |
+        Medido en Visual Studio Community 2026, juego de herramientas 14.51, _MSC_VER 1951.
+
+        El primer número parece decir que el proyecto está en C++98 y no es cierto. MSVC deja
+        __cplusplus congelado en 199711 por compatibilidad con código viejo, y solo reporta
+        el valor real si se agrega la marca /Zc:__cplusplus. La macro que sí dice la verdad
+        sin configurar nada es _MSVC_LANG, y 202002 es C++20.
+
+        Vale la pena correrlo en vivo. Es la primera vez que van a ver al compilador
+        contestar algo distinto de lo que esperaban, y la explicación es histórica, no un
+        error suyo.
+
+  - code_output:
+      eyebrow: Cuando no compila
+      title: El compilador señala el renglón donde dejó de entender
+      filename: roto.cpp
+      lang: cpp
+      output_label: Lista de errores
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "Hola\n"
+            return 0;
+        }
+      output: |
+        roto.cpp(6): error C2143:
+        syntax error: missing ';'
+        before 'return'
+      notes: |
+        El punto y coma falta en la línea 5 y el mensaje dice línea 6. No es un defecto del
+        compilador. Mientras no aparezca el punto y coma, la instrucción sigue abierta, así
+        que la primera cosa que sobra la encuentra hasta el renglón siguiente.
+
+        Este mensaje está copiado de una compilación real desde la línea de comandos. Dentro
+        del entorno se ve casi igual, con la columna añadida entre paréntesis.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: Corregir de abajo hacia arriba
+          desc: El primer error suele provocar los demás. Arregla el de hasta arriba y vuelve a compilar antes de tocar otro.
+        - label: Error 02
+          title: Confundir C2143 con LNK2019
+          desc: El primero es sintaxis y lo dice el compilador. El segundo es una función declarada que nadie escribió.
+        - label: Error 03
+          title: Configurar solo Debug
+          desc: El estándar queda puesto en una configuración y no en la otra, y falla el día que compilas en Release
+        - label: Error 04
+          title: Creerle a __cplusplus
+          desc: Con MSVC reporta 199711 aunque el proyecto esté en C++20. La macro que sirve aquí es _MSVC_LANG.
+
+  - method:
+      eyebrow: Criterio
+      title: Un mensaje de error se lee en tres partes
+      statement: El compilador no adivina qué querías escribir. Te dice en qué punto dejó de entender, que casi nunca es el punto donde está la falta.
+      points:
+        - label: Dónde
+          text: El archivo y el renglón entre paréntesis. Empieza a buscar ahí y sube, no bajes.
+        - label: Qué
+          text: La clave C2143 o LNK2019. Buscarla tal cual trae la explicación de Microsoft con ejemplos.
+        - label: Cuál primero
+          text: Siempre el de más arriba. Los que siguen suelen ser consecuencia y desaparecen solos.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Depuración
+      lede: Un programa que compila y da un resultado equivocado no tiene ningún mensaje que leer. Para eso existe el depurador.
+      block: 3
+
+  - code:
+      eyebrow: El problema
+      title: Compila, corre, y el promedio está mal
+      filename: promedio.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            int examen1 = 78;
+            int examen2 = 85;
+            int examen3 = 91;
+            int suma = examen1 + examen2 + examen3;
+            int promedio = suma / 4;
+            std::cout << "Promedio: " << promedio << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 8
+          text: Aquí no está el error. suma vale 254 y es correcto, aunque lo que sigue ya salga mal.
+        - label: Línea 9
+          text: Son tres exámenes y está dividiendo entre cuatro. El compilador no tiene manera de saberlo.
+        - label: Punto de ruptura
+          text: F9 sobre la línea 9. El programa se detiene antes de ejecutarla, con suma ya calculada.
+        - label: Riesgo
+          text: Dividir enteros trunca. Aun con el divisor correcto, 254 entre 3 da 84 y no 84.67.
+          accent: true
+
+  - table:
+      eyebrow: Herramientas
+      title: Las cuatro ventanas que vas a usar todo el semestre
+      headers: ["Ventana", "Qué muestra", "Cuándo sirve"]
+      rows:
+        - ["Locales", "Las variables vivas de esta función", "Casi siempre. Es la primera que abres."]
+        - ["Inspección", "Solo las expresiones que tú agregas", "Cuando hay muchas variables y te importan dos"]
+        - ["Pila de llamadas", "Quién llamó a quién para llegar aquí", "A partir de la unidad 3, cuando haya funciones"]
+        - ["Inmediato", "Evalúa lo que le escribas, sin recompilar", "Para probar una corrección antes de escribirla"]
+      notes: |
+        En una instalación en inglés son Locals, Watch, Call Stack e Immediate. Conviene
+        decir los dos nombres, porque cualquier respuesta que encuentren en internet va a
+        usar los de la derecha.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El punto de ruptura está en la línea 9. ¿Qué muestra Locales cuando se detiene?
+      filename: promedio.cpp
+      lang: cpp
+      source: |
+        int suma = examen1 + examen2 + examen3;
+        int promedio = suma / 4;
+      options:
+        - 'suma en 254 y promedio con basura, la línea no ha corrido'
+        - 'suma en 254 y promedio en 63, la línea ya corrió'
+        - 'las dos vacías, porque main apenas va empezando'
+        - 'suma en 254 y promedio en 0, que es su valor inicial'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El depurador se detiene antes de ejecutar la línea, no después
+      headers: ["Paso", "Acción", "suma", "promedio"]
+      rows:
+        - ["1", "F5, se detiene en la línea 9", "254", "basura"]
+        - ["2", "F10, ejecuta la línea 9", "254", "63"]
+        - ["3", "F10, imprime el resultado", "254", "63"]
+        - ["4", "Cambias el 4 por un 3", "254", "84"]
+      verdict: Una variable sin inicializar no vale cero, vale lo que hubiera en esa memoria. Y con el divisor corregido da 84, no 84.67, porque la división entre enteros tira la fracción.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un proyecto configurado y un error encontrado, en parejas
+      brief: Creen un proyecto de consola, déjenlo en C++20 en las dos configuraciones y compilen el programa del promedio tal como está en la diapositiva. Encuentren el error usando el depurador y nada más.
+      blocks:
+        - label: Restricción
+          text: Sin agregar líneas de impresión. Solo puntos de ruptura y la ventana Locales.
+        - label: Entregable
+          text: Una captura con el programa detenido y suma visible, más el archivo .cpp corregido
+        - label: Criterio
+          text: Que puedan decir en qué línea se detuvo y por qué promedio todavía no tenía su valor final
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El estándar no viene puesto
+          desc: Un proyecto nuevo compila como C++14 hasta que alguien entra a las propiedades y lo cambia
+        - title: Compilar y enlazar son dos pasos
+          desc: C2143 lo dice el compilador y LNK2019 el enlazador, y cada uno se arregla en otro lado
+        - title: El depurador se detiene antes
+          desc: Lo que ves en Locales es el estado justo antes de ejecutar la línea marcada, no después
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: El proyecto de la semana, entregado y corregido
+      brief: Entreguen el proyecto del laboratorio con el estándar en C++20 en Debug y en Release, el promedio corregido, y un comentario de bloque arriba de main que explique en dos renglones qué hacía mal el programa original.
+      meta:
+        - [Entrega, Antes de la sesión 2]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Configuración", "Requisito", "El proyecto compila en C++20 en las dos configuraciones"]
+        - ["Corrección", "Requisito", "El promedio se calcula con los tres exámenes que hay"]
+        - ["Depuración", "Requisito", "La captura muestra el programa detenido y la ventana Locales abierta"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, variables, constantes, operadores y por qué 254 entre 4 le dio 63 a la computadora.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

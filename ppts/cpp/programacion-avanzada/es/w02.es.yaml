@@ -1,0 +1,434 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 2
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 02 · Unidad 1 · Elementos básicos de C++
+      title: Programación Avanzada
+      subtitle: Cómo se declara un valor, qué hacen los operadores con él, y por qué la máquina contestó 63 cuando esperabas 63.5.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 2 de 17]
+      notes: |
+        La sesión cierra la unidad 1. Lo que quedó abierto la semana pasada, la división que
+        dio 63, se resuelve en el bloque 3 y conviene anunciarlo desde el principio para que
+        el grupo espere la respuesta.
+
+        Todos los resultados numéricos de este deck se midieron compilando en Visual Studio
+        Community 2026, juego de herramientas 14.51. El valor de la variable sin inicializar
+        cambia en cada corrida y en cada máquina; el 237 de la diapositiva es lo que salió
+        una vez, no un número que se pueda prometer.
+
+        Todavía no existen if ni ciclos. Las estructuras de control son la unidad 6 y llegan
+        hasta la semana 7, así que todo el código de hoy es de flujo recto. Si alguien
+        pregunta cómo se valida que el promedio sea mayor que siete, la respuesta honesta es
+        que falta una herramienta y llega en cinco semanas.
+
+        Lectura: Malik, octava edición, capítulo 2.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Nombres y valores
+          desc: Declarar, inicializar, y la diferencia entre las dos cosas
+        - title: Operadores
+          desc: Los cinco aritméticos completos, la precedencia y los compuestos
+        - title: Incremento
+          desc: Por qué el mismo operador da dos resultados según dónde se escribe
+        - title: Conversión
+          desc: Qué pasa cuando dos tipos distintos se encuentran en la misma línea
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar e inicializar correctamente
+          sub: Y explicar por qué leer una variable sin inicializar no da cero sino cualquier cosa
+        - head: Predecir el resultado de una expresión
+          sub: Aplicando la precedencia en el orden que usa el lenguaje, no en el orden de lectura
+        - head: Distinguir el incremento prefijo del sufijo
+          sub: Y decir qué valor entrega cada uno a la expresión que lo rodea
+        - head: Controlar la conversión de tipos
+          sub: Reconocer la implícita cuando ocurre sola y forzar la explícita con static_cast
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: now
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: todo
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Nombres y valores
+      lede: Una variable es un espacio de memoria con nombre y con tipo. Los tres pedazos de esa frase cuestan algo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Declarar reserva el espacio, inicializar lo llena
+      lead: >-
+        Declarar le dice al compilador cuánta memoria apartar y cómo interpretarla.
+        Inicializar pone el primer valor adentro. Son dos cosas distintas, y C++ te permite
+        hacer la primera sin la segunda, que es de donde salen los errores más difíciles.
+      panel:
+        label: Lo que no ocurre solo
+        title: Nadie la pone en cero por ti
+        note: >-
+          En otros lenguajes una variable nueva empieza en cero o en nulo. Aquí empieza con
+          lo que hubiera quedado en esa memoria, que puede ser cualquier cosa.
+      steps:
+        - text: El tipo decide el tamaño
+        - text: El nombre decide cómo la llamas
+        - text: La inicialización decide qué vale
+          loop: ↺ olvidar la tercera compila igual y falla distinto cada vez
+
+  - tiers:
+      eyebrow: Identificadores
+      title: Cuatro reglas para nombrar, y una costumbre
+      items:
+        - key: '01'
+          title: Letras, dígitos y guion bajo
+          desc: Nada más. Ni espacios, ni acentos, ni guion medio, que el compilador lee como una resta.
+        - key: '02'
+          title: No puede empezar con dígito
+          desc: examen2 es válido y 2examen no lo es. El compilador lo rechaza antes de entender qué querías.
+        - key: '03'
+          title: Distingue mayúsculas
+          desc: Alumno, alumno y ALUMNO son tres variables distintas y el compilador no te avisa del parecido.
+        - key: '04'
+          title: No puede ser palabra reservada
+          desc: int, class, return y otras noventa están tomadas. El error que sale no dice cuál es la razón.
+
+  - code:
+      eyebrow: Declaración
+      title: Tres variables, y una que el compilador protege
+      filename: notas.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            int alumnos = 32;
+            double promedio = 8.75;
+            const double APROBATORIA = 7.0;
+
+            alumnos = 33;
+            std::cout << alumnos << " " << APROBATORIA << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 5
+          text: El tipo va antes del nombre y ya no cambia. Un int es un int hasta que termina su alcance.
+        - label: Línea 7
+          text: const promete que ese valor no se reasigna, y el compilador se encarga de cobrar la promesa
+        - label: Línea 9
+          text: Reasignar alumnos es válido. La misma línea sobre APROBATORIA no compila.
+        - label: Riesgo
+          text: Las mayúsculas son costumbre, no regla. Lo que protege es const, no el nombre.
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: Lo que hay dentro de una variable que nadie llenó
+      filename: basura.cpp
+      lang: cpp
+      output_label: Una corrida, de muchas posibles
+      source: |
+        int declarada;
+        int inicializada = 0;
+
+        std::cout << declarada << "\n";
+        std::cout << inicializada << "\n";
+      output: |
+        237
+        0
+      notes: |
+        237 fue el resultado de una corrida concreta. La siguiente puede dar otro número, y
+        en otra máquina seguro da otro. Ese es exactamente el problema: el comportamiento no
+        está definido, así que no se puede depender de él ni para fallar igual dos veces.
+
+        El compilador sí avisa. Sale la advertencia C4700, uninitialized local variable
+        'declarada' used. Vale la pena mostrar la Lista de errores con las advertencias
+        visibles, porque muchos alumnos las tienen filtradas sin saberlo y esta es de las
+        que hay que leer.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Operadores y precedencia
+      lede: Cinco operadores aritméticos, y uno de ellos hace algo distinto de lo que hace en la calculadora del teléfono.
+      block: 2
+
+  - table:
+      eyebrow: Aritméticos
+      title: Los cinco, completos y en orden
+      headers: ["Operador", "Qué hace", "Ejemplo", "Da"]
+      rows:
+        - ["+", "Suma", "7 + 2", "9"]
+        - ["-", "Resta", "7 - 2", "5"]
+        - ["*", "Multiplica", "7 * 2", "14"]
+        - ["/", "Divide", "7 / 2", "3"]
+        - ["%", "Residuo", "7 % 2", "1"]
+      notes: |
+        El cuarto renglón es el que sorprende. Entre dos enteros la división da un entero y
+        la fracción se tira, no se redondea. 7 entre 2 da 3, y no 3.5 ni 4.
+
+        El residuo solo funciona con enteros. Si alguien intenta 7.5 % 2 el compilador lo
+        rechaza, y ese error de tipos aparece en el bloque siguiente.
+
+  - table:
+      eyebrow: Asignación
+      title: Los seis compuestos, y a qué equivale cada uno
+      headers: ["Operador", "Se lee", "Equivale a"]
+      rows:
+        - ["=", "Asigna", "x vale 5"]
+        - ["+=", "Suma y asigna", "x = x + 5"]
+        - ["-=", "Resta y asigna", "x = x - 5"]
+        - ["*=", "Multiplica y asigna", "x = x * 5"]
+        - ["/=", "Divide y asigna", "x = x / 5"]
+        - ["%=", "Residuo y asigna", "x = x % 5"]
+      notes: |
+        La columna de la derecha es literal. No son atajos que hagan algo distinto, escriben
+        exactamente la misma operación con menos texto, y por eso heredan la trampa de la
+        división entera sin avisar.
+
+  - code_output:
+      eyebrow: Precedencia
+      title: El orden no es de izquierda a derecha
+      filename: precedencia.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int p = 2 + 3 * 4;
+        int q = (2 + 3) * 4;
+
+        std::cout << p << " " << q << "\n";
+      output: |
+        14 20
+      notes: |
+        La multiplicación y la división corren antes que la suma y la resta, igual que en
+        álgebra. Los paréntesis ganan sobre todo lo demás.
+
+        La recomendación práctica no es memorizar la tabla completa de precedencia, que
+        tiene diecisiete niveles. Es poner paréntesis cuando la expresión mezcle más de dos
+        operadores, porque quien lea el código no va a consultar la tabla tampoco.
+
+  - code_output:
+      eyebrow: Incremento
+      title: El mismo operador, escrito de dos lados
+      filename: incremento.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int a = 5;
+        int b = a++;
+
+        int c = 5;
+        int d = ++c;
+
+        std::cout << a << " " << b << "\n";
+        std::cout << c << " " << d << "\n";
+      output: |
+        6 5
+        6 6
+      notes: |
+        Las dos variables incrementadas terminan en 6. Lo que cambia es lo que la expresión
+        entrega a quien la está leyendo. El sufijo entrega el valor viejo y luego incrementa;
+        el prefijo incrementa y entrega el nuevo.
+
+        Si el incremento va solo en su renglón, los dos hacen lo mismo y da igual cuál se
+        escriba. La diferencia solo importa cuando el resultado se usa en la misma línea, y
+        esa es justamente la línea que conviene no escribir.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: contador.cpp
+      lang: cpp
+      source: |
+        int n = 3;
+        int total = n++ + 10;
+
+        std::cout << n << " " << total << "\n";
+      options:
+        - '4 13, porque n++ entrega el 3 y después incrementa'
+        - '4 14, porque incrementa antes de sumar'
+        - '3 13, porque n++ no cambia a n en esta línea'
+        - '4 10, porque n++ se descarta al sumar'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El sufijo entrega el valor viejo y guarda el nuevo
+      headers: ["Paso", "Qué ocurre", "n", "total"]
+      rows:
+        - ["1", "int n = 3", "3", "sin valor"]
+        - ["2", "n++ entrega 3", "4", "sin valor"]
+        - ["3", "3 + 10", "4", "13"]
+        - ["4", "Se imprime", "4", "13"]
+      verdict: n ya vale 4 cuando la suma ocurre, pero la suma recibió el 3. Son dos cosas separadas que pasan en la misma línea, y por eso mezclarlas se lee mal.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Conversión de tipos
+      lede: Aquí está la respuesta a la pregunta que quedó abierta la semana pasada.
+      block: 3
+
+  - code_output:
+      eyebrow: La respuesta pendiente
+      title: Por qué el promedio de la semana pasada dio 84
+      filename: promedio.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        double media = (78 + 85 + 91) / 3;
+
+        std::cout << media << "\n";
+      output: |
+        84
+      notes: |
+        La variable es double y aun así imprime 84. La división ocurre antes de que el
+        resultado se guarde, y en ese momento los dos operandos son enteros, así que el
+        lenguaje usa división entera y tira la fracción. Guardar el 84 en un double no
+        recupera lo que ya se perdió.
+
+        Este es el momento de la sesión que conviene no apurar. Es el mismo error que
+        apareció en la semana 1 con el depurador, y ahora tiene explicación completa.
+
+  - code:
+      eyebrow: La corrección
+      title: Basta con que uno de los dos sea real
+      filename: promedio.cpp
+      lang: cpp
+      source: |
+        int suma = 78 + 85 + 91;
+
+        double mal = suma / 3;
+        double bien = static_cast<double>(suma) / 3;
+        double tambien = suma / 3.0;
+
+        std::cout << mal << " " << bien << "\n";
+        std::cout << tambien << "\n";
+      annotations:
+        - label: Línea 3
+          text: Entero entre entero da entero. El double de la izquierda llega demasiado tarde.
+        - label: Línea 4
+          text: static_cast convierte antes de dividir, así que la división ya es entre reales
+        - label: Línea 5
+          text: Escribir 3.0 en vez de 3 consigue lo mismo con menos ruido, y es lo que verás más seguido
+        - label: Riesgo
+          text: El molde de C, (double)suma, todavía compila. Prefiere static_cast, que sí avisa cuando la conversión no tiene sentido.
+          accent: true
+
+  - table:
+      eyebrow: Qué se pierde
+      title: Cuatro conversiones y lo que cuesta cada una
+      headers: ["De", "A", "Qué pasa"]
+      rows:
+        - ["int", "double", "Cabe siempre, no se pierde nada"]
+        - ["double", "int", "Se tira la fracción, no se redondea"]
+        - ["char", "int", "Queda su número de código"]
+        - ["int", "char", "Se pierde si no cabe en un byte"]
+      notes: |
+        static_cast<int>(8.9) da 8, no 9. Truncar y redondear no son lo mismo y el lenguaje
+        hace lo primero.
+
+        static_cast<int>('A') da 65. El catálogo completo de tipos, con char, bool y los
+        modificadores, es la sesión de la próxima semana. Hoy basta con saber que un char
+        guarda un número y que ese número se puede ver.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: Dividir dos enteros sin querer
+          desc: El resultado sale truncado, el programa no falla, y el error aparece hasta que alguien revisa el número
+        - label: Error 02
+          title: Leer antes de inicializar
+          desc: Compila, corre, y da un valor distinto cada vez. La advertencia C4700 ya lo dijo.
+        - label: Error 03
+          title: Mezclar incremento y expresión
+          desc: n++ + n en la misma línea no es un examen difícil, es código que hay que reescribir
+        - label: Error 04
+          title: Números sueltos en el código
+          desc: Un 7.0 escrito tres veces son tres lugares que corregir el día que la escala cambie
+
+  - method:
+      eyebrow: Criterio de estilo
+      title: El nombre es la única documentación que nadie borra
+      statement: Un identificador bien puesto ahorra el comentario que lo explicaba. La regla no es escribir nombres largos, es que el nombre diga qué contiene la variable y no qué tipo tiene.
+      points:
+        - label: Qué sí
+          text: promedioFinal, alumnosInscritos, APROBATORIA. Se leen solos y no necesitan nota al pie.
+        - label: Qué no
+          text: x, dato, temp, numero2. Cuestan una lectura del código completo para saber qué guardan.
+        - label: La constante
+          text: Cualquier número que aparezca dos veces o que tenga un significado merece nombre y const
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una boleta que calcula bien, en parejas
+      brief: Escriban un programa que declare las tres calificaciones de un alumno como enteros, calcule el promedio con decimales y lo imprima junto con el residuo de dividir la suma entre tres.
+      blocks:
+        - label: Restricción
+          text: Sin if y sin ciclos, que llegan hasta la semana 7. Flujo recto de arriba abajo.
+        - label: Entregable
+          text: Un archivo .cpp que imprima el promedio con fracción y el residuo en la misma corrida
+        - label: Criterio
+          text: Que la conversión sea explícita y que puedan explicar qué pasaría sin ella
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Declarar no es inicializar
+          desc: La primera aparta memoria y la segunda la llena. Sin la segunda, adentro hay lo que quedó.
+        - title: Entre enteros la división trunca
+          desc: 7 entre 2 da 3, y basta con que uno de los dos operandos sea real para que dé 3.5
+        - title: El sufijo entrega el valor viejo
+          desc: n++ incrementa a n y le pasa a la expresión el número que tenía antes de incrementarse
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La boleta terminada y una conversión explicada
+      brief: Terminen el programa del laboratorio, agreguen una constante con const para la calificación aprobatoria e incluyan un comentario de bloque que explique en tres renglones por qué una de las divisiones necesitó static_cast y la otra no.
+      meta:
+        - [Entrega, Antes de la sesión 3]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Correctitud", "Requisito", "El promedio sale con fracción y el residuo es el correcto"]
+        - ["Estilo", "Requisito", "Los nombres dicen qué guardan y la aprobatoria es const"]
+        - ["Explicación", "Requisito", "El comentario distingue la división entera de la real"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, el catálogo completo de tipos, los espacios de nombres y el tipo string.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

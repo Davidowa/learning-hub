@@ -1,0 +1,377 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 10
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 10 · Units 1 and 3 · Procedures and functions
+      title: Information Analysis and Processing
+      subtitle: Splitting a long macro into pieces that test on their own, and writing a function Excel accepts in a cell.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 10 of 17]
+      notes: |
+        Ninety minutes. Twenty on splitting, thirty on Sub against Function, the rest on
+        parameters and on the function used as a formula.
+
+        The slide that closes the session is the function in a cell. The student writes
+        MonthlyRate once in a module and from then on Excel recognises it in any cell,
+        next to SUM and VLOOKUP. Verified: the cell holding equals MonthlyRate of A1
+        returns the same number the code does.
+
+        The trap in block 3 is that ByRef is the default. A Sub that takes a variable and
+        modifies it is changing the caller's variable, without anybody asking for that.
+        Verified, five goes in and fifty comes out.
+
+        The second trap is a Function that never assigns to itself. It raises no error and
+        returns zero. Verified.
+
+        The code comes from
+        docs/en/courses/vba-course/09 - Subs and Functions/, both modules.
+
+        Careful opening them together: SubFunctions, SetupFieldsInWorksheet,
+        ReadInputParameters and ReadInputParametersValidation are declared in both files.
+        Imported into one project, no call knows which one to reach.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Splitting a long macro
+          desc: Why one of two hundred lines can neither be tested nor repaired
+        - title: Sub against Function
+          desc: One does something, the other returns a value, and that changes where it goes
+        - title: Parameters and reuse
+          desc: What goes in, what comes out, and what changes without anybody asking
+        - title: Your turn
+          desc: Your project split into pieces, and a function of yours in the sheet
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Split a long macro into procedures
+          sub: One task per procedure, and a master that only calls
+        - head: Tell a Sub from a Function
+          sub: When to return a value and when to only act on the sheet
+        - head: Write a function with parameters
+          sub: What goes in the parentheses, and the name you assign to return
+        - head: Choose between ByRef and ByVal
+          sub: And know which one is the default, which is not the one you would expect
+        - head: Use your function in a cell
+          sub: Written once in the module, available across the sheet like any formula
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Splitting a long macro
+      lede: Not for elegance. Because a macro of two hundred lines that fails does not say which of the seven things it does broke.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What cannot be tested in pieces cannot be fixed
+      lead: >-
+        A long macro does seven things in a row. When the result comes out wrong, the
+        whole thing has to be read to find which one failed, and testing the fifth means
+        running the four before it. Split into seven procedures, each one runs alone from
+        the macro dialog, and the broken one is found in a minute rather than an evening.
+      panel:
+        label: The rule of thumb
+        title: One procedure, one task, a name that says it
+        note: >-
+          If naming it requires the word and, it is probably two procedures rather than
+          one.
+      steps:
+        - text: You spot the tasks inside the long macro
+        - text: Each one becomes a named procedure
+        - text: The master calls them in order
+          loop: ↺ and each piece is tested alone before being chained
+
+  - compare:
+      eyebrow: Block 01 · Before and after
+      title: The same macro, in pieces that test on their own
+      before:
+        label: One single macro
+        file: Module1.bas
+        lang: vba
+        code: |
+          Sub DoEverything()
+              ' 40 lines of cleaning
+              ' 30 lines of formatting
+              ' 25 lines of calculation
+              ' 20 lines of reporting
+          End Sub
+      after:
+        label: Four and a master
+        file: Module1.bas
+        lang: vba
+        code: |
+          Sub DoEverything()
+              Call CleanDatabase
+              Call FormatAmounts
+              Call ComputeBalances
+              Call BuildReport
+          End Sub
+      note: >-
+        The version on the right reads like a table of contents for what the workbook
+        does, and any of the four runs alone from the macro dialog to be tested. It is
+        the shape the week 16 project will ask for.
+
+  - code:
+      eyebrow: Block 01 · Module 09
+      title: The master calls, the others work
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Sub SubFunctions()
+            Call SetupFieldsInWorksheet
+            Call ReadInputParameters
+
+            Dim result As Double
+            result = Summation(5, 3)
+            MsgBox "The result is " & result
+        End Sub
+      annotations:
+        - label: The two Calls
+          text: Each goes to a procedure that does one thing. The master does not know how, only what.
+        - label: The third line
+          text: Summation is not called with Call. It returns a value, so it sits on the right of the equals.
+        - label: Why it matters
+          text: The first two act on the sheet. The third answers a question. They are different things.
+        - label: Risk
+          text: This name is declared in AmortizationTable.bas as well. With both modules open, Call cannot choose.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: Sub against Function
+      lede: A Sub does something and answers nothing. A Function answers, which is why it can sit on the right of an equals sign, or inside a cell.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · The differences
+      title: When each one
+      headers: [Aspect, Sub, Function]
+      rows:
+        - ["Returns a value", "No", "Yes, through its own name"]
+        - ["How it is called", "Call Name", "x = Name(args)"]
+        - ["Shows in the macro dialog", "Yes, if public", "No"]
+        - ["Usable in a cell", "No", "Yes, like any formula"]
+        - ["What it is for", "Acting on the sheet", "Answering a question"]
+
+  - code:
+      eyebrow: Block 02 · A complete function
+      title: What goes in, what comes out, and how it is returned
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Function MonthlyRate(annual As Double) As Double
+            MonthlyRate = ((1 + annual) ^ (1 / 12)) - 1
+        End Function
+
+        Function Summation(n1 As Double, n2 As Double) As Double
+            Summation = n1 + n2
+        End Function
+      annotations:
+        - label: The parentheses
+          text: The parameters go there, with their types. It is what the function needs in order to work.
+        - label: The trailing As
+          text: The type it returns. Without it the function returns Variant, like an undeclared variable.
+        - label: How it returns
+          text: By assigning the value to the function's own name. There is no return keyword as in other languages.
+        - label: Risk
+          text: Never assigning the name raises no error. It returns zero, and the calculation carries on with it.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Verified
+      title: What each one answers
+      filename: SubsFunctions.bas
+      lang: vba
+      output_label: What comes back
+      source: |
+        MsgBox Summation(5, 3)
+        MsgBox MonthlyRate(0.12)
+        MsgBox NeverAssigned(7)
+      output: |
+        8
+
+        9.48879293458305E-03
+
+        0
+
+  - divider:
+      eyebrow: Block 03
+      title: Parameters and reuse
+      lede: What goes into a procedure can go in two ways, and the one VBA uses by default is the surprising one.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Verified
+      title: ByRef and ByVal, with the variable at five before the call
+      headers: [How it is declared, What happens inside, What it is worth outside after]
+      rows:
+        - ["ByRef n As Long", "n gets multiplied by 10", "50"]
+        - ["ByVal n As Long", "n gets multiplied by 10", "5"]
+        - ["n As Long, unmarked", "n gets multiplied by 10", "50"]
+        - ["Conclusion", "Writing nothing means ByRef", "and the change leaves the procedure"]
+
+  - code:
+      eyebrow: Block 03 · The trap
+      title: A Sub that changes what nobody asked it to change
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub ApplyTax(amount As Double)
+            amount = amount * 1.16
+        End Sub
+
+        Sub Invoice()
+            Dim subtotal As Double
+            subtotal = 1000
+
+            ApplyTax subtotal
+            Range("A1").Value = subtotal
+        End Sub
+      annotations:
+        - label: What it looks like
+          text: That ApplyTax works on its own copy and subtotal stays at 1000.
+        - label: What happens
+          text: A1 ends up at 1160. Without ByVal the parameter is by reference and the change escapes.
+        - label: How to avoid it
+          text: ByVal amount As Double. Or better, a Function that returns the total and touches nothing.
+        - label: Risk
+          text: The error shows up far from its cause, in the calling macro, not in the one that changed the value.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · The payoff
+      title: Your function, written once, available across the sheet
+      filename: sheet.xlsx
+      lang: excel
+      output_label: What it returns
+      source: |
+        =MonthlyRate(A1)
+        =Summation(5,3)
+        =MonthlyRate(A1)*12
+      output: |
+        9.48879293458305E-03
+
+        8
+
+        0.113865515214997
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways for a function to lie
+      items:
+        - label: Error 01
+          title: Never assigning the name
+          desc: A Function that never does name equals something returns zero and raises nothing. Verified.
+        - label: Error 02
+          title: Forgetting the parameter is ByRef
+          desc: Without writing ByVal, whatever the procedure does to the parameter it does to the original.
+        - label: Error 03
+          title: Calling a Sub with parentheses
+          desc: With two or more arguments and no Call, the parentheses are wrong and VBA complains of syntax.
+        - label: Error 04
+          title: Repeating the name in two modules
+          desc: Which is what module 09 of the repository already carries. No call knows which of the two to reach.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What ends up in A1?
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub Twice(n As Long)
+            n = n * 2
+        End Sub
+
+        Sub Test()
+            Dim x As Long
+            x = 7
+            Twice x
+            Range("A1").Value = x
+        End Sub
+      options:
+        - "7, because the Sub works on its own copy"
+        - "14, because without ByVal the parameter goes by reference"
+        - "0, because the Sub returns nothing"
+        - "An error, because a Sub cannot take parameters"
+
+  - lab:
+      eyebrow: Lab
+      title: Split your project and write a function of your own
+      brief: Take the longest macro you have and split it into procedures of one task each, with a master that only calls. Then write a Function from your own area, for instance the margin on a sale or the balance at a given term, and use it in a cell of the sheet.
+      blocks:
+        - label: Submission
+          text: The module exported and the .xlsm with the function used in at least three cells
+        - label: Constraint
+          text: The master stays under ten lines, and no procedure goes past forty.
+        - label: The test
+          text: Run each procedure alone from the macro dialog. If one breaks by itself, it depends on another silently.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: One procedure, one task
+          desc: If naming it needs the word and, it is two, and splitting them is what lets each be tested alone
+        - title: Without ByVal, the change escapes
+          desc: The default is by reference, so the procedure modifies the variable belonging to whoever called it
+        - title: Your function lives in the sheet
+          desc: Written once in a module, Excel recognises it in any cell as though it shipped with the program
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Refactor the amortization table macro into procedures of one task each, and pull
+        the monthly rate calculation out into a Function you can also call from a cell.
+      meta:
+        - [Due, Before week 11]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The split", "40 %", "Each procedure does one thing and runs alone from the macro dialog"]
+        - ["The function", "40 %", "It returns a value, works in a cell, and declares its return type"]
+        - ["Parameters", "20 %", "Whatever must not change is passed ByVal"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, events. Macros that run on their own when the workbook opens, when
+        it is saved, or when a cell changes.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

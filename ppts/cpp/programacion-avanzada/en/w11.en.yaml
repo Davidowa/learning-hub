@@ -1,0 +1,336 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 11
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 11 · Unit 9 · Records
+      title: Advanced Programming
+      subtitle: Putting values of different types together under one name, and how close that is to a class.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 11 of 17]
+      notes: |
+        Short on syntax and long on judgement. struct is almost identical to class and the
+        interesting question is when to use which.
+
+        In C++ the only technical difference between struct and class is the default access
+        level. Everything else is convention, and it is worth saying so rather than inventing
+        a distinction the language does not make.
+
+        The sizes and outputs were measured on Visual Studio Community 2026. sizeof on a
+        record of two doubles gives 16, the sum of its parts, and it is worth warning that
+        this does not always happen because of alignment padding.
+
+        Reading: Malik, eighth edition, chapter 9. The course documents cite 11, which is
+        right for the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The record
+          desc: Declaring it, filling it, and reading its fields
+        - title: Copies
+          desc: What happens when one whole record is assigned to another
+        - title: Records in arrays
+          desc: An array of records, which is the project's table
+        - title: struct or class
+          desc: The one real difference, and everything else that is habit
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and use a record
+          sub: With fields of different types, and the dot that reaches each one
+        - head: Predict what an assignment does
+          sub: Knowing that copying a record copies every field, not a reference
+        - head: Combine record and array
+          sub: To represent a table of rows whose columns have different types
+        - head: Choose between struct and class
+          sub: By what the convention communicates, since the language barely separates them
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Fields of different types
+      lede: An array holds many values of one type. A record holds a few values of different types that belong together by meaning.
+      block: 1
+
+  - code_output:
+      eyebrow: Declaration
+      title: A point with two fields
+      filename: point.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        struct Point {
+            double x;
+            double y;
+        };
+
+        int main()
+        {
+            Point q;
+            q.x = 3.0;
+            q.y = 4.0;
+
+            std::cout << q.x << " " << q.y << "\n";
+            return 0;
+        }
+      output: |
+        3 4
+      notes: |
+        The dot between the object name and the field name is the same operator used to call
+        a member function. That is no coincidence: a struct is a class.
+
+        The semicolon after the closing brace is required, exactly as with class, and it is
+        the same thing forgotten in week 6.
+
+        q was declared without initialising its fields. Until those two assignments, x and y
+        hold garbage, exactly like a loose variable.
+
+  - code_output:
+      eyebrow: Copies
+      title: Assigning a record copies everything it holds
+      filename: copy.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        Point q;
+        q.x = 3.0;
+
+        Point r = q;
+        r.x = 99.0;
+
+        std::cout << q.x << " " << r.x << "\n";
+      output: |
+        3 99
+      notes: |
+        The assignment copied the whole record, field by field. Changing r did not touch q,
+        which is what you expect and is not always what happens in other languages.
+
+        This is value semantics, the same the parameters had back in week 4. Worth saying
+        that with large records the copy costs, and that this is why they are passed to
+        functions as const references.
+
+        Once the record contains a pointer, in week 12, this copy will stop being enough.
+        Worth announcing today.
+
+  - divider:
+      eyebrow: Block 02
+      title: Records inside arrays
+      lede: This is where the course starts to look like a real program. A row with columns of different types, repeated n times.
+      block: 2
+
+  - code:
+      eyebrow: The table
+      title: An array of records is a table
+      filename: group.cpp
+      lang: cpp
+      source: |
+        struct Student {
+            std::string name;
+            int mark;
+        };
+
+        int main()
+        {
+            Student group[3];
+            group[0].name = "Ana";
+            group[0].mark = 95;
+
+            std::cout << group[0].name << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 8
+          text: Three records, each with its two fields. The array reserves all three in full.
+        - label: Line 9
+          text: The bracket picks the row first, then the dot picks the column
+        - label: The combination
+          text: Last week's array with today's record, and it already looks like a table
+        - label: Risk
+          text: The index is still unchecked. group[3] compiles and reads a record that is not there.
+          accent: true
+
+  - table:
+      eyebrow: Comparison
+      title: Three ways to hold data, and what each is for
+      headers: ["Form", "What it groups", "When"]
+      rows:
+        - ["Array", "Many of one type", "Ten marks"]
+        - ["Record", "A few of different types", "One student"]
+        - ["Array of records", "Rows with columns", "A whole group"]
+        - ["Class", "Data and its behaviour", "When there are rules to keep"]
+
+  - divider:
+      eyebrow: Block 03
+      title: struct or class
+      lede: They are so alike that the reasonable question is why both exist.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: The one difference is what is assumed when you say nothing
+      lead: >-
+        In a struct, anything without a label is public. In a class, it is private. That is
+        everything the language separates. A struct can have constructors, member functions,
+        inheritance and access levels, exactly the same.
+      panel:
+        label: What it does communicate
+        title: The convention says more than the compiler
+        note: >-
+          struct is used when the type is a bundle of data with no rules, and class when
+          there is an invariant to keep. Whoever reads the code will read it that way.
+      steps:
+        - text: struct assumes public
+        - text: class assumes private
+        - text: Everything else is identical
+          loop: ↺ choose by what it tells the reader, not by what it can do
+
+  - code_output:
+      eyebrow: The size
+      title: How much a record takes up
+      filename: size.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        struct Point {
+            double x;
+            double y;
+        };
+
+        std::cout << sizeof(Point) << "\n";
+      output: |
+        16
+      notes: |
+        Two doubles of eight bytes give sixteen, so the arithmetic works out here. It does
+        not always work out.
+
+        The compiler may insert padding between fields so each one starts at an address
+        aligned to its size. A struct with a char and an int usually takes eight bytes rather
+        than five.
+
+        The practical consequence is that you must not assume a record's size, nor write it
+        to a binary file assuming its layout. That matters in week 13.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: copy.cpp
+      lang: cpp
+      source: |
+        struct Point { double x; double y; };
+
+        Point q;
+        q.x = 3.0;
+        Point r = q;
+        r.x = 99.0;
+
+        std::cout << q.x << " " << r.x << "\n";
+      options:
+        - '3 99, because the assignment copied the record'
+        - '99 99, because r and q point at the same record'
+        - '3 3, because r was copied before the change'
+        - 'It does not compile, a struct cannot be assigned'
+
+  - trace:
+      eyebrow: Answer
+      title: Two separate records from the assignment line onwards
+      headers: ["Step", "What happens", "q.x", "r.x"]
+      rows:
+        - ["1", "q.x = 3.0", "3", "does not exist"]
+        - ["2", "Point r = q, copies field by field", "3", "3"]
+        - ["3", "r.x = 99.0", "3", "99"]
+        - ["4", "Both are printed", "3", "99"]
+      verdict: The copy is complete and happens at the moment of assignment. From then on they are two independent records, and changing one has no way of touching the other.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Forgetting the semicolon
+          desc: The brace closing the struct takes one, and without it the error lands on the next line
+        - label: Error 02
+          title: Uninitialised fields
+          desc: Declaring the record fills nothing. The fields hold garbage until they are assigned.
+        - label: Error 03
+          title: Assuming the size
+          desc: The compiler adds padding to align fields, so the sum of the fields does not always match
+        - label: Error 04
+          title: Copying large records
+          desc: Every pass by value duplicates every field. Pass them to functions as const references.
+
+  - lab:
+      eyebrow: Lab
+      title: The whole group, in pairs
+      brief: Define a Student record with a name, an ID and three marks, declare an array of five, and fill it. Compute each student's average and the group average, and print an aligned table.
+      blocks:
+        - label: Constraint
+          text: The array size is computed once, as last week, and never typed inside a loop
+        - label: Deliverable
+          text: A .cpp with the record, the array and the printed table
+        - label: Criterion
+          text: That adding a sixth student costs one line and touches no loop
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A record groups by meaning
+          desc: Several values of different types that describe one single thing
+        - title: Assigning copies every field
+          desc: From that line they are two independent records, not two names for one
+        - title: struct and class are near identical
+          desc: The only difference is default access, and the rest is what you tell the reader
+
+  - homework:
+      eyebrow: For the next session
+      title: The group table, ranked
+      brief: Finish the lab and add a function that takes the array and its size and returns the index of the student with the highest average, without modifying the array.
+      meta:
+        - [Due, Before session 12]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Record", "Required", "The fields have the right types and are initialised"]
+        - ["Table", "Required", "The output is aligned and the size is computed"]
+        - ["Function", "Required", "It takes the array without copying it and does not modify it"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, pointers and virtual functions. Memory you ask for and you give back.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

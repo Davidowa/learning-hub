@@ -1,0 +1,362 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 3
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 03 · Unidad 1 · Tipos, variables y celdas
+      title: Análisis y Procesamiento de la Información
+      subtitle: Qué tipo le toca a cada dato, por qué Long y no Integer, y las tres formas de llegar a una celda.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 3 de 17]
+      notes: |
+        Noventa minutos. Veinte en tipos, veinticinco en declarar bien, y el resto en la
+        máquina moviendo celdas.
+
+        La idea que ordena la sesión es que Long no es un lujo. Una hoja tiene 1,048,576
+        renglones y un Integer llega a 32,767, así que un contador de renglones declarado
+        como Integer truena. Eso no es teoría: está verificado y aparece en la diapositiva
+        del número grande y en la del error.
+
+        El código sale de
+        docs/en/courses/vba-course/01 - Basic Concepts/BasicConcepts.bas (Variables y
+        Constants) y de 02 - Access Cells/AccessCells.bas.
+
+        Todos los resultados de esta sesión se corrieron en Excel 16.0. El redondeo de
+        2.5 a 2 sorprende a todo el grupo y conviene dejarlos apostar antes de mostrarlo.
+
+        El error de Option Explicit aparece en inglés en esta captura, «Variable not
+        defined». Un Excel en español dice «No se ha definido la variable». Lo mismo con
+        Overflow, que sale como Desbordamiento.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los tipos de dato
+          desc: Los diez que existen, para qué sirve cada uno y cuál se queda corto
+        - title: Declarar bien
+          desc: Dim, As, Const y la línea que convierte un error mudo en un error visible
+        - title: Llegar a una celda
+          desc: Range, Offset y ActiveCell, y qué deja cada uno en la hoja
+        - title: Tu turno
+          desc: Una base de clientes recorrida con variables en vez de a mano
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir el tipo que le toca a cada dato
+          sub: Y saber por qué un contador de renglones tiene que ser Long
+        - head: Declarar variables y constantes
+          sub: Dim con As, Const en una sola línea, y nombres que digan qué guardan
+        - head: Activar Option Explicit
+          sub: Y explicar qué error deja de ser silencioso en cuanto lo pones
+        - head: Leer y escribir celdas desde VBA
+          sub: Range, Offset y ActiveCell, y cuándo conviene cada uno
+        - head: Reconocer una conversión implícita
+          sub: Cuándo VBA convierte solo, cuándo redondea y cuándo se detiene
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: now
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: todo
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los tipos de dato
+      lede: >-
+        Una celda de Excel adivina qué guardaste. VBA no adivina: tú le dices de qué
+        tamaño es la caja, y él la respeta al pie de la letra.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una variable es una caja con nombre y con tamaño
+      lead: >-
+        Guarda un valor y tiene un nombre para volver a encontrarlo, igual que una celda.
+        La diferencia son dos cosas: el nombre lo eliges tú y dice qué guarda, y el tipo
+        fija de antemano qué cabe adentro. B7 no dice nada; monto_prestamo sí. Y una caja
+        de tipo Integer no acepta un número de siete cifras, aunque quepa en la celda.
+      panel:
+        label: Lo que hay que saber
+        title: El tipo se elige una vez y no se cambia
+        note: >-
+          Una variable declarada como Long no puede guardar texto después. Excel sí lo
+          permite en una celda, y esa diferencia es la mitad de los errores del mes.
+      steps:
+        - text: Eliges un nombre que describa el dato
+        - text: Declaras el tipo con Dim y As
+        - text: Le asignas un valor con el signo igual
+          loop: ↺ y de ahí en adelante solo cabe eso
+
+  - table:
+      eyebrow: Bloque 01 · Tipos · 1 de 2
+      title: Los numéricos, completos y en orden
+      headers: [Tipo, Rango, Cuándo lo usas]
+      rows:
+        - ["Integer", "-32,768 a 32,767", "Casi nunca. Se queda corto."]
+        - ["Long", "±2,147,483,647", "El de cajón para contar"]
+        - ["Single", "7 cifras significativas", "Rara vez. Double da más."]
+        - ["Double", "15 cifras significativas", "Tasas, importes, decimales"]
+        - ["Currency", "4 decimales exactos", "Dinero sin redondeo"]
+
+  - table:
+      eyebrow: Bloque 01 · Tipos · 2 de 2
+      title: Y los que no son números
+      headers: [Tipo, Qué guarda, Cuándo lo usas]
+      rows:
+        - ["String", "Texto, sin límite práctico", "Nombres, claves, RFC, todo lo que no se suma"]
+        - ["Boolean", "True o False", "Banderas y respuestas de sí o no"]
+        - ["Date", "Del año 100 al 9999", "Fechas y horas, con su propia aritmética"]
+        - ["Object", "Una referencia", "Range, Worksheet, Workbook. Se asigna con Set."]
+        - ["Variant", "Cualquier cosa", "El que sale si no declaras nada. Evítalo."]
+
+  - stat:
+      eyebrow: El tipo que se queda corto
+      value: '32,767'
+      text: >-
+        es el número más grande que cabe en un Integer, y una hoja de Excel tiene
+        1,048,576 renglones.
+      note: >-
+        Declarar el contador de renglones como Integer es el error más caro de esta
+        semana, porque no aparece con datos de prueba y aparece con los de verdad.
+        Verificado en Excel: con Long corre y devuelve 1,048,576.
+
+  - code_output:
+      eyebrow: Bloque 01 · El error
+      title: Lo que pasa cuando la caja se queda chica
+      filename: Tipos.bas
+      lang: vba
+      output_label: Excel se detiene
+      source: |
+        Sub ContarRenglones()
+            Dim fila As Integer
+            fila = Rows.Count
+        End Sub
+      output: |
+        Run-time error '6':
+
+        Overflow
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Declarar bien
+      lede: Dos palabras, Dim y As. Y una tercera, Option Explicit, que convierte un error mudo en un error que se ve.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Lo básico
+      title: Declarar, asignar y fijar una constante
+      filename: BasicConcepts.bas
+      lang: vba
+      source: |
+        Sub Prestamo()
+            Const pi As Double = 3.14159
+            Dim clienteNombre As String
+            Dim mesesPlazo As Long
+            Dim tasaAnual As Double
+            Dim estaAlCorriente As Boolean
+
+            clienteNombre = "Servicios del Norte"
+            mesesPlazo = 120
+            tasaAnual = 0.15
+            estaAlCorriente = True
+        End Sub
+      annotations:
+        - label: Dim y As
+          text: Dim abre la declaración, As fija el tipo. Sin As, la variable queda como Variant.
+        - label: Const
+          text: Se declara y se le asigna valor en el mismo renglón, y ya no se puede cambiar.
+        - label: Los nombres
+          text: Cada uno dice qué guarda. VBA no distingue mayúsculas, así que el editor te corrige la caja al escribir.
+        - label: Riesgo
+          text: Dim mesesPlazo, tasaAnual As Double declara solo la segunda como Double. La primera queda Variant.
+          accent: true
+
+  - code:
+      eyebrow: Bloque 02 · La línea que salva la tarde
+      title: Sin Option Explicit un error de dedo no avisa
+      filename: Inventario.bas
+      lang: vba
+      source: |
+        Option Explicit
+
+        Sub Inventario()
+            Dim unidades As Long
+            unidades = 250
+            unidaes = 300
+            MsgBox unidades
+        End Sub
+      annotations:
+        - label: El error de dedo
+          text: unidaes no existe. Es unidades sin la d, y se ve idéntico al leer de corrido.
+        - label: Sin la primera línea
+          text: VBA crea unidaes al vuelo, le pone 300, y el mensaje muestra 250. Verificado en Excel.
+        - label: Con la primera línea
+          text: Ya no compila. Se detiene y te señala el renglón, antes de que la macro corra.
+        - label: Riesgo
+          text: Un resultado equivocado que no marca error es más caro que uno que truena. El programa siguió, el número no servía.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro trampas de tipos, todas verificadas
+      items:
+        - label: Error 01
+          title: Un renglón contado con Integer
+          desc: Aguanta hasta el renglón 32,767 y ahí se detiene con Overflow. Con datos de prueba nunca falla, con los de verdad sí.
+        - label: Error 02
+          title: Declarar dos en un renglón
+          desc: >-
+            Dim a, b As Integer deja a como Variant. Verificado: a acepta 40,000 y b se
+            detiene con Overflow.
+        - label: Error 03
+          title: Esperar el redondeo de la escuela
+          desc: Al guardar 2.5 en un Integer queda 2, y 3.5 queda 4. VBA redondea al par más cercano, no siempre hacia arriba.
+        - label: Error 04
+          title: Sumar lo que parece número
+          desc: "\"5\" + 3 da 8 porque VBA convierte, pero \"5a\" + 3 se detiene con error 13. Convierte tú, con CDbl o CLng."
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Llegar a una celda
+      lede: Tres caminos hasta la misma celda. Dos se leen igual de bien y el tercero es el que escribe la grabadora.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Los dos primeros caminos
+      title: Range directo, y Range con Offset
+      filename: AccessCells.bas
+      lang: vba
+      source: |
+        Sub AccessCells()
+            Range("A1").Value = 1
+            Range("A2").Value = 2
+            Range("A3").Value = 3
+
+            Range("B1").Value = 2
+            Range("B1").Offset(1, 0).Value = 4
+            Range("B1").Offset(2, 0).Value = 6
+        End Sub
+      annotations:
+        - label: Range
+          text: La dirección exacta, tal como la escribirías en la hoja. Clarísimo y rígido.
+        - label: Offset
+          text: Se mueve desde una celda base. Offset(renglones, columnas), y acepta negativos para subir o ir a la izquierda.
+        - label: Por qué importa
+          text: Offset es el que sirve cuando el punto de partida cambia de mes a mes. Range fijo no.
+        - label: Riesgo
+          text: Offset(1, 0) baja un renglón, no va a la columna B. El primer número son renglones.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 03 · El resultado
+      title: Lo que queda en la hoja al correrlo completo
+      headers: [Columna, Cómo se escribió, Qué quedó]
+      rows:
+        - ["A1:A5", "Range directo, una por una", "1, 2, 3, 4, 5"]
+        - ["B1:B5", "Range(\"B1\") más Offset", "2, 4, 6, 8, 10"]
+        - ["C1:C3", "Select y ActiveCell", "3, 6, 9"]
+        - ["ActiveCell", "Dónde quedó parado al final", "$C$3"]
+
+  - trace:
+      eyebrow: Bloque 03 · Traza
+      title: Después de Range("C1").Select, renglón por renglón
+      headers: [Renglón, ActiveCell después, Celda escrita]
+      rows:
+        - ["ActiveCell.Value = 3", "$C$1", "C1 = 3"]
+        - ["ActiveCell.Offset(1, 0).Value = 6", "$C$1", "C2 = 6"]
+        - ["ActiveCell.Offset(2, 0).Select", "$C$3", "ninguna"]
+        - ["ActiveCell.Value = 9", "$C$3", "C3 = 9"]
+      verdict: Sin Select, Offset escribe en la vecina y la seleccionada no cambia.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué queda en la celda al terminar?
+      filename: Tipos.bas
+      lang: vba
+      source: |
+        Sub Redondeo()
+            Dim piezas As Integer
+            piezas = 2.5
+            Range("A1").Value = piezas
+        End Sub
+      options:
+        - "3, porque .5 sube"
+        - "2, porque VBA redondea al par más cercano"
+        - "2.5, porque la celda sí acepta decimales"
+        - "Error, porque un Integer no acepta decimales"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tipa una base de clientes
+      brief: Toma una base de clientes de tu área con al menos ocho campos y escribe un procedimiento que declare una variable por campo, con el tipo que le toca, y las escriba en la fila 1 de una hoja vacía. Pon Option Explicit en el primer renglón del módulo.
+      blocks:
+        - label: Entrega
+          text: El módulo exportado como .bas y el .xlsm con la hoja escrita, en Blackboard
+        - label: Restricción
+          text: Ningún Variant y ningún nombre de una sola letra. El RFC y el código postal van como String.
+        - label: La prueba
+          text: Cambia un valor por uno que no corresponda al tipo. Si no truena, el tipo estaba mal elegido.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Long es el de cajón, no Integer
+          desc: Integer llega a 32,767 y una hoja tiene 1,048,576 renglones, así que el contador truena justo cuando los datos son reales
+        - title: Option Explicit en el primer renglón
+          desc: Sin él un error de dedo crea una variable nueva y el programa sigue con el número equivocado, sin marcar nada
+        - title: Un identificador es texto
+          desc: RFC, código postal y número de cliente. Que estén hechos de dígitos no los vuelve números que se sumen
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe un procedimiento que lea de la hoja el monto de un préstamo y su tasa
+        anual, calcule la tasa mensual y la escriba de regreso. Declara cada variable con
+        su tipo y usa una constante para los doce meses.
+      meta:
+        - [Entrega, Antes de la semana 4]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Tipos", "40 %", "Cada variable con el tipo correcto y ningún Variant"]
+        - ["Option Explicit", "20 %", "Está en el primer renglón del módulo"]
+        - ["Celdas", "40 %", "Lee y escribe en las celdas correctas y el resultado cuadra"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, las operaciones: los siete operadores aritméticos y los
+        nombres de rango, que vuelven legible una fórmula.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

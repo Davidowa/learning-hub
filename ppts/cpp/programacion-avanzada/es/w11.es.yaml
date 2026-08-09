@@ -1,0 +1,337 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 11
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 11 · Unidad 9 · Registros
+      title: Programación Avanzada
+      subtitle: Juntar datos de tipos distintos bajo un mismo nombre, y en qué se parece eso a una clase.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 11 de 17]
+      notes: |
+        La sesión es corta de sintaxis y larga de criterio. struct es casi idéntico a class y
+        la pregunta interesante es cuándo se usa cada uno.
+
+        En C++ la única diferencia técnica entre struct y class es el nivel de acceso por
+        omisión. Todo lo demás es convención, y conviene decirlo así en vez de inventar una
+        distinción que el lenguaje no hace.
+
+        Los tamaños y las salidas se midieron en Visual Studio Community 2026. El sizeof del
+        registro de dos doubles da 16, que es la suma de sus partes, y conviene advertir que
+        eso no siempre ocurre por el relleno de alineación.
+
+        Lectura: Malik, octava edición, capítulo 9. Los documentos del curso citan el 11, que
+        es correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El registro
+          desc: Declararlo, llenarlo y leer sus campos
+        - title: Copias
+          desc: Qué pasa al asignar un registro completo a otro
+        - title: Registros y arreglos
+          desc: Un arreglo de registros, que es la tabla del proyecto
+        - title: struct o class
+          desc: La única diferencia real, y todo lo demás que es costumbre
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar y usar un registro
+          sub: Con campos de tipos distintos, y el punto para llegar a cada uno
+        - head: Predecir el efecto de una asignación
+          sub: Sabiendo que copiar un registro copia todos sus campos, no una referencia
+        - head: Combinar registro y arreglo
+          sub: Para representar una tabla de filas con columnas de tipos distintos
+        - head: Elegir entre struct y class
+          sub: Por lo que la convención comunica, ya que el lenguaje casi no los distingue
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Campos de tipos distintos
+      lede: Un arreglo guarda muchos valores del mismo tipo. Un registro guarda pocos valores de tipos distintos, que van juntos por significado.
+      block: 1
+
+  - code_output:
+      eyebrow: Declaración
+      title: Un punto con dos campos
+      filename: punto.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        struct Punto {
+            double x;
+            double y;
+        };
+
+        int main()
+        {
+            Punto q;
+            q.x = 3.0;
+            q.y = 4.0;
+
+            std::cout << q.x << " " << q.y << "\n";
+            return 0;
+        }
+      output: |
+        3 4
+      notes: |
+        El punto entre el nombre del objeto y el del campo es el mismo operador que se usa
+        para llamar a una función miembro. No es casualidad: un struct es una clase.
+
+        El punto y coma después de la llave final es obligatorio, igual que en class, y es
+        el mismo olvido de la semana 6.
+
+        q se declaró sin inicializar sus campos. Hasta las dos asignaciones, x e y contienen
+        basura, exactamente como una variable suelta.
+
+  - code_output:
+      eyebrow: Copias
+      title: Asignar un registro copia todo lo que tiene
+      filename: copia.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        Punto q;
+        q.x = 3.0;
+
+        Punto r = q;
+        r.x = 99.0;
+
+        std::cout << q.x << " " << r.x << "\n";
+      output: |
+        3 99
+      notes: |
+        La asignación copió el registro completo, campo por campo. Cambiar r no tocó a q,
+        que es lo que uno espera y no siempre es lo que ocurre en otros lenguajes.
+
+        Esto es la semántica de valor, la misma que tenían los parámetros de la semana 4.
+        Vale la pena decir que con registros grandes esa copia cuesta, y que por eso se
+        pasan como const referencia a las funciones.
+
+        Cuando el registro contenga un puntero, en la semana 12, esta copia va a dejar de
+        ser suficiente. Conviene anunciarlo hoy.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Registros dentro de arreglos
+      lede: Aquí es donde el curso empieza a parecerse a un programa de verdad. Una fila con columnas de tipos distintos, repetida n veces.
+      block: 2
+
+  - code:
+      eyebrow: La tabla
+      title: Un arreglo de registros es una tabla
+      filename: grupo.cpp
+      lang: cpp
+      source: |
+        struct Alumno {
+            std::string nombre;
+            int calificacion;
+        };
+
+        int main()
+        {
+            Alumno grupo[3];
+            grupo[0].nombre = "Ana";
+            grupo[0].calificacion = 95;
+
+            std::cout << grupo[0].nombre << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 8
+          text: Tres registros, cada uno con sus dos campos. El arreglo reserva los tres completos.
+        - label: Línea 9
+          text: Primero el corchete para elegir la fila, después el punto para elegir la columna
+        - label: La combinación
+          text: Es el arreglo de la semana pasada con el registro de hoy, y ya se parece a una tabla
+        - label: Riesgo
+          text: El índice sigue sin revisarse. grupo[3] compila igual y lee un registro que no existe.
+          accent: true
+
+  - table:
+      eyebrow: Comparación
+      title: Tres formas de guardar datos, y para qué sirve cada una
+      headers: ["Forma", "Qué agrupa", "Cuándo"]
+      rows:
+        - ["Arreglo", "Muchos del mismo tipo", "Diez calificaciones"]
+        - ["Registro", "Pocos de tipos distintos", "Un alumno"]
+        - ["Arreglo de registros", "Filas con columnas", "Un grupo entero"]
+        - ["Clase", "Datos y su comportamiento", "Cuando hay reglas que cuidar"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: struct o class
+      lede: Se parecen tanto que la pregunta razonable es por qué existen los dos.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La única diferencia es qué se asume cuando no dices nada
+      lead: >-
+        En un struct, lo que no lleva etiqueta es público. En una class, es privado. Eso es
+        todo lo que el lenguaje distingue. Un struct puede tener constructores, funciones
+        miembro, herencia y niveles de acceso, exactamente igual.
+      panel:
+        label: Lo que sí comunica
+        title: La convención dice más que el compilador
+        note: >-
+          Se usa struct cuando el tipo es un montón de datos sin reglas, y class cuando hay
+          un invariante que sostener. Quien lea el código lo va a interpretar así.
+      steps:
+        - text: struct asume público
+        - text: class asume privado
+        - text: Todo lo demás es igual
+          loop: ↺ elige por lo que le dice al que lee, no por lo que puede hacer
+
+  - code_output:
+      eyebrow: El tamaño
+      title: Cuánto ocupa un registro
+      filename: tamano.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        struct Punto {
+            double x;
+            double y;
+        };
+
+        std::cout << sizeof(Punto) << "\n";
+      output: |
+        16
+      notes: |
+        Dos doubles de ocho bytes dan dieciséis, así que aquí la cuenta cuadra. No siempre
+        cuadra.
+
+        El compilador puede insertar relleno entre los campos para que cada uno empiece en
+        una dirección alineada con su tamaño. Un struct con un char y un int suele ocupar
+        ocho bytes y no cinco.
+
+        La consecuencia práctica es que no se debe suponer el tamaño de un registro ni
+        escribirlo a un archivo binario dando por hecho su disposición. Eso importa en la
+        semana 13.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: copia.cpp
+      lang: cpp
+      source: |
+        struct Punto { double x; double y; };
+
+        Punto q;
+        q.x = 3.0;
+        Punto r = q;
+        r.x = 99.0;
+
+        std::cout << q.x << " " << r.x << "\n";
+      options:
+        - '3 99, porque la asignación copió el registro'
+        - '99 99, porque r y q apuntan al mismo registro'
+        - '3 3, porque r se copió antes de cambiar'
+        - 'No compila, un struct no se puede asignar'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Dos registros distintos desde la línea de la asignación
+      headers: ["Paso", "Qué ocurre", "q.x", "r.x"]
+      rows:
+        - ["1", "q.x = 3.0", "3", "no existe"]
+        - ["2", "Punto r = q, copia campo a campo", "3", "3"]
+        - ["3", "r.x = 99.0", "3", "99"]
+        - ["4", "Se imprimen los dos", "3", "99"]
+      verdict: La copia es completa y ocurre en el momento de la asignación. Desde ahí son dos registros independientes, y modificar uno no tiene forma de tocar al otro.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Olvidar el punto y coma
+          desc: La llave que cierra el struct lo lleva, y sin él el error sale en la línea siguiente
+        - label: Error 02
+          title: Campos sin inicializar
+          desc: Declarar el registro no llena nada. Los campos traen basura hasta que se asignan.
+        - label: Error 03
+          title: Suponer el tamaño
+          desc: El compilador agrega relleno para alinear, así que la suma de los campos no siempre cuadra
+        - label: Error 04
+          title: Copiar registros grandes
+          desc: Cada paso por valor duplica todos los campos. A las funciones se pasan por const referencia.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El grupo completo, en parejas
+      brief: Definan un registro Alumno con nombre, matrícula y tres calificaciones, declaren un arreglo de cinco y llénenlo. Calculen el promedio de cada alumno y el promedio del grupo, e impriman una tabla alineada.
+      blocks:
+        - label: Restricción
+          text: El tamaño del arreglo se calcula una vez, como la semana pasada, y no se escribe en los ciclos
+        - label: Entregable
+          text: Un .cpp con el registro, el arreglo y la tabla impresa
+        - label: Criterio
+          text: Que agregar un sexto alumno cueste una línea y no toque ningún ciclo
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El registro agrupa por significado
+          desc: Muchos valores de tipos distintos que describen una sola cosa
+        - title: Asignar copia todos los campos
+          desc: Desde esa línea son dos registros independientes, no dos nombres del mismo
+        - title: struct y class son casi lo mismo
+          desc: La única diferencia es el acceso por omisión, y el resto es lo que le dices al lector
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La tabla del grupo, ordenada
+      brief: Terminen el laboratorio y agreguen una función que reciba el arreglo y su tamaño y devuelva el índice del alumno con el promedio más alto, sin modificar el arreglo.
+      meta:
+        - [Entrega, Antes de la sesión 12]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Registro", "Requisito", "Los campos son de los tipos correctos y están inicializados"]
+        - ["Tabla", "Requisito", "La salida está alineada y el tamaño se calcula"]
+        - ["Función", "Requisito", "Recibe el arreglo sin copiarlo y no lo modifica"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, punteros y funciones virtuales. Memoria que tú pides y tú devuelves.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,356 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 12
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 12 · Unidad 10 · Punteros, virtuales y abstractas
+      title: Programación Avanzada
+      subtitle: Memoria que tú pides y tú devuelves, y la palabra que hace que el objeto decida qué función corre.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 12 de 17]
+      notes: |
+        La sesión más pesada del curso. Son dos temas grandes que el temario junta en una
+        unidad: la memoria dinámica y el polimorfismo. Conviene no acelerar el primero para
+        alcanzar el segundo.
+
+        Todos los resultados se midieron en Visual Studio Community 2026. El par de la
+        lámina de virtual es el más importante del deck: el mismo puntero, dos llamadas,
+        9 y menos 1.
+
+        El temario pide punteros crudos con new y delete, y también los inteligentes. Se dan
+        los crudos primero porque son los que la unidad pide y los que aparecen en el libro,
+        y unique_ptr después como lo que se usa hoy.
+
+        Lectura: Malik, octava edición, capítulo 12. Los documentos del curso citan el 14,
+        correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: La dirección
+          desc: Una variable que guarda dónde vive otra
+        - title: Memoria dinámica
+          desc: new, delete, y lo que pasa cuando falta el segundo
+        - title: Virtual
+          desc: La palabra que hace que el objeto elija la función
+        - title: Abstractas
+          desc: Una clase que declara lo que sus hijas tienen que saber hacer
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar y usar un puntero
+          sub: Con el ampersand para tomar la dirección y el asterisco para llegar al valor
+        - head: Reservar y liberar memoria
+          sub: Con new y delete emparejados, y reconocer una fuga cuando falte el segundo
+        - head: Explicar qué hace virtual
+          sub: Y predecir qué función corre al llamar a través de un puntero a la base
+        - head: Declarar una clase abstracta
+          sub: Con una función virtual pura, que obliga a las hijas a implementarla
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Una variable que guarda una dirección
+      lede: Toda variable vive en algún lado. Un puntero es una variable cuyo contenido es ese lado.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: El valor, la dirección, y quién guarda cuál
+      image: img/es/pointer.png
+      caption: p no vale 42. p vale dónde está el 42, y el asterisco es la instrucción de ir hasta allá.
+      alt: Una caja con el valor 42 y su dirección, y una segunda caja que contiene esa dirección
+
+  - code_output:
+      eyebrow: Los dos operadores
+      title: Tomar la dirección y llegar al valor
+      filename: puntero.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int n = 42;
+        int* p = &n;
+
+        std::cout << n << " " << *p << "\n";
+
+        *p = 99;
+        std::cout << n << "\n";
+      output: |
+        42 42
+        99
+      notes: |
+        El ampersand de la línea 2 no es el de la semana 5. Ahí declaraba una referencia,
+        aquí toma la dirección de una variable. Es el mismo símbolo con dos trabajos, y
+        conviene decirlo antes de que alguien lo pregunte.
+
+        La última línea es la que importa. Se modificó n sin escribir n, a través del
+        puntero. Eso es exactamente lo que hace posible que una función cambie algo de
+        quien la llamó, y por eso el paso por referencia de la semana 5 y esto son primos.
+
+        Un puntero puede no apuntar a nada. Ese valor se escribe nullptr, y llegar al valor
+        de un puntero nulo termina el programa de golpe.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Memoria que pides tú
+      lede: Hasta hoy toda la memoria nacía y moría sola. A partir de new eso deja de ser cierto.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Dos lugares donde puede vivir un valor
+      image: img/es/stack-vs-heap.png
+      caption: Lo de la izquierda se limpia solo al salir del bloque. Lo de la derecha se queda hasta que alguien escriba delete.
+      alt: Una pila de marcos junto a un montón, con un puntero en la pila que apunta a un valor en el montón
+
+  - code_output:
+      eyebrow: new y delete
+      title: Pedir memoria y devolverla
+      filename: dinamica.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int* d = new int(7);
+
+        std::cout << *d << "\n";
+
+        delete d;
+        d = nullptr;
+      output: |
+        7
+      notes: |
+        new reserva memoria en el montón y devuelve su dirección. delete la libera. Los dos
+        van en pareja y la pareja tiene que cerrarse en todos los caminos del programa.
+
+        Poner el puntero en nullptr después del delete no es obligatorio y sí es buena
+        costumbre. Sin eso queda un puntero que apunta a memoria que ya no es suya, y usarlo
+        no da error, da comportamiento indefinido.
+
+        Si el new fue con corchetes, el delete también. new int[10] se libera con delete[],
+        y mezclarlos es uno de los errores que no avisa.
+
+  - code_output:
+      eyebrow: Lo que se usa hoy
+      title: Un puntero que se libera solo
+      filename: inteligente.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        std::unique_ptr<int> u
+            = std::make_unique<int>(5);
+
+        std::cout << *u << "\n";
+      output: |
+        5
+      notes: |
+        unique_ptr se comporta como un puntero y llama a delete solo, cuando la variable
+        sale de su alcance. No hay manera de olvidarlo, porque no hay nada que escribir.
+
+        Necesita la cabecera memory. Se llama único porque no se puede copiar: solo un
+        unique_ptr puede ser dueño de un objeto a la vez, y eso es justamente lo que evita
+        el doble delete.
+
+        Este curso enseña los dos porque la unidad pide new y delete y porque el libro está
+        escrito así. En código nuevo, la recomendación es empezar por el inteligente.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Que el objeto decida
+      lede: La palabra virtual es lo que convierte una jerarquía de clases en algo que sirve de verdad.
+      block: 3
+
+  - code_output:
+      eyebrow: La demostración
+      title: El mismo puntero, dos llamadas, dos respuestas
+      filename: virtual.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        Cuadrado c(3.0);
+        Figura* f = &c;
+
+        std::cout << f->area() << "\n";
+        std::cout << f->areaNoVirtual() << "\n";
+      output: |
+        9
+        -1
+      notes: |
+        El puntero es el mismo y el objeto es el mismo. Lo único que cambia es que area está
+        declarada virtual en Figura y areaNoVirtual no.
+
+        Sin virtual, el compilador decide qué función llamar viendo el tipo del puntero, que
+        es Figura, y por eso sale menos 1. Con virtual, la decisión se toma al ejecutar
+        mirando el objeto real, que es un Cuadrado, y sale 9.
+
+        Esta lámina es la sesión completa. Si algo se les queda de hoy, que sea el par 9 y
+        menos 1.
+
+  - figure:
+      eyebrow: Cómo funciona
+      title: Por dónde pasa la llamada cuando es virtual
+      image: img/es/vtable.png
+      caption: El objeto lleva una tabla con la dirección de la función que le toca. La llamada consulta la tabla en lugar de decidirlo al compilar.
+      alt: Una llamada que entra a una tabla virtual de tres renglones y sale por el que corresponde al tipo real
+
+  - code:
+      eyebrow: Abstractas
+      title: Una clase que solo declara lo que hay que saber hacer
+      filename: figura.cpp
+      lang: cpp
+      source: |
+        class Figura {
+        public:
+            virtual double area() = 0;
+            virtual ~Figura() {}
+        };
+
+        class Cuadrado : public Figura {
+        public:
+            Cuadrado(double l) : lado(l) {}
+            double area() override { return lado * lado; }
+        private:
+            double lado;
+        };
+      annotations:
+        - label: El igual a cero
+          text: Convierte la función en virtual pura. Figura ya no se puede instanciar.
+        - label: override
+          text: Le pide al compilador que verifique que de verdad estás sustituyendo algo de la base
+        - label: El destructor virtual
+          text: Sin él, borrar por un puntero a la base no llama al destructor de la hija
+        - label: Riesgo
+          text: Una hija que no implemente area sigue siendo abstracta, y el error sale al intentar crear un objeto.
+          accent: true
+
+  - table:
+      eyebrow: Resumen
+      title: Cuatro palabras y qué hace cada una
+      headers: ["Palabra", "Qué hace", "Dónde va"]
+      rows:
+        - ["virtual", "La decide el objeto real", "En la base"]
+        - ["override", "Verifica que sustituyas", "En la hija"]
+        - ["= 0", "La vuelve pura y abstrae", "En la base"]
+        - ["virtual ~", "Destruye la parte de la hija", "En la base, siempre"]
+      notes: |
+        El último renglón es una regla sin excepciones prácticas: si una clase tiene alguna
+        función virtual, su destructor también debe ser virtual. Es gratis y evita una fuga
+        silenciosa.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime, si area es virtual y areaNoVirtual no lo es?
+      filename: virtual.cpp
+      lang: cpp
+      source: |
+        Cuadrado c(3.0);
+        Figura* f = &c;
+
+        std::cout << f->area() << " ";
+        std::cout << f->areaNoVirtual() << "\n";
+      options:
+        - '9 -1, porque solo la primera mira el objeto real'
+        - '9 9, porque el objeto es un Cuadrado en las dos'
+        - '-1 -1, porque el puntero es de tipo Figura'
+        - 'No compila, un puntero a Figura no acepta un Cuadrado'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Una la decide el compilador, la otra el objeto
+      headers: ["Llamada", "Quién decide", "Cuándo", "Corre"]
+      rows:
+        - ["f->area()", "El objeto real", "Al ejecutar", "Cuadrado, da 9"]
+        - ["f->areaNoVirtual()", "El tipo del puntero", "Al compilar", "Figura, da -1"]
+      verdict: La diferencia entre las dos líneas es una sola palabra escrita en la clase base. Ese es todo el costo del polimorfismo, y es lo que permite tratar objetos distintos con el mismo código.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: new sin delete
+          desc: La memoria queda reservada hasta que el programa termina, y en un ciclo crece sin parar
+        - label: Error 02
+          title: Destructor sin virtual
+          desc: Borrar por un puntero a la base no destruye la parte de la hija, y ahí se fuga
+        - label: Error 03
+          title: Usar el puntero tras el delete
+          desc: No da error, da comportamiento indefinido, que a veces funciona y por eso es peor
+        - label: Error 04
+          title: Mezclar delete y delete corchetes
+          desc: Lo reservado con new corchetes se libera con delete corchetes, y no al revés
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tres figuras y un solo ciclo, en parejas
+      brief: Escriban una clase abstracta Figura con area virtual pura, tres clases hijas, y un arreglo de punteros a Figura. Recórranlo con un solo ciclo que sume todas las áreas sin preguntar de qué tipo es cada objeto.
+      blocks:
+        - label: Restricción
+          text: Ni un solo if que pregunte el tipo. Si aparece uno, falta un virtual en algún lado.
+        - label: Entregable
+          text: Un .cpp con la jerarquía, el arreglo de punteros y el delete de cada objeto
+        - label: Criterio
+          text: Que agregar una cuarta figura no obligue a tocar el ciclo
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El puntero guarda la dirección
+          desc: El asterisco es la instrucción de ir hasta allá, y permite modificar sin nombrar
+        - title: new y delete van en pareja
+          desc: Lo que pides tú se queda hasta que tú lo devuelvas, aunque el bloque haya terminado
+        - title: virtual mueve la decisión
+          desc: Del compilador al objeto real, y esa es la diferencia entre 9 y menos 1
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La jerarquía polimórfica, sin fugas
+      brief: Terminen el laboratorio y agreguen una segunda versión donde el arreglo guarde unique_ptr en lugar de punteros crudos. Comparen las dos y expliquen en tres renglones qué líneas desaparecieron.
+      meta:
+        - [Entrega, Antes de la sesión 13]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Polimorfismo", "Requisito", "Un solo ciclo suma las áreas sin preguntar el tipo"]
+        - ["Memoria", "Requisito", "Cada new tiene su delete y el destructor es virtual"]
+        - ["Comparación", "Requisito", "El texto identifica qué líneas quitó unique_ptr"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, archivos, y el segundo parcial. Datos que sobreviven a que se cierre el programa.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

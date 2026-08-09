@@ -2,7 +2,7 @@
 
 Tres cursos, diseñados para conectar uno con otro.
 
-<img src="computational-thinking-course/assets/computational-thinking-banner.png" alt="Banner de Pensamiento Computacional" width="100%">
+<img src="computational-thinking-course/assets/computational-thinking-banner.jpg" alt="Banner de Pensamiento Computacional" width="100%">
 
 - **[Pensamiento Computacional](computational-thinking-course/index.md)** — fundamento. Pensar con claridad sobre los problemas antes de escribir código.
 - **[C sharp (C#)](cs-course/index.md)** — lenguaje multiparadigma de tipado estático de Microsoft; herramientas robustas, ecosistema amplio. *En construcción.*

@@ -1,0 +1,435 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 2
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 02 · Unit 1 · Basic elements of C++
+      title: Advanced Programming
+      subtitle: How a value gets declared, what the operators do with it, and why the machine answered 63 when you expected 63.5.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 2 of 17]
+      notes: |
+        This session closes unit 1. What was left hanging last week, the division that came
+        out at 63, is settled in block 3, and it is worth announcing at the start so the
+        group is waiting for the answer.
+
+        Every numeric result in this deck was measured by building on Visual Studio
+        Community 2026, toolset 14.51. The value of the uninitialised variable changes on
+        every run and on every machine; the 237 on the slide is what came out once, not a
+        number anyone can promise.
+
+        There is still no if and there are no loops. Control structures are unit 6 and
+        arrive in week 7, so all of today's code runs straight down. If somebody asks how to
+        check that the average is above seven, the honest answer is that a tool is missing
+        and it arrives in five weeks.
+
+        Reading: Malik, eighth edition, chapter 2.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Names and values
+          desc: Declaring, initialising, and the difference between the two
+        - title: Operators
+          desc: All five arithmetic ones, precedence, and the compound forms
+        - title: Increment
+          desc: Why one operator gives two answers depending on which side you write it
+        - title: Conversion
+          desc: What happens when two different types meet on the same line
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and initialise correctly
+          sub: And explain why reading an uninitialised variable gives you anything rather than zero
+        - head: Predict what an expression evaluates to
+          sub: Applying precedence in the order the language uses, not the order you read in
+        - head: Tell prefix from postfix increment
+          sub: And say which value each one hands back to the expression around it
+        - head: Control type conversion
+          sub: Recognise the implicit one when it happens by itself and force the explicit one with static_cast
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: now
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: todo
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Names and values
+      lede: A variable is a piece of memory with a name and a type. All three parts of that sentence cost something.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Declaring reserves the space, initialising fills it
+      lead: >-
+        Declaring tells the compiler how much memory to set aside and how to read it.
+        Initialising puts the first value in. They are two separate things, and C++ lets you
+        do the first without the second, which is where the hardest bugs come from.
+      panel:
+        label: What does not happen by itself
+        title: Nobody zeroes it for you
+        note: >-
+          In other languages a fresh variable starts at zero or at null. Here it starts with
+          whatever happened to be left in that memory, which can be anything at all.
+      steps:
+        - text: The type decides the size
+        - text: The name decides what you call it
+        - text: The initialiser decides its value
+          loop: ↺ skipping the third still compiles and fails differently every run
+
+  - tiers:
+      eyebrow: Identifiers
+      title: Four rules for naming, and one habit
+      items:
+        - key: '01'
+          title: Letters, digits and underscore
+          desc: Nothing else. No spaces, no accented characters, no hyphen, which the compiler reads as a subtraction.
+        - key: '02'
+          title: Cannot start with a digit
+          desc: exam2 is valid and 2exam is not. The compiler rejects it before it works out what you meant.
+        - key: '03'
+          title: Case matters
+          desc: Student, student and STUDENT are three different variables and nothing warns you about the resemblance.
+        - key: '04'
+          title: Cannot be a reserved word
+          desc: int, class, return and about ninety others are taken. The error that comes out does not say why.
+
+  - code:
+      eyebrow: Declaration
+      title: Three variables, and one the compiler protects
+      filename: marks.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            int students = 32;
+            double average = 8.75;
+            const double PASS_MARK = 7.0;
+
+            students = 33;
+            std::cout << students << " " << PASS_MARK << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 5
+          text: The type goes before the name and never changes. An int stays an int until its scope ends.
+        - label: Line 7
+          text: const promises that value is never reassigned, and the compiler collects on the promise
+        - label: Line 9
+          text: Reassigning students is fine. The same line applied to PASS_MARK does not compile.
+        - label: Risk
+          text: Capitals are a habit, not a rule. What protects the value is const, not the name.
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: What sits inside a variable nobody filled
+      filename: garbage.cpp
+      lang: cpp
+      output_label: One run, out of many possible
+      source: |
+        int declared;
+        int initialised = 0;
+
+        std::cout << declared << "\n";
+        std::cout << initialised << "\n";
+      output: |
+        237
+        0
+      notes: |
+        237 was the result of one particular run. The next one can give another number, and
+        on another machine it certainly will. That is exactly the problem: the behaviour is
+        undefined, so it cannot even be relied on to fail the same way twice.
+
+        The compiler does warn. It raises C4700, uninitialized local variable 'declared'
+        used. Worth showing the Error List with warnings visible, because plenty of students
+        have them filtered out without knowing, and this is one of the ones to read.
+
+  - divider:
+      eyebrow: Block 02
+      title: Operators and precedence
+      lede: Five arithmetic operators, and one of them does something different from what it does on a phone calculator.
+      block: 2
+
+  - table:
+      eyebrow: Arithmetic
+      title: All five, complete and in order
+      headers: ["Operator", "What it does", "Example", "Gives"]
+      rows:
+        - ["+", "Adds", "7 + 2", "9"]
+        - ["-", "Subtracts", "7 - 2", "5"]
+        - ["*", "Multiplies", "7 * 2", "14"]
+        - ["/", "Divides", "7 / 2", "3"]
+        - ["%", "Remainder", "7 % 2", "1"]
+      notes: |
+        The fourth row is the surprising one. Between two integers, division gives an
+        integer and the fraction is thrown away rather than rounded. 7 over 2 is 3, not 3.5
+        and not 4.
+
+        The remainder only works on integers. Try 7.5 % 2 and the compiler refuses, and that
+        type error turns up in the next block.
+
+  - table:
+      eyebrow: Assignment
+      title: The six compound forms, and what each one stands for
+      headers: ["Operator", "Reads as", "Stands for"]
+      rows:
+        - ["=", "Assign", "x becomes 5"]
+        - ["+=", "Add and assign", "x = x + 5"]
+        - ["-=", "Subtract and assign", "x = x - 5"]
+        - ["*=", "Multiply and assign", "x = x * 5"]
+        - ["/=", "Divide and assign", "x = x / 5"]
+        - ["%=", "Remainder and assign", "x = x % 5"]
+      notes: |
+        The right-hand column is literal. These are not shortcuts that behave differently,
+        they write exactly the same operation with less text, which is why they inherit the
+        integer division trap without announcing it.
+
+  - code_output:
+      eyebrow: Precedence
+      title: The order is not left to right
+      filename: precedence.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int p = 2 + 3 * 4;
+        int q = (2 + 3) * 4;
+
+        std::cout << p << " " << q << "\n";
+      output: |
+        14 20
+      notes: |
+        Multiplication and division run before addition and subtraction, the same as in
+        algebra. Parentheses beat everything else.
+
+        The practical advice is not to memorise the full precedence table, which has
+        seventeen levels. It is to add parentheses whenever an expression mixes more than
+        two operators, because whoever reads the code is not going to consult the table
+        either.
+
+  - code_output:
+      eyebrow: Increment
+      title: One operator, written on two different sides
+      filename: increment.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int a = 5;
+        int b = a++;
+
+        int c = 5;
+        int d = ++c;
+
+        std::cout << a << " " << b << "\n";
+        std::cout << c << " " << d << "\n";
+      output: |
+        6 5
+        6 6
+      notes: |
+        Both incremented variables end at 6. What changes is the value the expression hands
+        to whoever is reading it. Postfix hands back the old value and then increments;
+        prefix increments and hands back the new one.
+
+        If the increment sits alone on its own line, the two do the same thing and it makes
+        no difference which one you write. The difference only matters when the result is
+        used on the same line, and that is precisely the line worth not writing.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: counter.cpp
+      lang: cpp
+      source: |
+        int n = 3;
+        int total = n++ + 10;
+
+        std::cout << n << " " << total << "\n";
+      options:
+        - '4 13, because n++ hands back the 3 and then increments'
+        - '4 14, because it increments before adding'
+        - '3 13, because n++ does not change n on this line'
+        - '4 10, because n++ is discarded by the addition'
+
+  - trace:
+      eyebrow: Answer
+      title: Postfix hands back the old value and keeps the new one
+      headers: ["Step", "What happens", "n", "total"]
+      rows:
+        - ["1", "int n = 3", "3", "no value"]
+        - ["2", "n++ hands back 3", "4", "no value"]
+        - ["3", "3 + 10", "4", "13"]
+        - ["4", "It prints", "4", "13"]
+      verdict: n already holds 4 by the time the addition happens, but the addition received the 3. Two separate things on one line, which is why mixing them reads badly.
+
+  - divider:
+      eyebrow: Block 03
+      title: Type conversion
+      lede: Here is the answer to the question left open last week.
+      block: 3
+
+  - code_output:
+      eyebrow: The pending answer
+      title: Why last week's average came out at 84
+      filename: average.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        double mean = (78 + 85 + 91) / 3;
+
+        std::cout << mean << "\n";
+      output: |
+        84
+      notes: |
+        The variable is a double and it still prints 84. The division happens before the
+        result is stored, and at that moment both operands are integers, so the language
+        uses integer division and throws the fraction away. Storing 84 in a double does not
+        recover what was already lost.
+
+        This is the moment of the session not to rush. It is the same bug that turned up in
+        week 1 under the debugger, and now it has a complete explanation.
+
+  - code:
+      eyebrow: The fix
+      title: One of the two only has to be real
+      filename: average.cpp
+      lang: cpp
+      source: |
+        int total = 78 + 85 + 91;
+
+        double wrong = total / 3;
+        double right = static_cast<double>(total) / 3;
+        double also = total / 3.0;
+
+        std::cout << wrong << " " << right << "\n";
+        std::cout << also << "\n";
+      annotations:
+        - label: Line 3
+          text: Integer over integer gives an integer. The double on the left arrives too late.
+        - label: Line 4
+          text: static_cast converts before dividing, so the division is already between reals
+        - label: Line 5
+          text: Writing 3.0 instead of 3 does the same with less noise, and it is what you will see most often
+        - label: Risk
+          text: The C-style cast, (double)total, still compiles. Prefer static_cast, which does complain when a conversion makes no sense.
+          accent: true
+
+  - table:
+      eyebrow: What gets lost
+      title: Four conversions and what each one costs
+      headers: ["From", "To", "What happens"]
+      rows:
+        - ["int", "double", "Always fits, nothing is lost"]
+        - ["double", "int", "The fraction is dropped, not rounded"]
+        - ["char", "int", "You get its code number"]
+        - ["int", "char", "Lost if it does not fit in one byte"]
+      notes: |
+        static_cast<int>(8.9) gives 8, not 9. Truncating and rounding are not the same thing
+        and the language does the first.
+
+        static_cast<int>('A') gives 65. The full catalogue of types, with char, bool and the
+        modifiers, is next week's session. Today it is enough to know that a char holds a
+        number and that the number can be looked at.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: Dividing two integers by accident
+          desc: The result comes out truncated, nothing crashes, and the bug surfaces when somebody checks the number
+        - label: Error 02
+          title: Reading before initialising
+          desc: It compiles, it runs, and it gives a different value each time. Warning C4700 already said so.
+        - label: Error 03
+          title: Mixing increment into an expression
+          desc: n++ + n on one line is not a hard exam question, it is code that needs rewriting
+        - label: Error 04
+          title: Loose numbers in the code
+          desc: A 7.0 written in three places is three things to fix the day the scale changes
+
+  - method:
+      eyebrow: Style criterion
+      title: The name is the one piece of documentation nobody deletes
+      statement: A well chosen identifier saves the comment that used to explain it. The rule is not to write long names, it is that the name should say what the variable holds rather than what type it is.
+      points:
+        - label: What works
+          text: finalAverage, enrolledStudents, PASS_MARK. They read on their own and need no footnote.
+        - label: What does not
+          text: x, data, temp, number2. Each costs a full read of the code to find out what it holds.
+        - label: The constant
+          text: Any number that appears twice or that carries a meaning deserves a name and a const
+
+  - lab:
+      eyebrow: Lab
+      title: A report card that computes correctly, in pairs
+      brief: Write a program that declares one student's three marks as integers, computes the average with its fraction intact, and prints it alongside the remainder of dividing the total by three.
+      blocks:
+        - label: Constraint
+          text: No if and no loops, which arrive in week 7. Straight down the page.
+        - label: Deliverable
+          text: A .cpp file that prints the fractional average and the remainder in the same run
+        - label: Criterion
+          text: That the conversion is explicit and that you can explain what would happen without it
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Declaring is not initialising
+          desc: The first sets memory aside and the second fills it. Without the second, what is inside is leftovers.
+        - title: Integer division truncates
+          desc: 7 over 2 gives 3, and one of the two operands being real is enough to make it 3.5
+        - title: Postfix hands back the old value
+          desc: n++ increments n and passes the expression the number it held before incrementing
+
+  - homework:
+      eyebrow: For the next session
+      title: The report card finished and one conversion explained
+      brief: Finish the lab program, add a const for the pass mark, and include a block comment explaining in three lines why one of the divisions needed static_cast and the other did not.
+      meta:
+        - [Due, Before session 3]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Correctness", "Required", "The average keeps its fraction and the remainder is right"]
+        - ["Style", "Required", "Names say what they hold and the pass mark is const"]
+        - ["Explanation", "Required", "The comment separates integer division from real division"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, the full catalogue of types, namespaces, and the string type.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

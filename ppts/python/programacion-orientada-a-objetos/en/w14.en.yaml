@@ -1,0 +1,336 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 14
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 14 · Topic 6 · Graphical interfaces
+      title: Object-Oriented Programming
+      subtitle: The program stops being in charge. One window, an event loop that waits, and controls that report when somebody touches them.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 14 of 17]
+      notes: |
+        The handover of control is the hard part of this session, not the syntax. Say it
+        outright in the first block: your code goes from calling to being called. Everything
+        else is class names you look up in the documentation.
+
+        The examples come from docs/en/courses/python-course/05 - GUI/9th Module, which uses
+        PyQt6: the minimal window is Code037.py, the window as a class is Code038.py, and
+        the signal connection with clicked.connect comes from Code044.py.
+
+        It needs pip install PyQt6. Worth asking for it installed before the session.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: The handover
+          desc: Why your code stops calling and starts being called
+        - title: The window
+          desc: QApplication, QMainWindow and the class that inherits from it
+        - title: Controls
+          desc: Labels, text boxes and buttons, and what each of them can do
+        - title: Signals
+          desc: Wiring a click to the function that handles it
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Explain what exec() does
+          sub: And why the window freezes when a slot takes a while to finish
+        - head: Write a window as a class
+          sub: Inheriting from QMainWindow and chaining the constructor with super
+        - head: Place controls
+          sub: QLabel, QLineEdit and QPushButton, stored on self so they survive
+        - head: Connect a signal to a slot
+          sub: Passing the function without parentheses, and reading controls inside the slot
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Graphical interfaces
+      lede: The first session where your program does not decide the order of things. Whoever is using it does.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What changes once the program has a window
+      lead: >-
+        Until now the program set the order. Ask for one value, then another, then print.
+        With a graphical interface the order belongs to whoever is using it, and the code
+        stops being a top-to-bottom recipe and turns into a set of separate answers.
+      panel:
+        label: The handover
+        title: Your code stops calling and starts being called
+        note: >-
+          The event loop belongs to Qt, not to you. You register which function handles what
+          and give up control. From then on Qt calls each of them when their turn comes.
+      steps:
+        - text: You build the window
+        - text: You connect each control
+        - text: You hand control to exec()
+          loop: ↺ from then on your code only ever responds
+
+  - figure:
+      eyebrow: Diagnosis
+      title: What exec() does while nothing is happening
+      image: img/en/event-loop.png
+      caption: The loop does not stop even when the window looks still. It is going round, waiting for the next event.
+      alt: A click entering an event queue, being dispatched to a function, and going back to waiting
+
+  - code:
+      eyebrow: PyQt6
+      title: The smallest window that already shows up
+      filename: window.py
+      lang: python
+      source: |
+        import sys
+        from PyQt6.QtWidgets import QApplication, QWidget
+
+        app = QApplication(sys.argv)
+
+        window = QWidget()
+        window.setWindowTitle("My first window")
+        window.setGeometry(100, 100, 280, 80)
+        window.show()
+
+        sys.exit(app.exec())
+      annotations:
+        - label: Line 4
+          text: One QApplication per program. It takes sys.argv because it reads startup arguments.
+        - label: Line 9
+          text: Without show() the window exists in memory and nobody sees it, not even you
+        - label: Line 11
+          text: exec() starts the event loop and does not return until the window is closed
+
+  - code:
+      eyebrow: The window as a class
+      title: Where everything from topic 2 starts paying off
+      filename: main_window.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QMainWindow, QPushButton
+
+
+        class MainWindow(QMainWindow):
+            def __init__(self) -> None:
+                super().__init__()
+                self.setWindowTitle("My App")
+                self.setGeometry(100, 100, 280, 80)
+
+                button = QPushButton("Press me")
+                self.setCentralWidget(button)
+      annotations:
+        - label: Line 4
+          text: Inheriting from QMainWindow brings a menu bar, a status bar and a central area for free
+        - label: Line 6
+          text: super().__init__() is compulsory. Without it Qt never initialises the window and it dies.
+        - label: Line 11
+          text: The central widget fills the main area, and there can only be one. Layouts grow out of that.
+
+  - table:
+      eyebrow: Vocabulary
+      title: The five classes everything is built from
+      headers: ["Class", "What it is", "How many"]
+      rows:
+        - ["QApplication", "The event loop", "One per program"]
+        - ["QMainWindow", "Window with bars and a central area", "One per window"]
+        - ["QWidget", "The base piece of everything visible", "As many as you like"]
+        - ["QPushButton", "A button that gets pressed", "As many as you like"]
+        - ["QLineEdit", "A one-line editable text box", "As many as you like"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Forms and controls
+      lede: Every control knows how to show itself and how to report. What it does not know is what to do, and that part is yours.
+      block: 2
+
+  - code:
+      eyebrow: Controls
+      title: The three that turn up in almost any window
+      filename: controls.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton
+
+        label = QLabel("Username")
+        box = QLineEdit()
+        box.setPlaceholderText("Type your username")
+        button = QPushButton("Sign in")
+
+        print(box.text())
+      annotations:
+        - label: The label
+          text: QLabel only displays text. It takes nothing from whoever is using the program.
+        - label: The box
+          text: QLineEdit is an editable line, and text() returns whatever is in it at that moment
+        - label: Risk
+          text: Asking box.text() while building the window returns the empty string, every time
+          accent: true
+
+  - code:
+      eyebrow: Signals and slots
+      title: Wiring the click to the function that handles it
+      filename: signals.py
+      lang: python
+      source: |
+        class MainWindow(QMainWindow):
+            def __init__(self) -> None:
+                super().__init__()
+                self.box = QLineEdit()
+                self.button = QPushButton("Sign in")
+                self.button.clicked.connect(self.on_sign_in)
+
+            def on_sign_in(self) -> None:
+                print("Hi,", self.box.text())
+      annotations:
+        - label: Line 6
+          text: clicked is the signal and on_sign_in is the slot. connect joins them and your job ends.
+        - label: No parentheses
+          text: You connect self.on_sign_in, not self.on_sign_in(). With parentheses it runs right there.
+        - label: Line 9
+          text: The slot reads the box when the click happens, the one moment when something is typed in it
+
+  - code_output:
+      eyebrow: Demonstration
+      title: What shows up in the console after two clicks
+      filename: run.py
+      lang: python
+      output_label: Console
+      source: |
+        app = QApplication(sys.argv)
+
+        window = MainWindow()
+        window.show()
+
+        sys.exit(app.exec())
+      output: |
+        Hi, Ana
+        Hi, Luis
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors that turn up in the first window
+      items:
+        - label: Error 01
+          title: Connecting with parentheses
+          desc: connect(self.on_sign_in()) calls the function while building and connects its result
+        - label: Error 02
+          title: A long loop inside the slot
+          desc: The window freezes, because the event loop is waiting for your function to finish
+        - label: Error 03
+          title: Not storing the control on self
+          desc: If the widget is a local variable in the constructor, Python collects it and it vanishes
+        - label: Error 04
+          title: Reading the fields while building
+          desc: At that point they are empty. They get read inside the slot, once something is typed.
+
+  - divider:
+      eyebrow: Block 03
+      title: Practice and wrap-up
+      lede: A window that does something with what it is given, and the syntax slip that takes out half the class.
+      block: 3
+
+  - quiz:
+      eyebrow: Quick question
+      question: When does the word click get printed?
+      filename: parentheses.py
+      lang: python
+      source: |
+        class Window(QMainWindow):
+            def __init__(self):
+                super().__init__()
+                button = QPushButton("Hi")
+                button.clicked.connect(self.greet())
+
+            def greet(self):
+                print("click")
+      options:
+        - 'Every time the button is pressed'
+        - 'While the window is being built, once'
+        - 'Never, because show() was not called'
+        - 'Every time the window is repainted'
+
+  - trace:
+      eyebrow: Answer
+      title: Once, while building, and then it blows up
+      headers: ["Step", "Statement", "What happens", "Output"]
+      rows:
+        - ["1", "Window()", "__init__ runs", "–"]
+        - ["2", "self.greet()", "executes right there", "click"]
+        - ["3", "the method returns None", "connect receives None", "–"]
+        - ["4", "connect(None)", "TypeError", "–"]
+      verdict: The parentheses call the function. Without them you pass the function itself, which is exactly what connect expects so it can store it and call it later.
+
+  - lab:
+      eyebrow: Lab
+      title: A window that answers back, in pairs
+      brief: Write a window with a text box, a button and a label, so that pressing the button makes the label show what was typed, in capitals.
+      blocks:
+        - label: Constraints
+          text: The window is a class inheriting from QMainWindow and the slot is a method on it
+        - label: Deliverable
+          text: A .py file that opens the window and a screenshot of the result
+        - label: Criterion
+          text: The slot calculates nothing, it only reads the control and calls a separate function
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: One QApplication and one event loop
+          desc: exec() does not return until the window closes, and all your code runs inside that loop
+        - title: The signal connects without parentheses
+          desc: connect takes the function so it can store it, not the result of having called it
+        - title: The slot reads the controls, later
+          desc: Reading them while building the window always returns the same thing, which is nothing
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Extend the lab window with a second button that clears the fields, and explain in one paragraph what would happen if the slot took ten seconds to finish.
+      meta:
+        - [Due, Before session 15]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Structure", "40 %", "The window is a class and every control is stored on self"]
+        - ["Signals", "30 %", "Each button connects to a different slot, with no parentheses in the connect"]
+        - ["Reflection", "30 %", "The paragraph explains the freeze with the event loop, not with machine speed"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, containers, integrating components and visual application design.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

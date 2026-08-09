@@ -1,0 +1,348 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 15
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 15 · Tema 6 · Interfaces gráficas
+      title: Programación Orientada a Objetos
+      subtitle: Quién decide dónde va cada control, cómo se conecta la ventana con las clases del dominio, y qué hace usable una interfaz.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 15 de 17]
+      notes: |
+        Última sesión antes del proyecto, así que el bloque 2 vale doble. La tentación de
+        meter toda la lógica dentro del slot es enorme y es exactamente lo que hace que un
+        proyecto entregado no se pueda calificar por partes.
+
+        Los ejemplos salen de docs/en/courses/python-course/05 - GUI/9th Module, en PyQt6:
+        QHBoxLayout es de Code039.py, QVBoxLayout de Code040.py, QGridLayout con span de
+        Code042.py, QFormLayout de Code043.py y el formulario completo de Code044.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Contenedores
+          desc: El widget que agrupa y el layout que lo acomoda
+        - title: Los cuatro layouts
+          desc: Horizontal, vertical, rejilla y formulario
+        - title: Integración
+          desc: Conectar la ventana con las clases que ya escribiste
+        - title: Diseño visual
+          desc: Cuatro criterios que se pueden revisar sin discutir de gustos
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Acomodar controles con un layout
+          sub: En lugar de fijar coordenadas, que dejan de servir al cambiar el tamaño de la ventana
+        - head: Elegir entre los cuatro layouts
+          sub: Por la forma del contenido, y anidarlos cuando ninguno alcanza por sí solo
+        - head: Separar la ventana del dominio
+          sub: El slot lee, llama a una clase que no sabe de Qt, y muestra el resultado
+        - head: Revisar una interfaz con criterios
+          sub: Agrupación, jerarquía, respuesta al error y tamaño de los blancos de clic
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Contenedores y layouts
+      lede: Colocar un control en la coordenada 120, 40 funciona hasta que alguien agranda la ventana. Y siempre hay alguien que la agranda.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Quién decide dónde va cada cosa
+      lead: >-
+        Un contenedor es un widget que guarda otros widgets. Un layout es el objeto que
+        decide dónde y de qué tamaño queda cada uno dentro del contenedor. Tú declaras el
+        orden en que entran, y el layout recalcula todo cada vez que cambia el tamaño.
+      panel:
+        label: Lo que se gana al cederlo
+        title: La ventana se adapta sola
+        note: >-
+          Con coordenadas fijas hay que recalcular a mano en cada cambio de tamaño, de fuente
+          y de idioma. Con un layout, esos tres cambios no tocan una sola línea de tu código.
+      steps:
+        - text: Crea el widget contenedor
+        - text: Crea el layout sobre él
+        - text: Agrega los controles en orden
+          loop: ↺ el layout se encarga del resto, y de cada cambio de tamaño
+
+  - figure:
+      eyebrow: Comparación
+      title: Los tres arreglos que resuelven casi todo
+      image: img/es/layouts.png
+      caption: En la rejilla las coordenadas son fila y columna, no píxeles. Un control puede abarcar varias celdas.
+      alt: Tres ventanas con los mismos controles acomodados en caja horizontal, caja vertical y rejilla
+
+  - code:
+      eyebrow: Cajas
+      title: Una fila, y adentro una columna
+      filename: cajas.py
+      lang: python
+      source: |
+        central = QWidget(self)
+        fila = QHBoxLayout(central)
+
+        fila.addWidget(QLabel("Usuario"))
+        fila.addWidget(QLineEdit())
+
+        columna = QVBoxLayout()
+        columna.addWidget(QPushButton("Entrar"))
+        columna.addWidget(QPushButton("Salir"))
+        fila.addLayout(columna)
+
+        self.setCentralWidget(central)
+      annotations:
+        - label: Línea 2
+          text: El layout se construye sobre el contenedor, y desde ahí manda sobre todo lo que entre
+        - label: Línea 10
+          text: addLayout mete un layout dentro de otro. Anidar es lo que resuelve las ventanas reales.
+        - label: El orden
+          text: Los controles quedan en el orden en que se agregaron, de izquierda a derecha o de arriba abajo
+
+  - code:
+      eyebrow: Rejilla
+      title: Un control que abarca dos filas y dos columnas
+      filename: rejilla.py
+      lang: python
+      source: |
+        central = QWidget(self)
+        rejilla = QGridLayout(central)
+
+        etiqueta = QLabel("Esto es una etiqueta")
+        boton = QPushButton("Presióname")
+
+        rejilla.addWidget(etiqueta, 0, 0)
+        rejilla.addWidget(boton, 0, 1, 2, 2)
+
+        self.setCentralWidget(central)
+      annotations:
+        - label: Línea 7
+          text: Los dos números son fila y columna, empezando en cero, igual que los índices de una lista
+        - label: Línea 8
+          text: Los dos números extra son cuántas filas y cuántas columnas abarca ese control
+        - label: Riesgo
+          text: Dos controles en la misma celda se encinan sin avisar, y solo se nota al correrlo
+          accent: true
+
+  - table:
+      eyebrow: Tabla de decisión
+      title: Cuál layout pide cada forma de contenido
+      headers: ["Layout", "Acomoda", "Cuándo se usa"]
+      rows:
+        - ["QHBoxLayout", "En una fila", "Barras de botones"]
+        - ["QVBoxLayout", "En una columna", "Listas de secciones"]
+        - ["QGridLayout", "En filas y columnas", "Tableros y calculadoras"]
+        - ["QFormLayout", "Etiqueta y campo por renglón", "Formularios de captura"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Integración de componentes
+      lede: La ventana ya funciona. Ahora hay que conectarla con las clases del tema 2 sin que se contaminen entre sí.
+      block: 2
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: Ninguna clase del dominio sabe que existe Qt
+      statement: El slot hace tres cosas y ninguna más. Lee los controles, llama a una clase que no importa PyQt6, y muestra lo que esa clase devolvió.
+      points:
+        - label: Por qué importa
+          text: Una clase que no depende de Qt se prueba sin abrir una ventana, y eso ahorra horas
+        - label: Cómo se revisa
+          text: Busca la palabra import en tus clases del dominio. Si aparece PyQt6, están contaminadas.
+        - label: Qué habilita
+          text: La misma clase sirve para la ventana, para un script de consola y para el examen final
+
+  - compare:
+      eyebrow: Refactorización
+      title: La lógica dentro del slot, o fuera
+      before:
+        label: Todo en el slot
+        file: ventana.py
+        code: |
+          def al_entrar(self):
+              u = self.caja.text()
+              if len(u) < 3:
+                  self.aviso("Muy corto")
+                  return
+              self.guardar(u)
+      after:
+        label: Con una clase aparte
+        file: ventana.py
+        code: |
+          def al_entrar(self):
+              try:
+                  self.registro.alta(self.caja.text())
+              except DatoInvalido as ex:
+                  self.aviso(str(ex))
+      note: La regla de los tres caracteres vive en Registro, que no sabe nada de ventanas. La ventana solo traduce entre los controles y esa clase.
+
+  - code:
+      eyebrow: Integración
+      title: La ventana llama, la clase decide
+      filename: integrar.py
+      lang: python
+      source: |
+        class Registro:
+            def __init__(self) -> None:
+                self.usuarios: list[str] = []
+
+            def alta(self, nombre: str) -> None:
+                if len(nombre) < 3:
+                    raise DatoInvalido("Mínimo tres letras")
+                self.usuarios.append(nombre)
+
+
+        class Ventana(QMainWindow):
+            def __init__(self, registro: Registro) -> None:
+                super().__init__()
+                self.registro = registro
+      annotations:
+        - label: Línea 1
+          text: Registro no importa PyQt6, así que se puede probar desde una terminal sin ventana
+        - label: Línea 7
+          text: La regla de negocio lanza una excepción. No imprime, no abre un cuadro de diálogo.
+        - label: Línea 12
+          text: La ventana recibe el registro armado. Es la composición de la semana 6, aplicada aquí.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de volver incalificable un proyecto
+      items:
+        - label: Error 01
+          title: Toda la lógica dentro de los slots
+          desc: Si la regla vive en el manejador del botón, no hay forma de probarla sin abrir la ventana
+        - label: Error 02
+          title: Coordenadas fijas en lugar de layout
+          desc: Se ve bien en tu pantalla y se encima en el proyector del salón, que tiene otra resolución
+        - label: Error 03
+          title: Una clase del dominio que importa PyQt6
+          desc: Queda amarrada a la interfaz y deja de servir para el script de consola y para las pruebas
+        - label: Error 04
+          title: Errores que solo van a la consola
+          desc: Quien usa una ventana no ve la consola. El error tiene que llegar a la pantalla.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Diseño de aplicaciones visuales
+      lede: Cuatro criterios que se pueden revisar sin discutir de gustos, y que valen puntos en el proyecto.
+      block: 3
+
+  - tiers:
+      eyebrow: Criterios
+      title: Cómo se revisa una interfaz sin hablar de gustos
+      items:
+        - key: '01'
+          title: Agrupación
+          desc: Lo que se usa junto se ve junto. Un espacio en blanco separa mejor que una línea.
+        - key: '02'
+          title: Jerarquía
+          desc: La acción principal se distingue de las demás por tamaño o posición, no por color
+        - key: '03'
+          title: Respuesta al error
+          desc: Cada error aparece junto al campo que lo causó y dice qué hay que corregir
+        - key: '04'
+          title: Blancos de clic
+          desc: Un botón chico junto a otro botón chico produce clics equivocados en cada sesión
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Dónde queda el botón en la ventana?
+      filename: celdas.py
+      lang: python
+      source: |
+        rejilla = QGridLayout(central)
+
+        rejilla.addWidget(QLabel("A"), 0, 0)
+        rejilla.addWidget(QLabel("B"), 1, 0)
+        rejilla.addWidget(boton, 0, 1, 2, 1)
+      options:
+        - 'A la derecha, ocupando el alto de las dos etiquetas'
+        - 'Abajo, ocupando el ancho de las dos etiquetas'
+        - 'Encimado sobre la etiqueta A'
+        - 'En la celda 2, 1, porque los índices empiezan en uno'
+
+  - trace:
+      eyebrow: Respuesta
+      title: A la derecha, y abarcando dos filas
+      headers: ["Control", "Fila", "Columna", "Abarca"]
+      rows:
+        - ["QLabel A", "0", "0", "1 x 1"]
+        - ["QLabel B", "1", "0", "1 x 1"]
+        - ["boton", "0", "1", "2 filas x 1 columna"]
+      verdict: Los cuatro números de addWidget son fila, columna, cuántas filas abarca y cuántas columnas. El botón arranca arriba a la derecha y baja hasta cubrir el renglón de la etiqueta B.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un formulario de captura, en parejas
+      brief: Armen una ventana de alta de alumnos con cuatro campos, un botón de guardar y una lista que muestre lo capturado, usando un layout de formulario dentro de uno vertical.
+      blocks:
+        - label: Restricciones
+          text: Ninguna coordenada fija, y la clase que valida no puede importar PyQt6
+        - label: Entregable
+          text: Dos archivos .py, uno con la ventana y otro con la clase del dominio, más una captura
+        - label: Criterio
+          text: Que la clase del dominio se pueda probar desde la terminal sin abrir ninguna ventana
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El layout decide, tú declaras el orden
+          desc: Las coordenadas fijas se rompen al primer cambio de tamaño, de fuente o de idioma
+        - title: Anidar layouts resuelve las ventanas reales
+          desc: Ninguna ventana de verdad cabe en un solo layout, y meter uno dentro de otro es una línea
+        - title: El dominio no sabe que existe Qt
+          desc: Si tus clases importan PyQt6, dejaste de poder probarlas sin abrir una ventana
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Toma el formulario del laboratorio y agrégale la validación de los cuatro campos en la clase del dominio, con un mensaje distinto por campo mostrado en la ventana.
+      meta:
+        - [Entrega, Antes de la sesión 16]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Layouts", "35 %", "No hay coordenadas fijas y los layouts están anidados donde hace falta"]
+        - ["Separación", "40 %", "La clase del dominio no importa PyQt6 y corre desde la terminal"]
+        - ["Errores", "25 %", "Cada mensaje llega a la ventana junto al campo que lo provocó"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, bases de datos, consultas y el arranque del proyecto integrador.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

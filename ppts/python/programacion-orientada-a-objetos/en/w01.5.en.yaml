@@ -1,0 +1,302 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 1.5
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Review 5 of 5 · Module 5 · Errors
+      title: Object-Oriented Programming
+      subtitle: Reading a traceback, catching the error you expected, and letting the one you did not through.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, Review 5 of 5]
+      notes: |
+        Covers module 5, Code028.
+
+        Start with reading an actual traceback: it is the skill that saves the most
+        time over the rest of the semester and the one least often taught out loud.
+        The closing slide hands over to week 2.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Read a traceback from the bottom up
+          sub: The last line says what happened; the one above says where
+        - head: Name the errors you meet most
+          sub: TypeError, ValueError, NameError, IndexError, KeyError and ZeroDivisionError
+        - head: Wrap only what can fail
+          sub: A short try is a try you can understand
+        - head: Write one except per type
+          sub: And explain why a bare except hides your own typos
+        - head: Use else and finally
+          sub: What runs when nothing went wrong, and what runs whatever happens
+
+  - roadmap:
+      eyebrow: Review map
+      title: Five sessions, one module each
+      phases:
+        - label: Review 1
+          title: Data and text
+          desc: Variables, types, strings, numbers and input
+          state: done
+        - label: Review 2
+          title: Decisions and loops
+          desc: Comparison, logic, if, for and while
+          state: done
+        - label: Review 3
+          title: Functions
+          desc: Parameters, return values and scope
+          state: done
+        - label: Review 4
+          title: Collections
+          desc: Lists, tuples, sets and dictionaries
+          state: done
+        - label: Review 5
+          title: Errors
+          desc: try, except and the types you meet first
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Reading the error
+      lede: Python already told you what happened and on which line. The problem is rarely the message, it is not reading it.
+      block: 1
+
+  - code_output:
+      eyebrow: Module 5 · Traceback
+      title: A real error, line by line
+      filename: div.py
+      lang: python
+      output_label: What appears
+      source: |
+        def divide(a, b):
+            return a / b
+
+        print(divide(10, 0))
+      output: |
+        Traceback (most recent call last):
+          File "div.py", line 4, in <module>
+            print(divide(10, 0))
+          File "div.py", line 2, in divide
+            return a / b
+        ZeroDivisionError: division by zero
+
+  - concept:
+      eyebrow: Module 5 · Traceback
+      title: It reads from the bottom up
+      lead: >-
+        The last line is the one that matters: it gives the type of error and the message.
+        The line above gives the file, the line number and the function where it happened.
+        Everything else is the path the program took to get there.
+      panel:
+        label: The reading order
+        title: First what, then where, last how it got there
+        note: >-
+          The type and the line number are ninety per cent of it. The rest of the
+          traceback only matters when the error comes from a distant function.
+      steps:
+        - text: Read the last line, type and message
+        - text: Go up to the File line and its number
+        - text: If needed, follow the path upward
+          loop: ↺ the original call sits right at the top
+
+  - table:
+      eyebrow: Module 5 · Exceptions
+      title: The errors you will meet this semester
+      headers: ["Error", "What causes it", "Example that triggers it"]
+      rows:
+        - ["TypeError", "Types that do not mix", "'5' + 1"]
+        - ["ValueError", "Right type, impossible value", "int('hello')"]
+        - ["NameError", "Using a name that does not exist", "print(totl)"]
+        - ["IndexError", "Position past the end", "[1, 2][5]"]
+        - ["KeyError", "Key not in the dictionary", "{'a': 1}['b']"]
+        - ["ZeroDivisionError", "Dividing by zero", "10 / 0"]
+        - ["AttributeError", "Asking for what it does not have", "(1, 2).append(3)"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Catching the error
+      lede: try fixes nothing on its own. It decides what happens when something fails.
+      block: 2
+
+  - code:
+      eyebrow: Module 5 · try and except
+      title: Catch the error you meant, not every error
+      filename: Code028.py
+      lang: python
+      source: |
+        try:
+            age = int(input("Age: "))
+            factor = 10 / age
+        except ValueError:
+            print("That is not a number")
+        except ZeroDivisionError:
+            print("Age cannot be 0")
+        else:
+            print(factor)
+        finally:
+            print("Done trying")
+      annotations:
+        - label: One except per type
+          text: Naming the exception lets the errors you should see travel up
+        - label: else
+          text: Runs only when try finished cleanly, which keeps the protected block short
+        - label: Risk
+          text: A bare except swallows your own typos along with the real failure
+          accent: true
+
+  - figure:
+      eyebrow: Module 5 · Exceptions
+      title: Each except catches its own
+      image: img/en/exceptions.png
+      caption: Naming the type lets the errors you should see travel up
+      alt: A cracked try box, two named darts and two baskets catching them
+
+  - table:
+      eyebrow: Module 5 · The four clauses
+      title: What runs and when
+      headers: ["Clause", "When it runs", "Required?"]
+      rows:
+        - ["try", "Always, it is what is watched", "Yes"]
+        - ["except", "Only when that type of error occurs", "At least one, or finally"]
+        - ["else", "Only when try finished without an error", "No"]
+        - ["finally", "Always, whether it failed or not", "No"]
+
+  - code_output:
+      eyebrow: Module 5 · Order
+      title: The same block, with and without an error
+      filename: order.py
+      lang: python
+      output_label: Both runs
+      source: |
+        def divide(x, y):
+            try:
+                r = x / y
+            except ZeroDivisionError:
+                print("division by zero")
+            else:
+                print("result", r)
+            finally:
+                print("finally always")
+
+        divide(10, 5)
+        divide(10, 0)
+      output: |
+        result 2.0
+        finally always
+        division by zero
+        finally always
+
+  - divider:
+      eyebrow: Block 03
+      title: When not to use try
+      lede: Wrapping everything in a try does not make a program robust. It makes it silent.
+      block: 3
+
+  - concept:
+      eyebrow: Module 5 · Judgement
+      title: Validate first, catch afterwards
+      lead: >-
+        If you can check the condition with an if, use an if. try is for what you cannot
+        foresee: what the user types, a file that may not be there, a connection that
+        drops.
+      panel:
+        label: The practical rule
+        title: The try wraps the smallest thing that can fail
+        note: >-
+          Twenty lines inside a try make it impossible to know which one failed. Two or
+          three lines, and the except knows exactly what it is talking about.
+      steps:
+        - text: Can I check it with an if?
+        - text: Then it is an if, not a try
+        - text: If it depends on the outside, try
+          loop: ↺ and always with the exception type named
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors from this module
+      items:
+        - label: Error 01
+          title: A bare except
+          desc: Catches everything, your own typos included, and turns them into a misleading message
+        - label: Error 02
+          title: A thirty-line try
+          desc: When it fires, nobody knows which of the thirty failed. Wrap only what can break.
+        - label: Error 03
+          title: Catching and doing nothing
+          desc: 'An except containing only pass hides the problem and saves it for later.'
+        - label: Error 04
+          title: Using try where an if would do
+          desc: Checking the list is not empty is an if. Checking the file exists is a try.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does this program print?
+      filename: quiz.py
+      lang: python
+      source: |
+        try:
+            numbers = [1, 2, 3]
+            print(numbers[5])
+        except ValueError:
+            print("value")
+        except IndexError:
+            print("index")
+        finally:
+            print("end")
+      options:
+        - 'value, then end'
+        - 'index, then end'
+        - 'Only end, because no except applies'
+        - 'It crashes before reaching finally'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints index and then end
+      headers: ["Step", "What happens", "Result"]
+      rows:
+        - ["1", "numbers[5] on a list of 3", "raises IndexError"]
+        - ["2", "except ValueError", "does not apply, skipped"]
+        - ["3", "except IndexError", "matches, prints index"]
+        - ["4", "finally", "runs regardless, prints end"]
+      verdict: The excepts are checked in order and only the first match runs. finally runs whatever happened.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A traceback reads from the bottom up
+          desc: The last line says what happened, the one above says where. That is usually enough.
+        - title: Naming the exception is what helps
+          desc: A bare except turns your own mistake into a message that lies
+        - title: If you can check it with an if, do not use try
+          desc: try is for what comes from outside and cannot be foreseen
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write a program that reads five grades, computes the average in a function, and does not crash when the user types nonsense.
+      meta:
+        - [Due, Before week 2]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Function", "30 %", "The average is computed in a function with a parameter and a return"]
+        - ["Exceptions", "40 %", "try and except with the type named, never a bare except"]
+        - ["Scope of the try", "30 %", "The try wraps only the conversion, not the whole program"]
+
+  - closing:
+      title: Questions
+      subtitle: That closes the review. Next session, programming paradigms.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

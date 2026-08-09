@@ -1,0 +1,327 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 2
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 02 · Tema 1 · Introducción a la POO
+      title: Programación Orientada a Objetos
+      subtitle: Por qué existe el paradigma. Qué problema tenían los programas de los años setenta y qué se inventó para resolverlo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 2 de 17]
+      notes: |
+        Arrancar preguntando qué lenguaje usaron en la materia anterior. Casi todos
+        vienen de programación estructurada, así que el contraste se siente.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Qué es un paradigma
+          desc: Tres formas distintas de repartir el mismo trabajo
+        - title: El problema que resolvió
+          desc: Qué se rompía cuando los programas pasaron de mil líneas
+        - title: Ventajas y límites
+          desc: Dónde ayuda el paradigma y dónde estorba
+        - title: Mapa comparativo
+          desc: Entregable de la sesión, en parejas
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Definir qué es un paradigma
+          sub: Y por qué un lenguaje puede soportar más de uno al mismo tiempo
+        - head: Contrastar tres paradigmas
+          sub: Imperativo, estructurado y orientado a objetos, sobre el mismo problema
+        - head: Nombrar los cuatro principios
+          sub: Abstracción, encapsulamiento, herencia y polimorfismo
+        - head: Decidir cuándo no conviene
+          sub: Casos donde una función suelta hace el trabajo mejor que una clase
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: now
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: todo
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: todo
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué es un paradigma
+      lede: Un paradigma no es una sintaxis. Es una decisión sobre cómo repartes el código antes de escribirlo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es un paradigma de programación
+      lead: >-
+        Un acuerdo sobre cómo se organiza un programa. No cambia lo que la computadora
+        ejecuta al final (todo termina en instrucciones de máquina), cambia dónde vive
+        cada pedazo de la lógica y quién puede tocarlo.
+      panel:
+        label: Por qué importa la distinción
+        title: Un lenguaje soporta varios paradigmas a la vez
+        note: >-
+          Python permite escribir con funciones sueltas, con clases o con estilo funcional.
+          El lenguaje no te obliga; la decisión sigue siendo tuya en cada archivo.
+      steps:
+        - text: Imperativo, órdenes en secuencia
+        - text: Estructurado, órdenes agrupadas en funciones
+        - text: Orientado a objetos, datos y funciones juntos
+          loop: ↺ cada paradigma nació resolviendo el límite del anterior
+
+  - figure:
+      eyebrow: Mapa
+      title: La POO es uno de seis, no el único
+      image: img/es/ct-10.png
+      caption: Cada paradigma nació resolviendo el límite del anterior
+      alt: Un sol rotulado PROGRAMACIÓN con seis rayos, cada uno a un paradigma
+
+  - diagram:
+      eyebrow: Línea del tiempo
+      title: Tres respuestas al mismo problema
+      blocks:
+        - label: 1950s
+          title: Imperativo
+          desc: Instrucciones una tras otra, con saltos GOTO a cualquier parte del programa
+        - label: 1970s
+          title: Estructurado
+          desc: Las órdenes se agrupan en funciones con entrada y salida definidas
+          dark: true
+        - label: 1980s
+          title: Orientado a objetos
+          desc: Los datos viajan con las funciones que los manipulan, en una sola unidad
+      note: >-
+        Cada salto ocurrió cuando el estilo anterior dejó de escalar. La POO se volvió común
+        cuando los programas pasaron de miles a cientos de miles de líneas.
+
+  - code:
+      eyebrow: Estilo estructurado
+      title: El promedio de un grupo, con funciones sueltas
+      filename: grupo_estructurado.py
+      lang: python
+      theme: light
+      source: |
+        nombres = ["Ana", "Luis", "Sofía"]
+        notas = [8.5, 7.0, 9.5]
+
+        def promedio(valores):
+            return sum(valores) / len(valores)
+
+        def aprobados(nombres, notas, minimo=7.0):
+            return [n for n, c in zip(nombres, notas) if c >= minimo]
+
+        print(promedio(notas), aprobados(nombres, notas))
+      annotations:
+        - label: Qué funciona
+          text: Con tres alumnos se lee perfecto y no hay nada que criticarle
+        - label: Dónde se rompe
+          text: Agrega la carrera, el semestre y la fecha de inscripción, y son cuatro listas paralelas
+          accent: true
+        - label: El síntoma
+          text: Si borras un alumno de una lista y olvidas la otra, los datos se desalinean sin avisar
+
+  - code:
+      eyebrow: Estilo orientado a objetos
+      title: El mismo problema, con los datos juntos
+      filename: grupo_poo.py
+      lang: python
+      source: |
+        class Alumno:
+            def __init__(self, nombre: str, nota: float) -> None:
+                self.nombre = nombre
+                self.nota = nota
+
+            def aprobo(self, minimo: float = 7.0) -> bool:
+                return self.nota >= minimo
+
+
+        grupo = [Alumno("Ana", 8.5), Alumno("Luis", 7.0)]
+      annotations:
+        - label: Qué cambió
+          text: El nombre y la nota ya no pueden separarse; viven en el mismo objeto
+        - label: Qué se ganó
+          text: Agregar un dato nuevo toca una sola línea del constructor, no cuatro listas
+        - label: Qué se pagó
+          text: Diez líneas donde antes había cuatro. En programas chicos, el costo no se recupera
+          accent: true
+
+  - figure:
+      eyebrow: El argumento
+      title: Por qué vale la pena escribir más líneas
+      image: img/es/parallel-lists.png
+      caption: Borra un alumno de cuatro listas paralelas y se desalinean. Bórralo de tres objetos y no pasa nada.
+      alt: Cuatro listas que se desalinean al borrar, contra tres fichas que siguen alineadas
+
+  - table:
+      eyebrow: Tabla comparativa
+      title: Tres paradigmas sobre la misma pregunta
+      headers: ["Pregunta", "Estructurado", "Orientado a objetos", "Funcional"]
+      rows:
+        - ["Unidad básica", "La función", "La clase", "La función pura"]
+        - ["Dónde viven los datos", "Variables sueltas", "Dentro del objeto", "Se pasan y se devuelven"]
+        - ["Quién los modifica", "Cualquier función", "Solo sus métodos", "Nadie, se crean nuevos"]
+        - ["Se rompe cuando", "Hay muchos datos ligados", "Hay poco estado real", "Hay que guardar estado"]
+
+  - stat:
+      eyebrow: Dato de la sesión
+      value: '1967'
+      text: es el año de Simula 67, el primer lenguaje con clases y objetos, doce años antes de que el término se volviera común.
+      note: Lo diseñaron Ole-Johan Dahl y Kristen Nygaard en Noruega para simular sistemas físicos, no para escribir software de negocio.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Ventajas y límites
+      lede: Cuatro razones para usar el paradigma, y cuatro señales de que lo estás forzando.
+      block: 2
+
+  - tiers:
+      eyebrow: Ventajas
+      title: Qué te da el paradigma cuando el problema lo pide
+      items:
+        - key: '01'
+          title: Abstracción
+          desc: Describes la cosa por lo que hace, no por cómo está implementada por dentro
+        - key: '02'
+          title: Encapsulamiento
+          desc: El objeto decide qué expone. Lo demás no se puede tocar por accidente desde fuera.
+        - key: '03'
+          title: Herencia
+          desc: Una clase reusa el comportamiento de otra sin copiar el código
+        - key: '04'
+          title: Polimorfismo
+          desc: Objetos distintos responden al mismo mensaje, cada uno a su manera
+
+  - figure:
+      eyebrow: Abstracción
+      title: Quedarse con lo esencial
+      image: img/es/ct-03.png
+      caption: La misma taza, despojada hasta lo que el problema necesita saber de ella
+      alt: Una taza decorada que se simplifica en dos pasos hasta su contorno
+
+  - pitfalls:
+      eyebrow: Límites
+      title: Cuatro señales de que estás forzando el paradigma
+      items:
+        - label: Señal 01
+          title: Clases sin estado
+          desc: Si la clase no guarda nada entre llamadas, es una función disfrazada de objeto
+        - label: Señal 02
+          title: Getters y setters para todo
+          desc: Si todos los atributos son públicos por la puerta de atrás, no encapsulaste nada
+        - label: Señal 03
+          title: Herencia de cinco niveles
+          desc: Cuando hay que subir cuatro clases para entender un método, la jerarquía perdió el rumbo
+        - label: Señal 04
+          title: Un script de treinta líneas
+          desc: Para leer un CSV y sacar un promedio, una función suelta gana siempre
+
+  - method:
+      eyebrow: Criterio de decisión
+      title: Cuándo escribir una clase
+      statement: Si los datos y las funciones que los tocan siempre viajan juntos, hay una clase ahí. Si no, hay una función.
+      points:
+        - label: Pide clase
+          text: Varios datos que solo tienen sentido juntos, y operaciones que dependen de todos ellos
+        - label: Pide función
+          text: Una transformación que entra, calcula y sale, sin recordar nada de la llamada anterior
+        - label: La prueba
+          text: Intenta nombrar la clase con un sustantivo concreto. Si el mejor nombre es un verbo, era una función.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Práctica y cierre
+      lede: Un ejercicio de clasificación y el mapa comparativo que se entrega esta semana.
+      block: 3
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuál de estos cuatro es el único que pide una clase?
+      options:
+        - Convertir grados Celsius a Fahrenheit
+        - Una cuenta bancaria con saldo y movimientos
+        - Contar cuántas vocales tiene una palabra
+        - Ordenar una lista de números de menor a mayor
+
+  - trace:
+      eyebrow: Respuesta
+      title: La cuenta bancaria, y la razón es el estado
+      headers: ["Opción", "¿Guarda estado?", "¿Datos ligados?", "Veredicto"]
+      rows:
+        - ["Celsius a Fahrenheit", "No", "No", "Función"]
+        - ["Cuenta bancaria", "Sí, el saldo", "Sí, saldo y movimientos", "Clase"]
+        - ["Contar vocales", "No", "No", "Función"]
+        - ["Ordenar una lista", "No", "No", "Función"]
+      verdict: Solo la cuenta bancaria recuerda algo entre una operación y la siguiente. Ese recuerdo es el estado.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Mapa comparativo en parejas
+      brief: Elijan un sistema que usen a diario (la app del transporte, la cafetería, el gimnasio) y describan el mismo módulo en los tres paradigmas.
+      blocks:
+        - label: Entregable
+          text: Una tabla de tres columnas con la unidad básica, dónde viven los datos y quién los modifica
+        - label: Restricción
+          text: El módulo tiene que caber en media cuartilla. Si no cabe, todavía es demasiado grande.
+        - label: Criterio
+          text: Que la columna de POO nombre objetos concretos, no categorías como "gestor" o "manejador"
+
+  - quote:
+      text: La gran idea son los mensajes. El foco debería estar en cómo se comunican los objetos, no en cómo están hechos por dentro.
+      author: Alan Kay
+      source: Correspondencia sobre el diseño de Smalltalk, 1998
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El paradigma resuelve un problema de escala
+          desc: Con cien líneas cualquiera funciona; la diferencia aparece cuando el programa crece
+        - title: Los cuatro principios son un conjunto
+          desc: Abstracción, encapsulamiento, herencia y polimorfismo se sostienen entre sí
+        - title: Forzar clases cuesta caro
+          desc: Una clase sin estado es una función con pasos extra y un nombre peor
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina el mapa comparativo de tu pareja y agrega un párrafo sobre qué paradigma elegirías para ese sistema y por qué.
+      meta:
+        - [Entrega, Antes de la sesión 3]
+        - [Formato, Blackboard · PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Tabla", "50 %", "Las tres columnas dicen algo distinto sobre el mismo módulo"]
+        - ["Elección", "30 %", "El párrafo argumenta con el sistema elegido, no con generalidades"]
+        - ["Concreción", "20 %", "Los objetos tienen nombre propio, no categorías genéricas"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, clases y objetos, y el primer código que corre.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

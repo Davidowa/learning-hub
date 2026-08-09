@@ -1,0 +1,364 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 2
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 02 · Tema 1 · Diseño de algoritmos
+      title: Análisis de Datos
+      subtitle: Cómo se resuelve un problema antes de escribir una sola línea. Algoritmos, diagramas de flujo y pseudocódigo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 2 de 17]
+      notes: |
+        Sesión sin computadora. Se resuelve en papel y en el pizarrón, y esa restricción
+        es el punto: si el algoritmo no está claro en papel, el código no lo va a aclarar.
+
+        El caso de toda la sesión es de recursos humanos, el cálculo de un bono anual.
+        Está elegido a propósito: tiene una condición encadenada que la mitad del grupo
+        va a leer mal la primera vez, y esa lectura equivocada es la lección.
+
+        Las figuras vienen del curso de pensamiento computacional, en ppts/img. El
+        ejercicio del laboratorio no tiene una sola respuesta correcta y no debe tenerla.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué es un algoritmo
+          desc: Y por qué una instrucción cotidiana casi nunca lo es
+        - title: Cómo se escribe
+          desc: Diagramas de flujo para verlo, pseudocódigo para escribirlo
+        - title: Cómo se ataca
+          desc: Descomponer un problema grande hasta que cada parte sea obvia
+        - title: Tu turno
+          desc: Un proceso de tu área, convertido en pasos que otro pueda seguir
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Definir qué es un algoritmo
+          sub: Y distinguirlo de una instrucción que suena clara y no lo es
+        - head: Nombrar las cinco propiedades
+          sub: Finito, preciso, definido, con entrada y con salida
+        - head: Leer y dibujar un diagrama de flujo
+          sub: Los cuatro símbolos y lo que cada uno significa
+        - head: Escribir pseudocódigo
+          sub: Un plan que cualquiera puede seguir, sin sintaxis de ningún lenguaje
+        - head: Descomponer un problema
+          sub: Partir uno grande en partes que se resuelvan por separado
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: todo
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué es un algoritmo
+      lede: Una secuencia de pasos que resuelve un problema, escrita con tal precisión que quien la siga no tenga que decidir nada.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La precisión es el requisito, no el detalle
+      lead: >-
+        Un algoritmo es una secuencia finita de pasos que resuelve un problema. Lo que lo
+        separa de una instrucción cualquiera no es la longitud ni el vocabulario, es que
+        no deja nada a criterio de quien lo ejecuta. Dos personas siguiendo el mismo
+        algoritmo con los mismos datos tienen que llegar al mismo resultado.
+      panel:
+        label: La prueba
+        title: Si dos personas obtienen resultados distintos, no era un algoritmo
+        note: >-
+          Esa es la prueba práctica, y sirve tanto para un cálculo de nómina como para un
+          proceso documentado de la empresa.
+      steps:
+        - text: Recibe unos datos de entrada
+        - text: Ejecuta pasos sin ambigüedad
+        - text: Entrega un resultado y termina
+          loop: ↺ y con los mismos datos entrega siempre lo mismo
+
+  - figure:
+      eyebrow: Bloque 01 · La idea
+      title: Una receta numerada, sin espacio para interpretar
+      image: img/es/ct-04.png
+      caption: Cada paso dice exactamente qué hacer y en qué orden. Nadie que la siga tiene que adivinar.
+      alt: Una receta con pasos numerados y sin ambigüedad, dibujada a mano
+
+  - table:
+      eyebrow: Bloque 01 · Propiedades
+      title: Las cinco propiedades que tiene que cumplir
+      headers: [Propiedad, Qué significa, Cómo se rompe]
+      rows:
+        - ["Finito", "Termina en pasos contables", "«Repite hasta que quede bien»"]
+        - ["Preciso", "Ningún paso admite lectura doble", "«Aplica el descuento habitual»"]
+        - ["Definido", "Mismos datos, mismo resultado", "Un paso que depende de quien lo lee"]
+        - ["Con entrada", "Recibe cero o más datos", "Un cálculo sin origen de sus números"]
+        - ["Con salida", "Produce al menos un resultado", "Termina sin decir qué obtuvo"]
+
+  - compare:
+      eyebrow: Bloque 01 · La diferencia
+      title: La misma instrucción, dicha dos veces
+      before:
+        label: Una instrucción
+        file: correo.txt
+        lang: text
+        code: |
+          Calcula el bono de fin de año
+          de cada empleado según su
+          antigüedad y su desempeño.
+      after:
+        label: Un algoritmo
+        file: bono.txt
+        lang: text
+        code: |
+          SI antiguedad < 12 meses:
+              bono = 0
+          SI NO, SI evaluacion >= 4.5:
+              bono = sueldo * 0.20
+          SI NO:
+              bono = sueldo * 0.10
+      note: >-
+        La de la izquierda parece clara y no lo es. Cuánto es «según su antigüedad» lo
+        decide quien la lea, y dos personas van a decidir distinto.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se escribe un algoritmo
+      lede: >-
+        Dos formas, y las dos sirven para lo mismo: dejarlo claro antes de traducirlo a
+        un lenguaje.
+      block: 2
+
+  - figure:
+      eyebrow: Bloque 02 · Diagramas
+      title: Los cuatro símbolos que hay que conocer
+      image: img/es/ct-05.png
+      caption: Óvalo para inicio y fin, rectángulo para un proceso, rombo para una decisión, paralelogramo para entrada y salida.
+      alt: Los cuatro símbolos de un diagrama de flujo, dibujados a mano y etiquetados
+
+  - table:
+      eyebrow: Bloque 02 · Símbolos
+      title: Qué dibuja cada figura
+      headers: [Símbolo, Qué representa, Ejemplo del caso]
+      rows:
+        - ["Óvalo", "El inicio o el final del algoritmo", "INICIO · FIN"]
+        - ["Paralelogramo", "Entrada de datos o salida de resultados", "LEER antiguedad · ESCRIBIR bono"]
+        - ["Rectángulo", "Un proceso: un cálculo o una asignación", "bono = sueldo * 0.20"]
+        - ["Rombo", "Una decisión con dos salidas", "¿antiguedad menor a 12?"]
+        - ["Flecha", "El orden en que se recorren los pasos", "Del rombo a uno de sus dos caminos"]
+
+  - figure:
+      eyebrow: Bloque 02 · El juego completo
+      title: Los otros nueve que sí existen
+      image: img/es/flow-symbols.png
+      caption: Proceso predefinido, preparación, los dos conectores, datos almacenados, documento, entrada manual, despliegue y operación manual.
+      alt: Los nueve símbolos restantes de un diagrama de flujo, cada uno con su nombre y su uso
+      notes: |
+        Los tres de abajo son los que más ganan. Le ponen forma a la distinción de la semana 5
+        entre lo que teclea una persona, lo que calcula la máquina y lo que sale a pantalla.
+
+        Nadie tiene que memorizarlos. El punto es que sepan que existen, para que cuando vean
+        un cilindro en un diagrama de la empresa sepan que ahí hay una base de datos.
+
+  - figure:
+      eyebrow: Bloque 02 · Cuando ya no cabe
+      title: Un diagrama largo se parte, no se aprieta
+      image: img/es/flow-connector.png
+      caption: El círculo con una letra dice dónde se corta la línea y dónde vuelve a empezar. La letra es lo único que los une.
+      alt: Un diagrama de flujo partido en dos, unido por un conector circular con la letra A
+      notes: |
+        El error que hacen todos la primera vez es tratar el círculo como si fuera un paso.
+        No lo es: no hace nada, solo dice dónde continúa la línea.
+
+        Vale la pena decirlo en voz alta porque en cuanto un proceso real tiene más de doce
+        pasos, esto es lo que evita el diagrama ilegible de una sola hoja.
+
+  - code:
+      eyebrow: Bloque 02 · Pseudocódigo
+      title: El mismo cálculo, escrito para leerse
+      filename: bono_anual.txt
+      lang: text
+      source: |
+        INICIO
+            LEER sueldo, antiguedad, evaluacion
+
+            SI antiguedad < 12 ENTONCES
+                bono = 0
+            SI NO SI evaluacion >= 4.5 ENTONCES
+                bono = sueldo * 0.20
+            SI NO
+                bono = sueldo * 0.10
+
+            ESCRIBIR bono
+        FIN
+      annotations:
+        - label: Sin lenguaje
+          text: No es Python ni ningún otro lenguaje. Es el plan, y por eso lo entiende quien no programa.
+        - label: La sangría
+          text: Marca qué instrucciones pertenecen a cada rama. Es la única estructura que tiene.
+        - label: El orden importa
+          text: La antigüedad se revisa primero. Un empleado con once meses no llega nunca a la evaluación.
+        - label: Riesgo
+          text: Cambiar el orden de las dos condiciones cambia quién cobra bono, y el pseudocódigo se ve igual de correcto.
+          accent: true
+
+  - compare:
+      eyebrow: Bloque 02 · La traducción
+      title: Del plan al lenguaje, casi línea por línea
+      before:
+        label: Pseudocódigo
+        file: bono_anual.txt
+        lang: text
+        code: |
+          SI antiguedad < 12 ENTONCES
+              bono = 0
+          SI NO SI evaluacion >= 4.5 ENTONCES
+              bono = sueldo * 0.20
+          SI NO
+              bono = sueldo * 0.10
+      after:
+        label: Python
+        file: bono_anual.py
+        code: |
+          if antiguedad < 12:
+              bono = 0
+          elif evaluacion >= 4.5:
+              bono = sueldo * 0.20
+          else:
+              bono = sueldo * 0.10
+      note: >-
+        Cambian cinco palabras y aparecen dos puntos al final de cada condición. El plan
+        es el mismo, y por eso escribirlo bien en papel es la mitad del trabajo.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cómo se ataca un problema grande
+      lede: Partiéndolo hasta que cada pedazo sea algo que ya sabes resolver.
+      block: 3
+
+  - figure:
+      eyebrow: Bloque 03 · Descomposición
+      title: Un enredo se resuelve desenredándolo
+      image: img/es/ct-01.png
+      caption: Ningún problema serio se resuelve de un golpe. Se parte en piezas hasta que cada una es obvia.
+      alt: Una maraña de hilos separada en madejas ordenadas, dibujada a mano
+
+  - steps:
+      eyebrow: Bloque 03 · Método
+      title: Las cinco fases de la resolución de un problema
+      items:
+        - label: '01'
+          title: Entender el problema
+          desc: Qué se pide exactamente, y qué no se está pidiendo
+        - label: '02'
+          title: Identificar datos
+          desc: Qué entra, qué sale y qué falta por conseguir
+        - label: '03'
+          title: Diseñar la solución
+          desc: El algoritmo en papel, en pseudocódigo o en diagrama
+        - label: '04'
+          title: Escribirlo en código
+          desc: La traducción, que es la parte más mecánica de todas
+        - label: '05'
+          title: Probarlo y corregir
+          desc: Con casos normales y con los casos límite que rompen todo
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Un empleado con 11 meses y evaluación de 5.0. ¿Cuánto bono le toca?
+      filename: bono_anual.txt
+      lang: text
+      source: |
+        SI antiguedad < 12 ENTONCES
+            bono = 0
+        SI NO SI evaluacion >= 4.5 ENTONCES
+            bono = sueldo * 0.20
+        SI NO
+            bono = sueldo * 0.10
+      options:
+        - "El 20 %, porque su evaluación es excelente"
+        - "Cero, porque la antigüedad se revisa primero"
+        - "El 10 %, porque no cumple una de las dos"
+        - "Depende de su sueldo"
+
+  - trace:
+      eyebrow: Respuesta
+      title: La traza lo enseña sin discusión
+      headers: [Paso, Instrucción, antiguedad, evaluacion, bono]
+      rows:
+        - ['1', "LEER datos", '11', "5.0", '–']
+        - ['2', "¿11 < 12?", '11', "5.0", '–']
+        - ['3', "Sí, entra a la primera rama", '11', "5.0", '0']
+        - ['4', "Las demás ramas no se evalúan", '11', "5.0", '0']
+        - ['5', "ESCRIBIR bono", '11', "5.0", '0']
+      verdict: La evaluación de 5.0 ni se revisa. Cuando una rama se cumple, las siguientes no se leen.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un proceso de tu área, escrito como algoritmo
+      brief: Elige un proceso que ya exista en tu carrera, como aprobar un gasto, calificar a un proveedor o segmentar a un cliente, y escríbelo en pseudocódigo con al menos una decisión.
+      blocks:
+        - label: Entrega
+          text: Media cuartilla en papel, con el pseudocódigo y sus datos de entrada
+        - label: Restricción
+          text: Sin computadora y sin sintaxis de ningún lenguaje. Solo el plan.
+        - label: La prueba
+          text: Intercambia tu hoja con un compañero. Si él obtiene otro resultado, algo quedó ambiguo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un algoritmo no deja nada a criterio
+          desc: Si dos personas siguiendo tus pasos obtienen resultados distintos, todavía no es un algoritmo
+        - title: El orden de las condiciones decide
+          desc: Revisar antigüedad antes que desempeño cambia quién cobra, y el papel se ve igual de correcto
+        - title: El código es la parte mecánica
+          desc: Lo difícil es el plan. Si está claro en papel, traducirlo es cuestión de sintaxis
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Convierte el pseudocódigo del laboratorio en un diagrama de flujo con los cuatro símbolos, y agrégale un caso límite que tu versión de clase no cubría.
+      meta:
+        - [Entrega, Antes de la semana 3]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Símbolos", "40 %", "Cada figura se usa para lo que le corresponde y el flujo se puede seguir"]
+        - ["Decisión", "30 %", "El rombo tiene sus dos salidas etiquetadas y ambas llevan a algún lado"]
+        - ["Caso límite", "30 %", "El caso agregado rompía la versión anterior, y se explica por qué"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, por qué existen los paradigmas de programación y qué hace un lenguaje con lo que escribes.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

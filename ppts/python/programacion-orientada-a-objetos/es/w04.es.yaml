@@ -1,0 +1,382 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 4
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 04 · Tema 2 · Elementos básicos
+      title: Programación Orientada a Objetos
+      subtitle: 'Quién puede tocar qué dentro de un objeto, y las tres piezas que controlan cómo nace: modificadores, propiedades y constructores.'
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 4 de 17]
+      notes: |
+        La trampa de esta sesión es creer que Python tiene private. No lo tiene, y decirlo
+        con todas sus letras al principio evita que el grupo confíe en una protección que
+        no existe. El renombrado del doble guion bajo se demuestra en vivo, con hasattr.
+
+        Los ejemplos salen de docs/en/courses/python-course/02 - POO/6th Module:
+        Persona y el método privado son de Code019.py, Producto con getter y setter es
+        de Code024.py, y el atributo de clase con classmethod viene de Code022.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Modificadores de acceso
+          desc: Público, protegido y privado, y cuál de los tres impone Python
+        - title: Funciones de acceso
+          desc: Getters, setters y la sintaxis que los vuelve invisibles
+        - title: Constructores
+          desc: Qué le toca hacer a __init__ y qué no
+        - title: Miembros estáticos
+          desc: Datos que pertenecen a la clase y no a cada objeto
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir el nivel de acceso de cada miembro
+          sub: Un guion bajo es un acuerdo entre programadores; dos cambian el nombre del atributo
+        - head: Escribir un getter y un setter
+          sub: Y validar dentro del setter, que es la única razón por la que valen la pena
+        - head: Convertirlos en una propiedad
+          sub: '@property y @nombre.setter conservan la validación y quitan los paréntesis'
+        - head: Separar la clase de la instancia
+          sub: Lo que se declara en el cuerpo de la clase se comparte; lo que va en __init__ no
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: now
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: todo
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Modificadores de acceso
+      lede: Python no tiene la palabra private. Tiene una convención y un truco de renombrado, y conviene saber cuál es cuál.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es un modificador de acceso
+      lead: >-
+        La decisión de quién puede leer y escribir cada miembro de un objeto. En Java o en C#
+        la impone el compilador y el programa no compila si la rompes. En Python la impone,
+        casi siempre, un acuerdo entre quienes leen el código.
+      panel:
+        label: La regla práctica
+        title: Público hasta que haya una razón
+        note: >-
+          Empieza con todo público. Cierra un atributo el día que descubras que alguien puede
+          dejar el objeto en un estado imposible desde fuera, no el día que te lo pida un libro.
+      steps:
+        - text: Sin prefijo, cualquiera lo lee y lo escribe
+        - text: Un guion bajo, no lo toques
+        - text: Dos guiones bajos, Python lo renombra
+          loop: ↺ el renombrado no es seguridad, es un seguro contra accidentes
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Qué pasa cuando alguien de fuera intenta leer
+      image: img/es/access-levels.png
+      caption: Solo los dos guiones bajos cambian algo. El guion simple es un acuerdo entre personas.
+      alt: Código externo intentando leer tres atributos de una clase Cuenta, con el privado bloqueado
+
+  - code:
+      eyebrow: Python
+      title: Un atributo y un método que no salen de la clase
+      filename: persona.py
+      lang: python
+      source: |
+        class Persona:
+            def __init__(self, nombre: str, edad: int) -> None:
+                self.__nombre = nombre
+                self.edad = edad
+
+            def hablar(self) -> None:
+                print(f"Hola, me llamo {self.__nombre}")
+                self.__decir_edad()
+
+            def __decir_edad(self) -> None:
+                print(f"y tengo {self.edad} años")
+      annotations:
+        - label: Línea 3
+          text: El nombre no cambia con los años y nadie debería reescribirlo desde fuera
+        - label: Línea 10
+          text: Los métodos también se cierran. __decir_edad solo tiene sentido dentro de hablar
+        - label: Riesgo
+          text: p.__decir_edad() desde fuera lanza AttributeError, no un error de permisos
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: El atributo sigue ahí, con otro nombre
+      filename: renombrado.py
+      lang: python
+      output_label: Salida
+      source: |
+        p = Persona("Ana", 20)
+        p.hablar()
+
+        print(p.edad)
+        print(p._Persona__nombre)
+        print(hasattr(p, "__nombre"))
+      output: |
+        Hola, me llamo Ana
+        y tengo 20 años
+        20
+        Ana
+        False
+
+  - table:
+      eyebrow: Vocabulario
+      title: Los cuatro prefijos, y quién los hace cumplir
+      headers: ["Prefijo", "Qué significa", "Lo hace cumplir", "Ejemplo"]
+      rows:
+        - ["Ninguno", "Público, parte del contrato", "Nadie", "self.edad"]
+        - ["_uno", "Interno, no lo uses", "La convención", "self._banco"]
+        - ["__dos", "Privado, se renombra", "El intérprete", "self.__saldo"]
+        - ["__ambos__", "Método mágico de Python", "El lenguaje", "__init__"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Funciones de acceso a propiedades
+      lede: Un atributo cerrado no sirve de nada si no hay manera de leerlo. Aquí está la manera, y la versión que no se nota.
+      block: 2
+
+  - code:
+      eyebrow: La versión larga
+      title: Un getter y un setter que validan
+      filename: producto_getters.py
+      lang: python
+      source: |
+        class Producto:
+            def __init__(self, precio: float) -> None:
+                self.set_precio(precio)
+
+            def get_precio(self) -> float:
+                return self.__precio
+
+            def set_precio(self, valor: float) -> None:
+                if valor < 0:
+                    raise ValueError("El precio no puede ser negativo")
+                self.__precio = valor
+      annotations:
+        - label: Línea 3
+          text: El constructor pasa por el setter, así que la validación corre desde el primer valor
+        - label: Por qué existen
+          text: Un atributo público no puede rechazar un valor. Un setter sí, y ese es todo el punto.
+        - label: Lo que cuestan
+          text: Quien use la clase escribe p.get_precio() en lugar de p.precio, en cada línea
+
+  - code:
+      eyebrow: La versión pythónica
+      title: La misma validación, sin paréntesis
+      filename: producto.py
+      lang: python
+      source: |
+        class Producto:
+            def __init__(self, precio: float) -> None:
+                self.precio = precio
+
+            @property
+            def precio(self) -> float:
+                return self.__precio
+
+            @precio.setter
+            def precio(self, valor: float) -> None:
+                if valor < 0:
+                    raise ValueError("El precio no puede ser negativo")
+                self.__precio = valor
+      annotations:
+        - label: Línea 3
+          text: self.precio = precio llama al setter; no crea un atributo nuevo por su cuenta
+        - label: Línea 9
+          text: El decorador toma el nombre de la propiedad, así que el método se repite igual
+        - label: Riesgo
+          text: Si dentro del setter escribes self.precio, la propiedad se llama a sí misma hasta el RecursionError
+          accent: true
+
+  - compare:
+      eyebrow: Lo que ve quien usa la clase
+      title: La validación no se mueve, la sintaxis sí
+      before:
+        label: Con getters
+        file: getters.py
+        code: |
+          p = Producto(10)
+
+          print(p.get_precio())
+          p.set_precio(20)
+      after:
+        label: Con propiedad
+        file: propiedad.py
+        code: |
+          p = Producto(10)
+
+          print(p.precio)
+          p.precio = 20
+      note: Las dos rechazan un precio negativo con el mismo ValueError. Solo la segunda deja intacto el código de quien ya usaba la clase.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de encapsular sin encapsular nada
+      items:
+        - label: Error 01
+          title: Un getter y un setter para cada atributo
+          desc: Si todos los atributos tienen los dos, el objeto sigue abierto y ahora hay el doble de código
+        - label: Error 02
+          title: Validar en el constructor y no en el setter
+          desc: El objeto nace correcto y queda inválido en la siguiente línea, sin que nadie se entere
+        - label: Error 03
+          title: Confiar en el guion bajo simple
+          desc: '_banco se lee desde fuera sin protestar. Lo pide el estilo, no lo impide el intérprete.'
+        - label: Error 04
+          title: Propiedades con efectos secundarios
+          desc: Si leer p.precio escribe en disco o consulta la red, nadie que lea la línea lo va a esperar
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Constructores y miembros estáticos
+      lede: Qué le toca hacer a __init__, y qué cosas pertenecen a la clase entera y no a cada objeto.
+      block: 3
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: Hasta dónde llega el constructor
+      statement: __init__ deja el objeto en un estado válido y termina. Todo lo que pueda fallar por causas ajenas a los argumentos va en otro método.
+      points:
+        - label: Le toca
+          text: Recibir lo indispensable, validarlo y dejarlo asignado sobre self
+        - label: No le toca
+          text: Abrir archivos, consultar la red o preguntarle algo a la base de datos
+        - label: La prueba
+          text: Si el constructor puede fallar por algo que no es culpa de quien lo llamó, saca eso de ahí
+
+  - code:
+      eyebrow: Miembros de la clase
+      title: Un dato compartido y un constructor alternativo
+      filename: censo.py
+      lang: python
+      source: |
+        class Persona:
+            especie = "humano"
+            censo = 0
+
+            def __init__(self, nombre: str, edad: int) -> None:
+                self.nombre = nombre
+                self.edad = edad
+                Persona.censo += 1
+
+            @classmethod
+            def anonima(cls) -> "Persona":
+                return cls("Sin nombre", 0)
+
+
+        print(Persona.especie, Persona.censo)
+      annotations:
+        - label: Líneas 2 y 3
+          text: Viven en la clase. Todos los objetos leen el mismo valor mientras nadie lo reasigne.
+        - label: Línea 8
+          text: El contador se escribe sobre Persona, no sobre self, o cada objeto tendría el suyo
+        - label: Línea 11
+          text: cls es a la clase lo que self es al objeto, y sirve para escribir constructores alternativos
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: contador.py
+      lang: python
+      source: |
+        class Contador:
+            total = 0
+
+            def __init__(self):
+                self.total += 1
+
+
+        a = Contador()
+        b = Contador()
+        print(Contador.total)
+      options:
+        - '2, porque se construyeron dos contadores'
+        - '0, porque self.total creó un atributo de instancia'
+        - '1, porque solo el primero alcanzó a contar'
+        - 'Error, total no está declarado en __init__'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 0, y la traza dice dónde se fue el conteo
+      headers: ["Paso", "Instrucción", "a.total", "b.total", "Contador.total"]
+      rows:
+        - ["1", "a = Contador()", "1", "–", "0"]
+        - ["2", "b = Contador()", "1", "1", "0"]
+        - ["3", "Contador.total", "1", "1", "0"]
+      verdict: self.total += 1 lee el cero de la clase, le suma uno y guarda el resultado en el objeto. La clase nunca se entera del incremento.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Cerrar una cuenta bancaria, en parejas
+      brief: Escriban la clase Cuenta con el titular público, el saldo privado y una propiedad de solo lectura que lo exponga, más los métodos depositar y retirar.
+      blocks:
+        - label: Restricciones
+          text: retirar no puede dejar el saldo negativo, y saldo no lleva setter
+        - label: Entregable
+          text: Un archivo .py con la clase y cinco operaciones de prueba impresas en consola
+        - label: Criterio
+          text: Que sea imposible dejar la cuenta en un estado inválido desde fuera de la clase
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un guion bajo pide permiso, dos lo quitan
+          desc: El primero es un acuerdo entre personas; el segundo renombra el atributo dentro del intérprete
+        - title: La propiedad es el setter que no se nota
+          desc: Valida igual que un método y se lee como un atributo, así que nadie tiene que cambiar su código
+        - title: Lo que se declara en la clase se comparte
+          desc: Los contadores y las constantes viven ahí; el estado de cada objeto se asigna dentro de __init__
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía la cuenta del laboratorio con un historial privado de movimientos y una propiedad de solo lectura que devuelva los últimos cinco.
+      meta:
+        - [Entrega, Antes de la sesión 5]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Encapsulamiento", "40 %", "El historial no se puede modificar desde fuera de la clase"]
+        - ["Validación", "30 %", "Depositar y retirar rechazan los montos que dejarían la cuenta inválida"]
+        - ["Ejecución", "30 %", "El archivo corre sin errores e imprime las operaciones de prueba"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, métodos sobrecargados, organización de clases y modelado.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

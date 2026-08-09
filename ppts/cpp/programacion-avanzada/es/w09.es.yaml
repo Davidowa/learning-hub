@@ -1,0 +1,316 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 9
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 09 · Unidad 7 · Herencia y composición
+      title: Programación Avanzada
+      subtitle: Reutilizar una clase sin volver a escribirla, y decidir entre heredar de ella o simplemente usarla.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 9 de 17]
+      notes: |
+        Primera sesión después del parcial. Conviene abrir con los errores más frecuentes del
+        examen antes de empezar el tema nuevo, porque todo lo que salió mal ahí vuelve a
+        entrar en el segundo parcial.
+
+        La sesión tiene una decisión de diseño en el centro, no una sintaxis. La herencia se
+        enseña completa y después se argumenta por qué la composición suele ser mejor. Los
+        alumnos que vienen de otros cursos llegan convencidos de lo contrario.
+
+        Todas las salidas se midieron compilando los programas de las láminas en Visual
+        Studio Community 2026.
+
+        La lámina del acceso protegido es la que justifica que exista ese nivel. Sin
+        herencia, protegido y privado se ven idénticos desde fuera, y esa fue la columna
+        derecha de la figura de la semana 6.
+
+        Lectura: Malik, octava edición, capítulo 11. Los documentos del curso citan el 13,
+        correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Heredar
+          desc: Una clase que toma el estado y el comportamiento de otra
+        - title: El nivel protegido
+          desc: Lo que la hija sí puede ver y quien está fuera no
+        - title: Componer
+          desc: Una clase que contiene otra en lugar de descender de ella
+        - title: Cuál elegir
+          desc: La pregunta que separa "es un" de "tiene un"
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar una clase derivada
+          sub: Con la sintaxis de dos puntos y la llamada al constructor de la base
+        - head: Usar el nivel protegido
+          sub: Y explicar por qué existe entre público y privado, con la herencia de por medio
+        - head: Reutilizar por composición
+          sub: Declarando un objeto de otra clase como miembro y delegándole trabajo
+        - head: Elegir entre las dos
+          sub: Aplicando la prueba de "es un" contra "tiene un" antes de escribir la clase
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Heredar
+      lede: Una clase derivada empieza con todo lo que tenía la base y le agrega lo suyo. Eso es la parte fácil.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Dos niveles funcionan, cuatro empiezan a doler
+      image: img/es/hierarchy.png
+      caption: La cadena larga hereda comportamiento que nadie pidió. Cada nivel nuevo es una decisión que ya no se puede deshacer.
+      alt: Un árbol de dos niveles junto a una cadena de cuatro que termina heredando algo que no corresponde
+
+  - code:
+      eyebrow: Herencia
+      title: Una clase que empieza donde termina otra
+      filename: alumno.cpp
+      lang: cpp
+      source: |
+        class Persona {
+        public:
+            Persona(std::string n) { nombre = n; }
+            std::string getNombre() { return nombre; }
+        protected:
+            std::string nombre;
+        };
+
+        class Alumno : public Persona {
+        public:
+            Alumno(std::string n, std::string m) : Persona(n), id(m) {}
+        private:
+            std::string id;
+        };
+      annotations:
+        - label: Línea 9
+          text: Los dos puntos y public Persona son la herencia. Alumno ya tiene nombre y getNombre.
+        - label: Línea 11
+          text: La lista de inicialización llama al constructor de la base, y corre antes que el cuerpo
+        - label: Línea 6
+          text: protected es lo que permite que Alumno lea nombre directamente. Con private no podría.
+        - label: Riesgo
+          text: Sin la llamada a Persona(n), el compilador busca un constructor sin argumentos en la base y no lo encuentra.
+          accent: true
+
+  - code_output:
+      eyebrow: Ejecución
+      title: Lo heredado funciona sin escribirlo otra vez
+      filename: alumno.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        Alumno a("Luis", "A01");
+
+        std::cout << a.getNombre() << "\n";
+      output: |
+        Luis
+      notes: |
+        getNombre no aparece en ninguna parte de Alumno y aun así se puede llamar sobre un
+        objeto Alumno. Eso es exactamente lo que se compró con la línea de la herencia.
+
+        Conviene señalar que el objeto es uno solo. No hay un Persona adentro de un Alumno
+        como si fueran dos objetos; hay un objeto que tiene las dos partes.
+
+  - figure:
+      eyebrow: Acceso
+      title: Para qué sirve el nivel de en medio
+      image: img/es/access-levels-cpp.png
+      caption: La columna derecha es la que apareció esta semana. Protegido es lo que la hija puede ver y el mundo no.
+      alt: Tres miembros de una clase contra dos columnas, desde fuera y desde una clase hija, con palomas y cruces
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Componer
+      lede: La otra manera de reutilizar, y la que casi siempre conviene más. Una clase que contiene a otra en lugar de descender de ella.
+      block: 2
+
+  - code_output:
+      eyebrow: Composición
+      title: Un auto que no hereda de motor
+      filename: auto.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        class Motor {
+        public:
+            void arrancar() { std::cout << "motor encendido\n"; }
+        };
+
+        class Auto {
+        public:
+            void encender() { motor.arrancar(); }
+        private:
+            Motor motor;
+        };
+      output: |
+        motor encendido
+      notes: |
+        Auto no desciende de Motor, lo tiene. La diferencia se lee en la línea del miembro
+        privado, y cambia todo lo demás.
+
+        Para cambiar el motor basta con reemplazar ese miembro. Ninguna otra clase se
+        entera, porque el motor no es parte de lo que Auto promete hacia afuera.
+
+        Un auto tiene un motor. Un auto no es un motor. Esa frase es toda la regla de
+        decisión de la sesión.
+
+  - table:
+      eyebrow: La decisión
+      title: Dos formas de reutilizar, y lo que cuesta cada una
+      headers: ["Aspecto", "Herencia", "Composición"]
+      rows:
+        - ["La relación", "Es un", "Tiene un"]
+        - ["Qué hereda", "Todo lo público y protegido", "Nada, solo lo que delegue"]
+        - ["Cambiar la pieza", "Toca toda la rama", "Una línea"]
+        - ["Acoplamiento", "Alto y permanente", "Bajo"]
+        - ["Cuándo conviene", "Relación real y estable", "Casi siempre"]
+      notes: |
+        El último renglón es una opinión defendible, no un dogma, y conviene presentarlo así.
+        La herencia se gana su lugar cuando hay una relación de "es un" verdadera y cuando se
+        va a aprovechar el polimorfismo, que es el tema de la semana 12.
+
+        Fuera de ese caso, heredar solo para reutilizar tres funciones ata dos clases para
+        siempre a cambio de ahorrar unas líneas.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cuál elegir
+      lede: La pregunta se contesta en una frase, antes de escribir la primera línea de la clase.
+      block: 3
+
+  - method:
+      eyebrow: Criterio
+      title: La prueba de la frase
+      statement: Antes de heredar, di la relación en voz alta. Si "es un" suena raro y "tiene un" suena natural, la respuesta es composición y no hay más que discutir.
+      points:
+        - label: Suena bien
+          text: Un alumno es una persona. Un cuadrado es una figura. Ahí la herencia describe algo real.
+        - label: Suena raro
+          text: Un auto es un motor. Una nómina es un empleado. Ahí lo que hay es contención.
+        - label: La duda típica
+          text: Una pila es un vector, o tiene un vector. Tiene. La pila expone menos operaciones, no más.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuál de las cuatro líneas no compila, desde main?
+      filename: acceso.cpp
+      lang: cpp
+      source: |
+        Alumno a("Luis", "A01");
+
+        a.getNombre();
+        a.nombre;
+        Persona p("Ana");
+        p.getNombre();
+      options:
+        - 'a.nombre, porque protegido no se ve desde fuera'
+        - 'a.getNombre(), porque está declarada en la base'
+        - 'Persona p("Ana"), porque la base ya tiene una hija'
+        - 'Ninguna, protegido sí se ve desde main'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Protegido abre la puerta a la hija, no al mundo
+      headers: ["Línea", "Quién pregunta", "Nivel", "Compila"]
+      rows:
+        - ["a.getNombre()", "main, desde fuera", "público", "Sí"]
+        - ["a.nombre", "main, desde fuera", "protegido", "No, C2248"]
+        - ["nombre dentro de Alumno", "la clase hija", "protegido", "Sí"]
+        - ["p.getNombre()", "main, desde fuera", "público", "Sí"]
+      verdict: Desde main, protegido y privado se comportan igual. La única diferencia aparece dentro de la clase derivada, y por eso el nivel no tiene sentido sin herencia.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Olvidar el constructor de la base
+          desc: Sin la lista de inicialización, el compilador busca uno sin argumentos y no lo encuentra
+        - label: Error 02
+          title: Heredar solo para reutilizar
+          desc: Ata dos clases para siempre a cambio de ahorrar unas líneas que una función resolvía
+        - label: Error 03
+          title: Cadenas de cuatro niveles
+          desc: Cada nivel arrastra comportamiento que el de abajo no pidió y no puede quitar
+        - label: Error 04
+          title: Poner todo protegido
+          desc: Convierte los datos internos en parte del contrato con cada clase hija futura
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una jerarquía y una composición, en parejas
+      brief: Escriban una clase Persona y una clase Profesor que herede de ella, con un departamento propio. Después escriban una clase Curso que tenga un Profesor como miembro, sin heredar de nadie.
+      blocks:
+        - label: Restricción
+          text: Dos niveles de herencia como máximo. Si aparece un tercero, revisen si no era composición.
+        - label: Entregable
+          text: Un .cpp con las tres clases y un main que use las dos formas de reutilización
+        - label: Criterio
+          text: Que puedan decir en una frase por qué Profesor hereda y Curso no
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La derivada empieza con lo de la base
+          desc: Lo público y lo protegido llegan solos, sin escribir una línea más
+        - title: Protegido solo importa con herencia
+          desc: Desde fuera se comporta igual que privado, y por eso la figura tiene dos columnas
+        - title: Tiene un gana casi siempre
+          desc: La composición cambia una pieza en una línea, la herencia toca toda la rama
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La jerarquía terminada y una decisión justificada
+      brief: Terminen el laboratorio y agreguen una tercera clase que hayan tenido que decidir entre heredar y componer, con un comentario de bloque que explique en tres renglones por qué eligieron una y no la otra.
+      meta:
+        - [Entrega, Antes de la sesión 10]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Herencia", "Requisito", "El constructor de la base se llama desde la lista de inicialización"]
+        - ["Composición", "Requisito", "Curso delega en su miembro sin heredar de él"]
+        - ["Justificación", "Requisito", "El comentario aplica la prueba de es un contra tiene un"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, arreglos y cadenas. Muchos datos del mismo tipo con un solo nombre.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

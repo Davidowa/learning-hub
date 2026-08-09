@@ -1,0 +1,379 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 6
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 06 · Tema 3 · Propiedades fundamentales
+      title: Programación Orientada a Objetos
+      subtitle: Juntar los datos con quien los cuida, decidir qué se ve desde fuera y reutilizar sin heredar. Los tres primeros pilares del tema.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 6 de 17]
+      notes: |
+        La demostración del KeyError es la sesión entera en treinta segundos. Córranla en
+        vivo, con el archivo abierto, y dejen que el grupo proponga la corrección antes de
+        mostrarla. La diferencia entre encapsular y ocultar se entiende ahí, no en la
+        definición.
+
+        Los ejemplos salen de docs/en/courses/python-course/02 - POO/6th Module:
+        la nube de etiquetas, abierta y cerrada, es Code023.py; la computadora armada por
+        composición es la parte final de Code021.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Encapsulamiento
+          desc: Los datos y el comportamiento que los cuida, en la misma clase
+        - title: Ocultamiento
+          desc: Qué es parte del contrato y qué es un detalle que puede cambiar
+        - title: La interfaz pública
+          desc: Corchetes, len y los métodos que sí puede usar quien no escribió la clase
+        - title: Reutilización
+          desc: Función, composición o herencia, y por qué casi siempre la del medio
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Distinguir encapsular de ocultar
+          sub: Lo primero junta datos y comportamiento; lo segundo decide qué se asoma hacia afuera
+        - head: Diseñar una interfaz pública
+          sub: Elegir qué métodos son el contrato y dejar el resto como detalle reemplazable
+        - head: Detectar una fuga
+          sub: Un getter que devuelve la estructura interna deshace todo el trabajo de encapsular
+        - head: Reutilizar por composición
+          sub: Recibir las piezas en el constructor en vez de heredarlas de una clase padre
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: now
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Encapsulamiento
+      lede: La palabra suena a candado, pero de entrada solo significa que los datos y las funciones que los tocan viven juntos.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Encapsular no es lo mismo que ocultar
+      lead: >-
+        Encapsular es poner en la misma clase un dato y el comportamiento que lo cuida.
+        Ocultar es la decisión, posterior y distinta, de no dejar que ese dato se vea desde
+        fuera. Se puede encapsular sin ocultar nada, y ahí empiezan los problemas.
+      panel:
+        label: La pregunta que separa a las dos
+        title: ¿Quién tiene que respetar esta regla?
+        note: >-
+          Si la regla vive dentro de la clase, quien la use no tiene que recordarla. Si vive
+          fuera, todos los archivos que la usan tienen que acordarse, y alguno no lo hará.
+      steps:
+        - text: Junta el dato y sus reglas
+        - text: Decide qué expone la clase
+        - text: Cierra lo que pueda cambiar
+          loop: ↺ lo que quedó abierto es una promesa que tendrás que sostener
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Los tres niveles, otra vez, ahora como decisión de diseño
+      image: img/es/access-levels.png
+      caption: La pregunta no es cuál es más seguro, sino cuál de los tres estás dispuesto a sostener sin cambios.
+      alt: Código externo intentando leer tres atributos de una clase Cuenta, con el privado bloqueado
+
+  - code:
+      eyebrow: El problema
+      title: Una clase con una regla que nadie de fuera conoce
+      filename: nube_abierta.py
+      lang: python
+      source: |
+        class NubeDeEtiquetas:
+            def __init__(self) -> None:
+                self.etiquetas = {}
+
+            def agregar(self, etiqueta: str) -> None:
+                clave = etiqueta.lower()
+                actual = self.etiquetas.get(clave, 0)
+                self.etiquetas[clave] = actual + 1
+
+
+        nube = NubeDeEtiquetas()
+        nube.agregar("Python")
+        nube.agregar("python")
+      annotations:
+        - label: Línea 3
+          text: El diccionario es público, así que cualquiera puede leerlo y escribirlo sin pasar por la clase
+        - label: Línea 6
+          text: Normalizar a minúsculas es la única regla que tiene la clase, y vive dentro de agregar
+        - label: Riesgo
+          text: Quien escriba nube.etiquetas["Python"] desde fuera se salta la regla sin enterarse
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: La segunda línea revienta y la primera no
+      filename: nube_abierta.py
+      lang: python
+      output_label: Salida
+      source: |
+        print(nube.etiquetas["python"])
+        print(nube.etiquetas["c++"])
+      output: |
+        2
+        Traceback (most recent call last):
+          File "nube_abierta.py", line 2
+        KeyError: 'c++'
+
+  - compare:
+      eyebrow: La corrección
+      title: La misma consulta, por la puerta de la clase
+      before:
+        label: Acceso directo
+        file: nube_abierta.py
+        code: |
+          nube.etiquetas["c++"]
+
+          nube.etiquetas["Python"] = 99
+      after:
+        label: Por la interfaz
+        file: nube.py
+        code: |
+          nube["c++"]
+
+          nube["Python"] = 99
+      note: La segunda pasa por __getitem__ y __setitem__, así que devuelve cero en lugar de reventar y normaliza la llave. La regla queda en un solo lugar.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Ocultamiento de información
+      lede: Todo lo que dejes visible es una promesa. Cuanto más chica la interfaz, menos promesas que sostener.
+      block: 2
+
+  - code:
+      eyebrow: La solución
+      title: El diccionario deja de existir para el mundo
+      filename: nube.py
+      lang: python
+      source: |
+        class NubeDeEtiquetas:
+            def __init__(self) -> None:
+                self.__etiquetas: dict[str, int] = {}
+
+            def agregar(self, etiqueta: str) -> None:
+                clave = etiqueta.lower()
+                actual = self.__etiquetas.get(clave, 0)
+                self.__etiquetas[clave] = actual + 1
+
+            def __getitem__(self, etiqueta: str) -> int:
+                return self.__etiquetas.get(etiqueta.lower(), 0)
+
+            def __setitem__(self, etiqueta, cuenta) -> None:
+                self.__etiquetas[etiqueta.lower()] = cuenta
+      annotations:
+        - label: Línea 3
+          text: El diccionario deja de ser parte del contrato. Mañana puede ser una lista y a nadie le consta.
+        - label: Línea 10
+          text: __getitem__ hace que nube["python"] funcione, y devuelve cero en lugar de lanzar KeyError
+        - label: Faltan dos
+          text: __len__ y __iter__ se agregan igual, y con ellos len(nube) y el for empiezan a funcionar
+
+  - table:
+      eyebrow: Diseño de la interfaz
+      title: Qué es contrato y qué es detalle
+      headers: ["Miembro", "Qué es", "Quién lo usa"]
+      rows:
+        - ["agregar", "Contrato público", "Cualquiera"]
+        - ["__getitem__", "Contrato público", "El operador de corchetes"]
+        - ["__len__", "Contrato público", "La función len"]
+        - ["__etiquetas", "Detalle interno", "Solo la clase"]
+        - ["etiqueta.lower()", "Detalle interno", "Solo la clase"]
+
+  - figure:
+      eyebrow: Abstracción
+      title: Quedarse con lo que el problema necesita saber
+      image: img/es/ct-03.png
+      caption: Ocultar información es dibujar la taza sin la decoración, porque el problema solo pide que tenga asa.
+      alt: Una taza decorada que se simplifica en dos pasos hasta su contorno
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de encapsular a medias
+      items:
+        - label: Error 01
+          title: Encapsular y luego devolverlo entero
+          desc: Un getter que regresa la lista interna deja que cualquiera la modifique sin pasar por tus reglas
+        - label: Error 02
+          title: Confundir encapsular con ocultar
+          desc: Poner dos guiones bajos a todo no es diseño. La pregunta es qué promesa quieres sostener.
+        - label: Error 03
+          title: Cerrar todo desde el primer día
+          desc: Una clase donde nada es público no le sirve a nadie, y la abrirás a la primera petición
+        - label: Error 04
+          title: La regla repetida fuera de la clase
+          desc: Si tres archivos hacen .lower() antes de llamar al método, la regla no vive donde debería
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Reutilización
+      lede: Tres maneras de no escribir el mismo código dos veces, en orden de menos a más compromiso.
+      block: 3
+
+  - diagram:
+      eyebrow: Diagrama
+      title: Tres formas de reutilizar, y lo que cuesta cada una
+      blocks:
+        - label: Lo más simple
+          title: Función
+          desc: El comportamiento no depende de ningún estado, así que no necesita una clase
+        - label: Lo más flexible
+          title: Composición
+          desc: La clase recibe instancias de otras y les delega el trabajo que no le toca
+          dark: true
+        - label: Lo más rígido
+          title: Herencia
+          desc: La clase toma el comportamiento del padre y queda atada a cada cambio suyo
+      note: >-
+        La composición se prefiere porque una pieza se cambia sin tocar las demás. La herencia
+        se gana el lugar cuando de verdad hay una relación de "es un" y no solo de "usa un".
+
+  - code:
+      eyebrow: Composición
+      title: Una computadora que no hereda de nada
+      filename: computadora.py
+      lang: python
+      source: |
+        class Disco:
+            def leer(self, archivo: str) -> None:
+                print(f"Leyendo {archivo}...")
+
+
+        class Computadora:
+            def __init__(self, cpu, disco) -> None:
+                self.cpu = cpu
+                self.disco = disco
+
+            def iniciar(self, programa: str) -> None:
+                self.disco.leer(f"{programa}.exe")
+                self.cpu.ejecutar()
+      annotations:
+        - label: Línea 1
+          text: Disco y CPU son clases sueltas que no saben nada la una de la otra, y se prueban por separado
+        - label: Línea 6
+          text: Computadora no hereda de nadie. Recibe las piezas armadas y les delega el trabajo.
+        - label: Para cambiar el disco
+          text: Se le pasa otro objeto que tenga leer. Ni una línea de Computadora se modifica.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: fuga.py
+      lang: python
+      source: |
+        class Carrito:
+            def __init__(self):
+                self.__productos = []
+
+            def obtener(self):
+                return self.__productos
+
+
+        c = Carrito()
+        c.obtener().append("X1")
+        print(len(c.obtener()))
+      options:
+        - '0, porque __productos es privado'
+        - '1, porque el getter devolvió la lista de verdad'
+        - 'AttributeError, obtener no puede tocar __productos'
+        - 'TypeError, no se puede hacer append sobre un método'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 1, y el doble guion bajo no lo impidió
+      headers: ["Paso", "Instrucción", "Qué devuelve", "__productos"]
+      rows:
+        - ["1", "c = Carrito()", "–", "[]"]
+        - ["2", "c.obtener()", "la lista misma", "[]"]
+        - ["3", ".append('X1')", "None", "['X1']"]
+        - ["4", "len(c.obtener())", "1", "['X1']"]
+      verdict: El getter devolvió una referencia a la lista interna, no una copia. Encapsular el nombre del atributo no encapsula el objeto que hay dentro.
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: La prueba del cambio
+      statement: Un dato está bien encapsulado si puedes cambiar cómo se guarda por dentro sin tocar una sola línea fuera de la clase.
+      points:
+        - label: Cómo se aplica
+          text: Cambia el diccionario por una lista de pares y vuelve a correr las pruebas sin editarlas
+        - label: Si pasa
+          text: Ese dato era un detalle interno y estaba guardado en el lugar correcto
+        - label: Si falla
+          text: Alguien de fuera dependía de la forma del dato, y eso es exactamente lo que hay que cerrar
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Cerrar un inventario, en parejas
+      brief: Reciben una clase Inventario con un diccionario público de productos y un archivo de pruebas. Ciérrenla sin cambiar ni una línea del archivo de pruebas.
+      blocks:
+        - label: Restricciones
+          text: El diccionario queda privado y la clase expone agregar, corchetes y len
+        - label: Entregable
+          text: Un archivo .py con la clase cerrada, y el archivo de pruebas tal como se los entregaron
+        - label: Criterio
+          text: Que pedir un producto inexistente devuelva cero en lugar de lanzar KeyError
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Encapsular junta, ocultar decide
+          desc: Lo primero pone datos y comportamiento en la misma clase; lo segundo elige qué se asoma
+        - title: Un getter puede deshacer el encapsulamiento
+          desc: Si devuelve la estructura interna, cualquiera la modifica sin pasar por ninguna de tus reglas
+        - title: La composición reutiliza mejor que la herencia
+          desc: Cambiar una pieza que se recibe cuesta una línea; cambiar un padre cuesta toda la rama
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Toma el inventario del laboratorio y cambia el diccionario interno por una lista de tuplas, sin tocar el archivo de pruebas. Explica en un párrafo qué tuviste que modificar.
+      meta:
+        - [Entrega, Antes de la sesión 7]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Encapsulamiento", "40 %", "El archivo de pruebas corre sin una sola modificación"]
+        - ["Interfaz", "30 %", "La clase expone agregar, corchetes y len, y nada más"]
+        - ["Reflexión", "30 %", "El párrafo explica qué habría pasado si el diccionario hubiera sido público"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, herencia, jerarquía de clases y el modificador protected.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

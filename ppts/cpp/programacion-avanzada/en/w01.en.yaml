@@ -1,0 +1,395 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 1
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 01 · Unit 1 · Basic elements of C++
+      title: Advanced Programming
+      subtitle: The environment, what happens between writing and running, and how to read a C++ program line by line.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 1 of 17]
+      notes: |
+        This session is taught with Visual Studio open and projected. Every block has a live
+        demonstration, and the group should be creating their own project during the first
+        block rather than watching one being created.
+
+        The code examples in this course are written for the course. There is no source
+        folder in the repository like the one COM102 has, so do not promise a file students
+        can clone. What is on the slide is what there is.
+
+        The __cplusplus and _MSVC_LANG values on the verification slide were measured on
+        Visual Studio Community 2026, toolset 14.51, _MSC_VER 1951. The C2143 message is
+        copied from a real build. If the room has a different version, measure again before
+        stating it.
+
+        The reading for the week is Malik, eighth edition, chapters 1 and 2. The course
+        documents cite the fifth edition, where it is chapter 2. The PDF in the repository
+        is the eighth.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The environment
+          desc: Solution, project, files and the two build configurations
+        - title: Source to executable
+          desc: What the preprocessor, the compiler and the linker do, in that order
+        - title: Anatomy
+          desc: The parts every C++ program has, including the shortest one
+        - title: Debugging
+          desc: Stopping a program mid run and looking at what its variables hold
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Configure a console project
+          sub: With the standard set to C++20, which is not switched on in any configuration by default
+        - head: Explain what runs before your program
+          sub: Preprocessor, compiler and linker, and which of the three is the one complaining
+        - head: Read a complete C++ program
+          sub: The include, the main function, the return value and where the name std comes from
+        - head: Find a bug with the debugger
+          sub: Breakpoint, stepping one line at a time, and the locals window
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: now
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: todo
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The working environment
+      lede: Half an hour spent well today avoids the problem that shows up in week nine and that nobody connects back to this session.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A solution holds projects and a project holds files
+      lead: >-
+        The solution is the working folder. Inside it goes at least one project, and the
+        project is the thing that knows which files get compiled, with which options, and
+        what comes out. Both levels exist because a real program is rarely one executable.
+      panel:
+        label: The next morning
+        title: Open the .sln, not the .cpp
+        note: >-
+          Open the loose .cpp and Visual Studio will edit it happily, but there is no
+          project to build, and half the menu turns grey without telling you why.
+      steps:
+        - text: The solution groups projects
+        - text: The project holds the options
+        - text: The file holds your code
+          loop: ↺ the language standard is set at the middle level
+
+  - table:
+      eyebrow: On disk
+      title: Which file is which, and which ones you actually touch
+      headers: ["File", "What it is", "How often you touch it"]
+      rows:
+        - [".sln", "The solution and its list of projects", "Almost never, and never by hand"]
+        - [".vcxproj", "The project and its build options", "Through the properties window"]
+        - [".cpp", "The source code you write", "All the time"]
+        - [".h", "What several .cpp files share", "From unit 3 onwards"]
+        - ['x64\Debug\', "What the build produces", "Never, and it is not submitted"]
+
+  - steps:
+      eyebrow: Configuration
+      title: Setting the standard to C++20, in five steps
+      items:
+        - label: Step 01
+          title: Open properties
+          desc: Right click the project, not the solution. They are different windows.
+        - label: Step 02
+          title: All configurations
+          desc: Change it at the top before touching anything, or Release keeps its old value
+        - label: Step 03
+          title: Go to Language
+          desc: C/C++, Language, C++ Language Standard
+        - label: Step 04
+          title: Pick C++20
+          desc: The entry reads ISO C++20 Standard and passes /std:c++20 underneath
+        - label: Step 05
+          title: Rebuild everything
+          desc: Build, Rebuild Solution. Changing the standard does not redo what is already compiled.
+
+  - diagram:
+      eyebrow: Configurations
+      title: The same code, built in two different ways
+      blocks:
+        - label: While you learn
+          title: Debug
+          desc: Unoptimised and carrying symbol information. The debugger can stop the program and show you every variable.
+          dark: true
+        - label: When you ship
+          title: Release
+          desc: Optimised and stripped of symbols. It runs faster and the debugger stops being much use to you.
+      note: >-
+        Almost every project option is stored per configuration, the standard included.
+        That is the reason for step 02, and also the reason a project builds on the machine
+        of whoever wrote it and fails on the one next to it.
+
+  - divider:
+      eyebrow: Block 02
+      title: From source to executable
+      lede: C++ is compiled, which means two programs that are not yours read yours before a single line of it runs.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnosis
+      title: Working out who is complaining when a build fails
+      image: img/en/compilation.png
+      caption: The compiler works one file at a time. The linker is the only one that sees the whole program, which is why its errors look so different.
+      alt: Three boxes, the source file, the object and the executable, joined by the compiler and the linker
+
+  - code:
+      eyebrow: Anatomy
+      title: The shortest program that already does something
+      filename: hello.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "Hello, Advanced Programming\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 1
+          text: The preprocessor pastes the contents of iostream here before the compiler sees anything
+        - label: Line 3
+          text: main is where the operating system comes in. A program has exactly one of them.
+        - label: Line 6
+          text: Zero tells the system it went well. Any other number means it did not.
+        - label: Risk
+          text: No accented characters, on purpose. The Windows console is not UTF-8 and they print as garbage.
+          accent: true
+
+  - code_output:
+      eyebrow: Verification
+      title: How to actually know which standard ended up set
+      filename: standard.cpp
+      lang: cpp
+      output_label: With /std:c++20 set
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "__cplusplus " << __cplusplus << "\n";
+            std::cout << "_MSVC_LANG  " << _MSVC_LANG << "\n";
+            return 0;
+        }
+      output: |
+        __cplusplus 199711
+        _MSVC_LANG  202002
+      notes: |
+        Measured on Visual Studio Community 2026, toolset 14.51, _MSC_VER 1951.
+
+        The first number looks like it says the project is on C++98, and it is not true.
+        MSVC keeps __cplusplus frozen at 199711 for compatibility with old code, and only
+        reports the real value if /Zc:__cplusplus is added. The macro that tells the truth
+        with nothing configured is _MSVC_LANG, and 202002 is C++20.
+
+        Worth running live. It is the first time they will see the compiler answer something
+        other than what they expected, and the explanation is historical rather than a
+        mistake of theirs.
+
+  - code_output:
+      eyebrow: When it will not build
+      title: The compiler points at the line where it stopped understanding
+      filename: broken.cpp
+      lang: cpp
+      output_label: Error list
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << "Hello\n"
+            return 0;
+        }
+      output: |
+        broken.cpp(6): error C2143:
+        syntax error: missing ';'
+        before 'return'
+      notes: |
+        The semicolon is missing on line 5 and the message says line 6. That is not a defect
+        in the compiler. Until the semicolon shows up the statement is still open, so the
+        first thing that does not belong turns up on the following line.
+
+        This message is copied from a real command line build. Inside the environment it
+        looks almost the same, with the column added in the parentheses.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: Fixing from the bottom up
+          desc: The first error usually causes the rest. Fix the topmost one and rebuild before touching another.
+        - label: Error 02
+          title: Mixing up C2143 and LNK2019
+          desc: The first is syntax and comes from the compiler. The second is a declared function nobody wrote.
+        - label: Error 03
+          title: Configuring only Debug
+          desc: The standard gets set in one configuration and not the other, and it breaks the day you build Release
+        - label: Error 04
+          title: Trusting __cplusplus
+          desc: On MSVC it reports 199711 even with the project on C++20. The macro that works here is _MSVC_LANG.
+
+  - method:
+      eyebrow: Criterion
+      title: An error message reads in three parts
+      statement: The compiler does not guess what you meant to write. It tells you the point where it stopped understanding, which is almost never the point where the mistake is.
+      points:
+        - label: Where
+          text: The file and the line in parentheses. Start looking there and go up, not down.
+        - label: What
+          text: The C2143 or LNK2019 code. Searching for it verbatim brings up Microsoft's explanation with examples.
+        - label: Which first
+          text: Always the topmost one. The ones below are usually consequences and clear on their own.
+
+  - divider:
+      eyebrow: Block 03
+      title: Debugging
+      lede: A program that compiles and gives the wrong answer has no message to read. That is what the debugger is for.
+      block: 3
+
+  - code:
+      eyebrow: The problem
+      title: It builds, it runs, and the average is wrong
+      filename: average.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            int exam1 = 78;
+            int exam2 = 85;
+            int exam3 = 91;
+            int total = exam1 + exam2 + exam3;
+            int average = total / 4;
+            std::cout << "Average: " << average << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 8
+          text: The bug is not here. total holds 254 and that is right, even though what follows comes out wrong.
+        - label: Line 9
+          text: There are three exams and it is dividing by four. The compiler has no way of knowing that.
+        - label: Breakpoint
+          text: F9 on line 9. The program stops before running it, with total already computed.
+        - label: Risk
+          text: Integer division truncates. Even with the right divisor, 254 over 3 gives 84 and not 84.67.
+          accent: true
+
+  - table:
+      eyebrow: Tools
+      title: The four windows you will use all term
+      headers: ["Window", "What it shows", "When it helps"]
+      rows:
+        - ["Locals", "The live variables of this function", "Almost always. It is the first one you open."]
+        - ["Watch", "Only the expressions you add yourself", "When there are many variables and two of them matter"]
+        - ["Call Stack", "Who called whom to get here", "From unit 3 onwards, once there are functions"]
+        - ["Immediate", "Evaluates whatever you type, without rebuilding", "For testing a fix before you write it"]
+      notes: |
+        On a Spanish installation these are Locales, Inspección, Pila de llamadas and
+        Inmediato. Worth saying both names, because any answer they find online will use
+        the English ones.
+
+  - quiz:
+      eyebrow: Quick question
+      question: The breakpoint is on line 9. What does Locals show when it stops?
+      filename: average.cpp
+      lang: cpp
+      source: |
+        int total = exam1 + exam2 + exam3;
+        int average = total / 4;
+      options:
+        - 'total at 254 and average holding garbage, the line has not run'
+        - 'total at 254 and average at 63, the line already ran'
+        - 'both of them empty, since main has barely started'
+        - 'total at 254 and average at 0, which is its starting value'
+
+  - trace:
+      eyebrow: Answer
+      title: The debugger stops before running the line, not after
+      headers: ["Step", "Action", "total", "average"]
+      rows:
+        - ["1", "F5, stops on line 9", "254", "garbage"]
+        - ["2", "F10, runs line 9", "254", "63"]
+        - ["3", "F10, prints the result", "254", "63"]
+        - ["4", "You change the 4 to a 3", "254", "84"]
+      verdict: An uninitialised variable does not hold zero, it holds whatever was in that memory. And with the divisor fixed it comes out at 84, not 84.67, because integer division throws the fraction away.
+
+  - lab:
+      eyebrow: Lab
+      title: One project configured and one bug found, in pairs
+      brief: Create a console project, set it to C++20 in both configurations, and build the average program exactly as it is on the slide. Find the bug using the debugger and nothing else.
+      blocks:
+        - label: Constraint
+          text: No adding print statements. Breakpoints and the Locals window only.
+        - label: Deliverable
+          text: A screenshot with the program stopped and total visible, plus the corrected .cpp file
+        - label: Criterion
+          text: That you can say which line it stopped on and why average did not hold its final value yet
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The standard is not set for you
+          desc: A new project builds as C++14 until somebody opens the properties and changes it
+        - title: Compiling and linking are two steps
+          desc: C2143 comes from the compiler and LNK2019 from the linker, and each is fixed elsewhere
+        - title: The debugger stops beforehand
+          desc: What you see in Locals is the state just before the marked line runs, not after
+
+  - homework:
+      eyebrow: For the next session
+      title: The week's project, submitted and corrected
+      brief: Submit the lab project with the standard on C++20 in both Debug and Release, the average corrected, and a block comment above main explaining in two lines what the original program was doing wrong.
+      meta:
+        - [Due, Before session 2]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Configuration", "Required", "The project builds as C++20 in both configurations"]
+        - ["Correctness", "Required", "The average is computed from the three exams that exist"]
+        - ["Debugging", "Required", "The screenshot shows the program stopped with the Locals window open"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, variables, constants, operators, and why the computer answered 63 when asked for 254 over 4.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

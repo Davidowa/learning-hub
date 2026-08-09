@@ -16,7 +16,10 @@ $RECYCLE.BIN/
 *.lnk
 
 # --- Editors / IDEs ---
-.vscode/
+# .vscode/* and not .vscode/, because git cannot re-include a file whose parent
+# directory is excluded: with the trailing slash the four exceptions below never
+# take effect and the shared settings stay untracked.
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -250,6 +253,12 @@ Saved/
 # Keep source macros. Ignore compiled Office binaries:
 *.exd
 
+# --- Course script output ---
+# Charts and reports the data modules write when you run them. Regenerate with
+# the scripts; the CSV inputs under 06 - Advanced/data stay tracked.
+docs/**/06 - Advanced/A05 - Pandas/output/
+docs/**/06 - Advanced/A06 - Data Visualization/output/
+
 # --- MkDocs / docs build ---
 site/
 .cache/
@@ -274,3 +283,4 @@ secrets.json
 *.swp
 *.swo
 *~
+

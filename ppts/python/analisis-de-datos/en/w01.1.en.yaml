@@ -1,0 +1,322 @@
+meta:
+  course: Data Analysis
+  code: TIA502
+  lang: en
+  language: python
+  week: 1.1
+  footer: DATA ANALYSIS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 01 · Bridge · From Excel to Python
+      title: Data Analysis
+      subtitle: What you already know about spreadsheets, said in Python. And the four places where the analogy stops working.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA502 · Business]
+        - [Session, Bridge · Week 1]
+      notes: |
+        This group is not here to become programmers. They come from finance, marketing,
+        international business and human resources, and they already do non-trivial work
+        in Excel. The session exists to name what they know before teaching new syntax.
+
+        The most expensive opening mistake is treating them as absolute beginners. They
+        are not. They are fluent in a different language. If block 01 feels obvious to
+        them, the session is going well.
+
+        The examples come from docs/en/courses/python-course/06 - Advanced: A04 reads a
+        CSV by hand, A05 does the same work with pandas, A06 is the charts. The data sits
+        in 06 - Advanced/data and make_datasets.py rebuilds it from a fixed seed, so the
+        numbers you quote in class always match the file.
+
+        The sales here are that same data set, cut to six months so it fits on a code
+        card. The arithmetic has been checked.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: The dictionary
+          desc: Everything you already do in a sheet has a name in Python
+        - title: Where it breaks
+          desc: Four differences that cost hours when nobody says them early
+        - title: The first script
+          desc: Twelve months of sales summarised without opening the sheet
+        - title: Your turn
+          desc: A case from your own field, translated on paper before code
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Translate a formula into an expression
+          sub: What you write after the equals sign is nearly the same on both sides
+        - head: Name your data instead of pointing at it
+          sub: A variable says what it holds; cell B7 says nothing at all
+        - head: Recognise the four breaking points
+          sub: Zero indexing, recalculation, types, and the trail your work leaves
+        - head: Summarise a table without opening Excel
+          sub: Add up, average and find the maximum in five lines
+        - head: Explain why it is worth the trouble
+          sub: What a spreadsheet stops being able to do once the table grows
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: todo
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: You already program, just in another syntax
+      lede: A spreadsheet is a language. It has values, names, functions and conditions. What changes is where you write them.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A formula is already a program
+      lead: >-
+        When you write the product of two cells you are doing what any program does: you
+        take input data, apply an operation, and store the result somewhere that has a
+        name. Python is not asking you for a new idea. It is asking you to write that
+        same idea a different way.
+      panel:
+        label: What does change
+        title: The result goes to a name, not to a cell
+        note: >-
+          In the sheet the result lives where you wrote the formula. In Python you give it
+          a name and you decide where it lives and how long it lasts.
+      steps:
+        - text: You choose the input data
+        - text: You write the operation that combines them
+        - text: You give the result a name
+          loop: ↺ and that name is what the next line uses
+
+  - table:
+      eyebrow: Block 01 · Equivalences · 1 of 2
+      title: The dictionary, first half
+      headers: [Concept, In the spreadsheet, In Python]
+      rows:
+        - ["Named data", "A cell with a name", "A variable"]
+        - ["Formula", "Price times quantity", "amount = price * quantity"]
+        - ["Function", "AVERAGE over a range", "mean() over a list"]
+        - ["Condition", "IF with two outcomes", "if and else"]
+
+  - table:
+      eyebrow: Block 01 · Equivalences · 2 of 2
+      title: The dictionary, second half
+      headers: [Concept, In the spreadsheet, In Python]
+      rows:
+        - ["Column", "The range B2:B500", "A list"]
+        - ["Lookup table", "VLOOKUP on a catalogue", "A dictionary"]
+        - ["The whole sheet", "Rows, columns and headers", "A DataFrame"]
+
+  - compare:
+      eyebrow: Block 01 · Translation
+      title: The same four operations, written twice
+      before:
+        label: In the sheet
+        file: sales.xlsx
+        lang: excel
+        code: |
+          =B2*C2
+          =SUM(D2:D13)
+          =AVERAGE(D2:D13)
+          =IF(D2>50000, "target", "below")
+      after:
+        label: In Python
+        file: sales.py
+        code: |
+          amount = price * quantity
+          total = sum(amounts)
+          average = total / len(amounts)
+          status = "target" if amount > 50000 else "below"
+      note: >-
+        The equals sign in a sheet opens a formula. The equals sign in Python stores a
+        result. That is the only piece of punctuation that matters today.
+
+  - figure:
+      eyebrow: Block 01 · Perspective
+      title: Both live on the same rung
+      image: img/en/ct-09.png
+      caption: Neither the sheet nor Python talks to the machine directly. Both are high-level languages, which is why they resemble each other so much.
+      alt: A ladder of abstraction levels, high-level language at the top and machine code at the foot
+
+  - divider:
+      eyebrow: Block 02
+      title: Where it stops resembling
+      lede: Four real differences. None of them is hard, and every one of them costs an afternoon when nobody says it early.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Differences
+      title: The four breaking points to know from today
+      headers: [Point, In the spreadsheet, In Python]
+      rows:
+        - ["First element", "Row number 1", "Index 0"]
+        - ["Recalculation", "Automatic when a value changes", "Only when you run it again"]
+        - ["Types", "The cell guesses the format", "The value has a type, no guessing"]
+        - ["Trail", "A click leaves no record", "The script is the whole recipe"]
+        - ["Size", "You drag it until it stops responding", "Millions of rows without trouble"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four traps for anyone coming from Excel
+      items:
+        - label: Error 01
+          title: Counting from one
+          desc: The first row of your table is row 1 in the sheet and index 0 in Python. Everything else shifts by one place.
+        - label: Error 02
+          title: Expecting it to recalculate itself
+          desc: Changing a value updates nothing. Either you run the script again, or the number on screen is already stale.
+        - label: Error 03
+          title: Taking the type for granted
+          desc: >-
+            A postal code read from a file arrives as text. Adding it up raises no error:
+            it glues the digits together.
+        - label: Error 04
+          title: Working without saving the how
+          desc: A click leaves no trail. If the analysis is not written down, it cannot be repeated or defended to anyone.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The list holds twelve months. What does months[12] return?
+      filename: indices.py
+      source: |
+        months = ["jan", "feb", "mar", "apr", "may", "jun",
+                  "jul", "aug", "sep", "oct", "nov", "dec"]
+
+        print(months[12])
+      options:
+        - "dec, because December is month number twelve"
+        - "jan, because the list wraps around"
+        - "IndexError, because the last index is 11"
+        - "None, because that position is empty"
+
+  - divider:
+      eyebrow: Block 03
+      title: The first script
+      lede: Twelve months of sales summarised in five lines, without opening the spreadsheet once.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · Sales
+      title: Two columns and three questions
+      filename: sales.py
+      source: |
+        months = ["jan", "feb", "mar", "apr", "may", "jun"]
+        sales = [42000, 51500, 38900, 60100, 55300, 47800]
+
+        total = sum(sales)
+        average = total / len(sales)
+        best = months[sales.index(max(sales))]
+      annotations:
+        - label: Two columns
+          text: Each list is a column of your sheet. Position 0 of one belongs with position 0 of the other.
+        - label: The same functions
+          text: sum is SUM, len is COUNT, and the division that joins them is the one you already use.
+        - label: The peak and its month
+          text: max gives the highest value, index gives its position, and that position gives you the month.
+        - label: Risk
+          text: If the two lists stop having the same length, the pairing breaks with no warning at all.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Result
+      title: What it prints, and why those numbers
+      filename: sales.py
+      source: |
+        print(f"Total: {total:,.0f}")
+        print(f"Average: {average:,.0f}")
+        print(f"Best month: {best}")
+      output: |
+        Total: 295,600
+        Average: 49,267
+        Best month: apr
+
+  - compare:
+      eyebrow: Block 03 · Where this goes
+      title: The same thing, once the table outgrows your head
+      before:
+        label: Today · lists
+        file: sales.py
+        code: |
+          total = sum(sales)
+          average = total / len(sales)
+          best = months[sales.index(max(sales))]
+      after:
+        label: Week 15 · pandas
+        file: 05_group_and_aggregate.py
+        code: |
+          import pandas as pd
+
+          df = pd.read_csv("sales_clean.csv")
+          print(df["amount"].sum())
+          print(df.groupby("region")["amount"].mean())
+      note: >-
+        It is the same idea. pandas takes away the job of keeping the columns paired by
+        hand, which is exactly where it breaks once the table grows.
+
+  - lab:
+      eyebrow: Lab
+      title: Translate a sheet of your own
+      brief: >-
+        Take a spreadsheet you actually use and write on paper, with no code, what each
+        formula does: which data goes in, which operation applies, and what the result
+        would be called.
+      blocks:
+        - label: Deliverable
+          text: One sheet of paper with three formulas broken into those three parts
+        - label: Constraint
+          text: Do not open Python. Today only the idea gets translated, not the syntax.
+        - label: Hint
+          text: Start with the longest formula. It is almost always three operations stacked into one.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A formula is already a program
+          desc: Input, operation and a named result. Python changes where you write it, not how you think it
+        - title: The index starts at zero
+          desc: It is the costliest mistake of the first weeks, and the easiest one to avoid once you know it
+        - title: Nothing recalculates on its own
+          desc: The script is the recipe. That is why the analysis can be repeated, reviewed and defended later
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Bring a .csv file from your own field with at least thirty rows and five columns, and write three lines on the question you would like it to answer.
+      meta:
+        - [Due, Before week 2]
+        - [Format, Blackboard · .csv and .txt]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Data", "50 %", "The file opens, carries headers and has at least thirty rows"]
+        - ["Question", "30 %", "The question can be answered with the columns you brought"]
+        - ["Source", "20 %", "You say where the file came from and which period it covers"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, how a problem gets solved before a single line of code is written.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,389 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 8
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 08 · Topic 3 · Core properties
+      title: Object-Oriented Programming
+      subtitle: The same message answered in different ways, the contract that forces an answer, and the close of the first three units.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 8 of 17]
+      notes: |
+        This closes topic 3 and closes the midterm. Keep block 3 intact for the exam
+        logistics even if block 2 runs short: the question that arrives by email on Sunday
+        is always about the format, never about abstract classes.
+
+        The examples come from docs/en/courses/python-course/02 - POO/6th Module:
+        Animal, Dog and Cat with an overridden talk are from Code027.py; the abstract
+        Stream with abstractmethod is Code026.py; Shape, Circle and Rectangle come from
+        the end of Code020.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Polymorphism
+          desc: One message, one different answer from each class
+        - title: Overriding
+          desc: Replacing the parent's method, or extending it with super
+        - title: Abstract and interfaces
+          desc: Declaring the contract before writing any of the body
+        - title: First midterm
+          desc: What is covered, how it is submitted and how it is graded
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Override a method
+          sub: Replace the body in the child, and decide whether to extend the parent's with super
+        - head: Walk different objects alike
+          sub: Write a loop calling the same method without asking what class each object is
+        - head: Declare an abstract class
+          sub: ABC plus @abstractmethod, and exactly what fails when one of the two is missing
+        - head: Sit the first midterm
+          sub: With units 1, 2 and 3 practised at the keyboard rather than read
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: now
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Polymorphism and overriding
+      lede: Many ways of answering the same thing. This is the pillar that lets you add a class without touching anything already written.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What polymorphism is
+      lead: >-
+        Objects of different classes answering the same message, each in their own way, with
+        the caller never having to know which one it got. That is what lets you add a new
+        class without touching a single line of the code that already worked.
+      panel:
+        label: Where you see it
+        title: In the calling loop, not in the class
+        note: >-
+          Polymorphism does not show up in the class that implements it, but in the loop that
+          calls them all alike. If that loop has a type check in it, you are not using it yet.
+      steps:
+        - text: The parent declares the method
+        - text: Each child writes its own
+        - text: The caller never asks the type
+          loop: ↺ a new class arrives without the loop changing
+
+  - figure:
+      eyebrow: Diagnosis
+      title: One call, three answers
+      image: img/en/polymorphism.png
+      caption: The line in the loop never changes. What changes is the class of the object it gets on each pass.
+      alt: A loop sending the same message to three objects, each answering with a different sound
+
+  - code:
+      eyebrow: Overriding
+      title: Three classes and one method name
+      filename: animals.py
+      lang: python
+      source: |
+        class Animal:
+            def talk(self) -> None:
+                print("Some animal noise")
+
+
+        class Dog(Animal):
+            def talk(self) -> None:
+                print("Woof")
+
+
+        class Cat(Animal):
+            def talk(self) -> None:
+                print("Meow")
+      annotations:
+        - label: Line 6
+          text: Dog defines talk again. For a dog, the parent's version is covered up.
+        - label: Line 11
+          text: Cat does the same with a different body, and neither knows the other exists
+        - label: Mind the words
+          text: Overriding replaces the body in the child. Overloading would mean two signatures, and Python has none.
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The loop that never asks what class it got
+      filename: chorus.py
+      lang: python
+      output_label: Output
+      source: |
+        animals = [Dog(), Cat(), Dog()]
+
+        for animal in animals:
+            animal.talk()
+      output: |
+        Woof
+        Meow
+        Woof
+
+  - code:
+      eyebrow: Extending instead of replacing
+      title: When the child wants the parent's work and more
+      filename: invoice.py
+      lang: python
+      source: |
+        class Document:
+            def save(self) -> None:
+                print("Validating fields")
+
+
+        class Invoice(Document):
+            def save(self) -> None:
+                super().save()
+                print("Stamping the invoice")
+
+
+        Invoice().save()
+      annotations:
+        - label: Line 8
+          text: super().save() runs the parent's work first and its own after. It extends, not replaces.
+        - label: When to skip it
+          text: When the child does something entirely different and the parent's work would get in the way
+        - label: Order matters
+          text: Putting the super call last flips the sequence. Decide it on purpose, not out of habit.
+
+  - divider:
+      eyebrow: Block 02
+      title: Abstract classes and interfaces
+      lede: A class whose whole job is to force other classes to write a method. It cannot be built, and that is exactly the point.
+      block: 2
+
+  - code:
+      eyebrow: Python
+      title: A parent that cannot be constructed
+      filename: streams.py
+      lang: python
+      source: |
+        from abc import ABC, abstractmethod
+
+
+        class Stream(ABC):
+            def open(self) -> None:
+                self.opened = True
+
+            @abstractmethod
+            def read(self) -> None:
+                ...
+
+
+        class MemoryStream(Stream):
+            def read(self) -> None:
+                print("Reading from memory")
+      annotations:
+        - label: Line 4
+          text: Inheriting from ABC marks the class abstract, and with that it stops being buildable
+        - label: Line 8
+          text: The decorator forces every child to write read. Leave it out and the error fires on construction.
+        - label: Risk
+          text: Without inheriting from ABC the decorator prevents nothing. The two have to travel together.
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The child gets built, the parent does not
+      filename: try_stream.py
+      lang: python
+      output_label: Output
+      source: |
+        s = MemoryStream()
+        s.open()
+        s.read()
+
+        other = Stream()
+      output: |
+        Reading from memory
+        TypeError: Can't instantiate
+        abstract class Stream
+
+  - table:
+      eyebrow: Vocabulary
+      title: Four ways to declare a contract
+      headers: ["Kind of class", "Instantiates", "Carries code", "In Python"]
+      rows:
+        - ["Concrete", "Yes", "All of it", "class Dog(Animal):"]
+        - ["Abstract", "No", "Part of it", "class Stream(ABC):"]
+        - ["Interface", "No", "None", "Only @abstractmethod"]
+        - ["Protocol", "Not applicable", "None", "typing.Protocol"]
+
+  - diagram:
+      eyebrow: Diagram
+      title: Who declares, who implements and who trusts
+      blocks:
+        - label: The abstract parent
+          title: Declares
+          desc: States which methods anything hanging off it will have, without saying how
+        - label: Each child
+          title: Implements
+          desc: Writes the body of every abstract method, its own way and on its own
+          dark: true
+        - label: The caller
+          title: Trusts
+          desc: Calls the method without asking which concrete class the object belongs to
+      note: >-
+        That is the whole contract. The caller depends on the abstract parent and on no child,
+        so adding one more child touches not a single line of its code.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to break the contract
+      items:
+        - label: Error 01
+          title: Overriding with a different signature
+          desc: If the child asks for other arguments, the polymorphic loop blows up on the third object
+        - label: Error 02
+          title: '@abstractmethod without ABC'
+          desc: The decorator prevents nothing on its own, and the class gets instantiated as if nothing happened
+        - label: Error 03
+          title: Checking the type before calling
+          desc: An isinstance branch per class is hand-rolled polymorphism, and every new class edits it again
+        - label: Error 04
+          title: An abstract class with one child
+          desc: If there will never be a second, the abstraction is one more layer abstracting nothing
+
+  - quiz:
+      eyebrow: Quick question
+      question: show is written in Shape. Which area runs?
+      filename: shapes.py
+      lang: python
+      source: |
+        class Shape:
+            def area(self):
+                return 0
+
+            def show(self):
+                print(self.area())
+
+        class Circle(Shape):
+            def area(self):
+                return 12.56
+
+        Circle().show()
+      options:
+        - '0, because show lives in Shape and uses Shape.area'
+        - '12.56, because self is a Circle and its area wins'
+        - 'AttributeError, Circle has no show'
+        - 'TypeError, area gets one argument too many'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 12.56, because self never changes type
+      headers: ["Step", "Statement", "Type of self", "Method that runs"]
+      rows:
+        - ["1", "Circle()", "Circle", "–"]
+        - ["2", ".show()", "Circle", "Shape.show"]
+        - ["3", "self.area()", "Circle", "Circle.area"]
+        - ["4", "print(...)", "Circle", "prints 12.56"]
+      verdict: show was inherited from Shape, but self is still a Circle. Python looks for area starting at the object's real class, not at the class where the method was written.
+
+  - divider:
+      eyebrow: Block 03
+      title: First midterm
+      lede: It closes units 1, 2 and 3. Everything on it has already been practised in a lab.
+      block: 3
+
+  - tiers:
+      eyebrow: Exam scope
+      title: What it covers, unit by unit
+      items:
+        - key: U1
+          title: Introduction to OOP
+          desc: Paradigms, the idea of an object, what the approach buys and where it gets in the way
+        - key: U2
+          title: Building blocks
+          desc: Classes, objects, attributes, methods, properties, access, constructors and class members
+        - key: U3
+          title: Core properties
+          desc: Encapsulation, hiding, reuse, inheritance, hierarchy, polymorphism and abstract classes
+        - key: Out
+          title: What it does not cover
+          desc: Files, graphical interfaces and databases, which belong to the second midterm
+
+  - method:
+      eyebrow: How to prepare
+      title: The exam asks you to write classes, not describe them
+      statement: If you cannot type from memory a class with a constructor, a private attribute, a property and a child that overrides a method, you do not know it yet.
+      points:
+        - label: What to practise
+          text: The labs from weeks 4, 6 and 7, solved again without opening the solution
+        - label: What to review
+          text: The diagnosis slides. The four errors on each one are the errors on the exam.
+        - label: What not to do
+          text: Memorising definitions. No question asks for the definition of encapsulation.
+
+  - lab:
+      eyebrow: Lab
+      title: A mock midterm, in pairs
+      brief: Each pair writes three code questions in the style of the ones we have seen, swaps them with another pair, and grades the answers against a two-line rubric.
+      blocks:
+        - label: Constraints
+          text: One question per unit, and none that can be answered with a definition
+        - label: Deliverable
+          text: The three questions, the other pair's answers and the grade with its justification
+        - label: Criterion
+          text: Every question has one correct answer and one trap that sounds reasonable
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Overriding changes the body, not the name
+          desc: The child replaces the parent's method and the caller never learns anything changed
+        - title: An abstract class declares the contract
+          desc: It states which methods will exist without writing the how, and forces each child to finish it
+        - title: Polymorphism deletes the type check
+          desc: Adding a new class touches not one line of the code that is about to use it
+
+  - homework:
+      eyebrow: First midterm
+      title: Submission and grading criteria
+      brief: The exam covers units 1, 2 and 3, and is sat during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
+      meta:
+        - [When, Week 8]
+        - [Format, Blackboard · one .py per question]
+        - [Weight, 20 % of the final grade]
+      rubric:
+        - ["Modelling", "30 %", "The classes match the brief and respect the access levels"]
+        - ["Inheritance", "30 %", "The hierarchies pass the is-a test and chain their constructors"]
+        - ["Polymorphism", "25 %", "The code walks different objects without asking about their type"]
+        - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, advanced functions, modularity and recursion.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

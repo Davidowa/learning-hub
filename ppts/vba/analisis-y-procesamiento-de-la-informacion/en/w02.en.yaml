@@ -1,0 +1,343 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 2
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 02 · Unit 1 · The VBA editor
+      title: Information Analysis and Processing
+      subtitle: Where the code you recorded actually lives. Project, module and procedure, and how to run one line at a time.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 2 of 17]
+      notes: |
+        Ninety minutes. Twenty on the tour of the editor, thirty on procedures, the rest
+        stepping through last week's recorded macro with F8.
+
+        Last session they opened the editor and saw code without knowing where it sat.
+        Today that map gets ordered: a workbook has a project, a project has modules, a
+        module has procedures, a procedure has lines. Everything else this term hangs off
+        those four words.
+
+        The code comes from
+        docs/en/courses/vba-course/01 - Basic Concepts/BasicConcepts.bas,
+        module BasicMacros, procedure MessageAndSubs.
+
+        F8 is what pays off today. Have everyone step through their own recorded macro
+        with the worksheet visible beside the editor, watching the cell change as the
+        highlight moves. It is the first time the code stops being text.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Inside the editor
+          desc: The four windows you will actually use, and the ones that can wait
+        - title: Where the code lives
+          desc: Project, module and procedure, and why it matters which one you put it in
+        - title: Run it and watch it run
+          desc: F5 runs the lot, F8 runs one line, and the second one is what teaches
+        - title: Your turn
+          desc: Last week's macro, stepped through one line at a time
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Find your way around the editor
+          sub: Project Explorer, code window, Immediate and Properties
+        - head: Tell project, module and procedure apart
+          sub: What each one holds, and what gets exported when you hand in an assignment
+        - head: Write a procedure from scratch
+          sub: From Sub to End Sub, with a name of your own and no recorder involved
+        - head: Run one line at a time
+          sub: F8, the yellow highlight, and watching the sheet change as it advances
+        - head: Choose where a macro goes
+          sub: Standard module, sheet module or ThisWorkbook, and what changes between them
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: now
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: todo
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Inside the editor
+      lede: It is a separate window with its own menus and its own files. Excel and the editor are two programs sharing one workbook.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The editor is not inside the sheet
+      lead: >-
+        Alt + F11 opens a different window with its own menu bar. The sheet stays open
+        behind it, and both windows see the same workbook at the same time. That is why
+        you can put them side by side, run one line in the editor and watch the cell
+        change in the sheet without switching windows.
+      panel:
+        label: Worth doing today
+        title: Put the two windows side by side
+        note: >-
+          Half the screen for the editor, half for the sheet. Everything taught with F8
+          depends on being able to see both at once.
+      steps:
+        - text: Alt + F11 opens the editor
+        - text: Alt + F11 again goes back to the sheet
+        - text: Both windows stay alive
+          loop: ↺ and both are looking at the same workbook, at the same time
+
+  - steps:
+      eyebrow: Block 01 · The tour
+      title: The four windows you will actually use
+      items:
+        - label: '01'
+          title: Project Explorer
+          desc: The tree on the left. One node per open workbook, with its sheets and modules inside.
+        - label: '02'
+          title: Code window
+          desc: The big one on the right. This is where you type, and the two lists on top jump between procedures.
+        - label: '03'
+          title: Immediate
+          desc: Ctrl + G. A console where you can ask what something is worth without running the whole macro.
+        - label: '04'
+          title: Properties
+          desc: F4. Barely useful today, and central in week 5 when the user forms arrive.
+
+  - divider:
+      eyebrow: Block 02
+      title: Where the code lives
+      lede: One workbook, one project. One project, several modules. One module, several procedures. One procedure, several lines.
+      block: 2
+
+  - diagram:
+      eyebrow: Block 02 · The tree
+      title: Four words, from the outside in
+      blocks:
+        - label: Project
+          title: A workbook
+          desc: All the code in the file
+        - label: Module
+          title: A .bas file
+          desc: Where you type. Exports as .bas.
+        - label: Procedure
+          title: A macro
+          desc: From Sub to End Sub
+          dark: true
+        - label: Statement
+          title: One line
+          desc: Object, property and value
+      note: >-
+        The Excel macro dialog only lists procedures, and only the ones in standard
+        modules. When your macro is missing from that list, it is almost always because
+        you wrote it inside a sheet module.
+
+  - code:
+      eyebrow: Block 02 · The smallest procedure
+      title: The smallest thing that is already a macro
+      filename: BasicConcepts.bas
+      lang: vba
+      source: |
+        Sub MessageAndSubs()
+
+            ' In this macro we display a message
+            MsgBox "Hello, World!"
+
+        End Sub
+      annotations:
+        - label: Sub
+          text: Opens the procedure and names it. No spaces, and it cannot start with a digit.
+        - label: MsgBox
+          text: Shows a message box and stops the macro until you click OK.
+        - label: End Sub
+          text: Closes the procedure. The editor writes it for you as soon as you type the first line.
+        - label: Risk
+          text: Two procedures with the same name in the same module will not compile. That is the error module 04 of the repository already carries.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · What you see
+      title: The box that comes up when you run it
+      filename: BasicConcepts.bas
+      lang: vba
+      output_label: Message box
+      source: |
+        MsgBox "Hello, World!"
+      output: |
+        Hello, World!
+
+  - table:
+      eyebrow: Block 02 · Vocabulary
+      title: Three words people use as if they were one
+      headers: [Word, What it is exactly, Where you see it]
+      rows:
+        - ["Sub", "A procedure that does something and returns nothing", "From Sub to End Sub"]
+        - ["Function", "A procedure that returns a value", "From Function to End Function"]
+        - ["Macro", "What Excel calls a Sub with no parameters", "In the macro dialog"]
+        - ["Module", "The code file the procedures live in", "In the Project Explorer"]
+        - ["Project", "All the code in one workbook", "The top node of the tree"]
+
+  - tiers:
+      eyebrow: Block 02 · Where to put it
+      title: Three different places, and they are not equivalent
+      items:
+        - key: '01'
+          title: Standard module
+          desc: The usual one. Insert, Module. Its procedures show up in the macro dialog and can be called from any sheet.
+        - key: '02'
+          title: Sheet module
+          desc: One per sheet, already created. This is where that sheet's events go, and they arrive in week 11.
+        - key: '03'
+          title: ThisWorkbook
+          desc: The module for the whole workbook. What runs on open or on save lives here, also in week 11.
+
+  - divider:
+      eyebrow: Block 03
+      title: Run it and watch it run
+      lede: F5 runs the whole macro and you only see the result. F8 runs one line at a time, and that is where the learning happens.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: The yellow highlight is one line ahead
+      lead: >-
+        When you press F8, the editor highlights the line that is about to run, not the
+        one that just ran. It is the most common confusion of the first class: what you
+        see highlighted has not happened yet. Press F8 again and then it does, and the
+        yellow moves on to the next one.
+      panel:
+        label: How to prove it
+        title: Put the sheet beside it and do not look away
+        note: >-
+          Press F8 on a line that writes into a cell. The cell does not change until the
+          next F8. That makes it obvious which line is still pending.
+      steps:
+        - text: F8 highlights the pending line
+        - text: F8 again executes it
+        - text: The yellow moves to the next one
+          loop: ↺ and Ctrl + Break stops a macro that has run away
+
+  - table:
+      eyebrow: Block 03 · Keys
+      title: The five keys of this session
+      headers: [Key, What it does, When you use it]
+      rows:
+        - ["Alt + F11", "Switches between the sheet and the editor", "All the time"]
+        - ["F5", "Runs the whole procedure", "Once you trust it"]
+        - ["F8", "Runs one line and stops", "When something is not doing what you expected"]
+        - ["Ctrl + G", "Opens the Immediate window", "To ask what something is worth"]
+        - ["Ctrl + Break", "Stops the macro that is running", "When it has run into an endless loop"]
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: Last week's macro, line by line
+      headers: [F8, Highlighted line, What happened when you pressed it, Column D]
+      rows:
+        - ["1", "Sub HideColumn()", "Enters the procedure", "Visible"]
+        - ["2", "Columns(\"D:D\")… = True", "Nothing yet", "Visible"]
+        - ["3", "Columns(\"D:D\")… = False", "It got hidden", "Hidden"]
+        - ["4", "End Sub", "It came back", "Visible"]
+      verdict: The highlighted line is the pending one, not the executed one. That is why the column hides on step 3 and not on step 2.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four stumbles from a first class in the editor
+      items:
+        - label: Error 01
+          title: Typing outside a procedure
+          desc: A loose statement above the first Sub never runs. Everything that executes lives between Sub and End Sub.
+        - label: Error 02
+          title: Looking in the wrong dialog
+          desc: The macro dialog only lists standard modules. If you wrote it in the sheet, it will not be there.
+        - label: Error 03
+          title: Running with the cursor elsewhere
+          desc: F5 runs the procedure the cursor is sitting in, not the one you were reading.
+        - label: Error 04
+          title: Closing the editor and assuming it saved
+          desc: Closing the window saves nothing. The code is saved when you save the workbook, and it has to be an .xlsm.
+
+  - quiz:
+      eyebrow: Quick check
+      question: You press F8 twice from the start. What is highlighted?
+      filename: BasicConcepts.bas
+      lang: vba
+      source: |
+        Sub Example()
+            Range("A1").Value = 10
+            Range("A2").Value = 20
+        End Sub
+      options:
+        - "Range(\"A1\"), and A1 is still empty"
+        - "Range(\"A2\"), A1 already holds 10 and A2 is still empty"
+        - "Range(\"A2\"), and both cells already hold a value"
+        - "End Sub, because F8 advances two lines at a time"
+
+  - lab:
+      eyebrow: Lab
+      title: Write your first procedure by hand
+      brief: Insert a standard module, write a procedure called PayrollGreeting that shows a message with your name and the area you come from, and step through it with F8 to the end. Then step through last week's recorded macro with the sheet visible beside it.
+      blocks:
+        - label: Submission
+          text: The module exported as .bas, plus a screenshot of the editor with the yellow highlight partway through
+        - label: Constraint
+          text: Typed by hand. If you record it, the recorder gives you Range and Select instead of MsgBox.
+        - label: Hint
+          text: Right-click the module, Export File, and out comes the .bas you hand in
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Four words, from the outside in
+          desc: Project, module, procedure and statement. Everything else this term hangs off that tree
+        - title: The yellow line is the pending one
+          desc: What is highlighted has not happened yet, and mixing that up makes an error look like it sits one line earlier
+        - title: Where you put it decides if it shows
+          desc: The macro dialog only lists standard modules, and the sheet and ThisWorkbook are for events
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Hand in a module with three procedures written by hand: one that shows a message,
+        one that writes your name into A1, and one that calls the other two with Call.
+      meta:
+        - [Due, Before week 3]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Structure", "30 %", "Three procedures with names of their own, each closed with End Sub"]
+        - ["Execution", "40 %", "All three run from the macro dialog without raising an error"]
+        - ["The third one", "30 %", "It calls the other two and does not repeat their code"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, data types and variables: how a value is stored, and why Option
+        Explicit saves whole afternoons.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

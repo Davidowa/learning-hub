@@ -1,0 +1,341 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 7
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 07 · Unidad 6 · Estructuras de control I
+      title: Programación Avanzada
+      subtitle: El programa deja de ser una línea recta. Comparar, combinar condiciones y elegir qué se ejecuta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 7 de 17]
+      notes: |
+        Se levanta la limitación que arrastraron las seis sesiones anteriores. Vale la pena
+        decirlo de entrada: el mutador de la semana pasada, que solo asignaba, hoy ya puede
+        revisar lo que recibe.
+
+        Todos los resultados de este deck se midieron compilando cada programa tal como
+        aparece en su lámina, en Visual Studio Community 2026. El caso del switch sin break y
+        el de la comparación de reales salieron de corridas reales, no de memoria.
+
+        La lámina de los reales es la más importante de la sesión y la que más se olvida.
+        0.1 más 0.2 no es igual a 0.3, y aun así cout imprime 0.3. Conviene correrlo en vivo.
+
+        Lectura: Malik, octava edición, capítulo 4.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Comparar
+          desc: Los seis operadores relacionales completos, y qué devuelven
+        - title: Combinar
+          desc: Los tres lógicos, y el atajo que evita evaluar de más
+        - title: Elegir
+          desc: if, if-else y el anidamiento, con el problema que trae
+        - title: Muchos casos
+          desc: switch, y el break que casi nadie olvida dos veces
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir una condición correcta
+          sub: Usando el operador de comparación y no el de asignación, que compila igual
+        - head: Combinar condiciones
+          sub: Con los tres operadores lógicos, y aprovechar la evaluación en corto circuito
+        - head: Elegir entre varios caminos
+          sub: Con if, if-else y switch, sabiendo cuál conviene en cada caso
+        - head: Comparar números reales
+          sub: Sin usar la igualdad exacta, que da falso cuando el resultado se ve correcto
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Comparar y combinar
+      lede: Una condición es una expresión que vale verdadero o falso. En C++ eso significa que vale 1 o 0, y se puede guardar.
+      block: 1
+
+  - figure:
+      eyebrow: Notación
+      title: Las cuatro figuras de un diagrama de flujo
+      image: img/es/ct-05.png
+      caption: El rombo es lo que llega esta semana. Todo lo anterior del curso cabía con las otras tres.
+      alt: Las cuatro figuras de un diagrama de flujo, con el rombo de decisión entre ellas
+
+  - table:
+      eyebrow: Relacionales
+      title: Los seis, completos y en orden
+      headers: ["Operador", "Se lee", "Ejemplo", "Da"]
+      rows:
+        - ["==", "Igual que", "7 == 7", "true"]
+        - ["!=", "Distinto de", "7 != 7", "false"]
+        - ["<", "Menor que", "3 < 7", "true"]
+        - [">", "Mayor que", "3 > 7", "false"]
+        - ["<=", "Menor o igual", "7 <= 7", "true"]
+        - [">=", "Mayor o igual", "3 >= 7", "false"]
+      notes: |
+        Los seis devuelven un bool. Como bool se convierte a entero sin pedir permiso, cout
+        los imprime como 1 y 0 salvo que se le pida lo contrario.
+
+        El primero es el que más problemas da, y no por difícil. Se escribe con dos signos y
+        el de uno solo también compila, que es la lámina siguiente.
+
+  - table:
+      eyebrow: Lógicos
+      title: Los tres, y cuándo se detienen
+      headers: ["Operador", "Se lee", "Es cierto cuando"]
+      rows:
+        - ["&&", "Y", "Las dos condiciones son ciertas"]
+        - ["||", "O", "Al menos una es cierta"]
+        - ["!", "No", "La condición es falsa"]
+      notes: |
+        C++ evalúa en corto circuito. Con && , si la primera condición es falsa, la segunda
+        ni siquiera se evalúa; con ||, si la primera es cierta, tampoco.
+
+        Eso no es una optimización invisible, es comportamiento garantizado y se usa a
+        propósito. Escribir la comprobación barata a la izquierda y la cara a la derecha
+        cambia lo que cuesta el programa.
+
+  - code_output:
+      eyebrow: El error clásico
+      title: Un signo de más y la condición deja de comparar
+      filename: igual.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int x = 5;
+
+        std::cout << (x = 6) << " " << x << "\n";
+      output: |
+        6 6
+      notes: |
+        El signo simple asigna y entrega el valor asignado. Como 6 no es cero, dentro de un
+        if eso cuenta como verdadero, así que la condición se cumple siempre y además la
+        variable quedó modificada.
+
+        Compila, corre y no hay ninguna advertencia que lo denuncie con las opciones que
+        traen los proyectos por omisión. Cuando un if se cumple siempre, esta es la primera
+        cosa que hay que revisar.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Elegir un camino
+      lede: La instrucción más usada del lenguaje, y la que más se anida hasta volverse ilegible.
+      block: 2
+
+  - code:
+      eyebrow: Selección
+      title: El mutador de la semana pasada, ahora sí completo
+      filename: rectangulo.cpp
+      lang: cpp
+      source: |
+        void setAncho(double a)
+        {
+            if (a > 0)
+            {
+                ancho = a;
+            }
+            else
+            {
+                std::cout << "ancho invalido\n";
+            }
+        }
+      annotations:
+        - label: La promesa cumplida
+          text: Esta es la línea que la semana 6 no podía escribir, y la razón de que el dato sea privado
+        - label: Un solo lugar
+          text: Nadie de fuera puede poner un ancho negativo, porque nadie de fuera puede tocar el miembro
+        - label: Las llaves
+          text: Con una sola instrucción son opcionales, y aun así conviene ponerlas siempre
+        - label: Riesgo
+          text: Sin llaves, agregar una segunda línea al if la deja fuera del if aunque quede indentada igual.
+          accent: true
+
+  - code_output:
+      eyebrow: Reales
+      title: La comparación que se ve bien y es falsa
+      filename: reales.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        double d = 0.1 + 0.2;
+
+        std::cout << (d == 0.3) << " " << d << "\n";
+      output: |
+        0 0.3
+      notes: |
+        El primer número es la comparación y vale falso. El segundo es el valor, y se
+        imprime como 0.3. Las dos cosas son ciertas al mismo tiempo.
+
+        0.1 y 0.2 no se pueden representar exactamente en binario, así que la suma queda a
+        una distancia mínima de 0.3. cout redondea a seis cifras al mostrar y esconde la
+        diferencia.
+
+        La regla práctica es no comparar reales con igualdad. Se compara la diferencia
+        absoluta contra una tolerancia pequeña, por ejemplo que sea menor a 0.000001.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Muchos casos a la vez
+      lede: Cuando la misma variable se compara contra cinco valores, la cadena de if-else deja de leerse.
+      block: 3
+
+  - code_output:
+      eyebrow: switch
+      title: Lo que pasa cuando falta un break
+      filename: menu.cpp
+      lang: cpp
+      output_label: Salida con opcion igual a 2
+      source: |
+        switch (opcion)
+        {
+        case 1: std::cout << "uno\n";
+        case 2: std::cout << "dos\n";
+        case 3: std::cout << "tres\n"; break;
+        default: std::cout << "otro\n";
+        }
+      output: |
+        dos
+        tres
+      notes: |
+        El switch no elige un caso, elige por dónde entrar. A partir de ahí ejecuta todo lo
+        que sigue hasta encontrar un break o llegar al final.
+
+        Por eso con opcion igual a 2 imprime dos y tres, pero no uno ni otro. Medido en una
+        corrida real.
+
+        Esto se llama caída y a veces se quiere a propósito, para que dos casos compartan el
+        mismo código. Cuando es a propósito conviene escribir un comentario que lo diga, o
+        el siguiente que lo lea va a creer que es un olvido.
+
+  - table:
+      eyebrow: Cuál usar
+      title: Tres formas de elegir, y cuándo conviene cada una
+      headers: ["Forma", "Cuándo", "Cuidado con"]
+      rows:
+        - ["if", "Una condición, un camino", "Las llaves cuando crezca"]
+        - ["if-else", "Dos caminos excluyentes", "Anidar más de dos niveles"]
+        - ["switch", "Una variable, muchos valores", "El break de cada caso"]
+      notes: |
+        switch solo funciona con enteros y con tipos que se convierten a entero, como char y
+        enum. No acepta double ni std::string, que es la primera limitación con la que se
+        topa quien lo intenta usar para un menú de texto.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime el programa, con nota valiendo 5?
+      filename: nota.cpp
+      lang: cpp
+      source: |
+        int nota = 5;
+
+        if (nota = 6)
+            std::cout << "aprobado\n";
+        else
+            std::cout << "reprobado\n";
+      options:
+        - 'aprobado, y además nota quedó valiendo 6'
+        - 'reprobado, porque 5 no llega a 6'
+        - 'No compila, falta un signo igual'
+        - 'aprobado, pero nota sigue valiendo 5'
+
+  - trace:
+      eyebrow: Respuesta
+      title: La condición no comparó nada, asignó
+      headers: ["Paso", "Qué ocurre", "nota", "La condición vale"]
+      rows:
+        - ["1", "int nota = 5", "5", "todavía nada"]
+        - ["2", "nota = 6 asigna", "6", "6"]
+        - ["3", "6 no es cero", "6", "verdadero"]
+        - ["4", "Entra al primer camino", "6", "verdadero"]
+      verdict: La condición sería verdadera con cualquier valor distinto de cero, así que el else no se alcanza nunca. Y de paso el programa modificó la variable que creía estar leyendo.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Un igual en vez de dos
+          desc: Asigna en lugar de comparar, la condición se cumple siempre y no hay advertencia
+        - label: Error 02
+          title: Punto y coma después del if
+          desc: El cuerpo se vuelve la instrucción vacía y el bloque de abajo corre siempre
+        - label: Error 03
+          title: Olvidar un break
+          desc: El switch cae al caso siguiente y ejecuta código de dos casos en la misma corrida
+        - label: Error 04
+          title: Comparar reales con igualdad
+          desc: 0.1 más 0.2 no es 0.3, aunque se imprima como 0.3. Se compara contra una tolerancia.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una clase que ya se defiende, en parejas
+      brief: Tomen la clase Alumno de la semana pasada y agreguen validación en los mutadores. Una calificación fuera del rango de cero a diez debe rechazarse, y el promedio debe devolver la letra correspondiente usando if-else encadenado.
+      blocks:
+        - label: Restricción
+          text: Sin ciclos, que llegan la próxima semana. Solo selección.
+        - label: Entregable
+          text: Un .cpp con la clase validada y un main que intente asignar un valor inválido a propósito
+        - label: Criterio
+          text: Que la validación viva dentro de la clase y no en main
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un igual asigna, dos comparan
+          desc: El de uno compila dentro de un if, se cumple siempre y modifica la variable
+        - title: El switch cae sin break
+          desc: Elige por dónde entrar, no qué caso ejecutar, y sigue hasta el primer break
+        - title: Los reales no se comparan con igualdad
+          desc: Se compara la diferencia contra una tolerancia, porque el valor exacto casi nunca existe
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La clase validada y un menú con switch
+      brief: Terminen la validación del laboratorio y agreguen al main un menú con switch de cuatro opciones que permita consultar el promedio, la letra, el nombre y salir.
+      meta:
+        - [Entrega, Antes de la sesión 8]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Validación", "Requisito", "Un valor fuera de rango se rechaza dentro de la clase"]
+        - ["Selección", "Requisito", "La letra sale de un if-else encadenado correcto"]
+        - ["switch", "Requisito", "Cada caso lleva su break y existe el caso por omisión"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, repetición, y el primer parcial. Los tres ciclos y cuándo conviene cada uno.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

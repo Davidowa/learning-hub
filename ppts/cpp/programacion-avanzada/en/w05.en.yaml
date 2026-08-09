@@ -1,0 +1,405 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 5
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 05 · Unit 4 · User-defined functions II
+      title: Advanced Programming
+      subtitle: Functions that return nothing, parameters that really do change the original, and several identical names living together.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 5 of 17]
+      notes: |
+        This session lifts the limitation announced last week. A parameter was a copy and
+        there was no way for a function to change the variable of whoever called it. Now
+        there is, and the difference is four characters.
+
+        Every output in this deck was measured by building each program exactly as it
+        appears on its slide, on Visual Studio Community 2026. The static counter program
+        was run with the three calls the trace shows.
+
+        There are still no control structures. This is the last session under that
+        constraint before classes arrive, and week 7 lifts it.
+
+        Reading: Malik, eighth edition, chapter 6. The course documents cite chapter 7,
+        which is right for the fifth edition; the eighth merged the two function chapters
+        into one.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Returning nothing
+          desc: void functions, and what a function with no result is good for
+        - title: By reference
+          desc: The ampersand that turns the copy into another name for the original
+        - title: Scope
+          desc: Global, local and block, plus the variable that outlives the call
+        - title: One name, several
+          desc: Overloading and parameters with a default value
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write void functions
+          sub: And decide when a result is returned and when it is written into a parameter
+        - head: Pass an argument by reference
+          sub: Knowing the function will be able to modify the caller's variable
+        - head: Predict which variable wins
+          sub: When a local shares its name with a global, and why that is worth avoiding
+        - head: Overload a function
+          sub: And say which differences between two signatures are enough to tell them apart
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: now
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Changing the caller's variable
+      lede: Last week the parameter was a copy and there was no way to touch the original. Today the difference is four characters.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The same call, with the ampersand and without
+      image: img/en/value-vs-reference.png
+      caption: On the left there are two boxes and one was copied into the other. On the right there is one box with two names.
+      alt: Two boxes joined by a copy arrow, beside a single box pointed at by two names
+
+  - code:
+      eyebrow: The difference
+      title: Four characters separate one from the other
+      filename: twice.cpp
+      lang: cpp
+      source: |
+        void twice(int n)
+        {
+            n = n * 2;
+        }
+
+        void twiceRef(int& n)
+        {
+            n = n * 2;
+        }
+      annotations:
+        - label: void
+          text: Neither returns anything. Which means the first one does nothing useful at all.
+        - label: Line 6
+          text: The ampersand goes on the type. n stops being a copy and becomes another name for the argument.
+        - label: The body
+          text: Both functions have an identical body. The only thing that changes is the signature.
+        - label: Risk
+          text: Whoever reads the call twiceRef(b) does not see the ampersand. You have to open the signature to know b will change.
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Two calls that look the same, two different results
+      filename: twice.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int a = 10;
+        twice(a);
+
+        int b = 10;
+        twiceRef(b);
+
+        std::cout << a << " " << b << "\n";
+      output: |
+        10 20
+      notes: |
+        Both calls are written the same way. The only way to know which one modifies its
+        argument is to go and read the function's signature, and that is the real cost of
+        passing by reference.
+
+        Which is why the most useful convention is that a function modifying its parameter
+        should say so in its name. computeTotal should change nothing; accumulateInto
+        should.
+
+  - concept:
+      eyebrow: Criterion
+      title: Three ways to receive, and when each one applies
+      lead: >-
+        By value when the function only needs to read something small. By reference when it
+        genuinely has to modify the original. And by constant reference when it only reads
+        something large and copying it would be expensive.
+      panel:
+        label: The third is the forgotten one
+        title: const ampersand reads without copying
+        note: >-
+          Taking a std::string by value copies the whole string on every call. Taking it as
+          const std::string& copies nothing and the compiler stops you modifying it.
+      steps:
+        - text: int by value, it is cheap
+        - text: int& when it must be modified
+        - text: const string& to only read
+          loop: ↺ the real question is between the first and the third
+
+  - divider:
+      eyebrow: Block 02
+      title: Where each name lives
+      lede: One identifier can exist three times in the same file and refer to three different things.
+      block: 2
+
+  - figure:
+      eyebrow: Scope
+      title: What is local dies when the function ends
+      image: img/en/scope-cpp.png
+      caption: Using the name outside its box does not fail at run time, it never gets that far. It fails at compile time, with C2065.
+      alt: Three nested boxes, global, function and local, with the way out to the local name crossed
+
+  - code_output:
+      eyebrow: Shadowing
+      title: When the local is named the same as the global
+      filename: shadow.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int counter = 0;
+
+        void shadow()
+        {
+            int counter = 99;
+            std::cout << counter << "\n";
+        }
+
+        int main()
+        {
+            shadow();
+            std::cout << counter << "\n";
+            return 0;
+        }
+      output: |
+        99
+        0
+      notes: |
+        Inside the function the local wins. The global still exists and still holds zero, it
+        was simply covered up for as long as that block lasts.
+
+        This compiles without a single warning and is one of the most frequent causes of a
+        program doing something other than what its author read. The advice is not to learn
+        the rule so you can exploit it, it is to stop reusing names.
+
+        Global variables are on the syllabus and it is worth saying out loud that they are
+        almost always a design mistake. Any function can change them and no signature
+        announces it.
+
+  - code_output:
+      eyebrow: static
+      title: A local variable that refuses to die
+      filename: counter.cpp
+      lang: cpp
+      output_label: Three calls in a row
+      source: |
+        void record()
+        {
+            static int calls = 0;
+            int normal = 0;
+
+            calls = calls + 1;
+            normal = normal + 1;
+            std::cout << calls << " " << normal << "\n";
+        }
+      output: |
+        1 1
+        2 1
+        3 1
+      notes: |
+        The line declaring calls runs exactly once in the whole life of the program, on the
+        first call. On the following ones it is skipped, and the variable keeps whatever it
+        was holding.
+
+        normal, by contrast, is born and dies on every call, which is what any ordinary
+        local does. The two lines sit one under the other on purpose.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Forgetting the ampersand
+          desc: The function compiles, runs, modifies nothing, and the mistake only shows in the final answer
+        - label: Error 02
+          title: Reusing a global's name
+          desc: The local covers it with no warning, and the program does something other than what it reads
+        - label: Error 03
+          title: Returning a reference to a local
+          desc: The variable dies when the function ends, leaving a reference to memory that is no longer its own
+        - label: Error 04
+          title: Default value on both sides
+          desc: It goes in the prototype or in the definition, never in both, or the compiler rejects it
+
+  - divider:
+      eyebrow: Block 03
+      title: One name, several functions
+      lede: Two functions can share a name as long as the compiler has some way to tell which one you meant.
+      block: 3
+
+  - code:
+      eyebrow: Overloading
+      title: The same name for the same concept
+      filename: area.cpp
+      lang: cpp
+      source: |
+        double area(double side)
+        {
+            return side * side;
+        }
+
+        double area(double base, double height)
+        {
+            return base * height;
+        }
+      annotations:
+        - label: The two signatures
+          text: They differ in the number of parameters, so the compiler chooses with no ambiguity
+        - label: area(3.0)
+          text: Runs the first and gives 9, measured. One argument, one side.
+        - label: area(3.0, 4.0)
+          text: Runs the second and gives 12. The compiler makes that choice, not the program.
+
+  - table:
+      eyebrow: The rule
+      title: Which differences actually tell two functions apart
+      headers: ["What changes", "Example", "Compiles"]
+      rows:
+        - ["How many parameters", "area(double) vs area(double, double)", "Yes"]
+        - ["What type they are", "print(int) vs print(double)", "Yes"]
+        - ["Only the name", "f(int a) vs f(int b)", "No"]
+        - ["Only the return", "int f(int) vs double f(int)", "No"]
+        - ["Value or reference", "f(int) vs f(int&)", "No, C2668"]
+      notes: |
+        The third and fourth rows are the same idea. The compiler chooses from what it can
+        see at the call, and neither the parameter name nor the return type appears there,
+        so neither helps it decide.
+
+        The last one is easy to measure and it surprises people. Declaring twice(int) and
+        twice(int&) compiles both definitions happily, then blows up at the call with
+        "ambiguous call to overloaded function", because a named int fits both equally well.
+
+  - code:
+      eyebrow: Default values
+      title: A parameter you are allowed not to write
+      filename: greeting.cpp
+      lang: cpp
+      source: |
+        std::string greeting(std::string name,
+                             std::string title = "Eng.")
+        {
+            return title + " " + name;
+        }
+
+        int main()
+        {
+            std::cout << greeting("Ana") << "\n";
+            std::cout << greeting("Ana", "Dr.") << "\n";
+            return 0;
+        }
+      annotations:
+        - label: The output
+          text: Prints Eng. Ana and then Dr. Ana, measured on a real run
+        - label: The order
+          text: Parameters with default values go last. You cannot skip one in the middle.
+        - label: Risk
+          text: The default value is written once, in the prototype if there is one. Repeating it in the definition does not compile.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick question
+      question: The function is called three times in a row. What does it print?
+      filename: counter.cpp
+      lang: cpp
+      source: |
+        static int calls = 0;
+        int normal = 0;
+
+        calls = calls + 1;
+        normal = normal + 1;
+        std::cout << calls << " " << normal << "\n";
+      options:
+        - '1 1, then 2 1, then 3 1'
+        - '1 1, then 2 2, then 3 3'
+        - '1 1 all three times, both reset'
+        - '3 3 at the end, because static accumulates both'
+
+  - trace:
+      eyebrow: Answer
+      title: The static line runs exactly once in the whole program
+      headers: ["Call", "calls", "normal", "Prints"]
+      rows:
+        - ["1", "0 to 1", "born at 0, up to 1", "1 1"]
+        - ["2", "1 to 2", "born at 0, up to 1", "2 1"]
+        - ["3", "2 to 3", "born at 0, up to 1", "3 1"]
+      verdict: static changes how long the variable lives, not who can see it. It is still local, nobody outside the function can name it, and it survives between calls.
+
+  - lab:
+      eyebrow: Lab
+      title: A function that reports two things, in pairs
+      brief: Write a void function that takes three marks and hands back, by reference, both the average and the total in two separate parameters. Add a second overloaded version that takes four marks.
+      blocks:
+        - label: Constraint
+          text: No if and no loops, which arrive in week 7. One route through each function.
+        - label: Deliverable
+          text: A .cpp with both overloaded versions and a main that calls each of them
+        - label: Criterion
+          text: That the function name announces it is going to modify its parameters
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The ampersand removes the copy
+          desc: With int& the function receives another name for the original variable, not a duplicate
+        - title: The local covers the global
+          desc: It compiles with no warning and makes the program read differently from how it runs
+        - title: static outlives the call
+          desc: It is initialised once and keeps its value, while still being local
+
+  - homework:
+      eyebrow: For the next session
+      title: The report card with references and one overload
+      brief: Take last week's modular report card and change the average function so it hands back, by reference, both the average and the number of subjects counted. Add an overload that accepts a fourth exam.
+      meta:
+        - [Due, Before session 6]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["References", "Required", "Both results come out through reference parameters"]
+        - ["Overloading", "Required", "The two versions coexist and the compiler picks correctly"]
+        - ["Naming", "Required", "Each function name says whether it modifies what it receives"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, classes. Putting data next to the functions that look after it, and deciding what shows from outside.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

@@ -1,0 +1,225 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 17
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 17 · Evaluación final
+      title: Programación Orientada a Objetos
+      subtitle: Sesión de cierre. Qué cubre el examen final, dónde se practicó cada tema, y los cuatro errores que más puntos costaron.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 17 de 17]
+      notes: |
+        Deck corto a propósito. La sesión es de repaso y de reglas, y el tiempo se va en las
+        preguntas del grupo, no en las diapositivas. Conviene tener abiertos los dos
+        parciales corregidos para citar errores reales en lugar de errores imaginados.
+
+        Si sobra tiempo, el mejor uso es resolver en vivo una pregunta del primer parcial
+        que haya salido mal en la mayoría de las entregas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro momentos de la sesión
+      cards:
+        - title: Alcance
+          desc: Las siete unidades y qué se pregunta de cada una
+        - title: Repaso
+          desc: Los errores que más puntos costaron, con su corrección
+        - title: Reglas
+          desc: Formato, materiales permitidos y cómo se entrega
+        - title: Cierre
+          desc: Qué sigue después de esta materia
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Ubicar cada tema del examen
+          sub: Sabiendo en qué sesión se vio y en qué laboratorio se practicó
+        - head: Reconocer los errores frecuentes
+          sub: Los cuatro que aparecieron en la mayoría de las entregas de los dos parciales
+        - head: Preparar el examen con criterio
+          sub: Practicando a máquina en lugar de releer diapositivas
+        - head: Presentarse sin dudas de formato
+          sub: Con las reglas de entrega y los materiales permitidos ya resueltos
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Alcance del examen final
+      lede: Integrador quiere decir que una sola pregunta puede tocar tres unidades. No hay secciones separadas por tema.
+      block: 1
+
+  - tiers:
+      eyebrow: Temario
+      title: Las cuatro mitades del curso, en orden
+      items:
+        - key: T1
+          title: Paradigma y elementos básicos
+          desc: Cuándo conviene una clase, y clases, objetos, atributos, métodos, acceso y propiedades
+        - key: T2
+          title: Propiedades fundamentales
+          desc: Encapsulamiento, ocultamiento, reutilización, herencia, polimorfismo y abstractas
+        - key: T3
+          title: Funciones, colecciones y errores
+          desc: Parámetros, modularidad, recursividad, las cuatro colecciones y el manejo de excepciones
+        - key: T4
+          title: Archivos, interfaces y datos
+          desc: Rutas, modos, texto y binarios, ventanas con PyQt6, y tablas con sqlite3
+
+  - table:
+      eyebrow: Dónde repasar
+      title: Cada tema, con la sesión y el laboratorio que lo practicó
+      headers: ["Tema", "Sesiones", "Laboratorio de referencia"]
+      rows:
+        - ["Clases y acceso", "3 y 4", "La cuenta bancaria de la sesión 4"]
+        - ["Herencia y polimorfismo", "7 y 8", "La jerarquía de transporte de la 7"]
+        - ["Colecciones y errores", "10 y 11", "El lector de calificaciones de la 11"]
+        - ["Archivos", "12 y 13", "El reporte desde CSV de la 12"]
+        - ["Interfaz y datos", "14 a 16", "El formulario de captura de la 15"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Repaso de lo que salió mal
+      lede: Cuatro errores concretos que aparecieron en la mayoría de las entregas de los dos parciales.
+      block: 2
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Los cuatro que más puntos costaron
+      items:
+        - label: Primer parcial
+          title: Constructor de la hija sin super
+          desc: El objeto nace sin los atributos del padre y truena en la primera línea que los usa
+        - label: Primer parcial
+          title: Atributo declarado fuera de __init__
+          desc: Se queda pegado a la clase y todos los objetos comparten la misma lista o el mismo contador
+        - label: Segundo parcial
+          title: Archivo abierto sin with
+          desc: Lo escrito no llega al disco cuando algo falla entre la apertura y el cierre
+        - label: Segundo parcial
+          title: except sin tipo
+          desc: Atrapa lo que no esperabas, esconde el error real, y deja la entrega sin forma de depurar
+
+  - quiz:
+      eyebrow: Repaso relámpago
+      question: ¿Qué imprime la última línea?
+      filename: repaso.py
+      lang: python
+      source: |
+        class Base:
+            def __init__(self):
+                self.items = []
+
+        class Hija(Base):
+            def __init__(self):
+                self.nombre = "x"
+
+        h = Hija()
+        print(len(h.items))
+      options:
+        - '0, porque la lista se creó vacía'
+        - 'AttributeError, items nunca se creó'
+        - 'TypeError, faltan argumentos en Hija'
+        - '1, porque nombre se agregó a la lista'
+
+  - trace:
+      eyebrow: Respuesta
+      title: AttributeError, y es el error número uno del semestre
+      headers: ["Paso", "Instrucción", "h.nombre", "h.items"]
+      rows:
+        - ["1", "Hija()", "–", "–"]
+        - ["2", "corre Hija.__init__", "x", "no existe"]
+        - ["3", "Base.__init__", "nunca se llamó", "no existe"]
+        - ["4", "len(h.items)", "x", "AttributeError"]
+      verdict: Definir __init__ en la hija reemplaza al del padre. La línea que falta es super().__init__(), y sin ella el constructor de Base no corre nunca.
+
+  - method:
+      eyebrow: Cómo prepararse
+      title: El examen se estudia tecleando
+      statement: Ninguna pregunta pide una definición. Todas piden escribir código que corra, así que la única preparación que sirve es volver a resolver los laboratorios sin ver la solución.
+      points:
+        - label: Qué practicar
+          text: Un laboratorio por unidad, resuelto desde cero y sin abrir el archivo de la solución
+        - label: Qué revisar
+          text: Las diapositivas de diagnóstico. Los cuatro errores de cada una son los del examen.
+        - label: Qué no hacer
+          text: Releer las diapositivas de concepto. Se entienden al leerlas y no se retienen al escribir.
+
+  - tiers:
+      eyebrow: Reglas
+      title: Lo que hay que saber antes de sentarse
+      items:
+        - key: '01'
+          title: Formato
+          desc: A máquina, un archivo .py por pregunta, con el nombre que indique el enunciado
+        - key: '02'
+          title: Materiales
+          desc: El repositorio del curso y la documentación oficial de Python, abiertos
+        - key: '03'
+          title: Sin ayuda de terceros
+          desc: Ni personas ni asistentes. Aplica el Código de Honor de la Universidad.
+        - key: '04'
+          title: Entrega
+          desc: Por Blackboard, dentro del horario del examen. No se aceptan entregas por correo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse del semestre
+      items:
+        - title: La clase describe, el objeto recuerda
+          desc: Todo lo demás del curso se apoya en esa distinción, incluida la mitad de aplicación
+        - title: Lo que se abre se cierra
+          desc: Un archivo, una conexión y una ventana tienen el mismo ciclo de vida y la misma trampa
+        - title: El código que se puede probar dura
+          desc: Sacar la lógica de los slots y de los ciclos es lo que permite corregirla sin adivinar
+
+  - homework:
+      eyebrow: Examen final
+      title: Presentación y criterios de evaluación
+      brief: Examen final integrador sobre las siete unidades del curso. Una sola pregunta puede tocar modelado, archivos y persistencia al mismo tiempo.
+      meta:
+        - [Momento, Semana 17]
+        - [Formato, Blackboard · un .py por pregunta]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - ["Modelado", "30 %", "Las clases corresponden al enunciado y respetan los niveles de acceso"]
+        - ["Aplicación", "35 %", "Colecciones, archivos y errores usados donde el enunciado los pide"]
+        - ["Robustez", "20 %", "Los errores previsibles se atrapan por tipo y con un mensaje que sirve"]
+        - ["Ejecución", "15 %", "Cada archivo corre y produce la salida que pide el enunciado"]
+
+  - closing:
+      title: Gracias
+      subtitle: El repositorio del curso queda abierto. Lo que sigue son estructuras de datos, y todo esto es la base.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

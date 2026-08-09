@@ -1,0 +1,355 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 12
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 12 · Unit 10 · Pointers, virtual and abstract
+      title: Advanced Programming
+      subtitle: Memory you ask for and you give back, and the word that lets the object decide which function runs.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 12 of 17]
+      notes: |
+        The heaviest session of the course. Two large topics the syllabus puts in one unit:
+        dynamic memory and polymorphism. Worth not rushing the first to reach the second.
+
+        Every result was measured on Visual Studio Community 2026. The pair on the virtual
+        slide is the most important thing in the deck: the same pointer, two calls, 9 and
+        minus 1.
+
+        The syllabus asks for raw pointers with new and delete, and for smart ones too. The
+        raw ones come first because that is what the unit asks for and what the book uses,
+        with unique_ptr afterwards as what is used today.
+
+        Reading: Malik, eighth edition, chapter 12. The course documents cite 14, right for
+        the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The address
+          desc: A variable that holds where another one lives
+        - title: Dynamic memory
+          desc: new, delete, and what happens when the second is missing
+        - title: Virtual
+          desc: The word that lets the object choose the function
+        - title: Abstract
+          desc: A class that declares what its children have to be able to do
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and use a pointer
+          sub: With the ampersand to take an address and the asterisk to reach the value
+        - head: Reserve and release memory
+          sub: With new and delete paired up, and recognise a leak when the second is missing
+        - head: Explain what virtual does
+          sub: And predict which function runs when calling through a pointer to the base
+        - head: Declare an abstract class
+          sub: With a pure virtual function, which forces the children to implement it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: A variable that holds an address
+      lede: Every variable lives somewhere. A pointer is a variable whose contents are that somewhere.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The value, the address, and which one holds which
+      image: img/en/pointer.png
+      caption: p does not hold 42. p holds where the 42 is, and the asterisk is the instruction to go there.
+      alt: A box holding the value 42 with its address, and a second box containing that address
+
+  - code_output:
+      eyebrow: The two operators
+      title: Taking the address and reaching the value
+      filename: pointer.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int n = 42;
+        int* p = &n;
+
+        std::cout << n << " " << *p << "\n";
+
+        *p = 99;
+        std::cout << n << "\n";
+      output: |
+        42 42
+        99
+      notes: |
+        The ampersand on line 2 is not the one from week 5. There it declared a reference,
+        here it takes the address of a variable. One symbol with two jobs, and it is worth
+        saying so before somebody asks.
+
+        The last line is the one that matters. n was modified without writing n, through the
+        pointer. That is exactly what lets a function change something belonging to its
+        caller, which makes week 5's pass by reference and this close relatives.
+
+        A pointer can point at nothing. That value is written nullptr, and reaching the value
+        of a null pointer stops the program dead.
+
+  - divider:
+      eyebrow: Block 02
+      title: Memory you ask for yourself
+      lede: Until today all memory was born and destroyed on its own. From new onwards that stops being true.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnosis
+      title: Two places a value can live
+      image: img/en/stack-vs-heap.png
+      caption: The left one cleans itself up when the block ends. The right one stays until somebody writes delete.
+      alt: A stack of frames beside a heap, with a pointer on the stack aimed at a value on the heap
+
+  - code_output:
+      eyebrow: new and delete
+      title: Asking for memory and handing it back
+      filename: dynamic.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int* d = new int(7);
+
+        std::cout << *d << "\n";
+
+        delete d;
+        d = nullptr;
+      output: |
+        7
+      notes: |
+        new reserves memory on the heap and hands back its address. delete releases it. The
+        two go in a pair and the pair has to close on every path through the program.
+
+        Setting the pointer to nullptr after the delete is not required and is a good habit.
+        Without it you are left with a pointer aimed at memory that is no longer yours, and
+        using it is not an error, it is undefined behaviour.
+
+        If the new had brackets, the delete needs them too. new int[10] is released with
+        delete[], and mixing them is one of the mistakes that does not warn you.
+
+  - code_output:
+      eyebrow: What is used today
+      title: A pointer that releases itself
+      filename: smart.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        std::unique_ptr<int> u
+            = std::make_unique<int>(5);
+
+        std::cout << *u << "\n";
+      output: |
+        5
+      notes: |
+        unique_ptr behaves like a pointer and calls delete by itself, when the variable goes
+        out of scope. There is no way to forget it, because there is nothing to write.
+
+        It needs the memory header. It is called unique because it cannot be copied: only one
+        unique_ptr can own an object at a time, which is precisely what prevents the double
+        delete.
+
+        This course teaches both because the unit asks for new and delete and because the
+        book is written that way. In new code, the advice is to start with the smart one.
+
+  - divider:
+      eyebrow: Block 03
+      title: Letting the object decide
+      lede: The word virtual is what turns a hierarchy of classes into something genuinely useful.
+      block: 3
+
+  - code_output:
+      eyebrow: The demonstration
+      title: One pointer, two calls, two answers
+      filename: virtual.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        Square c(3.0);
+        Shape* f = &c;
+
+        std::cout << f->area() << "\n";
+        std::cout << f->areaNonVirtual() << "\n";
+      output: |
+        9
+        -1
+      notes: |
+        The pointer is the same and the object is the same. The only thing that differs is
+        that area is declared virtual in Shape and areaNonVirtual is not.
+
+        Without virtual, the compiler picks the function from the type of the pointer, which
+        is Shape, and that is why minus 1 comes out. With virtual, the choice is made while
+        running by looking at the real object, which is a Square, and 9 comes out.
+
+        This slide is the whole session. If one thing survives today, let it be the pair 9
+        and minus 1.
+
+  - figure:
+      eyebrow: How it works
+      title: Where a virtual call actually goes
+      image: img/en/vtable.png
+      caption: The object carries a table holding the address of the function that belongs to it. The call consults the table instead of being settled at compile time.
+      alt: A call entering a three-row virtual table and leaving through the row matching the real type
+
+  - code:
+      eyebrow: Abstract
+      title: A class that only declares what must be doable
+      filename: shape.cpp
+      lang: cpp
+      source: |
+        class Shape {
+        public:
+            virtual double area() = 0;
+            virtual ~Shape() {}
+        };
+
+        class Square : public Shape {
+        public:
+            Square(double s) : side(s) {}
+            double area() override { return side * side; }
+        private:
+            double side;
+        };
+      annotations:
+        - label: The equals zero
+          text: Makes the function pure virtual. Shape can no longer be instantiated.
+        - label: override
+          text: Asks the compiler to check that you really are replacing something from the base
+        - label: The virtual destructor
+          text: Without it, deleting through a base pointer never calls the child's destructor
+        - label: Risk
+          text: A child that does not implement area stays abstract, and the error appears when you try to make an object.
+          accent: true
+
+  - table:
+      eyebrow: Summary
+      title: Four words and what each one does
+      headers: ["Word", "What it does", "Where it goes"]
+      rows:
+        - ["virtual", "The real object decides", "In the base"]
+        - ["override", "Checks that you replace", "In the child"]
+        - ["= 0", "Makes it pure and abstract", "In the base"]
+        - ["virtual ~", "Destroys the child's part", "In the base, always"]
+      notes: |
+        The last row is a rule with no practical exceptions: if a class has any virtual
+        function, its destructor must be virtual too. It is free and it prevents a silent
+        leak.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does it print, if area is virtual and areaNonVirtual is not?
+      filename: virtual.cpp
+      lang: cpp
+      source: |
+        Square c(3.0);
+        Shape* f = &c;
+
+        std::cout << f->area() << " ";
+        std::cout << f->areaNonVirtual() << "\n";
+      options:
+        - '9 -1, because only the first looks at the real object'
+        - '9 9, because the object is a Square in both'
+        - '-1 -1, because the pointer is of type Shape'
+        - 'It does not compile, a Shape pointer will not take a Square'
+
+  - trace:
+      eyebrow: Answer
+      title: One is decided by the compiler, the other by the object
+      headers: ["Call", "Who decides", "When", "Runs"]
+      rows:
+        - ["f->area()", "The real object", "While running", "Square, gives 9"]
+        - ["f->areaNonVirtual()", "The pointer's type", "At compile time", "Shape, gives -1"]
+      verdict: The difference between the two lines is a single word written in the base class. That is the whole cost of polymorphism, and it is what lets one piece of code handle different objects.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: new without delete
+          desc: The memory stays reserved until the program exits, and inside a loop it grows without stopping
+        - label: Error 02
+          title: A destructor without virtual
+          desc: Deleting through a base pointer never destroys the child's part, and that is where it leaks
+        - label: Error 03
+          title: Using the pointer after delete
+          desc: Not an error, undefined behaviour, which sometimes works and is worse for that reason
+        - label: Error 04
+          title: Mixing delete and delete brackets
+          desc: What new brackets reserved is released with delete brackets, and never the other way round
+
+  - lab:
+      eyebrow: Lab
+      title: Three shapes and one loop, in pairs
+      brief: Write an abstract Shape class with a pure virtual area, three derived classes, and an array of pointers to Shape. Walk it with a single loop that adds up all the areas without asking what type each object is.
+      blocks:
+        - label: Constraint
+          text: Not one if asking about the type. If one appears, a virtual is missing somewhere.
+        - label: Deliverable
+          text: A .cpp with the hierarchy, the array of pointers, and the delete for each object
+        - label: Criterion
+          text: That adding a fourth shape forces no change to the loop
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A pointer holds the address
+          desc: The asterisk is the instruction to go there, and it lets you modify without naming
+        - title: new and delete go in pairs
+          desc: What you ask for stays until you give it back, even after the block has ended
+        - title: virtual moves the decision
+          desc: From the compiler to the real object, and that is the difference between 9 and minus 1
+
+  - homework:
+      eyebrow: For the next session
+      title: The polymorphic hierarchy, with no leaks
+      brief: Finish the lab and add a second version where the array holds unique_ptr instead of raw pointers. Compare the two and explain in three lines which lines disappeared.
+      meta:
+        - [Due, Before session 13]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Polymorphism", "Required", "One loop adds the areas without asking about types"]
+        - ["Memory", "Required", "Every new has its delete and the destructor is virtual"]
+        - ["Comparison", "Required", "The text identifies which lines unique_ptr removed"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, files, and the second partial. Data that outlives the program closing.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

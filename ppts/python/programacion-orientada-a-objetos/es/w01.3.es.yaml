@@ -1,0 +1,371 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1.3
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Repaso 3 de 5 · Módulo 3 · Funciones
+      title: Programación Orientada a Objetos
+      subtitle: Darle nombre a un pedazo de trabajo. Parámetros, retorno y dónde vive cada variable.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, Repaso 3 de 5]
+      notes: |
+        Cubre el módulo 3 completo, Code010 y Code011 más Exercise002.
+
+        Es la sesión más importante de las cinco para lo que viene: en la semana 3,
+        una función que vive dentro de una clase se llama método, y el alcance local
+        se vuelve la diferencia entre una variable local y un atributo. Vale la pena
+        insistir en el bloque 03.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Definir una función con def
+          sub: Nombre en minúsculas, guiones bajos entre palabras, paréntesis y dos puntos
+        - head: Distinguir parámetro de argumento
+          sub: El hueco que se declara contra el valor que se pasa al llamar
+        - head: Usar valores por defecto
+          sub: Y por qué los parámetros con valor van siempre al final
+        - head: Devolver un valor con return
+          sub: Y qué devuelve una función que no lo escribe
+        - head: Explicar el alcance de una variable
+          sub: Local, global, y por qué NameError aparece justo donde aparece
+
+  - roadmap:
+      eyebrow: Mapa del repaso
+      title: Cinco sesiones, un módulo cada una
+      phases:
+        - label: Repaso 1
+          title: Datos y texto
+          desc: Variables, tipos, cadenas, números y entrada
+          state: done
+        - label: Repaso 2
+          title: Decisiones y ciclos
+          desc: Comparación, lógica, if, for y while
+          state: done
+        - label: Repaso 3
+          title: Funciones
+          desc: Parámetros, retorno y alcance
+          state: now
+        - label: Repaso 4
+          title: Colecciones
+          desc: Listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: Repaso 5
+          title: Errores
+          desc: try, except y los tipos más comunes
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Definir y llamar
+      lede: Una función es un pedazo de trabajo con nombre, que se escribe una vez y se usa muchas.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es una función
+      lead: >-
+        Un bloque de código con nombre que solo corre cuando alguien lo llama. Sirve para
+        no repetir, para poder probar una parte sin correr todo, y para que el programa
+        se lea como una lista de intenciones en vez de un muro de instrucciones.
+      panel:
+        label: La regla del nombre
+        title: Un verbo y un sustantivo
+        note: >-
+          calcular_promedio, leer_archivo, es_par. Si no puedes nombrarla así,
+          probablemente hace más de una cosa y conviene partirla.
+      steps:
+        - text: Se define con def, una sola vez
+        - text: Se llama con su nombre y paréntesis
+        - text: Al terminar, devuelve el control
+          loop: ↺ se puede llamar tantas veces como haga falta
+
+  - code:
+      eyebrow: Módulo 3 · Definir
+      title: La función más pequeña, y una con parámetro
+      filename: Code010.py
+      lang: python
+      source: |
+        def saludar():
+            print("Hola desde una función")
+
+
+        saludar()                      # Hola desde una función
+
+
+        def saludar_a(nombre):
+            print(f"Hola, {nombre}")
+
+
+        saludar_a("Ana")               # Hola, Ana
+      annotations:
+        - label: Los dos puntos y la sangría
+          text: Todo lo que pertenece a la función va indentado bajo el def
+        - label: Definir no es llamar
+          text: El def solo crea la función. Sin la llamada, nunca se ejecuta.
+        - label: Riesgo
+          text: Llamarla sin paréntesis no la ejecuta, imprime la referencia a la función
+          accent: true
+
+  - table:
+      eyebrow: Módulo 3 · Vocabulario
+      title: Cuatro palabras que se confunden
+      headers: [Término, Qué es, Dónde aparece, Ejemplo]
+      rows:
+        - ["Parámetro", "El hueco que declaras", "En el def", "def saludar_a(nombre)"]
+        - ["Argumento", "El valor que pasas", "En la llamada", "saludar_a('Ana')"]
+        - ["Retorno", "Lo que la función entrega", "En el return", "return total / n"]
+        - ["Llamada", "La orden de ejecutarla", "Donde la uses", "saludar_a('Ana')"]
+
+  - code:
+      eyebrow: Módulo 3 · Parámetros
+      title: Varios parámetros, con y sin valor por defecto
+      filename: parametros.py
+      lang: python
+      source: |
+        def presentar(nombre, apellido, saludo="Hola"):
+            print(f"{saludo}, {nombre} {apellido}")
+
+
+        presentar("Ana", "López")                    # por defecto
+        presentar("Ana", "López", "Buenos días")     # lo reemplaza
+        presentar(apellido="López", nombre="Ana")    # sin orden
+      annotations:
+        - label: Los que tienen valor van al final
+          text: Al revés es un SyntaxError, porque Python no sabría cuál se omitió
+        - label: Argumentos por nombre
+          text: Nombrarlos al llamar deja escribirlos en cualquier orden y se lee mejor
+        - label: Riesgo
+          text: Nunca uses una lista o un diccionario como valor por defecto, se comparte entre llamadas
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Devolver
+      lede: Imprimir y devolver no son lo mismo, y confundirlos rompe la mitad de los ejercicios.
+      block: 2
+
+  - concept:
+      eyebrow: Módulo 3 · return
+      title: print muestra, return entrega
+      lead: >-
+        print escribe en la consola y no deja nada aprovechable. return le entrega un
+        valor a quien llamó, para que pueda guardarlo, sumarlo o pasárselo a otra
+        función. Una función de cálculo casi siempre debe devolver, no imprimir.
+      panel:
+        label: Qué devuelve una función sin return
+        title: None, siempre
+        note: >-
+          Por eso resultado = imprimir_total() deja resultado en None, y operar con él
+          después levanta TypeError.
+      steps:
+        - text: return entrega el valor
+        - text: y termina la función ahí mismo
+        - text: lo que sigue después ya no corre
+          loop: ↺ puede haber varios return, pero solo uno se ejecuta
+
+  - code_output:
+      eyebrow: Módulo 3 · return
+      title: La misma cuenta, con print y con return
+      filename: retorno.py
+      lang: python
+      output_label: Salida
+      source: |
+        def promedio_imprime(notas):
+            print(sum(notas) / len(notas))
+
+        def promedio_devuelve(notas):
+            return sum(notas) / len(notas)
+
+        a = promedio_imprime([8, 9, 10])
+        b = promedio_devuelve([8, 9, 10])
+        print(a, b)
+      output: |
+        9.0
+        None 9.0
+
+  - code:
+      eyebrow: Módulo 3 · Anotaciones
+      title: Decir de qué tipo es cada cosa
+      filename: tipos_funcion.py
+      lang: python
+      source: |
+        def calcular_promedio(calificaciones: list) -> float:
+            total = 0
+            for nota in calificaciones:
+                total += nota
+            return total / len(calificaciones)
+
+
+        print(calcular_promedio([8, 9, 10]))   # 9.0
+      annotations:
+        - label: No obligan nada
+          text: Python no revisa los tipos al ejecutar; las anotaciones documentan
+        - label: Para qué sirven
+          text: El editor autocompleta mejor y el error se ve al escribir, no al correr
+        - label: Riesgo
+          text: Lista vacía significa división entre cero. El repaso 5 lo atrapa con try.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Alcance
+      lede: Dónde vive una variable, cuánto dura, y por qué eso decide casi todo en la semana 3.
+      block: 3
+
+  - concept:
+      eyebrow: Módulo 3 · Alcance
+      title: Dónde vive una variable
+      lead: >-
+        Una variable declarada dentro de una función solo existe mientras la función
+        corre. Fuera de ella Python no conoce el nombre y levanta NameError. Es el mismo
+        mecanismo que en la semana 3 explicará por qué self.x sobrevive y x no.
+      panel:
+        label: La regla de búsqueda
+        title: Local primero, global después
+        note: >-
+          Si asignas a un nombre dentro de la función, Python lo trata como local aunque
+          exista uno global con ese nombre. Para modificar el global hace falta la
+          palabra global, y casi siempre es mejor devolver el valor.
+      steps:
+        - text: Busca el nombre dentro de la función
+        - text: Si no está, lo busca afuera
+        - text: Si tampoco, levanta NameError
+          loop: ↺ cada llamada crea locales nuevas y las destruye al terminar
+
+  - figure:
+      eyebrow: Módulo 3 · Alcance
+      title: Local dentro de global
+      image: img/es/scope.png
+      caption: Lo que se declara dentro de la función deja de existir cuando la llamada termina
+      alt: Un frasco rotulado local dentro de una caja función, dentro de una caja global
+
+  - code_output:
+      eyebrow: Módulo 3 · Alcance
+      title: La local no pisa a la global
+      filename: Code011.py
+      lang: python
+      output_label: Salida
+      source: |
+        mensaje = "global"
+
+        def cambiar():
+            mensaje = "local"
+            print(mensaje)
+
+        cambiar()
+        print(mensaje)
+      output: |
+        local
+        global
+
+  - code:
+      eyebrow: Módulo 3 · Ejercicio
+      title: FizzBuzz, el ejercicio que junta todo lo anterior
+      filename: Exercise002.py
+      lang: python
+      source: |
+        def fizz_buzz() -> None:
+            for number in range(1, 101):
+                if number % 3 == 0 and number % 5 == 0:
+                    print("FizzBuzz")
+                elif number % 3 == 0:
+                    print("Fizz")
+                elif number % 5 == 0:
+                    print("Buzz")
+                else:
+                    print(number)
+      annotations:
+        - label: Por qué este orden
+          text: La condición doble va primero; si no, 15 se imprime como Fizz y nunca llega a FizzBuzz
+        - label: Qué repasa
+          text: Función, ciclo, residuo, condicional encadenado y else por defecto, en diez líneas
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores de este módulo
+      items:
+        - label: Error 01
+          title: Definir y no llamar
+          desc: El def solo crea la función. Sin la llamada con paréntesis, nunca se ejecuta.
+        - label: Error 02
+          title: Imprimir en vez de devolver
+          desc: 'La función muestra el resultado pero entrega None, y el que la llamó se queda sin nada.'
+        - label: Error 03
+          title: Esperar que la local cambie la global
+          desc: Asignar dentro crea una variable nueva. Para modificar la de fuera, devuélvela.
+        - label: Error 04
+          title: Lista como valor por defecto
+          desc: 'def f(x=[]) comparte la misma lista entre todas las llamadas. Usa None y créala dentro.'
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: quiz.py
+      lang: python
+      source: |
+        total = 0
+
+        def sumar(n):
+            total = total + n
+            return total
+
+        print(sumar(5))
+      options:
+        - '5, porque total valía 0 y le sumó 5'
+        - 'UnboundLocalError, porque total es local y se lee antes de asignarla'
+        - '0, porque la global no cambió'
+        - 'None, porque la función no devuelve nada'
+
+  - trace:
+      eyebrow: Respuesta
+      title: UnboundLocalError, y la razón está en la línea 4
+      headers: [Paso, Qué ve Python, Decisión]
+      rows:
+        - ["1", "total = 0 fuera de la función", "es global"]
+        - ["2", "dentro hay una asignación a total", "la trata como local"]
+        - ["3", "el lado derecho lee total", "la local aún no existe"]
+        - ["4", "levanta UnboundLocalError", "antes de sumar nada"]
+      verdict: Basta con que exista una asignación en cualquier línea de la función para que el nombre sea local en toda ella. La solución limpia es recibir total como parámetro y devolverlo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una función es una responsabilidad
+          desc: En tres semanas eso mismo se llamará método y vivirá dentro de una clase
+        - title: return entrega, print solo muestra
+          desc: Una función de cálculo que imprime deja al que la llamó con las manos vacías
+        - title: Asignar dentro crea una variable local
+          desc: Aunque exista una global con el mismo nombre, y aunque la asignación esté al final
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe tres funciones que reciban una lista de calificaciones y devuelvan el promedio, la más alta y cuántas aprobaron.
+      meta:
+        - [Entrega, Antes del repaso 4]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Retorno", "40 %", "Las tres devuelven con return; ninguna imprime desde adentro"]
+        - ["Parámetros", "40 %", "Reciben la lista como parámetro, no leen una variable global"]
+        - ["Nombres", "20 %", "Cada nombre es un verbo y un sustantivo que describen lo que hace"]
+
+  - closing:
+      title: Preguntas
+      subtitle: El siguiente repaso, las cuatro colecciones y cuándo usar cada una.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

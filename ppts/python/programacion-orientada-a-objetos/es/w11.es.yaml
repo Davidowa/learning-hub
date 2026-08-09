@@ -1,0 +1,365 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 11
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 11 · Tema 4 · Funciones y estructuras avanzadas
+      title: Programación Orientada a Objetos
+      subtitle: Qué hace un programa cuando algo sale mal, dónde se revisan los datos que entran, y cómo aguantar lo no previsto.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 11 de 17]
+      notes: |
+        Vale la pena abrir tecleando basura en el programa del laboratorio pasado, en vivo,
+        y leer el traceback completo en el pizarrón. La mayoría del grupo nunca ha leído uno
+        de arriba abajo y por eso le tiene miedo.
+
+        Los ejemplos salen de docs/en/courses/python-course: try, except, else y finally
+        son de 01 - Basics/5th Module/Code028.py, y la excepción propia que hereda de
+        Exception es el InvalidOperationError de 02 - POO/6th Module/Code026.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Excepciones
+          desc: Qué se levanta, hacia dónde sube y quién la atiende
+        - title: Las cuatro cláusulas
+          desc: try, except, else y finally, y cuándo corre cada una
+        - title: Validación
+          desc: Revisar el dato en la frontera y confiar en él hacia adentro
+        - title: Robustez
+          desc: Excepciones propias y mensajes que dicen qué corregir
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer un traceback completo
+          sub: De abajo hacia arriba, empezando por el tipo y terminando en la línea que falló
+        - head: Atrapar por tipo
+          sub: Un except por cada error que sabes atender, y ninguno que atrape lo que no esperabas
+        - head: Elegir dónde validar
+          sub: En el punto donde el dato entra, para que el resto del programa deje de preguntar
+        - head: Definir una excepción propia
+          sub: Una clase que hereda de Exception, con un nombre que venga del problema
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Manejo de excepciones
+      lede: Un programa que solo funciona con los datos correctos no está terminado. Falta la mitad que atiende todo lo demás.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es una excepción
+      lead: >-
+        Un objeto que Python crea cuando algo sale mal y lanza hacia arriba, buscando quién
+        lo atienda. Si nadie lo atrapa en toda la cadena de llamadas, el programa termina e
+        imprime el rastro de por dónde pasó antes de rendirse.
+      panel:
+        label: Lo que hay que decidir
+        title: Quién es responsable de este error
+        note: >-
+          La función que detecta el problema casi nunca es la que sabe qué hacer con él. Por
+          eso lo levanta, y lo atiende quien tenga el contexto suficiente para decidir.
+      steps:
+        - text: Ocurre y se levanta
+        - text: Sube por la cadena de llamadas
+        - text: La atrapa quien pueda decidir
+          loop: ↺ si nadie la atrapa, el programa termina y muestra el rastro
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Un except por tipo, y dónde entra el else
+      image: img/es/exceptions.png
+      caption: Cada except atiende su propio tipo. El else corre solo cuando el try llegó al final sin tropezar.
+      alt: Un bloque try del que salen dos flechas hacia dos except distintos, y una tercera hacia el else
+
+  - code:
+      eyebrow: Python
+      title: Dos errores distintos, dos respuestas distintas
+      filename: edad.py
+      lang: python
+      source: |
+        try:
+            edad = int(input("Edad: "))
+            factor = 10 / edad
+        except ValueError:
+            print("Eso no es un número entero")
+        except ZeroDivisionError:
+            print("La edad no puede ser cero")
+      annotations:
+        - label: Línea 1
+          text: El try marca el tramo donde puede fallar, y conviene que sea lo más corto posible
+        - label: Líneas 4 y 6
+          text: Un except por tipo. Corre el primero que coincide y los demás ni se revisan.
+        - label: Riesgo
+          text: except Exception atrapa todo, incluso los errores que no esperabas, y esconde el defecto
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: Tres entradas, tres caminos
+      filename: probar_edad.py
+      lang: python
+      output_label: Salida
+      source: |
+        for valor in ["abc", "0", "20"]:
+            try:
+                print(10 / int(valor))
+            except ValueError:
+                print("Eso no es un número entero")
+            except ZeroDivisionError:
+                print("La edad no puede ser cero")
+      output: |
+        Eso no es un número entero
+        La edad no puede ser cero
+        0.5
+
+  - code:
+      eyebrow: Las otras dos cláusulas
+      title: El camino feliz y el que corre siempre
+      filename: leer_archivo.py
+      lang: python
+      source: |
+        try:
+            archivo = open("datos.txt")
+        except FileNotFoundError:
+            print("No existe el archivo")
+        else:
+            print(archivo.read())
+            archivo.close()
+        finally:
+            print("Terminé de intentarlo")
+      annotations:
+        - label: El else
+          text: Corre solo si el try llegó al final sin excepción, y separa lo seguro de lo riesgoso
+        - label: El finally
+          text: Corre siempre, con error o sin él, y por eso es donde se cierra lo que se abrió
+        - label: Riesgo
+          text: Si el archivo no existe, la variable nunca se creó, y usarla en el finally lanza NameError
+          accent: true
+
+  - table:
+      eyebrow: Vocabulario
+      title: Las cinco palabras del manejo de errores
+      headers: ["Palabra", "Cuándo corre", "Para qué sirve"]
+      rows:
+        - ["try", "Siempre", "Marca el tramo que puede fallar"]
+        - ["except", "Si el tipo coincide", "Atiende un error concreto"]
+        - ["else", "Si no hubo error", "Separa el camino feliz del riesgoso"]
+        - ["finally", "Siempre, pase lo que pase", "Cierra lo que se abrió"]
+        - ["raise", "Cuando tú lo escribes", "Levanta el error hacia quien llamó"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Validación de errores
+      lede: La diferencia entre un programa que se cae y uno que explica lo que hay que corregir cabe en dónde pusiste la revisión.
+      block: 2
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: Valida en la frontera, confía hacia adentro
+      statement: Todo dato que entra por teclado, archivo o red se revisa en el punto exacto donde entra. Una vez adentro, ninguna función vuelve a preguntarse si el dato sirve.
+      points:
+        - label: Dónde va la revisión
+          text: En el constructor, en el setter y en la función que lee la entrada. En ningún otro lado.
+        - label: Qué se gana
+          text: El resto del programa se escribe suponiendo datos correctos, y se lee la mitad de largo
+        - label: Cómo se rompe
+          text: Si cada función revisa por su cuenta, la regla vive en veinte lugares y tarde o temprano se contradicen
+
+  - compare:
+      eyebrow: Dos estilos
+      title: Preguntar antes o intentar y atrapar
+      before:
+        label: Preguntar antes
+        file: mirar.py
+        code: |
+          if ruta.exists():
+              texto = ruta.read_text()
+          else:
+              print("No existe")
+      after:
+        label: Intentar y atrapar
+        file: intentar.py
+        code: |
+          try:
+              texto = ruta.read_text()
+          except FileNotFoundError:
+              print("No existe")
+      note: La primera deja una rendija, porque el archivo puede borrarse entre la pregunta y la lectura. La segunda no pregunta, intenta, y atiende exactamente el caso en el que falló.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de manejar mal un error
+      items:
+        - label: Error 01
+          title: Un except sin tipo
+          desc: Atrapa hasta el Ctrl+C y el error del import. Nombra el tipo que de verdad esperas.
+        - label: Error 02
+          title: Un except con pass adentro
+          desc: El error desaparece sin dejar rastro y el defecto reaparece tres pantallas más adelante
+        - label: Error 03
+          title: Un try alrededor de cuarenta líneas
+          desc: Cuando salta no sabes cuál de las cuarenta falló. Envuelve solo la línea riesgosa.
+        - label: Error 04
+          title: Excepciones para el flujo normal
+          desc: Si el caso ocurre la mitad de las veces, era un if. Las excepciones son para lo excepcional.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Robustez del software
+      lede: Un error con nombre propio y un mensaje que dice qué corregir valen más que veinte líneas de defensas repartidas.
+      block: 3
+
+  - code:
+      eyebrow: Excepciones propias
+      title: Un error con el nombre del problema
+      filename: cuenta.py
+      lang: python
+      source: |
+        class SaldoInsuficiente(Exception):
+            pass
+
+
+        class Cuenta:
+            def __init__(self, saldo: float) -> None:
+                self.saldo = saldo
+
+            def retirar(self, monto: float) -> None:
+                if monto > self.saldo:
+                    falta = monto - self.saldo
+                    raise SaldoInsuficiente(f"Faltan {falta}")
+                self.saldo -= monto
+      annotations:
+        - label: Línea 1
+          text: Una excepción propia es una clase que hereda de Exception, y con eso ya está completa
+        - label: Línea 12
+          text: raise levanta el error hacia quien llamó. Retirar no decide qué hacer, solo avisa.
+        - label: Por qué vale la pena
+          text: Quien llama atrapa SaldoInsuficiente sin atrapar de paso los ValueError de todo lo demás
+
+  - code_output:
+      eyebrow: Demostración
+      title: El tipo y el mensaje llegan juntos
+      filename: probar_cuenta.py
+      lang: python
+      output_label: Salida
+      source: |
+        cuenta = Cuenta(100)
+
+        try:
+            cuenta.retirar(150)
+        except SaldoInsuficiente as ex:
+            print(type(ex).__name__)
+            print(ex)
+      output: |
+        SaldoInsuficiente
+        Faltan 50
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿En qué orden aparecen las dos salidas?
+      filename: orden.py
+      lang: python
+      source: |
+        def leer(valor):
+            try:
+                return int(valor)
+            except ValueError:
+                return 0
+            finally:
+                print("listo")
+
+        print(leer("7"))
+      options:
+        - 'Primero listo y después 7'
+        - 'Primero 7 y después listo'
+        - 'Solo 7, porque el return se salta el finally'
+        - 'Solo listo, porque el finally descarta el return'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Primero listo, y la razón está en el finally
+      headers: ["Paso", "Instrucción", "Qué pasa", "Salida"]
+      rows:
+        - ["1", "leer('7')", "entra al try", "–"]
+        - ["2", "return int(valor)", "guarda el 7 para devolverlo", "–"]
+        - ["3", "finally", "corre antes de salir", "listo"]
+        - ["4", "print(leer('7'))", "recibe el 7 y lo imprime", "7"]
+      verdict: finally corre siempre, incluso cuando ya hay un return esperando su turno. El valor queda guardado, el bloque corre, y solo entonces la función devuelve.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Endurecer un lector de calificaciones, en parejas
+      brief: Reciben un script que lee calificaciones desde la consola y truena con cualquier entrada rara. Háganlo sobrevivir a texto, a números fuera de rango y a un archivo que no existe.
+      blocks:
+        - label: Restricciones
+          text: Ningún except sin tipo, ninguno vacío, y el try envuelve solo la línea riesgosa
+        - label: Entregable
+          text: Un archivo .py que llega al final con las cinco entradas de prueba que se les dan
+        - label: Criterio
+          text: Que cada mensaje le diga a quien lo lee qué tiene que corregir para seguir
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un except por tipo, y con nombre
+          desc: except Exception atrapa lo que no esperabas y esconde justo el error que sí importaba
+        - title: La validación vive en la frontera
+          desc: Se revisa donde el dato entra, y de ahí hacia adentro el resto del programa ya confía
+        - title: finally corre siempre
+          desc: Con error, sin error y con un return esperando. Es donde se cierra lo que se abrió.
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Agrégale al lector del laboratorio una excepción propia con nombre del dominio y un mensaje que diga qué corregir. Explica en un párrafo por qué no bastaba con ValueError.
+      meta:
+        - [Entrega, Antes de la sesión 12]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Tipos", "40 %", "Cada except nombra un tipo concreto y atiende un caso distinto"]
+        - ["Excepción propia", "30 %", "Hereda de Exception y su nombre viene del problema, no de la implementación"]
+        - ["Mensajes", "30 %", "Cada mensaje dice qué corregir y no solo que algo salió mal"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, archivos, procesamiento de archivos y archivos de texto.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,296 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 15
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 15 · Unit 13 · Exception handling
+      title: Advanced Programming
+      subtitle: What to do when a function cannot deliver what it promised, and who takes charge of the problem.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 15 of 17]
+      notes: |
+        The topic connects to nearly everything before it. Division by zero from week 2, the
+        file that would not open from week 13, and the out-of-range index from week 10 are
+        the three natural examples, and the group has already lived through all three.
+
+        Worth being honest about the scope: exceptions do not replace validation. Data the
+        program can check gets checked with an if. The exception is for what the function
+        cannot resolve on its own.
+
+        The outputs were measured on Visual Studio Community 2026.
+
+        Reading: Malik, eighth edition, chapter 14. The course documents cite 16, right for
+        the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The problem
+          desc: Why returning an error code stops being enough
+        - title: The three blocks
+          desc: try, throw and catch, and the order they happen in
+        - title: The types
+          desc: Catching by type and using the ones the standard library ships
+        - title: When not to
+          desc: What an if solves and does not deserve an exception
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Throw and catch an exception
+          sub: With throw inside the function and catch where the decision can be made
+        - head: Choose the type you throw
+          sub: Using the ones from stdexcept rather than throwing loose strings
+        - head: Catch by const reference
+          sub: And explain why catching by value slices off the derived part of the object
+        - head: Decide when not to use them
+          sub: Separating an expected invalid input from a condition the function cannot resolve
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The problem they solve
+      lede: A function that fails has to tell somebody. The trouble is that whoever detects the failure is almost never the one who can fix it.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Detecting and deciding are two different people's jobs
+      lead: >-
+        The function opening the file knows it did not open, and does not know whether that
+        means warning the user, using a default, or ending the program. Whoever does know is
+        several levels up and has no way of finding out.
+      panel:
+        label: What used to be done
+        title: Return a code nobody checks
+        note: >-
+          A special return value works if everyone checks it. In practice it is ignored, and
+          the program carries on with data that never arrived.
+      steps:
+        - text: The function detects and throws
+        - text: The error travels up by itself
+        - text: It is caught where it can be decided
+          loop: ↺ and nobody in between has to write anything
+
+  - divider:
+      eyebrow: Block 02
+      title: try, throw and catch
+      lede: Three words, in an order that is not the order you read them in.
+      block: 2
+
+  - code_output:
+      eyebrow: The three blocks
+      title: Throwing, travelling up, and catching
+      filename: exception.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        try
+        {
+            throw std::runtime_error("division by zero");
+        }
+        catch (const std::runtime_error& e)
+        {
+            std::cout << e.what() << "\n";
+        }
+      output: |
+        division by zero
+      notes: |
+        throw ends the function immediately. Not one more line of the try block runs, it
+        jumps straight to the matching catch.
+
+        what returns the text given when the exception was constructed. It is a function on
+        the base class, so every standard library exception has one.
+
+        This needs the stdexcept header. The example throws and catches in one place for
+        clarity; the real case has the throw inside a function and the catch several levels
+        above.
+
+  - code_output:
+      eyebrow: From the library
+      title: An exception that was already written
+      filename: range.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        std::string s = "abc";
+
+        try
+        {
+            std::cout << s.at(10) << "\n";
+        }
+        catch (const std::out_of_range& e)
+        {
+            std::cout << "out of range\n";
+        }
+      output: |
+        out of range
+      notes: |
+        at is the week 10 function that does check the index. Here you can see what it does
+        when the index is not there: it throws out_of_range, a standard library class.
+
+        With brackets none of this would have happened. It would have read someone else's
+        memory in silence, exactly like the week 10 array. That is the difference bought with
+        a little run time.
+
+  - table:
+      eyebrow: The types
+      title: Four library exceptions worth knowing
+      headers: ["Type", "Thrown when", "Comes from"]
+      rows:
+        - ["out_of_range", "An index is not there", "at, on string and vector"]
+        - ["invalid_argument", "An argument is unusable", "stoi on non-numeric text"]
+        - ["runtime_error", "Something fails while running", "General use"]
+        - ["bad_alloc", "There is no memory", "new, when it cannot reserve"]
+      notes: |
+        All four descend from std::exception, so a catch on that base class catches every
+        one. It works as a net at the end, and it does not replace the specific ones.
+
+        Throwing your own types is valid and common on large projects. For this course the
+        library ones are enough, since they arrive with the message and the hierarchy already
+        settled.
+
+  - divider:
+      eyebrow: Block 03
+      title: When not to use them
+      lede: An exception is expensive and loud. Half the cases where they get used were an if.
+      block: 3
+
+  - method:
+      eyebrow: Criterion
+      title: The question is whether the function can settle it alone
+      statement: If the bad data is something the function can check and handle where it stands, use an if. The exception is for what the function detects and is in no position to decide about.
+      points:
+        - label: Use an if
+          text: The user typed a letter where a number goes. Check it, say so, and ask again.
+        - label: Use an exception
+          text: The constructor received a zero denominator. It cannot build the object and cannot decide what to do.
+        - label: The warning sign
+          text: A try around the whole program with a catch that only prints almost always hides an if that was missing
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Catching by value
+          desc: It copies the object and slices off the derived part, losing the exception's real type
+        - label: Error 02
+          title: An empty catch
+          desc: It catches the problem and drops it. The program carries on and the error becomes invisible.
+        - label: Error 03
+          title: Throwing from a destructor
+          desc: If another exception was already travelling, the program is terminated on the spot
+        - label: Error 04
+          title: Using them for normal flow
+          desc: An expected invalid input is not exceptional, and handling it this way costs more and reads worse
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the program print?
+      filename: order.cpp
+      lang: cpp
+      source: |
+        try
+        {
+            std::cout << "A";
+            throw std::runtime_error("x");
+            std::cout << "B";
+        }
+        catch (const std::exception& e)
+        {
+            std::cout << "C";
+        }
+        std::cout << "D\n";
+      options:
+        - 'ACD, because the B never runs'
+        - 'ABCD, because the throw does not interrupt the block'
+        - 'ACBD, because it returns to the try after the catch'
+        - 'AC, because the program ends once it catches'
+
+  - trace:
+      eyebrow: Answer
+      title: The throw abandons the block and never comes back
+      headers: ["Step", "What happens", "Prints"]
+      rows:
+        - ["1", "The first line runs", "A"]
+        - ["2", "throw abandons the try", "–"]
+        - ["3", "The B line is skipped", "–"]
+        - ["4", "It enters the catch", "C"]
+        - ["5", "It carries on after the catch", "D"]
+      verdict: A catch on exception caught a runtime_error, because it descends from it. And after the catch the program carries on normally, which is the entire point.
+
+  - lab:
+      eyebrow: Lab
+      title: The fraction that refuses to exist wrongly, in pairs
+      brief: Take last week's Fraction class and make its constructor throw invalid_argument when the denominator is zero. Add a main that tries to build an invalid fraction and catches it, without the program ending.
+      blocks:
+        - label: Constraint
+          text: The catch goes in main, not inside the class. The class detects, main decides.
+        - label: Deliverable
+          text: A .cpp with the class, the throw in the constructor, and the catch by const reference
+        - label: Criterion
+          text: That after catching the error the program keeps running and shows the valid fractions
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Detecting and deciding split apart
+          desc: The function throws because it knows it failed, and it is caught where the decision lives
+        - title: Catch by const reference
+          desc: Catching by value copies and slices the derived part, and the real type is lost
+        - title: They do not replace validation
+          desc: What an if can check and handle is not exceptional and does not deserve an exception
+
+  - homework:
+      eyebrow: For the next session
+      title: The robust fraction and the protected read
+      brief: Finish the lab and go back to the week 13 file program so it throws an exception when the file does not open, catching it in main with a clear message.
+      meta:
+        - [Due, Before session 16]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Throwing", "Required", "The constructor rejects a zero denominator with invalid_argument"]
+        - ["Catching", "Required", "The catch is by const reference and the program continues"]
+        - ["Judgement", "Required", "User input validation is still an if, not an exception"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, recursion and threads, and the third partial. A function that calls itself and two things happening at once.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

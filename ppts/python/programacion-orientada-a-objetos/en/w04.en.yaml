@@ -1,0 +1,382 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 4
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 04 · Topic 2 · Building blocks
+      title: Object-Oriented Programming
+      subtitle: 'Who gets to touch what inside an object, and the three pieces that decide how it is born: modifiers, properties and constructors.'
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 4 of 17]
+      notes: |
+        The trap in this session is believing Python has private. It does not, and saying
+        so plainly at the start keeps the group from trusting a protection that is not
+        there. Demonstrate the double-underscore renaming live, with hasattr.
+
+        The examples come from docs/en/courses/python-course/02 - POO/6th Module:
+        Person and the private method are from Code019.py, Product with its getter and
+        setter is from Code024.py, and the class attribute with classmethod is Code022.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Access modifiers
+          desc: Public, protected and private, and which of the three Python enforces
+        - title: Access functions
+          desc: Getters, setters and the syntax that makes them disappear
+        - title: Constructors
+          desc: What __init__ is responsible for and what it is not
+        - title: Static members
+          desc: Data that belongs to the class rather than to each object
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Pick an access level for each member
+          sub: One underscore is an agreement between programmers; two rename the attribute
+        - head: Write a getter and a setter
+          sub: And validate inside the setter, which is the only reason they earn their keep
+        - head: Turn them into a property
+          sub: '@property and @name.setter keep the validation and drop the parentheses'
+        - head: Separate the class from the instance
+          sub: What sits in the class body is shared; what goes in __init__ is not
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: now
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: todo
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Access modifiers
+      lede: Python has no private keyword. It has a convention and a renaming trick, and it pays to know which is which.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What an access modifier is
+      lead: >-
+        The decision about who may read and write each member of an object. In Java or C#
+        the compiler enforces it and the program will not build if you break it. In Python
+        it is enforced, most of the time, by an agreement between the people reading the code.
+      panel:
+        label: The working rule
+        title: Public until there is a reason
+        note: >-
+          Start with everything public. Close an attribute the day you find that outside code
+          can leave the object in an impossible state, not the day a book tells you to.
+      steps:
+        - text: No prefix, anyone reads it and writes it
+        - text: One underscore, please do not touch
+        - text: Two underscores, Python renames it
+          loop: ↺ the renaming is not security, it is a guard against accidents
+
+  - figure:
+      eyebrow: Diagnosis
+      title: What happens when outside code reaches in
+      image: img/en/access-levels.png
+      caption: Only the two underscores change anything. The single underscore is an agreement between people.
+      alt: Outside code reading three attributes of an Account class, with the private one blocked
+
+  - code:
+      eyebrow: Python
+      title: An attribute and a method that stay inside the class
+      filename: person.py
+      lang: python
+      source: |
+        class Person:
+            def __init__(self, name: str, age: int) -> None:
+                self.__name = name
+                self.age = age
+
+            def talk(self) -> None:
+                print(f"Hi, my name is {self.__name}")
+                self.__say_age()
+
+            def __say_age(self) -> None:
+                print(f"and I am {self.age} years old")
+      annotations:
+        - label: Line 3
+          text: A name does not change over the years and nobody outside should rewrite it
+        - label: Line 10
+          text: Methods close too. __say_age only makes sense inside talk, so it stays there.
+        - label: Risk
+          text: p.__say_age() from outside raises AttributeError, not a permission error
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The attribute is still there, under another name
+      filename: mangling.py
+      lang: python
+      output_label: Output
+      source: |
+        p = Person("Ana", 20)
+        p.talk()
+
+        print(p.age)
+        print(p._Person__name)
+        print(hasattr(p, "__name"))
+      output: |
+        Hi, my name is Ana
+        and I am 20 years old
+        20
+        Ana
+        False
+
+  - table:
+      eyebrow: Vocabulary
+      title: The four prefixes, and who enforces each one
+      headers: ["Prefix", "What it means", "Enforced by", "Example"]
+      rows:
+        - ["None", "Public, part of the contract", "Nobody", "self.age"]
+        - ["_one", "Internal, please leave it", "The convention", "self._bank"]
+        - ["__two", "Private, gets renamed", "The interpreter", "self.__balance"]
+        - ["__both__", "A Python magic method", "The language", "__init__"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Access functions for properties
+      lede: A closed attribute is no use if there is no way to read it. Here is the way, and the version nobody notices.
+      block: 2
+
+  - code:
+      eyebrow: The long version
+      title: A getter and a setter that validate
+      filename: product_getters.py
+      lang: python
+      source: |
+        class Product:
+            def __init__(self, price: float) -> None:
+                self.set_price(price)
+
+            def get_price(self) -> float:
+                return self.__price
+
+            def set_price(self, value: float) -> None:
+                if value < 0:
+                    raise ValueError("Price cannot be negative")
+                self.__price = value
+      annotations:
+        - label: Line 3
+          text: The constructor goes through the setter, so validation runs on the very first value
+        - label: Why they exist
+          text: A public attribute cannot refuse a value. A setter can, and that is the whole point.
+        - label: What they cost
+          text: Everyone using the class writes p.get_price() instead of p.price, on every line
+
+  - code:
+      eyebrow: The pythonic version
+      title: The same validation, without the parentheses
+      filename: product.py
+      lang: python
+      source: |
+        class Product:
+            def __init__(self, price: float) -> None:
+                self.price = price
+
+            @property
+            def price(self) -> float:
+                return self.__price
+
+            @price.setter
+            def price(self, value: float) -> None:
+                if value < 0:
+                    raise ValueError("Price cannot be negative")
+                self.__price = value
+      annotations:
+        - label: Line 3
+          text: self.price = price calls the setter; it does not quietly create a new attribute
+        - label: Line 9
+          text: The decorator takes the property name, so the method name has to repeat exactly
+        - label: Risk
+          text: Write self.price inside the setter and the property calls itself until RecursionError
+          accent: true
+
+  - compare:
+      eyebrow: What the caller sees
+      title: The validation stays put, the syntax does not
+      before:
+        label: With getters
+        file: getters.py
+        code: |
+          p = Product(10)
+
+          print(p.get_price())
+          p.set_price(20)
+      after:
+        label: With a property
+        file: property.py
+        code: |
+          p = Product(10)
+
+          print(p.price)
+          p.price = 20
+      note: Both refuse a negative price with the same ValueError. Only the second leaves untouched the code of everyone who already used the class.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to encapsulate nothing at all
+      items:
+        - label: Error 01
+          title: A getter and a setter for every attribute
+          desc: If everything has both, the object is still wide open and now there is twice the code
+        - label: Error 02
+          title: Validating in the constructor only
+          desc: The object is born correct and turns invalid on the next line, with nobody the wiser
+        - label: Error 03
+          title: Trusting the single underscore
+          desc: '_bank reads from outside without complaint. Style asks for it, the interpreter does not.'
+        - label: Error 04
+          title: Properties with side effects
+          desc: If reading p.price writes to disk or hits the network, nobody reading that line expects it
+
+  - divider:
+      eyebrow: Block 03
+      title: Constructors and static members
+      lede: What __init__ is responsible for, and which things belong to the whole class rather than to each object.
+      block: 3
+
+  - method:
+      eyebrow: Design criterion
+      title: How far the constructor goes
+      statement: __init__ leaves the object in a valid state and stops. Anything that can fail for reasons outside its arguments belongs in another method.
+      points:
+        - label: Its job
+          text: Take what is essential, check it, and leave it assigned on self
+        - label: Not its job
+          text: Opening files, calling the network, or asking the database a question
+        - label: The test
+          text: If the constructor can fail for something the caller did not do, move that out of there
+
+  - code:
+      eyebrow: Class members
+      title: A shared value and an alternative constructor
+      filename: census.py
+      lang: python
+      source: |
+        class Person:
+            species = "human"
+            census = 0
+
+            def __init__(self, name: str, age: int) -> None:
+                self.name = name
+                self.age = age
+                Person.census += 1
+
+            @classmethod
+            def anonymous(cls) -> "Person":
+                return cls("No name", 0)
+
+
+        print(Person.species, Person.census)
+      annotations:
+        - label: Lines 2 and 3
+          text: These live on the class. Every object reads the same value until someone reassigns it.
+        - label: Line 8
+          text: The counter is written on Person, not on self, or every object would keep its own
+        - label: Line 11
+          text: cls is to the class what self is to the object, and it is how you write extra constructors
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: counter.py
+      lang: python
+      source: |
+        class Counter:
+            total = 0
+
+            def __init__(self):
+                self.total += 1
+
+
+        a = Counter()
+        b = Counter()
+        print(Counter.total)
+      options:
+        - '2, because two counters were built'
+        - '0, because self.total created an instance attribute'
+        - '1, because only the first one got to count'
+        - 'An error, total is not declared in __init__'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 0, and the trace shows where the count went
+      headers: ["Step", "Statement", "a.total", "b.total", "Counter.total"]
+      rows:
+        - ["1", "a = Counter()", "1", "–", "0"]
+        - ["2", "b = Counter()", "1", "1", "0"]
+        - ["3", "Counter.total", "1", "1", "0"]
+      verdict: self.total += 1 reads the zero from the class, adds one, and stores the result on the object. The class never hears about the increment.
+
+  - lab:
+      eyebrow: Lab
+      title: Closing a bank account, in pairs
+      brief: Write the class Account with a public holder, a private balance and a read-only property that exposes it, plus the methods deposit and withdraw.
+      blocks:
+        - label: Constraints
+          text: withdraw may not leave the balance negative, and balance gets no setter
+        - label: Deliverable
+          text: A .py file with the class and five test operations printed to the console
+        - label: Criterion
+          text: It should be impossible to leave the account in an invalid state from outside the class
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: One underscore asks, two take away
+          desc: The first is an agreement between people; the second renames the attribute inside the interpreter
+        - title: A property is the setter nobody notices
+          desc: It validates like a method and reads like an attribute, so no caller has to change a line
+        - title: What sits in the class body is shared
+          desc: Counters and constants live there; the state of each object is assigned inside __init__
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Extend the lab account with a private history of transactions and a read-only property that returns the last five.
+      meta:
+        - [Due, Before session 5]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Encapsulation", "40 %", "The history cannot be modified from outside the class"]
+        - ["Validation", "30 %", "Deposit and withdraw refuse amounts that would leave the account invalid"]
+        - ["Execution", "30 %", "The file runs without errors and prints the test operations"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, overloaded methods, organising classes and basic modelling.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

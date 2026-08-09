@@ -1,0 +1,339 @@
+meta:
+  course: Data Analysis
+  code: TIA502
+  lang: en
+  language: python
+  week: 15.3
+  footer: DATA ANALYSIS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 15 · 3 of 3 · Unit 8.1.3 · Grouping, summarising and joining
+      title: Data Analysis
+      subtitle: The PivotTable and the VLOOKUP, one line each. Plus the check no spreadsheet ever lets you run.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA502 · Business]
+        - [Session, 15 · 3 of 3]
+      notes: |
+        The third of three, and the one that lands hardest. The eighty lines they wrote by
+        hand in week 14 fit into eight here, and the numbers match exactly.
+
+        The code is module A05, scripts 05 and 06. It is worth putting the two outputs side
+        by side: the manual script and the groupby give the same four totals.
+
+        The indicator=True part is what no spreadsheet allows. A VLOOKUP scattering N/A
+        does not tell you how many failed; an audited merge does, in both directions.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Grouping
+          desc: groupby is the PivotTable. Split, summarise, put back together
+        - title: The grid
+          desc: pivot_table lays those same numbers out as a grid
+        - title: Joining
+          desc: merge is VLOOKUP, and it also tells you what it did not find
+        - title: Your turn
+          desc: Your business question, answered with a grouping
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Group and summarise in one line
+          sub: groupby followed by the column and the summary function
+        - head: Ask for several summaries at once
+          sub: With agg, and with column names of your own choosing
+        - head: Build a grid
+          sub: With pivot_table, index, columns and values, plus the totals
+        - head: Join two tables
+          sub: With merge, and know why the left mode is the safe one
+        - head: Audit a join
+          sub: With indicator, checking both directions before trusting it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: done
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Grouping
+      lede: Split the rows that share a value, summarise each pile, and put the results back together. That is all it is.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · The reduction
+      title: Eighty lines, or eight
+      before:
+        label: Week 14, by hand
+        file: manual.py
+        code: |
+          from collections import defaultdict
+
+          by_region = defaultdict(float)
+
+          for r in records:
+              by_region[r["region"]] += r["amount"]
+      after:
+        label: With pandas
+        file: group.py
+        code: |
+          by_region = (sales
+                       .groupby("region")["amount"]
+                       .sum())
+      note: >-
+        Both give the same four totals, down to the cent. The difference is that one reads
+        at a glance and the other has to be checked line by line.
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: The four totals, in thousands
+      filename: group.py
+      source: |
+        by_region = (sales.groupby("region")["amount"]
+                     .sum()
+                     .sort_values(ascending=False))
+
+        print((by_region / 1000).round(0))
+      output: |
+        region
+        North     4352.0
+        Centre    3919.0
+        West      3030.0
+        South     1553.0
+
+  - code:
+      eyebrow: Block 01 · Several summaries
+      title: How much, how often and how large
+      filename: summary.py
+      source: |
+        detail = sales.groupby("region").agg(
+            revenue=("amount", "sum"),
+            units=("units", "sum"),
+            sales=("amount", "count"),
+            average=("amount", "mean"),
+        ).round(2)
+
+        print(detail.sort_values("revenue", ascending=False))
+      annotations:
+        - label: agg
+          text: It takes as many summaries as you want, and each one comes out as a column of the report.
+        - label: The pattern
+          text: new_name equals the source column and the function. You choose what every column is called.
+        - label: How much and how many
+          text: sum answers magnitude, count answers frequency. They are the two questions from week 9.
+        - label: The finding
+          text: The region that sells most is not the one with the highest average sale. That is the story.
+
+  - divider:
+      eyebrow: Block 02
+      title: The grid
+      lede: The same numbers, laid out the way you see them on screen when you open a PivotTable.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · pivot_table
+      title: The four arguments, and what each one is
+      filename: grid.py
+      source: |
+        grid = sales.pivot_table(
+            index="region",      # what goes down the side
+            columns="channel",   # what goes across the top
+            values="amount",     # what fills the cells
+            aggfunc="sum",       # how they are summarised
+        )
+
+        print((grid / 1000).round(0))
+      annotations:
+        - label: index
+          text: The field you would drag into the rows of the PivotTable.
+        - label: columns
+          text: The one you would drag into the columns. Every distinct value becomes a column.
+        - label: values and aggfunc
+          text: What gets summarised and with what function. It averages by default, so nearly always say it.
+        - label: margins
+          text: Set it to true and the row and column totals appear, like the grand total.
+
+  - code_output:
+      eyebrow: Block 02 · Result
+      title: Region against channel, in thousands
+      filename: grid.py
+      source: |
+        print((grid / 1000).round(0))
+      output: |
+        channel  Online  Retail  Wholesale
+        Centre   1292.0   490.0     2137.0
+        North     978.0  1331.0     2042.0
+        South     420.0   271.0      862.0
+        West      589.0   738.0     1703.0
+
+  - divider:
+      eyebrow: Block 03
+      title: Joining two tables
+      lede: VLOOKUP brings one column per formula. merge brings them all at once, and it tells you what it missed.
+      block: 3
+
+  - compare:
+      eyebrow: Block 03 · Translation
+      title: VLOOKUP, said once
+      before:
+        label: In the sheet
+        file: sales.xlsx
+        lang: excel
+        code: |
+          =VLOOKUP(B2, Regions, 2, FALSE)
+          =VLOOKUP(B2, Regions, 3, FALSE)
+          =VLOOKUP(B2, Regions, 4, FALSE)
+      after:
+        label: In pandas
+        file: join.py
+        code: |
+          joined = sales.merge(regions,
+                               on="region",
+                               how="left")
+      note: >-
+        Three formulas for every column you want to bring across, or a single statement
+        that brings them all. And with no column number, which is where VLOOKUP breaks.
+
+  - table:
+      eyebrow: Block 03 · Modes
+      title: The four join modes
+      headers: [Mode, What it keeps, When]
+      rows:
+        - ["left", "Every row from the left side", "The safe one, and the VLOOKUP lookalike"]
+        - ["inner", "Only the ones that match", "When what does not match is of no interest"]
+        - ["right", "Every row from the right side", "Rare, it is a left join reversed"]
+        - ["outer", "Every row from both sides", "To audit what failed to match"]
+
+  - code_output:
+      eyebrow: Block 03 · The audit
+      title: What no spreadsheet lets you check
+      filename: audit.py
+      source: |
+        audit = sales.merge(regions, on="region",
+                            how="outer", indicator=True)
+
+        print(audit["_merge"].value_counts())
+      output: |
+        _merge
+        both          306
+        right_only      1
+        left_only       0
+
+  - concept:
+      eyebrow: Key concept
+      title: The two directions are checked separately
+      lead: >-
+        right_only at one means the catalogue holds a region with no sales at all. That is
+        nearly always fine: a new territory, or one that closed. left_only at zero means no
+        sale was left orphaned, and that one does matter: a sale carrying a region the
+        catalogue does not know is a data problem to report.
+      panel:
+        label: The difference from VLOOKUP
+        title: N/A scattered across a sheet does not count itself
+        note: >-
+          With a formula you would have to count the errors by hand, and only in one
+          direction. Here the count comes included and it covers both.
+      steps:
+        - text: You join with indicator set to true
+        - text: You count where each row came from
+        - text: You investigate what did not match
+          loop: ↺ and only then do you trust the result
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four grouping and joining errors
+      items:
+        - label: Error 01
+          title: Grouping before cleaning
+          desc: Eight regions where there are four. The totals split, and each half looks perfectly reasonable.
+        - label: Error 02
+          title: Assuming pivot_table sums
+          desc: It averages by default. If you expected totals and did not say aggfunc, the number is wrong.
+        - label: Error 03
+          title: Joining with inner by accident
+          desc: The rows that do not match vanish silently, and your total drops with nothing to explain it.
+        - label: Error 04
+          title: Trusting a join without auditing it
+          desc: indicator set to true costs one word and tells you exactly how many rows were left loose.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this line return if you do not say aggfunc?
+      filename: aggfunc.py
+      source: |
+        grid = sales.pivot_table(
+            index="region",
+            columns="channel",
+            values="amount",
+        )
+      options:
+        - "The sum by region and channel"
+        - "The average, which is what it does by default"
+        - "The count of rows"
+        - "An error, because aggfunc is required"
+
+  - lab:
+      eyebrow: Lab
+      title: Answer your business question
+      brief: With your clean file, answer the question you framed in week 1 using a grouping. Also produce a grid crossing two categories, and join it against a catalogue table if your case calls for one.
+      blocks:
+        - label: Deliverable
+          text: The notebook with the grouping, the grid, and the answer written in one sentence
+        - label: Constraint
+          text: If there is a join, it has to come audited with indicator and commented
+        - label: The test
+          text: Sum the whole grid and compare it against the table total. If they differ, something was lost.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: groupby is the PivotTable
+          desc: Split, summarise, put back together. The eighty lines of week 14, in eight and without errors
+        - title: pivot_table averages by default
+          desc: If you wanted totals you have to say so, and forgetting produces a number that looks reasonable
+        - title: A join gets audited
+          desc: indicator costs one word and answers, in both directions, which rows found no partner
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Run scripts 05 and 06 of module A05 and compare their four totals by region against the ones the manual script produced in week 14. Explain why they match down to the cent.
+      meta:
+        - [Due, Before session 16.1]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Comparison", "40 %", "Both outputs appear side by side and all four totals match"]
+        - ["Explanation", "40 %", "You say what groupby does inside and why it equals the dictionary version"]
+        - ["Audit", "20 %", "The indicator result is reported, and what the right_only means"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, charts. What a number has to look like for somebody to understand it unaided.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

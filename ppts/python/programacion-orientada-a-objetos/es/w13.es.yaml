@@ -1,0 +1,339 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 13
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 13 · Tema 5 · Archivos
+      title: Programación Orientada a Objetos
+      subtitle: Los archivos que no se pueden abrir en un editor, la manera de saltar al registro que interesa sin leer los anteriores, y el cierre de la unidad.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 13 de 17]
+      notes: |
+        Abre el .png del curso con el bloc de notas, en vivo, antes de explicar nada. Ver la
+        pantalla llena de basura y un UnicodeDecodeError deja claro en diez segundos lo que
+        cuesta media diapositiva de definiciones.
+
+        El zip sale de docs/en/courses/python-course/03 - Paths and Files/7th Module/Code34.py.
+        Los ejemplos de modo binario, seek y tell no existen en el repositorio y se
+        escribieron para esta sesión, siguiendo el estilo de los archivos de ese módulo.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Archivos binarios
+          desc: Qué se pierde y qué se gana al quitar la capa de texto
+        - title: Comprimidos
+          desc: Un zip tratado como carpeta en lugar de como bytes
+        - title: Secuencial y aleatorio
+          desc: El cursor, la posición y por qué el tamaño fijo lo cambia todo
+        - title: Segundo parcial
+          desc: Qué entra, cómo se entrega y cómo se califica
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir entre texto y binario
+          sub: Por el contenido del archivo y no por la extensión que traiga en el nombre
+        - head: Leer y escribir bytes
+          sub: Con los modos rb y wb, y sabiendo que read cuenta bytes y no caracteres
+        - head: Saltar a una posición
+          sub: Calcular dónde empieza el registro n cuando todos los registros miden lo mismo
+        - head: Presentarse al segundo parcial
+          sub: Con las unidades 4 y 5 practicadas escribiendo archivos, no leyendo apuntes
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Archivos binarios
+      lede: Un archivo es una fila de bytes. El modo texto le pone una capa encima que traduce, y a veces esa capa estorba.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La diferencia entre leer y decodificar
+      lead: >-
+        Todo archivo es una fila de bytes. El modo texto agrega una capa que los traduce a
+        letras con un encoding y de paso arregla los saltos de línea. El modo binario quita
+        esa capa y entrega los bytes tal como salieron del disco, sin interpretar ninguno.
+      panel:
+        label: Cuándo quitar la capa
+        title: Cuando los bytes no son letras
+        note: >-
+          Una imagen, un zip o un ejecutable no tienen letras adentro. Traducirlos a texto los
+          rompe, y con suerte lanza UnicodeDecodeError antes de alcanzar a romper algo.
+      steps:
+        - text: Texto para lo que se lee
+        - text: Binario para todo lo demás
+        - text: Nunca los mezcles en un archivo
+          loop: ↺ el modo se elige por el contenido, no por la extensión
+
+  - code:
+      eyebrow: Python
+      title: Los primeros ocho bytes de una imagen
+      filename: binario.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        ruta = Path("datos") / "logo.png"
+
+        with open(ruta, "rb") as archivo:
+            cabecera = archivo.read(8)
+
+        print(cabecera)
+        print(len(cabecera))
+      annotations:
+        - label: La b del modo
+          text: rb y wb leen y escriben bytes crudos, sin traducir saltos de línea ni acentos
+        - label: Línea 6
+          text: read(8) pide ocho bytes, no ocho caracteres. En binario no existen los caracteres.
+        - label: Riesgo
+          text: Abrir un binario en modo texto lanza UnicodeDecodeError, o peor, lee basura sin quejarse
+          accent: true
+
+  - table:
+      eyebrow: Tabla comparativa
+      title: Las cinco diferencias que importan
+      headers: ["Aspecto", "Modo texto", "Modo binario"]
+      rows:
+        - ["Cómo se abre", "open(ruta)", "open(ruta, 'rb')"]
+        - ["Qué devuelve read", "str", "bytes"]
+        - ["Encoding", "Obligatorio en la práctica", "No aplica"]
+        - ["Saltos de línea", "Se traducen solos", "Quedan tal cual"]
+        - ["Para qué sirve", "Texto, CSV, JSON", "Imágenes, zip, ejecutables"]
+
+  - code:
+      eyebrow: Comprimidos
+      title: Un binario que se trata como si fuera una carpeta
+      filename: comprimir.py
+      lang: python
+      source: |
+        from zipfile import ZipFile
+        from pathlib import Path
+
+        carpeta = Path("datos")
+
+        with ZipFile("entrega.zip", "w") as paquete:
+            for archivo in carpeta.rglob("*.csv"):
+                paquete.write(archivo)
+
+        with ZipFile("entrega.zip") as paquete:
+            print(paquete.namelist())
+      annotations:
+        - label: Línea 6
+          text: Un zip es un archivo binario, pero zipfile lo trata como carpeta y evita tocar los bytes
+        - label: El rglob
+          text: Recorre también las subcarpetas. glob se queda en el nivel de arriba y nada más.
+        - label: El nombre
+          text: No le pongas zip a la variable, porque tapa la función zip que trae Python
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Acceso secuencial y aleatorio
+      lede: Todo archivo abierto tiene un cursor. Leer lo empuja hacia adelante, y hay una manera de moverlo a donde quieras.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: El cursor, la lectura y el salto
+      image: img/es/seek-tell.png
+      caption: Leer avanza el cursor una posición a la vez. seek lo pone donde le digas, sin leer nada en el camino.
+      alt: Un archivo dibujado como doce casillas numeradas, con una flecha de salto arriba y flechas de avance abajo
+
+  - code:
+      eyebrow: Acceso aleatorio
+      title: Ir directo al tercer registro
+      filename: registros.py
+      lang: python
+      source: |
+        TAM = 32
+
+        with open("registros.bin", "rb") as f:
+            f.seek(2 * TAM)
+            tercero = f.read(TAM)
+            print(f.tell())
+
+            f.seek(0)
+            primero = f.read(TAM)
+      annotations:
+        - label: Línea 4
+          text: Si todos los registros miden lo mismo, el registro n empieza en n por el tamaño
+        - label: Línea 6
+          text: tell devuelve la posición actual del cursor, contada en bytes desde el principio
+        - label: Por qué importa
+          text: Leer el registro mil de un archivo de un millón cuesta lo mismo que leer el primero
+
+  - code_output:
+      eyebrow: Demostración
+      title: Dónde queda el cursor después de cada operación
+      filename: cursor.py
+      lang: python
+      output_label: Salida
+      source: |
+        with open("registros.bin", "rb") as f:
+            print(f.tell())
+            f.seek(64)
+            print(f.tell())
+            f.read(32)
+            print(f.tell())
+      output: |
+        0
+        64
+        96
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores con posiciones y bytes
+      items:
+        - label: Error 01
+          title: Mezclar seek con modo texto
+          desc: En texto, seek solo acepta las posiciones que devolvió tell. Cualquier otra da resultados raros.
+        - label: Error 02
+          title: Registros de tamaño variable
+          desc: Si cada renglón mide distinto no hay cuenta que dé la posición, y el acceso vuelve a ser secuencial
+        - label: Error 03
+          title: Escribir un registro más corto
+          desc: Lo que sobra del registro anterior se queda ahí. Hay que rellenar hasta el tamaño fijo.
+        - label: Error 04
+          title: Creer que seek avisa
+          desc: Saltar más allá del final y escribir deja ceros en medio del archivo, sin ningún error
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: saltar.py
+      lang: python
+      source: |
+        with open("datos.bin", "wb") as f:
+            f.write(b"ABCDEFGH")
+
+        with open("datos.bin", "rb") as f:
+            f.seek(3)
+            print(f.read(2))
+      options:
+        - "b'DE', porque el cursor queda antes de la cuarta letra"
+        - "b'CD', porque seek empieza a contar en uno"
+        - "b'ABCDEFGH', porque seek no afecta lo que lee read"
+        - 'Un error, seek no funciona en modo binario'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime b'DE', y las posiciones arrancan en cero
+      headers: ["Paso", "Instrucción", "Cursor", "Qué devuelve"]
+      rows:
+        - ["1", 'open("datos.bin", "rb")', "0", "–"]
+        - ["2", "f.seek(3)", "3", "3"]
+        - ["3", "f.read(2)", "5", "b'DE'"]
+        - ["4", "print(...)", "5", "b'DE'"]
+      verdict: Las posiciones se cuentan desde cero, igual que los índices de una lista. La posición 3 queda justo antes de la cuarta letra, y read(2) toma esa y la siguiente.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Segundo parcial
+      lede: Cierra las unidades 4 y 5. Todo lo que entra se practicó en un laboratorio, con el archivo escribiéndose en disco.
+      block: 3
+
+  - tiers:
+      eyebrow: Alcance del examen
+      title: Lo que entra, unidad por unidad
+      items:
+        - key: U4
+          title: Funciones y estructuras avanzadas
+          desc: Parámetros, modularidad, recursividad, colecciones, arreglos dinámicos y manejo de excepciones
+        - key: U5
+          title: Archivos
+          desc: Rutas, modos de apertura, texto, CSV, binarios y acceso secuencial y aleatorio
+        - key: Base
+          title: Lo que se arrastra
+          desc: El modelado de las unidades 1 a 3, porque el examen pide clases que lean y escriban archivos
+        - key: Fuera
+          title: Lo que no entra
+          desc: Interfaces gráficas y bases de datos, que se evalúan en el proyecto y en el examen final
+
+  - method:
+      eyebrow: Cómo prepararse
+      title: Este parcial se estudia con el disco puesto
+      statement: Cada pregunta de la unidad 5 se contesta escribiendo un archivo y volviéndolo a leer. Si no lo practicaste corriendo el código, no lo practicaste.
+      points:
+        - label: Qué practicar
+          text: Los laboratorios de las semanas 9, 11 y 12, resueltos otra vez y desde cero
+        - label: Qué revisar
+          text: Los modos de apertura, y qué hace cada uno cuando el archivo ya existía
+        - label: Qué no hacer
+          text: Memorizar los métodos de Path. Están a un tabulador de distancia dentro del editor.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Simulacro del segundo parcial, en parejas
+      brief: Cada pareja escribe un enunciado corto que exija leer un CSV, calcular algo y escribir un archivo nuevo. Lo intercambian con otra pareja y resuelven el que les tocó.
+      blocks:
+        - label: Restricciones
+          text: El enunciado cabe en cinco renglones y admite una sola interpretación posible
+        - label: Entregable
+          text: El enunciado propio, la solución del ajeno y una nota de qué quedó ambiguo
+        - label: Criterio
+          text: Que la solución corra con el archivo de prueba sin tener que editar ninguna ruta
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El modo binario no traduce nada
+          desc: Ni saltos de línea ni acentos. Lo que está en el disco es exactamente lo que llega a memoria.
+        - title: El acceso aleatorio pide registros iguales
+          desc: Si cada registro mide distinto no hay multiplicación que dé la posición, y toca leer todo
+        - title: Las posiciones se cuentan desde cero
+          desc: seek(3) deja el cursor antes del cuarto byte, con la misma lógica que un índice de lista
+
+  - homework:
+      eyebrow: Segundo parcial
+      title: Entrega y criterios de evaluación
+      brief: El examen cubre las unidades 4 y 5, y se presenta durante esta misma semana. Es a máquina, con el repositorio del curso abierto y sin ayuda de terceros.
+      meta:
+        - [Momento, Semana 13]
+        - [Formato, Blackboard · un .py por pregunta]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - ["Funciones", "25 %", "Cada función hace una sola cosa y revisa lo que recibe de fuera"]
+        - ["Archivos", "35 %", "Todo acceso usa with, Path y un encoding explícito"]
+        - ["Robustez", "25 %", "Los errores previsibles se atrapan por tipo y con un mensaje que sirve"]
+        - ["Ejecución", "15 %", "Cada archivo corre y produce la salida que pide el enunciado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, interfaces gráficas, formas y controles.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,327 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 2
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 02 · Topic 1 · Introduction to OOP
+      title: Object-Oriented Programming
+      subtitle: Why the paradigm exists. What was breaking in the programs of the seventies, and what got invented to fix it.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 2 of 17]
+      notes: |
+        Open by asking which language they used in the previous course. Almost everyone
+        comes from structured programming, which makes the contrast land.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: What a paradigm is
+          desc: Three ways of splitting up the same work
+        - title: The problem it solved
+          desc: What broke once programs passed a thousand lines
+        - title: Strengths and limits
+          desc: Where the paradigm helps and where it gets in the way
+        - title: Comparison map
+          desc: This week's deliverable, in pairs
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Define what a paradigm is
+          sub: And why one language can support several of them at the same time
+        - head: Contrast three paradigms
+          sub: Imperative, structured and object-oriented, on the same problem
+        - head: Name the four principles
+          sub: Abstraction, encapsulation, inheritance and polymorphism
+        - head: Decide when not to use it
+          sub: Cases where a plain function does the job better than a class
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: now
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: todo
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: todo
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What a paradigm is
+      lede: A paradigm is not a syntax. It is a decision about how you split the code, taken before you write any.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a programming paradigm is
+      lead: >-
+        An agreement about how a program is organised. It does not change what the machine
+        ends up executing, since everything becomes machine instructions anyway. It changes
+        where each piece of logic lives and who is allowed to touch it.
+      panel:
+        label: Why the distinction matters
+        title: One language can support several paradigms
+        note: >-
+          Python lets you write with plain functions, with classes, or in a functional style.
+          The language does not force your hand, so the choice stays yours in every file.
+      steps:
+        - text: Imperative, orders in sequence
+        - text: Structured, orders grouped into functions
+        - text: Object-oriented, data and functions together
+          loop: ↺ each paradigm answered the limit of the one before it
+
+  - figure:
+      eyebrow: Map
+      title: OOP is one of six, not the only one
+      image: img/en/ct-10.png
+      caption: Each paradigm answered the limit of the one before it
+      alt: A sun labelled PROGRAMMING with six rays, one per paradigm
+
+  - diagram:
+      eyebrow: Timeline
+      title: Three answers to the same problem
+      blocks:
+        - label: 1950s
+          title: Imperative
+          desc: Instructions one after another, with GOTO jumps to anywhere in the program
+        - label: 1970s
+          title: Structured
+          desc: Orders grouped into functions with a defined input and output
+          dark: true
+        - label: 1980s
+          title: Object-oriented
+          desc: Data travels with the functions that touch it, inside a single unit
+      note: >-
+        Each jump happened when the previous style stopped scaling. OOP became mainstream
+        once programs went from thousands of lines to hundreds of thousands.
+
+  - code:
+      eyebrow: Structured style
+      title: A class average, written with loose functions
+      filename: group_structured.py
+      lang: python
+      theme: light
+      source: |
+        names = ["Ana", "Luis", "Sofia"]
+        grades = [8.5, 7.0, 9.5]
+
+        def average(values):
+            return sum(values) / len(values)
+
+        def passing(names, grades, minimum=7.0):
+            return [n for n, g in zip(names, grades) if g >= minimum]
+
+        print(average(grades), passing(names, grades))
+      annotations:
+        - label: What works
+          text: With three students this reads perfectly and there is nothing to criticise
+        - label: Where it breaks
+          text: Add the degree, the term and the enrolment date, and you have four parallel lists
+          accent: true
+        - label: The symptom
+          text: Drop a student from one list, forget the other, and the data goes out of step silently
+
+  - code:
+      eyebrow: Object-oriented style
+      title: The same problem, with the data held together
+      filename: group_oop.py
+      lang: python
+      source: |
+        class Student:
+            def __init__(self, name: str, grade: float) -> None:
+                self.name = name
+                self.grade = grade
+
+            def passed(self, minimum: float = 7.0) -> bool:
+                return self.grade >= minimum
+
+
+        group = [Student("Ana", 8.5), Student("Luis", 7.0)]
+      annotations:
+        - label: What changed
+          text: The name and the grade can no longer drift apart; they live in the same object
+        - label: What you gained
+          text: Adding a new field touches one line of the constructor instead of four lists
+        - label: What you paid
+          text: Ten lines where four used to do. On small programs that cost never pays back
+          accent: true
+
+  - figure:
+      eyebrow: The argument
+      title: Why the extra lines are worth writing
+      image: img/en/parallel-lists.png
+      caption: Delete a student from four parallel lists and they drift. Delete them from three objects and nothing moves.
+      alt: Four lists going out of step, against three cards staying aligned
+
+  - table:
+      eyebrow: Comparison
+      title: Three paradigms answering the same questions
+      headers: ["Question", "Structured", "Object-oriented", "Functional"]
+      rows:
+        - ["Basic unit", "The function", "The class", "The pure function"]
+        - ["Where data lives", "Loose variables", "Inside the object", "Passed in and returned"]
+        - ["Who can change it", "Any function", "Only its own methods", "Nobody, new values appear"]
+        - ["It breaks when", "Many fields are linked", "There is little real state", "State has to persist"]
+
+  - stat:
+      eyebrow: Session fact
+      value: '1967'
+      text: is the year of Simula 67, the first language with classes and objects, twelve years before the term went mainstream.
+      note: Ole-Johan Dahl and Kristen Nygaard designed it in Norway to simulate physical systems, not to write business software.
+
+  - divider:
+      eyebrow: Block 02
+      title: Strengths and limits
+      lede: Four reasons to reach for the paradigm, and four signs you are forcing it.
+      block: 2
+
+  - tiers:
+      eyebrow: Strengths
+      title: What the paradigm gives you when the problem calls for it
+      items:
+        - key: '01'
+          title: Abstraction
+          desc: You describe the thing by what it does, not by how it is built inside
+        - key: '02'
+          title: Encapsulation
+          desc: The object decides what it exposes. Nothing else can be touched by accident from outside.
+        - key: '03'
+          title: Inheritance
+          desc: One class reuses another's behaviour without copying the code
+        - key: '04'
+          title: Polymorphism
+          desc: Different objects answer the same message, each in its own way
+
+  - figure:
+      eyebrow: Abstraction
+      title: Keeping only what matters
+      image: img/en/ct-03.png
+      caption: The same mug, stripped down to what the problem needs to know about it
+      alt: A decorated mug simplified in two steps to its outline
+
+  - pitfalls:
+      eyebrow: Limits
+      title: Four signs you are forcing the paradigm
+      items:
+        - label: Sign 01
+          title: Classes with no state
+          desc: If nothing is remembered between calls, that is a function wearing a class costume
+        - label: Sign 02
+          title: Getters and setters for everything
+          desc: If every attribute is public through the back door, nothing was encapsulated
+        - label: Sign 03
+          title: Five levels of inheritance
+          desc: When you climb four classes to understand one method, the hierarchy has lost the plot
+        - label: Sign 04
+          title: A thirty-line script
+          desc: To read a CSV and take an average, a loose function wins every time
+
+  - method:
+      eyebrow: Decision rule
+      title: When to write a class
+      statement: If the data and the functions that touch it always travel together, there is a class there. If not, there is a function.
+      points:
+        - label: Calls for a class
+          text: Several fields that only make sense together, and operations that depend on all of them
+        - label: Calls for a function
+          text: A transformation that takes input, computes and returns, remembering nothing
+        - label: The test
+          text: Try naming the class with a concrete noun. If the best name is a verb, it was a function.
+
+  - divider:
+      eyebrow: Block 03
+      title: Practice and wrap-up
+      lede: A classification exercise, and the comparison map due this week.
+      block: 3
+
+  - quiz:
+      eyebrow: Quick question
+      question: Which of these four is the only one that calls for a class?
+      options:
+        - Converting Celsius to Fahrenheit
+        - A bank account with a balance and a transaction history
+        - Counting the vowels in a word
+        - Sorting a list of numbers from low to high
+
+  - trace:
+      eyebrow: Answer
+      title: The bank account, and the reason is state
+      headers: ["Option", "Holds state?", "Linked data?", "Verdict"]
+      rows:
+        - ["Celsius to Fahrenheit", "No", "No", "Function"]
+        - ["Bank account", "Yes, the balance", "Yes, balance and history", "Class"]
+        - ["Counting vowels", "No", "No", "Function"]
+        - ["Sorting a list", "No", "No", "Function"]
+      verdict: Only the bank account remembers anything between one operation and the next. That memory is the state.
+
+  - lab:
+      eyebrow: Lab
+      title: Comparison map, in pairs
+      brief: Pick a system you use every day (the transit app, the cafeteria, the gym) and describe one module of it in all three paradigms.
+      blocks:
+        - label: Deliverable
+          text: A three-column table with the basic unit, where the data lives and who can change it
+        - label: Constraint
+          text: The module has to fit on half a page. If it does not, it is still too big.
+        - label: Criterion
+          text: The OOP column must name concrete objects, not categories like "manager" or "handler"
+
+  - quote:
+      text: The big idea is messaging. The focus should be on how objects communicate, not on how they are built inside.
+      author: Alan Kay
+      source: Correspondence on the design of Smalltalk, 1998
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The paradigm solves a problem of scale
+          desc: At a hundred lines anything works; the difference shows up once the program grows
+        - title: The four principles are one package
+          desc: Abstraction, encapsulation, inheritance and polymorphism hold each other up
+        - title: Forcing classes is expensive
+          desc: A class with no state is a function with extra steps and a worse name
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the comparison map with your partner and add a paragraph on which paradigm you would pick for that system, and why.
+      meta:
+        - [Due, Before session 3]
+        - [Format, Blackboard · PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Table", "50 %", "The three columns say something different about the same module"]
+        - ["Choice", "30 %", "The paragraph argues from the chosen system, not from generalities"]
+        - ["Concreteness", "20 %", "The objects have proper names, not generic categories"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, classes and objects, and the first code that runs.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

@@ -1,0 +1,302 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1.5
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Repaso 5 de 5 · Módulo 5 · Errores
+      title: Programación Orientada a Objetos
+      subtitle: Leer un traceback, atrapar el error que esperabas y dejar pasar el que no.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, Repaso 5 de 5]
+      notes: |
+        Cubre el módulo 5, Code028.
+
+        Empieza por leer un traceback de verdad: es la habilidad que más ahorra
+        tiempo en el resto del semestre y la que menos se enseña explícitamente.
+        Al cerrar, la lámina de la semana 2 ya queda encadenada.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer un traceback de abajo hacia arriba
+          sub: La última línea dice qué pasó; la penúltima, dónde
+        - head: Nombrar los errores más comunes
+          sub: TypeError, ValueError, NameError, IndexError, KeyError y ZeroDivisionError
+        - head: Envolver solo lo que puede fallar
+          sub: Un try corto es un try que se entiende
+        - head: Escribir un except por tipo
+          sub: Y explicar por qué except a secas esconde tus propios errores de dedo
+        - head: Usar else y finally
+          sub: Lo que corre si todo salió bien, y lo que corre pase lo que pase
+
+  - roadmap:
+      eyebrow: Mapa del repaso
+      title: Cinco sesiones, un módulo cada una
+      phases:
+        - label: Repaso 1
+          title: Datos y texto
+          desc: Variables, tipos, cadenas, números y entrada
+          state: done
+        - label: Repaso 2
+          title: Decisiones y ciclos
+          desc: Comparación, lógica, if, for y while
+          state: done
+        - label: Repaso 3
+          title: Funciones
+          desc: Parámetros, retorno y alcance
+          state: done
+        - label: Repaso 4
+          title: Colecciones
+          desc: Listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: Repaso 5
+          title: Errores
+          desc: try, except y los tipos más comunes
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Leer el error
+      lede: Python ya te dijo qué pasó y en qué línea. El problema casi nunca es el mensaje, es no leerlo.
+      block: 1
+
+  - code_output:
+      eyebrow: Módulo 5 · Traceback
+      title: Un error de verdad, línea por línea
+      filename: div.py
+      lang: python
+      output_label: Lo que aparece
+      source: |
+        def dividir(a, b):
+            return a / b
+
+        print(dividir(10, 0))
+      output: |
+        Traceback (most recent call last):
+          File "div.py", line 4, in <module>
+            print(dividir(10, 0))
+          File "div.py", line 2, in dividir
+            return a / b
+        ZeroDivisionError: division by zero
+
+  - concept:
+      eyebrow: Módulo 5 · Traceback
+      title: Se lee de abajo hacia arriba
+      lead: >-
+        La última línea es la que importa: dice el tipo de error y el mensaje. La de
+        arriba dice el archivo, la línea y la función donde ocurrió. Todo lo demás es el
+        camino que siguió el programa para llegar ahí.
+      panel:
+        label: El orden de lectura
+        title: Primero qué, después dónde, al final cómo llegó
+        note: >-
+          Con el tipo y la línea ya tienes el noventa por ciento. El resto del traceback
+          solo hace falta cuando el error viene de una función lejana.
+      steps:
+        - text: Lee la última línea, el tipo y el mensaje
+        - text: Sube a la línea con File y el número
+        - text: Si hace falta, sigue el camino hacia arriba
+          loop: ↺ la llamada original queda hasta el principio
+
+  - table:
+      eyebrow: Módulo 5 · Excepciones
+      title: Los siete errores que vas a ver este semestre
+      headers: [Error, Qué lo provoca, Ejemplo que lo dispara]
+      rows:
+        - ["TypeError", "Operar entre tipos que no se llevan", "'5' + 1"]
+        - ["ValueError", "Tipo correcto, valor imposible", "int('hola')"]
+        - ["NameError", "Usar un nombre que no existe", "print(totl)"]
+        - ["IndexError", "Posición fuera de la lista", "[1, 2][5]"]
+        - ["KeyError", "Llave que no está en el diccionario", "{'a': 1}['b']"]
+        - ["ZeroDivisionError", "Dividir entre cero", "10 / 0"]
+        - ["AttributeError", "Pedir algo que el objeto no tiene", "(1, 2).append(3)"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Atrapar el error
+      lede: try no arregla nada por sí solo. Decide qué pasa cuando algo falla.
+      block: 2
+
+  - code:
+      eyebrow: Módulo 5 · try y except
+      title: Atrapar el error correcto, no todos
+      filename: Code028.py
+      lang: python
+      source: |
+        try:
+            edad = int(input("Edad: "))
+            factor = 10 / edad
+        except ValueError:
+            print("Eso no es un número")
+        except ZeroDivisionError:
+            print("La edad no puede ser 0")
+        else:
+            print(factor)
+        finally:
+            print("Terminé de intentarlo")
+      annotations:
+        - label: Un except por tipo
+          text: Nombrar la excepción deja pasar los errores que sí deberías ver
+        - label: else
+          text: Corre solo si el try terminó sin excepción, así el bloque protegido queda corto
+        - label: Riesgo
+          text: except a secas atrapa hasta tus errores de dedo y los esconde
+          accent: true
+
+  - figure:
+      eyebrow: Módulo 5 · Excepciones
+      title: Cada except atrapa lo suyo
+      image: img/es/exceptions.png
+      caption: Nombrar el tipo deja pasar los errores que sí deberías ver
+      alt: Una caja try agrietada, dos dardos con nombre y dos canastas que los atrapan
+
+  - table:
+      eyebrow: Módulo 5 · Las cuatro cláusulas
+      title: Qué corre y cuándo
+      headers: ["Cláusula", "Cuándo corre", "¿Es obligatoria?"]
+      rows:
+        - ["try", "Siempre, es lo que se vigila", "Sí"]
+        - ["except", "Solo si ocurre ese tipo de error", "Al menos uno, o finally"]
+        - ["else", "Solo si el try terminó sin error", "No"]
+        - ["finally", "Siempre, haya fallado o no", "No"]
+
+  - code_output:
+      eyebrow: Módulo 5 · Orden
+      title: El mismo bloque, con y sin error
+      filename: orden.py
+      lang: python
+      output_label: Las dos corridas
+      source: |
+        def dividir(x, y):
+            try:
+                r = x / y
+            except ZeroDivisionError:
+                print("division por cero")
+            else:
+                print("resultado", r)
+            finally:
+                print("finally siempre")
+
+        dividir(10, 5)
+        dividir(10, 0)
+      output: |
+        resultado 2.0
+        finally siempre
+        division por cero
+        finally siempre
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cuándo no usar try
+      lede: Envolver todo en un try no hace robusto a un programa. Lo hace mudo.
+      block: 3
+
+  - concept:
+      eyebrow: Módulo 5 · Criterio
+      title: Validar antes, atrapar después
+      lead: >-
+        Si puedes comprobar la condición con un if, hazlo con un if. try es para lo que
+        no puedes prever: lo que escribe el usuario, un archivo que quizá no está, una
+        conexión que se cae.
+      panel:
+        label: La regla práctica
+        title: El try envuelve lo mínimo que puede fallar
+        note: >-
+          Meter veinte líneas en un try hace imposible saber cuál falló. Dos o tres
+          líneas dentro, y el except sabe exactamente de qué habla.
+      steps:
+        - text: ¿Puedo comprobarlo con un if?
+        - text: Entonces va un if, no un try
+        - text: Si depende de algo externo, va try
+          loop: ↺ y siempre con el tipo de excepción nombrado
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores de este módulo
+      items:
+        - label: Error 01
+          title: except a secas
+          desc: Atrapa todo, incluidos tus errores de dedo, y los convierte en un mensaje falso
+        - label: Error 02
+          title: Un try de treinta líneas
+          desc: Cuando salta, nadie sabe cuál de las treinta falló. Envuelve solo lo que puede tronar.
+        - label: Error 03
+          title: Atrapar y no hacer nada
+          desc: 'Un except con solo pass esconde el problema y lo deja para más tarde.'
+        - label: Error 04
+          title: Usar try donde bastaba un if
+          desc: Comprobar que la lista no está vacía es un if. Que el archivo exista, un try.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime este programa?
+      filename: quiz.py
+      lang: python
+      source: |
+        try:
+            numeros = [1, 2, 3]
+            print(numeros[5])
+        except ValueError:
+            print("valor")
+        except IndexError:
+            print("indice")
+        finally:
+            print("fin")
+      options:
+        - 'valor, y luego fin'
+        - 'indice, y luego fin'
+        - 'Solo fin, porque ningún except aplica'
+        - 'El programa truena antes de llegar a finally'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime indice y luego fin
+      headers: [Paso, Qué pasa, Resultado]
+      rows:
+        - ["1", "numeros[5] en una lista de 3", "levanta IndexError"]
+        - ["2", "except ValueError", "no aplica, se salta"]
+        - ["3", "except IndexError", "coincide, imprime indice"]
+        - ["4", "finally", "corre siempre, imprime fin"]
+      verdict: Los except se revisan en orden y solo entra el primero que coincide. finally corre pase lo que pase.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El traceback se lee de abajo hacia arriba
+          desc: La última línea dice qué pasó, la de arriba dice dónde. Con eso basta casi siempre.
+        - title: Nombrar la excepción es lo que ayuda
+          desc: Un except a secas convierte un error tuyo en un mensaje que miente
+        - title: Si lo puedes comprobar con un if, no uses try
+          desc: try es para lo que viene de afuera y no puedes prever
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe un programa que pida cinco calificaciones, calcule el promedio con una función y no truene si el usuario escribe cualquier cosa.
+      meta:
+        - [Entrega, Antes de la semana 2]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Función", "30 %", "El promedio se calcula en una función con parámetro y retorno"]
+        - ["Excepciones", "40 %", "try y except con el tipo nombrado, nunca except a secas"]
+        - ["Alcance del try", "30 %", "El try envuelve solo la conversión, no el programa entero"]
+
+  - closing:
+      title: Preguntas
+      subtitle: Con esto cerramos el repaso. La próxima sesión, paradigmas de programación.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

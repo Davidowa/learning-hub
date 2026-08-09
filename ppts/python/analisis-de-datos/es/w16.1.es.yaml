@@ -1,0 +1,327 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 16.1
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 16 · 1 de 2 · Tema 8.2 · Visualización y matplotlib
+      title: Análisis de Datos
+      subtitle: Qué gráfica contesta qué pregunta, y qué hace falta para que alguien la entienda sin que tú estés ahí.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 16 · 1 de 2]
+      notes: |
+        Primera de dos sesiones de visualización. Esta es la que define el criterio; la
+        siguiente es la que da velocidad con seaborn.
+
+        El código es el módulo A06, scripts 01 a 03. Las imágenes que produce quedan en su
+        carpeta output y se pueden proyectar directo.
+
+        El punto que cambia la calidad de sus entregas es titular con el hallazgo. Nadie
+        lo hace solo, y en cuanto lo hacen una vez ya no vuelven atrás.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Elegir la gráfica
+          desc: Cada forma contesta una pregunta distinta, y usar la otra miente
+        - title: Los dos objetos
+          desc: Figure y Axes, y por qué toda gráfica empieza igual
+        - title: Que se entienda
+          desc: Título con el hallazgo, ejes legibles y color que sobrevive al gris
+        - title: Tu turno
+          desc: Una gráfica de tu proyecto, terminada de verdad
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir la gráfica por la pregunta
+          sub: Barra, línea, dispersión o histograma, según qué quieras contestar
+        - head: Construir una gráfica con matplotlib
+          sub: Con figura y ejes, y guardarla como imagen
+        - head: Titular con el hallazgo
+          sub: No con los nombres de los ejes, que el lector ya está viendo
+        - head: Formatear los ejes
+          sub: Para que nadie tenga que contar dígitos en pantalla
+        - head: Elegir color accesible
+          sub: Y no dejar que el color sea la única señal que distingue
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Cuál gráfica
+      lede: No es una decisión de estilo. Cada forma contesta una pregunta, y usar la equivocada hace que un número cierto diga algo falso.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Elección
+      title: Cuatro formas, cuatro preguntas
+      headers: [Gráfica, La pregunta, Ejemplo del curso]
+      rows:
+        - ["Barra", "¿Cómo se comparan?", "Ingreso por producto"]
+        - ["Línea", "¿Cómo cambió con el tiempo?", "Ingreso por mes"]
+        - ["Dispersión", "¿Se mueven juntas?", "Sueldo contra antigüedad"]
+        - ["Histograma", "¿Cómo se reparten?", "Distribución de sueldos"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una línea afirma que el orden significa algo
+      lead: >-
+        Conectar dos puntos con una línea le dice al lector que hay un recorrido entre
+        ellos. Eso es cierto entre enero y febrero, y es falso entre Norte y Sur. Usar una
+        línea sobre categorías sugiere una trayectoria que no existe, y el lector la va a
+        creer porque la forma se lo está diciendo.
+      panel:
+        label: La otra regla
+        title: Las barras y las líneas empiezan en cero
+        note: >-
+          Cortar el eje exagera la diferencia. Hacerlo a propósito es la forma más común de
+          mentir con una gráfica que solo contiene números correctos.
+      steps:
+        - text: Escribes la pregunta primero
+        - text: La pregunta elige la forma
+        - text: La forma decide qué se puede leer
+          loop: ↺ y no al revés, nunca
+
+  - compare:
+      eyebrow: Bloque 01 · La que casi nunca sirve
+      title: Pastel contra barras, con los mismos datos
+      before:
+        label: Pastel
+        file: pastel.py
+        code: |
+          ax.pie(valores, labels=nombres,
+                 autopct="%1.0f%%")
+
+          # ¿cuáles dos son más parecidos?
+      after:
+        label: Barras ordenadas
+        file: barras.py
+        code: |
+          ax.barh(nombres, valores)
+
+          # el orden ya contestó la pregunta
+      note: >-
+        Un pastel pide comparar ángulos, que es algo que la gente hace mal. Pasando de tres
+        rebanadas deja de leerse, y las mismas cifras en barras se entienden de un vistazo.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se construye
+      lede: Dos objetos, y toda gráfica de matplotlib empieza con la misma línea.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Figure y Axes
+      title: La hoja de papel y los ejes dibujados en ella
+      filename: primera.py
+      source: |
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+        ax.plot(MESES, mensual.values / 1000,
+                marker="o", linewidth=2)
+
+        fig.savefig("mensual.png", dpi=150,
+                    bbox_inches="tight")
+        plt.close(fig)
+      annotations:
+        - label: subplots
+          text: Devuelve las dos cosas de golpe. Es como empieza prácticamente toda gráfica que vas a escribir.
+        - label: Figure y Axes
+          text: La figura es la hoja, los ejes son el par de ejes dibujados encima. Se dibuja en los ejes.
+        - label: savefig
+          text: Se guarda la figura, no los ejes. 150 puntos por pulgada alcanzan para proyectar.
+        - label: close
+          text: Cierra la figura al terminar. Un ciclo que dibuja cincuenta y no las cierra las deja todas en memoria.
+
+  - table:
+      eyebrow: Bloque 02 · Lo mínimo
+      title: Lo que le falta a una gráfica recién hecha
+      headers: [Elemento, Qué aporta, Método]
+      rows:
+        - ["Título", "El hallazgo, en una frase", "set_title"]
+        - ["Etiqueta de eje", "Qué se está midiendo, y en qué unidad", "set_ylabel"]
+        - ["Base en cero", "Que la diferencia no se exagere", "set_ylim"]
+        - ["Fuente", "De dónde salieron los números", "fig.text"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Que se entienda sin ti
+      lede: La gráfica va a viajar sola en un correo. Todo lo que tengas que explicar en voz alta le falta escrito.
+      block: 3
+
+  - compare:
+      eyebrow: Bloque 03 · El título
+      title: Describir los ejes, o decir el hallazgo
+      before:
+        label: Describe los ejes
+        file: describe.py
+        code: |
+          ax.set_title("Ingreso por mes")
+
+          # el lector ya veía eso
+      after:
+        label: Dice el hallazgo
+        file: hallazgo.py
+        code: |
+          ax.set_title(
+              "Diciembre concentró el 20 % "
+              "del ingreso del año")
+      note: >-
+        La primera se queda mirando hasta que alguien la explica. La segunda se lee una vez
+        y ya. El subtítulo es donde va la descripción, ahora que el título dice lo que importa.
+
+  - code:
+      eyebrow: Bloque 03 · Énfasis y formato
+      title: Una barra fuerte, y ejes que se leen
+      filename: anotada.py
+      source: |
+        barras = ax.bar(MESES, mensual.values, color="#C7D6E8")
+        barras[pico - 1].set_color("#2B5F8F")
+
+        ax.yaxis.set_major_formatter(
+            ticker.FuncFormatter(
+                lambda v, _: f"{v / 1_000_000:.1f}M"))
+      annotations:
+        - label: Una sola fuerte
+          text: La barra que carga el argumento lleva el color intenso. Si todo resalta, nada resalta.
+        - label: El formateador
+          text: Cambia solo las etiquetas del eje. Los valores de abajo no se tocan.
+        - label: Por qué
+          text: 2567118.5 obliga a contar dígitos. 2.6M se lee sin pensarlo.
+        - label: El resto en gris
+          text: Las otras once barras siguen ahí y siguen siendo comparables. Solo dejaron de competir por la atención.
+
+  - table:
+      eyebrow: Bloque 03 · Accesibilidad
+      title: Cuatro reglas que cuestan una línea cada una
+      headers: [Regla, Por qué, Cómo]
+      rows:
+        - ["Azul contra naranja", "Rojo y verde no se distinguen para todos", "Elegir la paleta"]
+        - ["Estilo de línea", "El color se pierde al imprimir en gris", "linestyle y marker"]
+        - ["Etiqueta al final", "El ojo no tiene que buscar la leyenda", "annotate"]
+        - ["Texto alternativo", "Para quien usa lector de pantalla", "Escribirlo a mano"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El texto alternativo es la frase que dirías
+      lead: >-
+        Si la imagen no cargara, qué le dirías a alguien por teléfono. Eso es el texto
+        alternativo: qué muestra la gráfica y qué te muestra a ti. Y se escribe mirando la
+        tabla, no de memoria, porque describir una tendencia que los datos no tienen es la
+        forma más fácil de que una gráfica accesible diga algo falso.
+      panel:
+        label: Un ejemplo del curso
+        title: Cada número de la descripción se puede verificar
+        note: >-
+          Mayoreo pasa de 322 mil en noviembre a 1,611 mil en diciembre. Eso está en la
+          tabla, y por eso se puede escribir sin miedo.
+      steps:
+        - text: Dices qué tipo de gráfica es
+        - text: Dices qué rango cubre cada serie
+        - text: Dices qué se ve que pasa
+          loop: ↺ y cada cifra se comprueba contra la tabla
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de arruinar una gráfica correcta
+      items:
+        - label: Error 01
+          title: Cortar el eje vertical
+          desc: Una diferencia del dos por ciento se ve como del cincuenta. Los números están bien y la gráfica miente.
+        - label: Error 02
+          title: Barras sin ordenar
+          desc: El lector tiene que hacer el ranking a ojo. Ordenarlas es gratis y contesta la pregunta sola.
+        - label: Error 03
+          title: Línea sobre categorías
+          desc: Conectar Norte con Sur sugiere un recorrido que no existe. Para categorías van barras.
+        - label: Error 04
+          title: Dejar el título por omisión
+          desc: Una gráfica sin título ni fuente es una opinión. Con las dos cosas es evidencia.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Quieres mostrar cómo se reparten los sueldos de la empresa. ¿Qué gráfica?
+      filename: eleccion.py
+      source: |
+        sueldos = empleados["sueldo_mensual"]
+      options:
+        - "Barras, una por empleado"
+        - "Histograma, porque muestra el reparto de una columna"
+        - "Línea, para ver la tendencia"
+        - "Pastel, con una rebanada por rango"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una gráfica de tu proyecto, terminada
+      brief: Produce una gráfica con los datos de tu proyecto, con título que diga el hallazgo, subtítulo descriptivo, ejes formateados, un elemento resaltado y la fuente al pie. Escribe también su texto alternativo.
+      blocks:
+        - label: Entrega
+          text: La imagen, el código que la genera y el texto alternativo
+        - label: Restricción
+          text: Nada de pastel, y el eje vertical empieza en cero
+        - label: La prueba
+          text: Enséñala sin decir nada. Si tu compañero pregunta qué muestra, al título le falta el hallazgo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La pregunta elige la gráfica
+          desc: Barra compara, línea cambia con el tiempo, dispersión relaciona e histograma reparte
+        - title: Titula con el hallazgo
+          desc: El nombre de los ejes ya se ve. Lo que el lector no puede ver solo es qué encontraste tú
+        - title: El color nunca va solo
+          desc: Estilo de línea, marcador o etiqueta directa. Todo eso sobrevive a una impresión en gris
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Corre los scripts 01 a 03 del módulo A06, y toma la gráfica que produce el primero, la que no tiene título ni etiquetas, y arréglala hasta que se entienda sin explicación.
+      meta:
+        - [Entrega, Antes de la sesión 16.2]
+        - [Formato, Blackboard · .png y .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Antes y después", "40 %", "Se muestran las dos versiones de la misma gráfica"]
+        - ["Los cuatro elementos", "40 %", "Título con hallazgo, etiquetas, base en cero y fuente"]
+        - ["Texto alternativo", "20 %", "Se escribe, y cada cifra se puede verificar en los datos"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, seaborn y el cierre del proyecto integrador.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

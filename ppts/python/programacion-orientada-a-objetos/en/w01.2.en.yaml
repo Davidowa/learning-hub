@@ -1,0 +1,394 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 1.2
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Review 2 of 5 · Module 2 · Decisions and loops
+      title: Object-Oriented Programming
+      subtitle: Comparing, deciding and repeating. The four groups of operators and the two kinds of loop.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, Review 2 of 5]
+      notes: |
+        Covers module 2 end to end, Code006 to Code009 plus Exercise001.
+
+        The four operator tables run back to back on purpose: comparison, logical,
+        membership and identity. This is the only session where seeing them together
+        pays off, because afterwards they get mixed without warning.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Use the six comparison operators
+          sub: And know that comparing strings compares the numeric value of their letters
+        - head: Combine conditions with and, or and not
+          sub: Including short-circuit evaluation, which decides what never gets evaluated
+        - head: Tell in from is
+          sub: Membership against identity, two questions that get confused all semester
+        - head: Write if, elif, else and the ternary
+          sub: And explain why the order of the conditions changes the result
+        - head: Choose between for and while
+          sub: How many passes I know in advance, against until something happens
+
+  - roadmap:
+      eyebrow: Review map
+      title: Five sessions, one module each
+      phases:
+        - label: Review 1
+          title: Data and text
+          desc: Variables, types, strings, numbers and input
+          state: done
+        - label: Review 2
+          title: Decisions and loops
+          desc: Comparison, logic, if, for and while
+          state: now
+        - label: Review 3
+          title: Functions
+          desc: Parameters, return values and scope
+          state: todo
+        - label: Review 4
+          title: Collections
+          desc: Lists, tuples, sets and dictionaries
+          state: todo
+        - label: Review 5
+          title: Errors
+          desc: try, except and the types you meet first
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Comparing
+      lede: Every decision starts with a question whose answer is either true or false.
+      block: 1
+
+  - table:
+      eyebrow: Module 2 · Comparison
+      title: All six, in order
+      headers: ["Operator", "Question", "Example", "Result"]
+      rows:
+        - ["==", "Are they equal?", "5 == 5", "True"]
+        - ["!=", "Are they different?", "5 != 5", "False"]
+        - [">", "Greater than?", "5 > 3", "True"]
+        - ["<", "Less than?", "5 < 3", "False"]
+        - [">=", "Greater or equal?", "5 >= 5", "True"]
+        - ["<=", "Less or equal?", "5 <= 5", "True"]
+
+  - code_output:
+      eyebrow: Module 2 · Comparison
+      title: Strings compare letter by letter
+      filename: Code006.py
+      lang: python
+      output_label: Output
+      source: |
+        print("Python" == "python")
+        print("bag" > "apple")
+        print(ord("b"), ord("B"))
+        print("Z" < "a")
+      output: |
+        False
+        True
+        98 66
+        True
+      notes: |
+        ord() returns the number that stands for a letter. Capitals come before
+        lowercase in that numbering, which is why "Z" < "a" is true.
+
+  - table:
+      eyebrow: Module 2 · Logical operators
+      title: The three that combine conditions
+      headers: ["Operator", "True when", "Example", "Result"]
+      rows:
+        - ["and", "Both sides are true", "True and False", "False"]
+        - ["or", "At least one is true", "True or False", "True"]
+        - ["not", "The side is false", "not True", "False"]
+
+  - table:
+      eyebrow: Module 2 · Membership and identity
+      title: The four that get mistaken for each other
+      headers: ["Operator", "Question", "Example", "Result"]
+      rows:
+        - ["in", "Is it inside?", "'Pro' in 'Programming'", "True"]
+        - ["not in", "Is it absent?", "'swift' not in 'Python'", "True"]
+        - ["is", "Is it the same object?", "a = [1]; b = a; a is b", "True"]
+        - ["is not", "Is it another object?", "[1] is not [1]", "True"]
+
+  - concept:
+      eyebrow: Module 2 · Identity
+      title: is is not the same as ==
+      lead: >-
+        The double equals asks whether two things hold the same value. is asks whether
+        they are the very same object in memory. Two lists with identical contents are
+        equal, but they are not the same list.
+      panel:
+        label: When is is the right choice
+        title: Only with None, True and False
+        note: >-
+          The correct way to check for absence is "if result is None". For any other
+          comparison, the double equals is what you want.
+      steps:
+        - text: '[1, 2] == [1, 2] is true'
+        - text: '[1, 2] is [1, 2] is false'
+        - text: 'Equal, but not the same one'
+          loop: ↺ review 4 comes back to this with list copies
+
+  - concept:
+      eyebrow: Module 2 · Short-circuit
+      title: Sometimes the second condition is never evaluated
+      lead: >-
+        With and, if the first part is false, Python already knows the answer and never
+        looks at the second. With or the opposite happens: if the first is true, the rest
+        is skipped. That is short-circuit evaluation.
+      panel:
+        label: Why it matters
+        title: It is what makes a guard safe
+        note: >-
+          if data and data[0] does not crash on an empty list, because the index is
+          never reached. Swap the order and it raises IndexError.
+      steps:
+        - text: Python evaluates the first condition
+        - text: If that already decides it, it stops
+        - text: If not, it evaluates the next one
+          loop: ↺ left to right, always
+
+  - divider:
+      eyebrow: Block 02
+      title: Deciding
+      lede: A condition without a block is worth nothing. Indentation is what says which lines run.
+      block: 2
+
+  - code:
+      eyebrow: Module 2 · Conditionals
+      title: if, elif, else
+      filename: Code007.py
+      lang: python
+      source: |
+        temperature = 20
+
+        if temperature > 30:
+            print("It's hot")
+        elif temperature > 20:
+            print("Nice day")
+        elif temperature > 10:
+            print("A bit cold")
+        else:
+            print("It's cold")
+
+        print("Done")
+      annotations:
+        - label: Order decides
+          text: They are read top to bottom and stop at the first one that is true
+        - label: else is optional
+          text: It acts as the default. Without it, if nothing matches, nothing happens.
+        - label: Risk
+          text: Indentation defines the block. One extra space changes what runs.
+          accent: true
+
+  - code_output:
+      eyebrow: Module 2 · Conditionals
+      title: At 20 degrees, which branch runs?
+      filename: temperature.py
+      lang: python
+      output_label: Output
+      source: |
+        temperature = 20
+
+        if temperature > 30:
+            print("It's hot")
+        elif temperature > 20:
+            print("Nice day")
+        else:
+            print("It's cold")
+      output: |
+        It's cold
+      notes: |
+        Deliberate trap. With temperature = 20, the condition temperature > 20 is
+        false, because 20 is not greater than 20, so it falls through to else. It is
+        the most common boundary error, and worth letting them find before explaining.
+
+  - code:
+      eyebrow: Module 2 · Ternary
+      title: The one-line if
+      filename: ternary.py
+      lang: python
+      source: |
+        age = 22
+
+        message = "Eligible" if age >= 18 else "Not eligible"
+
+        # exactly the same as:
+        if age >= 18:
+            message = "Eligible"
+        else:
+            message = "Not eligible"
+      annotations:
+        - label: When to use it
+          text: When the decision is assigning one of two values to the same variable
+        - label: When not to
+          text: With more than two cases, or when each branch does something different, use the full if
+
+  - divider:
+      eyebrow: Block 03
+      title: Repeating
+      lede: Two kinds of loop, and the question that decides which one you want.
+      block: 3
+
+  - concept:
+      eyebrow: Module 2 · Loops
+      title: for or while, depending on what you know in advance
+      lead: >-
+        If you know how many passes there will be, or you are walking over something that
+        already exists, it is a for. If you repeat until something happens that you cannot
+        count ahead of time, it is a while.
+      panel:
+        label: The three pieces every loop needs
+        title: Initialisation, exit condition and advance
+        note: >-
+          In a for, Python supplies all three. In a while you write them yourself, and
+          forgetting the advance is the exact recipe for an infinite loop.
+      steps:
+        - text: Initialise the control variable
+        - text: Evaluate the exit condition
+        - text: Run the body and advance
+          loop: ↺ back to step 2 until the condition is false
+
+  - code_output:
+      eyebrow: Module 2 · for
+      title: for with range, and what each pass prints
+      filename: Code009.py
+      lang: python
+      output_label: Output
+      source: |
+        for number in range(4):
+            print("Attempt", number, number * ".")
+      output: |
+        Attempt 0
+        Attempt 1 .
+        Attempt 2 ..
+        Attempt 3 ...
+
+  - table:
+      eyebrow: Module 2 · range
+      title: The three forms of range
+      headers: ["Form", "What it yields", "Example", "Values"]
+      rows:
+        - ["range(n)", "0 up to n minus 1", "range(4)", "0 1 2 3"]
+        - ["range(a, b)", "a up to b minus 1", "range(2, 6)", "2 3 4 5"]
+        - ["range(a, b, s)", "a to b, in steps of s", "range(0, 10, 3)", "0 3 6 9"]
+        - ["range(b, a, -1)", "Backwards", "range(3, 0, -1)", "3 2 1"]
+
+  - code:
+      eyebrow: Module 2 · while
+      title: while, and the two words that cut a loop short
+      filename: loops.py
+      lang: python
+      source: |
+        counter = 0
+        while counter < 3:
+            print(counter)
+            counter += 1         # without this line it never ends
+
+        for n in range(10):
+            if n == 3:
+                continue         # skip to the next pass
+            if n == 6:
+                break            # leave the loop entirely
+            print(n)
+      annotations:
+        - label: continue
+          text: Skips the rest of the body and carries on with the next pass
+        - label: break
+          text: Leaves the loop completely, without checking the condition again
+        - label: Risk
+          text: A while whose control variable never changes inside the body never ends
+          accent: true
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors from this module
+      items:
+        - label: Error 01
+          title: Comparing with one equals sign
+          desc: 'SyntaxError. One sign assigns, two compare. Inside an if it is always two.'
+        - label: Error 02
+          title: Getting the boundary wrong
+          desc: '"greater than 20" excludes 20. If 20 should be included, the condition is >=.'
+        - label: Error 03
+          title: Infinite loop
+          desc: The while whose control variable is never modified inside the body
+        - label: Error 04
+          title: Using is instead of ==
+          desc: is compares identity, not value. Only use it with None, True and False.
+
+  - quiz:
+      eyebrow: Quick question
+      question: How many times does this print "hello"?
+      filename: quiz.py
+      lang: python
+      source: |
+        counter = 0
+
+        while counter < 3:
+            print("hello")
+            counter += 1
+
+        for i in range(2):
+            print("hello")
+      options:
+        - Three times
+        - Five times
+        - Six times
+        - Never, the program loops forever
+
+  - trace:
+      eyebrow: Answer
+      title: Five times, and the trace shows it
+      headers: ["Step", "Statement", "counter", "i", "Prints"]
+      rows:
+        - ['1', "counter = 0", '0', '–', '0']
+        - ['2', "while 0 < 3", '1', '–', '1']
+        - ['3', "while 1 < 3", '2', '–', '2']
+        - ['4', "while 2 < 3", '3', '–', '3']
+        - ['5', "while 3 < 3 is false", '3', '–', '3']
+        - ['6', "for i in range(2)", '3', "0, 1", '5']
+      verdict: The while runs three times and the for runs twice. Five prints in total.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The order of the conditions changes the result
+          desc: It stops at the first true one, so the most specific condition goes on top
+        - title: Short-circuit is not a footnote
+          desc: It is what lets you write guards that do not crash on empty data
+        - title: Every loop needs three pieces
+          desc: Initialisation, exit condition and advance, even when the for supplies them
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write a program that reads numbers until the user types zero, then reports how many were even and how many odd.
+      meta:
+        - [Due, Before review 3]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Loop", "40 %", "It uses while, because the count is not known in advance"]
+        - ["Condition", "40 %", "The even test uses the remainder, not a list of cases"]
+        - ["Output", "20 %", "Both counts are printed with an f-string at the end"]
+
+  - closing:
+      title: Questions
+      subtitle: Next review, functions with parameters, return values and scope.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

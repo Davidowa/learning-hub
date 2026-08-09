@@ -1,0 +1,327 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 8
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 08 · Unidad 6 · Estructuras de control II
+      title: Programación Avanzada
+      subtitle: Los tres ciclos, cuándo conviene cada uno, y la logística del primer parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 8 de 17]
+      notes: |
+        Sesión doble. Se cierra la unidad 6 con repetición y se cierra el bloque del primer
+        parcial. No es una sesión de repaso: el tema nuevo se enseña completo y la logística
+        va al final.
+
+        El parcial es acumulativo. Cubre desde la unidad 1 hasta la 6, que es todo lo visto
+        hasta hoy, y conviene decirlo con esas palabras. La tabla de calificaciones del
+        syllabus dice "acumulativo" para los tres parciales, no lista unidades por parcial.
+
+        Todas las salidas de los ciclos se midieron compilando cada fragmento tal como
+        aparece, en Visual Studio Community 2026. El do-while con la condición falsa desde
+        el principio imprime una vez, y esa corrida está en la lámina.
+
+        Lectura: Malik, octava edición, capítulo 5.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Repetir
+          desc: Los tres ciclos del lenguaje y qué los distingue
+        - title: Cuál usar
+          desc: Cuándo se sabe el número de vueltas y cuándo no
+        - title: Control fino
+          desc: break, continue y los ciclos anidados
+        - title: El parcial
+          desc: Qué cubre, cómo es y qué se puede llevar
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir los tres ciclos
+          sub: while, do-while y for, con su condición y su avance en el lugar correcto
+        - head: Elegir el ciclo adecuado
+          sub: Por si el número de repeticiones se conoce antes de entrar o no
+        - head: Evitar el ciclo infinito
+          sub: Reconociendo las tres maneras de olvidar que la condición tiene que cambiar
+        - head: Anidar dos ciclos
+          sub: Y calcular cuántas veces corre en total el cuerpo del de adentro
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los tres ciclos
+      lede: Tres formas de escribir lo mismo, y una diferencia real entre dos de ellas que se ve en un solo caso.
+      block: 1
+
+  - code_output:
+      eyebrow: while
+      title: Revisa antes de entrar
+      filename: ciclos.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int i = 0;
+
+        while (i < 3)
+        {
+            std::cout << "w" << i;
+            i++;
+        }
+      output: |
+        w0w1w2
+      notes: |
+        Tres cosas tienen que estar presentes y en su lugar: la variable inicializada antes
+        del ciclo, la condición en el encabezado, y el avance dentro del cuerpo.
+
+        Si falta la tercera, el ciclo no termina nunca. Es el error más común de la sesión y
+        se nota porque el programa se queda callado con el cursor parpadeando.
+
+  - code_output:
+      eyebrow: do-while
+      title: Ejecuta antes de revisar
+      filename: ciclos.cpp
+      lang: cpp
+      output_label: Salida con j valiendo 3
+      source: |
+        int j = 3;
+
+        do
+        {
+            std::cout << "d" << j;
+            j++;
+        } while (j < 3);
+      output: |
+        d3
+      notes: |
+        La condición es falsa desde antes de entrar y aun así imprimió una vez. Esa es la
+        única diferencia real con while, y es la razón de que exista.
+
+        Sirve para lo que tiene que ocurrir al menos una vez, como mostrar un menú antes de
+        preguntar si el usuario quiere salir. Fuera de ese caso, while se lee mejor.
+
+        El punto y coma después del paréntesis final es obligatorio.
+
+  - code_output:
+      eyebrow: for
+      title: Las tres partes juntas en el encabezado
+      filename: ciclos.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        for (int k = 0; k < 3; k++)
+        {
+            std::cout << "f" << k;
+        }
+      output: |
+        f0f1f2
+      notes: |
+        Inicialización, condición y avance en un solo renglón. No hace nada que while no
+        pueda hacer, pero pone las tres piezas donde se ven juntas y por eso es más difícil
+        olvidar una.
+
+        La variable k se declara en el encabezado y solo existe dentro del ciclo. Al salir
+        deja de existir, que es exactamente lo que se quiere casi siempre.
+
+  - table:
+      eyebrow: Cuál usar
+      title: Tres ciclos, y la pregunta que decide
+      headers: ["Ciclo", "Cuándo", "Corre mínimo"]
+      rows:
+        - ["for", "Se sabe cuántas vueltas", "Cero veces"]
+        - ["while", "No se sabe, depende de algo", "Cero veces"]
+        - ["do-while", "Tiene que pasar al menos una", "Una vez"]
+      notes: |
+        La columna de la derecha es la que decide entre los dos primeros y el tercero. Los
+        dos de arriba revisan antes de entrar, así que pueden no ejecutarse nunca.
+
+        Entre for y while la elección es de legibilidad, no de capacidad. Cualquiera de los
+        dos hace lo del otro.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Anidar y controlar
+      lede: Un ciclo dentro de otro multiplica, no suma. Es la primera vez en el curso que el costo de un programa se dispara.
+      block: 2
+
+  - code_output:
+      eyebrow: Anidados
+      title: Dos ciclos, y cuántas veces corre el cuerpo
+      filename: anidado.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int suma = 0;
+
+        for (int a = 1; a <= 3; a++)
+            for (int b = 1; b <= 2; b++)
+                suma = suma + a * b;
+
+        std::cout << suma << "\n";
+      output: |
+        18
+      notes: |
+        El cuerpo corre seis veces, tres por dos. Los productos son 1, 2, 2, 4, 3 y 6, que
+        suman 18. Medido en una corrida real.
+
+        La cuenta que importa no es el 18, es el seis. Con tres por dos no se nota; con mil
+        por mil son un millón de vueltas, y ahí es donde un programa deja de responder.
+
+  - table:
+      eyebrow: Control fino
+      title: Dos instrucciones que rompen el flujo del ciclo
+      headers: ["Instrucción", "Qué hace", "Cuidado"]
+      rows:
+        - ["break", "Sale del ciclo por completo", "Solo del más interno"]
+        - ["continue", "Salta a la siguiente vuelta", "El avance se puede saltar"]
+      notes: |
+        El cuidado de continue es real y produce ciclos infinitos. En un while donde el
+        avance está al final del cuerpo, un continue se lo salta y la condición nunca cambia.
+
+        En un for eso no pasa, porque el avance vive en el encabezado y corre siempre. Es
+        una razón más para preferir for cuando hay un contador.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro maneras de escribir un ciclo infinito
+      items:
+        - label: Error 01
+          title: Olvidar el avance
+          desc: La condición nunca cambia y el programa se queda quieto, sin error y sin salida
+        - label: Error 02
+          title: Punto y coma después del for
+          desc: El cuerpo se vuelve la instrucción vacía y el bloque de abajo corre una sola vez
+        - label: Error 03
+          title: continue antes del avance
+          desc: En un while, salta la línea que hacía avanzar la variable y el ciclo se traba
+        - label: Error 04
+          title: Comparar con igualdad exacta
+          desc: Si la variable salta el valor buscado, la condición nunca se cumple y no termina
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuántas veces se imprime, con j empezando en 3?
+      filename: dowhile.cpp
+      lang: cpp
+      source: |
+        int j = 3;
+
+        do
+        {
+            std::cout << "d" << j;
+            j++;
+        } while (j < 3);
+      options:
+        - 'Una vez, porque revisa después de ejecutar'
+        - 'Ninguna, porque 3 no es menor que 3'
+        - 'Tres veces, porque j empieza en 3'
+        - 'Infinitas, porque j crece y nunca es menor que 3'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El cuerpo corre antes de que exista la primera revisión
+      headers: ["Paso", "Qué ocurre", "j", "Imprime"]
+      rows:
+        - ["1", "Entra al cuerpo sin revisar", "3", "d3"]
+        - ["2", "j++", "4", "–"]
+        - ["3", "Revisa 4 < 3", "4", "–"]
+        - ["4", "Es falso, sale", "4", "–"]
+      verdict: Un while con esa misma condición no habría impreso nada. La diferencia entre los dos ciclos es exactamente esta corrida.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Primer parcial
+      lede: Martes 8 de septiembre. Acumulativo, como los tres del curso.
+      block: 3
+
+  - tiers:
+      eyebrow: El examen
+      title: Cuatro cosas que conviene saber antes
+      items:
+        - key: '01'
+          title: Cubre de la unidad 1 a la 6
+          desc: Todo lo visto hasta hoy. Entorno, tipos, operadores, funciones, clases y control.
+        - key: '02'
+          title: Es acumulativo, y los tres lo son
+          desc: El segundo parcial incluirá esto mismo otra vez, y el tercero incluirá todo el curso
+        - key: '03'
+          title: Se resuelve escribiendo código
+          desc: No es de opción múltiple. Hay que compilar y hacer que funcione.
+        - key: '04'
+          title: Entra la depuración
+          desc: Encontrar el error de un programa dado cuenta igual que escribir uno nuevo
+
+  - method:
+      eyebrow: Cómo prepararlo
+      title: Repetir los ejercicios vale más que releer las diapositivas
+      statement: Este examen se resuelve escribiendo, así que se prepara escribiendo. Volver a hacer los laboratorios sin mirar la solución es la única práctica que se parece al examen.
+      points:
+        - label: Qué repetir
+          text: Los cuatro laboratorios y las tareas. Son las mismas mecánicas con otros datos.
+        - label: Qué revisar
+          text: Los errores del compilador que ya vieron. C2065, C2143, C2248 y LNK2019 salen de nuevo.
+        - label: Qué no hacer
+          text: Leer código ajeno sin escribirlo. Se entiende al leerlo y no sale al escribirlo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: do-while corre al menos una vez
+          desc: Revisa después del cuerpo, y esa es la única diferencia real con while
+        - title: Anidar multiplica las vueltas
+          desc: Tres por dos son seis, y mil por mil son un millón. El costo deja de ser gratis.
+        - title: El parcial es acumulativo
+          desc: Cubre de la unidad 1 a la 6, y lo de hoy vuelve a entrar en los otros dos
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Práctica de repetición y preparación del parcial
+      brief: Escriban un programa que use los tres ciclos para lo mismo, calcular el promedio de diez calificaciones capturadas, y un párrafo corto que explique cuál de los tres eligieron y por qué.
+      meta:
+        - [Entrega, Antes de la sesión 9]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Los tres ciclos", "Requisito", "Las tres versiones dan el mismo resultado"]
+        - ["Sin infinitos", "Requisito", "Las tres terminan con cualquier entrada válida"]
+        - ["Criterio", "Requisito", "El párrafo justifica la elección por legibilidad"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, herencia y composición. Reutilizar una clase sin volver a escribirla.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,331 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 12
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 12 · Tema 6 · Listas y tuplas
+      title: Análisis de Datos
+      subtitle: La columna de tu hoja de cálculo, dicha en Python. Índices, rebanadas, métodos y el peligro de las copias.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 12 de 17]
+      notes: |
+        La analogía de la sesión es directa: una lista es una columna. Vale la pena decirla
+        temprano y sostenerla, porque en la semana 15 una Series de pandas es exactamente
+        esto con un índice encima.
+
+        Los métodos van en dos tablas completas, los que modifican y los que consultan. La
+        distinción entre modificar en el lugar y devolver una copia es lo que más confunde
+        y lo que más se cobra en el parcial.
+
+        El alias contra la copia conviene demostrarlo en vivo. Es contraintuitivo, no se
+        entiende leyéndolo, y es el origen de errores que parecen embrujados.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La lista
+          desc: Una columna con nombre, que crece y se recorre
+        - title: Los métodos
+          desc: Los que la modifican y los que solo la consultan
+        - title: Copias y alias
+          desc: Por qué dos nombres pueden apuntar a la misma lista
+        - title: Tu turno
+          desc: Una columna real de tu área, ordenada y filtrada
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Crear y recorrer una lista
+          sub: Con índices que empiezan en cero y también cuentan hacia atrás
+        - head: Cortar una rebanada
+          sub: El primer índice entra, el segundo no, y por eso los tamaños salen redondos
+        - head: Usar los métodos de lista
+          sub: Los seis que la modifican y los cinco que la consultan
+        - head: Distinguir lista de tupla
+          sub: Una se puede cambiar y la otra no, y eso es una decisión de diseño
+        - head: Reconocer un alias
+          sub: Dos nombres para la misma lista, y cómo hacer una copia de verdad
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Una lista es una columna
+      lede: Valores en orden, bajo un solo nombre. La diferencia con un rango es que la lista crece y se encoge sola.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Ordenada, indexada y de largo variable
+      lead: >-
+        Una lista guarda varios valores en un orden que se respeta, y cada uno se alcanza
+        por su posición. Ese orden es lo que la vuelve una columna: la posición 0 de la
+        lista de pagos corresponde a la posición 0 de la lista de clientes. A diferencia de
+        un rango de celdas, no tiene un tamaño fijo declarado de antemano.
+      panel:
+        label: A dónde lleva
+        title: Una Series de pandas es esto con un índice encima
+        note: >-
+          Todo lo que aprendas hoy sobre recorrer, cortar y ordenar sigue valiendo en la
+          semana 15, con menos escritura.
+      steps:
+        - text: Se declara entre corchetes
+        - text: Cada valor tiene una posición
+        - text: Crece y se encoge según haga falta
+          loop: ↺ y el orden se mantiene siempre
+
+  - code:
+      eyebrow: Bloque 01 · Índices
+      title: Los pagos mensuales de cinco créditos
+      filename: pagos.py
+      source: |
+        pagos = [9038.10, 6344.53, 7220.66,
+                 4180.25, 11902.44]
+
+        print(pagos[0])
+        print(pagos[-1])
+        print(pagos[1:3])
+      annotations:
+        - label: El primero es cero
+          text: pagos[0] es el primer valor. Es el quiebre número uno para quien viene de la fila 1.
+        - label: Los negativos
+          text: pagos[-1] es el último, sin importar cuántos haya. Ahorra escribir len menos uno.
+        - label: La rebanada
+          text: De la posición 1 a la 3, y el 3 no entra. Por eso devuelve exactamente dos valores.
+        - label: Riesgo
+          text: pagos[5] en una lista de cinco lanza IndexError. El último índice válido es 4.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: Lo que devuelve cada acceso
+      filename: pagos.py
+      source: |
+        print(pagos[0])
+        print(pagos[-1])
+        print(pagos[1:3])
+      output: |
+        9038.1
+        11902.44
+        [6344.53, 7220.66]
+
+  - figure:
+      eyebrow: Bloque 01 · La regla del corte
+      title: El primero entra, el segundo no
+      image: img/es/slicing.png
+      caption: Por eso la rebanada de 0 a 3 devuelve tres elementos, y por eso los tamaños siempre salen redondos.
+      alt: Una palabra en fichas, con los índices positivos arriba y los negativos abajo
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Los métodos
+      lede: Once en total. Seis cambian la lista, cinco solo preguntan por ella, y confundirlos cuesta caro.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Métodos · 1 de 2
+      title: Los seis que modifican la lista
+      headers: [Método, Qué hace, Ejemplo]
+      rows:
+        - ["append", "Agrega uno al final", "pagos.append(5500)"]
+        - ["insert", "Agrega uno en una posición", "pagos.insert(0, 5500)"]
+        - ["extend", "Agrega los de otra lista", "pagos.extend(otros)"]
+        - ["remove", "Quita la primera aparición", "pagos.remove(5500)"]
+        - ["pop", "Saca uno y lo devuelve", "ultimo = pagos.pop()"]
+        - ["clear", "Los quita todos", "pagos.clear()"]
+
+  - table:
+      eyebrow: Bloque 02 · Métodos · 2 de 2
+      title: Los cinco restantes
+      headers: [Método, Qué hace, Ejemplo]
+      rows:
+        - ["sort", "Ordena en el lugar", "pagos.sort()"]
+        - ["reverse", "Invierte en el lugar", "pagos.reverse()"]
+        - ["index", "En qué posición está", "pagos.index(7220.66)"]
+        - ["count", "Cuántas veces aparece", "pagos.count(6344.53)"]
+        - ["copy", "Devuelve una copia nueva", "otra = pagos.copy()"]
+
+  - compare:
+      eyebrow: Bloque 02 · La distinción cara
+      title: Ordenar en el lugar, o pedir una copia ordenada
+      before:
+        label: sort modifica
+        file: modifica.py
+        code: |
+          pagos.sort()
+          # pagos quedó ordenada
+          # el orden original se perdió
+      after:
+        label: sorted devuelve
+        file: devuelve.py
+        code: |
+          ordenados = sorted(pagos)
+          # pagos sigue como estaba
+          # ordenados es una lista nueva
+      note: >-
+        El método devuelve None y cambia la lista. La función deja la lista intacta y
+        devuelve otra. Escribir pagos = pagos.sort() borra tus datos y no avisa.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Copias, alias y tuplas
+      lede: Dos nombres pueden señalar la misma lista. Cuando eso pasa sin que lo sepas, los errores parecen embrujados.
+      block: 3
+
+  - figure:
+      eyebrow: Bloque 03 · Alias
+      title: Un nombre nuevo no es una lista nueva
+      image: img/es/reference-vs-copy.png
+      caption: Asignar una lista a otro nombre crea una segunda etiqueta sobre la misma lista. Cambiar una cambia la otra.
+      alt: Dos etiquetas apuntando a la misma caja de valores, frente a dos cajas separadas
+
+  - code_output:
+      eyebrow: Bloque 03 · Demostración
+      title: La misma operación, dos resultados
+      filename: alias.py
+      source: |
+        a = [1, 2, 3]
+        b = a
+        b.append(4)
+        print(a)
+
+        c = [1, 2, 3]
+        d = c.copy()
+        d.append(4)
+        print(c)
+      output: |
+        [1, 2, 3, 4]
+        [1, 2, 3]
+
+  - table:
+      eyebrow: Bloque 03 · Tuplas
+      title: Lista y tupla, y cuándo se usa cada una
+      headers: [Aspecto, Lista, Tupla]
+      rows:
+        - ["Se escribe", "Entre corchetes", "Entre paréntesis"]
+        - ["Se puede cambiar", "Sí", "No, nunca"]
+        - ["Para qué sirve", "Datos que crecen", "Datos que no deben cambiar"]
+        - ["Ejemplo del curso", "La columna de pagos", "Los términos de un crédito"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Inmutable
+      title: Lo que pasa al intentar cambiar una tupla
+      filename: tupla.py
+      source: |
+        terminos = (250000, 0.18, 36)
+
+        print(terminos[1])
+        terminos[0] = 300000
+      output: |
+        0.18
+        TypeError: 'tuple' object does
+        not support item assignment
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro trampas de listas
+      items:
+        - label: Error 01
+          title: Guardar lo que devuelve sort
+          desc: pagos = pagos.sort() deja pagos valiendo None. Tus datos desaparecen y el error sale después.
+        - label: Error 02
+          title: Copiar con el signo igual
+          desc: otra = pagos no copia nada. Crea un segundo nombre para la misma lista. Usa copy.
+        - label: Error 03
+          title: Borrar mientras recorres
+          desc: Quitar elementos dentro de un for descoloca las posiciones y el ciclo se salta valores.
+        - label: Error 04
+          title: Suponer que remove quita todos
+          desc: Quita solo la primera aparición. Si el valor está tres veces, quedan dos.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime la última línea?
+      filename: metodos.py
+      source: |
+        ventas = [300, 100, 200]
+        resultado = ventas.sort()
+
+        print(resultado)
+      options:
+        - "[100, 200, 300], la lista ordenada"
+        - "None, porque sort ordena y no devuelve nada"
+        - "[300, 100, 200], sin cambios"
+        - "Un error, porque falta un argumento"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una columna de tu área
+      brief: >-
+        Toma doce valores reales de tu carrera en una lista y responde cuatro preguntas
+        con métodos y funciones: el mayor, el menor, los tres más altos, y en qué posición
+        está uno que tú elijas.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con las cuatro respuestas impresas y etiquetadas
+        - label: Restricción
+          text: La lista original tiene que quedar en su orden inicial al terminar el programa
+        - label: La prueba
+          text: Imprime la lista al principio y al final. Si cambió, usaste un método donde iba una función.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una lista es una columna
+          desc: Y en la semana 15 esa misma columna se llamará Series, con un índice puesto encima
+        - title: Modificar no es devolver
+          desc: sort ordena y devuelve None, sorted deja la lista quieta y devuelve otra. La confusión borra datos
+        - title: El igual no copia
+          desc: Crea un segundo nombre para la misma lista, y tocar cualquiera de los dos toca la única que hay
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Con las listas de campañas de la semana 8, produce una lista nueva que solo contenga las que superan la meta, sin modificar la original, y ordénala de mayor a menor inversión.
+      meta:
+        - [Entrega, Antes de la semana 13]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Intacta", "40 %", "La lista original conserva su orden y su contenido al final"]
+        - ["Filtro", "40 %", "La lista nueva contiene exactamente las que cumplen la condición"]
+        - ["Orden", "20 %", "El ordenamiento es descendente y se hizo sin destruir nada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, diccionarios y conjuntos, y el segundo examen parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

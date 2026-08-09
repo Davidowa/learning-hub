@@ -1,0 +1,353 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 6
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 06 · Unit 2 · Editing what you recorded
+      title: Information Analysis and Processing
+      subtitle: Cutting what the recorder added and adding what it left out, so the macro still works next month.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 6 of 17]
+      notes: |
+        Ninety minutes. Twenty on what the recorder gets wrong, thirty-five on variable
+        ranges, the rest hiding and deleting columns.
+
+        This is the session the course has been promising since week 1, where the record,
+        read, edit, run cycle was laid out. Today the editing gets done for real.
+
+        The central argument can be demonstrated on screen in thirty seconds. The same
+        macro, with twelve rows of data, builds the range A2:C13. With forty rows it
+        builds A2:C41. Without touching a line. That is verified and it carries the
+        result slide. The recorded macro, by contrast, has A2:C13 typed into it.
+
+        The other useful verification is the difference between hiding and deleting. With
+        Hidden, B1 still says Region. With Delete, B1 becomes Venta, because the columns
+        shift across and the data is gone. Students mix these two up constantly.
+
+        The code comes from module 00, Module2 of amortization_table_macros.xlsm, and
+        12 - Cells/Cells.bas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: What the recorder gets wrong
+          desc: Select, Selection and a hand-typed address that does not survive the month
+        - title: Ranges that grow
+          desc: Cells with variables, and three ways to find where the data ends
+        - title: Hiding and deleting
+          desc: Two things that look alike on screen and are nothing alike underneath
+        - title: Your turn
+          desc: A recorded macro, edited until it works with any number of rows
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Recognise the recorder's fingerprints
+          sub: Select, Selection, ActiveCell and hard-typed addresses
+        - head: Remove Select without changing the result
+          sub: And explain why the macro also runs faster afterwards
+        - head: Build a range from variables
+          sub: Cells(row, column), and the range that runs corner to corner
+        - head: Find where the data ends
+          sub: End(xlUp), CurrentRegion and UsedRange, and where each one fails
+        - head: Tell hiding from deleting
+          sub: One is undone, the other shifts the columns and takes the data with it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: now
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What the recorder gets wrong
+      lede: It does not write badly. It writes exactly what you did, and what you did included moving around, and next month the data will not be there.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · Straight out of the recorder
+      title: The three fingerprints of a recorded macro
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub FormatSales()
+        '
+        ' FormatSales Macro
+        '
+            Range("C2:C13").Select
+            Selection.NumberFormat = "$#,##0.00"
+            Range("A1").Select
+        End Sub
+      annotations:
+        - label: Select
+          text: The recorder selects before touching anything, because you did. The code does not need it.
+        - label: Selection
+          text: Refers to whatever was selected last. It works, and it stops saying what it is working on.
+        - label: C2 to C13
+          text: The exact address of the day you recorded. Twelve rows, not one more.
+        - label: Risk
+          text: Next month forty rows arrive. The macro runs without error and formats only the first twelve.
+          accent: true
+
+  - compare:
+      eyebrow: Block 01 · The first edit
+      title: The same thing, without selecting anything
+      before:
+        label: What it recorded
+        file: Module1.bas
+        lang: vba
+        code: |
+          Range("C2:C13").Select
+          Selection.NumberFormat = "$#,##0.00"
+          Range("A1").Select
+      after:
+        label: What is left
+        file: Module1.bas
+        lang: vba
+        code: |
+          Range("C2:C13").NumberFormat = "$#,##0.00"
+      note: >-
+        Three lines become one, and the line now says what it works on without reading
+        upwards. The macro also stops moving the screen while it runs, which is where the
+        feeling that it was slow came from.
+
+  - method:
+      eyebrow: Block 01 · The rule
+      title: If you can name it, do not select it
+      statement: Selecting is what a person does with a mouse. A program names the cell and talks to it directly.
+      points:
+        - label: What you gain
+          text: The line explains itself, the macro stops flickering, and you no longer depend on which sheet was active
+        - label: When to keep it
+          text: When you want to leave the cursor somewhere at the end, or with SetFocus in a form
+        - label: How to remove it
+          text: Join the Select to the line below. Range("X").Select plus Selection.thing becomes Range("X").thing
+
+  - divider:
+      eyebrow: Block 02
+      title: Ranges that grow
+      lede: The recorder writes today's address. What is needed is one that gets worked out every time the macro runs.
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: Cells takes variables, Range does not
+      lead: >-
+        Range wants a written address in quotes, and that makes it useless the moment the
+        last row moves. Cells wants two numbers, the row and the column, and a number can
+        come from a variable. That builds a range running from one calculated corner to
+        the other, and the macro stops being the size of yesterday's data.
+      panel:
+        label: The shape you will repeat all term
+        title: Range(Cells(row1, col1), Cells(row2, col2))
+        note: >-
+          Range accepts two cells as its corners. Both come from Cells, and both can carry
+          variables inside them.
+      steps:
+        - text: You find which row the data ends on
+        - text: You keep it in a Long variable
+        - text: You build the range between the two corners
+          loop: ↺ and next month it gives another range, with no edit
+
+  - table:
+      eyebrow: Block 02 · Verified
+      title: Three ways to find where the data ends
+      headers: [Way, What it returns, Where it fails]
+      rows:
+        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "If column 1 has gaps"]
+        - ["Range(\"A1\").CurrentRegion", "$A$1:$C$13", "If there is an empty row in the middle"]
+        - ["UsedRange", "$A$1:$C$13", "If formatting was left in empty cells"]
+
+  - code:
+      eyebrow: Block 02 · The range built up
+      title: The same macro, for any number of rows
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub FormatSales()
+            Dim lastRow As Long
+            Dim data As Range
+
+            lastRow = Cells(Rows.Count, 1).End(xlUp).Row
+            Set data = Range(Cells(2, 3), Cells(lastRow, 3))
+
+            data.NumberFormat = "$#,##0.00"
+        End Sub
+      annotations:
+        - label: Rows.Count
+          text: It is 1,048,576. You start from the very bottom and come up until you hit data.
+        - label: End(xlUp)
+          text: It is Ctrl plus arrow-up from the keyboard, written as code. Its value is -4162.
+        - label: Set
+          text: A range is an object, and objects are assigned with Set. Without it, error 91.
+        - label: Risk
+          text: If column 1 has gaps, End(xlUp) stops at the first one from the bottom and the range comes out short.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · The proof
+      title: The same code, two different months
+      filename: Module1.bas
+      lang: vba
+      output_label: Range it builds
+      source: |
+        lastRow = Cells(Rows.Count, 1).End(xlUp).Row
+        Set data = Range(Cells(2, 1), Cells(lastRow, 3))
+      output: |
+        With 12 rows:
+        $A$2:$C$13
+
+        With 40 rows:
+        $A$2:$C$41
+
+  - divider:
+      eyebrow: Block 03
+      title: Hiding, showing and deleting
+      lede: On screen the first two look alike and so does the third. In the data, one is reversible and the other is not.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Verified
+      title: What each one does to the sheet
+      headers: [Statement, What happens to B, What is left in B1]
+      rows:
+        - ["Before running anything", "Visible, says Region", "Region"]
+        - ["EntireColumn.Hidden = True", "Hidden, still there", "Region"]
+        - ["EntireColumn.Hidden = False", "Visible again", "Region"]
+        - ["EntireColumn.Delete", "Gone, and C shifts across", "Venta"]
+
+  - code:
+      eyebrow: Block 03 · The week 1 macro, fixed
+      title: Now it does what its name promises
+      filename: Module2.bas
+      lang: vba
+      source: |
+        Sub ToggleHelperColumn()
+            Dim col As Range
+            Set col = Columns("D:D")
+
+            If col.EntireColumn.Hidden Then
+                col.EntireColumn.Hidden = False
+            Else
+                col.EntireColumn.Hidden = True
+            End If
+        End Sub
+      annotations:
+        - label: What changed
+          text: The second line that undid the first is gone, and a decision took its place.
+        - label: Hidden can be read
+          text: Not only assigned. Asking it is what lets one button both hide and show.
+        - label: The name
+          text: ToggleHelperColumn says which column and what for. HideColumn said neither.
+        - label: Risk
+          text: Delete instead of Hidden looks the same in the demo and destroys the data for good.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to break an edited macro
+      items:
+        - label: Error 01
+          title: Removing Select but keeping Selection
+          desc: Delete the Select and leave the Selection, and the macro works on whatever the user happened to select.
+        - label: Error 02
+          title: Forgetting Set on an object
+          desc: A range is assigned with Set. Without it VBA stops with error 91, object variable not set.
+        - label: Error 03
+          title: Counting from the top
+          desc: Cells(1, 1).End(xlDown) stops at the first gap. Coming up from the bottom with xlUp does not.
+        - label: Error 04
+          title: Deleting when you meant hiding
+          desc: Delete shifts the columns from the right across and takes the data. Hidden touches nothing and undoes.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The sheet has 40 rows of data. What gets formatted?
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub FormatColumn()
+            Range("C2:C13").Select
+            Selection.NumberFormat = "$#,##0.00"
+        End Sub
+      options:
+        - "All 40 rows, because Selection adjusts"
+        - "Only C2 to C13, and it raises no error at all"
+        - "It stops with an error, because the range does not match"
+        - "All 40, but it takes longer"
+
+  - lab:
+      eyebrow: Lab
+      title: Edit a recorded macro until it is usable
+      brief: Record a macro that formats a column of amounts in your database. Then edit it until it does three things. Carries no Select at all. Works out the last row instead of having it typed in. And runs the same with twice as many rows.
+      blocks:
+        - label: Submission
+          text: The .bas before and the .bas after, plus the .xlsm, on Blackboard
+        - label: Constraint
+          text: Not one Select and not one Selection in the final version
+        - label: The test
+          text: Double the rows in the database and run it again. If it formats half, the range is still fixed.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The recorder writes today's range
+          desc: And next month it runs with no error at all over the wrong part, which is the most expensive failure there is
+        - title: Cells takes variables, Range does not
+          desc: Range wants an address in quotes, Cells wants two numbers, and a number can be worked out
+        - title: Hiding undoes, deleting does not
+          desc: Delete shifts the columns across and takes the data. On screen they look alike, in the data they are nothing alike
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Take the amortization table and write a macro that applies a currency format to
+        every amount, whatever number of periods it has. Add a button that hides and shows
+        the helper columns.
+      meta:
+        - [Due, Before week 7]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["No Select", "20 %", "Not one Select or Selection is left in the code"]
+        - ["Variable range", "50 %", "The last row is worked out and the macro runs with any number"]
+        - ["Hiding", "30 %", "The button hides and shows, and deletes nothing"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, Goal Seek driven from a macro, and how several macros get chained
+        without tripping over each other.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

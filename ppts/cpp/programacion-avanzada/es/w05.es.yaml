@@ -1,0 +1,406 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 5
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 05 · Unidad 4 · Funciones definidas por el usuario II
+      title: Programación Avanzada
+      subtitle: Funciones que no devuelven nada, parámetros que sí cambian el original, y varios nombres iguales que conviven.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 5 de 17]
+      notes: |
+        La sesión resuelve la limitación que quedó anunciada la semana pasada. Un parámetro
+        era una copia y no había manera de que una función cambiara la variable de quien la
+        llamó. Hoy sí la hay, y son cuatro caracteres de diferencia.
+
+        Todas las salidas de este deck se midieron compilando cada programa tal como aparece
+        en su lámina, en Visual Studio Community 2026. El programa del contador estático se
+        corrió con las tres llamadas que muestra la traza.
+
+        Siguen sin existir estructuras de control. Es la última sesión con esa limitación
+        antes de las clases, y la semana 7 la levanta.
+
+        Lectura: Malik, octava edición, capítulo 6. Los documentos del curso citan el
+        capítulo 7, que es correcto en la quinta edición; la octava fusionó los dos
+        capítulos de funciones en uno.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Sin devolver nada
+          desc: Funciones void, y para qué sirve una que no entrega resultado
+        - title: Por referencia
+          desc: El ampersand que convierte la copia en otro nombre del original
+        - title: Alcance
+          desc: Global, local y de bloque, más la variable que sobrevive a la llamada
+        - title: Un nombre, varias
+          desc: Sobrecarga y parámetros con valor por omisión
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir funciones void
+          sub: Y decidir cuándo un resultado se devuelve y cuándo se escribe en un parámetro
+        - head: Pasar un argumento por referencia
+          sub: Sabiendo que la función va a poder modificar la variable de quien la llamó
+        - head: Predecir qué variable gana
+          sub: Cuando una local tiene el mismo nombre que una global, y por qué eso se evita
+        - head: Sobrecargar una función
+          sub: Y decir qué diferencias entre dos firmas sí bastan para distinguirlas
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: now
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Cambiar la variable de quien llamó
+      lede: La semana pasada el parámetro era una copia y no había forma de tocar el original. Hoy la diferencia son cuatro caracteres.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: La misma llamada, con y sin ampersand
+      image: img/es/value-vs-reference.png
+      caption: A la izquierda hay dos cajas y una se copió en la otra. A la derecha hay una sola caja con dos nombres.
+      alt: Dos cajas unidas por una flecha de copia, frente a una sola caja señalada por dos nombres
+
+  - code:
+      eyebrow: La diferencia
+      title: Cuatro caracteres separan una cosa de la otra
+      filename: duplicar.cpp
+      lang: cpp
+      source: |
+        void duplicar(int n)
+        {
+            n = n * 2;
+        }
+
+        void duplicarRef(int& n)
+        {
+            n = n * 2;
+        }
+      annotations:
+        - label: void
+          text: Ninguna de las dos devuelve nada. La primera, por lo tanto, no hace absolutamente nada útil.
+        - label: Línea 6
+          text: El ampersand va pegado al tipo. n deja de ser una copia y pasa a ser otro nombre del argumento.
+        - label: El cuerpo
+          text: Las dos funciones tienen el cuerpo idéntico. Lo único que cambia es la firma.
+        - label: Riesgo
+          text: Quien lee la llamada duplicarRef(b) no ve el ampersand. Hay que abrir la firma para saber que b va a cambiar.
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: Dos llamadas iguales, dos resultados distintos
+      filename: duplicar.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int a = 10;
+        duplicar(a);
+
+        int b = 10;
+        duplicarRef(b);
+
+        std::cout << a << " " << b << "\n";
+      output: |
+        10 20
+      notes: |
+        Las dos llamadas se escriben igual. La única manera de saber cuál modifica su
+        argumento es ir a leer la firma de la función, y ese es el costo real del paso por
+        referencia.
+
+        Por eso la convención más útil es que una función que modifica su parámetro lo
+        anuncie en el nombre. calcularTotal no debería cambiar nada; acumularEn sí.
+
+  - concept:
+      eyebrow: Criterio
+      title: Tres formas de recibir, y cuándo va cada una
+      lead: >-
+        Por valor cuando la función solo necesita leer un dato pequeño. Por referencia
+        cuando de verdad tiene que modificar el original. Y por referencia constante cuando
+        solo va a leer algo grande y copiarlo saldría caro.
+      panel:
+        label: La tercera es la que se olvida
+        title: const ampersand lee sin copiar
+        note: >-
+          Recibir un std::string por valor copia toda la cadena en cada llamada. Recibirlo
+          como const std::string& no copia nada y el compilador impide modificarlo.
+      steps:
+        - text: int por valor, es barato
+        - text: int& si hay que modificarlo
+        - text: const string& para solo leer
+          loop: ↺ la duda razonable es entre la primera y la tercera
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Dónde vive cada nombre
+      lede: Un mismo identificador puede existir tres veces en el mismo archivo y referirse a tres cosas distintas.
+      block: 2
+
+  - figure:
+      eyebrow: Alcance
+      title: Lo local muere cuando la función termina
+      image: img/es/scope-cpp.png
+      caption: Usar el nombre fuera de su caja no falla al correr, no llega tan lejos. Falla al compilar, con C2065.
+      alt: Tres cajas anidadas, global, función y local, con la salida hacia el nombre local tachada
+
+  - code_output:
+      eyebrow: Sombra
+      title: Cuando la local se llama igual que la global
+      filename: sombra.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int contador = 0;
+
+        void sombra()
+        {
+            int contador = 99;
+            std::cout << contador << "\n";
+        }
+
+        int main()
+        {
+            sombra();
+            std::cout << contador << "\n";
+            return 0;
+        }
+      output: |
+        99
+        0
+      notes: |
+        Adentro de la función gana la local. La global sigue existiendo y sigue valiendo
+        cero, simplemente quedó tapada mientras dure ese bloque.
+
+        Esto compila sin una sola advertencia y es una de las causas más frecuentes de un
+        programa que hace algo distinto de lo que su autor leyó. La recomendación no es
+        aprender la regla para aprovecharla, es no repetir nombres.
+
+        Las variables globales son parte del temario y conviene decir en voz alta que casi
+        siempre son un error de diseño. Cualquier función puede cambiarlas y ninguna firma
+        lo anuncia.
+
+  - code_output:
+      eyebrow: static
+      title: Una variable local que no se muere
+      filename: contador.cpp
+      lang: cpp
+      output_label: Tres llamadas seguidas
+      source: |
+        void registrar()
+        {
+            static int llamadas = 0;
+            int normal = 0;
+
+            llamadas = llamadas + 1;
+            normal = normal + 1;
+            std::cout << llamadas << " " << normal << "\n";
+        }
+      output: |
+        1 1
+        2 1
+        3 1
+      notes: |
+        La línea que declara llamadas se ejecuta una sola vez en toda la vida del programa,
+        en la primera llamada. En las siguientes se salta, y la variable conserva lo que
+        tenía.
+
+        normal, en cambio, nace y muere en cada llamada, que es lo que hace cualquier local
+        normal. Las dos líneas están una debajo de la otra a propósito.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Olvidar el ampersand
+          desc: La función compila, corre, no modifica nada, y el error solo se ve en el resultado final
+        - label: Error 02
+          title: Repetir el nombre de una global
+          desc: La local la tapa sin una advertencia, y el programa hace algo distinto de lo que se lee
+        - label: Error 03
+          title: Devolver una referencia a una local
+          desc: La variable muere al terminar la función y queda una referencia a memoria que ya no es suya
+        - label: Error 04
+          title: Valor por omisión en los dos lados
+          desc: Va en el prototipo o en la definición, nunca en ambos, o el compilador lo rechaza
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Un nombre, varias funciones
+      lede: Dos funciones pueden llamarse igual si el compilador tiene cómo distinguir cuál quisiste.
+      block: 3
+
+  - code:
+      eyebrow: Sobrecarga
+      title: El mismo nombre para el mismo concepto
+      filename: area.cpp
+      lang: cpp
+      source: |
+        double area(double lado)
+        {
+            return lado * lado;
+        }
+
+        double area(double base, double altura)
+        {
+            return base * altura;
+        }
+      annotations:
+        - label: Las dos firmas
+          text: Se distinguen por el número de parámetros, así que el compilador elige sin ambigüedad
+        - label: area(3.0)
+          text: Corre la primera y devuelve 9, medido. Un solo argumento, un solo lado.
+        - label: area(3.0, 4.0)
+          text: Corre la segunda y devuelve 12. La decisión la toma el compilador, no el programa.
+        - label: Cuándo usarla
+          text: Solo cuando las dos hacen conceptualmente lo mismo. Si no, son dos nombres distintos.
+
+  - table:
+      eyebrow: La regla
+      title: Qué diferencias sí distinguen dos funciones
+      headers: ["Qué cambia", "Ejemplo", "Compila"]
+      rows:
+        - ["Cuántos parámetros", "area(double) y area(double, double)", "Sí"]
+        - ["De qué tipo son", "imprimir(int) e imprimir(double)", "Sí"]
+        - ["Solo el nombre", "f(int a) y f(int b)", "No"]
+        - ["Solo el retorno", "int f(int) y double f(int)", "No"]
+        - ["Valor o referencia", "f(int) y f(int&)", "No, da C2668"]
+      notes: |
+        Los renglones tercero y cuarto son la misma idea. El compilador elige por lo que ve
+        en la llamada, y ahí no aparece ni el nombre del parámetro ni el tipo que devuelve,
+        así que no le sirven para decidir.
+
+        El último se mide fácil y sorprende. Declarar duplicar(int) y duplicar(int&) compila
+        las dos definiciones sin problema, y revienta en la llamada con "ambiguous call to
+        overloaded function", porque un int con nombre encaja igual de bien en las dos.
+
+  - code:
+      eyebrow: Valores por omisión
+      title: Un parámetro que se puede no escribir
+      filename: saludo.cpp
+      lang: cpp
+      source: |
+        std::string saludo(std::string nombre,
+                           std::string titulo = "Ing.")
+        {
+            return titulo + " " + nombre;
+        }
+
+        int main()
+        {
+            std::cout << saludo("Ana") << "\n";
+            std::cout << saludo("Ana", "Dra.") << "\n";
+            return 0;
+        }
+      annotations:
+        - label: La salida
+          text: Imprime Ing. Ana y luego Dra. Ana, medido en una corrida real
+        - label: El orden
+          text: Los parámetros con valor por omisión van al final. No se puede omitir uno de en medio.
+        - label: Riesgo
+          text: El valor por omisión se escribe una sola vez, en el prototipo si existe. Repetirlo en la definición no compila.
+          accent: true
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: La función se llama tres veces seguidas. ¿Qué imprime?
+      filename: contador.cpp
+      lang: cpp
+      source: |
+        static int llamadas = 0;
+        int normal = 0;
+
+        llamadas = llamadas + 1;
+        normal = normal + 1;
+        std::cout << llamadas << " " << normal << "\n";
+      options:
+        - '1 1, luego 2 1, luego 3 1'
+        - '1 1, luego 2 2, luego 3 3'
+        - '1 1 las tres veces, las dos se reinician'
+        - '3 3 al final, porque static acumula las dos'
+
+  - trace:
+      eyebrow: Respuesta
+      title: La línea del static se ejecuta una sola vez en todo el programa
+      headers: ["Llamada", "llamadas", "normal", "Imprime"]
+      rows:
+        - ["1", "de 0 a 1", "nace en 0, sube a 1", "1 1"]
+        - ["2", "de 1 a 2", "nace en 0, sube a 1", "2 1"]
+        - ["3", "de 2 a 3", "nace en 0, sube a 1", "3 1"]
+      verdict: static cambia cuánto vive la variable, no desde dónde se ve. Sigue siendo local, nadie fuera de la función puede nombrarla, y sobrevive entre llamadas.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una función que reporta dos cosas, en parejas
+      brief: Escriban una función void que reciba tres calificaciones y devuelva, por referencia, el promedio y la suma en dos parámetros distintos. Agreguen una segunda versión sobrecargada que reciba cuatro calificaciones.
+      blocks:
+        - label: Restricción
+          text: Sin if y sin ciclos, que llegan en la semana 7. Una sola ruta por función.
+        - label: Entregable
+          text: Un .cpp con las dos versiones sobrecargadas y un main que llame a las dos
+        - label: Criterio
+          text: Que el nombre de la función anuncie que va a modificar sus parámetros
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El ampersand quita la copia
+          desc: Con int& la función recibe otro nombre de la variable original, no un duplicado
+        - title: La local tapa a la global
+          desc: Compila sin advertencia y hace que el programa lea distinto de lo que ejecuta
+        - title: static sobrevive a la llamada
+          desc: Se inicializa una sola vez y conserva su valor, aunque siga siendo local
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La boleta con referencias y una sobrecarga
+      brief: Tomen la boleta modular de la semana pasada y cambien la función del promedio para que devuelva por referencia el promedio y el número de materias contadas. Agreguen una sobrecarga que acepte un cuarto examen.
+      meta:
+        - [Entrega, Antes de la sesión 6]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Referencias", "Requisito", "Los dos resultados salen por parámetros de referencia"]
+        - ["Sobrecarga", "Requisito", "Las dos versiones conviven y el compilador elige bien"]
+        - ["Nombres", "Requisito", "El nombre de cada función dice si modifica lo que recibe"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, clases. Juntar los datos con las funciones que los cuidan, y decidir qué se ve desde fuera.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,324 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 14
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 14 · Unidad 12 · Sobrecarga y plantillas
+      title: Programación Avanzada
+      subtitle: Que tus tipos se usen como los del lenguaje, y escribir una sola vez lo que sirve para todos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 14 de 17]
+      notes: |
+        Empieza el último bloque del curso. Los dos temas de hoy son los que explican por qué
+        la biblioteca estándar se ve como se ve: vector, string y todo lo demás están
+        construidos con plantillas y con operadores sobrecargados.
+
+        La comparación con la semana 0 vale la pena. La lámina de la pila de 1979 contra la
+        de C++20 mostraba exactamente esta diferencia, y hoy el grupo ya puede leer las dos.
+
+        Las salidas se midieron en Visual Studio Community 2026.
+
+        Lectura: Malik, octava edición, capítulo 13. Los documentos del curso citan el 15,
+        correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Operadores
+          desc: Que el signo de más funcione sobre un objeto tuyo
+        - title: Qué sí y qué no
+          desc: Cuáles se pueden sobrecargar y cuándo conviene no hacerlo
+        - title: Plantillas
+          desc: Una función escrita una vez que sirve para cualquier tipo
+        - title: Plantillas de clase
+          desc: La misma idea aplicada a una clase completa
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Sobrecargar un operador
+          sub: Como función miembro, con la firma que corresponde al signo
+        - head: Decidir cuándo no sobrecargar
+          sub: Reconociendo que un operador con significado inventado es peor que una función con nombre
+        - head: Escribir una función plantilla
+          sub: Con typename, y explicar en qué momento el compilador genera la versión concreta
+        - head: Leer una plantilla de clase
+          sub: Y relacionarla con el vector y el string que ya usó todo el semestre
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Que tu tipo se comporte como los de casa
+      lede: std::string ya se concatena con el signo de más. Eso no viene del lenguaje, viene de que alguien lo escribió.
+      block: 1
+
+  - code_output:
+      eyebrow: Sobrecarga
+      title: Sumar dos objetos con el signo de siempre
+      filename: vector2.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        class Vector2 {
+        public:
+            Vector2(double a, double b) : x(a), y(b) {}
+            Vector2 operator+(Vector2 o)
+            {
+                return Vector2(x + o.x, y + o.y);
+            }
+            double x;
+            double y;
+        };
+
+        Vector2 v = Vector2(1, 2) + Vector2(3, 4);
+      output: |
+        4 6
+      notes: |
+        operator+ es el nombre de la función. Lo único especial es que el compilador la
+        busca cuando encuentra un signo de más entre dos objetos de ese tipo.
+
+        Como función miembro, el objeto de la izquierda es el que recibe la llamada y el de
+        la derecha llega como parámetro. Por eso solo lleva un argumento y no dos.
+
+        Recibir el parámetro por valor copia el objeto en cada suma. Con un tipo grande eso
+        se nota, y la firma correcta lleva const y ampersand, que es lo de la semana 5.
+
+  - table:
+      eyebrow: Los límites
+      title: Qué se puede y qué no
+      headers: ["Se puede", "No se puede", "Por qué"]
+      rows:
+        - ["+ - * /", "El punto", "Rompería el acceso a miembros"]
+        - ["== != < >", "El ámbito", "Es parte de cómo se nombran las cosas"]
+        - ["[] () << >>", "El ternario", "El lenguaje lo reserva"]
+        - ["++ -- =", "Inventar signos", "Solo existen los que ya hay"]
+      notes: |
+        La lista de lo que se puede es larga y la de lo que no es corta. La pregunta
+        interesante no es cuáles, es cuáles conviene.
+
+        La regla práctica: sobrecargar un operador solo cuando el significado sea obvio para
+        cualquiera que lea el código sin preguntar. Sumar dos vectores es obvio. Sumar dos
+        alumnos no significa nada, y ahí una función con nombre es mejor.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Escribirlo una sola vez
+      lede: Una función que sirve para int, para double y para cualquier tipo que aún no existe.
+      block: 2
+
+  - code_output:
+      eyebrow: Plantillas
+      title: El mismo código para tipos distintos
+      filename: mayor.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        template <typename T>
+        T mayor(T a, T b)
+        {
+            if (a > b)
+                return a;
+            return b;
+        }
+
+        std::cout << mayor(3, 9) << " ";
+        std::cout << mayor(2.5, 1.5) << "\n";
+      output: |
+        9 2.5
+      notes: |
+        La primera llamada devolvió un entero y la segunda un double. No hay conversión de
+        por medio: el compilador generó dos funciones distintas a partir de la misma
+        plantilla, una con T igual a int y otra con T igual a double.
+
+        Eso ocurre al compilar, no al ejecutar. Una plantilla que nadie llama no genera
+        ningún código, y por eso sus errores aparecen hasta la primera llamada.
+
+        El único requisito sobre T es que soporte lo que el cuerpo hace con él. Aquí, que se
+        pueda comparar con el operador mayor que. Si se llama con un tipo que no lo tiene, el
+        error sale largo, y ese es el costo que anunciaba la semana 0.
+
+  - code:
+      eyebrow: Plantillas de clase
+      title: La misma idea, sobre una clase entera
+      filename: caja.cpp
+      lang: cpp
+      source: |
+        template <typename T>
+        class Caja {
+        public:
+            Caja(T v) : valor(v) {}
+            T obtener() { return valor; }
+        private:
+            T valor;
+        };
+
+        Caja<int> a(5);
+        Caja<std::string> b("hola");
+      annotations:
+        - label: Los corchetes angulares
+          text: Aquí el tipo se escribe a mano. En una función plantilla el compilador lo deduce solo.
+        - label: Dos clases distintas
+          text: Caja de int y Caja de string no comparten nada. Son dos clases generadas por separado.
+        - label: Ya la conocen
+          text: std::vector y std::unique_ptr son exactamente esto, y llevan usándolos desde la semana 12
+        - label: Riesgo
+          text: Una plantilla de clase suele vivir completa en el archivo de cabecera. Separarla en un .cpp da errores de enlace.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Volver al principio
+      lede: La diapositiva de la semana 0 que comparaba 1979 con hoy ya se puede leer completa.
+      block: 3
+
+  - compare:
+      eyebrow: Cuarenta años después
+      title: La misma pila, con y sin plantillas
+      before:
+        label: C con clases
+        file: pila.cpp
+        lang: cpp
+        code: |
+          class pila {
+              int v[100];
+              int tope;
+          public:
+              void mete(int);
+              int saca();
+          };
+      after:
+        label: C++20
+        file: pila.cpp
+        lang: cpp
+        code: |
+          template <typename T>
+          class Pila {
+              std::vector<T> v;
+          public:
+              void mete(T x);
+              T saca();
+          };
+      note: >-
+        En la semana 0 esta lámina era un dato histórico. Hoy las dos se leen línea por
+        línea. La de la izquierda solo guarda cien enteros; la de la derecha sirve para
+        cualquier tipo y crece sola, porque dentro trae otra plantilla.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuántas funciones genera el compilador con estas dos llamadas?
+      filename: mayor.cpp
+      lang: cpp
+      source: |
+        template <typename T>
+        T mayor(T a, T b) { return a > b ? a : b; }
+
+        mayor(3, 9);
+        mayor(2.5, 1.5);
+      options:
+        - 'Dos, una para int y otra para double'
+        - 'Una, que sirve para los dos tipos'
+        - 'Ninguna, la plantilla se resuelve al ejecutar'
+        - 'Tres, las dos anteriores más la plantilla'
+
+  - trace:
+      eyebrow: Respuesta
+      title: La plantilla es una receta, no una función
+      headers: ["Momento", "Qué existe", "Con qué T"]
+      rows:
+        - ["Al escribir", "Solo la plantilla", "Ninguno todavía"]
+        - ["Al ver mayor(3, 9)", "Se genera una función", "T es int"]
+        - ["Al ver mayor(2.5, 1.5)", "Se genera otra", "T es double"]
+        - ["En el ejecutable", "Las dos generadas", "int y double"]
+      verdict: La plantilla misma no llega al ejecutable. Lo que llega son las versiones concretas que alguien pidió, y por eso una plantilla que nadie usa no cuesta nada.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Sobrecargar sin significado obvio
+          desc: Un operador que hace algo inesperado es peor que una función con nombre largo
+        - label: Error 02
+          title: Recibir el operando por valor
+          desc: Cada suma copia el objeto completo. La firma con const y ampersand no copia nada.
+        - label: Error 03
+          title: Plantilla partida en dos archivos
+          desc: Si la definición no está en la cabecera, el enlazador no encuentra la versión concreta
+        - label: Error 04
+          title: Suponer qué soporta T
+          desc: El cuerpo puede pedirle a T algo que no tiene, y el error solo aparece en la primera llamada
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una fracción que se comporta como un número, en parejas
+      brief: Escriban una clase Fraccion con numerador y denominador, sobrecarguen la suma y la comparación de igualdad, y escriban una función plantilla que devuelva el mayor de dos valores de cualquier tipo, probándola con enteros y con fracciones.
+      blocks:
+        - label: Restricción
+          text: La comparación de la plantilla usa el operador mayor que, así que la fracción tiene que definirlo
+        - label: Entregable
+          text: Un .cpp con la clase, los operadores y la plantilla probada con los dos tipos
+        - label: Criterio
+          text: Que la plantilla no tenga ni una línea específica de Fraccion
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un operador es una función
+          desc: operator+ se llama distinto y se busca solo, pero no tiene nada de mágico
+        - title: La plantilla se resuelve al compilar
+          desc: Genera una función concreta por cada tipo con el que se le llame, y ninguna si nadie la llama
+        - title: La biblioteca estándar es esto
+          desc: vector, string y unique_ptr son plantillas de clase con operadores sobrecargados
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La fracción completa
+      brief: Terminen el laboratorio y agreguen la sobrecarga del operador de salida para que una fracción se pueda imprimir con cout directamente, en la forma numerador diagonal denominador.
+      meta:
+        - [Entrega, Antes de la sesión 15]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Operadores", "Requisito", "La suma y la igualdad dan resultados correctos"]
+        - ["Plantilla", "Requisito", "Funciona con enteros y con fracciones sin cambiar una línea"]
+        - ["Salida", "Requisito", "cout imprime la fracción sin llamar a ningún método"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, excepciones. Qué hacer cuando la función no puede cumplir lo que prometió.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

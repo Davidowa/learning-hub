@@ -1,0 +1,346 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 7
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 07 · Unidad 2 · Búsqueda de objetivo y encadenamiento
+      title: Análisis y Procesamiento de la Información
+      subtitle: Invertir la pregunta desde una macro, acotar lo que la macro toca, y encadenar varias sin que se estorben.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 7 de 17]
+      notes: |
+        Noventa minutos. Treinta en búsqueda de objetivo, veinte en acotar, y el resto
+        encadenando.
+
+        Todo lo que aparece en las diapositivas de números salió de correr el modelo. Un
+        préstamo de 500,000 a doce por ciento anual, ciento veinte periodos. GoalSeek
+        deja el pago en 6,997.36 y el saldo final en menos 5.56 por diez a la menos diez,
+        que no es cero. Ese detalle es el que hay que aprovechar: GoalSeek no despeja la
+        ecuación, la tantea, y por eso tiene un residuo y un tope de cien iteraciones.
+
+        La diapositiva del número grande dice 339,683, que son los intereses del mismo
+        préstamo. Es el sesenta y ocho por ciento de lo prestado, y para un grupo de
+        Empresariales pega más fuerte que cualquier argumento sobre programación.
+
+        El código sale de
+        docs/en/courses/vba-course/00 - Record Macro - Amortization Table/RecordMacroAmortization.bas
+        y de 09 - Subs and Functions/SubsFunctions.bas para el encadenamiento.
+
+        Aviso sobre el .bas del módulo 00: usa los nombres de rango del libro que viene en
+        esa misma carpeta, con dobles guiones bajos. Si lo copian a un libro nuevo sin
+        crear esos nombres, se detiene con error 1004.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Búsqueda de objetivo
+          desc: Preguntar al revés, y qué tan exacta es la respuesta que devuelve
+        - title: Automatización acotada
+          desc: Apagar lo que la macro no necesita, y volverlo a prender pase lo que pase
+        - title: Encadenar macros
+          desc: Una que manda y varias que hacen, en vez de una sola de doscientos renglones
+        - title: Tu turno
+          desc: Un escenario de tu área, resuelto al revés desde un botón
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Invertir una pregunta con GoalSeek
+          sub: Fijar el resultado que quieres y dejar que Excel encuentre el dato de entrada
+        - head: Escribir GoalSeek desde una macro
+          sub: Sus dos argumentos con nombre, y sobre qué celda se invoca
+        - head: Reconocer que la respuesta es aproximada
+          sub: Hay residuo y hay tope de iteraciones, y los dos se pueden ajustar
+        - head: Acotar lo que la macro toca
+          sub: Pantalla y cálculo apagados mientras corre, y encendidos al terminar
+        - head: Encadenar procedimientos con Call
+          sub: Una macro maestra corta que llama a varias que hacen una cosa cada una
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: now
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Búsqueda de objetivo
+      lede: >-
+        La hoja calcula el resultado a partir de los datos. Aquí se hace al revés: tú
+        fijas el resultado y Excel busca el dato.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La pregunta se invierte
+      lead: >-
+        La tabla de amortización contesta cuánto queda de deuda si el pago mensual es de
+        siete mil. La pregunta que de verdad se hace en una junta es la contraria: de
+        cuánto tiene que ser el pago para que la deuda quede en cero. Despejar eso a mano
+        exige álgebra. GoalSeek lo tantea, y desde una macro cabe en un renglón.
+      panel:
+        label: Lo que hay que entender de una vez
+        title: GoalSeek no despeja, tantea
+        note: >-
+          Prueba un valor, mira qué tan lejos quedó, corrige y vuelve a probar. Por eso
+          tiene un residuo y un tope de intentos, y por eso a veces no encuentra nada.
+      steps:
+        - text: Señalas la celda del resultado
+        - text: Le dices en cuánto la quieres
+        - text: Le dices qué celda puede mover
+          loop: ↺ y Excel prueba hasta acercarse lo suficiente
+
+  - code:
+      eyebrow: Bloque 01 · El módulo 00
+      title: Toda la búsqueda de objetivo, en un renglón
+      filename: RecordMacroAmortization.bas
+      lang: vba
+      source: |
+        Sub BuscarPagoMensual()
+            Range("SaldoFinal").GoalSeek _
+                Goal:=0, _
+                ChangingCell:=Range("PagoMensual")
+        End Sub
+      annotations:
+        - label: Sobre qué celda
+          text: Se invoca sobre la celda del resultado, la que tiene la fórmula que quieres forzar.
+        - label: Goal
+          text: El valor al que la quieres llevar. Aquí cero, porque queremos que la deuda se liquide.
+        - label: ChangingCell
+          text: La celda que Excel tiene permiso de mover. Tiene que ser un valor, nunca una fórmula.
+        - label: Riesgo
+          text: Si ChangingCell trae una fórmula, se detiene con error 1004. Solo puede mover datos escritos.
+          accent: true
+
+  - stat:
+      eyebrow: El préstamo del módulo 00
+      value: '339,683'
+      text: >-
+        son los intereses de un préstamo de 500,000 a diez años, al doce por ciento anual.
+      note: Es el sesenta y ocho por ciento de lo prestado, y no aparece en ninguna celda de la tabla hasta que alguien la calcula. Verificado con GoalSeek en Excel 16.0, con el modelo de ciento veinte periodos.
+
+  - code_output:
+      eyebrow: Bloque 01 · Verificado
+      title: Antes y después de correr la macro
+      filename: RecordMacroAmortization.bas
+      lang: vba
+      output_label: La hoja
+      source: |
+        Range("SaldoFinal").GoalSeek _
+            Goal:=0, ChangingCell:=Range("PagoMensual")
+      output: |
+        Pago antes:    1,000.00
+        Saldo final:   1,330,994.06
+
+        Pago después:  6,997.36
+        Saldo final:   -5.56E-10
+
+  - table:
+      eyebrow: Bloque 01 · Los límites
+      title: Por qué el saldo final no queda en cero exacto
+      headers: [Lo que gobierna, Valor por omisión, Qué significa]
+      rows:
+        - ["Application.MaxChange", "0.001", "Qué tan cerca del objetivo se conforma"]
+        - ["Application.MaxIterations", "100", "Cuántos intentos hace antes de rendirse"]
+        - ["Residuo obtenido", "-5.56E-10", "Lo que quedó de deuda, en centésimas de milmillonésima"]
+        - ["Pago con 60 periodos", "10,967.85", "El mismo modelo, la mitad del plazo"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Automatización acotada
+      lede: Una macro que recalcula la hoja en cada renglón y redibuja la pantalla en cada paso hace el trabajo dos veces. Acotar es apagar lo que no hace falta.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Apagar y volver a prender
+      title: Lo que se apaga se tiene que prender pase lo que pase
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub ProcesarBase()
+            Application.ScreenUpdating = False
+            Application.Calculation = xlCalculationManual
+
+            Call LimpiarBase
+            Call FormatearImportes
+            Call BuscarPagoMensual
+
+            Application.Calculation = xlCalculationAutomatic
+            Application.ScreenUpdating = True
+        End Sub
+      annotations:
+        - label: ScreenUpdating
+          text: Deja de redibujar mientras corre. Es de donde viene casi toda la lentitud que se siente.
+        - label: Calculation
+          text: En manual, la hoja no recalcula en cada escritura. xlCalculationManual vale -4135.
+        - label: El orden
+          text: Se prenden en orden inverso al que se apagaron, y siempre antes de terminar.
+        - label: Riesgo
+          text: Si la macro se detiene a media ejecución, Excel se queda en manual y el usuario no se entera.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro formas de dejar Excel descompuesto
+      items:
+        - label: Error 01
+          title: No volver a prender el cálculo
+          desc: Excel se queda en manual, las fórmulas dejan de actualizarse y el usuario cree que sus datos están mal.
+        - label: Error 02
+          title: Apagar la pantalla y no encenderla
+          desc: La hoja se queda congelada aunque el usuario escriba. Parece que Excel se trabó.
+        - label: Error 03
+          title: Buscar objetivo sobre una fórmula
+          desc: ChangingCell tiene que ser un valor escrito. Si es una fórmula, se detiene con error 1004.
+        - label: Error 04
+          title: Confiar en el cero exacto
+          desc: GoalSeek deja un residuo. Comparar el resultado con cero exacto casi nunca es verdad.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Encadenar macros
+      lede: Una macro de doscientos renglones no se puede probar por partes. Cinco de cuarenta, llamadas por una sexta, sí.
+      block: 3
+
+  - diagram:
+      eyebrow: Bloque 03 · La forma
+      title: Una que manda, varias que hacen
+      blocks:
+        - label: Maestra
+          title: Solo llama
+          desc: Seis renglones, todos Call
+          dark: true
+        - label: Limpiar
+          title: Una tarea
+          desc: Quita duplicados y espacios
+        - label: Formatear
+          title: Otra tarea
+          desc: Moneda y porcentaje
+        - label: Buscar
+          title: La tercera
+          desc: GoalSeek sobre el saldo
+      note: >-
+        Cada una se puede correr sola desde el cuadro de macros para probarla, y la
+        maestra se lee como el índice de lo que hace el libro. Es la misma forma que va a
+        pedir el proyecto de la semana 16.
+
+  - code:
+      eyebrow: Bloque 03 · Call
+      title: Cómo se llama a otra macro
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Sub SubFunctions()
+            Call SetupFieldsInWorksheet
+            Call ReadInputParameters
+
+            Dim resultado As Double
+            resultado = Summation(5, 3)
+            Range("A1").Value = resultado
+        End Sub
+
+        Function Summation(n1 As Double, n2 As Double) As Double
+            Summation = n1 + n2
+        End Function
+      annotations:
+        - label: Call
+          text: Es opcional. Sin él también funciona, y con él se lee de un vistazo que ahí se va a otro lado.
+        - label: La diferencia
+          text: Un Sub hace algo. Una Function devuelve un valor, y por eso se puede poner del lado derecho del igual.
+        - label: Los argumentos
+          text: Una Function con paréntesis y valores adentro. Un Sub llamado con Call no lleva paréntesis.
+        - label: Riesgo
+          text: Dos procedimientos con el mismo nombre en módulos distintos hacen que Call no sepa a cuál ir.
+          accent: true
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué pasa si la macro se detiene en el renglón de en medio?
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Application.Calculation = xlCalculationManual
+
+        Call ProcesarTodo
+
+        Application.Calculation = xlCalculationAutomatic
+      options:
+        - "Excel vuelve solo a automático al terminar la macro"
+        - "Excel se queda en manual y las fórmulas dejan de actualizarse"
+        - "Se pierde el libro y hay que volver a abrirlo"
+        - "No pasa nada, el cálculo manual es lo mismo"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un escenario al revés, de tu área
+      brief: Toma un modelo de tu área donde un resultado dependa de una entrada, por ejemplo el punto de equilibrio en función del precio, o el pago mensual en función del plazo. Escribe una macro que fije el resultado deseado y encuentre la entrada con GoalSeek, y déjala detrás de un botón.
+      blocks:
+        - label: Entrega
+          text: El .xlsm con el botón y el módulo exportado, en Blackboard
+        - label: Restricción
+          text: La macro maestra no puede pasar de diez renglones. Lo demás va en procedimientos aparte.
+        - label: La prueba
+          text: Cambia un dato del modelo y vuelve a correrla. El resultado tiene que cambiar solo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: GoalSeek tantea, no despeja
+          desc: Deja un residuo y tiene un tope de cien intentos, así que comparar su resultado con cero exacto falla
+        - title: Lo que apagas lo tienes que prender
+          desc: Una macro que muere a medio camino deja Excel en cálculo manual y el usuario no se entera hasta que ya cerró
+        - title: Una macro maestra es un índice
+          desc: Cinco procedimientos de cuarenta renglones se prueban por separado, uno de doscientos no
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Sobre la tabla de amortización, escribe una macro maestra que acote la pantalla y
+        el cálculo, llame a tres procedimientos, y termine encontrando el pago mensual con
+        GoalSeek. Reporta el residuo que quedó.
+      meta:
+        - [Entrega, Antes de la semana 8]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["GoalSeek", "40 %", "Encuentra el pago y el residuo se reporta en vez de darse por cero"]
+        - ["Acotado", "30 %", "Pantalla y cálculo se apagan y se vuelven a prender"]
+        - ["Encadenado", "30 %", "La maestra solo llama, y cada procedimiento hace una cosa"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, la primera decisión: If, los operadores de comparación y los
+        lógicos, y el primer parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

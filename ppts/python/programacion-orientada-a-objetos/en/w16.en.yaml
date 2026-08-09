@@ -1,0 +1,317 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 16
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 16 · Topic 7 · Databases and project
+      title: Object-Oriented Programming
+      subtitle: Storing data that gets searched, filtered and outlives the program. And the session where the whole semester lands in one submission.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 16 of 17]
+      notes: |
+        A heavy double session. Keep block 3 whole for the project and do not trim it even if
+        the query block runs long: it is the last class before submission, and the scoping
+        questions come out there or they come by email on Sunday.
+
+        The examples come from docs/en/courses/python-course/04 - SQLite/8th Module/Code036.py,
+        which creates the database, loads it from a JSON file and queries with a cursor. The
+        login form joining PyQt6 to sqlite3 is 05 - GUI/9th Module/Code044.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Databases
+          desc: What a table solves that a text file does not
+        - title: Access
+          desc: Connection, cursor, commit, and the close you cannot forget
+        - title: Queries
+          desc: SELECT, parameters, and why strings never get glued together
+        - title: Integrating project
+          desc: Scope, submission and how the marks are split
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Choose between a file and a database
+          sub: By how the data will be queried, not by how many records there will be
+        - head: Create a table and insert
+          sub: With sqlite3, inside a with, knowing what commit does and what happens without it
+        - head: Query with parameters
+          sub: Using placeholders instead of glued strings, and explaining what that prevents
+        - head: Plan the integrating project
+          sub: Splitting OOP, persistence and interface into pieces testable on their own
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Databases
+      lede: A file stores data. A database stores data and also knows how to answer questions about it.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a table solves that a file does not
+      lead: >-
+        In a file, searching means reading all of it. In a table, searching means asking, and
+        the engine decides how to reach the value. That difference is invisible with a
+        hundred records and decides the whole program at a hundred thousand.
+      panel:
+        label: The three pieces of the model
+        title: Table, row and primary key
+        note: >-
+          Each table holds one kind of thing. Each row is one object of that kind. And the
+          primary key is the attribute telling one row apart from every other.
+      steps:
+        - text: One table per noun
+        - text: One column per attribute
+        - text: One key that identifies
+          loop: ↺ it is week 5 modelling again, in a different syntax
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The route a query takes
+      image: img/en/db-access.png
+      caption: The cursor does not hold the rows. It points at them and hands them over, like walking a file line by line.
+      alt: A program connecting to a database, running SQL and receiving a cursor that delivers rows
+
+  - table:
+      eyebrow: Decision table
+      title: When a file is enough and when it is not
+      headers: ["The need", "Text file", "Database"]
+      rows:
+        - ["Store and read back", "Enough", "Also works"]
+        - ["Find one record", "Reads the whole file", "Answers without reading it all"]
+        - ["Filter and sort", "You program it", "Goes in the query"]
+        - ["Two programs at once", "They clash", "The engine sorts it out"]
+        - ["Change the shape", "Rewrite the file", "Alter the table"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Access and queries
+      lede: A connection is opened, used and closed. Same life as a file, with one extra trap called commit.
+      block: 2
+
+  - code:
+      eyebrow: sqlite3
+      title: Creating the table and putting the first data in
+      filename: creating.py
+      lang: python
+      source: |
+        import sqlite3
+        from pathlib import Path
+
+        path = Path("data") / "movies.db"
+
+        with sqlite3.connect(path) as connection:
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS Movies ("
+                "id INTEGER PRIMARY KEY, title TEXT NOT NULL)")
+            connection.execute(
+                "INSERT INTO Movies VALUES (?, ?)", (1, "Coco"))
+            connection.commit()
+      annotations:
+        - label: Line 6
+          text: The with closes the connection on the way out, exactly as it does with an open file
+        - label: Line 11
+          text: The question marks are placeholders. The values travel separately, in a tuple.
+        - label: Risk
+          text: Without commit, whatever was inserted is lost on closing. The with does not do it for you.
+          accent: true
+
+  - code_output:
+      eyebrow: Querying
+      title: The cursor hands over one row at a time
+      filename: querying.py
+      lang: python
+      output_label: Output
+      source: |
+        with sqlite3.connect(path) as connection:
+            cursor = connection.execute(
+                "SELECT id, title FROM Movies ORDER BY title")
+            for row in cursor:
+                print(row)
+      output: |
+        (19, 'Coco')
+        (15, 'Inside Out')
+        (10, 'Up')
+
+  - code:
+      eyebrow: Parameters
+      title: Why the value never gets glued into the query
+      filename: parameters.py
+      lang: python
+      source: |
+        wanted = input("Title: ")
+
+        # Never do this
+        bad = f"SELECT * FROM Movies WHERE title = '{wanted}'"
+
+        # Do this
+        with sqlite3.connect(path) as connection:
+            cursor = connection.execute(
+                "SELECT * FROM Movies WHERE title = ?", (wanted,))
+            print(cursor.fetchall())
+      annotations:
+        - label: Line 4
+          text: If somebody types a quote, the query changes shape and does something you never wanted
+        - label: Line 9
+          text: With the placeholder the value is never read as SQL. It is data and it stays data.
+        - label: The comma
+          text: '(wanted,) with a comma is a one-item tuple. Without the comma it is just brackets.'
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors with databases
+      items:
+        - label: Error 01
+          title: Forgetting the commit
+          desc: The INSERTs run, the program never complains, and reopening the database shows nothing
+        - label: Error 02
+          title: Gluing values in with f-strings
+          desc: A quote in the data breaks the query, and on purpose turns it into a different one
+        - label: Error 03
+          title: SQL scattered across the window
+          desc: If every slot writes its own SELECT, changing one column means auditing the whole project
+        - label: Error 04
+          title: Keeping a cursor for later
+          desc: Once the connection closes the cursor is dead, and the error surfaces far from its cause
+
+  - divider:
+      eyebrow: Block 03
+      title: The integrating project
+      lede: The submission that pulls the seven units together. Code and report are both marked, and the code carries more than twice the weight.
+      block: 3
+
+  - tiers:
+      eyebrow: Scope
+      title: The four pieces the project has to contain
+      items:
+        - key: '01'
+          title: Object-oriented modelling
+          desc: Classes with their own state, encapsulation, and at least one justified inheritance
+        - key: '02'
+          title: Persistence
+          desc: Files or a database, with the data surviving the program being closed
+        - key: '03'
+          title: Graphical interface
+          desc: A PyQt6 window holding no business rules inside its slots
+        - key: '04'
+          title: Written report
+          desc: What problem it solves, what was decided and why, with evidence woven into the text
+
+  - method:
+      eyebrow: How to split the work
+      title: Three pieces that get tested separately
+      statement: Start with the domain classes, no window and no database. Once those run from a terminal, everything after that is connecting wires.
+      points:
+        - label: First
+          text: The problem's classes, tested with a console script that prints results
+        - label: Then
+          text: Persistence, with those same classes saving and recovering their state
+        - label: Last
+          text: The window, which only reads controls and calls what already worked before it existed
+
+  - quiz:
+      eyebrow: Quick question
+      question: What ends up stored in the database?
+      filename: commit.py
+      lang: python
+      source: |
+        with sqlite3.connect(path) as c:
+            c.execute("INSERT INTO Movies VALUES (1, 'Up')")
+
+        with sqlite3.connect(path) as c:
+            cursor = c.execute("SELECT COUNT(*) FROM Movies")
+            print(cursor.fetchone())
+      options:
+        - "(1,), because the with commits on the way out"
+        - "(0,), because commit was never called"
+        - 'An error, the connection was already closed'
+        - "(1,), because sqlite3 saves every INSERT at once"
+
+  - trace:
+      eyebrow: Answer
+      title: It prints (0,), and the with is not to blame
+      headers: ["Step", "Statement", "In memory", "On disk"]
+      rows:
+        - ["1", "connect(path)", "transaction open", "empty"]
+        - ["2", "execute(INSERT)", "1 row pending", "empty"]
+        - ["3", "leaving the with", "discarded", "empty"]
+        - ["4", "SELECT COUNT(*)", "0", "empty"]
+      verdict: The sqlite3 with closes the transaction, it does not confirm it. Without an explicit call to commit, whatever was inserted is discarded on the way out of the block.
+
+  - lab:
+      eyebrow: Lab
+      title: From classes to tables, in pairs
+      brief: Take two classes from your project and write the CREATE TABLE each of them needs, plus the save and load methods turning them into rows and back.
+      blocks:
+        - label: Constraints
+          text: All the SQL lives in one data access class, and nothing else writes any
+        - label: Deliverable
+          text: A .py file with the classes and a test script that saves, closes, reopens and recovers
+        - label: Criterion
+          text: The domain classes still run without importing sqlite3 or PyQt6
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A table answers, a file only stores
+          desc: The difference shows up once you have to search, filter or sort without reading it all
+        - title: Without commit there is nothing on disk
+          desc: The with closes the connection, and closing without confirming throws away everything pending
+        - title: Values travel as parameters
+          desc: The placeholder keeps data as data, and a quote loses its power to change the query
+
+  - homework:
+      eyebrow: Integrating project
+      title: Submission and grading criteria
+      brief: An application combining object-oriented programming, persistence in files or a database, and a graphical interface, solving one concrete problem. Submitted this week.
+      meta:
+        - [When, Week 16]
+        - [Format, Blackboard · full source + PDF report]
+        - [Weight, 20 % of the final grade]
+      rubric:
+        - ["Execution", "40 %", "The application runs and does what the report says it does"]
+        - ["OOP and structure", "20 %", "The modelling holds and the interface carries no business rules"]
+        - ["Good practice", "10 %", "Organisation, naming and handling of foreseeable errors"]
+        - ["Written report", "30 %", "Narrative, design decisions and evidence woven into the text"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, general review and the final integrating exam.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

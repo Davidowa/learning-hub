@@ -1,0 +1,347 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 9
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 09 · Unidad 3 · Repetición
+      title: Análisis y Procesamiento de la Información
+      subtitle: For cuenta, For Each recorre. Y la diferencia entre borrar de arriba hacia abajo o al revés.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 9 de 17]
+      notes: |
+        Noventa minutos. Veinticinco en For, veinticinco en For Each, y el resto
+        recorriendo una base de verdad.
+
+        Es la sesión donde la macro por fin hace lo que ninguna hoja hace sola. Hasta hoy
+        cada instrucción tocaba una celda. A partir de hoy una instrucción toca mil.
+
+        El ciclo del módulo 08 escribe ciento veinte columnas desde B3 y termina en DQ3.
+        Verificado. Es exactamente la última columna de la tabla de amortización del
+        módulo 00, y vale la pena decirlo en voz alta: la tabla que en la semana 1 se veía
+        como seiscientas celdas hechas a mano ahora cabe en cuatro renglones.
+
+        Las dos verificaciones que hay que dejar caer despacio son el borrado y la
+        velocidad. Borrar seis filas hacia adelante deja tres, porque al borrar la uno la
+        dos se convierte en la uno y el contador ya va en dos. Hacia atrás deja cero. Y
+        veinte mil celdas escritas una por una tardan 0.91 segundos, contra 0.02 de un
+        solo golpe con un arreglo.
+
+        El código sale de
+        docs/en/courses/vba-course/08 - Repetition Statement/RepetitionStatements.bas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: For, el contador
+          desc: Cuántas veces, con qué paso, y cómo se sale antes de tiempo
+        - title: For Each, la colección
+          desc: Recorrer lo que hay sin saber cuánto hay, y en qué orden lo entrega
+        - title: Recorrer una base
+          desc: Juntar el ciclo con la decisión, y borrar sin saltarse renglones
+        - title: Tu turno
+          desc: Mil filas revisadas por una macro de quince renglones
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un ciclo For con contador
+          sub: Desde, hasta, con Step cuando el paso no es de uno en uno
+        - head: Recorrer un rango con For Each
+          sub: Sin declarar cuántas celdas hay, y sabiendo en qué orden llegan
+        - head: Combinar ciclo y decisión
+          sub: Recorrer todo y actuar solo sobre lo que cumple la condición
+        - head: Borrar filas sin saltarse ninguna
+          sub: De abajo hacia arriba con Step -1, y por qué al revés falla
+        - head: Elegir entre celda por celda y arreglo
+          sub: Cuándo la diferencia de velocidad deja de ser un detalle
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: For, el contador
+      lede: Se usa cuando sabes cuántas veces. La variable del ciclo va contando sola, y tú decides desde dónde, hasta dónde y de cuánto en cuánto.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · El más simple
+      title: Cinco vueltas, y el contador sirve de dato
+      filename: RepetitionStatements.bas
+      lang: vba
+      source: |
+        Sub Contar()
+            Dim i As Integer
+            Dim mensaje As String
+
+            mensaje = "Los números del 1 al 5 son: "
+            For i = 1 To 5
+                mensaje = mensaje & i & " "
+            Next i
+
+            MsgBox mensaje
+        End Sub
+      annotations:
+        - label: La variable del ciclo
+          text: i arranca en 1 y sube sola en cada vuelta. No hay que aumentarla a mano.
+        - label: Next i
+          text: Cierra el ciclo. La i después de Next es opcional y ayuda cuando hay ciclos anidados.
+        - label: Se usa como dato
+          text: i no solo cuenta, también sirve dentro del ciclo. Aquí se pega al mensaje.
+        - label: El resultado
+          text: Los números del 1 al 5 son 1 2 3 4 5, con un espacio al final. Verificado.
+
+  - table:
+      eyebrow: Bloque 01 · Las cuatro, completas
+      title: Todas las formas de repetir que trae VBA
+      headers: [Forma, Cuándo se usa, Ejemplo]
+      rows:
+        - ["For i = 1 To n", "Sabes cuántas vueltas", "For i = 1 To 120"]
+        - ["For Each x In col", "No sabes cuántas", "For Each c In Range"]
+        - ["Do While cond", "Mientras se cumpla", "Do While Not valido"]
+        - ["Do Until cond", "Hasta que se cumpla", "Do Until k > 5"]
+        - ["While cond ... Wend", "Igual que Do While", "Forma antigua, evítala"]
+
+  - code:
+      eyebrow: Bloque 01 · La tabla de amortización, otra vez
+      title: Ciento veinte columnas en cuatro renglones
+      filename: RepetitionStatements.bas
+      lang: vba
+      source: |
+        Sub NumerarPeriodos()
+            Dim periodo As Long
+
+            Range("B3").Select
+            For periodo = 1 To 120
+                ActiveCell.Offset(0, periodo - 1).Value = periodo
+            Next periodo
+        End Sub
+      annotations:
+        - label: Dónde termina
+          text: En DQ3. Verificado, y es exactamente la última columna de la tabla del módulo 00.
+        - label: Offset con el contador
+          text: El contador entra en el Offset, así que cada vuelta escribe una columna más a la derecha.
+        - label: El menos uno
+          text: La primera vuelta tiene que escribir en B3 mismo, así que el desplazamiento arranca en cero.
+        - label: Riesgo
+          text: Sigue usando Select y ActiveCell. En la semana 6 aprendimos a quitarlos, y aquí todavía están.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: For Each, la colección
+      lede: Se usa cuando no sabes cuántos hay, o cuando no te importa. Le pides a Excel que te entregue uno por uno lo que tenga.
+      block: 2
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Uno cuenta, el otro recorre
+      lead: >-
+        For lleva un número y tú decides dónde empieza y dónde acaba, así que sirve
+        cuando el límite se puede calcular. For Each no lleva número: recibe una
+        colección, un rango de celdas, las hojas de un libro, las tablas de una hoja, y
+        entrega sus elementos uno por uno hasta que se acaban.
+      panel:
+        label: Verificado
+        title: El orden es a lo ancho y luego hacia abajo
+        note: >-
+          Sobre A1 hasta B2, For Each entrega A1, B1, A2, B2. Va terminando cada renglón
+          antes de bajar, no cada columna.
+      steps:
+        - text: Declaras una variable del tipo de los elementos
+        - text: For Each esa variable In la colección
+        - text: Adentro trabajas con la variable
+          loop: ↺ y termina solo cuando ya no queda ninguno
+
+  - code:
+      eyebrow: Bloque 02 · Sobre un rango
+      title: Recorrer sin saber cuántas celdas hay
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub MarcarVacias()
+            Dim celda As Range
+
+            For Each celda In Range("A1:C500")
+                If IsEmpty(celda.Value) Then
+                    celda.Interior.Color = RGB(255, 235, 156)
+                End If
+            Next celda
+        End Sub
+      annotations:
+        - label: La variable
+          text: Se declara As Range porque los elementos de un rango son celdas, y una celda es un Range.
+        - label: IsEmpty
+          text: Es la única que distingue una celda vacía de un cero capturado, como vimos la semana pasada.
+        - label: Sin contador
+          text: No hay que saber cuántas celdas son. Si el rango cambia, el ciclo se ajusta solo.
+        - label: Riesgo
+          text: Sobre A1 hasta C500 son mil quinientas celdas aunque solo veinte tengan dato. Acota el rango antes.
+          accent: true
+
+  - stat:
+      eyebrow: Veinte mil celdas, dos formas
+      value: '0.02'
+      text: >-
+        segundos tarda escribirlas de un solo golpe con un arreglo. Celda por celda, la
+        misma macro tarda 0.91.
+      note: Las dos versiones hacen exactamente lo mismo y dejan la hoja idéntica. La diferencia es cuántas veces se cruza la frontera entre VBA y Excel, que son veinte mil contra una. Medido en Excel 16.0 con Timer.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Recorrer una base
+      lede: El ciclo de la semana pasada más la decisión de la anterior. Con eso ya se puede revisar una base entera renglón por renglón.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Ciclo y decisión juntos
+      title: Recorrer lo que haya y actuar solo sobre lo que cumple
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub MarcarMorosos()
+            Dim ultima As Long
+            Dim fila As Long
+
+            ultima = Cells(Rows.Count, 1).End(xlUp).Row
+
+            For fila = 2 To ultima
+                If Cells(fila, 3).Value > 30 Then
+                    Cells(fila, 4).Value = "Vencido"
+                End If
+            Next fila
+        End Sub
+      annotations:
+        - label: Arranca en 2
+          text: La fila 1 son los encabezados. Empezar en 1 marcaría el título como si fuera un cliente.
+        - label: Hasta ultima
+          text: El rango variable de la semana 6. Con mil filas o con diez, el mismo código.
+        - label: Cells con dos variables
+          text: Cells(fila, 3) recorre hacia abajo y siempre lee la columna 3. La fila cambia, la columna no.
+        - label: Riesgo
+          text: Si la columna 3 trae celdas vacías, la comparación con 30 las trata como cero y no las marca.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 03 · Verificado
+      title: Borrar seis filas, en los dos sentidos
+      headers: [Sentido, Cómo se escribe, Cuántas quedaron]
+      rows:
+        - ["Hacia adelante", "For fila = 1 To 6", "3 de 6"]
+        - ["Hacia atrás", "For fila = 6 To 1 Step -1", "0 de 6"]
+        - ["Por qué falla", "Al borrar la 1, la 2 pasa a ser la 1", "y el contador ya va en 2"]
+        - ["La regla", "Si borras, recorre al revés", "siempre, sin excepción"]
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de que el ciclo mienta
+      items:
+        - label: Error 01
+          title: Borrar hacia adelante
+          desc: Cada borrado sube las filas de abajo y el contador ya avanzó. Se salta la mitad, verificado.
+        - label: Error 02
+          title: Empezar el ciclo en la fila 1
+          desc: La fila de encabezados entra al recorrido y se clasifica como si fuera un dato más.
+        - label: Error 03
+          title: Recorrer toda la columna
+          desc: For Each sobre A1 hasta A1048576 recorre un millón de celdas vacías. Acota con la última fila.
+        - label: Error 04
+          title: Escribir celda por celda
+          desc: Cada escritura cruza de VBA a Excel. Veinte mil cruces son 0.91 segundos, uno solo son 0.02.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Las seis filas dicen X. ¿Cuántas quedan al terminar?
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Dim fila As Long
+
+        For fila = 1 To 6
+            If Cells(fila, 1).Value = "X" Then
+                Rows(fila).Delete
+            End If
+        Next fila
+      options:
+        - "Ninguna, borró las seis"
+        - "Tres, porque al borrar una se recorren las de abajo"
+        - "Seis, porque Delete no funciona dentro de un ciclo"
+        - "Se detiene con error al llegar a una fila que ya no existe"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Mil filas revisadas por quince renglones
+      brief: Toma una base de tu área con al menos doscientas filas. Escribe una macro que la recorra completa, marque en una columna nueva las filas que cumplan una condición de tu negocio, y cuente cuántas fueron. Después borra las que no sirvan, en el sentido correcto.
+      blocks:
+        - label: Entrega
+          text: El .xlsm con la base marcada y el módulo exportado, en Blackboard
+        - label: Restricción
+          text: La última fila se calcula. Ninguna dirección escrita a mano en el ciclo.
+        - label: La prueba
+          text: Duplica la base y vuelve a correrla. Si marca la mitad, el rango sigue fijo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: For cuenta, For Each recorre
+          desc: Uno sirve cuando el límite se puede calcular, el otro cuando ni siquiera hace falta saber cuántos hay
+        - title: Si borras, recorre al revés
+          desc: Borrar hacia adelante se salta la mitad de las filas y no marca ningún error. Verificado, tres de seis
+        - title: Cada celda que tocas cuesta
+          desc: Veinte mil escrituras sueltas tardan 0.91 segundos y una sola con arreglo tarda 0.02
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe una macro que recorra la tabla de amortización periodo por periodo, y
+        detenga el recorrido en el primero donde el saldo quede por debajo de la mitad del
+        préstamo. Reporta ese número de periodo en una celda.
+      meta:
+        - [Entrega, Antes de la semana 10]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["El ciclo", "40 %", "Recorre con rango variable y se detiene con Exit For"]
+        - ["La condición", "30 %", "Compara contra la mitad calculada, no contra un número escrito"]
+        - ["El reporte", "30 %", "El periodo encontrado queda en una celda con nombre"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, partir una macro larga en procedimientos y funciones que se
+        puedan probar por separado.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

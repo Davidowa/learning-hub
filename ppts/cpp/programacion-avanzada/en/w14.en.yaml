@@ -1,0 +1,325 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 14
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 14 · Unit 12 · Overloading and templates
+      title: Advanced Programming
+      subtitle: Making your types behave like the language's own, and writing once what serves every type.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 14 of 17]
+      notes: |
+        The last block of the course begins. Today's two topics are what explain why the
+        standard library looks the way it does: vector, string and everything else are built
+        from templates and overloaded operators.
+
+        The comparison with week 0 is worth making. The slide showing the 1979 stack against
+        the C++20 one was exactly this difference, and today the group can read both.
+
+        The outputs were measured on Visual Studio Community 2026.
+
+        Reading: Malik, eighth edition, chapter 13. The course documents cite 15, right for
+        the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Operators
+          desc: Making the plus sign work on an object of yours
+        - title: What you may
+          desc: Which ones can be overloaded and when it is better not to
+        - title: Templates
+          desc: One function written once that serves any type
+        - title: Class templates
+          desc: The same idea applied to a whole class
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Overload an operator
+          sub: As a member function, with the signature that matches the sign
+        - head: Decide when not to overload
+          sub: Recognising that an operator with an invented meaning is worse than a named function
+        - head: Write a function template
+          sub: With typename, and explain when the compiler generates the concrete version
+        - head: Read a class template
+          sub: And connect it to the vector and string you have used all term
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Making your type behave like the locals
+      lede: std::string already joins with a plus sign. That does not come from the language, it comes from somebody having written it.
+      block: 1
+
+  - code_output:
+      eyebrow: Overloading
+      title: Adding two objects with the usual sign
+      filename: vector2.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        class Vector2 {
+        public:
+            Vector2(double a, double b) : x(a), y(b) {}
+            Vector2 operator+(Vector2 o)
+            {
+                return Vector2(x + o.x, y + o.y);
+            }
+            double x;
+            double y;
+        };
+
+        Vector2 v = Vector2(1, 2) + Vector2(3, 4);
+      output: |
+        4 6
+      notes: |
+        operator+ is the function's name. The only special thing is that the compiler looks
+        for it when it meets a plus sign between two objects of that type.
+
+        As a member function, the object on the left receives the call and the one on the
+        right arrives as a parameter. Which is why it takes one argument and not two.
+
+        Taking the parameter by value copies the object on every addition. With a large type
+        that shows, and the correct signature carries const and an ampersand, which is week 5
+        material.
+
+  - table:
+      eyebrow: The limits
+      title: What you may and what you may not
+      headers: ["You may", "You may not", "Why"]
+      rows:
+        - ["+ - * /", "The dot", "It would break member access"]
+        - ["== != < >", "The scope operator", "It is part of how things are named"]
+        - ["[] () << >>", "The ternary", "The language reserves it"]
+        - ["++ -- =", "Inventing signs", "Only the existing ones exist"]
+      notes: |
+        The list of what you may is long and the list of what you may not is short. The
+        interesting question is not which ones, it is which ones are worth it.
+
+        The practical rule: overload an operator only when the meaning is obvious to anyone
+        reading the code without asking. Adding two vectors is obvious. Adding two students
+        means nothing, and there a named function is better.
+
+  - divider:
+      eyebrow: Block 02
+      title: Writing it once
+      lede: One function that serves int, double, and any type that does not exist yet.
+      block: 2
+
+  - code_output:
+      eyebrow: Templates
+      title: The same code for different types
+      filename: larger.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        template <typename T>
+        T larger(T a, T b)
+        {
+            if (a > b)
+                return a;
+            return b;
+        }
+
+        std::cout << larger(3, 9) << " ";
+        std::cout << larger(2.5, 1.5) << "\n";
+      output: |
+        9 2.5
+      notes: |
+        The first call handed back an integer and the second a double. No conversion is
+        involved: the compiler generated two separate functions from the same template, one
+        with T as int and one with T as double.
+
+        That happens at compile time, not while running. A template nobody calls generates no
+        code at all, which is why its errors only appear at the first call.
+
+        The only requirement on T is that it supports whatever the body does with it. Here,
+        that it can be compared with greater-than. Called with a type lacking that, the error
+        comes out long, and that is the cost week 0 warned about.
+
+  - code:
+      eyebrow: Class templates
+      title: The same idea, over a whole class
+      filename: box.cpp
+      lang: cpp
+      source: |
+        template <typename T>
+        class Box {
+        public:
+            Box(T v) : value(v) {}
+            T get() { return value; }
+        private:
+            T value;
+        };
+
+        Box<int> a(5);
+        Box<std::string> b("hello");
+      annotations:
+        - label: The angle brackets
+          text: Here the type is written by hand. In a function template the compiler works it out.
+        - label: Two separate classes
+          text: Box of int and Box of string share nothing. They are two classes generated separately.
+        - label: You already know it
+          text: std::vector and std::unique_ptr are exactly this, and you have used them since week 12
+        - label: Risk
+          text: A class template usually lives entirely in the header. Splitting it into a .cpp gives linker errors.
+          accent: true
+
+  - divider:
+      eyebrow: Block 03
+      title: Back to the beginning
+      lede: The week 0 slide comparing 1979 with today can now be read in full.
+      block: 3
+
+  - compare:
+      eyebrow: Forty years on
+      title: The same stack, with templates and without
+      before:
+        label: C with classes
+        file: stack.cpp
+        lang: cpp
+        code: |
+          class stack {
+              int v[100];
+              int top;
+          public:
+              void push(int);
+              int pop();
+          };
+      after:
+        label: C++20
+        file: stack.cpp
+        lang: cpp
+        code: |
+          template <typename T>
+          class Stack {
+              std::vector<T> v;
+          public:
+              void push(T x);
+              T pop();
+          };
+      note: >-
+        In week 0 this slide was a historical note. Today both sides read line by line. The
+        left holds a hundred integers and nothing else; the right serves any type and grows
+        by itself, because it carries another template inside.
+
+  - quiz:
+      eyebrow: Quick question
+      question: How many functions does the compiler generate from these two calls?
+      filename: larger.cpp
+      lang: cpp
+      source: |
+        template <typename T>
+        T larger(T a, T b) { return a > b ? a : b; }
+
+        larger(3, 9);
+        larger(2.5, 1.5);
+      options:
+        - 'Two, one for int and one for double'
+        - 'One, which serves both types'
+        - 'None, the template is resolved while running'
+        - 'Three, the two above plus the template'
+
+  - trace:
+      eyebrow: Answer
+      title: A template is a recipe, not a function
+      headers: ["Moment", "What exists", "With which T"]
+      rows:
+        - ["As written", "Only the template", "None yet"]
+        - ["Seeing larger(3, 9)", "One function is generated", "T is int"]
+        - ["Seeing larger(2.5, 1.5)", "Another is generated", "T is double"]
+        - ["In the executable", "The two generated ones", "int and double"]
+      verdict: The template itself never reaches the executable. What reaches it are the concrete versions somebody asked for, which is why a template nobody uses costs nothing.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Overloading without an obvious meaning
+          desc: An operator doing something unexpected is worse than a function with a long name
+        - label: Error 02
+          title: Taking the operand by value
+          desc: Every addition copies the whole object. The const ampersand signature copies nothing.
+        - label: Error 03
+          title: A template split across two files
+          desc: With the definition outside the header, the linker cannot find the concrete version
+        - label: Error 04
+          title: Assuming what T supports
+          desc: The body can ask T for something it lacks, and the error only shows at the first call
+
+  - lab:
+      eyebrow: Lab
+      title: A fraction that behaves like a number, in pairs
+      brief: Write a Fraction class with a numerator and a denominator, overload addition and equality, and write a function template returning the larger of two values of any type, testing it with integers and with fractions.
+      blocks:
+        - label: Constraint
+          text: The template's comparison uses greater-than, so the fraction has to define it
+        - label: Deliverable
+          text: A .cpp with the class, the operators, and the template tested against both types
+        - label: Criterion
+          text: That the template contains not one line specific to Fraction
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: An operator is a function
+          desc: operator+ has an odd name and gets found automatically, but there is nothing magic about it
+        - title: A template resolves at compile time
+          desc: It generates one concrete function per type called with, and none if nobody calls it
+        - title: The standard library is this
+          desc: vector, string and unique_ptr are class templates with overloaded operators
+
+  - homework:
+      eyebrow: For the next session
+      title: The fraction finished
+      brief: Finish the lab and add the output operator overload so a fraction can be printed straight through cout, in the form numerator slash denominator.
+      meta:
+        - [Due, Before session 15]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Operators", "Required", "Addition and equality give correct results"]
+        - ["Template", "Required", "It works with integers and fractions without one line changed"]
+        - ["Output", "Required", "cout prints the fraction without calling any method"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, exceptions. What to do when a function cannot deliver what it promised.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

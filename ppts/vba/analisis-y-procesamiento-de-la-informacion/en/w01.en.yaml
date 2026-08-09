@@ -1,0 +1,381 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 1
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 01 · Course framing and the first recorded macro
+      title: Information Analysis and Processing
+      subtitle: How the term is graded, and the first macro. Record what you already do with the mouse, then read the code it left behind.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 1 of 17]
+      notes: |
+        Ninety minutes. Twenty-five on the framing, twenty on assessment, the rest at the
+        machine recording.
+
+        What this course has over any programming course is that the student already
+        lives inside the tool. Nobody is switching programs. They are here to stop
+        redoing by hand what they already know how to do. Say that in the first five
+        minutes, in those words.
+
+        Assessment and policy come from the TIA503 syllabus. Five components at twenty
+        per cent, and no extra credit: unlike Data Analysis, this course carries no
+        external certification.
+
+        The code in this session comes from
+        docs/en/courses/vba-course/00 - Record Macro - Amortization Table/,
+        module Module2 of amortization_table_macros.xlsm. Both procedures in that module
+        were written by the recorder, and the comment header gives it away.
+
+        Verified in Excel 16.0 before class: HideColumn runs without error and leaves
+        column D visible, because it hides and then unhides. That is the centrepiece of
+        the session.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Why this course exists
+          desc: What the mouse stops being able to do, and what a macro starts being able to do
+        - title: How it is graded
+          desc: Five components, the week 16 project and the rules that apply from today
+        - title: The first macro
+          desc: Enable the environment, record, read the code and cut what does not belong
+        - title: Your turn
+          desc: The module 00 amortization table, with its first recorded macro
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what this course solves
+          sub: Why automating Excel is worth more than learning to program for its own sake
+        - head: Get the environment ready
+          sub: Developer tab showing, file saved as .xlsm, macros enabled
+        - head: Record a macro and run it
+          sub: The whole cycle, from the first click to the button that repeats it
+        - head: Read what the recorder wrote
+          sub: Spot the object, the property and the value in every line
+        - head: Place every assessment in the term
+          sub: What is assessed, when, how much it weighs and what has to be handed in
+
+  - roadmap:
+      eyebrow: Course map
+      title: Four blocks, seventeen weeks
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: now
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: todo
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why this course exists
+      lede: Not to turn you into programmers. So you stop redoing by hand what the spreadsheet already knows how to do on its own.
+      block: 1
+
+  - stat:
+      eyebrow: The module 00 amortization table
+      value: '600'
+      text: >-
+        is how many cells that table takes up: a hundred and twenty periods, five rows each.
+      note: Not one of the six hundred is hard. The problem is that there are six hundred, that next month they have to be rebuilt with another amount and another rate, and that afterwards nobody can say what moved.
+
+  - concept:
+      eyebrow: Key concept
+      title: What a click leaves behind
+      lead: >-
+        Formatting a column with the mouse and formatting it with a macro give exactly the
+        same result on screen. The difference shows up a month later. The click left
+        nothing behind: you have to remember what you did and do it again. The macro left
+        the procedure written down, and running it again costs a second.
+      panel:
+        label: The consequence
+        title: A procedure nobody wrote down cannot be reviewed
+        note: >-
+          In an audit or in front of a client the question is rarely what the number was.
+          It is how it was obtained, and who can repeat it when you are not there.
+      steps:
+        - text: You do the work once with the mouse
+        - text: The recorder writes it down as code
+        - text: Next month you run the code
+          loop: ↺ and it comes out the same, on new data, without a single click
+
+  - diagram:
+      eyebrow: Block 01 · The cycle of the course
+      title: Record, read, edit, run
+      blocks:
+        - label: Record
+          title: Excel writes it
+          desc: Once with the mouse, and Excel takes notes
+        - label: Read
+          title: You read the notes
+          desc: An object, a property of it, a value
+        - label: Edit
+          title: You fix it
+          desc: The rest of the term lives here
+          dark: true
+        - label: Run
+          title: One button
+          desc: Another month, another region, no clicks
+      note: >-
+        Microsoft describes its own recorder as a stable bridge between what you already
+        know as an Office user and what you are about to know as a programmer, and puts a
+        warning on the same page: the generated code can be confusing, because the
+        recorder has to assume what you meant and those assumptions are not always right.
+
+  - divider:
+      eyebrow: Block 02
+      title: How it is graded, and how we work
+      lede: Five components at twenty per cent each, a project that has to run on its own, and rules that apply from today.
+      block: 2
+
+  - table:
+      eyebrow: Course assessment
+      title: Five components, twenty per cent each
+      headers: [Component, Content, When, Weight]
+      rows:
+        - ["Midterm 1", "Units 1, 2 and 3", "Week 8", "20 %"]
+        - ["Midterm 2", "Units 3 and 4", "Week 13", "20 %"]
+        - ["Project", "Integrative VBA automation", "Week 16", "20 %"]
+        - ["Final exam", "All course units", "Week 17", "20 %"]
+        - ["Assignments", "Work done outside class", "Whole term", "20 %"]
+
+  - concept:
+      eyebrow: Integrative project
+      title: What is handed in on week 16
+      lead: >-
+        A workbook that automates a real information-processing task from your own area,
+        end to end. It takes raw data, cleans and orders it with macros, computes what the
+        problem asks for and reports the result. The rule that defines it in one line:
+        everything the user touches runs from VBA, not by hand.
+      panel:
+        label: How it is graded
+        title: Seventy per cent the code, thirty the report
+        note: >-
+          If the workbook does not run, its maximum grade is 30 %. It is graded
+          individually even when the work is done in teams, and every member has to be
+          able to explain the whole solution.
+      steps:
+        - text: You pick the task and the data from your area
+        - text: You automate it with macros, start to finish
+        - text: You present it and defend your decisions
+          loop: ↺ and it has to run on data it has never seen
+
+  - steps:
+      eyebrow: Operating rules
+      title: What you need to know from today
+      items:
+        - label: '01'
+          title: Attendance
+          desc: Recorded within the first five minutes of the session
+        - label: '02'
+          title: Late arrival
+          desc: From minute five to fifteen. Two late arrivals count as one absence, and you ask for the mark before that same class ends.
+        - label: '03'
+          title: From minute sixteen
+          desc: No entry to the classroom, and an absence is recorded
+        - label: '04'
+          title: Devices
+          desc: Phone, headphones and AI glasses put away for the whole session
+        - label: '05'
+          title: Submissions
+          desc: Blackboard only, on the set date. Assignments and quizzes cannot be made up.
+
+  - method:
+      eyebrow: Honour Code
+      title: What counts as your own work
+      statement: You may lean on artificial intelligence to understand. You may not hand in code you cannot explain.
+      points:
+        - label: Allowed
+          text: Asking it to explain an error, a property or an object you do not recognise
+        - label: Not allowed
+          text: Handing in a generated macro you could not read line by line if I asked
+        - label: How it is checked
+          text: In the review I pick a part and ask you to explain it. Reading it aloud is not explaining it.
+
+  - divider:
+      eyebrow: Block 03
+      title: The first macro
+      lede: Excel ships the recorder hidden behind a tab that comes switched off. Switching it on is the first step of the term.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · Before recording
+      title: Four steps to get the environment ready
+      items:
+        - label: '01'
+          title: Switch on the Developer tab
+          desc: File, Options, Customize Ribbon, Main Tabs, and tick Developer
+        - label: '02'
+          title: Save as .xlsm
+          desc: An .xlsx cannot hold code. Excel warns you, and saving anyway leaves the file without it.
+        - label: '03'
+          title: Enable macros on open
+          desc: Excel disables them by default and offers to switch them on in a bar above the sheet
+        - label: '04'
+          title: Open the editor
+          desc: Alt + F11, or the Visual Basic button on the Developer tab. That is where the code lives.
+
+  - code:
+      eyebrow: Block 03 · What the recorder wrote
+      title: A macro nobody typed
+      filename: Module2.bas
+      lang: vba
+      source: |
+        Sub HideColumn()
+        '
+        ' HideColumn Macro
+        '
+
+        '
+            Columns("D:D").EntireColumn.Hidden = True
+            Columns("D:D").EntireColumn.Hidden = False
+        End Sub
+      annotations:
+        - label: The header
+          text: Lines that open with an apostrophe are comments. The recorder wrote them on its own and VBA ignores them at run time.
+        - label: Sub and End Sub
+          text: They delimit a procedure. Everything that executes in VBA lives inside one.
+        - label: Two lines
+          text: You hid column D and then brought it back. The recorder wrote down both, in order.
+        - label: Risk
+          text: >-
+            The macro runs without error and leaves nothing done. Verified in Excel: when
+            it ends, column D is still visible.
+          accent: true
+
+  - table:
+      eyebrow: Block 03 · How to read one line
+      title: Object, property and value
+      headers: [Piece, In grammar, In the line above]
+      rows:
+        - ["Object", "The noun", "Columns(\"D:D\")"]
+        - ["Property", "The adjective", "Hidden"]
+        - ["Value", "What you assign to it", "True"]
+        - ["Method", "The verb, when there is one", "Select, Copy, Delete"]
+        - ["The dot", "The possessive, read it as «of»", "Of that column, its EntireColumn"]
+
+  - compare:
+      eyebrow: Block 03 · The edit
+      title: The recorder starts the work, you finish it
+      before:
+        label: What it recorded
+        file: Module2.bas
+        lang: vba
+        code: |
+          Sub HideColumn()
+              Columns("D:D").EntireColumn.Hidden = True
+              Columns("D:D").EntireColumn.Hidden = False
+          End Sub
+      after:
+        label: What is left after editing
+        file: Module2.bas
+        lang: vba
+        code: |
+          Sub HideColumn()
+              Columns("D:D").EntireColumn.Hidden = True
+          End Sub
+      note: >-
+        One line fewer, and the macro finally does what its name promises. This is the
+        move that repeats all term: record so you do not type from scratch, and read so
+        you can cut what the recorder wrote down by mistake.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to lose the macro
+      items:
+        - label: Error 01
+          title: Saving as .xlsx
+          desc: The plain format holds no code. Excel warns you, and if you accept, the file is saved without it and the macro is gone.
+        - label: Error 02
+          title: Trusting what you recorded
+          desc: The recorder writes down every action, including the one you undid. Read the code before you rely on it.
+        - label: Error 03
+          title: Recording onto one fixed cell
+          desc: It writes down the exact cell you touched. If next month the data starts lower, it writes in the wrong place.
+        - label: Error 04
+          title: Opening the file without enabling
+          desc: The button does nothing and no error appears. The warning was in the bar on top and got dismissed unread.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What has this macro done once it finishes?
+      filename: Module2.bas
+      lang: vba
+      source: |
+        Sub HideColumn()
+            Columns("D:D").EntireColumn.Hidden = True
+            Columns("D:D").EntireColumn.Hidden = False
+        End Sub
+      options:
+        - "Column D ends up hidden"
+        - "Column D ends up visible, just as before running it"
+        - "It raises an error, because the property is set twice"
+        - "It hides column D and also row 4"
+
+  - lab:
+      eyebrow: Lab
+      title: Record your first macro
+      brief: Open the module 00 amortization table, save it as .xlsm and record a macro that formats the two rate cells as percentages. Stop recording, open the editor and read line by line what ended up written.
+      blocks:
+        - label: Submission
+          text: The .xlsm file with the recorded macro, uploaded to Blackboard
+        - label: Constraint
+          text: Delete from the code any line that came from a click you undid while recording
+        - label: If it fails
+          text: If the button does nothing, check that you enabled macros when you opened the file
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The recorder is the bridge
+          desc: It writes the code for you, and at first all you have to do is read it and cut what does not belong
+        - title: A click leaves no trace, a macro does
+          desc: Same result on screen, but only one of the two can be repeated, reviewed and defended next month
+        - title: The code lives in an .xlsm
+          desc: Saving as .xlsx erases it, and on open Excel disables it until you decide to switch it on
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: Get Excel ready for the term and hand in the amortization workbook with a recorded macro you can run twice in a row and get the same result.
+      meta:
+        - [Due, Before week 2]
+        - [Format, Blackboard · .xlsm file]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Environment", "30 %", "The Developer tab is visible and the file is an .xlsm"]
+        - ["Macro", "40 %", "It runs from the macro dialog and does what its name says"]
+        - ["Reading", "30 %", "The code carries no leftover lines from undone clicks"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the editor from the inside: project, modules and procedures, and how
+        to run one line at a time.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

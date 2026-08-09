@@ -1,0 +1,393 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 5
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 05 · Unidad 1 · Captura y mensajes
+      title: Análisis y Procesamiento de la Información
+      subtitle: Cómo le pides un dato al usuario, cómo le contestas, y por qué hay que revisar todo lo que teclea.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 5 de 17]
+      notes: |
+        Noventa minutos. Veinte en mensajes, treinta en captura y validación, y el resto
+        armando un formulario en pantalla.
+
+        Cierra la unidad 1. Hasta hoy los datos venían escritos en el código o leídos de
+        una celda. A partir de hoy los teclea alguien más, y todo lo que teclea alguien
+        más llega como texto y puede venir mal.
+
+        El hallazgo de la sesión es que And y Or en VBA no son de cortocircuito. Los dos
+        lados se evalúan siempre, así que la validación que en cualquier otro lenguaje se
+        escribe en un solo If aquí se rompe. Está verificado con un contador y sale en la
+        diapositiva de errores y en el quiz.
+
+        El código sale de
+        docs/en/courses/vba-course/03 - Arithmetic Operators/ArithmeticExamples.bas
+        (CircleAreaInMessageWithInputs) y de
+        09 - Subs and Functions/SubsFunctions.bas (ReadInputParametersValidation).
+
+        Ese último trae un detalle que conviene mencionar. La condición dice
+        IsNumeric(userInput) And userInput <> "", y la segunda mitad sobra, porque
+        IsNumeric de una cadena vacía ya devuelve False. Verificado.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Contestarle al usuario
+          desc: MsgBox, sus botones, sus iconos y el valor que devuelve al cerrarse
+        - title: Pedirle un dato
+          desc: InputBox, la conversión de tipo y la validación que no se puede saltar
+        - title: El formulario
+          desc: Cuándo tres InputBox encadenados dejan de ser suficiente
+        - title: Tu turno
+          desc: Una captura de nómina que no acepta un dato mal escrito
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Mostrar un mensaje con botones e icono
+          sub: MsgBox con sus tres argumentos, y qué constante elegir para cada caso
+        - head: Leer la respuesta del usuario
+          sub: MsgBox devuelve un número, y ese número decide qué hace la macro
+        - head: Capturar un dato con InputBox
+          sub: Y convertirlo, porque siempre llega como texto aunque parezca número
+        - head: Validar antes de convertir
+          sub: IsNumeric, el ciclo que insiste, y por qué And no te salva aquí
+        - head: Construir un formulario mínimo
+          sub: Etiquetas, cuadros de texto y un botón que lee lo capturado
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: now
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: todo
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Contestarle al usuario
+      lede: MsgBox no solo avisa. También pregunta, y lo que el usuario conteste decide qué hace la macro a continuación.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · Los tres argumentos
+      title: MsgBox completo, no solo el texto
+      filename: Mensajes.bas
+      lang: vba
+      source: |
+        Sub Avisar()
+            MsgBox "El archivo se guardó."
+
+            MsgBox "Revisa la fila 12, viene vacía.", _
+                   vbExclamation, "Datos incompletos"
+
+            MsgBox "Cliente: Servicios del Norte" & vbNewLine & _
+                   "Saldo: 128,400.00", vbInformation, "Resumen"
+        End Sub
+      annotations:
+        - label: El primero
+          text: El texto. Es el único obligatorio, y por eso la mayoría de los ejemplos se quedan ahí.
+        - label: El segundo
+          text: Los botones y el icono, sumados. vbExclamation vale 48 y vbInformation 64.
+        - label: El tercero
+          text: El título de la ventana. Sin él dice Microsoft Excel, que no le dice nada a nadie.
+        - label: vbNewLine
+          text: Corta el renglón dentro del mensaje. Es el retorno de carro y el salto de línea, juntos.
+
+  - table:
+      eyebrow: Bloque 01 · Verificado
+      title: Las constantes que vas a usar, con su valor
+      headers: [Constante, Qué pone, Vale]
+      rows:
+        - ["vbOKOnly", "Solo Aceptar", "0"]
+        - ["vbOKCancel", "Aceptar y Cancelar", "1"]
+        - ["vbYesNo", "Sí y No", "4"]
+        - ["vbCritical", "Icono de error", "16"]
+        - ["vbQuestion", "Icono de pregunta", "32"]
+        - ["vbExclamation", "Icono de advertencia", "48"]
+        - ["vbInformation", "Icono de información", "64"]
+
+  - code:
+      eyebrow: Bloque 01 · MsgBox que pregunta
+      title: El mismo cuadro, pero ahora decide
+      filename: Mensajes.bas
+      lang: vba
+      source: |
+        Sub ConfirmarBorrado()
+            Dim respuesta As Long
+
+            respuesta = MsgBox("Se borran 340 filas. ¿Continuar?", _
+                               vbYesNo + vbQuestion, "Confirmar")
+
+            If respuesta = vbYes Then
+                Range("A2:H341").ClearContents
+            End If
+        End Sub
+      annotations:
+        - label: Los paréntesis
+          text: Cuando quieres el valor de regreso, los argumentos van entre paréntesis. Sin valor de regreso, no.
+        - label: Lo que devuelve
+          text: Un número. vbYes vale 6 y vbNo vale 7. Verificado.
+        - label: La suma
+          text: vbYesNo más vbQuestion es 4 más 32. Se suman porque cada uno ocupa bits distintos.
+        - label: Riesgo
+          text: Si comparas con el texto del botón en vez de la constante, nunca entra al If y el borrado no ocurre.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Pedirle un dato
+      lede: InputBox devuelve texto. Siempre. Aunque el usuario teclee un número, aunque teclee solo dígitos, aunque no teclee nada.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Capturar y convertir
+      title: Lo que teclean llega como texto
+      filename: ArithmeticExamples.bas
+      lang: vba
+      source: |
+        Sub CapturarPrestamo()
+            Dim monto As Double
+            Dim tasa As Double
+
+            monto = CDbl(InputBox("Monto del préstamo", "Captura"))
+            tasa = CDbl(InputBox("Tasa anual", "Captura"))
+
+            Range("B1").Value = monto
+            Range("B2").Value = tasa
+        End Sub
+      annotations:
+        - label: Los dos argumentos
+          text: El texto de la pregunta y el título de la ventana. El título es opcional y siempre vale ponerlo.
+        - label: CDbl
+          text: Convierte el texto a decimal. Sin él estarías guardando la cadena, no el número.
+        - label: Cuando cancelan
+          text: InputBox devuelve una cadena vacía, y CDbl de una cadena vacía se detiene con error 13.
+        - label: Riesgo
+          text: Este código funciona en la demostración y truena en el primer usuario real. Le falta validar.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 02 · Verificado
+      title: Qué acepta IsNumeric y qué logra convertir CDbl
+      headers: [Lo que teclean, IsNumeric, CDbl]
+      rows:
+        - ["5.5", "True", "5.5"]
+        - ["1,000", "True", "1000"]
+        - ["1e3", "True", "1000"]
+        - ["$5", "False", "error 13"]
+        - ["5a", "False", "error 13"]
+        - ["nada, cancelaron", "False", "error 13"]
+
+  - code:
+      eyebrow: Bloque 02 · Validar antes de convertir
+      title: El ciclo que insiste hasta que el dato sirve
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Dim monto As Double
+        Dim texto As String
+        Dim valido As Boolean
+
+        valido = False
+        Do While Not valido
+            texto = InputBox("Monto del préstamo", "Captura")
+            If IsNumeric(texto) Then
+                monto = CDbl(texto)
+                valido = True
+            Else
+                MsgBox "Eso no es un número.", vbExclamation
+            End If
+        Loop
+      annotations:
+        - label: La bandera
+          text: valido arranca en False y solo se vuelve True cuando el dato pasó la revisión.
+        - label: El orden
+          text: Primero se revisa, después se convierte. Nunca al revés, porque convertir es lo que truena.
+        - label: Lo que sobra
+          text: El módulo original agrega And texto <> "". Verificado que sobra, IsNumeric de vacío ya da False.
+        - label: Riesgo
+          text: Si el usuario cancela, el ciclo vuelve a preguntar para siempre. En la semana 8 le ponemos salida.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro formas de que la captura truene
+      items:
+        - label: Error 01
+          title: And no es de cortocircuito
+          desc: "En VBA los dos lados se evalúan siempre. IsNumeric(t) And CDbl(t) > 0 truena con texto, aunque el primero ya dijo False."
+        - label: Error 02
+          title: Convertir antes de revisar
+          desc: CDbl de lo que sea que hayan tecleado se detiene con error 13. Revisa con IsNumeric primero.
+        - label: Error 03
+          title: Olvidar el botón Cancelar
+          desc: Cancelar devuelve cadena vacía, igual que aceptar sin escribir nada. Los dos casos hay que atenderlos.
+        - label: Error 04
+          title: Aceptar el signo de pesos
+          desc: "IsNumeric de $5 da False, pero de 1,000 da True. La coma pasa y el símbolo de moneda no."
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El formulario
+      lede: Tres InputBox encadenados son tres ventanas, tres cancelaciones posibles y ningún dato a la vista. Un formulario es una sola.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cuándo un formulario deja de ser un capricho
+      lead: >-
+        Con un dato, InputBox alcanza y sobra. Con seis, el usuario contesta a ciegas, no
+        puede corregir el segundo cuando va en el quinto, y si cancela uno se pierde todo
+        lo anterior. Un formulario pone los seis campos juntos, permite corregir
+        cualquiera antes de aceptar, y valida todo de una vez al presionar el botón.
+      panel:
+        label: La regla práctica
+        title: Más de dos datos seguidos piden formulario
+        note: >-
+          Y el proyecto de la semana 16 pide uno de manera explícita, así que conviene que
+          el que armes hoy sea el que vas a reusar.
+      steps:
+        - text: Insertar, UserForm en el editor
+        - text: Arrastras etiquetas y cuadros de texto
+        - text: Doble clic en el botón, y ahí va el código
+          loop: ↺ y UserForm1.Show lo abre desde cualquier macro
+
+  - steps:
+      eyebrow: Bloque 03 · Cómo se arma
+      title: Cinco pasos, y el quinto es el único que lleva código
+      items:
+        - label: '01'
+          title: Insertar el formulario
+          desc: En el editor, menú Insertar, UserForm. Aparece en el árbol bajo Formularios.
+        - label: '02'
+          title: Poner los controles
+          desc: Del cuadro de herramientas. Label para el texto fijo, TextBox para lo que capturan.
+        - label: '03'
+          title: Nombrarlos
+          desc: En Propiedades, F4. txtMonto y txtTasa se leen; TextBox1 y TextBox2 no.
+        - label: '04'
+          title: Agregar el botón
+          desc: Un CommandButton con Caption Aceptar. El Caption es lo que se ve, el nombre es lo que usas.
+        - label: '05'
+          title: Escribir el código
+          desc: Doble clic en el botón. El editor abre el procedimiento del evento Click, ya escrito.
+
+  - code:
+      eyebrow: Bloque 03 · El código del botón
+      title: Lo que corre cuando el usuario acepta
+      filename: frmPrestamo
+      lang: vba
+      source: |
+        Private Sub cmdAceptar_Click()
+            If Not IsNumeric(txtMonto.Value) Then
+                MsgBox "El monto no es un número.", vbExclamation
+                txtMonto.SetFocus
+                Exit Sub
+            End If
+
+            Range("MontoPrestamo").Value = CDbl(txtMonto.Value)
+            Range("TasaAnual").Value = CDbl(txtTasa.Value)
+            Unload Me
+        End Sub
+      annotations:
+        - label: Private Sub
+          text: Vive en el módulo del formulario, no en uno estándar, así que no sale en el cuadro de macros.
+        - label: Exit Sub
+          text: Sale del procedimiento sin cerrar el formulario, para que el usuario corrija y vuelva a intentar.
+        - label: SetFocus
+          text: Deja el cursor en el campo que estaba mal. Cuesta un renglón y se agradece mucho.
+        - label: Unload Me
+          text: Cierra el formulario. Me es el formulario mismo, igual que ThisWorkbook es este libro.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: El usuario teclea abc. ¿Qué pasa?
+      filename: Captura.bas
+      lang: vba
+      source: |
+        Dim t As String
+        t = InputBox("Monto")
+
+        If IsNumeric(t) And CDbl(t) > 0 Then
+            Range("A1").Value = CDbl(t)
+        End If
+      options:
+        - "Nada, porque IsNumeric ya devolvió False"
+        - "Se detiene con error 13, porque And evalúa los dos lados"
+        - "Guarda 0 en A1"
+        - "Vuelve a preguntar hasta que teclee un número"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una captura de nómina que no acepta basura
+      brief: Arma un formulario con cuatro campos de un recibo de nómina de tu área, por ejemplo el número de empleado, los días trabajados, el sueldo diario y el porcentaje de bono. Al aceptar, valida los cuatro y escríbelos en celdas con nombre.
+      blocks:
+        - label: Entrega
+          text: El .xlsm con el formulario y el módulo exportado, en Blackboard
+        - label: Restricción
+          text: Cada control con nombre propio. Ningún TextBox1 ni CommandButton1 en el código.
+        - label: La prueba
+          text: Teclea un texto en el sueldo y presiona Aceptar. Si truena, la validación no estaba puesta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Todo lo que teclean llega como texto
+          desc: InputBox y TextBox devuelven cadenas, siempre, y convertir sin revisar antes es la falla más común del semestre
+        - title: And evalúa los dos lados
+          desc: VBA no corta la condición a la mitad, así que la validación va en dos If anidados y no en uno solo
+        - title: MsgBox también pregunta
+          desc: Devuelve un número, y comparar ese número contra vbYes es lo que convierte un aviso en una decisión
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Toma la captura de parámetros del préstamo y pásala de InputBox encadenados a un
+        formulario. Valida cada campo antes de escribir, avisa con MsgBox cuál está mal, y
+        deja el cursor en el campo del error.
+      meta:
+        - [Entrega, Antes de la semana 6]
+        - [Formato, Blackboard · .xlsm y .frm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Formulario", "30 %", "Cuatro campos con nombre propio y un botón que se llama como lo que hace"]
+        - ["Validación", "50 %", "Ningún dato mal escrito llega a la hoja, y el aviso dice cuál falló"]
+        - ["Escritura", "20 %", "Los valores llegan a celdas con nombre y con el formato correcto"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, de regreso a la grabadora: editar lo que grabó para que
+        funcione con un rango que cambia de tamaño cada mes.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

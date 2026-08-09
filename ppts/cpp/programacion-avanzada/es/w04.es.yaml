@@ -1,0 +1,365 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 4
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 04 · Unidad 3 · Funciones definidas por el usuario I
+      title: Programación Avanzada
+      subtitle: Partir un programa en piezas con nombre, que se prueban por separado y se corrigen sin tocar el resto.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 4 de 17]
+      notes: |
+        Primera sesión del bloque de funciones y clases. Hasta hoy todo cabía en main, y a
+        partir de aquí eso deja de ser una opción razonable.
+
+        Sigue sin haber estructuras de control. Son la unidad 6 y llegan en la semana 7, así
+        que todas las funciones de hoy tienen una sola ruta de arriba abajo, sin ramas. Es
+        una limitación real al escribir los ejemplos, y también la razón por la que las
+        funciones de hoy se entienden completas de una lectura.
+
+        El bloque de errores del compilador que aparece en la diapositiva del prototipo
+        faltante es real y está recortado. La corrida completa en Visual Studio Community
+        2026 entregó treinta y tres líneas por un solo identificador mal puesto.
+
+        Lectura: Malik, octava edición, capítulo 6.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Por qué partir
+          desc: Qué gana un programa cuando deja de ser una sola pieza
+        - title: Anatomía
+          desc: Prototipo, definición y llamada, y para qué sirve cada uno
+        - title: El primer error
+          desc: Qué pasa cuando el compilador encuentra un nombre que no conoce
+        - title: Lo local
+          desc: Dónde vive una variable declarada dentro de una función, y hasta cuándo
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Descomponer un problema en funciones
+          sub: Con una responsabilidad clara cada una, y un nombre que la anuncie
+        - head: Escribir prototipo y definición
+          sub: Y explicar por qué el compilador necesita el primero antes de ver el segundo
+        - head: Distinguir parámetro de argumento
+          sub: Lo que la función declara recibir frente al valor concreto con el que se llama
+        - head: Reconocer el alcance de una variable local
+          sub: Y predecir el error que sale al usarla fuera de la función donde se declaró
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: now
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Descomponer
+      lede: Un programa de trescientas líneas dentro de main no está mal escrito por largo. Está mal escrito porque no hay manera de probar una parte sin correrlo todo.
+      block: 1
+
+  - figure:
+      eyebrow: Descomposición
+      title: Separar un problema en piezas que se resuelven solas
+      image: img/es/ct-01.png
+      caption: Cada pieza se puede probar, corregir y explicar por su cuenta. Eso es lo que se compra con la línea extra que cuesta declararla.
+      alt: Una maraña de hilo que se separa en varias madejas ordenadas
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una función es una promesa con tres partes
+      lead: >-
+        Una función promete que si le das ciertos valores, con ciertos tipos, te devuelve un
+        resultado de un tipo conocido. Quien la llama no necesita saber cómo lo hace. Esa es
+        toda la idea, y es la misma que sostiene el resto del curso.
+      panel:
+        label: La prueba de una buena función
+        title: Se explica en una sola frase
+        note: >-
+          Si para decir qué hace hace falta un "y también", probablemente son dos funciones
+          que quedaron pegadas y conviene separarlas ahora.
+      steps:
+        - text: Recibe valores con tipo
+        - text: Hace una sola cosa
+        - text: Devuelve un resultado
+          loop: ↺ quien la usa solo necesita esas tres líneas
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Prototipo, definición y llamada
+      lede: Tres cosas distintas que se escriben en tres lugares distintos, y el compilador exige que aparezcan en cierto orden.
+      block: 2
+
+  - code:
+      eyebrow: Anatomía
+      title: Una función completa, y las tres veces que aparece su nombre
+      filename: promedio.cpp
+      lang: cpp
+      source: |
+        double promedio(int a, int b, int c);
+
+        int main()
+        {
+            double p = promedio(78, 85, 91);
+            std::cout << p << "\n";
+            return 0;
+        }
+
+        double promedio(int a, int b, int c)
+        {
+            double suma = a + b + c;
+            return suma / 3;
+        }
+      annotations:
+        - label: Línea 1
+          text: El prototipo anuncia la función. Lleva punto y coma y no lleva cuerpo.
+        - label: Línea 5
+          text: La llamada. 78, 85 y 91 son los argumentos, los valores concretos de esta vez.
+        - label: Línea 10
+          text: La definición. Aquí a, b y c son los parámetros, los nombres que usa el cuerpo.
+        - label: Línea 12
+          text: suma es double, así que la división de la línea siguiente ya es entre reales
+      notes: |
+        El #include de iostream va arriba y se omitió en la lámina para que la función
+        completa cupiera en una sola tarjeta.
+
+        Vale la pena señalar que el nombre promedio aparece tres veces y significa algo
+        distinto cada vez: en la línea 1 es un anuncio, en la 5 es una orden y en la 10 es la
+        receta. Los alumnos que confunden prototipo con definición casi siempre es porque
+        nadie les separó esos tres papeles.
+
+  - code_output:
+      eyebrow: Ejecución
+      title: Y lo que entrega al correr
+      filename: promedio.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        double p = promedio(78, 85, 91);
+
+        std::cout << p << "\n";
+      output: |
+        84.6667
+      notes: |
+        84.6667 y no 84. La diferencia con la semana pasada es la línea que declara suma
+        como double antes de dividir, así que cuando llega la división ya hay un real de por
+        medio.
+
+        cout imprime seis cifras significativas por omisión. El valor guardado tiene más
+        precisión que la que se ve, y controlar cuántas se muestran es tema de la unidad 11.
+
+  - table:
+      eyebrow: Las partes
+      title: Siete piezas, y dónde aparece cada una
+      headers: ["Pieza", "Qué es", "En el ejemplo"]
+      rows:
+        - ["Tipo de retorno", "El tipo de lo que entrega", "double"]
+        - ["Nombre", "Con el que se le llama", "promedio"]
+        - ["Parámetros", "Lo que declara recibir", "int a, int b, int c"]
+        - ["Argumentos", "Los valores de esta llamada", "78, 85, 91"]
+        - ["Cuerpo", "Lo que hace, entre llaves", "suma / 3"]
+        - ["return", "Entrega y termina la función", "return suma / 3;"]
+        - ["Prototipo", "El anuncio, antes de main", "double promedio(int, int, int);"]
+      notes: |
+        En el prototipo los nombres de los parámetros son opcionales, basta con los tipos.
+        Ponerlos igual que en la definición cuesta nada y le dice a quien lea la cabecera
+        qué significa cada hueco.
+
+  - code_output:
+      eyebrow: Cuando falta el anuncio
+      title: Un identificador que el compilador no conoce todavía
+      filename: sinproto.cpp
+      lang: cpp
+      output_label: Lista de errores, recortada
+      source: |
+        int main()
+        {
+            std::cout << duplica(4);
+            return 0;
+        }
+
+        int duplica(int n)
+        {
+            return n * 2;
+        }
+      output: |
+        error C3861: 'duplica':
+        identifier not found
+        error C2593: 'operator <<'
+        is ambiguous
+        ... 29 lineas mas de notas
+      notes: |
+        El compilador lee de arriba abajo. Al llegar a la línea 3 todavía no ha visto la
+        definición de duplica, así que no sabe qué tipo devuelve ni si existe.
+
+        El primer error es el único que importa. El segundo sale porque, al no saber qué
+        devuelve duplica, tampoco puede decidir cuál versión de << usar, y detrás vienen
+        veintinueve notas listando todas las que probó. La corrida real dio treinta y tres
+        líneas.
+
+        Se arregla de dos maneras, y las dos son válidas: poner el prototipo antes de main,
+        o mover la definición completa arriba. La primera escala mejor cuando hay varias
+        funciones que se llaman entre sí.
+
+  - method:
+      eyebrow: Criterio
+      title: Arriba está la causa, abajo están las consecuencias
+      statement: Un error de compilación en C++ rara vez viene solo. La disciplina que ahorra más tiempo en este curso es corregir únicamente el primero y volver a compilar antes de leer el segundo.
+      points:
+        - label: Por qué pasa
+          text: El compilador sigue trabajando con información incompleta, y cada suposición mala genera errores nuevos
+        - label: Qué hacer
+          text: Doble clic en el primer renglón de la lista, corregir eso, recompilar. Nada más.
+        - label: Cuándo desconfiar
+          text: Si el primer error apunta a un archivo de la biblioteca estándar, el problema casi siempre está en tu llamada
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Definir la función después de main
+          desc: Sin prototipo arriba, un solo nombre desconocido produce treinta líneas de error
+        - label: Error 02
+          title: Prototipo sin punto y coma
+          desc: El compilador lo lee como el principio de una definición y se queja de la línea siguiente
+        - label: Error 03
+          title: Usar una local fuera de su función
+          desc: Sale C2065, undeclared identifier, aunque la variable esté escrita tres líneas arriba
+        - label: Error 04
+          title: Esperar que cambie el original
+          desc: El parámetro es una copia. Modificarlo dentro no toca la variable de quien llamó.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Lo local se queda adentro
+      lede: Una variable declarada dentro de una función nace cuando la función arranca y desaparece cuando termina.
+      block: 3
+
+  - code:
+      eyebrow: Copias
+      title: El parámetro recibe una copia del valor
+      filename: copia.cpp
+      lang: cpp
+      source: |
+        int duplicado(int n)
+        {
+            n = n * 2;
+            return n;
+        }
+
+        int main()
+        {
+            int original = 10;
+            int copia = duplicado(original);
+            std::cout << original << " " << copia << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Sin prototipo
+          text: La definición va arriba de main, que es la otra forma válida de resolver lo de la lámina anterior
+        - label: Línea 3
+          text: n cambia a 20 dentro de la función, y n solo existe dentro de la función
+        - label: Línea 10
+          text: Se le pasa el valor de original, no original. La función recibe un 10 suelto.
+        - label: Riesgo
+          text: Se ve como una limitación y por ahora lo es. Cambiarlo se llama paso por referencia, y es la próxima sesión.
+          accent: true
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime el programa de la diapositiva anterior?
+      filename: copia.cpp
+      lang: cpp
+      source: |
+        int original = 10;
+        int copia = duplicado(original);
+
+        std::cout << original << " " << copia << "\n";
+      options:
+        - '10 20, porque la función trabajó sobre una copia'
+        - '20 20, porque n y original son la misma variable'
+        - '10 10, porque el return no se guardó en ningún lado'
+        - '20 10, porque el cambio se aplica al salir de la función'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Dos variables distintas que valen lo mismo un instante
+      headers: ["Paso", "Qué ocurre", "original", "n"]
+      rows:
+        - ["1", "int original = 10", "10", "no existe"]
+        - ["2", "Se llama duplicado(original)", "10", "10, recién copiado"]
+        - ["3", "n = n * 2", "10", "20"]
+        - ["4", "return n, copia recibe 20", "10", "deja de existir"]
+      verdict: original nunca cambió porque la función nunca lo tuvo. Recibió una copia, en otro espacio, que se destruye al terminar la llamada.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una boleta partida en funciones, en parejas
+      brief: Tomen el programa de la boleta de la semana 2, que hoy está completo dentro de main, y sepárenlo en tres funciones con prototipo, una que calcule el promedio, otra que lo convierta a porcentaje y otra que arme la línea de texto final.
+      blocks:
+        - label: Restricción
+          text: Sin if y sin ciclos, que llegan en la semana 7. Cada función con una sola ruta.
+        - label: Entregable
+          text: Un .cpp con los tres prototipos arriba, main en medio y las tres definiciones abajo
+        - label: Criterio
+          text: Que main se lea de corrido y que ninguna función necesite un "y también" para explicarse
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El prototipo va antes de usarla
+          desc: El compilador lee de arriba abajo, y un nombre que no conoce le genera errores en cadena
+        - title: El parámetro es una copia
+          desc: Modificarlo dentro de la función no toca la variable con la que se hizo la llamada
+        - title: Corrige solo el primer error
+          desc: Los que vienen abajo suelen ser consecuencia, y desaparecen al recompilar
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La boleta modular y una función probada aparte
+      brief: Terminen la separación en funciones del laboratorio y agreguen una cuarta función que reciba la suma y el número de materias y devuelva el promedio, de modo que se pueda llamar con valores inventados para comprobar que da lo correcto.
+      meta:
+        - [Entrega, Antes de la sesión 5]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Descomposición", "Requisito", "Cuatro funciones, cada una con una responsabilidad"]
+        - ["Prototipos", "Requisito", "Declarados antes de main y con los tipos correctos"]
+        - ["Comprobación", "Requisito", "Tres llamadas de prueba con valores conocidos y su resultado esperado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, funciones que no devuelven nada, parámetros por referencia y varias funciones con el mismo nombre.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

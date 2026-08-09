@@ -1,0 +1,330 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1.4
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 4
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Repaso 4 de 5 · Módulo 4 · Colecciones
+      title: Programación Orientada a Objetos
+      subtitle: Cuatro formas de guardar varias cosas en una sola variable, y cuándo usar cada una.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, Repaso 4 de 5]
+      notes: |
+        Cubre el módulo 4, Code012 a Code017 más Exercise003.
+
+        El bloque de referencias contra copias es el que más rinde: es el mismo
+        mecanismo que en la semana 3 explica el atributo de clase compartido, que es
+        la pregunta del quiz de esa sesión.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir entre las cuatro colecciones
+          sub: Según si el orden importa, si va a cambiar y si puede haber repetidos
+        - head: Recorrer e indexar una lista
+          sub: Índices, rebanadas y paso, exactamente igual que en las cadenas
+        - head: Usar los métodos de lista
+          sub: append, insert, remove, pop, sort, reverse y count
+        - head: Buscar por llave en un diccionario
+          sub: Y por qué get evita el KeyError que corta el programa
+        - head: Distinguir copiar de renombrar
+          sub: El signo igual no copia una lista, le pone un segundo nombre a la misma
+
+  - roadmap:
+      eyebrow: Mapa del repaso
+      title: Cinco sesiones, un módulo cada una
+      phases:
+        - label: Repaso 1
+          title: Datos y texto
+          desc: Variables, tipos, cadenas, números y entrada
+          state: done
+        - label: Repaso 2
+          title: Decisiones y ciclos
+          desc: Comparación, lógica, if, for y while
+          state: done
+        - label: Repaso 3
+          title: Funciones
+          desc: Parámetros, retorno y alcance
+          state: done
+        - label: Repaso 4
+          title: Colecciones
+          desc: Listas, tuplas, conjuntos y diccionarios
+          state: now
+        - label: Repaso 5
+          title: Errores
+          desc: try, except y los tipos más comunes
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Las cuatro colecciones
+      lede: Tres preguntas deciden cuál usar, y contestarlas mal cuesta caro más adelante.
+      block: 1
+
+  - table:
+      eyebrow: Módulo 4 · Comparación
+      title: Tres preguntas, cuatro respuestas
+      headers: ["Colección", "Sintaxis", "¿Ordenada?", "¿Se puede cambiar?", "¿Admite repetidos?"]
+      rows:
+        - ["Lista", "[1, 2, 3]", "Sí", "Sí", "Sí"]
+        - ["Tupla", "(1, 2, 3)", "Sí", "No", "Sí"]
+        - ["Conjunto", "{1, 2, 3}", "No", "Sí", "No"]
+        - ["Diccionario", "{'a': 1}", "Sí", "Sí", "No en las llaves"]
+
+  - figure:
+      eyebrow: Módulo 4 · Colecciones
+      title: La misma tabla, en imagen
+      image: img/es/collections.png
+      caption: Cada contenedor dibujado con la propiedad que lo separa de los otros tres
+      alt: Lista, tupla, conjunto y diccionario, uno junto a otro
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Listas
+      lede: La colección que vas a usar el noventa por ciento de las veces.
+      block: 2
+
+  - code:
+      eyebrow: Módulo 4 · Listas
+      title: Indexar y rebanar, igual que una cadena
+      filename: Code012.py
+      lang: python
+      source: |
+        fruits = ["apple", "banana", "cherry", "blackcurrant"]
+
+        fruits[1]        # 'banana'
+        fruits[-1]       # 'blackcurrant'
+        fruits[1:3]      # ['banana', 'cherry']
+        fruits[:2]       # ['apple', 'banana']
+        fruits[::2]      # ['apple', 'cherry']   de dos en dos
+        len(fruits)      # 4
+      annotations:
+        - label: Ya lo sabes
+          text: Índices, negativos y rebanadas funcionan igual que en las cadenas del repaso 1
+        - label: La diferencia
+          text: La lista sí se puede modificar. La cadena no; siempre devuelve una copia.
+
+  - table:
+      eyebrow: Módulo 4 · Listas
+      title: Los métodos de lista que vas a usar
+      headers: ["Método", "Qué hace", "Partiendo de [3, 1]", "Queda en"]
+      rows:
+        - ["append(x)", "Agrega al final", "lista.append(2)", "[3, 1, 2]"]
+        - ["insert(i, x)", "Inserta en la posición i", "lista.insert(0, 9)", "[9, 3, 1]"]
+        - ["remove(x)", "Borra la primera x", "lista.remove(3)", "[1]"]
+        - ["pop()", "Saca y devuelve el último", "lista.pop()", "[3]"]
+        - ["sort()", "Ordena en el lugar", "lista.sort()", "[1, 3]"]
+        - ["reverse()", "Invierte en el lugar", "lista.reverse()", "[1, 3]"]
+
+  - concept:
+      eyebrow: Módulo 4 · Listas
+      title: Estos métodos sí modifican la original
+      lead: >-
+        Al revés que las cadenas. append, sort y reverse cambian la lista y devuelven
+        None. Guardar el resultado es el error clásico: lista = lista.sort() deja la
+        variable en None y pierde los datos.
+      panel:
+        label: Las dos versiones de ordenar
+        title: sort modifica, sorted devuelve una copia
+        note: >-
+          count(x) cuenta apariciones e index(x) devuelve la primera posición; ninguna
+          modifica la lista. lista.sort() ordena la que ya tienes. sorted(lista) te entrega una lista nueva
+          ordenada y deja la original intacta. Elige según si te importa conservarla.
+      steps:
+        - text: El método cambia la lista
+        - text: y devuelve None
+        - text: guardar ese None borra tu lista
+          loop: ↺ si necesitas una copia ordenada, usa sorted
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Tuplas, conjuntos y diccionarios
+      lede: Las otras tres existen porque a veces necesitas justo lo que la lista no da.
+      block: 3
+
+  - code:
+      eyebrow: Módulo 4 · Tuplas
+      title: Una lista que no se puede cambiar
+      filename: Code013.py
+      lang: python
+      source: |
+        punto = (3, 4)
+
+        punto[0]              # 3, se lee igual que una lista
+        len(punto)            # 2
+        otro = punto + (5,)   # (3, 4, 5), una tupla nueva
+
+        # punto[0] = 9        # TypeError, no admite asignación
+        x, y = punto          # desempaqueta en dos variables
+      annotations:
+        - label: Para qué sirve
+          text: Para datos que no deben cambiar, como una coordenada o una fecha
+        - label: La coma solitaria
+          text: '(5,) es una tupla de un elemento. (5) sin coma es solo el número entre paréntesis.'
+        - label: Riesgo
+          text: No tiene append ni extend. Concatenar con + crea una tupla nueva, no modifica la anterior.
+          accent: true
+
+  - code_output:
+      eyebrow: Módulo 4 · Conjuntos
+      title: Un conjunto descarta los repetidos solo
+      filename: Code014.py
+      lang: python
+      output_label: Salida
+      source: |
+        notas = [8, 9, 8, 10, 9, 8]
+
+        unicas = set(notas)
+        print(unicas)
+        print(len(notas), len(unicas))
+        print(8 in unicas)
+      output: |
+        {8, 9, 10}
+        6 3
+        True
+
+  - code:
+      eyebrow: Módulo 4 · Diccionarios
+      title: Guardar por llave en vez de por posición
+      filename: Code015.py
+      lang: python
+      source: |
+        alumno = {
+            "nombre": "Ana",
+            "carrera": "Mecatrónica",
+            "semestre": 2,
+        }
+
+        alumno["nombre"]              # 'Ana'
+        alumno.get("beca")            # None, en vez de reventar
+        alumno.get("beca", False)     # False, valor por defecto
+
+        for llave, valor in alumno.items():
+            print(llave, valor)
+      annotations:
+        - label: Corchetes contra get
+          text: 'alumno["beca"] levanta KeyError si no existe. get devuelve None y sigue.'
+        - label: items()
+          text: Recorre llave y valor a la vez, que es como casi siempre lo quieres
+        - label: Riesgo
+          text: Las llaves no se repiten. Escribir la misma dos veces deja solo la última.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 04
+      title: Copiar contra renombrar
+      lede: El bloque que más se les olvida, y el que vuelve a aparecer en la semana 3.
+      block: 4
+
+  - concept:
+      eyebrow: Módulo 4 · Referencias
+      title: El signo igual no copia una lista
+      lead: >-
+        Con números y cadenas, asignar copia el valor. Con listas, diccionarios y
+        conjuntos, asignar solo le pone un segundo nombre a la misma cosa. Modificar por
+        cualquiera de los dos nombres cambia lo que ve el otro.
+      panel:
+        label: Cómo se copia de verdad
+        title: copy(), list() o una rebanada completa
+        note: >-
+          nueva = vieja.copy() y nueva = list(vieja) hacen lo mismo. Ojo: la copia es
+          superficial, así que una lista de listas sigue compartiendo las de adentro.
+      steps:
+        - text: copia = numeros le pone otro nombre
+        - text: copia.append(4) toca la única lista
+        - text: numeros también cambió
+          loop: ↺ copy() es lo que crea una segunda lista
+
+  - figure:
+      eyebrow: Módulo 4 · Referencias
+      title: Dos etiquetas, una sola caja
+      image: img/es/reference-vs-copy.png
+      caption: El signo igual copia la referencia. Para una lista aparte hace falta copy().
+      alt: Dos etiquetas atadas a la misma caja, y al lado dos etiquetas con una caja cada una
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores de este módulo
+      items:
+        - label: Error 01
+          title: Guardar lo que devuelve sort
+          desc: 'lista = lista.sort() deja la variable en None. sort ordena y no devuelve nada.'
+        - label: Error 02
+          title: Índice fuera de rango
+          desc: 'IndexError. La última posición de una lista de n elementos es n menos uno.'
+        - label: Error 03
+          title: Llave que no existe
+          desc: 'KeyError con corchetes. Usa get si el dato puede faltar.'
+        - label: Error 04
+          title: Modificar la lista mientras la recorres
+          desc: El ciclo salta elementos. Recorre una copia, o construye una lista nueva.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: quiz.py
+      lang: python
+      source: |
+        numeros = [1, 2, 3]
+        copia = numeros
+
+        copia.append(4)
+
+        print(len(numeros))
+      options:
+        - '3, porque copia es otra lista'
+        - '4, porque los dos nombres apuntan a la misma lista'
+        - 'Error, no se puede asignar una lista a otra variable'
+        - '7, porque se concatenan las dos listas'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 4, y la razón es que no hubo copia
+      headers: ["Paso", "Instrucción", "numeros", "copia", "¿Mismo objeto?"]
+      rows:
+        - ['1', "numeros = [1, 2, 3]", "[1, 2, 3]", "–", "–"]
+        - ['2', "copia = numeros", "[1, 2, 3]", "[1, 2, 3]", "Sí"]
+        - ['3', "copia.append(4)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Sí"]
+        - ['4', "len(numeros)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "4"]
+      verdict: El signo igual copia la referencia, no el contenido. Para una lista aparte, numeros.copy() o list(numeros).
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Tres preguntas eligen la colección
+          desc: Importa el orden, va a cambiar, puede haber repetidos. Con eso basta.
+        - title: Los métodos de lista devuelven None
+          desc: Justo al revés que los de cadena, que devuelven una copia y no tocan nada
+        - title: Asignar una lista no la copia
+          desc: En la semana 3 esto reaparece como el atributo de clase que todos comparten
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Con una lista de diccionarios de alumnos, escribe funciones que devuelvan los aprobados, el promedio del grupo y las carreras sin repetir.
+      meta:
+        - [Entrega, Antes del repaso 5]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Colecciones", "40 %", "Las carreras sin repetir se resuelven con un conjunto, no con un ciclo"]
+        - ["Acceso", "30 %", "Los datos del alumno se leen con get donde el campo puede faltar"]
+        - ["Sin efectos", "30 %", "Ninguna función modifica la lista que recibe"]
+
+  - closing:
+      title: Preguntas
+      subtitle: El último repaso, cómo atrapar un error sin que el programa truene.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

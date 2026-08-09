@@ -1,0 +1,336 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 0
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Opening session · Course introduction
+      title: Advanced Programming
+      subtitle: Where C++ came from, where it still rules forty years later, and how we are going to work this term.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, Opening]
+      notes: |
+        This session replaces the image-only deck used before. The original infographics
+        are still in ppts/cpp/Introducción al curso.pptx and hold up on a close screen,
+        but they are far too dense for a large room. What follows is the same material
+        spread across slides that read from the back row, plus the history, which was the
+        one thing none of the eight covered.
+
+        The sector percentages and the language comparison come from those infographics,
+        which label themselves as the author's own editorial assessment. They are nobody's
+        official figures, and that is worth saying out loud when presenting them.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Where it came from
+          desc: Forty years, from C to the version this course uses
+        - title: What makes it different
+          desc: Compiled, high level, and with nobody collecting the garbage
+        - title: Where it is used
+          desc: The sectors where it is still the first choice
+        - title: How we work
+          desc: Grading, submissions, the AI policy and the toolchain
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Place C++ in time
+          sub: What came before it, what it was built to fix, and why it still changes
+        - head: Explain what a compiler does
+          sub: And why a syntax error turns up before the program ever runs
+        - head: Say where C++ is worth it
+          sub: And where another language solves the same thing with less work
+        - head: Work with the toolchain ready
+          sub: Visual Studio 2026, a console project, and the standard set to C++20
+
+  - roadmap:
+      eyebrow: Course map
+      title: Fourteen units across seventeen weeks
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Fundamentals
+          desc: Environment, debugging, types, operators and strings
+          state: now
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: todo
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Where C++ came from
+      lede: Almost no language in use today is forty years old. It is worth knowing why this one is.
+      block: 1
+
+  - figure:
+      eyebrow: Timeline
+      title: Forty years on one line
+      image: img/en/cpp-timeline.png
+      caption: Bjarne Stroustrup wanted the classes of Simula with the speed of C. Everything else followed from that.
+      alt: A timeline with six milestones from 1972 to 2020, from the birth of C to the standard this course uses
+
+  - concept:
+      eyebrow: Key concept
+      title: High level, with close control of the hardware
+      lead: >-
+        High level because you write classes, templates and algorithms rather than processor
+        registers. Close to the hardware because you decide when memory is reserved, when it
+        is released and what gets copied. Having both at once is the rare part, and the point.
+      panel:
+        label: What it does not do for you
+        title: Nobody here collects the garbage
+        note: >-
+          In Python an object disappears once nothing uses it. Here it disappears because you
+          wrote that it should, or it does not disappear. More work, and exact control.
+      steps:
+        - text: You declare the types
+        - text: You decide the memory
+        - text: The compiler checks first
+          loop: ↺ in exchange, what you did not write does not happen
+
+  - figure:
+      eyebrow: Diagnosis
+      title: What happens between writing and running
+      image: img/en/compilation.png
+      caption: Two separate programs work before yours does. It pays to know which of them is complaining.
+      alt: Three boxes, the source file, the object file and the executable, joined by the compiler and the linker
+
+  - compare:
+      eyebrow: Forty years apart
+      title: The same idea, in 1979 and today
+      before:
+        label: C with Classes
+        file: stack.cpp
+        lang: cpp
+        code: |
+          class stack {
+              int v[100];
+              int top;
+          public:
+              void push(int);
+              int pop();
+          };
+      after:
+        label: C++20
+        file: stack.cpp
+        lang: cpp
+        code: |
+          template <typename T>
+          class Stack {
+              std::vector<T> v;
+          public:
+              void push(T x);
+              T pop();
+          };
+      note: The one on the left holds integers only, and only a hundred. The one on the right takes any type and grows on its own. Forty years of work fit in that difference.
+
+  - table:
+      eyebrow: The standards
+      title: What each version brought
+      headers: ["Version", "Year", "What it brought"]
+      rows:
+        - ["C++98", "1998", "The first ISO standard, templates and the STL"]
+        - ["C++11", "2011", "auto, lambdas, smart pointers and threads"]
+        - ["C++17", "2017", "The filesystem library and structured bindings"]
+        - ["C++20", "2020", "Concepts, ranges, modules and jthread"]
+        - ["C++23", "2023", "More library and fewer surprises"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Where it is used and what it costs
+      lede: C++ does not compete to be the language for everything. It competes where performance and memory decide the outcome.
+      block: 2
+
+  - tiers:
+      eyebrow: By sector
+      title: Where it is still the first choice
+      items:
+        - key: '01'
+          title: Video games
+          desc: A little over half the sector's new code. Unreal and nearly every in-house engine are written in it.
+        - key: '02'
+          title: Embedded systems
+          desc: Shares the ground with C. Where memory is counted in kilobytes and response time is a requirement.
+        - key: '03'
+          title: Scientific computing
+          desc: A quarter of the new code, alongside Fortran. Python rules the surface and calls C++ underneath.
+        - key: '04'
+          title: Everything else
+          desc: Around three per cent of the new code written today. It is a niche, and it is a niche that does not move.
+
+  - table:
+      eyebrow: Comparison
+      title: C++ against the languages you already know
+      headers: ["Language", "Speed", "Memory", "Where it rules"]
+      rows:
+        - ["C", "1.00", "1.00", "Operating systems and drivers"]
+        - ["C++", "0.75", "1.05", "Games, 3D engines and computing"]
+        - ["Rust", "0.95", "1.10", "Systems needing memory safety"]
+        - ["Java", "0.60", "1.50", "Enterprise and Android"]
+        - ["Python", "0.15", "2.50", "Data, AI and quick prototypes"]
+      notes: |
+        Both numeric columns are normalised against C, which is 1.00. For speed, higher is
+        better; for memory, lower is better. Say so, because read the other way round they
+        tell exactly the opposite story.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things C++ will charge you for
+      items:
+        - label: Cost 01
+          title: More ways to do the same thing
+          desc: The curve is longer than C's, and there are usually three ways to write the same line
+        - label: Cost 02
+          title: Not safe by default
+          desc: It still allows dangling pointers, memory leaks and out-of-range access
+        - label: Cost 03
+          title: Long error messages
+          desc: One error inside a template can fill screens before it says what went wrong
+        - label: Cost 04
+          title: Compilation time
+          desc: On a large project, building stops being instant and starts costing minutes
+
+  - divider:
+      eyebrow: Block 03
+      title: How we are going to work
+      lede: Three cumulative partials, a team project, and a toolchain worth setting up this week.
+      block: 3
+
+  - table:
+      eyebrow: Grading
+      title: What the final mark is made of
+      headers: ["Moment", "Content", "When", "Weight"]
+      rows:
+        - ["Partial 1", "Cumulative", "Tuesday 8 September", "80 % for the"]
+        - ["Partial 2", "Cumulative", "Tuesday 20 October", "three of them"]
+        - ["Partial 3", "Cumulative", "Tuesday 17 November", "averaged"]
+        - ["Project", "Teams, individual mark", "Final exam date", "20 %"]
+
+  - concept:
+      eyebrow: What differs from other courses
+      title: Cumulative means nothing ever closes
+      lead: >-
+        All three partials are cumulative. The second includes the first and the third
+        includes everything. No topic is studied once and filed away, which is why the
+        weekly exercises are worth handing in as they come rather than letting them pile up.
+      panel:
+        label: What adds on top
+        title: Exercises and quizzes are worth one point
+        note: >-
+          They are averaged and added to that period's mark. There is no resit, so anything
+          not handed in on its date is graded zero.
+      steps:
+        - text: Each partial includes the last
+        - text: Exercises add one point
+        - text: What is not handed in is zero
+          loop: ↺ the project is assigned after the first partial
+
+  - tiers:
+      eyebrow: Submission rules
+      title: Four things that stop you losing a mark
+      items:
+        - key: '01'
+          title: Blackboard is the only channel
+          desc: Anything arriving by email is not graded, however punctual and however correct
+        - key: '02'
+          title: One file per team
+          desc: One member uploads it, named after the team. Strip the executables before zipping or the antivirus blocks it.
+        - key: '03'
+          title: Plagiarism is always checked
+          desc: With Copyleaks and Turnitin. Above thirty per cent the work is graded zero.
+        - key: '04'
+          title: Documents go as PDF or DOCX
+          desc: And only submissions uploaded within the stated date are accepted
+
+  - method:
+      eyebrow: Use of artificial intelligence
+      title: AI gives you speed, judgement gives you direction
+      statement: Outside the exams you may lean on AI tools, on one condition. You have to know and be able to explain what you hand in.
+      points:
+        - label: What it is good at
+          text: The documented and the repeated. It is very fast with whatever is already written somewhere.
+        - label: What it is not
+          text: The context of your problem, why you chose a structure, and what happens when it fails
+        - label: How it is assessed
+          text: Reading the code aloud does not count as explaining it. If you cannot hold it up, the work is zero.
+
+  - steps:
+      eyebrow: Before the next session
+      title: Getting the toolchain ready, in five steps
+      items:
+        - label: Step 01
+          title: Install
+          desc: Visual Studio 2026 Community, with the desktop development with C++ workload
+        - label: Step 02
+          title: Create the project
+          desc: A console application, which already has the main function and builds as it is
+        - label: Step 03
+          title: Set the standard
+          desc: Properties, C/C++, Language, C++20. It is not set by default.
+        - label: Step 04
+          title: Build and run
+          desc: Ctrl+F5 runs without the debugger and leaves the console open at the end
+        - label: Step 05
+          title: Try the debugger
+          desc: F9 sets a breakpoint, F5 steps in, and the locals window shows the variables
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: C++ is forty years old and still changing
+          desc: Since 2011 a version ships every three years, and this course works with the 2020 one
+        - title: Compiled means the error arrives earlier
+          desc: The compiler checks the whole program before a single line of it runs
+        - title: It does not compete on being universal
+          desc: It competes where performance and memory control decide, and nothing has moved it there
+
+  - homework:
+      eyebrow: For the next session
+      title: Toolchain installed and first program
+      brief: Install Visual Studio 2026 Community, create a console project, set the standard to C++20 and build a program that prints your name and the value of _MSVC_LANG.
+      meta:
+        - [Due, Before session 1]
+        - [Format, Blackboard · team .zip]
+        - [Weight, "No mark, it is a requirement for session 1"]
+      rubric:
+        - ["Toolchain", "Required", "The project builds and runs from Visual Studio"]
+        - ["Standard", "Required", "_MSVC_LANG reports 202002, which is C++20"]
+        - ["Debugging", "Required", "A screenshot with an active breakpoint and the locals window"]
+      notes: |
+        The macro is _MSVC_LANG and not __cplusplus, which is the obvious choice and the
+        wrong one here. MSVC keeps __cplusplus frozen at 199711 unless /Zc:__cplusplus is
+        added, so a student who sets the standard correctly still sees a C++98 value and
+        assumes they broke something. Measured on Visual Studio Community 2026, toolset
+        14.51, _MSC_VER 1951.
+
+        Week 1 shows both macros side by side and explains why. If somebody hands in
+        __cplusplus and asks about it beforehand, that is a good question to hold for the
+        session rather than answer over mail.
+
+  - closing:
+      title: Questions
+      subtitle: Next session, the development environment, the anatomy of a program and debugging.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

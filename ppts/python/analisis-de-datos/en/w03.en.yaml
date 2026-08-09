@@ -1,0 +1,293 @@
+meta:
+  course: Data Analysis
+  code: TIA502
+  lang: en
+  language: python
+  week: 3
+  footer: DATA ANALYSIS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 03 · Units 1 and 2 · Paradigms and an introduction to programming
+      title: Data Analysis
+      subtitle: Why different ways of programming exist, what a language does with what you write, and your first program.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA502 · Business]
+        - [Session, 3 of 17]
+      notes: |
+        The last session of the computational thinking block, and the first one with
+        computers. It closes unit 1 with paradigms and structured programming, and opens
+        the whole of unit 2.
+
+        Run the paradigm part fast. A taxonomy is no use to this group. What is useful is
+        knowing they will write structured code and why that is enough for the course.
+
+        The first program is worth the whole session. Make it run today, on their machine,
+        with their name on screen. An environment that does not work in week 3 becomes a
+        student who drops out in week 6.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Ways of programming
+          desc: Why there are several and which one we use all term
+        - title: What a language is
+          desc: What happens between what you write and what the machine runs
+        - title: The first program
+          desc: Structure, syntax, and the rules Python does not forgive
+        - title: Your turn
+          desc: Write it, break it on purpose, and read what it complains about
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what a paradigm is
+          sub: And why structured programming covers everything this course needs
+        - head: Name the three basic structures
+          sub: Sequence, selection and repetition, and why those three are enough
+        - head: Tell compiling from interpreting
+          sub: What Python does with your file at the moment you run it
+        - head: Read the structure of a program
+          sub: Imports, statements, comments, and the order they run in
+        - head: Recognise a syntax error
+          sub: Read the message, find the line, and fix it without guessing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: todo
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Ways of programming
+      lede: A paradigm is a way of organising the solution. There are several because no problem resembles all the others.
+      block: 1
+
+  - figure:
+      eyebrow: Block 01 · Overview
+      title: Several ways of orbiting the same problem
+      image: img/en/ct-10.png
+      caption: None of them is the correct one. Each organises the solution differently, and some fit a given problem better than others.
+      alt: A hand-drawn map of programming paradigms arranged around a centre
+
+  - table:
+      eyebrow: Block 01 · Paradigms
+      title: The four worth recognising
+      headers: [Paradigm, How it organises the solution, Where you see it]
+      rows:
+        - ["Structured", "Steps in order, with decisions and loops", "This course, and almost all data analysis"]
+        - ["Object-oriented", "Data and behaviour together in classes", "Large systems, desktop applications"]
+        - ["Functional", "Functions that transform data without changing it", "Data processing, spreadsheets"]
+        - ["Declarative", "You state what you want, not how to get it", "SQL, and the formulas in Excel"]
+
+  - concept:
+      eyebrow: Key concept
+      title: Structured programming
+      lead: >-
+        This is the way you will write all term, and it rests on one simple idea: any
+        program can be written with three structures. No jumps into the middle of the
+        code, no flows that cannot be followed. It reads top to bottom, and when it
+        branches you can see exactly where and why.
+      panel:
+        label: Why it matters
+        title: A program that reads top to bottom can be fixed
+        note: >-
+          Before this idea a program could jump to any line at all. Finding a bug meant
+          following the jumps by hand, one at a time.
+      steps:
+        - text: Sequence, one instruction after another
+        - text: Selection, one path or another depending on a condition
+        - text: Repetition, the same thing several times
+          loop: ↺ and those three write any program there is
+
+  - divider:
+      eyebrow: Block 02
+      title: What a programming language is
+      lede: An in-between tongue. Precise enough for the machine, readable enough for you.
+      block: 2
+
+  - figure:
+      eyebrow: Block 02 · Levels
+      title: The higher up, the closer to how you think
+      image: img/en/ct-09.png
+      caption: Python lives on the high rung. You write close to your own language and something else takes it down to what the processor understands.
+      alt: A ladder of abstraction levels, high-level language at the top and machine code at the foot
+
+  - table:
+      eyebrow: Block 02 · Translation
+      title: Compiled and interpreted, and where Python falls
+      headers: [Aspect, Compiled, Interpreted]
+      rows:
+        - ["When it translates", "All of it, before running", "Statement by statement, as it runs"]
+        - ["What it produces", "A standalone executable", "Nothing permanent"]
+        - ["Speed", "Faster at run time", "Slower, and it will not matter"]
+        - ["When errors appear", "At compile time", "On reaching the line that fails"]
+        - ["Examples", "C, C++, Go", "Python, R, JavaScript"]
+
+  - code:
+      eyebrow: Block 02 · Anatomy
+      title: A whole program, part by part
+      filename: first_program.py
+      source: |
+        # A comment. Python ignores it, you do not.
+        from statistics import mean
+
+        salaries = [23200, 42800, 82700, 24500, 24500]
+
+        average = mean(salaries)
+        highest = max(salaries)
+
+        print("Employees:", len(salaries))
+        print("Average salary:", average)
+        print("Highest salary:", highest)
+      annotations:
+        - label: Imports
+          text: The tools that do not come ready are brought in at the top. mean lives in statistics.
+        - label: Data
+          text: These five salaries are the first rows of employees.csv. In brackets they are a list, the column of week 12.
+        - label: Top to bottom
+          text: Every line runs in the order it is written. There is nothing that reorders them.
+        - label: Output
+          text: print is the only thing you see. A calculation with no print runs fine and shows nothing.
+
+  - code_output:
+      eyebrow: Block 02 · Result
+      title: What appears in the terminal
+      filename: first_program.py
+      source: |
+        print("Employees:", len(salaries))
+        print("Average salary:", average)
+        print("Highest salary:", highest)
+      output: |
+        Employees: 5
+        Average salary: 39540
+        Highest salary: 82700
+
+  - divider:
+      eyebrow: Block 03
+      title: Syntax, and what it does not forgive
+      lede: The writing rules of the language. They are not negotiable, and the error message almost always says where you slipped.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Rules
+      title: Five rules Python always enforces
+      headers: [Rule, What it demands, What happens if you break it]
+      rows:
+        - ["Indentation", "Four spaces mark what nests", "IndentationError, and nothing runs"]
+        - ["Capitalisation", "Print and print differ", "NameError on a name that does not exist"]
+        - ["Quotes", "Text goes in quotes, both ends", "SyntaxError on that line or the next"]
+        - ["Parentheses", "Openers and closers, in pairs", "SyntaxError, sometimes a line below"]
+        - ["Colons", "Conditions and loops end in one", "SyntaxError exactly where it is missing"]
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four first-week errors
+      items:
+        - label: Error 01
+          title: Mixing spaces and tabs
+          desc: They look identical on screen and Python counts them differently. Set the editor to four spaces and forget about it.
+        - label: Error 02
+          title: Reading only the last line of the error
+          desc: The message carries the file, the line and the type. All three before touching anything.
+        - label: Error 03
+          title: Looking for the bug where it is reported
+          desc: An unclosed parenthesis is reported on the next line. The problem is above it.
+        - label: Error 04
+          title: Calculating without printing
+          desc: The program runs, shows nothing and looks broken. The print was missing, not the calculation.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this program print?
+      filename: order.py
+      source: |
+        total = 100
+        total = total + 50
+        total = total * 2
+
+        print(total)
+      options:
+        - "300, because it adds and then multiplies"
+        - "200, because only the last line counts"
+        - "250, because it multiplies before adding"
+        - "An error, because total is redefined three times"
+
+  - trace:
+      eyebrow: Answer
+      title: Each line works on the result of the one before
+      headers: [Step, Instruction, total, Comment]
+      rows:
+        - ['1', "total = 100", '100', "The name is created and given a value"]
+        - ['2', "total = total + 50", '150', "The old value is read, added to, written back"]
+        - ['3', "total = total * 2", '300', "150 is read, doubled, written back"]
+        - ['4', "print(total)", '300', "Only now does anything appear on screen"]
+      verdict: The equals sign does not compare, it stores. Reassigning a name overwrites what it held, and the order of the lines is the result.
+
+  - lab:
+      eyebrow: Lab
+      title: Write it, break it, fix it
+      brief: >-
+        Copy the salaries program, run it, and then break it on purpose three different
+        ways: remove a parenthesis, change print to Print, and delete one quote. Write
+        down the exact message each one gives.
+      blocks:
+        - label: Deliverable
+          text: The working .py file and a table with the three error messages
+        - label: Why
+          text: You will see them a hundred times this term. Recognising them beats avoiding them.
+        - label: Hint
+          text: The message ends with the error type. That last word is the one to read first.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Three structures write any program
+          desc: Sequence, selection and repetition. Everything else this term is a variation on those three
+        - title: Python translates as it runs
+          desc: That is why the error shows up when it reaches that line, and not before it starts
+        - title: An error message is a clue, not a scolding
+          desc: It carries the file, the line and the type. Reading it in full saves more time than any other habit
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Translate last week's bonus pseudocode into Python, with input values of your own, and have it print the result with a label somebody can understand.
+      meta:
+        - [Due, Before week 4]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["It runs", "40 %", "The file executes with no errors and shows a result"]
+        - ["Faithfulness", "40 %", "It does what the pseudocode did, including the order of the conditions"]
+        - ["Names", "20 %", "Variables are named after the data they hold, not a, b and c"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, data types, and why a postal code is not a number even though it looks like one.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

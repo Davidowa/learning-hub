@@ -1,0 +1,308 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 16
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 16 · Unidad 14 · Recursión y concurrencia
+      title: Programación Avanzada
+      subtitle: Una función que se llama a sí misma, dos cosas ocurriendo a la vez, y la logística del tercer parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 16 de 17]
+      notes: |
+        Última sesión de contenido. La unidad pide recursión con detalle y multihilos como
+        panorama, y el reparto de la sesión respeta esa proporción: dos bloques de recursión
+        y uno corto de hilos.
+
+        Todo lo de hilos se comprobó en esta máquina antes de escribirlo. jthread existe en
+        el juego de herramientas que trae Visual Studio 2026, las cabeceras compilan con
+        /std:c++20 y no hace falta ninguna opción de enlace adicional.
+
+        Una advertencia sobre la demostración de la salida entreverada: sí ocurre, y es
+        menos escandalosa de lo que uno espera. En una corrida de cuatrocientas líneas
+        salieron dos rotas. Si la van a proyectar, súbanle a cientos de vueltas y adviertan
+        que el resultado cambia en cada corrida.
+
+        Malik no tiene capítulo de hilos en ninguna edición. El material de esta parte sale
+        de cppreference y de Microsoft Learn.
+
+        Lectura: Malik, octava edición, capítulo 15, para la parte de recursión.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Llamarse a sí misma
+          desc: El caso base y el caso que se acerca a él
+        - title: La pila
+          desc: Qué ocurre en memoria mientras la recursión baja y sube
+        - title: Dos a la vez
+          desc: Un vistazo a los hilos y al problema que traen
+        - title: El parcial
+          desc: El tercero, que cubre el curso completo
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir una función recursiva
+          sub: Con un caso base que la detiene y un caso que se acerca a él en cada llamada
+        - head: Seguir la pila de llamadas
+          sub: Y explicar por qué el resultado se arma de regreso y no de ida
+        - head: Reconocer el desbordamiento de pila
+          sub: Y decir qué le falta a una recursión que nunca termina
+        - head: Explicar qué protege un mutex
+          sub: Sobre un recurso que dos hilos tocan al mismo tiempo
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Una función que se llama a sí misma
+      lede: No hay nada especial en el mecanismo. Una llamada recursiva es una llamada normal, y lo único distinto es a quién le toca.
+      block: 1
+
+  - code_output:
+      eyebrow: Recursión
+      title: El factorial, que es el ejemplo de siempre por buenas razones
+      filename: factorial.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        int factorial(int n)
+        {
+            if (n <= 1)
+                return 1;
+            return n * factorial(n - 1);
+        }
+
+        std::cout << factorial(5) << "\n";
+      output: |
+        120
+      notes: |
+        Dos partes y las dos son obligatorias. El caso base, que devuelve sin volver a
+        llamar, y el caso recursivo, que llama con un argumento más cerca del base.
+
+        Si falta el caso base, o si el argumento no se acerca a él, la recursión no termina.
+        No se queda colgada como un ciclo infinito: se acaba la pila y el programa muere de
+        golpe.
+
+        Todo lo que se puede hacer con recursión se puede hacer con un ciclo, y al revés. La
+        elección es de claridad. Para recorrer un arreglo, el ciclo. Para un árbol o para
+        Hanoi, la recursión se lee mucho mejor.
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Cómo se ve una recursión mientras corre
+      image: img/es/recursion.png
+      caption: Los marcos bajan hasta el caso base y el resultado se arma de regreso, multiplicando en el camino de subida.
+      alt: Cuatro marcos de la pila para factorial de 4, bajando hasta el caso base y devolviendo hacia arriba
+
+  - trace:
+      eyebrow: Paso a paso
+      title: Cinco llamadas que esperan y una que contesta
+      headers: ["Llamada", "Qué devuelve", "Espera a", "Valor final"]
+      rows:
+        - ["factorial(5)", "5 por lo de abajo", "factorial(4)", "120"]
+        - ["factorial(4)", "4 por lo de abajo", "factorial(3)", "24"]
+        - ["factorial(3)", "3 por lo de abajo", "factorial(2)", "6"]
+        - ["factorial(2)", "2 por lo de abajo", "factorial(1)", "2"]
+        - ["factorial(1)", "1, caso base", "nadie", "1"]
+      verdict: Ninguna de las cuatro primeras puede terminar hasta que la de abajo conteste. Todas están vivas al mismo tiempo, ocupando pila, y por eso una recursión muy profunda se queda sin espacio.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Lo que cuesta
+      lede: Cada llamada pendiente ocupa memoria. Con cinco no se nota, y ese es justo el problema.
+      block: 2
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de la recursión
+      items:
+        - label: Error 01
+          title: Sin caso base
+          desc: La pila se agota y el programa muere sin mensaje útil, no se cuelga como un ciclo
+        - label: Error 02
+          title: El caso base inalcanzable
+          desc: Existe, pero el argumento no se acerca a él y el efecto es exactamente el mismo
+        - label: Error 03
+          title: Recalcular lo mismo mil veces
+          desc: Fibonacci recursivo simple repite las mismas llamadas y tarda una eternidad con n grande
+        - label: Error 04
+          title: Recursión donde iba un ciclo
+          desc: Recorrer un arreglo recursivamente cuesta pila y no se lee mejor que un for
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué le pasa a este programa?
+      filename: sinbase.cpp
+      lang: cpp
+      source: |
+        int cuenta(int n)
+        {
+            return n + cuenta(n - 1);
+        }
+
+        std::cout << cuenta(5) << "\n";
+      options:
+        - 'Se queda sin pila y el programa muere'
+        - 'Devuelve 15, la suma de 5 a 1'
+        - 'Se queda colgado para siempre, como un ciclo infinito'
+        - 'No compila, falta el caso base'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Baja de cinco a menos infinito, y la pila no alcanza
+      headers: ["Llamada", "n", "Llama a", "Se detiene"]
+      rows:
+        - ["1", "5", "cuenta(4)", "No"]
+        - ["2", "4", "cuenta(3)", "No"]
+        - ["...", "baja sin límite", "la siguiente", "No"]
+        - ["miles", "negativo", "la siguiente", "Se agota la pila"]
+      verdict: "Compila sin una advertencia, porque sintácticamente no hay nada malo. Y no se cuelga: la pila tiene un tamaño fijo y el programa termina de golpe al pasarse."
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Dos cosas a la vez
+      lede: Un panorama, no un tratado. Lo suficiente para saber qué existe y por qué es difícil.
+      block: 3
+
+  - code_output:
+      eyebrow: Concurrencia
+      title: Dos hilos escribiendo en el mismo lugar
+      filename: hilos.cpp
+      lang: cpp
+      output_label: Una corrida, que cambia cada vez
+      source: |
+        void ruido(const char* etiqueta)
+        {
+            for (int i = 0; i < 200; i++)
+                std::cout << etiqueta << " " << i << "\n";
+        }
+
+        std::jthread a(ruido, "AAAA");
+        std::jthread b(ruido, "BBBB");
+      output: |
+        AAAA 149
+        BBBBAAAA 0
+        AAAA 150 0
+      notes: |
+        Las dos últimas líneas de la salida están rotas. Un hilo escribió a medias, el otro
+        se metió, y el resultado no es lo que ninguno de los dos quería imprimir.
+
+        Medido en esta máquina, con Visual Studio Community 2026 y /std:c++20. En una corrida
+        de cuatrocientas líneas salieron dos rotas. No es escandaloso, y esa es justamente la
+        parte peligrosa: un error que aparece dos veces de cada cuatrocientas no se encuentra
+        probando.
+
+        Se usa jthread y no thread porque jthread se une solo al destruirse. Un std::thread
+        cuyo join se olvida llama a terminate, y el primer programa concurrente de un alumno
+        se cae por una razón que no tiene nada que ver con la concurrencia.
+
+  - concept:
+      eyebrow: La solución
+      title: Un candado alrededor de lo que no se puede compartir
+      lead: >-
+        Un mutex es un objeto que solo un hilo puede tener a la vez. Quien lo quiere y no lo
+        consigue, espera. Rodear con él la escritura a la consola hace que las líneas dejen
+        de entreverarse.
+      panel:
+        label: Cómo se usa sin olvidarlo
+        title: lock_guard lo suelta solo
+        note: >-
+          Se declara al principio del bloque y libera el candado al salir, incluso si el
+          bloque termina por una excepción. Es la misma idea que unique_ptr con la memoria.
+      steps:
+        - text: Un mutex por recurso compartido
+        - text: lock_guard al entrar al bloque
+        - text: Se libera solo al salir
+          loop: ↺ y el bloque protegido se mantiene lo más corto posible
+
+  - tiers:
+      eyebrow: Tercer parcial
+      title: Martes 17 de noviembre, y cubre todo
+      items:
+        - key: '01'
+          title: Acumulativo, y esta vez es el curso entero
+          desc: De la unidad 1 a la 14. Lo del primer parcial y lo del segundo vuelven a entrar.
+        - key: '02'
+          title: Pesa lo mismo que los otros dos
+          desc: Los tres se promedian y ese promedio es el 80 por ciento de la calificación
+        - key: '03'
+          title: La recursión entra, los hilos apenas
+          desc: De concurrencia se pregunta el concepto, no código que haya que escribir
+        - key: '04'
+          title: El proyecto va aparte
+          desc: Se entrega en la fecha del examen final y vale el 20 por ciento restante
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Hanoi y un candado, en parejas
+      brief: Escriban la solución recursiva de las torres de Hanoi para cinco discos, imprimiendo cada movimiento. Después lancen dos hilos que impriman en paralelo y arreglen la salida entreverada con un mutex.
+      blocks:
+        - label: Restricción
+          text: La parte de Hanoi tiene que ser recursiva, sin ciclos. La de hilos usa jthread.
+        - label: Entregable
+          text: Un .cpp con las dos partes y una captura de la salida antes y después del candado
+        - label: Criterio
+          text: Que sepan decir cuántos movimientos hace Hanoi con cinco discos y por qué
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Sin caso base no hay recursión
+          desc: Hay un programa que se queda sin pila y muere, y compila sin una sola advertencia
+        - title: Las llamadas se apilan y esperan
+          desc: El resultado se arma de regreso, y todas las pendientes ocupan memoria al mismo tiempo
+        - title: Lo compartido necesita candado
+          desc: Dos hilos sobre el mismo recurso se pisan, y el error aparece dos veces de cada cuatrocientas
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Hanoi terminado y el proyecto listo para revisión
+      brief: Terminen el laboratorio y traigan el proyecto integrador en el estado en que esté, con el código que ya compile y el documento empezado, para la revisión de la última sesión.
+      meta:
+        - [Entrega, Antes de la sesión 17]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Recursión", "Requisito", "Hanoi resuelve cinco discos con el número correcto de movimientos"]
+        - ["Concurrencia", "Requisito", "El mutex elimina la salida entreverada"]
+        - ["Proyecto", "Requisito", "Compila y trae el documento empezado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, el proyecto integrador. Cómo se entrega, cómo se evalúa y qué se espera de la presentación.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

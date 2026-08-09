@@ -1,0 +1,328 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 16.2
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 16 · 2 de 2 · Tema 8.2.3 · seaborn y cierre del proyecto
+      title: Análisis de Datos
+      subtitle: Las gráficas estadísticas en una línea, lo que un promedio esconde, y la entrega del proyecto integrador.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 16 · 2 de 2]
+      notes: |
+        Última sesión de contenido. Cierra visualización con seaborn y cierra el proyecto,
+        que se entrega y se presenta hoy.
+
+        El código es el módulo A06, script 04. El hallazgo del sum contra mean es real en
+        los datos del curso y conviene mostrarlo en vivo: la región que más vende no es la
+        que tiene la venta promedio más alta.
+
+        Reserva la segunda mitad para las presentaciones. La rúbrica está en el syllabus y
+        la evaluación es individual aunque el trabajo sea en equipo.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: seaborn
+          desc: Le das el DataFrame y los nombres, y él agrupa por su cuenta
+        - title: Lo que el promedio esconde
+          desc: Caja y bigotes, y por qué dos áreas con el mismo promedio no se parecen
+        - title: El proyecto
+          desc: Qué se entrega, cómo se califica y qué se pregunta en la presentación
+        - title: Tu turno
+          desc: La presentación, hoy mismo
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Graficar desde un DataFrame
+          sub: Pasando nombres de columna, sin preparar los datos antes
+        - head: Elegir el estimador correcto
+          sub: Porque seaborn promedia por omisión y casi siempre quieres el total
+        - head: Meter una tercera variable
+          sub: Con hue, que separa por color y arma la leyenda solo
+        - head: Leer una caja y bigotes
+          sub: Mediana, mitad central, rango y los valores atípicos
+        - head: Presentar un hallazgo
+          sub: Con la conclusión primero y la evidencia detrás
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: seaborn
+      lede: Vive encima de matplotlib y recibe el DataFrame directo. Le dices qué columnas usar y él resuelve el resto.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · La diferencia
+      title: Preparar los datos, o nombrar las columnas
+      before:
+        label: matplotlib
+        file: mpl.py
+        code: |
+          por_region = (ventas
+                        .groupby("region")["amount"]
+                        .sum())
+
+          ax.bar(por_region.index,
+                 por_region.values)
+      after:
+        label: seaborn
+        file: sns.py
+        code: |
+          sns.barplot(data=ventas, x="region",
+                      y="amount", estimator="sum",
+                      errorbar=None, ax=ax)
+      note: >-
+        matplotlib pide valores de x y valores de y. seaborn pide qué columnas usar y hace
+        la agrupación por su cuenta. El precio es que hay que saber qué está agrupando.
+
+  - code:
+      eyebrow: Bloque 01 · El tema
+      title: Se configura una vez, y aplica a todo
+      filename: tema.py
+      source: |
+        import seaborn as sns
+
+        sns.set_theme(style="whitegrid", palette="deep")
+
+        sns.barplot(data=ventas, x="region", y="amount",
+                    estimator="sum", errorbar=None,
+                    hue="region", legend=False, ax=ax)
+      annotations:
+        - label: set_theme
+          text: Fija cuadrícula, tipografía y paleta para todas las gráficas que vengan después. Por eso se ven consistentes.
+        - label: estimator
+          text: Por omisión promedia. Si querías el total tienes que decirlo, y es el error número uno con seaborn.
+        - label: errorbar
+          text: Sin esto dibuja un intervalo de confianza encima de cada barra, que casi nunca es lo que querías.
+        - label: Riesgo
+          text: Una barra que dice promedio cuando el lector esperaba total es un número correcto que engaña.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · El hallazgo
+      title: El mismo dato, dos rankings distintos
+      filename: suma_promedio.py
+      source: |
+        print((ventas.groupby("region")["amount"]
+               .agg(["sum", "mean"]) / 1000).round(0))
+      output: |
+        region     sum    mean
+        Centre  3919.0    56.0
+        North   4352.0    47.0
+        South   1553.0    23.0
+        West    3030.0    40.0
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Total y promedio contestan preguntas distintas
+      lead: >-
+        Norte vende más que Centro en el año. Centro vende más grande en cada operación.
+        Las dos afirmaciones son ciertas y salen de la misma tabla, y la gráfica que
+        escojas decide cuál de las dos ve tu lector. Elegir sin darte cuenta es cómo un
+        reporte honesto termina diciendo algo que no querías decir.
+      panel:
+        label: La consecuencia práctica
+        title: Norte vende seguido, Centro vende caro
+        note: >-
+          Esa frase es el hallazgo, y no se ve en ninguna de las dos gráficas por separado.
+          Sale de poner las dos juntas.
+      steps:
+        - text: Total contesta cuánto entró
+        - text: Promedio contesta de qué tamaño
+        - text: Conteo contesta qué tan seguido
+          loop: ↺ y las tres juntas cuentan la historia
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Lo que un promedio esconde
+      lede: Dos áreas con el mismo sueldo promedio pueden no parecerse en nada. La caja lo enseña de un vistazo.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Caja y bigotes
+      title: La forma completa, no solo el centro
+      filename: caja.py
+      source: |
+        orden = (empleados.groupby("area")["sueldo_mensual"]
+                 .median()
+                 .sort_values(ascending=False).index)
+
+        sns.boxplot(data=empleados, x="area",
+                    y="sueldo_mensual", order=orden,
+                    hue="area", legend=False, ax=ax)
+      annotations:
+        - label: La caja
+          text: Contiene la mitad central de los valores. La línea de adentro es la mediana, no el promedio.
+        - label: Los bigotes
+          text: Llegan hasta el rango típico. Los puntos sueltos más allá son los valores atípicos.
+        - label: order
+          text: Ordenar por mediana hace que el ranking se lea solo, igual que ordenar las barras.
+        - label: Por qué mediana
+          text: Un solo sueldo muy alto jala el promedio y no mueve la mediana. Por eso la caja es más honesta.
+
+  - table:
+      eyebrow: Bloque 02 · Las cinco de seaborn
+      title: Las gráficas que valen una línea
+      headers: [Función, Para qué, Nota]
+      rows:
+        - ["barplot", "Comparar categorías", "Promedia si no dices estimator"]
+        - ["lineplot", "Cambio en el tiempo", "hue separa varias series"]
+        - ["boxplot", "El reparto completo", "Muestra lo que el promedio esconde"]
+        - ["heatmap", "Una rejilla con color", "Es la tabla dinámica sombreada"]
+        - ["pairplot", "Todo contra todo", "Para explorar, no para el reporte"]
+
+  - code:
+      eyebrow: Bloque 02 · heatmap
+      title: La tabla dinámica, sombreada
+      filename: mapa.py
+      source: |
+        rejilla = ventas.pivot_table(
+            index="region", columns="channel",
+            values="amount", aggfunc="sum") / 1000
+
+        sns.heatmap(rejilla, annot=True, fmt=".0f",
+                    cmap="Blues", ax=ax)
+      annotations:
+        - label: La entrada
+          text: Recibe la rejilla que produjo pivot_table en la sesión anterior. Ninguna preparación extra.
+        - label: annot
+          text: Escribe el valor dentro de cada celda. Sin él, el color obliga a estimar contra la barra lateral.
+        - label: El color
+          text: Hace el ranking por ti. Se ve dónde está lo alto sin comparar cifras una por una.
+        - label: fmt
+          text: Controla cómo se redondea lo que se escribe. Con miles y cero decimales cabe cómodo.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El proyecto integrador
+      lede: Se entrega y se presenta hoy. Vale el veinte por ciento, y la evaluación es individual.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Entrega
+      title: Qué se entrega y cómo se califica
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Qué", "Cuaderno o código, el conjunto de datos usado, y un reporte en PDF"]
+        - ["Dónde", "Blackboard. Por correo no se califica"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Código y análisis", "70 %: corre y contesta, limpieza correcta, gráficas honestas"]
+        - ["Reporte", "30 %: narrativa, justificación de decisiones y evidencia integrada"]
+
+  - method:
+      eyebrow: Bloque 03 · La presentación
+      title: La conclusión primero, la evidencia detrás
+      statement: Empieza diciendo qué encontraste. Después enseñas cómo lo obtuviste, y al final qué harías con eso.
+      points:
+        - label: Los tres minutos
+          text: Uno para la pregunta y el hallazgo, uno para el método, uno para la recomendación
+        - label: Lo que se pregunta
+          text: Qué decidiste con los datos faltantes, y por qué esa gráfica y no otra
+        - label: Lo que no cuenta
+          text: Leer el código en voz alta. Si no puedes explicar una línea, esa línea no es tuya
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de perder puntos en la entrega
+      items:
+        - label: Error 01
+          title: El cuaderno no corre de cero
+          desc: Reinícialo y córrelo completo antes de entregar. Si truena, la calificación máxima es 30 %.
+        - label: Error 02
+          title: Rutas absolutas al archivo
+          desc: Funciona en tu máquina y en ninguna otra. Entrega los datos junto al código y usa ruta relativa.
+        - label: Error 03
+          title: Gráficas sin título ni fuente
+          desc: Es lo primero que se revisa, y es lo que menos cuesta arreglar de todo el proyecto.
+        - label: Error 04
+          title: Limpiar sin dejar constancia
+          desc: Si el reporte no dice qué hiciste con los huecos y los duplicados, el análisis no se puede defender.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué dibuja esta línea si no pasas estimator?
+      filename: estimador.py
+      source: |
+        sns.barplot(data=ventas, x="region",
+                    y="amount", ax=ax)
+      options:
+        - "El total por región"
+        - "El promedio por región, que es lo que hace por omisión"
+        - "El conteo de renglones por región"
+        - "Un error, porque falta el estimador"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Presenta tu proyecto
+      brief: Tres minutos por equipo. La pregunta, el hallazgo, cómo llegaste a él y qué recomendarías. Dos gráficas como máximo en pantalla, y las dos con su título completo.
+      blocks:
+        - label: Entrega
+          text: Todo subido a Blackboard antes de empezar las presentaciones
+        - label: Restricción
+          text: Máximo dos gráficas. Si necesitas cinco, todavía no sabes cuál es el hallazgo.
+        - label: Lo que se evalúa
+          text: Que cada integrante pueda explicar cualquier parte, no solo la que le tocó escribir
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: seaborn promedia por omisión
+          desc: Si querías el total y no dijiste estimator, la barra muestra un número correcto que engaña
+        - title: El promedio esconde la forma
+          desc: Dos áreas con el mismo sueldo promedio pueden repartirse de maneras que no se parecen en nada
+        - title: La conclusión va primero
+          desc: Quien te escucha decide en los primeros treinta segundos si va a poner atención al resto
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Entrega el proyecto integrador completo antes de la presentación, y prepara la sesión de repaso trayendo por escrito las tres dudas que quieres resolver antes del examen final.
+      meta:
+        - [Entrega, "Hoy, antes de presentar"]
+        - [Formato, "Blackboard · cuaderno, datos y .pdf"]
+        - [Peso, 20 % del curso]
+      rubric:
+        - ["Código y análisis", "70 %", "Corre de cero, la limpieza es correcta y las gráficas son honestas"]
+        - ["Reporte", "30 %", "Narrativa clara, decisiones justificadas y evidencia integrada"]
+        - ["Dudas", "Requisito", "Las tres preguntas llegan por escrito antes de la semana 17"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, repaso y examen final.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

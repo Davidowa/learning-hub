@@ -1,6 +1,6 @@
 # 01 · Resolución de problemas
 
-<img src="../assets/problem-solving.png" alt="Secuencia doodle: preocupado → pensando → eureka" width="100%">
+<img src="../assets/problem-solving.jpg" alt="Secuencia doodle: preocupado → pensando → eureka" width="100%">
 
 Todo programa nace de un **problema**. Antes de tocar el teclado, quien programa con oficio recorre un proceso mental para **entender** el problema y **diseñar** una solución. Este módulo enseña ese proceso.
 

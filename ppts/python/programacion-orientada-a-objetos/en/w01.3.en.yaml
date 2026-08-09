@@ -1,0 +1,371 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 1.3
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Review 3 of 5 · Module 3 · Functions
+      title: Object-Oriented Programming
+      subtitle: Giving a piece of work a name. Parameters, return values and where each variable lives.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, Review 3 of 5]
+      notes: |
+        Covers module 3 end to end, Code010 and Code011 plus Exercise002.
+
+        This is the most important of the five for what comes next: in week 3 a
+        function that lives inside a class is called a method, and local scope becomes
+        the difference between a local variable and an attribute. Block 03 is worth
+        pressing on.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Define a function with def
+          sub: Lowercase name, underscores between words, parentheses and a colon
+        - head: Tell a parameter from an argument
+          sub: The slot you declare against the value you pass when calling
+        - head: Use default values
+          sub: And why parameters with a default always go last
+        - head: Return a value with return
+          sub: And what a function without one hands back
+        - head: Explain the scope of a variable
+          sub: Local, global, and why NameError appears exactly where it appears
+
+  - roadmap:
+      eyebrow: Review map
+      title: Five sessions, one module each
+      phases:
+        - label: Review 1
+          title: Data and text
+          desc: Variables, types, strings, numbers and input
+          state: done
+        - label: Review 2
+          title: Decisions and loops
+          desc: Comparison, logic, if, for and while
+          state: done
+        - label: Review 3
+          title: Functions
+          desc: Parameters, return values and scope
+          state: now
+        - label: Review 4
+          title: Collections
+          desc: Lists, tuples, sets and dictionaries
+          state: todo
+        - label: Review 5
+          title: Errors
+          desc: try, except and the types you meet first
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Defining and calling
+      lede: A function is a piece of work with a name, written once and used many times.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a function is
+      lead: >-
+        A named block of code that only runs when something calls it. It exists so you do
+        not repeat yourself, so you can test one part without running everything, and so
+        the program reads as a list of intentions instead of a wall of instructions.
+      panel:
+        label: The naming rule
+        title: A verb and a noun
+        note: >-
+          calculate_average, read_file, is_even. If you cannot name it that way, it
+          probably does more than one thing and wants splitting.
+      steps:
+        - text: Defined with def, exactly once
+        - text: Called by name, with parentheses
+        - text: When it ends, control goes back
+          loop: ↺ it can be called as many times as needed
+
+  - code:
+      eyebrow: Module 3 · Defining
+      title: The smallest function, and one with a parameter
+      filename: Code010.py
+      lang: python
+      source: |
+        def greet():
+            print("Hello from a function")
+
+
+        greet()                        # Hello from a function
+
+
+        def greet_by_name(name):
+            print(f"Hello, {name}")
+
+
+        greet_by_name("Ana")           # Hello, Ana
+      annotations:
+        - label: The colon and the indent
+          text: Everything belonging to the function sits indented under the def
+        - label: Defining is not calling
+          text: The def only creates the function. Without the call, it never runs.
+        - label: Risk
+          text: Calling it without parentheses does not run it, it prints the function reference
+          accent: true
+
+  - table:
+      eyebrow: Module 3 · Vocabulary
+      title: Four words that get confused
+      headers: ["Term", "What it is", "Where it appears", "Example"]
+      rows:
+        - ["Parameter", "The slot you declare", "In the def", "def greet_by_name(name)"]
+        - ["Argument", "The value you pass", "In the call", "greet_by_name('Ana')"]
+        - ["Return value", "What it hands back", "In the return", "return total / n"]
+        - ["Call", "The order to run it", "Wherever you use it", "greet_by_name('Ana')"]
+
+  - code:
+      eyebrow: Module 3 · Parameters
+      title: Several parameters, with and without defaults
+      filename: parameters.py
+      lang: python
+      source: |
+        def introduce(first, last, greeting="Hello"):
+            print(f"{greeting}, {first} {last}")
+
+
+        introduce("Ana", "Lopez")                     # the default
+        introduce("Ana", "Lopez", "Good morning")     # replaces it
+        introduce(last="Lopez", first="Ana")          # by name
+      annotations:
+        - label: Defaults go last
+          text: The other way round is a SyntaxError, because Python could not tell which one was omitted
+        - label: Keyword arguments
+          text: Naming them at the call site frees the order and reads better
+        - label: Risk
+          text: Never use a list or a dictionary as a default value, it is shared between calls
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: Returning
+      lede: Printing and returning are not the same thing, and confusing them breaks half the exercises.
+      block: 2
+
+  - concept:
+      eyebrow: Module 3 · return
+      title: print shows, return hands over
+      lead: >-
+        print writes to the console and leaves nothing usable behind. return gives a value
+        to whoever called, so it can be stored, added to, or passed on. A function that
+        calculates should almost always return, not print.
+      panel:
+        label: What a function without return gives back
+        title: None, every time
+        note: >-
+          That is why result = print_total() leaves result as None, and doing arithmetic
+          on it afterwards raises TypeError.
+      steps:
+        - text: return hands over the value
+        - text: and ends the function right there
+        - text: anything after it never runs
+          loop: ↺ there can be several returns, but only one executes
+
+  - code_output:
+      eyebrow: Module 3 · return
+      title: The same sum, with print and with return
+      filename: returning.py
+      lang: python
+      output_label: Output
+      source: |
+        def average_prints(grades):
+            print(sum(grades) / len(grades))
+
+        def average_returns(grades):
+            return sum(grades) / len(grades)
+
+        a = average_prints([8, 9, 10])
+        b = average_returns([8, 9, 10])
+        print(a, b)
+      output: |
+        9.0
+        None 9.0
+
+  - code:
+      eyebrow: Module 3 · Annotations
+      title: Saying what type each thing is
+      filename: typed_function.py
+      lang: python
+      source: |
+        def calculate_average(grades: list) -> float:
+            total = 0
+            for grade in grades:
+                total += grade
+            return total / len(grades)
+
+
+        print(calculate_average([8, 9, 10]))   # 9.0
+      annotations:
+        - label: They enforce nothing
+          text: Python does not check types at run time; annotations document
+        - label: What they are for
+          text: The editor completes better and the mistake shows while typing, not while running
+        - label: Risk
+          text: An empty list means division by zero. Review 5 catches it with try.
+          accent: true
+
+  - divider:
+      eyebrow: Block 03
+      title: Scope
+      lede: Where a variable lives, how long it lasts, and why that decides nearly everything in week 3.
+      block: 3
+
+  - concept:
+      eyebrow: Module 3 · Scope
+      title: Where a variable lives
+      lead: >-
+        A variable declared inside a function exists only while that function runs.
+        Outside it, Python does not know the name and raises NameError. It is the same
+        mechanism that in week 3 explains why self.x survives a call and x does not.
+      panel:
+        label: The lookup rule
+        title: Local first, then global
+        note: >-
+          If you assign to a name inside a function, Python treats it as local even when a
+          global of the same name exists. Changing the global needs the global keyword,
+          and returning the value is almost always better.
+      steps:
+        - text: Look for the name inside the function
+        - text: If it is not there, look outside
+        - text: If it is nowhere, raise NameError
+          loop: ↺ every call builds fresh locals and destroys them on return
+
+  - figure:
+      eyebrow: Module 3 · Scope
+      title: Local inside global
+      image: img/en/scope.png
+      caption: What is declared inside the function stops existing when the call returns
+      alt: A jar labelled local inside a function box, inside a global box
+
+  - code_output:
+      eyebrow: Module 3 · Scope
+      title: The local does not overwrite the global
+      filename: Code011.py
+      lang: python
+      output_label: Output
+      source: |
+        message = "global"
+
+        def change():
+            message = "local"
+            print(message)
+
+        change()
+        print(message)
+      output: |
+        local
+        global
+
+  - code:
+      eyebrow: Module 3 · Exercise
+      title: FizzBuzz, the exercise that uses everything above
+      filename: Exercise002.py
+      lang: python
+      source: |
+        def fizz_buzz() -> None:
+            for number in range(1, 101):
+                if number % 3 == 0 and number % 5 == 0:
+                    print("FizzBuzz")
+                elif number % 3 == 0:
+                    print("Fizz")
+                elif number % 5 == 0:
+                    print("Buzz")
+                else:
+                    print(number)
+      annotations:
+        - label: Why this order
+          text: The double condition goes first; otherwise 15 prints as Fizz and never reaches FizzBuzz
+        - label: What it reviews
+          text: Function, loop, remainder, chained conditionals and a default else, in ten lines
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors from this module
+      items:
+        - label: Error 01
+          title: Defining and never calling
+          desc: The def only creates the function. Without a call with parentheses it never runs.
+        - label: Error 02
+          title: Printing instead of returning
+          desc: 'The function shows the result but hands back None, leaving the caller with nothing.'
+        - label: Error 03
+          title: Expecting the local to change the global
+          desc: Assigning inside creates a new variable. To change the outer one, return it.
+        - label: Error 04
+          title: A list as a default value
+          desc: 'def f(x=[]) shares one list across every call. Use None and build it inside.'
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: quiz.py
+      lang: python
+      source: |
+        total = 0
+
+        def add(n):
+            total = total + n
+            return total
+
+        print(add(5))
+      options:
+        - '5, because total was 0 and it added 5'
+        - 'UnboundLocalError, because total is local and is read before being assigned'
+        - '0, because the global never changed'
+        - 'None, because the function returns nothing'
+
+  - trace:
+      eyebrow: Answer
+      title: UnboundLocalError, and the reason is on line 4
+      headers: ["Step", "What Python sees", "Decision"]
+      rows:
+        - ["1", "total = 0 outside the function", "it is global"]
+        - ["2", "inside there is an assignment to total", "treats it as local"]
+        - ["3", "the right-hand side reads total", "the local does not exist yet"]
+        - ["4", "raises UnboundLocalError", "before adding anything"]
+      verdict: One assignment anywhere in the function makes the name local throughout it. The clean fix is to take total as a parameter and return it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A function is a responsibility with a name
+          desc: In three weeks the same thing is called a method and lives inside a class
+        - title: return hands over, print only shows
+          desc: A calculating function that prints leaves the caller empty-handed
+        - title: Assigning inside creates a local
+          desc: Even when a global of that name exists, and even when the assignment is at the end
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write three functions that take a list of grades and return the average, the highest, and how many passed.
+      meta:
+        - [Due, Before review 4]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Return", "40 %", "All three hand back with return; none prints from inside"]
+        - ["Parameters", "40 %", "They take the list as a parameter instead of reading a global"]
+        - ["Names", "20 %", "Each name is a verb and a noun describing what it does"]
+
+  - closing:
+      title: Questions
+      subtitle: Next review, the four collections and when to reach for each.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

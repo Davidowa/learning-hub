@@ -1,0 +1,353 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 15.2
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 15 · 2 de 3 · Tema 8.1.2 · Selección, filtrado y limpieza
+      title: Análisis de Datos
+      subtitle: El autofiltro escrito, y las cuatro reparaciones que todo archivo real necesita antes de que su total signifique algo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 15 · 2 de 3]
+      notes: |
+        Segunda de tres. Es la sesión más práctica del curso: los cuatro defectos del
+        archivo se arreglan uno por uno, en vivo, y cada arreglo se justifica en voz alta.
+
+        El código es el módulo A05, scripts 03 y 04. El de limpieza deja escrito qué decidió
+        y por qué, y eso mismo se les pide en el proyecto.
+
+        La trampa de Copy-on-Write vale la pena demostrarla. Desde pandas 3.0 la asignación
+        encadenada no hace nada, en silencio, y ese silencio es lo peligroso.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Elegir
+          desc: Columnas por nombre, renglones por condición
+        - title: Filtrar
+          desc: El autofiltro, escrito. Y las dos reglas que evitan el error confuso
+        - title: Limpiar
+          desc: Duplicados, texto inconsistente, números que eran texto y huecos
+        - title: Tu turno
+          desc: Tu archivo, limpio, con cada decisión anotada
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir columnas y renglones
+          sub: Por nombre con corchetes, y por etiqueta o posición con loc e iloc
+        - head: Construir una máscara booleana
+          sub: Una columna de verdadero y falso que se devuelve a la tabla
+        - head: Combinar condiciones
+          sub: Con los símbolos, no con las palabras, y siempre entre paréntesis
+        - head: Limpiar las cuatro suciedades
+          sub: Duplicados, mayúsculas, formato de moneda y celdas vacías
+        - head: Asignar con loc
+          sub: Y explicar por qué la asignación encadenada no hace nada
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Elegir y filtrar
+      lede: Describes lo que quieres y recibes una tabla nueva. La original nunca se toca, así que puedes probar sin miedo.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · Traducción
+      title: El autofiltro, escrito
+      before:
+        label: En la hoja
+        file: ventas.xlsx
+        lang: excel
+        code: |
+          Datos > Filtro
+          region = "North"
+          amount > 50000
+      after:
+        label: En pandas
+        file: filtrar.py
+        code: |
+          norte = ventas[
+              (ventas["region"] == "North") &
+              (ventas["amount"] > 50000)
+          ]
+      note: >-
+        El autofiltro esconde renglones y hay que acordarse de quitarlo. La máscara devuelve
+        una tabla nueva, y la original queda intacta y disponible.
+
+  - code:
+      eyebrow: Bloque 01 · La máscara
+      title: Una condición devuelve una columna de verdad o falso
+      filename: mascara.py
+      source: |
+        mascara = ventas["amount"] > 50000
+
+        print(mascara.head(3))
+        print(mascara.sum())
+
+        grandes = ventas[mascara]
+        print(len(grandes))
+      annotations:
+        - label: La máscara
+          text: Un True o un False por renglón. Es la semana 6 aplicada a toda la columna de golpe.
+        - label: sum sobre booleanos
+          text: True vale uno y False vale cero, así que sumar la máscara cuenta cuántos cumplen.
+        - label: Devolverla
+          text: Entre corchetes, la máscara selecciona los renglones marcados. Sale una tabla nueva.
+        - label: Riesgo
+          text: Usar las palabras and y or en lugar de los símbolos lanza un error que parece no tener sentido.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · Combinar
+      title: Las cuatro formas de combinar condiciones
+      headers: [Símbolo, Significa, Regla]
+      rows:
+        - ["&", "Las dos", "Nunca la palabra and"]
+        - ["|", "Cualquiera", "Nunca la palabra or"]
+        - ["~", "Lo contrario", "Va antes de la condición"]
+        - ["isin", "Está en la lista", "Reemplaza una fila de barras"]
+
+  - code_output:
+      eyebrow: Bloque 01 · Con condiciones
+      title: Norte y grande, al mismo tiempo
+      filename: filtrar.py
+      source: |
+        sel = ventas[(ventas["region"] == "North") &
+                     (ventas["amount"] > 50000)]
+
+        print(len(sel))
+        print(sorted(sel["channel"].unique()))
+      output: |
+        22
+        ['Online', 'Retail', 'Wholesale']
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Las cuatro reparaciones
+      lede: Los cuatro defectos del archivo, arreglados uno por uno, y cada arreglo dicho en voz alta.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Plan
+      title: Qué está mal y con qué se arregla
+      headers: [Defecto, Cuántos, Se arregla con]
+      rows:
+        - ["Renglones duplicados", "7", "drop_duplicates"]
+        - ["Región mal capturada", "8 formas", "str.strip y str.title"]
+        - ["Precio como texto", "324", "str.replace y astype"]
+        - ["Unidades vacías", "11", "dropna o fillna"]
+
+  - code:
+      eyebrow: Bloque 02 · Texto
+      title: Cuatro regiones que se veían como ocho
+      filename: limpiar.py
+      source: |
+        print(ventas["region"].nunique())
+
+        ventas["region"] = (ventas["region"]
+                            .str.strip()
+                            .str.title())
+
+        print(ventas["region"].nunique())
+      annotations:
+        - label: .str
+          text: Aplica cualquier método de texto a la columna completa. Es el ciclo de la semana 8, sin escribirlo.
+        - label: strip
+          text: Quita los espacios de los extremos. " North" y "North " se vuelven el mismo valor.
+        - label: title
+          text: Normaliza las mayúsculas. north, NORTH y North quedan iguales.
+        - label: Por qué importa
+          text: Sin esto, un groupby por región reporta ocho regiones, y cuatro de ellas no existen.
+
+  - code:
+      eyebrow: Bloque 02 · Números
+      title: Quitarle el formato al precio
+      filename: limpiar.py
+      source: |
+        ventas["unit_price"] = (
+            ventas["unit_price"]
+            .str.replace("$", "", regex=False)
+            .str.replace(",", "", regex=False)
+            .str.strip()
+            .astype(float)
+        )
+
+        ventas["date"] = pd.to_datetime(ventas["date"])
+      annotations:
+        - label: regex=False
+          text: Trata el signo de pesos como carácter literal. Sin esto lo interpretaría como un símbolo de patrón.
+        - label: Dos replace
+          text: El símbolo y la coma de miles, por separado. Los dos son formato, ninguno es el valor.
+        - label: astype
+          text: Solo hasta aquí el texto puede volverse número. Antes, cualquier conversión falla.
+        - label: to_datetime
+          text: La fecha deja de ser texto y empieza a poder compararse, restarse y agruparse por mes.
+
+  - code_output:
+      eyebrow: Bloque 02 · Los huecos
+      title: Tres respuestas honestas, y hay que elegir una
+      filename: limpiar.py
+      source: |
+        print(ventas["units"].isna().sum())
+
+        ventas = ventas.dropna(subset=["units"])
+        ventas["units"] = ventas["units"].astype(int)
+
+        print(len(ventas), ventas["units"].dtype)
+      output: |
+        11
+        306 int64
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La trampa que hay que ver una vez
+      lede: Desde pandas 3.0 hay una forma de escribir en la tabla que no escribe nada, y no avisa.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Copy-on-Write
+      lead: >-
+        Cuando encadenas dos operaciones para asignar, la primera mitad construye una tabla
+        temporal con los renglones que coinciden. La asignación cae sobre esa copia
+        temporal, que se descarta en la línea siguiente. No se lanza ningún error y no
+        cambia nada. Es una operación silenciosa que no hace absolutamente nada.
+      panel:
+        label: La forma correcta
+        title: Con loc, en un solo paso, renglones primero
+        note: >-
+          ventas.loc[condición, "columna"] = valor. Una sola instrucción, y pandas sabe que
+          quieres escribir en la tabla original.
+      steps:
+        - text: La condición elige los renglones
+        - text: El nombre elige la columna
+        - text: La asignación escribe en la original
+          loop: ↺ y todo eso en una sola instrucción
+
+  - compare:
+      eyebrow: Bloque 03 · Demostración
+      title: La misma intención, dos resultados
+      before:
+        label: No hace nada
+        file: encadenada.py
+        code: |
+          ventas[ventas["region"] == "North"] \
+              ["channel"] = "Retail"
+
+          # ningún error, ningún cambio
+      after:
+        label: Sí funciona
+        file: con_loc.py
+        code: |
+          ventas.loc[
+              ventas["region"] == "North",
+              "channel"] = "Retail"
+      note: >-
+        La izquierda corre limpia y no cambia nada. Ese silencio es lo que la vuelve
+        peligrosa: parece que funcionó hasta que revisas el resultado.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores al limpiar
+      items:
+        - label: Error 01
+          title: Calcular antes de limpiar
+          desc: Una suma sobre datos sucios devuelve un número, y ese número está mal sin decírtelo nunca.
+        - label: Error 02
+          title: Usar and en lugar de &
+          desc: El error que sale habla del valor de verdad de una Series y no ayuda en nada. Usa los símbolos.
+        - label: Error 03
+          title: Olvidar los paréntesis
+          desc: Sin ellos Python evalúa en el orden equivocado. Cada condición va entre sus propios paréntesis.
+        - label: Error 04
+          title: Rellenar huecos sin decirlo
+          desc: Poner cero donde faltaba un dato es una decisión de negocio. Se toma a propósito y se deja escrita.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué pasa después de correr esta línea?
+      filename: encadenada.py
+      source: |
+        ventas[ventas["region"] == "North"]["channel"] = "Retail"
+
+        print(ventas["channel"].value_counts())
+      options:
+        - "Todos los renglones del norte quedan en Retail"
+        - "Nada cambia, y tampoco se lanza ningún error"
+        - "Se lanza KeyError porque channel no existe"
+        - "Se crea una columna nueva llamada channel"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Limpia tu archivo y deja constancia
+      brief: Aplica a tu propio CSV las reparaciones que necesite y guarda una versión limpia. Por cada arreglo, escribe un renglón diciendo qué encontraste, qué decidiste y cuántos registros se vieron afectados.
+      blocks:
+        - label: Entrega
+          text: El cuaderno, el archivo limpio y la bitácora de decisiones
+        - label: Restricción
+          text: Ninguna asignación encadenada. Todo lo que escriba en la tabla va con loc.
+        - label: La prueba
+          text: Compara el total antes y después de limpiar. Si no cambió, o el archivo estaba limpio o no limpiaste.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un filtro es una columna de verdadero y falso
+          desc: Devuelta a la tabla entre corchetes, deja solo los renglones marcados y no toca la original
+        - title: Limpiar antes de calcular
+          desc: La suma sobre datos sucios devuelve un número, y un número equivocado nunca se anuncia solo
+        - title: Escribe con loc, en un paso
+          desc: La asignación encadenada no hace nada y no lanza error, que es la peor combinación posible
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Corre el script 04 del módulo A05 y reporta el total del año antes de limpiar, después de quitar duplicados, y después de resolver los huecos. Explica cuál de los tres reportarías.
+      meta:
+        - [Entrega, Antes de la sesión 15.3]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Los tres totales", "40 %", "Se reportan los tres números con su conteo de renglones"]
+        - ["La decisión", "40 %", "Se elige uno y se justifica con un argumento de negocio"]
+        - ["Bitácora", "20 %", "Cada limpieza queda documentada con lo que afectó"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, agrupar y unir. La tabla dinámica y el BUSCARV, en una línea cada uno.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

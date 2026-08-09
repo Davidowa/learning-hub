@@ -1,0 +1,385 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 3
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 03 · Tema 2 · Elementos básicos
+      title: Programación Orientada a Objetos
+      subtitle: Clases, objetos y el estado que guardan. El vocabulario mínimo del paradigma, con código que corre hoy mismo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 3 de 17]
+      notes: |
+        Esta es la sesión donde se define el ritmo del bloque. Si el grupo no distingue
+        clase de objeto al salir, las semanas 4 y 5 no se sostienen. Vale la pena
+        gastar los 25 minutos del bloque 2 aunque se recorte el laboratorio.
+
+        Los ejemplos salen de docs/en/courses/python-course/02 - POO/6th Module:
+        Punto y Persona son de Code019.py, el carrito compartido es la variante
+        de ShoppingCart del mismo archivo.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Clase y objeto
+          desc: El plano contra la cosa construida
+        - title: Atributos y métodos
+          desc: Qué recuerda y qué sabe hacer
+        - title: Propiedades
+          desc: Atributos calculados con la sintaxis de siempre
+        - title: Laboratorio
+          desc: Modelar una biblioteca, en parejas
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Distinguir una clase de un objeto
+          sub: El plano no es la casa. La clase se escribe una vez; los objetos se crean muchas.
+        - head: Escribir un constructor
+          sub: __init__ recibe los datos sin los cuales el objeto no tendría sentido
+        - head: Declarar métodos con self
+          sub: Por qué el primer parámetro existe y qué pasa exactamente si se olvida
+        - head: Usar una propiedad
+          sub: '@property expone un cálculo con la misma sintaxis que un atributo'
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: now
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: todo
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La clase y el objeto
+      lede: Dos palabras que se confunden todo el semestre si no se separan hoy.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es una clase
+      lead: >-
+        Una plantilla que describe qué recuerda un objeto y qué sabe hacer. La clase se
+        escribe una sola vez y no ocupa memoria por sí misma. Cada objeto que sale de ella
+        sí la ocupa, con su propia copia de los datos.
+      panel:
+        label: Tres piezas obligatorias
+        title: Un nombre, sus atributos y sus métodos
+        note: >-
+          Si no puedes nombrar la clase con un sustantivo concreto del problema, todavía no
+          sabes qué estás modelando. "Gestor" y "manejador" casi nunca son sustantivos del problema.
+      steps:
+        - text: Nombra la cosa del mundo
+        - text: Lista lo que debe recordar
+        - text: Lista lo que debe saber hacer
+          loop: ↺ vuelve al paso 2 cada vez que aparezca un dato nuevo
+
+  - diagram:
+      eyebrow: Diagrama
+      title: Anatomía de una clase
+      blocks:
+        - label: Plano
+          title: Clase
+          desc: Define los atributos y los métodos. No guarda valores.
+        - label: Fábrica
+          title: __init__
+          desc: Recibe lo indispensable y deja el objeto listo para usarse
+          dark: true
+        - label: Cosa
+          title: Objeto
+          desc: Una instancia, con su propia copia del estado en memoria
+      note: >-
+        Cada objeto lleva sus propios atributos. Los métodos viven una sola vez, en la clase,
+        y reciben el objeto como primer parámetro cuando se llaman.
+
+  - figure:
+      eyebrow: Analogía
+      title: Un molde, muchas galletas
+      image: img/es/class-object.png
+      caption: La clase se escribe una vez. Cada objeto sale con su propio estado.
+      alt: Un molde de galletas, un horno rotulado init, y tres galletas distintas
+
+  - code:
+      eyebrow: Python
+      title: La clase más pequeña que ya sirve de algo
+      filename: punto.py
+      lang: python
+      source: |
+        class Punto:
+            def __init__(self, x: float, y: float) -> None:
+                self.x = x
+                self.y = y
+
+            def dibujar(self) -> None:
+                print(f"Punto en ({self.x}, {self.y})")
+
+
+        p = Punto(1, 2)
+        p.dibujar()
+      annotations:
+        - label: Línea 2
+          text: El constructor corre solo, en el momento en que escribes Punto(1, 2)
+        - label: Línea 6
+          text: self es el objeto sobre el que se llamó el método, no un parámetro que tú pases
+        - label: Riesgo
+          text: Si olvidas self en la definición, Python reclama un argumento de más al llamar
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: Dos objetos, dos estados independientes
+      filename: dos_puntos.py
+      lang: python
+      output_label: Salida
+      source: |
+        a = Punto(1, 2)
+        b = Punto(9, 9)
+
+        a.x = 100
+
+        a.dibujar()
+        b.dibujar()
+        print(a is b)
+      output: |
+        Punto en (100, 2)
+        Punto en (9, 9)
+        False
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Atributos, métodos y propiedades
+      lede: Qué recuerda el objeto, qué sabe hacer, y qué finge ser un dato sin serlo.
+      block: 2
+
+  - code:
+      eyebrow: Encapsulamiento
+      title: Un atributo que no se toca desde fuera
+      filename: persona.py
+      lang: python
+      source: |
+        class Persona:
+            def __init__(self, nombre: str, edad: int) -> None:
+                self.__nombre = nombre
+                self.edad = edad
+
+            def hablar(self) -> None:
+                print(f"Hola, me llamo {self.__nombre}")
+
+
+        p = Persona("Ana", 20)
+        p.edad = 21
+      annotations:
+        - label: Línea 3
+          text: Los dos guiones bajos le dicen a Python que renombre el atributo por dentro
+        - label: Línea 10
+          text: La edad cambia con los años, así que se deja pública a propósito
+        - label: Si intentas p.__nombre
+          text: AttributeError. El atributo existe, pero con otro nombre fuera de la clase
+          accent: true
+
+  - code:
+      eyebrow: Propiedades
+      title: Un cálculo que se lee como si fuera un atributo
+      filename: rectangulo.py
+      lang: python
+      source: |
+        class Rectangulo:
+            def __init__(self, ancho: float, alto: float) -> None:
+                self.ancho = ancho
+                self.alto = alto
+
+            @property
+            def area(self) -> float:
+                return self.ancho * self.alto
+
+
+        r = Rectangulo(3, 4)
+        print(r.area)
+      annotations:
+        - label: Línea 6
+          text: '@property convierte el método en algo que se lee sin paréntesis'
+        - label: Por qué sirve
+          text: El área nunca queda desincronizada, porque se calcula en el momento de leerla
+        - label: Cuándo no usarla
+          text: Si el cálculo es caro, escóndelo detrás de un método normal para que se note
+          accent: true
+
+  - table:
+      eyebrow: Vocabulario
+      title: Las cinco palabras del tema, con su sintaxis
+      headers: ["Término", "Qué es", "Sintaxis en Python"]
+      rows:
+        - ["Clase", "La plantilla", "class Punto:"]
+        - ["Objeto", "Una instancia con estado propio", "p = Punto(1, 2)"]
+        - ["Atributo", "Un dato que el objeto recuerda", "self.x = x"]
+        - ["Método", "Algo que el objeto sabe hacer", "def dibujar(self):"]
+        - ["Propiedad", "Un cálculo que se lee como dato", "@property"]
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores que veremos hoy en el laboratorio
+      items:
+        - label: Error 01
+          title: Olvidar self en la definición
+          desc: 'TypeError, takes 0 positional arguments but 1 was given. El objeto se pasa solo.'
+        - label: Error 02
+          title: Declarar el atributo fuera de __init__
+          desc: Queda pegado a la clase y todos los objetos comparten la misma lista o el mismo contador
+        - label: Error 03
+          title: Llamar al método sin paréntesis
+          desc: 'p.dibujar imprime la referencia al método. p.dibujar() lo ejecuta.'
+        - label: Error 04
+          title: Constructor que hace demasiado
+          desc: Si __init__ abre archivos o consulta la red, el objeto falla antes de existir
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: compartido.py
+      lang: python
+      source: |
+        class Carrito:
+            productos = []
+
+            def __init__(self, dueno):
+                self.dueno = dueno
+
+            def agregar(self, sku):
+                self.productos.append(sku)
+
+
+        a = Carrito("Ana")
+        b = Carrito("Luis")
+        a.agregar("X1")
+        print(len(b.productos))
+      options:
+        - '0, porque b nunca agregó nada'
+        - '1, porque la lista vive en la clase'
+        - 'Error, productos no está definido en __init__'
+        - '2, porque cada carrito duplica la lista'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 1, y la traza dice por qué
+      headers: ["Paso", "Instrucción", "a.dueno", "b.dueno", "Carrito.productos"]
+      rows:
+        - ["1", "a = Carrito('Ana')", "Ana", "–", "[]"]
+        - ["2", "b = Carrito('Luis')", "Ana", "Luis", "[]"]
+        - ["3", "a.agregar('X1')", "Ana", "Luis", "['X1']"]
+        - ["4", "len(b.productos)", "Ana", "Luis", "['X1']"]
+      verdict: productos se declaró en el cuerpo de la clase, así que existe una sola lista para todos los carritos.
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Una canasta compartida contra una por carrito
+      image: img/es/class-vs-instance.png
+      caption: Lo que se declara en el cuerpo de la clase lo comparten todos los objetos
+      alt: Una canasta unida a dos carritos, y al lado cada carrito con la suya
+
+  - compare:
+      eyebrow: Refactorización
+      title: La corrección cabe en una línea
+      before:
+        label: Antes
+        file: compartido.py
+        code: |
+          class Carrito:
+              productos = []
+
+              def __init__(self, dueno):
+                  self.dueno = dueno
+      after:
+        label: Después
+        file: propio.py
+        code: |
+          class Carrito:
+              def __init__(self, dueno):
+                  self.dueno = dueno
+                  self.productos = []
+      note: Todo lo que deba ser distinto en cada objeto se asigna dentro de __init__, sobre self.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Laboratorio y cierre
+      lede: Modelar algo real, y descubrir en el intento qué datos faltaban.
+      block: 3
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Modelar una biblioteca, en parejas
+      brief: Escriban las clases Libro y Prestamo de modo que el sistema pueda decir si un préstamo ya venció.
+      blocks:
+        - label: Restricciones
+          text: Máximo tres atributos por clase, sin librerías externas, un método público por clase
+        - label: Entregable
+          text: Un archivo .py con las dos clases y tres objetos de prueba impresos en consola
+        - label: Criterio
+          text: Que los nombres se entiendan sin leer el cuerpo de los métodos
+
+  - method:
+      eyebrow: Método de depuración
+      title: Rubber duck debugging
+      statement: Explica tu código en voz alta, línea por línea, a alguien que no puede ayudarte.
+      points:
+        - label: Por qué funciona
+          text: Verbalizar obliga a revisar las suposiciones que al leer se saltan sin darte cuenta
+        - label: Cuándo usarlo
+          text: Cuando llevas más de diez minutos sin una hipótesis nueva sobre el error
+        - label: Con qué
+          text: El pato de la materia, un compañero o el bloc de notas. Da igual, pero en voz alta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La clase describe, el objeto recuerda
+          desc: Una definición en el código, tantos estados independientes como instancias crees
+        - title: Lo que va en __init__ es de cada objeto
+          desc: Lo que se declara en el cuerpo de la clase se comparte, casi siempre sin querer
+        - title: Una propiedad es un método disfrazado
+          desc: Se lee como dato y se calcula al vuelo, así que nunca queda desactualizada
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía la biblioteca del laboratorio con una clase Usuario y explica en un párrafo por qué cada atributo es necesario.
+      meta:
+        - [Entrega, Antes de la sesión 4]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Modelado", "40 %", "Los atributos corresponden al dominio de una biblioteca real"]
+        - ["Ejecución", "30 %", "El archivo corre sin errores e imprime los objetos de prueba"]
+        - ["Justificación", "30 %", "El párrafo argumenta decisiones, no repite el código en prosa"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, modificadores de acceso, constructores y miembros estáticos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

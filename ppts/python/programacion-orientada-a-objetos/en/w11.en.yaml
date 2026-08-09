@@ -1,0 +1,365 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 11
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 11 · Topic 4 · Advanced functions and structures
+      title: Object-Oriented Programming
+      subtitle: What a program does when something goes wrong, where incoming data gets checked, and how to survive the unplanned.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 11 of 17]
+      notes: |
+        Worth opening by typing rubbish into last week's lab program, live, and reading the
+        whole traceback on the board. Most of the room has never read one top to bottom,
+        which is exactly why they are afraid of it.
+
+        The examples come from docs/en/courses/python-course: try, except, else and finally
+        are from 01 - Basics/5th Module/Code028.py, and the custom exception inheriting from
+        Exception is the InvalidOperationError in 02 - POO/6th Module/Code026.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Exceptions
+          desc: What gets raised, where it travels, and who attends to it
+        - title: The four clauses
+          desc: try, except, else and finally, and when each of them runs
+        - title: Validation
+          desc: Checking the value at the border and trusting it from there inwards
+        - title: Robustness
+          desc: Custom exceptions and messages that say what to fix
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Read a full traceback
+          sub: Bottom to top, starting at the type and ending at the line that actually failed
+        - head: Catch by type
+          sub: One except per error you know how to handle, and none that catches the unexpected
+        - head: Decide where to validate
+          sub: At the point where the value enters, so the rest of the program stops asking
+        - head: Define a custom exception
+          sub: A class inheriting from Exception, with a name that comes from the problem
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Exception handling
+      lede: A program that only works on correct data is not finished. The half that handles everything else is still missing.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What an exception is
+      lead: >-
+        An object Python creates when something goes wrong and throws upwards, looking for
+        someone to handle it. If nobody catches it anywhere in the chain of calls, the
+        program stops and prints the trail of where it had been before giving up.
+      panel:
+        label: What has to be decided
+        title: Who is responsible for this error
+        note: >-
+          The function that spots the problem is almost never the one that knows what to do
+          about it. That is why it raises, and whoever has enough context handles it.
+      steps:
+        - text: It happens and gets raised
+        - text: It travels up the call chain
+        - text: Whoever can decide catches it
+          loop: ↺ if nobody catches it, the program stops and shows the trail
+
+  - figure:
+      eyebrow: Diagnosis
+      title: One except per type, and where the else sits
+      image: img/en/exceptions.png
+      caption: Each except handles its own type. The else runs only when the try reached the end without tripping.
+      alt: A try block with two arrows out to two different excepts, and a third arrow to the else
+
+  - code:
+      eyebrow: Python
+      title: Two different errors, two different answers
+      filename: age.py
+      lang: python
+      source: |
+        try:
+            age = int(input("Age: "))
+            factor = 10 / age
+        except ValueError:
+            print("That is not a whole number")
+        except ZeroDivisionError:
+            print("Age cannot be zero")
+      annotations:
+        - label: Line 1
+          text: The try marks the stretch that can fail, and the shorter that stretch is, the better
+        - label: Lines 4 and 6
+          text: One except per type. The first one that matches runs and the rest are never checked.
+        - label: Risk
+          text: except Exception catches everything, including errors you did not expect, and hides the defect
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Three inputs, three paths
+      filename: try_age.py
+      lang: python
+      output_label: Output
+      source: |
+        for value in ["abc", "0", "20"]:
+            try:
+                print(10 / int(value))
+            except ValueError:
+                print("That is not a whole number")
+            except ZeroDivisionError:
+                print("Age cannot be zero")
+      output: |
+        That is not a whole number
+        Age cannot be zero
+        0.5
+
+  - code:
+      eyebrow: The other two clauses
+      title: The happy path and the one that always runs
+      filename: read_file.py
+      lang: python
+      source: |
+        try:
+            handle = open("data.txt")
+        except FileNotFoundError:
+            print("The file is not there")
+        else:
+            print(handle.read())
+            handle.close()
+        finally:
+            print("Done trying")
+      annotations:
+        - label: The else
+          text: Runs only if the try reached the end without an exception, keeping the safe part apart
+        - label: The finally
+          text: Runs every time, error or no error, which is why it is where you close what you opened
+        - label: Risk
+          text: If the file is missing, the variable was never created, and using it in the finally raises NameError
+          accent: true
+
+  - table:
+      eyebrow: Vocabulary
+      title: The five words of error handling
+      headers: ["Word", "When it runs", "What it is for"]
+      rows:
+        - ["try", "Always", "Marks the stretch that can fail"]
+        - ["except", "If the type matches", "Handles one specific error"]
+        - ["else", "If there was no error", "Keeps the happy path apart"]
+        - ["finally", "Always, whatever happens", "Closes what was opened"]
+        - ["raise", "When you write it", "Throws the error to the caller"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Validating input
+      lede: The difference between a program that crashes and one that explains what to fix comes down to where you put the check.
+      block: 2
+
+  - method:
+      eyebrow: Design criterion
+      title: Validate at the border, trust inwards
+      statement: Every value arriving from the keyboard, a file or the network is checked at the exact point where it enters. Once inside, no function asks again whether the value is usable.
+      points:
+        - label: Where the check goes
+          text: In the constructor, in the setter and in the function reading the input. Nowhere else.
+        - label: What it buys
+          text: The rest of the program is written assuming correct data, and reads half as long
+        - label: How it breaks
+          text: If every function checks on its own, the rule lives in twenty places and eventually they disagree
+
+  - compare:
+      eyebrow: Two styles
+      title: Ask first, or try and catch
+      before:
+        label: Ask first
+        file: looking.py
+        code: |
+          if path.exists():
+              text = path.read_text()
+          else:
+              print("Not there")
+      after:
+        label: Try and catch
+        file: trying.py
+        code: |
+          try:
+              text = path.read_text()
+          except FileNotFoundError:
+              print("Not there")
+      note: The first leaves a gap, because the file can be deleted between the question and the read. The second does not ask, it tries, and handles exactly the case where it failed.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to handle an error badly
+      items:
+        - label: Error 01
+          title: An except with no type
+          desc: It catches Ctrl+C and the import error too. Name the type you actually expect.
+        - label: Error 02
+          title: An except with pass inside
+          desc: The error vanishes without a trace and the defect resurfaces three screens later
+        - label: Error 03
+          title: A try wrapped round forty lines
+          desc: When it fires you cannot tell which of the forty failed. Wrap the risky line only.
+        - label: Error 04
+          title: Exceptions for the normal flow
+          desc: If the case happens half the time, it was an if. Exceptions are for the exceptional.
+
+  - divider:
+      eyebrow: Block 03
+      title: Software robustness
+      lede: An error with a name of its own and a message saying what to fix beats twenty lines of defences scattered about.
+      block: 3
+
+  - code:
+      eyebrow: Custom exceptions
+      title: An error named after the problem
+      filename: account.py
+      lang: python
+      source: |
+        class InsufficientFunds(Exception):
+            pass
+
+
+        class Account:
+            def __init__(self, balance: float) -> None:
+                self.balance = balance
+
+            def withdraw(self, amount: float) -> None:
+                if amount > self.balance:
+                    short = amount - self.balance
+                    raise InsufficientFunds(f"Short by {short}")
+                self.balance -= amount
+      annotations:
+        - label: Line 1
+          text: A custom exception is a class inheriting from Exception, and that already finishes it
+        - label: Line 12
+          text: raise throws the error at the caller. withdraw does not decide anything, it reports.
+        - label: Why it pays off
+          text: The caller catches InsufficientFunds without also catching every ValueError in the program
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The type and the message arrive together
+      filename: try_account.py
+      lang: python
+      output_label: Output
+      source: |
+        account = Account(100)
+
+        try:
+            account.withdraw(150)
+        except InsufficientFunds as ex:
+            print(type(ex).__name__)
+            print(ex)
+      output: |
+        InsufficientFunds
+        Short by 50
+
+  - quiz:
+      eyebrow: Quick question
+      question: In what order do the two outputs appear?
+      filename: ordering.py
+      lang: python
+      source: |
+        def read(value):
+            try:
+                return int(value)
+            except ValueError:
+                return 0
+            finally:
+                print("done")
+
+        print(read("7"))
+      options:
+        - 'First done, then 7'
+        - 'First 7, then done'
+        - 'Only 7, because return skips the finally'
+        - 'Only done, because finally discards the return'
+
+  - trace:
+      eyebrow: Answer
+      title: done comes first, and the finally explains why
+      headers: ["Step", "Statement", "What happens", "Output"]
+      rows:
+        - ["1", "read('7')", "enters the try", "–"]
+        - ["2", "return int(value)", "holds the 7 to return", "–"]
+        - ["3", "finally", "runs before leaving", "done"]
+        - ["4", "print(read('7'))", "gets the 7 and prints it", "7"]
+      verdict: finally runs every time, even when a return is already waiting its turn. The value is held, the block runs, and only then does the function hand it back.
+
+  - lab:
+      eyebrow: Lab
+      title: Hardening a grade reader, in pairs
+      brief: You get a script that reads grades from the console and blows up on any odd input. Make it survive text, numbers out of range and a file that is not there.
+      blocks:
+        - label: Constraints
+          text: No except without a type, none left empty, and the try wraps only the risky line
+        - label: Deliverable
+          text: A .py file that reaches the end on all five of the test inputs you are given
+        - label: Criterion
+          text: Every message tells whoever reads it what to fix in order to carry on
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: One except per type, and named
+          desc: except Exception catches what you did not expect and hides the error that mattered
+        - title: Validation lives at the border
+          desc: The check happens where the value enters, and from there inwards the program trusts it
+        - title: finally runs every time
+          desc: With an error, without one, and with a return waiting. It is where you close what you opened.
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Add to the lab reader a custom exception named after the domain and a message saying what to fix. Explain in one paragraph why ValueError was not enough.
+      meta:
+        - [Due, Before session 12]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Types", "40 %", "Every except names a concrete type and handles a distinct case"]
+        - ["Custom exception", "30 %", "It inherits from Exception and its name comes from the problem"]
+        - ["Messages", "30 %", "Every message says what to fix, not only that something went wrong"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, files, file processing and text files.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

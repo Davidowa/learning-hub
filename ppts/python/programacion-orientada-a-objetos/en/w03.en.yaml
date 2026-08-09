@@ -1,0 +1,385 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 3
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 03 · Topic 2 · Building blocks
+      title: Object-Oriented Programming
+      subtitle: Classes, objects and the state they hold. The smallest vocabulary the paradigm needs, with code that runs today.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 3 of 17]
+      notes: |
+        This session sets the pace for the block. If the group cannot tell a class from an
+        object on the way out, weeks 4 and 5 will not hold. Spend the full 25 minutes of
+        block 2 even if the lab gets cut short.
+
+        The examples come from docs/en/courses/python-course/02 - POO/6th Module:
+        Point and Person are from Code019.py, and the shared cart is the
+        ShoppingCart variant in the same file.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Class and object
+          desc: The blueprint against the thing that gets built
+        - title: Attributes and methods
+          desc: What it remembers and what it can do
+        - title: Properties
+          desc: Computed values that read like plain attributes
+        - title: Lab
+          desc: Modelling a library, in pairs
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Tell a class from an object
+          sub: The blueprint is not the house. You write the class once and create many objects.
+        - head: Write a constructor
+          sub: __init__ takes the data without which the object would make no sense
+        - head: Declare methods with self
+          sub: Why the first parameter is there and what happens exactly if you forget it
+        - head: Use a property
+          sub: '@property exposes a computed value with plain attribute syntax'
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: now
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: todo
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The class and the object
+      lede: Two words that get mixed up all semester if they are not separated today.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a class is
+      lead: >-
+        A template describing what an object remembers and what it can do. You write the
+        class once and it costs no memory by itself. Every object made from it does cost
+        memory, and carries its own copy of the data.
+      panel:
+        label: Three mandatory pieces
+        title: A name, its attributes, its methods
+        note: >-
+          If you cannot name the class with a concrete noun from the problem, you do not yet
+          know what you are modelling. "Manager" and "handler" are almost never that noun.
+      steps:
+        - text: Name the thing in the world
+        - text: List what it has to remember
+        - text: List what it has to be able to do
+          loop: ↺ go back to step 2 every time a new field appears
+
+  - diagram:
+      eyebrow: Diagram
+      title: Anatomy of a class
+      blocks:
+        - label: Blueprint
+          title: Class
+          desc: Declares the attributes and methods. Stores no values of its own.
+        - label: Factory
+          title: __init__
+          desc: Takes what is essential and leaves the object ready to use
+          dark: true
+        - label: Thing
+          title: Object
+          desc: One instance, with its own copy of the state in memory
+      note: >-
+        Every object carries its own attributes. Methods live once, in the class, and receive
+        the object as their first parameter when they are called.
+
+  - figure:
+      eyebrow: Analogy
+      title: One cutter, many cookies
+      image: img/en/class-object.png
+      caption: The class is written once. Every object comes out with its own state.
+      alt: A cookie cutter, an oven labelled init, and three different cookies
+
+  - code:
+      eyebrow: Python
+      title: The smallest class that already earns its keep
+      filename: point.py
+      lang: python
+      source: |
+        class Point:
+            def __init__(self, x: float, y: float) -> None:
+                self.x = x
+                self.y = y
+
+            def draw(self) -> None:
+                print(f"Point at ({self.x}, {self.y})")
+
+
+        p = Point(1, 2)
+        p.draw()
+      annotations:
+        - label: Line 2
+          text: The constructor runs on its own, the moment you write Point(1, 2)
+        - label: Line 6
+          text: self is the object the method was called on, not an argument you pass in
+        - label: Risk
+          text: Leave self out of the definition and Python reports one argument too many
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Two objects, two independent states
+      filename: two_points.py
+      lang: python
+      output_label: Output
+      source: |
+        a = Point(1, 2)
+        b = Point(9, 9)
+
+        a.x = 100
+
+        a.draw()
+        b.draw()
+        print(a is b)
+      output: |
+        Point at (100, 2)
+        Point at (9, 9)
+        False
+
+  - divider:
+      eyebrow: Block 02
+      title: Attributes, methods and properties
+      lede: What the object remembers, what it can do, and what only pretends to be a field.
+      block: 2
+
+  - code:
+      eyebrow: Encapsulation
+      title: An attribute nobody touches from outside
+      filename: person.py
+      lang: python
+      source: |
+        class Person:
+            def __init__(self, name: str, age: int) -> None:
+                self.__name = name
+                self.age = age
+
+            def talk(self) -> None:
+                print(f"Hi, my name is {self.__name}")
+
+
+        p = Person("Ana", 20)
+        p.age = 21
+      annotations:
+        - label: Line 3
+          text: The two leading underscores tell Python to rename the attribute internally
+        - label: Line 10
+          text: Age changes over the years, so it is left public on purpose
+        - label: If you try p.__name
+          text: AttributeError. The attribute exists, under a different name outside the class
+          accent: true
+
+  - code:
+      eyebrow: Properties
+      title: A computed value that reads like a field
+      filename: rectangle.py
+      lang: python
+      source: |
+        class Rectangle:
+            def __init__(self, width: float, height: float) -> None:
+                self.width = width
+                self.height = height
+
+            @property
+            def area(self) -> float:
+                return self.width * self.height
+
+
+        r = Rectangle(3, 4)
+        print(r.area)
+      annotations:
+        - label: Line 6
+          text: '@property turns the method into something you read without parentheses'
+        - label: Why it helps
+          text: The area can never go stale, because it is computed at the moment you read it
+        - label: When to skip it
+          text: If the computation is expensive, keep it behind a normal method so callers notice
+          accent: true
+
+  - table:
+      eyebrow: Vocabulary
+      title: The five words of this topic, with their syntax
+      headers: ["Term", "What it is", "Python syntax"]
+      rows:
+        - ["Class", "The template", "class Point:"]
+        - ["Object", "An instance with its own state", "p = Point(1, 2)"]
+        - ["Attribute", "A value the object remembers", "self.x = x"]
+        - ["Method", "Something the object can do", "def draw(self):"]
+        - ["Property", "A computed value read as a field", "@property"]
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors we will hit in today's lab
+      items:
+        - label: Error 01
+          title: Forgetting self in the definition
+          desc: 'TypeError, takes 0 positional arguments but 1 was given. The object passes itself.'
+        - label: Error 02
+          title: Declaring the attribute outside __init__
+          desc: It sticks to the class, so every object shares the same list or the same counter
+        - label: Error 03
+          title: Calling a method without parentheses
+          desc: 'p.draw prints the method reference. p.draw() runs it.'
+        - label: Error 04
+          title: A constructor that does too much
+          desc: If __init__ opens files or hits the network, the object fails before it exists
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: shared.py
+      lang: python
+      source: |
+        class Cart:
+            items = []
+
+            def __init__(self, owner):
+                self.owner = owner
+
+            def add(self, sku):
+                self.items.append(sku)
+
+
+        a = Cart("Ana")
+        b = Cart("Luis")
+        a.add("X1")
+        print(len(b.items))
+      options:
+        - '0, because b never added anything'
+        - '1, because the list lives on the class'
+        - 'An error, items is not defined in __init__'
+        - '2, because each cart copies the list'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 1, and the trace explains why
+      headers: ["Step", "Statement", "a.owner", "b.owner", "Cart.items"]
+      rows:
+        - ["1", "a = Cart('Ana')", "Ana", "–", "[]"]
+        - ["2", "b = Cart('Luis')", "Ana", "Luis", "[]"]
+        - ["3", "a.add('X1')", "Ana", "Luis", "['X1']"]
+        - ["4", "len(b.items)", "Ana", "Luis", "['X1']"]
+      verdict: items was declared in the class body, so there is exactly one list shared by every cart.
+
+  - figure:
+      eyebrow: Diagnosis
+      title: One shared basket against one each
+      image: img/en/class-vs-instance.png
+      caption: What is declared in the class body is shared by every object
+      alt: One basket tied to two carts, beside each cart holding its own
+
+  - compare:
+      eyebrow: Refactor
+      title: The fix fits on one line
+      before:
+        label: Before
+        file: shared.py
+        code: |
+          class Cart:
+              items = []
+
+              def __init__(self, owner):
+                  self.owner = owner
+      after:
+        label: After
+        file: own.py
+        code: |
+          class Cart:
+              def __init__(self, owner):
+                  self.owner = owner
+                  self.items = []
+      note: Anything that has to differ per object is assigned inside __init__, on self.
+
+  - divider:
+      eyebrow: Block 03
+      title: Lab and wrap-up
+      lede: Model something real, and find out along the way which fields you were missing.
+      block: 3
+
+  - lab:
+      eyebrow: Lab
+      title: Modelling a library, in pairs
+      brief: Write the classes Book and Loan so that the system can say whether a loan is overdue.
+      blocks:
+        - label: Constraints
+          text: At most three attributes per class, no external libraries, one public method each
+        - label: Deliverable
+          text: A .py file with both classes and three test objects printed to the console
+        - label: Criterion
+          text: The names should make sense without reading the bodies of the methods
+
+  - method:
+      eyebrow: Debugging method
+      title: Rubber duck debugging
+      statement: Explain your code out loud, line by line, to someone who cannot help you.
+      points:
+        - label: Why it works
+          text: Saying it out loud forces you to check the assumptions reading lets you skip
+        - label: When to use it
+          text: Once you have spent ten minutes without a new hypothesis about the bug
+        - label: With what
+          text: The course duck, a classmate, or a notepad. Any of them, as long as it is out loud.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The class describes, the object remembers
+          desc: One definition in the code, as many independent states as instances you create
+        - title: What goes in __init__ belongs to the object
+          desc: What sits in the class body is shared, almost always by accident
+        - title: A property is a method in disguise
+          desc: It reads like a field and computes on the spot, so it never goes stale
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Extend the lab library with a Member class and explain in one paragraph why each attribute is needed.
+      meta:
+        - [Due, Before session 4]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Modelling", "40 %", "The attributes match the domain of an actual library"]
+        - ["Execution", "30 %", "The file runs without errors and prints the test objects"]
+        - ["Justification", "30 %", "The paragraph argues decisions instead of narrating the code"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, access modifiers, constructors and static members.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

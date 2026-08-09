@@ -1,0 +1,365 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 4
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 04 · Unidad 1 · Operaciones y nombres de rango
+      title: Análisis y Procesamiento de la Información
+      subtitle: Los siete operadores, el orden en que VBA los resuelve, y por qué la misma cuenta da distinto en la celda.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 4 de 17]
+      notes: |
+        Noventa minutos. Veinte en operadores, veinticinco en las diferencias con la hoja,
+        y el resto poniendo nombres a los rangos de la tabla de amortización.
+
+        La sesión tiene un hallazgo que conviene no adelantar. La misma expresión escrita
+        en una celda y escrita en VBA da resultados distintos, y no en un caso raro:
+        pasa con la potencia de un negativo, con el residuo de un negativo y con la suma
+        de dos textos. Las tres están verificadas en Excel 16.0, las dos versiones, y
+        salen en la tabla del bloque 2. Deja que el grupo apueste antes de mostrarla.
+
+        Un detalle de esa tabla: la verificación se corrió en un Excel en inglés, donde la
+        función se llama MOD y el separador es la coma. La diapositiva la escribe como
+        RESIDUO con punto y coma, que es lo que va a ver el grupo. El valor es el mismo.
+
+        El otro golpe es la tasa mensual. Todos esperan 0.0094 y VBA imprime
+        9.48879293458305E-03. No es un error, es notación científica, y Format lo arregla.
+
+        El código sale de
+        docs/en/courses/vba-course/03 - Arithmetic Operators/ (los dos módulos) y de
+        04 - Name Cells/DefineNameCells.bas.
+
+        Cuidado con ese último archivo: trae Sub DefineNameCells declarado dos veces en
+        el mismo módulo, así que no compila tal como está. Las diapositivas citan la
+        segunda versión, que es la que tiene el código.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los siete operadores
+          desc: Los cuatro de siempre y los tres que la hoja no tiene escritos así
+        - title: La celda contra VBA
+          desc: Tres expresiones que dan distinto según dónde las escribas
+        - title: Nombres de rango
+          desc: Cómo se crean desde código y qué le hacen a la legibilidad
+        - title: Tu turno
+          desc: La tabla de amortización con sus parámetros nombrados
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Usar los siete operadores aritméticos
+          sub: Suma, resta, producto, las dos divisiones, residuo y potencia
+        - head: Aplicar la precedencia correcta
+          sub: Y poner paréntesis cuando el orden no es obvio a simple vista
+        - head: Anticipar dónde VBA y la hoja difieren
+          sub: Tres casos verificados, y qué hacer para que no te muerdan
+        - head: Formatear un resultado para leerlo
+          sub: Format y Round, y por qué una tasa sale en notación científica
+        - head: Crear nombres de rango desde código
+          sub: Names.Add, y por qué una fórmula con nombres se revisa sola
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: now
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: todo
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los siete operadores
+      lede: Cuatro los usas desde la primaria. Los otros tres existen en la hoja con otro nombre, y en VBA tienen símbolo propio.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Aritméticos · 1 de 2
+      title: Los cuatro de siempre
+      headers: [Operador, Qué hace, Ejemplo, Resultado]
+      rows:
+        - ["+", "Suma", "5 + 3", "8"]
+        - ["-", "Resta", "5 - 3", "2"]
+        - ["*", "Producto", "5 * 3", "15"]
+        - ["/", "División decimal", "5 / 3", "1.66666666666667"]
+
+  - table:
+      eyebrow: Bloque 01 · Aritméticos · 2 de 2
+      title: Y los tres que la hoja no escribe así
+      headers: [Operador, Qué hace, Ejemplo, Resultado]
+      rows:
+        - ["\\", "División entera", "5 \\ 3", "1"]
+        - ["Mod", "Residuo", "5 Mod 3", "2"]
+        - ["^", "Potencia", "5 ^ 3", "125"]
+
+  - code:
+      eyebrow: Bloque 01 · Precedencia
+      title: El orden en que VBA resuelve una expresión
+      filename: Operadores.bas
+      lang: vba
+      source: |
+        Sub Precedencia()
+            ' 1. Paréntesis  2. ^  3. * /  4. \  5. Mod  6. + -
+            Dim sinParentesis As Double
+            Dim conParentesis As Double
+
+            sinParentesis = 5 + 3 * 2
+            conParentesis = (5 + 3) * 2
+
+            Range("A1").Value = sinParentesis
+            Range("A2").Value = conParentesis
+        End Sub
+      annotations:
+        - label: El resultado
+          text: 11 y 16. El producto se resuelve antes que la suma, igual que en la hoja.
+        - label: Las dos divisiones
+          text: La entera y el residuo tienen su propio escalón, debajo de la división normal.
+        - label: Los paréntesis
+          text: Cuestan cero y quitan toda duda. Ponlos aunque no hagan falta.
+        - label: Riesgo
+          text: Las dos líneas corren y devuelven un número. Solo una contesta la pregunta que hiciste.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La celda contra VBA
+      lede: Son dos motores distintos dentro del mismo programa. Casi siempre coinciden, y donde no coinciden nadie lo avisa.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Verificado en Excel 16.0
+      title: Tres expresiones que dan distinto según dónde las escribas
+      headers: [En la celda, En VBA, Qué devuelve cada uno]
+      rows:
+        - ["=-3^2", "-3 ^ 2", "9 contra -9"]
+        - ["=\"5\"+\"3\"", "\"5\" + \"3\"", "8 contra 53"]
+        - ["=RESIDUO(-5;3)", "-5 Mod 3", "1 contra -2"]
+        - ["=2^3^2", "2 ^ 3 ^ 2", "64 y 64, aquí sí coinciden"]
+
+  - method:
+      eyebrow: Bloque 02 · Por qué pasa
+      title: Tres reglas distintas, no tres errores
+      statement: La hoja y VBA son dos motores dentro del mismo programa, y en tres puntos tomaron decisiones opuestas.
+      points:
+        - label: El signo menos
+          text: En la hoja se aplica antes que la potencia, así que -3^2 es 9. En VBA se aplica después, y da -9.
+        - label: El signo más
+          text: En la hoja convierte los textos a número y suma. En VBA, si los dos lados son texto, los pega.
+        - label: El residuo
+          text: La función de la hoja devuelve el signo del divisor. Mod devuelve el del dividendo.
+
+  - code_output:
+      eyebrow: Bloque 02 · La tasa mensual
+      title: El resultado que todos leen como un error
+      filename: Tasa.bas
+      lang: vba
+      output_label: Lo que se ve
+      source: |
+        Dim tasaAnual As Double
+        Dim tasaMensual As Double
+
+        tasaAnual = 0.12
+        tasaMensual = ((1 + tasaAnual) ^ (1 / 12)) - 1
+      output: |
+        9.48879293458305E-03
+      notes: |
+        Verificado. La misma cuenta en una celda muestra 0.009489, porque la celda trae
+        formato. En VBA el número es idéntico, lo que cambia es cómo se escribe.
+
+  - code:
+      eyebrow: Bloque 02 · La solución
+      title: Format para leerlo, Round para recortarlo
+      filename: Tasa.bas
+      lang: vba
+      source: |
+        Sub TasaLegible()
+            Dim tasaMensual As Double
+            tasaMensual = ((1 + 0.12) ^ (1 / 12)) - 1
+
+            Range("B1").Value = tasaMensual
+            Range("B1").NumberFormat = "0.00%"
+
+            Range("B2").Value = Format(tasaMensual, "0.00%")
+            Range("B3").Value = Round(tasaMensual, 6)
+        End Sub
+      annotations:
+        - label: NumberFormat
+          text: Deja el número completo en la celda y solo cambia cómo se ve. B1 muestra 0.95 %.
+        - label: Format
+          text: Devuelve texto ya formateado. Sirve para un mensaje, no para seguir calculando.
+        - label: Round
+          text: Recorta el número de verdad. Round(tasa, 6) deja 0.009489 y ya perdiste lo demás.
+        - label: Riesgo
+          text: Format convierte a texto. Si después sumas eso, VBA lo pega en vez de sumarlo.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro cuentas que dan un número equivocado
+      items:
+        - label: Error 01
+          title: Sumar dos textos con más
+          desc: "\"5\" + \"3\" da 53, no 8. Con un número de cada lado sí suma, y esa inconsistencia es la trampa."
+        - label: Error 02
+          title: Elevar un negativo
+          desc: En VBA -3 ^ 2 es -9 porque el signo se aplica al final. Escribe (-3) ^ 2 si querías 9.
+        - label: Error 03
+          title: Dividir entre cero
+          desc: La celda muestra un error y sigue. VBA se detiene con error 11 y la macro no termina.
+        - label: Error 04
+          title: Dividir enteros con la diagonal
+          desc: "7.5 \\ 2 no da 3.75 ni 3. Redondea los dos lados primero, así que da 4."
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Nombres de rango
+      lede: Una fórmula con B3 hay que ir a verificarla. Una con Tasa_Mensual se revisa sin moverse de donde está.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Crear un nombre
+      title: Names.Add, y el rango deja de ser una coordenada
+      filename: DefineNameCells.bas
+      lang: vba
+      source: |
+        Sub DefinirNombres()
+            ThisWorkbook.Names.Add _
+                Name:="MontoPrestamo", RefersTo:="=Sheet1!$B$1"
+            ThisWorkbook.Names.Add _
+                Name:="TasaAnual", RefersTo:="=Sheet1!$B$2"
+
+            Range("MontoPrestamo").Value = 500000
+            Range("TasaAnual").Value = 0.12
+        End Sub
+      annotations:
+        - label: Name
+          text: El nombre que vas a usar. Sin espacios, y no puede parecerse a una dirección de celda.
+        - label: RefersTo
+          text: Empieza con signo igual y lleva la hoja y la dirección absoluta, con los signos de pesos.
+        - label: Después
+          text: Range("MontoPrestamo") funciona igual que Range("B1"), en el código y en la hoja.
+        - label: Riesgo
+          text: Names.Add dos veces no marca error. Redefine el nombre en silencio.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 03 · Verificado
+      title: Lo que devuelve un nombre ya creado
+      headers: [Lo que preguntas, Lo que contesta]
+      rows:
+        - ["Range(\"MontoPrestamo\").Address", "$B$1"]
+        - ["Range(\"MontoPrestamo\").Value", "500000"]
+        - ["Range(\"DatosCliente\").Address", "$A$1:$B$5"]
+        - ["Range(\"DatosCliente\").Cells.Count", "10"]
+        - ["Names(\"MontoPrestamo\").RefersTo", "=Sheet1!$B$1"]
+
+  - compare:
+      eyebrow: Bloque 03 · Por qué vale la pena
+      title: La misma fórmula, con coordenadas y con nombres
+      before:
+        label: Con coordenadas
+        file: hoja.xlsx
+        lang: excel
+        code: |
+          =B1*B3
+          =B1+B12-B13
+      after:
+        label: Con nombres
+        file: hoja.xlsx
+        lang: excel
+        code: |
+          =MontoPrestamo*TasaMensual
+          =SaldoInicial+Interes-Capital
+      note: >-
+        La primera hay que ir a verificarla celda por celda. La segunda se lee de corrido
+        y el error salta solo. Es la misma cuenta, y en la revisión del proyecto una se
+        defiende en diez segundos y la otra no.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué queda en A1 y en A2 al terminar?
+      filename: Operadores.bas
+      lang: vba
+      source: |
+        Sub Cuentas()
+            Range("A1").Value = -3 ^ 2
+            Range("A2").Value = 7.5 \ 2
+        End Sub
+      options:
+        - "9 y 3.75, como en la hoja"
+        - "-9 y 4, porque el signo va al final y la diagonal redondea"
+        - "9 y 3, porque la división entera trunca"
+        - "Error, porque no se puede elevar un negativo"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Ponle nombre a la tabla de amortización
+      brief: Abre la tabla de amortización del módulo 00 y escribe un procedimiento que cree nombres para el monto, la tasa anual, la tasa mensual y el pago. Después calcula la tasa mensual con la fórmula de la potencia y déjala en su celda con formato de porcentaje.
+      blocks:
+        - label: Entrega
+          text: El .xlsm con los nombres creados y el módulo exportado, en Blackboard
+        - label: Restricción
+          text: Ninguna fórmula de la hoja puede quedar con coordenadas. Todas con nombres.
+        - label: La prueba
+          text: Inserta un renglón arriba de la tabla. Si algo se rompe, el nombre no estaba bien puesto.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La hoja y VBA no siempre coinciden
+          desc: La potencia de un negativo, la suma de dos textos y el residuo de un negativo dan distinto en cada motor
+        - title: Notación científica no es un error
+          desc: E-03 significa correr el punto tres lugares. El número es correcto y Format lo vuelve legible
+        - title: Un nombre se lee, B3 se verifica
+          desc: La fórmula con nombres se entiende de corrido, y esa diferencia es la que se nota en la revisión del proyecto
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe un procedimiento que reciba el monto, la tasa anual y el plazo desde la
+        hoja, calcule la tasa mensual y el pago aproximado, y deje los dos en celdas con
+        nombre y con formato.
+      meta:
+        - [Entrega, Antes de la semana 5]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Operadores", "30 %", "La fórmula usa la precedencia correcta y lleva paréntesis donde hacen falta"]
+        - ["Nombres", "40 %", "Los cuatro parámetros tienen nombre y las fórmulas los usan"]
+        - ["Formato", "30 %", "La tasa se ve como porcentaje y el importe como moneda"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, cómo entra la información: cuadros de mensaje, cuadros de
+        captura y el primer formulario.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

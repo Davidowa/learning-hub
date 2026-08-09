@@ -1,0 +1,339 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 13
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 13 · Topic 5 · Files
+      title: Object-Oriented Programming
+      subtitle: The files no editor can open, the way to jump straight to the record you want without reading the ones before it, and the close of the unit.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 13 of 17]
+      notes: |
+        Open the course .png in Notepad, live, before explaining anything. A screen full of
+        rubbish and a UnicodeDecodeError make the point in ten seconds that half a slide of
+        definitions would take.
+
+        The zip work comes from docs/en/courses/python-course/03 - Paths and Files/7th
+        Module/Code34.py. The binary mode, seek and tell examples are not in the repository
+        and were written for this session, following the style of that module.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Binary files
+          desc: What is lost and what is gained by removing the text layer
+        - title: Archives
+          desc: A zip handled as a folder instead of as bytes
+        - title: Sequential and random
+          desc: The cursor, the position, and why fixed size changes everything
+        - title: Second midterm
+          desc: What is covered, how it is submitted and how it is graded
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Choose between text and binary
+          sub: By what is inside the file and not by the extension attached to its name
+        - head: Read and write bytes
+          sub: With the rb and wb modes, knowing read counts bytes rather than characters
+        - head: Jump to a position
+          sub: Work out where record n starts when every record is the same size
+        - head: Sit the second midterm
+          sub: With units 4 and 5 practised by writing files, not by reading notes
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Binary files
+      lede: A file is a row of bytes. Text mode puts a layer on top that translates them, and sometimes that layer is in the way.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The difference between reading and decoding
+      lead: >-
+        Every file is a row of bytes. Text mode adds a layer translating them into letters
+        with an encoding and tidying the line breaks on the way past. Binary mode removes
+        that layer and hands over the bytes exactly as they came off the disk.
+      panel:
+        label: When to remove the layer
+        title: When the bytes are not letters
+        note: >-
+          An image, a zip or an executable has no letters inside it. Translating them into text
+          breaks them, and with luck raises UnicodeDecodeError before anything gets broken.
+      steps:
+        - text: Text for what people read
+        - text: Binary for everything else
+        - text: Never mix them in one file
+          loop: ↺ the mode is chosen by the contents, not by the extension
+
+  - code:
+      eyebrow: Python
+      title: The first eight bytes of an image
+      filename: binary.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        path = Path("data") / "logo.png"
+
+        with open(path, "rb") as handle:
+            header = handle.read(8)
+
+        print(header)
+        print(len(header))
+      annotations:
+        - label: The b in the mode
+          text: rb and wb read and write raw bytes, translating neither line breaks nor accents
+        - label: Line 6
+          text: read(8) asks for eight bytes, not eight characters. In binary there are no characters.
+        - label: Risk
+          text: Opening a binary in text mode raises UnicodeDecodeError, or worse, reads rubbish quietly
+          accent: true
+
+  - table:
+      eyebrow: Comparison
+      title: The five differences that matter
+      headers: ["Aspect", "Text mode", "Binary mode"]
+      rows:
+        - ["How it opens", "open(path)", "open(path, 'rb')"]
+        - ["What read returns", "str", "bytes"]
+        - ["Encoding", "Required in practice", "Not applicable"]
+        - ["Line breaks", "Translated for you", "Left exactly as they are"]
+        - ["What it is for", "Text, CSV, JSON", "Images, zips, executables"]
+
+  - code:
+      eyebrow: Archives
+      title: A binary handled as though it were a folder
+      filename: archiving.py
+      lang: python
+      source: |
+        from zipfile import ZipFile
+        from pathlib import Path
+
+        folder = Path("data")
+
+        with ZipFile("submission.zip", "w") as bundle:
+            for item in folder.rglob("*.csv"):
+                bundle.write(item)
+
+        with ZipFile("submission.zip") as bundle:
+            print(bundle.namelist())
+      annotations:
+        - label: Line 6
+          text: A zip is a binary file, but zipfile treats it as a folder so you never touch the bytes
+        - label: The rglob
+          text: It walks the subfolders too. glob stays on the top level and goes no further.
+        - label: The name
+          text: Do not call the variable zip, because it covers up the zip function Python ships with
+
+  - divider:
+      eyebrow: Block 02
+      title: Sequential and random access
+      lede: Every open file has a cursor. Reading pushes it forward, and there is a way to put it wherever you want.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The cursor, the read and the jump
+      image: img/en/seek-tell.png
+      caption: Reading moves the cursor one position at a time. seek puts it where you say, reading nothing on the way.
+      alt: A file drawn as twelve numbered cells, with a jump arrow above and step arrows below
+
+  - code:
+      eyebrow: Random access
+      title: Straight to the third record
+      filename: records.py
+      lang: python
+      source: |
+        SIZE = 32
+
+        with open("records.bin", "rb") as f:
+            f.seek(2 * SIZE)
+            third = f.read(SIZE)
+            print(f.tell())
+
+            f.seek(0)
+            first = f.read(SIZE)
+      annotations:
+        - label: Line 4
+          text: If every record is the same size, record n starts at n times the size. That is the whole sum.
+        - label: Line 6
+          text: tell returns the current position of the cursor, counted in bytes from the start
+        - label: Why it matters
+          text: Reading record one thousand of a million costs the same as reading the first one
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Where the cursor lands after each operation
+      filename: cursor.py
+      lang: python
+      output_label: Output
+      source: |
+        with open("records.bin", "rb") as f:
+            print(f.tell())
+            f.seek(64)
+            print(f.tell())
+            f.read(32)
+            print(f.tell())
+      output: |
+        0
+        64
+        96
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors with positions and bytes
+      items:
+        - label: Error 01
+          title: Mixing seek with text mode
+          desc: In text mode seek only accepts positions that tell returned. Anything else gives odd results.
+        - label: Error 02
+          title: Records of varying size
+          desc: If each row is a different length no sum gives the position, and access falls back to sequential
+        - label: Error 03
+          title: Writing a shorter record
+          desc: Whatever is left of the previous record stays there. Pad it out to the fixed size.
+        - label: Error 04
+          title: Expecting seek to warn you
+          desc: Jumping past the end and writing leaves zeros in the middle of the file, with no error at all
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: jumping.py
+      lang: python
+      source: |
+        with open("data.bin", "wb") as f:
+            f.write(b"ABCDEFGH")
+
+        with open("data.bin", "rb") as f:
+            f.seek(3)
+            print(f.read(2))
+      options:
+        - "b'DE', because the cursor lands before the fourth letter"
+        - "b'CD', because seek starts counting at one"
+        - "b'ABCDEFGH', because seek does not affect read"
+        - 'An error, seek does not work in binary mode'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints b'DE', and positions start at zero
+      headers: ["Step", "Statement", "Cursor", "What it returns"]
+      rows:
+        - ["1", 'open("data.bin", "rb")', "0", "–"]
+        - ["2", "f.seek(3)", "3", "3"]
+        - ["3", "f.read(2)", "5", "b'DE'"]
+        - ["4", "print(...)", "5", "b'DE'"]
+      verdict: Positions count from zero, exactly like list indexes. Position 3 sits just before the fourth letter, and read(2) takes that one and the next.
+
+  - divider:
+      eyebrow: Block 03
+      title: Second midterm
+      lede: It closes units 4 and 5. Everything on it was practised in a lab, with a file actually landing on disk.
+      block: 3
+
+  - tiers:
+      eyebrow: Exam scope
+      title: What it covers, unit by unit
+      items:
+        - key: U4
+          title: Advanced functions and structures
+          desc: Parameters, modularity, recursion, collections, dynamic arrays and exception handling
+        - key: U5
+          title: Files
+          desc: Paths, open modes, text, CSV, binaries, and sequential and random access
+        - key: Base
+          title: What carries over
+          desc: The modelling from units 1 to 3, since the exam asks for classes that read and write files
+        - key: Out
+          title: What it does not cover
+          desc: Graphical interfaces and databases, which are assessed in the project and the final exam
+
+  - method:
+      eyebrow: How to prepare
+      title: This one is studied with the disk plugged in
+      statement: Every unit 5 question is answered by writing a file and reading it back. If you did not practise it by running the code, you did not practise it.
+      points:
+        - label: What to practise
+          text: The labs from weeks 9, 11 and 12, solved again and from scratch
+        - label: What to review
+          text: The open modes, and what each one does when the file was already there
+        - label: What not to do
+          text: Memorising the methods on Path. They are one tab keypress away inside the editor.
+
+  - lab:
+      eyebrow: Lab
+      title: A mock second midterm, in pairs
+      brief: Each pair writes a short brief requiring a CSV to be read, something to be calculated and a new file to be written. Swap it with another pair and solve the one you get.
+      blocks:
+        - label: Constraints
+          text: The brief fits in five lines and allows exactly one reading of what is asked
+        - label: Deliverable
+          text: Your own brief, the other pair's solution, and a note on what turned out ambiguous
+        - label: Criterion
+          text: The solution runs against the test file without anyone having to edit a path
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Binary mode translates nothing
+          desc: No line breaks, no accents. What sits on the disk is exactly what arrives in memory.
+        - title: Random access wants equal records
+          desc: If records vary in size no multiplication gives the position, and you are back to reading it all
+        - title: Positions count from zero
+          desc: seek(3) leaves the cursor before the fourth byte, on the same logic as a list index
+
+  - homework:
+      eyebrow: Second midterm
+      title: Submission and grading criteria
+      brief: The exam covers units 4 and 5, and is sat during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
+      meta:
+        - [When, Week 13]
+        - [Format, Blackboard · one .py per question]
+        - [Weight, 20 % of the final grade]
+      rubric:
+        - ["Functions", "25 %", "Every function does one thing and checks what it takes from outside"]
+        - ["Files", "35 %", "Every access uses with, Path and an explicit encoding"]
+        - ["Robustness", "25 %", "Foreseeable errors are caught by type and with a message that helps"]
+        - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, graphical interfaces, forms and controls.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

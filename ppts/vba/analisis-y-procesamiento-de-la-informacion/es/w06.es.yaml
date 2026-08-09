@@ -1,0 +1,353 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 6
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 06 · Unidad 2 · Editar lo grabado
+      title: Análisis y Procesamiento de la Información
+      subtitle: Quitarle a la grabadora lo que sobra y ponerle lo que le falta, para que la macro sirva el mes que entra.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 6 de 17]
+      notes: |
+        Noventa minutos. Veinte en lo que la grabadora hace mal, treinta y cinco en rangos
+        variables, y el resto ocultando y eliminando columnas.
+
+        Esta es la sesión que el curso venía prometiendo desde la semana 1. Ahí quedó
+        planteado el ciclo grabar, leer, editar, correr, y hoy toca el editar en serio.
+
+        El argumento central se puede demostrar en pantalla en treinta segundos. La misma
+        macro, con doce filas de datos, arma el rango A2:C13. Con cuarenta filas arma
+        A2:C41. Sin tocar una línea. Eso está verificado y sale en la diapositiva del
+        resultado. La macro grabada, en cambio, trae A2:C13 escrito a mano.
+
+        La otra verificación útil es la diferencia entre ocultar y eliminar. Con Hidden,
+        B1 sigue diciendo Region. Con Delete, B1 pasa a decir Venta, porque las columnas
+        se recorren y el dato se fue. Los alumnos confunden las dos todo el tiempo.
+
+        El código sale del módulo 00, del Module2 de amortization_table_macros.xlsm, y de
+        12 - Cells/Cells.bas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Lo que la grabadora hace mal
+          desc: Select, Selection y una dirección escrita a mano que no sobrevive al mes
+        - title: Rangos que crecen
+          desc: Cells con variables, y las tres formas de encontrar dónde acaban los datos
+        - title: Ocultar y eliminar
+          desc: Dos cosas que se parecen en pantalla y no se parecen en nada
+        - title: Tu turno
+          desc: Una macro grabada, editada hasta que funcione con cualquier cantidad de filas
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Reconocer las marcas de la grabadora
+          sub: Select, Selection, ActiveCell y las direcciones fijas
+        - head: Quitar Select sin cambiar el resultado
+          sub: Y explicar por qué la macro además corre más rápido
+        - head: Armar un rango con variables
+          sub: Cells(fila, columna), y el rango que va de una esquina a la otra
+        - head: Encontrar el final de los datos
+          sub: End(xlUp), CurrentRegion y UsedRange, y cuándo falla cada uno
+        - head: Distinguir ocultar de eliminar
+          sub: Una se deshace y la otra recorre las columnas y borra el dato
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: now
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Lo que la grabadora hace mal
+      lede: No es que escriba mal. Es que escribe exactamente lo que hiciste, y lo que hiciste incluía moverte, y el mes que entra los datos no van a estar ahí.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · Tal como salió
+      title: Las tres marcas de una macro grabada
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub FormatearVentas()
+        '
+        ' FormatearVentas Macro
+        '
+            Range("C2:C13").Select
+            Selection.NumberFormat = "$#,##0.00"
+            Range("A1").Select
+        End Sub
+      annotations:
+        - label: Select
+          text: La grabadora selecciona antes de tocar algo, porque tú seleccionaste. El código no lo necesita.
+        - label: Selection
+          text: Se refiere a lo último seleccionado. Funciona, y deja de decir sobre qué está trabajando.
+        - label: C2 dos puntos C13
+          text: La dirección exacta del día que grabaste. Doce filas, ni una más.
+        - label: Riesgo
+          text: El mes que entra llegan cuarenta filas. La macro corre sin error y formatea solo las primeras doce.
+          accent: true
+
+  - compare:
+      eyebrow: Bloque 01 · La primera edición
+      title: Lo mismo, sin seleccionar nada
+      before:
+        label: Lo que grabó
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          Range("C2:C13").Select
+          Selection.NumberFormat = "$#,##0.00"
+          Range("A1").Select
+      after:
+        label: Lo que queda
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          Range("C2:C13").NumberFormat = "$#,##0.00"
+      note: >-
+        Tres renglones se vuelven uno, y ahora el renglón dice sobre qué trabaja sin que
+        haya que leer hacia arriba. La macro tampoco mueve la pantalla mientras corre, que
+        es de dónde viene la sensación de que se tardó.
+
+  - method:
+      eyebrow: Bloque 01 · La regla
+      title: Si lo puedes nombrar, no lo selecciones
+      statement: Seleccionar es lo que hace una persona con el ratón. Un programa nombra la celda y le habla directo.
+      points:
+        - label: Qué se gana
+          text: El renglón se entiende solo, la macro no parpadea, y dejas de depender de qué hoja estaba activa
+        - label: Cuándo sí
+          text: Cuando quieres dejar el cursor en algún lado al terminar, o al usar SetFocus en un formulario
+        - label: Cómo se quita
+          text: Junta el Select con la línea siguiente. Range("X").Select más Selection.algo se vuelve Range("X").algo
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Rangos que crecen
+      lede: La grabadora escribe la dirección de hoy. Lo que hace falta es una que se calcule cada vez que la macro corre.
+      block: 2
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cells acepta variables, Range no
+      lead: >-
+        Range pide una dirección escrita, entre comillas, y eso la vuelve inservible
+        cuando la última fila cambia. Cells pide dos números, la fila y la columna, y un
+        número puede venir de una variable. Con eso se arma un rango que va de una esquina
+        calculada a la otra, y la macro deja de tener el tamaño de los datos de ayer.
+      panel:
+        label: La forma que vas a repetir todo el semestre
+        title: Range(Cells(fila1, col1), Cells(fila2, col2))
+        note: >-
+          Range acepta dos celdas como esquinas. Las dos vienen de Cells, y las dos pueden
+          traer variables adentro.
+      steps:
+        - text: Averiguas en qué fila acaban los datos
+        - text: La guardas en una variable Long
+        - text: Armas el rango entre las dos esquinas
+          loop: ↺ y el mes que entra da otro rango, sin tocar el código
+
+  - table:
+      eyebrow: Bloque 02 · Verificado
+      title: Tres formas de encontrar dónde acaban los datos
+      headers: [Forma, Qué devuelve, Cuándo falla]
+      rows:
+        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "Si la columna 1 tiene huecos"]
+        - ["Range(\"A1\").CurrentRegion", "$A$1:$C$13", "Si hay una fila vacía en medio"]
+        - ["UsedRange", "$A$1:$C$13", "Si quedó formato en celdas vacías"]
+
+  - code:
+      eyebrow: Bloque 02 · El rango armado
+      title: La misma macro, para cualquier cantidad de filas
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub FormatearVentas()
+            Dim ultimaFila As Long
+            Dim datos As Range
+
+            ultimaFila = Cells(Rows.Count, 1).End(xlUp).Row
+            Set datos = Range(Cells(2, 3), Cells(ultimaFila, 3))
+
+            datos.NumberFormat = "$#,##0.00"
+        End Sub
+      annotations:
+        - label: Rows.Count
+          text: Es 1,048,576. Se arranca desde abajo del todo y se sube hasta topar con dato.
+        - label: End(xlUp)
+          text: Es el Ctrl más flecha arriba del teclado, escrito en código. Vale -4162.
+        - label: Set
+          text: Un rango es un objeto, y los objetos se asignan con Set. Sin Set, error 91.
+        - label: Riesgo
+          text: Si la columna 1 trae huecos, End(xlUp) se detiene en el primero desde abajo y el rango sale corto.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · La prueba
+      title: El mismo código, dos meses distintos
+      filename: Modulo1.bas
+      lang: vba
+      output_label: Rango que arma
+      source: |
+        ultimaFila = Cells(Rows.Count, 1).End(xlUp).Row
+        Set datos = Range(Cells(2, 1), Cells(ultimaFila, 3))
+      output: |
+        Con 12 filas:
+        $A$2:$C$13
+
+        Con 40 filas:
+        $A$2:$C$41
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Ocultar, mostrar y eliminar
+      lede: En pantalla las dos primeras se parecen y la tercera también. En los datos, una es reversible y la otra no.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Verificado
+      title: Qué le pasa a la hoja con cada una
+      headers: [Instrucción, Qué le pasa a B, Qué queda en B1]
+      rows:
+        - ["Antes de correr nada", "Se ve, dice Region", "Region"]
+        - ["EntireColumn.Hidden = True", "Se esconde, sigue ahí", "Region"]
+        - ["EntireColumn.Hidden = False", "Vuelve a verse", "Region"]
+        - ["EntireColumn.Delete", "Desaparece y C se recorre", "Venta"]
+
+  - code:
+      eyebrow: Bloque 03 · La macro de la semana 1, arreglada
+      title: Ahora sí hace lo que su nombre promete
+      filename: Modulo2.bas
+      lang: vba
+      source: |
+        Sub OcultarColumnaAuxiliar()
+            Dim col As Range
+            Set col = Columns("D:D")
+
+            If col.EntireColumn.Hidden Then
+                col.EntireColumn.Hidden = False
+            Else
+                col.EntireColumn.Hidden = True
+            End If
+        End Sub
+      annotations:
+        - label: Lo que cambió
+          text: Se fue el segundo renglón que deshacía el primero, y en su lugar entró una decisión.
+        - label: Hidden se lee
+          text: No solo se asigna. Preguntar por él es lo que permite que el mismo botón oculte y muestre.
+        - label: El nombre
+          text: OcultarColumnaAuxiliar dice qué columna y para qué. HideColumn no decía ninguna de las dos.
+        - label: Riesgo
+          text: Delete en vez de Hidden se ve igual en la demostración y borra el dato para siempre.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de romper una macro editada
+      items:
+        - label: Error 01
+          title: Quitar Select y dejar Selection
+          desc: Si borras el Select pero dejas Selection, la macro trabaja sobre lo que hubiera seleccionado el usuario.
+        - label: Error 02
+          title: Olvidar Set en un objeto
+          desc: Un rango se asigna con Set. Sin él, VBA se detiene con error 91, objeto no establecido.
+        - label: Error 03
+          title: Contar desde arriba
+          desc: Cells(1, 1).End(xlDown) se detiene en el primer hueco. Desde abajo con xlUp no tiene ese problema.
+        - label: Error 04
+          title: Eliminar creyendo que ocultas
+          desc: Delete recorre las columnas de la derecha y se lleva el dato. Hidden no toca nada y se deshace.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: La hoja trae 40 filas de datos. ¿Qué formatea?
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub Formatear()
+            Range("C2:C13").Select
+            Selection.NumberFormat = "$#,##0.00"
+        End Sub
+      options:
+        - "Las 40 filas, porque Selection se ajusta"
+        - "Solo de C2 a C13, y no marca ningún error"
+        - "Se detiene con error, porque el rango no coincide"
+        - "Las 40, pero tarda más"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Edita una macro grabada hasta que sirva
+      brief: Graba una macro que dé formato a una columna de importes de tu base. Después edítala hasta que cumpla tres cosas. Que no tenga ningún Select. Que calcule la última fila en vez de traerla escrita. Y que corra igual con el doble de filas.
+      blocks:
+        - label: Entrega
+          text: El .bas antes y el .bas después, más el .xlsm, en Blackboard
+        - label: Restricción
+          text: Ni un Select ni un Selection en la versión final
+        - label: La prueba
+          text: Duplica las filas de la base y vuelve a correrla. Si formatea la mitad, el rango sigue fijo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La grabadora escribe el rango de hoy
+          desc: Y el mes que entra corre sin marcar error sobre la parte equivocada, que es la falla más cara de todas
+        - title: Cells acepta variables, Range no
+          desc: Range pide una dirección entre comillas, Cells pide dos números, y un número puede calcularse
+        - title: Ocultar se deshace, eliminar no
+          desc: Delete recorre las columnas y se lleva el dato. En pantalla se parecen y en los datos no se parecen en nada
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Toma la tabla de amortización y escribe una macro que dé formato de moneda a todos
+        los importes, sin importar cuántos periodos tenga. Agrega un botón que oculte y
+        muestre las columnas auxiliares.
+      meta:
+        - [Entrega, Antes de la semana 7]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Sin Select", "20 %", "No queda ningún Select ni Selection en el código"]
+        - ["Rango variable", "50 %", "La última fila se calcula y la macro corre con cualquier cantidad"]
+        - ["Ocultar", "30 %", "El botón oculta y muestra, y no elimina nada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, la búsqueda de objetivo desde una macro, y cómo se encadenan
+        varias macros sin que se estorben.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

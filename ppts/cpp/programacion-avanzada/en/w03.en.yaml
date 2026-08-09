@@ -1,0 +1,412 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 3
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 03 · Unit 2 · Types, namespaces and string
+      title: Advanced Programming
+      subtitle: Which types the language ships with, where the name std comes from, and the first type this course meets that is not a number.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 3 of 17]
+      notes: |
+        This closes the foundations block. From next session onwards there are functions, so
+        this is the last time everything fits inside main without feeling strange.
+
+        The sizes in the table were measured with sizeof on Visual Studio Community 2026,
+        building for x64. They are not the standard's numbers, they are this platform's, and
+        that difference is the subject of one of the slides.
+
+        There is still no if and there are no loops. Today's string operations were chosen
+        precisely because none of them needs one.
+
+        Reading: Malik, eighth edition, chapters 2 and 7. The course documents cite chapter
+        8, which is the right number in the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: The catalogue
+          desc: The types the language already ships, and what each one costs
+        - title: The limits
+          desc: What happens when a value does not fit and nothing raises an error
+        - title: Proper names
+          desc: Namespaces, enumerations and type aliases
+        - title: Text
+          desc: std::string and the operations you will use all term
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Choose the right type
+          sub: By what it will hold and the range it needs, rather than out of habit
+        - head: Explain what a namespace is
+          sub: "And why std:: sits in front of everything the standard library provides"
+        - head: Declare enumerations and aliases
+          sub: With enum class and using, which are the forms this course sticks to
+        - head: Work with text through std::string
+          sub: Join, measure, cut and search without touching an array of characters
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: now
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: todo
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The catalogue of types
+      lede: "Choosing a type settles two things at once: which values fit, and how much memory holding them costs."
+      block: 1
+
+  - table:
+      eyebrow: Fundamental types
+      title: The seven you will use, and what they cost here
+      headers: ["Type", "What it holds", "Bytes"]
+      rows:
+        - ["bool", "true or false, nothing else", "1"]
+        - ["char", "One character, stored as a number", "1"]
+        - ["short", "Integers of a short range", "2"]
+        - ["int", "The everyday integer", "4"]
+        - ["long long", "Integers too big for int", "8"]
+        - ["float", "Single precision real", "4"]
+        - ["double", "The everyday real", "8"]
+      notes: |
+        Measured with sizeof on this platform, x64 with MSVC. The practical advice is to use
+        int and double unless there is a concrete reason for something else, because those
+        are the ones the processor handles most comfortably.
+
+        float exists and is rarely worth it. It carries seven significant digits against
+        double's fifteen, and saving four bytes seldom pays for that.
+
+  - code_output:
+      eyebrow: Verification
+      title: The language does not promise these numbers, the platform does
+      filename: sizes.cpp
+      lang: cpp
+      output_label: x64 with MSVC
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << sizeof(int) << "\n";
+            std::cout << sizeof(long) << "\n";
+            std::cout << sizeof(long long) << "\n";
+            return 0;
+        }
+      output: |
+        4
+        4
+        8
+      notes: |
+        The middle row is the interesting one. long is 4 bytes here and 8 on Linux with gcc,
+        from the same code under the same standard. The standard only requires long to hold
+        at least 32 bits and to be no smaller than int, and Windows stayed at the minimum.
+
+        The practical consequence: a program that stores a large value in a long works on
+        one machine and overflows on the other. When the size genuinely matters, int32_t and
+        int64_t live in cstdint and say their size in the name.
+
+  - concept:
+      eyebrow: Key concept
+      title: An integer type does not announce that it ran out of room
+      lead: >-
+        Every integer type has a smallest and a largest value. Going past either one raises
+        no error, no exception and no runtime warning. The value wraps around and carries on
+        counting from the other end, and the program continues as though nothing happened.
+      panel:
+        label: Where to look it up
+        title: The limits header says so
+        note: >-
+          std::numeric_limits<int>::max() returns 2147483647 and min() returns
+          -2147483648. Useful for checking a range instead of assuming one.
+      steps:
+        - text: Every type has a fixed range
+        - text: Going past it raises nothing
+        - text: The value wraps and carries on
+          loop: ↺ choosing the type is choosing where that edge sits
+
+  - code_output:
+      eyebrow: Demonstration
+      title: Zero minus one, in a type with no negatives
+      filename: wrap.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        unsigned int u = 0;
+
+        std::cout << u - 1 << "\n";
+      output: |
+        4294967295
+      notes: |
+        unsigned holds only non-negative values, so subtracting one from zero wraps the
+        result round to the type's maximum. This is not a compiler bug, it is defined that
+        way in the standard and it is what has to happen.
+
+        Which is why unsigned is a poor fit for quantities that get subtracted, even ones
+        that should never go negative. The day a subtraction crosses zero, the program does
+        not fail, it hands back four billion and keeps working with that number.
+
+  - divider:
+      eyebrow: Block 02
+      title: Proper names
+      lede: "Three things you can name: the place something lives in, a set of values, and the type itself."
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: A namespace keeps two libraries from colliding
+      lead: >-
+        If your program and a library both define a function called print, the linker cannot
+        tell which one you meant. A namespace gives each of them a surname, so both can
+        exist without fighting over the name.
+      panel:
+        label: Which is why std is everywhere
+        title: std is the library's surname
+        note: >-
+          cout, string, vector and everything else the standard ships live in std. Writing
+          std::cout is saying the full name, not a formality the compiler insists on.
+      steps:
+        - text: The library lives in std
+        - text: The prefix says where it came from
+        - text: using takes it for granted
+          loop: ↺ taking it for granted saves letters and removes information
+
+  - compare:
+      eyebrow: The two forms
+      title: The same code, with the prefix and without
+      before:
+        label: With using
+        file: short.cpp
+        lang: cpp
+        code: |
+          using namespace std;
+
+          string course = "Programming";
+          cout << course.length() << endl;
+      after:
+        label: With the prefix
+        file: explicit.cpp
+        lang: cpp
+        code: |
+          #include <string>
+
+          std::string course = "Programming";
+          std::cout << course.length() << "\n";
+      note: >-
+        On a slide and in a one-page exercise the left reads better, and this course uses
+        it. In a header file never, because the using spreads to every file that includes
+        it, and that is where the name collisions start.
+
+  - code:
+      eyebrow: Enumerations and aliases
+      title: Naming a set of values, and naming a type
+      filename: levels.cpp
+      lang: cpp
+      source: |
+        enum class Level { Low, Medium, High };
+
+        using Mark = double;
+
+        int main()
+        {
+            Level n = Level::High;
+            Mark m = 8.75;
+
+            std::cout << static_cast<int>(n) << "\n";
+            std::cout << m << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 1
+          text: The values start at zero and go up by one, so High is 2
+        - label: Line 3
+          text: using gives another name to a type that already exists. It creates a synonym, not a new type.
+        - label: Line 7
+          text: The enum name is required in front of the value, and that is what stops it colliding with another High
+        - label: Risk
+          text: enum without class leaves the names loose and converts to int on its own. Always use enum class.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: using namespace in a header
+          desc: It spreads to every file that includes it, and the name collision shows up far from where it was caused
+        - label: Error 02
+          title: enum without class
+          desc: The values are left loose in the surrounding scope and convert to integer without anyone asking
+        - label: Error 03
+          title: Comparing text with two quotes
+          desc: Between two std::string the operator works, but comparing two character arrays compares addresses
+        - label: Error 04
+          title: Single quote against double quote
+          desc: A single quote makes one char and a double quote makes a string, which also carries a zero at the end
+
+  - divider:
+      eyebrow: Block 03
+      title: The string type
+      lede: The first type in this course that does not hold a number, and the one used most after int.
+      block: 3
+
+  - code:
+      eyebrow: Text
+      title: Declare it, join it, measure it
+      filename: strings.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+        #include <string>
+
+        int main()
+        {
+            std::string course = "Programming";
+            std::string code = "COM103";
+
+            std::string both = course + " " + code;
+
+            std::cout << both << "\n";
+            std::cout << course.length() << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Line 2
+          text: string needs its own header. iostream sometimes drags it in, and on another compiler it will not.
+        - label: Line 9
+          text: The plus operator joins them. With at least one string involved, the literals attach themselves.
+        - label: Line 12
+          text: length() counts characters and gives 11 here. size() does exactly the same thing.
+        - label: Risk
+          text: course + code compiles, but joining two bare literals does not, because neither of them is a string.
+          accent: true
+
+  - table:
+      eyebrow: Operations
+      title: Seven operations, and what each hands back
+      headers: ["Operation", "What it does", "Gives"]
+      rows:
+        - ["a + b", "Joins the two", "A new string"]
+        - ["a.length()", "Counts the characters", "12"]
+        - ["a.at(0)", "The character at that position", "P"]
+        - ["a.substr(0, 7)", "A piece from a position", "Program"]
+        - ["a.find(\"gram\")", "Where the searched text starts", "3"]
+        - ["a.empty()", "Whether it has no characters", "true or false"]
+        - ["a == b", "Compares the contents", "true or false"]
+      notes: |
+        Every value in the right-hand column comes from applying the operation to the string
+        "Programacion", measured on a real run.
+
+        find returns std::string::npos when it finds nothing, which is the largest value the
+        type can hold rather than minus one. Comparing against npos is the correct way to
+        ask whether there was a result, and from week 7 that comparison can sit inside an
+        if.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: piece.cpp
+      lang: cpp
+      source: |
+        std::string s = "Programacion";
+
+        std::cout << s.substr(0, 7) << s.length() << "\n";
+      options:
+        - 'Program12, because substr does not modify the original'
+        - 'Program7, because substr leaves the string seven characters long'
+        - 'Programacion12, because substr copies the whole string'
+        - 'rogramac12, because the numbers are the start and the end'
+
+  - trace:
+      eyebrow: Answer
+      title: substr hands back a copy and leaves the original alone
+      headers: ["Step", "Expression", "Gives", "s is still"]
+      rows:
+        - ["1", "s starts as Programacion", "–", "Programacion"]
+        - ["2", "s.substr(0, 7)", "Program", "Programacion"]
+        - ["3", "s.length()", "12", "Programacion"]
+        - ["4", "Printed together", "Program12", "Programacion"]
+      verdict: The two arguments of substr are the starting position and how many characters to take, not the start and the end. And neither operation changes the string it was applied to.
+
+  - method:
+      eyebrow: Criterion
+      title: Read somebody else's code before writing your own
+      statement: Half of a programmer's work is understanding what is already written. It gets read in a different order from the one it was written in, and it is worth practising deliberately.
+      points:
+        - label: First
+          text: The types of the variables. They say what the program holds before any line of logic does.
+        - label: Then
+          text: The names. An honest identifier saves reading the whole function to find out what it does.
+        - label: Last
+          text: The line you do not understand. Marking it and moving on beats getting stuck, it usually clears up.
+
+  - lab:
+      eyebrow: Lab
+      title: Read it, fix it, rename it, in pairs
+      brief: You get a thirty-line program that compiles and works, with one-letter names, an enum without class, and using namespace std inside a header. Make it readable without changing what it does.
+      blocks:
+        - label: Constraint
+          text: The program's output has to be identical before and after, character for character
+        - label: Deliverable
+          text: The corrected file and a list of the changes, one line of justification each
+        - label: Criterion
+          text: That every change can be defended on readability rather than personal taste
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The size depends on the platform
+          desc: long is 4 bytes on Windows and 8 on Linux, from the same code under the same standard
+        - title: Going out of range raises nothing
+          desc: The value wraps silently, so the type is chosen by the range you actually need
+        - title: std is a namespace
+          desc: The prefix says which library each name came from, and in a header it is never left out
+
+  - homework:
+      eyebrow: For the next session
+      title: A student record built from text and chosen types
+      brief: Write a program that assembles one student's record with name and ID as std::string, an enum class for the level, and that prints the joined full name, its length, and the first three characters of the ID.
+      meta:
+        - [Due, Before session 4]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Types", "Required", "Every variable uses the right type and the enum is an enum class"]
+        - ["Text", "Required", "The join, the length and the cut give the correct values"]
+        - ["Style", "Required", "No using namespace outside an implementation file"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, functions. How a program gets split into pieces that can be tested on their own.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

@@ -1,0 +1,336 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 0
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión de apertura · Introducción al curso
+      title: Programación Avanzada
+      subtitle: De dónde viene C++, dónde sigue mandando cuarenta años después, y cómo vamos a trabajar este semestre.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, Apertura]
+      notes: |
+        Esta sesión sustituye al deck de imágenes que se usaba antes. Las infografías
+        originales siguen en ppts/cpp/Introducción al curso.pptx y valen para proyectar
+        de cerca, pero son demasiado densas para un salón grande. Aquí está lo mismo
+        repartido en diapositivas que se leen desde la última fila, más la historia, que
+        era lo único que no estaba en ninguna de las ocho.
+
+        Los porcentajes por sector y la tabla comparativa de lenguajes salen de esas
+        infografías, que la propia lámina marca como evaluación editorial propia. No son
+        cifras oficiales de nadie, y conviene decirlo en voz alta al presentarlas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: De dónde viene
+          desc: Cuarenta años, de C a la versión que usa este curso
+        - title: Qué lo hace distinto
+          desc: Compilado, de alto nivel y sin recolector de basura
+        - title: Dónde se usa
+          desc: Los sectores donde sigue siendo la primera opción
+        - title: Cómo trabajamos
+          desc: Evaluación, entregas, uso de IA y el entorno
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Ubicar C++ en el tiempo
+          sub: Qué había antes, qué problema vino a resolver y por qué sigue cambiando
+        - head: Explicar qué hace un compilador
+          sub: Y por qué el error de sintaxis aparece antes de que el programa corra
+        - head: Decir dónde conviene C++
+          sub: Y dónde otro lenguaje resuelve lo mismo con menos trabajo
+        - head: Trabajar con el entorno listo
+          sub: Visual Studio 2026, un proyecto de consola y el estándar puesto en C++20
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Catorce unidades en diecisiete semanas
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: now
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: todo
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: De dónde viene C++
+      lede: Casi ningún lenguaje que se usa hoy tiene cuarenta años. Vale la pena saber por qué este sí.
+      block: 1
+
+  - figure:
+      eyebrow: Línea del tiempo
+      title: Cuarenta años en una línea
+      image: img/es/cpp-timeline.png
+      caption: Bjarne Stroustrup quería las clases de Simula con la velocidad de C. Todo lo demás salió de ahí.
+      alt: Una línea del tiempo con seis hitos, de 1972 a 2020, desde el nacimiento de C hasta el estándar del curso
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Alto nivel con control cercano al hardware
+      lead: >-
+        De alto nivel porque escribes clases, plantillas y algoritmos, no registros del
+        procesador. Cercano al hardware porque decides tú cuándo se reserva memoria, cuándo
+        se libera y qué se copia. Tener las dos cosas a la vez es lo raro, y es su razón de ser.
+      panel:
+        label: Lo que no hace por ti
+        title: Aquí nadie recoge la basura
+        note: >-
+          En Python un objeto desaparece cuando ya nadie lo usa. Aquí desaparece porque tú
+          escribiste que desapareciera, o no desaparece. Es más trabajo y es control exacto.
+      steps:
+        - text: Tú declaras los tipos
+        - text: Tú decides la memoria
+        - text: El compilador revisa antes
+          loop: ↺ a cambio, lo que no escribiste no ocurre
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Qué pasa entre que escribes y que corre
+      image: img/es/compilation.png
+      caption: Son dos programas distintos los que trabajan antes que el tuyo. Vale la pena saber cuál se está quejando.
+      alt: Tres cajas, el archivo fuente, el objeto y el ejecutable, unidas por el compilador y el enlazador
+
+  - compare:
+      eyebrow: Cuarenta años después
+      title: La misma idea, en 1979 y hoy
+      before:
+        label: C con clases
+        file: pila.cpp
+        lang: cpp
+        code: |
+          class pila {
+              int v[100];
+              int tope;
+          public:
+              void mete(int);
+              int saca();
+          };
+      after:
+        label: C++20
+        file: pila.cpp
+        lang: cpp
+        code: |
+          template <typename T>
+          class Pila {
+              std::vector<T> v;
+          public:
+              void mete(T x);
+              T saca();
+          };
+      note: La de la izquierda solo guarda enteros y solo cien. La de la derecha sirve para cualquier tipo y crece sola. Cuarenta años de trabajo caben en esa diferencia.
+
+  - table:
+      eyebrow: Los estándares
+      title: Qué trajo cada versión
+      headers: ["Versión", "Año", "Lo que trajo"]
+      rows:
+        - ["C++98", "1998", "El primer estándar ISO, plantillas y la STL"]
+        - ["C++11", "2011", "auto, lambdas, punteros inteligentes e hilos"]
+        - ["C++17", "2017", "Sistema de archivos y enlace estructurado"]
+        - ["C++20", "2020", "Conceptos, rangos, módulos y jthread"]
+        - ["C++23", "2023", "Más biblioteca y menos sorpresas"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Dónde se usa y qué cuesta
+      lede: C++ no compite por ser el lenguaje de todo. Compite donde el rendimiento y la memoria deciden el resultado.
+      block: 2
+
+  - tiers:
+      eyebrow: Por sector
+      title: Dónde sigue siendo la primera opción
+      items:
+        - key: '01'
+          title: Videojuegos
+          desc: Poco más de la mitad del código nuevo del sector. Unreal y casi todos los motores propios están escritos aquí.
+        - key: '02'
+          title: Sistemas embebidos
+          desc: Comparte el terreno con C. Donde la memoria se cuenta en kilobytes y el tiempo de respuesta es un requisito.
+        - key: '03'
+          title: Cómputo científico
+          desc: Un cuarto del código nuevo, junto a Fortran. Python manda en la superficie y llama a C++ por debajo.
+        - key: '04'
+          title: Todo lo demás
+          desc: Alrededor del tres por ciento del código nuevo que se escribe hoy. Es un nicho, y es un nicho que no se mueve.
+
+  - table:
+      eyebrow: Comparación
+      title: C++ frente a los lenguajes que ya conoces
+      headers: ["Lenguaje", "Velocidad", "Memoria", "Dónde manda"]
+      rows:
+        - ["C", "1.00", "1.00", "Sistemas operativos y controladores"]
+        - ["C++", "0.75", "1.05", "Videojuegos, motores 3D y cómputo"]
+        - ["Rust", "0.95", "1.10", "Sistemas con seguridad de memoria"]
+        - ["Java", "0.60", "1.50", "Empresarial y Android"]
+        - ["Python", "0.15", "2.50", "Datos, IA y prototipos rápidos"]
+      notes: |
+        Las dos columnas numéricas están normalizadas contra C, que vale 1.00. En velocidad
+        más alto es mejor; en memoria más bajo es mejor. Conviene decirlo, porque leídas al
+        revés cuentan justo la historia contraria.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que C++ te va a cobrar
+      items:
+        - label: Costo 01
+          title: Más formas de hacer lo mismo
+          desc: La curva es más larga que la de C, y casi siempre hay tres maneras de escribir lo mismo
+        - label: Costo 02
+          title: No es seguro por omisión
+          desc: Sigue permitiendo punteros colgantes, fugas de memoria y accesos fuera de rango
+        - label: Costo 03
+          title: Mensajes de error largos
+          desc: Un error dentro de una plantilla puede ocupar pantallas enteras antes de decir qué pasó
+        - label: Costo 04
+          title: Tiempos de compilación
+          desc: En un proyecto grande, compilar deja de ser instantáneo y empieza a costar minutos
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cómo vamos a trabajar
+      lede: Tres parciales acumulativos, un proyecto por equipos, y un entorno que conviene dejar listo esta semana.
+      block: 3
+
+  - table:
+      eyebrow: Evaluación
+      title: De qué se compone la calificación
+      headers: ["Momento", "Contenido", "Cuándo", "Peso"]
+      rows:
+        - ["Parcial 1", "Acumulativo", "Martes 8 de septiembre", "80 % los tres"]
+        - ["Parcial 2", "Acumulativo", "Martes 20 de octubre", "promediados"]
+        - ["Parcial 3", "Acumulativo", "Martes 17 de noviembre", "entre sí"]
+        - ["Proyecto", "Equipos, nota individual", "Fecha del examen final", "20 %"]
+
+  - concept:
+      eyebrow: Lo que cambia respecto a otros cursos
+      title: Acumulativo quiere decir que nada se cierra
+      lead: >-
+        Los tres parciales son acumulativos. El segundo incluye lo del primero y el tercero
+        incluye todo. No hay un tema que se estudie una vez y se archive, y por eso conviene
+        que los ejercicios de cada semana se entreguen al día en lugar de acumularse.
+      panel:
+        label: Lo que sí suma aparte
+        title: Ejercicios y quizzes valen un punto
+        note: >-
+          Se promedian y se suman a la calificación del periodo. No tienen reposición, así
+          que lo que no se entrega en su fecha se evalúa con cero.
+      steps:
+        - text: Cada parcial incluye lo anterior
+        - text: Los ejercicios suman un punto
+        - text: Lo no entregado vale cero
+          loop: ↺ el proyecto se asigna después del primer parcial
+
+  - tiers:
+      eyebrow: Reglas de entrega
+      title: Cuatro cosas que evitan perder una calificación
+      items:
+        - key: '01'
+          title: Blackboard es el único canal
+          desc: Lo que llegue por correo no se califica, aunque llegue a tiempo y esté bien
+        - key: '02'
+          title: Un solo archivo por equipo
+          desc: Lo sube un integrante, nombrado como el equipo. Saquen los ejecutables antes de comprimir o el antivirus lo bloquea.
+        - key: '03'
+          title: El plagio se revisa siempre
+          desc: Con Copyleaks y Turnitin. Arriba del treinta por ciento se califica con cero.
+        - key: '04'
+          title: Los documentos van en PDF o DOCX
+          desc: Y solo se aceptan las entregas subidas dentro de la fecha establecida
+
+  - method:
+      eyebrow: Uso de inteligencia artificial
+      title: La IA te da velocidad, el criterio te da dirección
+      statement: Fuera de los exámenes puedes apoyarte en herramientas de IA, con una condición. Tienes que conocer y poder explicar lo que entregas.
+      points:
+        - label: En qué es buena
+          text: En lo documentado y lo repetido. Es rapidísima con lo que ya está escrito en algún lado.
+        - label: En qué no
+          text: En el contexto de tu problema, en por qué elegiste una estructura y en qué pasa cuando falla
+        - label: Cómo se evalúa
+          text: Leer el código en voz alta no cuenta como explicación. Si no lo sostienes, la entrega vale cero.
+
+  - steps:
+      eyebrow: Antes de la próxima sesión
+      title: Dejar el entorno listo, en cinco pasos
+      items:
+        - label: Paso 01
+          title: Instala
+          desc: Visual Studio 2026 Community, con la carga de trabajo de escritorio con C++
+        - label: Paso 02
+          title: Crea el proyecto
+          desc: Aplicación de consola, que ya trae la función principal y compila sola
+        - label: Paso 03
+          title: Fija el estándar
+          desc: Propiedades, C/C++, Lenguaje, C++20. No viene puesto por omisión.
+        - label: Paso 04
+          title: Compila y ejecuta
+          desc: Ctrl+F5 corre sin depurador y deja la consola abierta al terminar
+        - label: Paso 05
+          title: Prueba el depurador
+          desc: F9 pone un punto de ruptura, F5 entra, y ahí se ven las variables locales
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: C++ tiene cuarenta años y sigue cambiando
+          desc: Desde 2011 sale una versión cada tres años, y este curso trabaja con la de 2020
+        - title: Compilado quiere decir que el error llega antes
+          desc: El compilador revisa el programa entero antes de que corra una sola línea
+        - title: No compite por ser universal
+          desc: Compite donde el rendimiento y el control de memoria deciden, y ahí no lo ha movido nadie
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Entorno instalado y primer programa
+      brief: Instala Visual Studio 2026 Community, crea un proyecto de consola, fija el estándar en C++20 y compila un programa que imprima tu nombre y el valor de _MSVC_LANG.
+      meta:
+        - [Entrega, Antes de la sesión 1]
+        - [Formato, Blackboard · .zip del equipo]
+        - [Peso, "Sin calificación, es requisito para la sesión 1"]
+      rubric:
+        - ["Entorno", "Requisito", "El proyecto compila y ejecuta desde Visual Studio"]
+        - ["Estándar", "Requisito", "_MSVC_LANG reporta 202002, que es C++20"]
+        - ["Depuración", "Requisito", "Una captura con un punto de ruptura activo y las variables locales"]
+      notes: |
+        La macro es _MSVC_LANG y no __cplusplus, que es la opción obvia y aquí la
+        equivocada. MSVC deja __cplusplus congelado en 199711 salvo que se agregue la marca
+        /Zc:__cplusplus, así que un alumno que puso bien el estándar sigue viendo un valor
+        de C++98 y da por hecho que descompuso algo. Medido en Visual Studio Community
+        2026, juego de herramientas 14.51, _MSC_VER 1951.
+
+        La semana 1 muestra las dos macros lado a lado y explica el motivo. Si alguien
+        entrega __cplusplus y pregunta antes, conviene guardar la respuesta para la sesión
+        en lugar de contestarla por correo.
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, el entorno de desarrollo, la anatomía de un programa y la depuración.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

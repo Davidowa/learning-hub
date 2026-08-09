@@ -1,0 +1,336 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 14
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 14 · Tema 6 · Interfaces gráficas
+      title: Programación Orientada a Objetos
+      subtitle: El programa deja de mandar. Una ventana, un ciclo de eventos que espera, y controles que avisan cuando alguien los toca.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 14 de 17]
+      notes: |
+        El cambio de mando es lo difícil de esta sesión, no la sintaxis. Conviene decirlo de
+        frente en el primer bloque: tu código pasa de llamar a ser llamado. Todo lo demás
+        son nombres de clases que se buscan en la documentación.
+
+        Los ejemplos salen de docs/en/courses/python-course/05 - GUI/9th Module, que usa
+        PyQt6: la ventana mínima es Code037.py, la ventana como clase es Code038.py, y la
+        conexión de señales con clicked.connect sale de Code044.py.
+
+        Requiere pip install PyQt6. Vale la pena pedirlo instalado antes de la sesión.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El cambio de mando
+          desc: Por qué tu código deja de llamar y empieza a ser llamado
+        - title: La ventana
+          desc: QApplication, QMainWindow y la clase que hereda de ella
+        - title: Controles
+          desc: Etiquetas, cajas de texto y botones, y qué sabe hacer cada uno
+        - title: Señales
+          desc: Conectar un clic con la función que lo atiende
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué hace exec()
+          sub: Y por qué la ventana se congela si un slot tarda en terminar
+        - head: Escribir una ventana como clase
+          sub: Heredando de QMainWindow y encadenando el constructor con super
+        - head: Colocar controles
+          sub: QLabel, QLineEdit y QPushButton, guardados sobre self para que sobrevivan
+        - head: Conectar una señal a un slot
+          sub: Pasando la función sin paréntesis, y leyendo los controles dentro del slot
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Interfaces gráficas
+      lede: La primera sesión en la que tu programa no decide el orden de las cosas. Lo decide quien lo está usando.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué cambia cuando el programa tiene ventana
+      lead: >-
+        Hasta ahora el programa decidía el orden. Pedía un dato, luego otro, luego imprimía.
+        Con una interfaz gráfica el orden lo decide quien usa el programa, y el código deja
+        de ser una receta de arriba abajo para volverse un conjunto de respuestas sueltas.
+      panel:
+        label: El cambio de mando
+        title: Tu código deja de llamar y empieza a ser llamado
+        note: >-
+          El ciclo de eventos es de Qt, no tuyo. Registras qué función atiende cada cosa y
+          cedes el control. De ahí en adelante Qt te llama cuando le toca a cada una.
+      steps:
+        - text: Construyes la ventana
+        - text: Conectas cada control
+        - text: Cedes el control a exec()
+          loop: ↺ de ahí en adelante tu código solo responde
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Qué hace exec() mientras no pasa nada
+      image: img/es/event-loop.png
+      caption: El ciclo no se detiene ni cuando la ventana parece quieta. Está dando vueltas, esperando el siguiente evento.
+      alt: Un clic que entra a una cola de eventos, se reparte a una función y regresa a esperar
+
+  - code:
+      eyebrow: PyQt6
+      title: La ventana más pequeña que ya se ve
+      filename: ventana.py
+      lang: python
+      source: |
+        import sys
+        from PyQt6.QtWidgets import QApplication, QWidget
+
+        app = QApplication(sys.argv)
+
+        ventana = QWidget()
+        ventana.setWindowTitle("Mi primera ventana")
+        ventana.setGeometry(100, 100, 280, 80)
+        ventana.show()
+
+        sys.exit(app.exec())
+      annotations:
+        - label: Línea 4
+          text: Un solo QApplication por programa. Recibe sys.argv porque lee argumentos de arranque.
+        - label: Línea 9
+          text: Sin show() la ventana existe en memoria y no la ve nadie, ni siquiera tú
+        - label: Línea 11
+          text: exec() arranca el ciclo de eventos y no devuelve hasta que se cierra la ventana
+
+  - code:
+      eyebrow: La ventana como clase
+      title: Donde empieza a servir todo lo del tema 2
+      filename: principal.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QMainWindow, QPushButton
+
+
+        class VentanaPrincipal(QMainWindow):
+            def __init__(self) -> None:
+                super().__init__()
+                self.setWindowTitle("Mi App")
+                self.setGeometry(100, 100, 280, 80)
+
+                boton = QPushButton("Presióname")
+                self.setCentralWidget(boton)
+      annotations:
+        - label: Línea 4
+          text: Heredar de QMainWindow trae barra de menú, barra de estado y área central sin escribir nada
+        - label: Línea 6
+          text: super().__init__() es obligatorio. Sin él Qt no inicializa la ventana y el programa muere.
+        - label: Línea 11
+          text: El widget central ocupa el área principal, y solo puede haber uno. De ahí salen los layouts.
+
+  - table:
+      eyebrow: Vocabulario
+      title: Las cinco clases con las que se arma todo
+      headers: ["Clase", "Qué es", "Cuántas hay"]
+      rows:
+        - ["QApplication", "El ciclo de eventos", "Una por programa"]
+        - ["QMainWindow", "Ventana con barras y área central", "Una por ventana"]
+        - ["QWidget", "La pieza base de todo lo visible", "Las que quieras"]
+        - ["QPushButton", "Un botón que se oprime", "Las que quieras"]
+        - ["QLineEdit", "Una caja de texto de un renglón", "Las que quieras"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Formas y controles
+      lede: Cada control sabe mostrarse y sabe avisar. Lo que no sabe es qué hacer, y eso lo pones tú.
+      block: 2
+
+  - code:
+      eyebrow: Controles
+      title: Los tres que aparecen en casi cualquier ventana
+      filename: controles.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton
+
+        etiqueta = QLabel("Usuario")
+        caja = QLineEdit()
+        caja.setPlaceholderText("Escribe tu usuario")
+        boton = QPushButton("Entrar")
+
+        print(caja.text())
+      annotations:
+        - label: La etiqueta
+          text: QLabel solo muestra texto. No recibe nada de quien está usando el programa.
+        - label: La caja
+          text: QLineEdit es un renglón editable, y text() devuelve lo que haya escrito en ese instante
+        - label: Riesgo
+          text: Preguntar caja.text() al construir la ventana devuelve la cadena vacía, siempre
+          accent: true
+
+  - code:
+      eyebrow: Señales y slots
+      title: Unir el clic con la función que lo atiende
+      filename: senales.py
+      lang: python
+      source: |
+        class VentanaPrincipal(QMainWindow):
+            def __init__(self) -> None:
+                super().__init__()
+                self.caja = QLineEdit()
+                self.boton = QPushButton("Entrar")
+                self.boton.clicked.connect(self.al_entrar)
+
+            def al_entrar(self) -> None:
+                print("Hola,", self.caja.text())
+      annotations:
+        - label: Línea 6
+          text: clicked es la señal y al_entrar es el slot. connect los une y ahí termina tu trabajo.
+        - label: Sin paréntesis
+          text: Se conecta self.al_entrar, no self.al_entrar(). Con paréntesis se llama en ese instante.
+        - label: Línea 9
+          text: El slot lee la caja cuando ocurre el clic, que es el único momento en que hay algo escrito
+
+  - code_output:
+      eyebrow: Demostración
+      title: Lo que aparece en consola después de dos clics
+      filename: correr.py
+      lang: python
+      output_label: Consola
+      source: |
+        app = QApplication(sys.argv)
+
+        ventana = VentanaPrincipal()
+        ventana.show()
+
+        sys.exit(app.exec())
+      output: |
+        Hola, Ana
+        Hola, Luis
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores que se ven en la primera ventana
+      items:
+        - label: Error 01
+          title: Conectar con paréntesis
+          desc: connect(self.al_entrar()) llama a la función al construir y le conecta el resultado
+        - label: Error 02
+          title: Un ciclo largo dentro del slot
+          desc: La ventana se congela, porque el ciclo de eventos está esperando a que tu función termine
+        - label: Error 03
+          title: No guardar el control sobre self
+          desc: Si el widget es una variable local del constructor, Python lo recolecta y desaparece
+        - label: Error 04
+          title: Leer los campos al construir
+          desc: En ese momento están vacíos. Se leen dentro del slot, cuando ya hay algo escrito.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Práctica y cierre
+      lede: Una ventana que hace algo con lo que le escriben, y el error de sintaxis que se lleva media clase.
+      block: 3
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuándo se imprime la palabra clic?
+      filename: parentesis.py
+      lang: python
+      source: |
+        class Ventana(QMainWindow):
+            def __init__(self):
+                super().__init__()
+                boton = QPushButton("Hola")
+                boton.clicked.connect(self.saludar())
+
+            def saludar(self):
+                print("clic")
+      options:
+        - 'Cada vez que se oprime el botón'
+        - 'Al construir la ventana, una sola vez'
+        - 'Nunca, porque falta llamar a show()'
+        - 'Cada vez que la ventana se redibuja'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Una sola vez, al construir, y después revienta
+      headers: ["Paso", "Instrucción", "Qué pasa", "Salida"]
+      rows:
+        - ["1", "Ventana()", "corre __init__", "–"]
+        - ["2", "self.saludar()", "se ejecuta en ese momento", "clic"]
+        - ["3", "el método devuelve None", "connect recibe None", "–"]
+        - ["4", "connect(None)", "TypeError", "–"]
+      verdict: Los paréntesis llaman a la función. Sin ellos se pasa la función misma, que es justo lo que connect espera recibir para guardarla y llamarla después.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una ventana que responde, en parejas
+      brief: Escriban una ventana con una caja de texto, un botón y una etiqueta, de modo que al oprimir el botón la etiqueta muestre en mayúsculas lo que se escribió.
+      blocks:
+        - label: Restricciones
+          text: La ventana es una clase que hereda de QMainWindow y el slot es un método suyo
+        - label: Entregable
+          text: Un archivo .py que abre la ventana y una captura de pantalla con el resultado
+        - label: Criterio
+          text: Que el slot no calcule nada, solo lea el control y llame a una función aparte
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un QApplication y un ciclo de eventos
+          desc: exec() no devuelve hasta que se cierra la ventana, y todo lo tuyo corre dentro de ese ciclo
+        - title: La señal se conecta sin paréntesis
+          desc: connect recibe la función para guardarla, no el resultado de haberla llamado
+        - title: El slot lee los controles al ocurrir el evento
+          desc: Leerlos al construir la ventana devuelve siempre lo mismo, que es exactamente nada
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía la ventana del laboratorio con un segundo botón que limpie los campos, y explica en un párrafo qué pasaría si el slot tardara diez segundos en terminar.
+      meta:
+        - [Entrega, Antes de la sesión 15]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Estructura", "40 %", "La ventana es una clase y cada control se guarda sobre self"]
+        - ["Señales", "30 %", "Cada botón se conecta a un slot distinto y sin paréntesis en el connect"]
+        - ["Reflexión", "30 %", "El párrafo explica el congelamiento con el ciclo de eventos, no con la velocidad de la máquina"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, contenedores, integración de componentes y diseño de aplicaciones visuales.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

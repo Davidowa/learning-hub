@@ -1,0 +1,324 @@
+meta:
+  course: Data Analysis
+  code: TIA502
+  lang: en
+  language: python
+  week: 9
+  footer: DATA ANALYSIS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 09 · Unit 4.5 · Accumulators, flags and nested loops
+      title: Data Analysis
+      subtitle: The three patterns that solve almost everything done inside a loop, and what happens when one lives inside another.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA502 · Business]
+        - [Session, 9 of 17]
+      notes: |
+        The close of the data and decisions block. Everything covered today comes back in
+        week 15 as a single line of pandas, and saying so today gives the practice a point.
+
+        The accumulator, the counter and the flag are three patterns, not three topics.
+        Once recognised, most exam exercises are solved by working out which of the three
+        the wording is asking for.
+
+        Run the nested loops fast. It is enough that they understand the inner one makes
+        all of its passes for every pass of the outer one, and that this multiplies.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The three patterns
+          desc: Accumulate, count and flag. Those three solve almost everything
+        - title: Breaking the flow
+          desc: break, continue, and the for-else that almost nobody knows about
+        - title: Nested loops
+          desc: One inside another, and why the passes multiply
+        - title: Your turn
+          desc: A report by category, computed with a loop inside a loop
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write an accumulator
+          sub: A variable outside the loop that adds up what happens inside it
+        - head: Write a counter
+          sub: How many cases satisfy something, which is not how much they add to
+        - head: Use a flag
+          sub: To answer whether at least one exists, without walking any further
+        - head: Interrupt or skip a pass
+          sub: break leaves the loop, continue jumps to the next pass
+        - head: Read a nested loop
+          sub: And predict how many passes it makes in total before running it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Computational thinking
+          desc: How a problem gets solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data and decisions
+          desc: Types, operators, conditions and repetition
+          state: now
+        - label: 03 · Weeks 10–13
+          title: Structure and collections
+          desc: Functions, lists, tuples, sets and dictionaries
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Real data
+          desc: Files, pandas and visualisation
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The three patterns
+      lede: Accumulate, count and flag. Recognising which one the wording asks for is half of solving it.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Patterns
+      title: All three, and the question each answers
+      headers: [Pattern, The question, Starting value, Inside the loop]
+      rows:
+        - ["Accumulator", "How much do they add to?", "0", "total += value"]
+        - ["Counter", "How many satisfy it?", "0", "if condition: n += 1"]
+        - ["Flag", "Does at least one exist?", "False", "if condition: found = True"]
+
+  - concept:
+      eyebrow: Key concept
+      title: The variable lives outside, the work happens inside
+      lead: >-
+        All three patterns share the same shape. A variable is declared before the loop,
+        with a starting value that stands for «nothing yet». Inside the loop it is updated
+        on every pass. When the loop ends, that variable holds the answer. Putting it
+        inside the loop resets it every pass, and that is the classic error.
+      panel:
+        label: The classic error
+        title: Declaring it inside resets it on every pass
+        note: >-
+          The program runs, reports nothing, and at the end the total holds whatever the
+          last record was. A wrong result that looks perfectly right.
+      steps:
+        - text: Before the loop, the starting value
+        - text: Inside, the update on each pass
+        - text: After the loop, the answer
+          loop: ↺ and the indentation is what decides which is which
+
+  - code:
+      eyebrow: Block 01 · All three together
+      title: One walk, three answers
+      filename: patterns.py
+      source: |
+        total_spend = 0
+        large_campaigns = 0
+        any_expensive = False
+
+        for i in range(len(campaigns)):
+            total_spend += spend[i]
+
+            if clicks[i] > 5000:
+                large_campaigns += 1
+
+            if spend[i] / clicks[i] > 7.75:
+                any_expensive = True
+      annotations:
+        - label: All three outside
+          text: The three variables are declared before the for, which is why they survive every pass.
+        - label: Accumulator
+          text: total_spend adds up how much. It answers a question of magnitude.
+        - label: Counter
+          text: large_campaigns adds one. It answers how many, not how much.
+        - label: Flag
+          text: any_expensive only goes from False to True, and never back. It answers whether any exist.
+
+  - code_output:
+      eyebrow: Block 01 · Result
+      title: Three answers from the same walk
+      filename: patterns.py
+      source: |
+        print(f"Total spend: ${total_spend:,}")
+        print(f"Large campaigns: {large_campaigns}")
+        print(f"Any expensive: {any_expensive}")
+      output: |
+        Total spend: $129,100
+        Large campaigns: 2
+        Any expensive: True
+
+  - divider:
+      eyebrow: Block 02
+      title: Breaking the flow
+      lede: Three statements that change the normal course of a loop. Almost nobody knows the third one.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Loop control
+      title: The three statements that alter a loop
+      headers: [Statement, What it does, When it is used]
+      rows:
+        - ["break", "Leaves the loop immediately", "You found what you were after and going on is waste"]
+        - ["continue", "Jumps to the next pass", "This record does not apply and you would rather not nest a huge if"]
+        - ["for-else", "Runs only if the loop finished without a break", "To say «I walked all of it and found nothing»"]
+
+  - code:
+      eyebrow: Block 02 · In context
+      title: Finding the first expensive campaign
+      filename: search.py
+      source: |
+        for i in range(len(campaigns)):
+            if clicks[i] < 2000:
+                continue
+
+            if spend[i] / clicks[i] > 7.75:
+                print(f"First expensive: {campaigns[i]}")
+                break
+        else:
+            print("No campaign crosses the threshold.")
+      annotations:
+        - label: continue
+          text: Campaigns under 2000 clicks lack the volume to be judged. They get skipped.
+        - label: break
+          text: As soon as it finds the first one, it leaves. Walking the rest would not change the answer.
+        - label: The else
+          text: It lines up with the for, not with the if. It runs only if the loop reached the end without a break.
+        - label: Risk
+          text: If the else is lined up with the if by mistake, the message prints even when one was found.
+          accent: true
+
+  - trace:
+      eyebrow: Block 02 · Trace
+      title: What happens on each pass
+      headers: [i, Campaign, clicks, What it does]
+      rows:
+        - ['0', "Instagram", '5074', "Passes the filter. 7.59 does not cross 7.75, carries on"]
+        - ['1', "Meta", '3820', "Passes the filter. 7.80 does cross, prints and leaves"]
+        - ['2', "Google", '6910', "Not evaluated, the break already left"]
+        - ['3', "TikTok", '1240', "Not evaluated"]
+      verdict: The for-else does not run. The loop left through a break, which is its whole purpose.
+
+  - divider:
+      eyebrow: Block 03
+      title: Nested loops
+      lede: A loop inside a loop. The inner one makes all of its passes for every single pass of the outer one.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · Nested
+      title: Every region against every channel
+      filename: crosstab.py
+      source: |
+        regions = ["North", "Centre"]
+        channels = ["Retail", "Online"]
+
+        for region in regions:
+            for channel in channels:
+                print(f"{region} · {channel}")
+      annotations:
+        - label: No index
+          text: When you only need the value and not the position, a for can walk the list directly.
+        - label: The multiplication
+          text: Two regions by two channels is four passes. With four and three it would be twelve.
+        - label: The order
+          text: The outer one advances a position only once the inner one has finished all of its own.
+        - label: The limit
+          text: A hundred by a hundred is ten thousand passes. Three levels over long lists gets slow fast.
+
+  - code_output:
+      eyebrow: Block 03 · Result
+      title: Four combinations, in that order
+      filename: crosstab.py
+      source: |
+        for region in regions:
+            for channel in channels:
+                print(f"{region} · {channel}")
+      output: |
+        North · Retail
+        North · Online
+        Centre · Retail
+        Centre · Online
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four accumulator and nesting errors
+      items:
+        - label: Error 01
+          title: Resetting the accumulator inside
+          desc: total = 0 inside the loop wipes it every pass. At the end it holds the last record and nobody warns you.
+        - label: Error 02
+          title: Confusing counting with adding
+          desc: How many campaigns beat the target is a counter. How much those campaigns add to is an accumulator.
+        - label: Error 03
+          title: Reusing the inner loop variable
+          desc: If both fors use i, the inner one overwrites the outer and the walk falls apart.
+        - label: Error 04
+          title: Nesting when a filter was enough
+          desc: Before putting a loop inside a loop, ask whether a continue in the first one solved the same thing.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What is total worth when this finishes?
+      filename: accumulator.py
+      source: |
+        sales = [100, 200, 300]
+
+        for s in sales:
+            total = 0
+            total += s
+
+        print(total)
+      options:
+        - "600, because it adds all three"
+        - "300, because it resets on every pass"
+        - "0, because total is declared at the end"
+        - "An error, because total does not exist before the loop"
+
+  - lab:
+      eyebrow: Lab
+      title: A crosstab report
+      brief: With two category lists from your field, for example region and product, write a nested loop that prints every combination with a computed metric. Add an accumulator and a counter to the walk.
+      blocks:
+        - label: Deliverable
+          text: The .py file with the printed table and the two summary figures at the end
+        - label: Constraint
+          text: The two loop variables have to be named differently and say what they walk
+        - label: The test
+          text: Count by hand how many lines it should print. If the count is off, the nesting is wrong.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The variable lives outside the loop
+          desc: Declaring it inside resets it every pass, and the wrong result looks perfectly normal
+        - title: Counting and adding are different
+          desc: How many satisfy it is a counter, how much they add to is an accumulator, and the wording usually says
+        - title: The passes multiply
+          desc: Two by two is four, and a hundred by a hundred is ten thousand. That is where nesting stops being free
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Walk the four campaigns and produce a report with the total spend, how many beat the conversion target, whether any has a cost per click above eight pesos, and which is the best of them all.
+      meta:
+        - [Due, Before week 10]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Patterns", "40 %", "The accumulator, the counter and the flag all appear, each placed correctly"]
+        - ["One walk", "40 %", "All four answers come out of one for loop, not four"]
+        - ["Output", "20 %", "The report reads without opening the code"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, how to package a calculation so you never have to write it again.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

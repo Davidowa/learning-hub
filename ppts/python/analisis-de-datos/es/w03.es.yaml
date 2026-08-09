@@ -1,0 +1,293 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 3
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 03 · Temas 1 y 2 · Paradigmas e introducción a la programación
+      title: Análisis de Datos
+      subtitle: Por qué existen distintas formas de programar, qué hace un lenguaje con lo que escribes y tu primer programa.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 3 de 17]
+      notes: |
+        Última sesión del bloque de pensamiento computacional, y la primera con
+        computadora. Cierra la unidad 1 con paradigmas y programación estructurada, y abre
+        la unidad 2 completa.
+
+        La parte de paradigmas se corre rápido. A este grupo no le sirve una taxonomía, le
+        sirve saber que va a escribir estructurado y por qué eso basta para el curso.
+
+        El primer programa vale la sesión entera. Que corra hoy, en su máquina, con su
+        nombre en pantalla. Un entorno que no funciona en la semana 3 se convierte en un
+        alumno que abandona en la 6.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Formas de programar
+          desc: Por qué hay varias y cuál vamos a usar todo el semestre
+        - title: Qué es un lenguaje
+          desc: Qué pasa entre lo que escribes y lo que la máquina ejecuta
+        - title: El primer programa
+          desc: Estructura, sintaxis y las reglas que Python no perdona
+        - title: Tu turno
+          desc: Escribirlo, romperlo a propósito y leer lo que reclama
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué es un paradigma
+          sub: Y por qué el estructurado alcanza para todo lo que haremos este curso
+        - head: Nombrar las tres estructuras básicas
+          sub: Secuencia, selección y repetición, y por qué con esas tres basta
+        - head: Distinguir compilar de interpretar
+          sub: Qué hace Python con tu archivo en el momento en que lo ejecutas
+        - head: Leer la estructura de un programa
+          sub: Importaciones, instrucciones, comentarios y el orden en que corren
+        - head: Reconocer un error de sintaxis
+          sub: Leer el mensaje, ubicar la línea y corregirlo sin adivinar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: todo
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Formas de programar
+      lede: Un paradigma es una manera de organizar la solución. Hay varias porque ningún problema se parece a todos los demás.
+      block: 1
+
+  - figure:
+      eyebrow: Bloque 01 · Panorama
+      title: Varias maneras de girar alrededor del mismo problema
+      image: img/es/ct-10.png
+      caption: Ninguna es la correcta. Cada una organiza la solución de otra forma, y unas encajan mejor que otras según el problema.
+      alt: Un mapa de paradigmas de programación dispuestos alrededor de un centro, dibujado a mano
+
+  - table:
+      eyebrow: Bloque 01 · Paradigmas
+      title: Los cuatro que vale la pena reconocer
+      headers: [Paradigma, Cómo organiza la solución, Dónde se ve]
+      rows:
+        - ["Estructurado", "Pasos en orden, con decisiones y ciclos", "El de este curso, y el de casi todo análisis de datos"]
+        - ["Orientado a objetos", "Datos y comportamiento juntos en clases", "Sistemas grandes, aplicaciones de escritorio"]
+        - ["Funcional", "Funciones que transforman datos sin cambiarlos", "Procesamiento de datos, hojas de cálculo"]
+        - ["Declarativo", "Se declara qué se quiere, no cómo obtenerlo", "SQL, y las fórmulas de Excel"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Programación estructurada
+      lead: >-
+        Es la forma que vas a usar todo el semestre, y consiste en una idea sencilla: todo
+        programa se puede escribir con tres estructuras. Nada de saltos a mitad del código,
+        nada de flujos imposibles de seguir. Se lee de arriba hacia abajo, y cuando se
+        desvía, se ve exactamente dónde y por qué.
+      panel:
+        label: Por qué importa
+        title: Un programa que se lee de arriba abajo se puede corregir
+        note: >-
+          Antes de esta idea, un programa podía saltar a cualquier línea. Encontrar un
+          error significaba seguir el salto a mano, uno por uno.
+      steps:
+        - text: Secuencia, una instrucción tras otra
+        - text: Selección, un camino u otro según una condición
+        - text: Repetición, lo mismo varias veces
+          loop: ↺ y con esas tres se escribe cualquier programa
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Qué es un lenguaje de programación
+      lede: Un idioma intermedio. Lo suficientemente preciso para la máquina, lo suficientemente legible para ti.
+      block: 2
+
+  - figure:
+      eyebrow: Bloque 02 · Niveles
+      title: Cuanto más arriba, más se parece a como piensas
+      image: img/es/ct-09.png
+      caption: Python vive en el peldaño alto. Escribes cerca de tu idioma y algo más se encarga de bajarlo a lo que el procesador entiende.
+      alt: Una escalera de niveles de abstracción, con el lenguaje de alto nivel arriba y el código máquina al pie
+
+  - table:
+      eyebrow: Bloque 02 · Traducción
+      title: Compilar e interpretar, y dónde cae Python
+      headers: [Aspecto, Compilado, Interpretado]
+      rows:
+        - ["Cuándo traduce", "Todo el programa antes de correrlo", "Instrucción por instrucción, al ejecutar"]
+        - ["Qué produce", "Un ejecutable independiente", "Nada permanente, corre y se acaba"]
+        - ["Velocidad", "Más rápido al ejecutar", "Más lento, y para tu trabajo da igual"]
+        - ["Cuándo avisa del error", "Al compilar, antes de correr", "Al llegar a la línea que falla"]
+        - ["Ejemplos", "C, C++, Go", "Python, R, JavaScript"]
+
+  - code:
+      eyebrow: Bloque 02 · Anatomía
+      title: Un programa completo, por partes
+      filename: primer_programa.py
+      source: |
+        # Un comentario. Python lo ignora, tú no.
+        from statistics import mean
+
+        sueldos = [23200, 42800, 82700, 24500, 24500]
+
+        promedio = mean(sueldos)
+        mayor = max(sueldos)
+
+        print("Empleados:", len(sueldos))
+        print("Sueldo promedio:", promedio)
+        print("Sueldo mayor:", mayor)
+      annotations:
+        - label: Importaciones
+          text: Arriba se traen las herramientas que no vienen listas. mean vive en statistics.
+        - label: Datos
+          text: Los cinco sueldos son los primeros de employees.csv. Entre corchetes son una lista, la columna de la semana 12.
+        - label: De arriba a abajo
+          text: Cada línea corre en el orden en que está escrita. No hay nada que la reordene.
+        - label: Salida
+          text: print es lo único que se ve. Un cálculo sin print corre igual, y no muestra nada.
+
+  - code_output:
+      eyebrow: Bloque 02 · Resultado
+      title: Lo que aparece en la terminal
+      filename: primer_programa.py
+      source: |
+        print("Empleados:", len(sueldos))
+        print("Sueldo promedio:", promedio)
+        print("Sueldo mayor:", mayor)
+      output: |
+        Empleados: 5
+        Sueldo promedio: 39540
+        Sueldo mayor: 82700
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La sintaxis y lo que no perdona
+      lede: Las reglas de escritura del lenguaje. No son negociables, y el mensaje de error casi siempre dice dónde fallaste.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Reglas
+      title: Cinco reglas que Python aplica siempre
+      headers: [Regla, Qué exige, Qué pasa si la rompes]
+      rows:
+        - ["Sangría", "Cuatro espacios marcan qué anida", "IndentationError, y no corre nada"]
+        - ["Mayúsculas", "Print y print no son iguales", "NameError sobre un nombre inexistente"]
+        - ["Comillas", "El texto va entre comillas, las dos", "SyntaxError en esa línea o la siguiente"]
+        - ["Paréntesis", "Los que abren y cierran, en pares", "SyntaxError, a veces una línea abajo"]
+        - ["Dos puntos", "Condiciones y ciclos terminan en uno", "SyntaxError justo donde falta"]
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de la primera semana
+      items:
+        - label: Error 01
+          title: Mezclar espacios y tabuladores
+          desc: Se ven idénticos en pantalla y Python los cuenta distinto. Configura el editor en cuatro espacios y olvídate.
+        - label: Error 02
+          title: Leer solo la última línea del error
+          desc: El mensaje trae el archivo, la línea y el tipo. Las tres cosas antes de tocar nada.
+        - label: Error 03
+          title: Buscar el error donde lo marca
+          desc: Un paréntesis sin cerrar se reclama en la línea siguiente. El problema está arriba.
+        - label: Error 04
+          title: Calcular sin imprimir
+          desc: El programa corre, no muestra nada y parece roto. Faltaba el print, no el cálculo.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime este programa?
+      filename: orden.py
+      source: |
+        total = 100
+        total = total + 50
+        total = total * 2
+
+        print(total)
+      options:
+        - "300, porque suma y luego multiplica"
+        - "200, porque solo cuenta la última línea"
+        - "250, porque multiplica antes de sumar"
+        - "Un error, porque total se redefine tres veces"
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cada línea sobre el resultado de la anterior
+      headers: [Paso, Instrucción, total, Comentario]
+      rows:
+        - ['1', "total = 100", '100', "Se crea el nombre y se le asigna un valor"]
+        - ['2', "total = total + 50", '150', "Se lee el valor viejo, se suma, se guarda encima"]
+        - ['3', "total = total * 2", '300', "Se lee 150, se duplica, se guarda encima"]
+        - ['4', "print(total)", '300', "Solo ahora aparece algo en pantalla"]
+      verdict: El signo igual no compara, guarda. Cada línea pisa el valor que dejó la anterior.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Escríbelo, rómpelo y arréglalo
+      brief: >-
+        Copia el programa de los sueldos, córrelo, y después rómpelo a propósito de tres
+        formas distintas: quita un paréntesis, cambia print por Print y borra una comilla.
+        Anota el mensaje exacto que da cada uno.
+      blocks:
+        - label: Entrega
+          text: El archivo .py funcionando y una tabla con los tres mensajes de error
+        - label: Por qué
+          text: Los vas a ver cien veces este semestre. Vale más reconocerlos que evitarlos.
+        - label: Pista
+          text: El mensaje termina con el tipo de error. Esa última palabra es la que hay que leer primero.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Tres estructuras bastan para todo
+          desc: Secuencia, selección y repetición. Todo lo demás del semestre es una variante de esas tres
+        - title: Python traduce mientras corre
+          desc: Por eso el error aparece cuando llega a esa línea, y no antes de arrancar
+        - title: El mensaje de error es una pista, no un regaño
+          desc: Trae archivo, línea y tipo. Leerlo completo ahorra más tiempo que cualquier otra costumbre
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Traduce a Python el pseudocódigo del bono que escribiste la semana pasada, con tus propios valores de entrada, y que imprima el resultado con una etiqueta que se entienda.
+      meta:
+        - [Entrega, Antes de la semana 4]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Corre", "40 %", "El archivo se ejecuta sin errores y muestra un resultado"]
+        - ["Fidelidad", "40 %", "Hace lo mismo que el pseudocódigo, incluido el orden de las condiciones"]
+        - ["Nombres", "20 %", "Las variables se llaman como el dato que guardan, no a, b y c"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, los tipos de datos y por qué un código postal no es un número aunque lo parezca.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,392 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 5
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 05 · Tema 2 · Elementos básicos
+      title: Programación Orientada a Objetos
+      subtitle: Un mismo nombre para varias formas de llamar, dónde vive cada clase cuando el proyecto crece, y del enunciado al modelo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 5 de 17]
+      notes: |
+        Media clase llega convencida de que Python sobrecarga métodos, porque lo vieron en
+        el curso de Java. Conviene tumbar esa idea con el quiz antes de explicar nada: se
+        recuerda mejor un TypeError que uno mismo predijo mal.
+
+        Los ejemplos salen de docs/en/courses/python-course: el Punto con __str__, __eq__
+        y __add__ es de 02 - POO/6th Module/Code022.py, el bloque de módulos y paquetes
+        viene de 06 - Advanced/A02 - Modules y A03 - Packages. La referencia larga de
+        métodos mágicos es MagicMethods.md, en la misma carpeta del módulo 6.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Métodos sobrecargados
+          desc: Lo que otros lenguajes resuelven con firmas y Python con argumentos
+        - title: Operadores propios
+          desc: Los métodos mágicos que le dan sintaxis conocida a tu clase
+        - title: Organización
+          desc: Módulos, paquetes y el archivo que sí se ejecuta
+        - title: Modelado
+          desc: Del enunciado a las cajas, y de las cajas al código
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar por qué el segundo def gana
+          sub: El nombre de un método es una entrada de diccionario, y una entrada solo guarda un valor
+        - head: Cubrir varias formas con un método
+          sub: Valores por omisión para lo opcional, *args para lo posicional, **kwargs para lo nombrado
+        - head: Sobrecargar operadores
+          sub: __str__, __eq__ y __add__ hacen que print, == y + funcionen sobre tus objetos
+        - head: Repartir las clases en archivos
+          sub: Qué justifica un módulo nuevo, qué justifica un paquete y qué corre al importar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: now
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: todo
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Métodos sobrecargados
+      lede: La sobrecarga que enseñan en Java no existe en Python. Lo que existe es mejor, y hay que saber por qué.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué significa sobrecargar un método
+      lead: >-
+        En Java o en C# puedes escribir dos métodos con el mismo nombre y distinta firma, y
+        el compilador elige cuál llamar según los argumentos. Python no hace eso. El nombre
+        de un método es una entrada más en un diccionario, y una entrada guarda un valor.
+      panel:
+        label: Lo que Python ofrece en su lugar
+        title: Un solo método que acepta más formas
+        note: >-
+          Un valor por omisión, *args para lo posicional y **kwargs para lo nombrado cubren
+          casi todos los casos donde otro lenguaje declararía tres firmas distintas.
+      steps:
+        - text: Un método, una responsabilidad
+        - text: Los casos opcionales, por omisión
+        - text: Los tipos distintos, con isinstance
+          loop: ↺ si el cuerpo se llena de if de tipos, eran dos métodos con nombres distintos
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: calculadora.py
+      lang: python
+      source: |
+        class Calculadora:
+            def sumar(self, a, b):
+                return a + b
+
+            def sumar(self, a, b, c):
+                return a + b + c
+
+
+        c = Calculadora()
+        print(c.sumar(1, 2))
+      options:
+        - '3, porque Python elige el método de dos parámetros'
+        - 'TypeError, falta un argumento posicional'
+        - '6, porque c vale cero cuando no se pasa'
+        - 'SyntaxError, sumar está definido dos veces'
+
+  - compare:
+      eyebrow: Respuesta
+      title: El segundo def borra al primero
+      before:
+        label: Sobrecarga imaginaria
+        file: calculadora.py
+        code: |
+          class Calculadora:
+              def sumar(self, a, b):
+                  return a + b
+
+              def sumar(self, a, b, c):
+                  return a + b + c
+      after:
+        label: Un solo método
+        file: calculadora.py
+        code: |
+          class Calculadora:
+              def sumar(self, a, b, c=0):
+                  return a + b + c
+      note: Definir sumar dos veces es como asignar una variable dos veces. El segundo valor gana, y la llamada con dos argumentos lanza TypeError por el argumento c que falta.
+
+  - code:
+      eyebrow: Argumentos variables
+      title: Cuando no sabes cuántos van a llegar
+      filename: carrito.py
+      lang: python
+      source: |
+        class Carrito:
+            def __init__(self, dueno: str) -> None:
+                self.dueno = dueno
+                self.productos: list[str] = []
+
+            def agregar(self, *skus: str, **opciones: bool) -> None:
+                for sku in skus:
+                    self.productos.append(sku)
+                if opciones.get("avisar"):
+                    print(f"{len(skus)} productos agregados")
+
+
+        c = Carrito("Ana")
+        c.agregar("X1", "X2", "X3", avisar=True)
+      annotations:
+        - label: El asterisco simple
+          text: '*skus recoge en una tupla cuantos argumentos posicionales lleguen, incluso ninguno'
+        - label: El asterisco doble
+          text: '**opciones recoge en un diccionario los que vienen con nombre, como avisar=True'
+        - label: Riesgo
+          text: Un método que acepta cualquier cosa no le dice a nadie qué se le puede pasar. Úsalo con cuidado.
+          accent: true
+
+  - table:
+      eyebrow: Tabla de equivalencias
+      title: La misma necesidad, resuelta de dos maneras
+      headers: ["Necesidad", "En Java o C#", "En Python"]
+      rows:
+        - ["Un parámetro opcional", "Dos métodos con firma distinta", "def saludar(self, formal=False)"]
+        - ["Cuántos datos sean", "Un método por cantidad", "def agregar(self, *skus)"]
+        - ["Opciones con nombre", "Un objeto de configuración", "def crear(self, **opciones)"]
+        - ["Tipos distintos", "Una firma por tipo", "isinstance o functools.singledispatch"]
+        - ["Operadores propios", "operator overloading", "__add__ · __eq__ · __str__"]
+
+  - code:
+      eyebrow: Sobrecarga de operadores
+      title: Tres métodos mágicos que sí cambian la sintaxis
+      filename: punto.py
+      lang: python
+      source: |
+        class Punto:
+            def __init__(self, x: int, y: int) -> None:
+                self.x = x
+                self.y = y
+
+            def __str__(self) -> str:
+                return f"({self.x}, {self.y})"
+
+            def __eq__(self, otro) -> bool:
+                return self.x == otro.x and self.y == otro.y
+
+            def __add__(self, otro) -> "Punto":
+                return Punto(self.x + otro.x, self.y + otro.y)
+      annotations:
+        - label: Línea 6
+          text: __str__ es lo que usa print. Sin él verás la clase y una dirección de memoria.
+        - label: Línea 9
+          text: Sin __eq__ el operador == compara identidad, así que dos puntos iguales salen distintos
+        - label: Línea 12
+          text: __add__ devuelve un punto nuevo. Un operador que modifica sus operandos sorprende a quien lo lee.
+
+  - code_output:
+      eyebrow: Demostración
+      title: Lo que ganan print, el igual y la suma
+      filename: usar_punto.py
+      lang: python
+      output_label: Salida
+      source: |
+        p1 = Punto(1, 2)
+        p2 = Punto(3, 4)
+
+        print(p1)
+        print(p1 == Punto(1, 2))
+        print(p1 + p2)
+      output: |
+        (1, 2)
+        True
+        (4, 6)
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Organización de clases
+      lede: Un archivo de mil líneas funciona igual de bien que diez de cien. La diferencia aparece cuando hay que encontrar algo.
+      block: 2
+
+  - diagram:
+      eyebrow: Diagrama
+      title: Del archivo suelto al paquete
+      blocks:
+        - label: Un archivo
+          title: Módulo
+          desc: Un .py con las funciones y clases que resuelven lo mismo
+        - label: Una carpeta
+          title: Paquete
+          desc: Varios módulos bajo un nombre, marcados por un __init__.py
+          dark: true
+        - label: El que se ejecuta
+          title: Script
+          desc: El archivo que corres, donde __name__ vale "__main__"
+      note: >-
+        Un módulo se justifica cuando dos clases del mismo archivo ya no se leen juntas. Un
+        paquete se justifica cuando los módulos empiezan a repetir prefijos en el nombre.
+
+  - code:
+      eyebrow: Importar
+      title: Tres formas de traer la misma clase
+      filename: app.py
+      lang: python
+      source: |
+        import tienda.carrito
+        from tienda.carrito import Carrito
+        from tienda import carrito as ca
+
+        a = tienda.carrito.Carrito("Ana")
+        b = Carrito("Luis")
+        d = ca.Carrito("Sofía")
+      annotations:
+        - label: Línea 1
+          text: Trae el módulo completo. Las llamadas quedan largas, pero se ve de dónde salió cada nombre.
+        - label: Línea 2
+          text: Trae un solo nombre. Es la forma más común y la que menos ruido hace dentro del archivo.
+        - label: Riesgo
+          text: from tienda.carrito import * trae todo, y dos módulos pueden traer el mismo nombre sin avisar
+          accent: true
+
+  - code:
+      eyebrow: Módulo y script
+      title: La línea que separa importar de ejecutar
+      filename: ventas.py
+      lang: python
+      source: |
+        TASA_IVA = 0.16
+
+
+        def calcular_iva(monto: float) -> float:
+            return monto * TASA_IVA
+
+
+        if __name__ == "__main__":
+            print(calcular_iva(100))
+      annotations:
+        - label: Línea 8
+          text: El bloque corre cuando ejecutas el archivo, y no corre cuando alguien lo importa
+        - label: Por qué importa
+          text: Sin esa línea, importar el módulo dispara sus pruebas, sus prints y todo lo que tenga suelto
+        - label: La convención
+          text: Cualquier módulo del proyecto debería poder importarse sin que pase nada visible
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro formas de organizar mal un proyecto
+      items:
+        - label: Error 01
+          title: Un solo archivo con todo
+          desc: Cuando pasa de trescientas líneas, encontrar una clase cuesta más que escribirla de nuevo
+        - label: Error 02
+          title: Un archivo por clase, sin excepción
+          desc: Diez archivos de quince líneas son diez archivos que abrir para entender una sola idea
+        - label: Error 03
+          title: Importaciones circulares
+          desc: Si carrito importa cliente y cliente importa carrito, Python falla a media carga con ImportError
+        - label: Error 04
+          title: Código suelto en el módulo
+          desc: Todo lo que esté fuera de una función o una clase corre en el momento de importar, siempre
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Modelado básico orientado a objetos
+      lede: 'El paso que casi nadie hace y que decide la mitad del resultado: dibujar antes de teclear.'
+      block: 3
+
+  - figure:
+      eyebrow: Notación
+      title: La caja que se dibuja antes del código
+      image: img/es/uml-class.png
+      caption: Nombre arriba, lo que recuerda en medio, lo que sabe hacer abajo. Cada compartimento es una línea de Python.
+      alt: Una caja UML de tres compartimentos, con flechas hacia las líneas de Python que le corresponden
+
+  - steps:
+      eyebrow: Método de modelado
+      title: Del enunciado a las cajas, en cinco pasos
+      items:
+        - label: Paso 01
+          title: Subraya los sustantivos
+          desc: Cada sustantivo concreto del enunciado es un candidato a clase
+        - label: Paso 02
+          title: Descarta los que no recuerdan
+          desc: Si no guarda nada entre una llamada y la siguiente, era una función
+        - label: Paso 03
+          title: Lista lo que recuerda
+          desc: Los datos que sobreviven a una operación son los atributos del constructor
+        - label: Paso 04
+          title: Subraya los verbos
+          desc: Los verbos que actúan sobre esos datos son los métodos de esa clase
+        - label: Paso 05
+          title: Dibuja la caja
+          desc: Si los tres compartimentos no caben en media hoja, la clase hace demasiado
+
+  - lab:
+      eyebrow: Laboratorio
+      title: De un enunciado a un modelo, en parejas
+      brief: 'Modelen el préstamo de la biblioteca: quién pide prestado, qué se presta, cuándo vence y quién cobra la multa. Entreguen las cajas antes que el código.'
+      blocks:
+        - label: Restricciones
+          text: Máximo cuatro clases y tres atributos por clase, con los métodos declarados y el cuerpo vacío
+        - label: Entregable
+          text: Un diagrama con las cajas y un archivo .py con las clases y las firmas de sus métodos
+        - label: Criterio
+          text: Que ninguna clase se llame Gestor, Manejador o Sistema, porque ninguno de los tres es un sustantivo del problema
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Python no sobrecarga por firma
+          desc: El segundo def sobrescribe al primero, y los valores por omisión cubren el caso real
+        - title: Los operadores sí se sobrecargan
+          desc: __str__, __eq__ y __add__ le dan a tu clase la sintaxis que todo el mundo ya conoce
+        - title: El modelo se dibuja antes de escribirse
+          desc: Sustantivos a cajas, verbos a métodos, y recién entonces el editor de código
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Completa el modelo del laboratorio con __str__ y __eq__ en cada clase, y agrega un párrafo que defienda por qué elegiste esas clases y no otras.
+      meta:
+        - [Entrega, Antes de la sesión 6]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Modelado", "40 %", "Las clases salen de sustantivos del enunciado y ninguna hace de todo"]
+        - ["Operadores", "30 %", "__str__ imprime algo legible y __eq__ compara los datos, no la identidad"]
+        - ["Justificación", "30 %", "El párrafo defiende las decisiones y menciona una alternativa descartada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, encapsulamiento, ocultamiento de información y reutilización.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

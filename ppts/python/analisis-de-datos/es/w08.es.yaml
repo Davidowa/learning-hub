@@ -1,0 +1,290 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 8
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 08 · Tema 4.5 · Repetición · Primer parcial
+      title: Análisis de Datos
+      subtitle: Los dos ciclos, cuándo se usa cada uno, y la logística del primer examen parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 8 de 17]
+      notes: |
+        Sesión doble: tema nuevo y cierre del primer parcial. El parcial cubre las
+        unidades 1 a 4 y vale 20 %.
+
+        La analogía que funciona es arrastrar una fórmula hacia abajo. Eso es exactamente
+        un for, y ellos llevan años haciéndolo sin llamarlo así.
+
+        El ciclo infinito conviene provocarlo en vivo, con Control C a la mano. Verlo una
+        vez enseña más que tres diapositivas de advertencia.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Por qué repetir
+          desc: Arrastrar la fórmula hacia abajo, dicho en una sola instrucción
+        - title: El ciclo for
+          desc: Cuando sabes cuántas veces, o tienes una lista que recorrer
+        - title: El ciclo while
+          desc: Cuando no sabes cuántas, y solo conoces la condición para parar
+        - title: El parcial
+          desc: Qué entra, cómo es y qué puedes llevar
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar para qué sirve un ciclo
+          sub: Y reconocer el trabajo repetido que ya haces a mano en una hoja
+        - head: Recorrer una lista con for
+          sub: Elemento por elemento, sin saber de antemano cuántos hay
+        - head: Usar range con sus tres formas
+          sub: Un solo argumento, dos, y tres cuando hay que ir de otro en otro
+        - head: Escribir un while que termina
+          sub: Con una condición que cambia dentro del cuerpo del ciclo
+        - head: Elegir entre los dos
+          sub: Por la pregunta que contestan, no por costumbre
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: now
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué existe un ciclo
+      lede: Porque el trabajo repetido a mano se equivoca, y porque cuatro campañas hoy son cuatrocientas el año que entra.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · Traducción
+      title: Arrastrar la fórmula, dicho en dos líneas
+      before:
+        label: En la hoja
+        file: campanas.xlsx
+        lang: excel
+        code: |
+          =C2/B2
+          # y arrastras hasta la fila 500
+      after:
+        label: En Python
+        file: cpc.py
+        code: |
+          for i in range(len(campanas)):
+              cpc = inversion[i] / clics[i]
+      note: >-
+        Arrastrar es repetir la misma operación cambiando el número de fila. Un for hace
+        eso mismo, y no se detiene en la fila 500 porque se te acabó la paciencia.
+
+  - table:
+      eyebrow: Bloque 01 · Los dos ciclos
+      title: Cuál usar, y por qué
+      headers: [Ciclo, Cuándo se usa, La pregunta que contesta]
+      rows:
+        - ["for", "Sabes cuántas veces, o tienes algo que recorrer", "¿Para cada uno de estos?"]
+        - ["while", "No sabes cuántas, solo cuándo parar", "¿Mientras se cumpla esto?"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El ciclo for
+      lede: Recorre algo, elemento por elemento, y se detiene solo cuando ya no queda ninguno.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · for
+      title: El costo por clic de cuatro campañas
+      filename: cpc.py
+      source: |
+        campanas = ["Instagram", "Meta", "Google", "TikTok"]
+        clics = [5074, 3820, 6910, 1240]
+        inversion = [38500, 29800, 51200, 9600]
+
+        for i in range(len(campanas)):
+            cpc = inversion[i] / clics[i]
+            print(f"{campanas[i]:<12} ${cpc:>6.2f}")
+      annotations:
+        - label: Las tres listas
+          text: Cada una es una columna. La posición 0 de las tres pertenece a la misma campaña.
+        - label: range con len
+          text: len da cuántos hay, range genera las posiciones 0, 1, 2 y 3. La lista puede crecer sin tocar el ciclo.
+        - label: La variable i
+          text: Vale 0 en la primera vuelta, 1 en la segunda, y así. Es el número de fila del ciclo.
+        - label: Riesgo
+          text: Si una lista tiene un elemento menos que las otras, el ciclo lanza IndexError al llegar al final.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Resultado
+      title: Cuatro vueltas, cuatro renglones
+      filename: cpc.py
+      source: |
+        for i in range(len(campanas)):
+            cpc = inversion[i] / clics[i]
+            print(f"{campanas[i]:<12} ${cpc:>6.2f}")
+      output: |
+        Instagram    $  7.59
+        Meta         $  7.80
+        Google       $  7.41
+        TikTok       $  7.74
+
+  - table:
+      eyebrow: Bloque 02 · range
+      title: Las tres formas de range, completas
+      headers: [Forma, Qué genera, Ejemplo, Produce]
+      rows:
+        - ["range(n)", "De 0 hasta n, sin incluir n", "range(4)", "0, 1, 2, 3"]
+        - ["range(a, b)", "De a hasta b, sin incluir b", "range(1, 5)", "1, 2, 3, 4"]
+        - ["range(a, b, p)", "De a hasta b, de p en p", "range(0, 10, 3)", "0, 3, 6, 9"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El ciclo while
+      lede: Repite mientras la condición sea verdadera. Si nada la cambia dentro del cuerpo, repite para siempre.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · while
+      title: Cuántos días aguanta el presupuesto
+      filename: presupuesto.py
+      source: |
+        presupuesto = 100000
+        gasto_diario = 12500
+        dia = 0
+
+        while presupuesto > 0:
+            presupuesto -= gasto_diario
+            dia += 1
+
+        print(f"El presupuesto aguanta {dia} días.")
+      annotations:
+        - label: La condición
+          text: Se revisa antes de cada vuelta. Si es falsa desde el principio, el cuerpo no corre ni una vez.
+        - label: Lo que cambia
+          text: La resta de la primera línea del cuerpo. Sin ella la condición sería verdadera para siempre.
+        - label: El contador
+          text: dia empieza en cero y sube uno por vuelta. Es cómo se cuenta cuántas veces se repitió algo.
+        - label: Riesgo
+          text: Quita la resta y el programa nunca termina. Control C lo detiene, y conviene verlo una vez.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 03 · Traza
+      title: Las últimas vueltas del ciclo
+      headers: [Vuelta, Al entrar, "¿> 0?", Al salir, dia]
+      rows:
+        - ['6', '37500', "Sí", '25000', '6']
+        - ['7', '25000', "Sí", '12500', '7']
+        - ['8', '12500', "Sí", '0', '8']
+        - ['–', '0', "No", '0', '8']
+      verdict: La condición se revisa antes de cada vuelta, así que la novena nunca empieza. El presupuesto alcanza para ocho días exactos.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro errores de ciclos
+      items:
+        - label: Error 01
+          title: El ciclo infinito
+          desc: Nada dentro del cuerpo cambia la condición. El programa se queda corriendo hasta que lo detienes tú.
+        - label: Error 02
+          title: Errar por uno
+          desc: range(4) da cuatro vueltas, de 0 a 3. El 4 nunca aparece, y eso es lo correcto.
+        - label: Error 03
+          title: Definir el acumulador dentro
+          desc: Si total = 0 está dentro del ciclo, se reinicia en cada vuelta y al final vale solo la última.
+        - label: Error 04
+          title: Recorrer listas de distinto largo
+          desc: Tres columnas con distinto número de filas rompen el emparejamiento y lanzan IndexError.
+
+  - table:
+      eyebrow: Primer parcial
+      title: Qué entra, y cómo es el examen
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Unidades 1 a 4: algoritmos, paradigmas, tipos, operadores, selección y repetición"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Formato", "Se resuelve en la computadora del salón y se sube comprimido a Blackboard"]
+        - ["Puedes llevar", "Tus apuntes, tus tareas, los libros y lo que hayas generado con IA antes"]
+        - ["No puedes", "Teléfono, audífonos, lentes con IA, ni ningún medio de mensajería"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Cuántas veces se imprime algo?
+      filename: vueltas.py
+      source: |
+        for i in range(2, 10, 3):
+            print(i)
+      options:
+        - "Ocho veces, de 2 a 9"
+        - "Tres veces: 2, 5 y 8"
+        - "Cuatro veces: 2, 5, 8 y 11"
+        - "Diez veces, de 0 a 9"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Recorre tu propia tabla
+      brief: Toma seis registros de tu área en tres listas paralelas y recórrelos con un for, calculando una métrica por renglón e imprimiéndola alineada. Después escribe un while que cuente cuántos superan un umbral.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con las dos versiones y su salida alineada
+        - label: Restricción
+          text: Ningún número mágico repetido. Si el umbral aparece dos veces, hazlo variable.
+        - label: La prueba
+          text: Agrega un séptimo registro. Si tuviste que tocar el ciclo, el ciclo estaba mal escrito.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un for es arrastrar la fórmula
+          desc: La misma operación aplicada a cada fila, y sin detenerse donde se acabó tu paciencia
+        - title: for cuando sabes cuántas
+          desc: Y while cuando solo sabes cuándo parar. Elegir por la pregunta, no por costumbre
+        - title: Algo dentro tiene que cambiar
+          desc: Si el cuerpo del while no toca la condición, el ciclo no termina nunca
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe un programa que recorra las cuatro campañas de la clase y reporte cuál tiene el mejor costo por clic, cuál el peor, y el costo por clic global de las cuatro juntas.
+      meta:
+        - [Entrega, Antes de la semana 9]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Recorrido", "40 %", "El ciclo funciona igual si se agrega una quinta campaña"]
+        - ["Global", "40 %", "El costo global divide la suma entre la suma, no promedia los cuatro costos"]
+        - ["Salida", "20 %", "Las tres respuestas se leen con etiqueta y con formato de moneda"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, acumuladores, banderas y ciclos que viven dentro de otros ciclos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

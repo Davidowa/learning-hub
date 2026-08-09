@@ -1,0 +1,351 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 9
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 09 · Unit 3 · Repetition
+      title: Information Analysis and Processing
+      subtitle: For counts, For Each walks. And the difference between deleting top to bottom or the other way round.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 9 of 17]
+      notes: |
+        Ninety minutes. Twenty-five on For, twenty-five on For Each, the rest walking a
+        real database.
+
+        This is the session where the macro finally does what no sheet does on its own.
+        Until today every statement touched one cell. From today one statement touches a
+        thousand.
+
+        The module 08 loop writes a hundred and twenty columns from B3 and finishes at
+        DQ3. Verified. That is exactly the last column of the module 00 amortization
+        table, and it is worth saying out loud: the table that in week 1 looked like six
+        hundred hand-made cells now fits in four lines.
+
+        The two verifications to drop slowly are the deletion and the speed. Deleting six
+        rows forwards leaves three, because deleting row one turns row two into row one
+        while the counter has already moved to two. Backwards it leaves none. And twenty
+        thousand cells written one at a time take 0.91 seconds, against 0.02 in a single
+        write with an array.
+
+        The code comes from
+        docs/en/courses/vba-course/08 - Repetition Statement/RepetitionStatements.bas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: For, the counter
+          desc: How many times, with what step, and how to leave early
+        - title: For Each, the collection
+          desc: Walking what is there without knowing how much, and in what order
+        - title: Walking a database
+          desc: Loop and decision together, and deleting without skipping rows
+        - title: Your turn
+          desc: A thousand rows checked by a macro of fifteen lines
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a For loop with a counter
+          sub: From, to, and Step when the increment is not one at a time
+        - head: Walk a range with For Each
+          sub: Without declaring how many cells there are, and knowing what order they arrive in
+        - head: Combine loop and decision
+          sub: Walk everything and act only on what meets the condition
+        - head: Delete rows without skipping any
+          sub: Bottom to top with Step -1, and why the other way fails
+        - head: Choose between cell by cell and an array
+          sub: When the speed difference stops being a detail
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: For, the counter
+      lede: Used when you know how many times. The loop variable counts on its own, and you decide where it starts, where it ends and by how much it moves.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · The simplest one
+      title: Five turns, and the counter doubles as data
+      filename: RepetitionStatements.bas
+      lang: vba
+      source: |
+        Sub Count()
+            Dim i As Integer
+            Dim message As String
+
+            message = "The numbers from 1 to 5 are: "
+            For i = 1 To 5
+                message = message & i & " "
+            Next i
+
+            MsgBox message
+        End Sub
+      annotations:
+        - label: The loop variable
+          text: i starts at 1 and moves up on its own each turn. There is nothing to increment by hand.
+        - label: Next i
+          text: Closes the loop. The i after Next is optional and helps a great deal with nested loops.
+        - label: Used as data
+          text: i does not only count, it is usable inside the loop. Here it gets glued onto the message.
+        - label: The result
+          text: The numbers from 1 to 5 are 1 2 3 4 5, with a trailing space. Verified.
+
+  - table:
+      eyebrow: Block 01 · All four
+      title: Every way of repeating that VBA offers
+      headers: [Form, When it is used, Example]
+      rows:
+        - ["For i = 1 To n", "You know how many turns", "For i = 1 To 120"]
+        - ["For Each x In col", "You do not know how many", "For Each c In Range"]
+        - ["Do While cond", "While it holds", "Do While Not valid"]
+        - ["Do Until cond", "Until it holds", "Do Until k > 5"]
+        - ["While cond ... Wend", "Same as Do While", "The old form, avoid it"]
+
+  - code:
+      eyebrow: Block 01 · The amortization table, again
+      title: A hundred and twenty columns in four lines
+      filename: RepetitionStatements.bas
+      lang: vba
+      source: |
+        Sub NumberPeriods()
+            Dim period As Long
+
+            Range("B3").Select
+            For period = 1 To 120
+                ActiveCell.Offset(0, period - 1).Value = period
+            Next period
+        End Sub
+      annotations:
+        - label: Where it ends
+          text: At DQ3. Verified, and it is exactly the last column of the module 00 table.
+        - label: Offset with the counter
+          text: The counter goes into the Offset, so each turn writes one column further right.
+        - label: The minus one
+          text: The first turn has to write into B3 itself, so the offset has to start at zero.
+        - label: Risk
+          text: It still uses Select and ActiveCell. Week 6 taught how to remove them, and here they are.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: For Each, the collection
+      lede: Used when you do not know how many there are, or do not care. You ask Excel to hand you whatever it has, one at a time.
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: One counts, the other walks
+      lead: >-
+        For carries a number and you decide where it starts and stops, so it works when
+        the limit can be worked out. For Each carries no number: it takes a collection, a
+        range of cells, the sheets of a workbook, the tables on a sheet, and hands over
+        its members one at a time until they run out.
+      panel:
+        label: Verified
+        title: The order is across, then down
+        note: >-
+          Over A1 to B2, For Each hands back A1, B1, A2, B2. It finishes each row before
+          moving down, not each column.
+      steps:
+        - text: You declare a variable of the members' type
+        - text: For Each that variable In the collection
+        - text: Inside, you work with the variable
+          loop: ↺ and it ends by itself when none are left
+
+  - code:
+      eyebrow: Block 02 · Over a range
+      title: Walking without knowing how many cells there are
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub FlagEmpties()
+            Dim cell As Range
+
+            For Each cell In Range("A1:C500")
+                If IsEmpty(cell.Value) Then
+                    cell.Interior.Color = RGB(255, 235, 156)
+                End If
+            Next cell
+        End Sub
+      annotations:
+        - label: The variable
+          text: Declared As Range because the members of a range are cells, and a cell is a Range.
+        - label: IsEmpty
+          text: The only test that tells an empty cell from a captured zero, as we saw last week.
+        - label: No counter
+          text: There is no need to know how many cells. If the range changes, the loop adjusts itself.
+        - label: Risk
+          text: A1 to C500 is fifteen hundred cells even when only twenty hold data. Narrow the range first.
+          accent: true
+
+  - stat:
+      eyebrow: Twenty thousand cells, two ways
+      value: '0.02'
+      text: >-
+        seconds to write them in a single go with an array. One cell at a time, the same
+        macro takes 0.91.
+      note: >-
+        Both versions do exactly the same thing and leave the sheet identical. The
+        difference is how many times the boundary between VBA and Excel gets crossed,
+        which is twenty thousand against one. Measured in Excel 16.0 with Timer.
+
+  - divider:
+      eyebrow: Block 03
+      title: Walking a database
+      lede: Last week's loop plus the week before's decision. With those two, a whole database can be checked row by row.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · Loop and decision together
+      title: Walk what is there, act only on what qualifies
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub FlagOverdue()
+            Dim lastRow As Long
+            Dim r As Long
+
+            lastRow = Cells(Rows.Count, 1).End(xlUp).Row
+
+            For r = 2 To lastRow
+                If Cells(r, 3).Value > 30 Then
+                    Cells(r, 4).Value = "Overdue"
+                End If
+            Next r
+        End Sub
+      annotations:
+        - label: Starts at 2
+          text: Row 1 is the headers. Starting at 1 would classify the title as if it were a customer.
+        - label: Up to lastRow
+          text: The variable range from week 6. With a thousand rows or with ten, the same code.
+        - label: Cells with two variables
+          text: Cells(r, 3) walks downwards and always reads column 3. The row moves, the column does not.
+        - label: Risk
+          text: If column 3 has empty cells, comparing against 30 treats them as zero and skips them.
+          accent: true
+
+  - table:
+      eyebrow: Block 03 · Verified
+      title: Deleting six rows, both directions
+      headers: [Direction, How it is written, How many were left]
+      rows:
+        - ["Forwards", "For r = 1 To 6", "3 of 6"]
+        - ["Backwards", "For r = 6 To 1 Step -1", "0 of 6"]
+        - ["Why it fails", "Delete row 1 and row 2 becomes row 1", "while the counter is already at 2"]
+        - ["The rule", "If you delete, walk backwards", "always, no exceptions"]
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways for a loop to lie to you
+      items:
+        - label: Error 01
+          title: Deleting forwards
+          desc: Each delete pulls the rows below up while the counter has moved on. It skips half of them, verified.
+        - label: Error 02
+          title: Starting the loop at row 1
+          desc: The header row joins the walk and gets classified as though it were another record.
+        - label: Error 03
+          title: Walking the whole column
+          desc: For Each over A1 to A1048576 walks a million empty cells. Bound it with the last row.
+        - label: Error 04
+          title: Writing cell by cell
+          desc: Every write crosses from VBA into Excel. Twenty thousand crossings are 0.91 seconds, one is 0.02.
+
+  - quiz:
+      eyebrow: Quick check
+      question: All six rows say X. How many are left at the end?
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Dim r As Long
+
+        For r = 1 To 6
+            If Cells(r, 1).Value = "X" Then
+                Rows(r).Delete
+            End If
+        Next r
+      options:
+        - "None, it deleted all six"
+        - "Three, because deleting one pulls the rows below up"
+        - "Six, because Delete does not work inside a loop"
+        - "It stops with an error on reaching a row that no longer exists"
+
+  - lab:
+      eyebrow: Lab
+      title: A thousand rows checked by fifteen lines
+      brief: Take a database from your own area with at least two hundred rows. Write a macro that walks all of it, flags in a new column the rows meeting a condition from your business, and counts how many there were. Then delete the ones that are no use, in the right direction.
+      blocks:
+        - label: Submission
+          text: The .xlsm with the database flagged and the module exported, on Blackboard
+        - label: Constraint
+          text: The last row is worked out. Not one hand-typed address inside the loop.
+        - label: The test
+          text: Double the database and run it again. If it flags half, the range is still fixed.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: For counts, For Each walks
+          desc: One works when the limit can be worked out, the other when there is no need to know how many at all
+        - title: If you delete, walk backwards
+          desc: Deleting forwards skips half the rows and raises no error whatsoever. Verified, three of six
+        - title: Every cell you touch costs
+          desc: Twenty thousand separate writes take 0.91 seconds and one write with an array takes 0.02
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Write a macro that walks the amortization table period by period and stops at the
+        first one where the balance drops below half the loan. Report that period number
+        into a cell.
+      meta:
+        - [Due, Before week 10]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The loop", "40 %", "It walks with a variable range and stops with Exit For"]
+        - ["The condition", "30 %", "It compares against the calculated half, not a typed number"]
+        - ["The report", "30 %", "The period found lands in a named cell"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, splitting a long macro into procedures and functions that can each
+        be tested on their own.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,349 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 8
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 08 · Unidad 3 · Decisiones y primer parcial
+      title: Análisis y Procesamiento de la Información
+      subtitle: Comparar, combinar y decidir. Y las cuatro comparaciones que dan lo contrario de lo que parece.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 8 de 17]
+      notes: |
+        Noventa minutos. Cuarenta en decisiones, veinte en las trampas, y el resto en la
+        logística del parcial.
+
+        Abre la unidad 3 y cierra la primera mitad del curso. El parcial entra las
+        unidades 1, 2 y 3, o sea todo lo visto hasta hoy, y pesa veinte por ciento.
+
+        Las cuatro trampas del bloque 2 están verificadas en Excel 16.0 y conviene que el
+        grupo apueste antes de mostrarlas. La más útil para el resto del semestre es que
+        VBA compara texto respetando mayúsculas, así que Norte y norte son distintos. Eso
+        va a reaparecer en la semana 13 limpiando bases.
+
+        La otra que vale oro es que una celda vacía es igual a cero y también igual a
+        cadena vacía, las dos verdaderas. Preguntar si vale cero no distingue un cero
+        capturado de un dato que nunca llegó, y eso cambia un promedio.
+
+        El código sale de los módulos 05, 06 y 07 de
+        docs/en/courses/vba-course/.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Comparar
+          desc: Los seis operadores, y qué pasa cuando lo comparado es texto
+        - title: Combinar y decidir
+          desc: And, Or y Not, y las dos formas de escribir una decisión
+        - title: El primer parcial
+          desc: Qué entra, cómo se presenta y qué se puede llevar
+        - title: Tu turno
+          desc: Una clasificación de clientes escrita de las dos formas
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Usar los seis operadores de comparación
+          sub: Igual, distinto, mayor, menor, y los dos que incluyen la igualdad
+        - head: Anticipar cómo se comparan dos textos
+          sub: Letra por letra, respetando mayúsculas, y por qué 10 puede ser menor que 9
+        - head: Combinar condiciones con And, Or y Not
+          sub: Y saber que los dos lados se evalúan siempre, sin importar el primero
+        - head: Escribir una decisión de dos formas
+          sub: If con ElseIf en cadena, y Select Case cuando se compara contra una sola cosa
+        - head: Presentar el primer parcial
+          sub: Qué entra, qué se puede consultar y cómo se sube la respuesta
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Comparar
+      lede: Una comparación no devuelve un número ni un texto. Devuelve verdadero o falso, y con eso se decide todo lo demás.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Los seis, completos
+      title: Todos los operadores de comparación de VBA
+      headers: [Operador, Qué pregunta, Ejemplo, Resultado]
+      rows:
+        - ["=", "¿Son iguales?", "5 = 5", "True"]
+        - ["<>", "¿Son distintos?", "5 <> 10", "True"]
+        - [">", "¿El primero es mayor?", "5 > 10", "False"]
+        - ["<", "¿El primero es menor?", "5 < 10", "True"]
+        - [">=", "¿Mayor o igual?", "5 >= 5", "True"]
+        - ["<=", "¿Menor o igual?", "5 <= 10", "True"]
+
+  - code:
+      eyebrow: Bloque 01 · El igual hace dos cosas
+      title: El mismo signo, dos trabajos distintos
+      filename: ComparissonOperators.bas
+      lang: vba
+      source: |
+        Sub Comparar()
+            Dim a As Integer
+            Dim b As Integer
+            Dim sonIguales As Boolean
+
+            a = 5
+            b = 5
+            sonIguales = a = b
+
+            MsgBox "¿a es igual a b? " & sonIguales
+        End Sub
+      annotations:
+        - label: El primer igual
+          text: Asigna. Guarda en sonIguales lo que salga del lado derecho.
+        - label: El segundo igual
+          text: Compara. Devuelve True o False, y ese es el valor que se guarda.
+        - label: Cómo se lee
+          text: De derecha a izquierda. Primero se resuelve a = b, después se guarda el resultado.
+        - label: Riesgo
+          text: En VBA no hay dos signos distintos como en otros lenguajes. El contexto decide cuál de los dos es.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · Verificado
+      title: Comparar texto no es comparar números
+      headers: [Comparación, Devuelve, Por qué]
+      rows:
+        - ["10 < 9", "False", "Como números, nueve es menor"]
+        - ["\"10\" < \"9\"", "True", "Como texto, el 1 va antes que el 9"]
+        - ["\"Norte\" = \"norte\"", "False", "VBA respeta mayúsculas por omisión"]
+        - ["\"abc\" < \"abd\"", "True", "Letra por letra, hasta la primera que difiere"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Combinar y decidir
+      lede: Tres palabras para juntar condiciones, y dos formas de escribir la decisión que sale de ellas.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Los tres, completos
+      title: And, Or y Not, con su tabla de verdad
+      headers: [Combinación, And, Or]
+      rows:
+        - ["True con True", "True", "True"]
+        - ["True con False", "False", "True"]
+        - ["False con True", "False", "True"]
+        - ["False con False", "False", "False"]
+        - ["Not True", "False", "Not invierte lo que tenga"]
+        - ["Not False", "True", "y solo toma una condición"]
+
+  - code:
+      eyebrow: Bloque 02 · La cadena
+      title: If, ElseIf y Else, en el orden que importa
+      filename: ConditionalStatements.bas
+      lang: vba
+      source: |
+        Sub Clasificar()
+            Dim calificacion As Double
+            calificacion = 7.5
+
+            If calificacion >= 9 Then
+                MsgBox "A"
+            ElseIf calificacion >= 8 Then
+                MsgBox "B"
+            ElseIf calificacion >= 7 Then
+                MsgBox "C"
+            Else
+                MsgBox "Reprobado"
+            End If
+        End Sub
+      annotations:
+        - label: El orden manda
+          text: Se revisa de arriba hacia abajo y se detiene en la primera que sea verdadera. Verificado, 7.5 da C.
+        - label: Por qué de mayor a menor
+          text: Si el primero fuera mayor o igual a siete, un nueve entraría ahí y nunca llegaría a la A.
+        - label: Else
+          text: Atrapa todo lo que no entró antes. Sin él, una calificación de cinco no produce nada.
+        - label: Riesgo
+          text: ElseIf junto es una palabra. Else If separado abre un If nuevo que pide su propio End If.
+          accent: true
+
+  - compare:
+      eyebrow: Bloque 02 · La otra forma
+      title: La misma decisión, escrita con Select Case
+      before:
+        label: Con ElseIf en cadena
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          If calificacion >= 9 Then
+              nivel = "A"
+          ElseIf calificacion >= 8 Then
+              nivel = "B"
+          End If
+      after:
+        label: Con Select Case
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          Select Case calificacion
+              Case Is >= 9:   nivel = "A"
+              Case 8 To 8.99: nivel = "B"
+          End Select
+      note: >-
+        Las dos dan C con 7.5, verificado. Select Case gana cuando todas las condiciones
+        preguntan por la misma variable, y acepta rangos con To y comparaciones con Is. If
+        gana cuando cada rama pregunta por cosas distintas.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro comparaciones que dan lo contrario
+      items:
+        - label: Error 01
+          title: True no vale uno, vale menos uno
+          desc: "CInt(True) es -1. Por eso (5 > 1) * 3 da -3, y sumar dos condiciones verdaderas da -2."
+        - label: Error 02
+          title: Norte no es igual a norte
+          desc: VBA compara texto respetando mayúsculas. Una base con capturas mixtas nunca cuadra al agrupar.
+        - label: Error 03
+          title: Una celda vacía es igual a cero
+          desc: También es igual a cadena vacía, las dos ciertas. Preguntar si vale cero no distingue el dato ausente.
+        - label: Error 04
+          title: And evalúa los dos lados
+          desc: No corta al primer False. La condición de la derecha corre aunque la de la izquierda ya haya fallado.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El primer parcial
+      lede: Entran las unidades 1, 2 y 3. Es todo lo que hemos hecho, y se presenta en la máquina, con tus apuntes al lado.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Qué entra
+      title: Las tres unidades, semana por semana
+      headers: [Unidad, Semanas, Lo que se evalúa]
+      rows:
+        - ["1", "2 a 5", "Editor, tipos, variables, operadores y captura"]
+        - ["2", "1, 6 y 7", "Grabar, editar, rangos variables y búsqueda de objetivo"]
+        - ["3", "8", "If, comparación y lógicos"]
+        - ["Peso", "Semana 8", "20 % de la calificación final"]
+
+  - steps:
+      eyebrow: Bloque 03 · Cómo es
+      title: Cinco cosas que hay que saber antes de sentarse
+      items:
+        - label: '01'
+          title: En la máquina del aula
+          desc: Se resuelve en Excel, no en papel. Puedes traer una USB con lo que quieras.
+        - label: '02'
+          title: Con tus materiales
+          desc: Apuntes, tareas entregadas, los libros, la web y lo que hayas generado con IA antes del examen.
+        - label: '03'
+          title: Sin canal de comunicación
+          desc: Hay web, pero no correo ni mensajería. La red es para subir la respuesta, nada más.
+        - label: '04'
+          title: Dispositivos al frente
+          desc: Teléfono, audífonos y lentes con IA se dejan enfrente antes de empezar.
+        - label: '05'
+          title: Se sube comprimido
+          desc: Un .zip con tu nombre completo, por ejemplo PedroPerezGonzalez.zip, a Blackboard.
+
+  - method:
+      eyebrow: Bloque 03 · Lo que sí se pregunta
+      title: Puedes consultar todo, y aun así hay que saber
+      statement: El examen no mide qué tanto memorizaste. Mide si puedes leer un requerimiento, escribir la macro y defenderla.
+      points:
+        - label: Lo que se evalúa
+          text: Que el código corra, que haga lo que el enunciado pide, y que uses el rango variable en vez de una dirección fija
+        - label: La defensa
+          text: Puedo pedirte que expliques en voz alta un procedimiento tuyo. Leerlo no es explicarlo.
+        - label: Cómo se prepara
+          text: Volviendo a hacer las tareas sin ver la solución. Consultar es rápido cuando ya sabes qué buscar.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: La celda A1 está vacía. ¿Qué escribe en B1?
+      filename: Decisiones.bas
+      lang: vba
+      source: |
+        If Range("A1").Value = 0 Then
+            Range("B1").Value = "Sin venta"
+        Else
+            Range("B1").Value = "Con venta"
+        End If
+      options:
+        - "Con venta, porque la celda está vacía y no vale cero"
+        - "Sin venta, porque una celda vacía sí es igual a cero"
+        - "Nada, porque comparar una celda vacía marca error"
+        - "Depende del formato que tenga la celda"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Clasifica una cartera de clientes
+      brief: Toma una base de clientes de tu área y escribe una macro que clasifique cada renglón en tres niveles según su saldo. Escríbela dos veces, una con ElseIf en cadena y otra con Select Case, y decide cuál queda mejor para este caso.
+      blocks:
+        - label: Entrega
+          text: El módulo con los dos procedimientos y una nota de cuál elegiste, en Blackboard
+        - label: Restricción
+          text: Ningún cliente puede quedar sin clasificar. Si no entra en ninguno, va al Else.
+        - label: La prueba
+          text: Mete un renglón con el saldo vacío. Si lo clasifica como cero, ya sabes qué falta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Comparar texto no es comparar números
+          desc: Como texto, 10 es menor que 9, y Norte no es norte. Una clave capturada como texto se ordena distinto
+        - title: Una celda vacía es igual a cero
+          desc: Y también a cadena vacía. Preguntar por cero no distingue el dato ausente del que sí llegó valiendo cero
+        - title: El orden de los ElseIf decide
+          desc: Se detiene en la primera condición verdadera, así que va de la más exigente a la más floja
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Sobre la tabla de amortización, escribe una macro que revise cada periodo y marque
+        los que ya pagaron más de la mitad del capital. Usa el rango variable de la semana
+        6 y clasifica en tres niveles.
+      meta:
+        - [Entrega, Antes de la semana 9]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Condiciones", "40 %", "Las tres ramas están y ninguna fila queda sin clasificar"]
+        - ["Rango variable", "30 %", "Recorre lo que haya, no una dirección escrita a mano"]
+        - ["Vacíos", "30 %", "Un periodo sin dato no se cuenta como cero"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, la repetición. For y For Each, que es donde la macro por fin
+        recorre las mil filas sin que tú escribas mil renglones.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

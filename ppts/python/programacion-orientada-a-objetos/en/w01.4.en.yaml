@@ -1,0 +1,330 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 1.4
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 4
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Review 4 of 5 · Module 4 · Collections
+      title: Object-Oriented Programming
+      subtitle: Four ways to hold several things in one variable, and when to reach for each.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, Review 4 of 5]
+      notes: |
+        Covers module 4, Code012 to Code017 plus Exercise003.
+
+        The references-against-copies block pays the most: it is the same mechanism
+        that in week 3 explains the shared class attribute, which is the quiz question
+        of that session.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Choose between the four collections
+          sub: Based on whether order matters, whether it will change, and whether duplicates are allowed
+        - head: Index and walk a list
+          sub: Indexes, slices and step, exactly as in strings
+        - head: Use the list methods
+          sub: append, insert, remove, pop, sort and reverse
+        - head: Look up by key in a dictionary
+          sub: And why get avoids the KeyError that stops the program
+        - head: Tell copying from renaming
+          sub: The equals sign does not copy a list, it gives the same list a second name
+
+  - roadmap:
+      eyebrow: Review map
+      title: Five sessions, one module each
+      phases:
+        - label: Review 1
+          title: Data and text
+          desc: Variables, types, strings, numbers and input
+          state: done
+        - label: Review 2
+          title: Decisions and loops
+          desc: Comparison, logic, if, for and while
+          state: done
+        - label: Review 3
+          title: Functions
+          desc: Parameters, return values and scope
+          state: done
+        - label: Review 4
+          title: Collections
+          desc: Lists, tuples, sets and dictionaries
+          state: now
+        - label: Review 5
+          title: Errors
+          desc: try, except and the types you meet first
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The four collections
+      lede: Three questions decide which one you want, and answering them wrong costs later.
+      block: 1
+
+  - table:
+      eyebrow: Module 4 · Comparison
+      title: Three questions, four answers
+      headers: ["Collection", "Syntax", "Ordered?", "Changeable?", "Duplicates?"]
+      rows:
+        - ["List", "[1, 2, 3]", "Yes", "Yes", "Yes"]
+        - ["Tuple", "(1, 2, 3)", "Yes", "No", "Yes"]
+        - ["Set", "{1, 2, 3}", "No", "Yes", "No"]
+        - ["Dictionary", "{'a': 1}", "Yes", "Yes", "Not in the keys"]
+
+  - figure:
+      eyebrow: Module 4 · Collections
+      title: The same table, as a picture
+      image: img/en/collections.png
+      caption: Each container drawn with the property that separates it from the other three
+      alt: List, tuple, set and dictionary side by side
+
+  - divider:
+      eyebrow: Block 02
+      title: Lists
+      lede: The collection you will reach for ninety per cent of the time.
+      block: 2
+
+  - code:
+      eyebrow: Module 4 · Lists
+      title: Indexing and slicing, just like a string
+      filename: Code012.py
+      lang: python
+      source: |
+        fruits = ["apple", "banana", "cherry", "blackcurrant"]
+
+        fruits[1]        # 'banana'
+        fruits[-1]       # 'blackcurrant'
+        fruits[1:3]      # ['banana', 'cherry']
+        fruits[:2]       # ['apple', 'banana']
+        fruits[::2]      # ['apple', 'cherry']   every second one
+        len(fruits)      # 4
+      annotations:
+        - label: You already know this
+          text: Indexes, negatives and slices work exactly as they did on strings in review 1
+        - label: The difference
+          text: A list can be modified. A string cannot; it always returns a copy.
+
+  - table:
+      eyebrow: Module 4 · Lists
+      title: The list methods you will use
+      headers: ["Method", "What it does", "Starting from [3, 1]", "It becomes"]
+      rows:
+        - ["append(x)", "Adds at the end", "items.append(2)", "[3, 1, 2]"]
+        - ["insert(i, x)", "Inserts at position i", "items.insert(0, 9)", "[9, 3, 1]"]
+        - ["remove(x)", "Deletes the first x", "items.remove(3)", "[1]"]
+        - ["pop()", "Takes and returns the last", "items.pop()", "[3]"]
+        - ["sort()", "Sorts in place", "items.sort()", "[1, 3]"]
+        - ["reverse()", "Reverses in place", "items.reverse()", "[1, 3]"]
+
+  - concept:
+      eyebrow: Module 4 · Lists
+      title: These methods do change the original
+      lead: >-
+        The opposite of strings. append, sort and reverse change the list and return None.
+        Storing the result is the classic mistake: items = items.sort() leaves the
+        variable as None and loses the data.
+      panel:
+        label: The two ways to sort
+        title: sort changes it, sorted returns a copy
+        note: >-
+          count(x) counts occurrences and index(x) gives the first position; neither
+          modifies the list. items.sort() sorts the one you have. sorted(items) hands
+          you a new sorted list and leaves the original intact.
+      steps:
+        - text: The method changes the list
+        - text: and returns None
+        - text: storing that None loses your list
+          loop: ↺ if you need a sorted copy, use sorted
+
+  - divider:
+      eyebrow: Block 03
+      title: Tuples, sets and dictionaries
+      lede: The other three exist because sometimes you need exactly what a list will not give you.
+      block: 3
+
+  - code:
+      eyebrow: Module 4 · Tuples
+      title: A list that cannot be changed
+      filename: Code013.py
+      lang: python
+      source: |
+        point = (3, 4)
+
+        point[0]              # 3, reads like a list
+        len(point)            # 2
+        other = point + (5,)  # (3, 4, 5), a brand new tuple
+
+        # point[0] = 9        # TypeError, no item assignment
+        x, y = point          # unpacks into two variables
+      annotations:
+        - label: What it is for
+          text: Data that must not change, such as a coordinate or a date
+        - label: The lonely comma
+          text: '(5,) is a one-element tuple. (5) without the comma is just a number in brackets.'
+        - label: Risk
+          text: There is no append and no extend. Concatenating with + builds a new tuple.
+          accent: true
+
+  - code_output:
+      eyebrow: Module 4 · Sets
+      title: A set drops the duplicates on its own
+      filename: Code014.py
+      lang: python
+      output_label: Output
+      source: |
+        grades = [8, 9, 8, 10, 9, 8]
+
+        unique = set(grades)
+        print(unique)
+        print(len(grades), len(unique))
+        print(8 in unique)
+      output: |
+        {8, 9, 10}
+        6 3
+        True
+
+  - code:
+      eyebrow: Module 4 · Dictionaries
+      title: Storing by key instead of by position
+      filename: Code015.py
+      lang: python
+      source: |
+        student = {
+            "name": "Ana",
+            "degree": "Mechatronics",
+            "term": 2,
+        }
+
+        student["name"]                # 'Ana'
+        student.get("grant")           # None, instead of blowing up
+        student.get("grant", False)    # False, a default
+
+        for key, value in student.items():
+            print(key, value)
+      annotations:
+        - label: Brackets against get
+          text: 'student["grant"] raises KeyError if it is missing. get returns None and carries on.'
+        - label: items()
+          text: Walks key and value together, which is how you almost always want it
+        - label: Risk
+          text: Keys do not repeat. Writing the same one twice keeps only the last value.
+          accent: true
+
+  - divider:
+      eyebrow: Block 04
+      title: Copying against renaming
+      lede: The block they forget most, and the one that comes back in week 3.
+      block: 4
+
+  - concept:
+      eyebrow: Module 4 · References
+      title: The equals sign does not copy a list
+      lead: >-
+        With numbers and strings, assigning copies the value. With lists, dictionaries and
+        sets, assigning only gives the same thing a second name. Changing it through
+        either name changes what the other one sees.
+      panel:
+        label: How to actually copy
+        title: copy(), list() or a full slice
+        note: >-
+          new = old.copy() and new = list(old) do the same thing. Careful: the copy is
+          shallow, so a list of lists still shares the inner ones.
+      steps:
+        - text: copy = numbers gives a second name
+        - text: copy.append(4) touches the one list
+        - text: numbers changed too
+          loop: ↺ copy() is what creates a second list
+
+  - figure:
+      eyebrow: Module 4 · References
+      title: Two tags, one box
+      image: img/en/reference-vs-copy.png
+      caption: The equals sign copies the reference. A separate list needs copy().
+      alt: Two tags tied to one box, beside two tags with a box each
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors from this module
+      items:
+        - label: Error 01
+          title: Storing what sort returns
+          desc: 'items = items.sort() leaves the variable as None. sort sorts and returns nothing.'
+        - label: Error 02
+          title: Index out of range
+          desc: 'IndexError. The last position of a list of n items is n minus one.'
+        - label: Error 03
+          title: A key that is not there
+          desc: 'KeyError with brackets. Use get when the field might be missing.'
+        - label: Error 04
+          title: Editing a list while looping over it
+          desc: The loop skips items. Iterate over a copy, or build a new list.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: quiz.py
+      lang: python
+      source: |
+        numbers = [1, 2, 3]
+        copy = numbers
+
+        copy.append(4)
+
+        print(len(numbers))
+      options:
+        - '3, because copy is a separate list'
+        - '4, because both names point at the same list'
+        - 'An error, a list cannot be assigned to another variable'
+        - '7, because the two lists get concatenated'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 4, because nothing was copied
+      headers: ["Step", "Statement", "numbers", "copy", "Same object?"]
+      rows:
+        - ["1", "numbers = [1, 2, 3]", "[1, 2, 3]", "–", "–"]
+        - ["2", "copy = numbers", "[1, 2, 3]", "[1, 2, 3]", "Yes"]
+        - ["3", "copy.append(4)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Yes"]
+        - ["4", "len(numbers)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "4"]
+      verdict: The equals sign copies the reference, not the contents. For a separate list use numbers.copy() or list(numbers).
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Three questions pick the collection
+          desc: Does order matter, will it change, can there be duplicates. That is enough.
+        - title: List methods change it and return None
+          desc: Exactly the opposite of string methods, which return a copy and touch nothing
+        - title: Assigning a list does not copy it
+          desc: In week 3 this comes back as the class attribute every object shares
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Given a list of student dictionaries, write functions returning those who passed, the group average, and the degrees without repeats.
+      meta:
+        - [Due, Before review 5]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Collections", "40 %", "The degrees without repeats use a set, not a loop"]
+        - ["Access", "30 %", "Student fields are read with get where the field may be missing"]
+        - ["No side effects", "30 %", "No function modifies the list it receives"]
+
+  - closing:
+      title: Questions
+      subtitle: The last review, catching an error without the program crashing.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

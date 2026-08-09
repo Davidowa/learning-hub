@@ -1,0 +1,416 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 3
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 03 · Unidad 2 · Tipos, espacios de nombres y string
+      title: Programación Avanzada
+      subtitle: Qué tipos trae el lenguaje, de dónde sale el nombre std, y el primer tipo del curso que no es un número.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 3 de 17]
+      notes: |
+        Cierra el bloque de fundamentos. A partir de la próxima sesión se escriben funciones,
+        así que esta es la última vez que todo cabe dentro de main sin que se sienta raro.
+
+        Los tamaños de la tabla se midieron con sizeof en Visual Studio Community 2026,
+        compilando para x64. No son los del estándar, son los de esta plataforma, y la
+        diferencia es el tema de una de las diapositivas.
+
+        Siguen sin existir if ni ciclos. Las operaciones de string de hoy se eligieron
+        justamente porque ninguna los necesita.
+
+        Lectura: Malik, octava edición, capítulos 2 y 7. Los documentos del curso citan el
+        capítulo 8, que es el número correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El catálogo
+          desc: Los tipos que el lenguaje ya trae, y cuánto ocupa cada uno
+        - title: Los límites
+          desc: Qué pasa cuando un valor no cabe y nadie lanza un error
+        - title: Nombres propios
+          desc: Espacios de nombres, enumeraciones y alias de tipo
+        - title: Texto
+          desc: std::string y las operaciones que vas a usar todo el semestre
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir el tipo adecuado
+          sub: Por lo que va a guardar y por el rango que necesita, no por costumbre
+        - head: Explicar qué es un espacio de nombres
+          sub: "Y por qué std:: aparece delante de todo lo que trae la biblioteca estándar"
+        - head: Declarar enumeraciones y alias
+          sub: Con enum class y using, que son las formas que este curso usa
+        - head: Manipular texto con std::string
+          sub: Concatenar, medir, cortar y buscar sin tocar un arreglo de caracteres
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: now
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: todo
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El catálogo de tipos
+      lede: "Elegir un tipo es decidir dos cosas a la vez: qué valores caben y cuánta memoria cuesta guardarlos."
+      block: 1
+
+  - table:
+      eyebrow: Tipos fundamentales
+      title: Los siete que vas a usar, y lo que ocupan aquí
+      headers: ["Tipo", "Qué guarda", "Bytes"]
+      rows:
+        - ["bool", "true o false, nada más", "1"]
+        - ["char", "Un carácter, guardado como número", "1"]
+        - ["short", "Enteros de rango corto", "2"]
+        - ["int", "El entero de uso diario", "4"]
+        - ["long long", "Enteros que no caben en int", "8"]
+        - ["float", "Real de precisión sencilla", "4"]
+        - ["double", "El real de uso diario", "8"]
+      notes: |
+        Medidos con sizeof en esta plataforma, x64 con MSVC. La recomendación práctica es
+        usar int y double salvo que haya una razón concreta para otra cosa, porque son los
+        que el procesador maneja más cómodo.
+
+        float existe y casi nunca conviene. Tiene siete cifras significativas contra las
+        quince de double, y el ahorro de cuatro bytes rara vez compensa.
+
+  - code_output:
+      eyebrow: Comprobación
+      title: El lenguaje no promete estos números, la plataforma sí
+      filename: tamanos.cpp
+      lang: cpp
+      output_label: x64 con MSVC
+      source: |
+        #include <iostream>
+
+        int main()
+        {
+            std::cout << sizeof(int) << "\n";
+            std::cout << sizeof(long) << "\n";
+            std::cout << sizeof(long long) << "\n";
+            return 0;
+        }
+      output: |
+        4
+        4
+        8
+      notes: |
+        El renglón de en medio es el interesante. long mide 4 bytes aquí y 8 en Linux con
+        gcc, con el mismo código y el mismo estándar. El estándar solo exige que long tenga
+        al menos 32 bits y que no sea menor que int, y Windows se quedó en el mínimo.
+
+        La consecuencia práctica: un programa que guarda un valor grande en un long funciona
+        en una máquina y se desborda en la otra. Cuando el tamaño importe de verdad, están
+        int32_t e int64_t en cstdint, que sí dicen su tamaño en el nombre.
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un tipo entero no avisa cuando se le acaba el espacio
+      lead: >-
+        Cada tipo entero tiene un valor mínimo y uno máximo. Al pasarse no hay error, ni
+        excepción, ni advertencia en tiempo de ejecución. El valor da la vuelta y sigue
+        contando desde el otro extremo, y el programa continúa como si nada.
+      panel:
+        label: Dónde consultarlo
+        title: La cabecera limits lo dice
+        note: >-
+          std::numeric_limits<int>::max() devuelve 2147483647 y min() devuelve
+          -2147483648. Sirve para verificar un rango en lugar de suponerlo.
+      steps:
+        - text: Cada tipo tiene un rango fijo
+        - text: Pasarse no lanza ningún error
+        - text: El valor da la vuelta y sigue
+          loop: ↺ elegir el tipo es elegir dónde está ese borde
+
+  - code_output:
+      eyebrow: Demostración
+      title: Cero menos uno, en un tipo que no admite negativos
+      filename: vuelta.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        unsigned int u = 0;
+
+        std::cout << u - 1 << "\n";
+      output: |
+        4294967295
+      notes: |
+        unsigned guarda solo valores no negativos, así que al restarle uno a cero el
+        resultado da la vuelta hasta el máximo del tipo. No es un error del compilador, está
+        definido así en el estándar y es lo que tiene que pasar.
+
+        Por eso conviene no usar unsigned para cantidades que se restan, aunque nunca vayan
+        a ser negativas. El día que una resta se pase de cero, el programa no falla, entrega
+        cuatro mil millones y sigue trabajando con ese número.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Nombres propios
+      lede: "Tres maneras de ponerle nombre a algo: al lugar donde vive, a un conjunto de valores, y al tipo mismo."
+      block: 2
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un espacio de nombres evita que dos bibliotecas choquen
+      lead: >-
+        Si tu programa y una biblioteca definen los dos una función llamada imprimir, el
+        enlazador no sabe cuál quieres. Un espacio de nombres le pone apellido a cada una,
+        así que las dos pueden existir sin pelearse.
+      panel:
+        label: Por eso std está en todos lados
+        title: std es el apellido de la biblioteca
+        note: >-
+          cout, string, vector y todo lo que trae el estándar viven en std. Escribir
+          std::cout es decir el nombre completo, no una formalidad del compilador.
+      steps:
+        - text: La biblioteca vive en std
+        - text: El prefijo dice de dónde sale
+        - text: using lo da por supuesto
+          loop: ↺ darlo por supuesto ahorra letras y quita información
+
+  - compare:
+      eyebrow: Las dos formas
+      title: El mismo código, con y sin el prefijo
+      before:
+        label: Con using
+        file: corto.cpp
+        lang: cpp
+        code: |
+          using namespace std;
+
+          string curso = "Programacion";
+          cout << curso.length() << endl;
+      after:
+        label: Con el prefijo
+        file: explicito.cpp
+        lang: cpp
+        code: |
+          #include <string>
+
+          std::string curso = "Programacion";
+          std::cout << curso.length() << "\n";
+      note: >-
+        En una diapositiva y en un ejercicio de una página, la izquierda se lee mejor y este
+        curso la usa. En un archivo de cabecera nunca, porque el using se contagia a todo
+        archivo que lo incluya y ahí sí empiezan los choques de nombres.
+
+  - code:
+      eyebrow: Enumeraciones y alias
+      title: Ponerle nombre a un conjunto de valores, y a un tipo
+      filename: niveles.cpp
+      lang: cpp
+      source: |
+        enum class Nivel { Bajo, Medio, Alto };
+
+        using Calificacion = double;
+
+        int main()
+        {
+            Nivel n = Nivel::Alto;
+            Calificacion c = 8.75;
+
+            std::cout << static_cast<int>(n) << "\n";
+            std::cout << c << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 1
+          text: Los valores empiezan en cero y suben de uno en uno, así que Alto vale 2
+        - label: Línea 3
+          text: using le pone otro nombre a un tipo que ya existe. Es un sinónimo, no un tipo nuevo.
+        - label: Línea 7
+          text: El nombre del enum va obligatorio delante del valor. Eso evita chocar con otro Alto.
+        - label: Riesgo
+          text: enum sin class deja los nombres sueltos y se convierte a int solo.
+          accent: true
+      notes: |
+        Usen siempre enum class. La forma sin class es la que traía C, deja los nombres de
+        los valores sueltos en el espacio que la rodea, y los convierte a entero sin que
+        nadie lo pida, que es justo lo que causa los choques que el enum venía a evitar.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: using namespace en una cabecera
+          desc: Se contagia a todo archivo que la incluya, y el choque de nombres aparece lejos de donde se causó
+        - label: Error 02
+          title: enum sin class
+          desc: Los valores quedan sueltos en el espacio que los rodea y se convierten a entero sin que nadie lo pida
+        - label: Error 03
+          title: Comparar texto con dos comillas
+          desc: Entre std::string el operador funciona, pero comparar dos arreglos de caracteres compara direcciones
+        - label: Error 04
+          title: Confundir comilla simple y doble
+          desc: "Con comilla simple es un char y con comilla doble es una cadena, que además lleva un cero al final"
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El tipo string
+      lede: El primer tipo del curso que no guarda un número, y el que más se usa después de int.
+      block: 3
+
+  - code:
+      eyebrow: Texto
+      title: Declarar, unir y medir
+      filename: cadenas.cpp
+      lang: cpp
+      source: |
+        #include <iostream>
+        #include <string>
+
+        int main()
+        {
+            std::string curso = "Programacion";
+            std::string clave = "COM103";
+
+            std::string junto = curso + " " + clave;
+
+            std::cout << junto << "\n";
+            std::cout << curso.length() << "\n";
+            return 0;
+        }
+      annotations:
+        - label: Línea 2
+          text: string necesita su propia cabecera. iostream la arrastra a veces y en otro compilador no.
+        - label: Línea 9
+          text: El operador de suma concatena. Con al menos un string de por medio, los literales se pegan solos.
+        - label: Línea 12
+          text: length() cuenta caracteres y devuelve 12. size() hace exactamente lo mismo.
+        - label: Riesgo
+          text: "curso + clave sí compila, pero \"COM\" + \"103\" no, porque ahí no hay ningún string, solo dos literales."
+          accent: true
+
+  - table:
+      eyebrow: Operaciones
+      title: Siete operaciones, con lo que devuelven
+      headers: ["Operación", "Qué hace", "Devuelve"]
+      rows:
+        - ["a + b", "Concatena las dos", "Un string nuevo"]
+        - ["a.length()", "Cuenta los caracteres", "12"]
+        - ["a.at(0)", "El carácter de esa posición", "P"]
+        - ["a.substr(0, 7)", "Un pedazo desde una posición", "Program"]
+        - ["a.find(\"gram\")", "Dónde empieza el texto buscado", "3"]
+        - ["a.empty()", "Si no tiene caracteres", "true o false"]
+        - ["a == b", "Compara el contenido", "true o false"]
+      notes: |
+        Todos los valores de la columna derecha salen de aplicar la operación sobre la
+        cadena "Programacion", medidos en una corrida real.
+
+        find devuelve std::string::npos cuando no encuentra nada, que es el valor más grande
+        que cabe en el tipo, no menos uno. Compararlo contra npos es la forma correcta de
+        preguntar si hubo resultado, y en la semana 7 esa comparación ya podrá ir dentro de
+        un if.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: pedazo.cpp
+      lang: cpp
+      source: |
+        std::string s = "Programacion";
+
+        std::cout << s.substr(0, 7) << s.length() << "\n";
+      options:
+        - 'Program12, porque substr no modifica la cadena original'
+        - 'Program7, porque substr deja la cadena en siete caracteres'
+        - 'Programacion12, porque substr copia toda la cadena'
+        - 'rogramac12, porque el primer número es dónde empieza y el segundo dónde termina'
+
+  - trace:
+      eyebrow: Respuesta
+      title: substr devuelve una copia y deja la original intacta
+      headers: ["Paso", "Expresión", "Devuelve", "s sigue siendo"]
+      rows:
+        - ["1", "s = \"Programacion\"", "–", "Programacion"]
+        - ["2", "s.substr(0, 7)", "Program", "Programacion"]
+        - ["3", "s.length()", "12", "Programacion"]
+        - ["4", "Se imprimen juntos", "Program12", "Programacion"]
+      verdict: Los dos argumentos de substr son la posición de inicio y cuántos caracteres llevarse, no el inicio y el final. Y ninguna de las dos operaciones cambia la cadena sobre la que se aplican.
+
+  - method:
+      eyebrow: Criterio
+      title: Leer código ajeno antes de escribir el propio
+      statement: La mitad del trabajo de un programador es entender lo que ya está escrito. Se lee en un orden distinto del que se escribió, y conviene practicarlo con intención.
+      points:
+        - label: Primero
+          text: Los tipos de las variables. Dicen qué guarda el programa antes que ninguna línea de lógica.
+        - label: Después
+          text: Los nombres. Un identificador honesto ahorra leer la función completa para saber qué hace.
+        - label: Al final
+          text: La línea que no entiendas. Marcarla y seguir es mejor que atorarse, casi siempre se aclara sola.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Leer, corregir y renombrar, en parejas
+      brief: Reciben un programa de treinta líneas que compila y funciona, con nombres de una letra, un enum sin class y using namespace std dentro de una cabecera. Déjenlo legible sin cambiar lo que hace.
+      blocks:
+        - label: Restricción
+          text: La salida del programa tiene que ser idéntica antes y después, carácter por carácter
+        - label: Entregable
+          text: El archivo corregido y una lista de los cambios, con una línea de justificación cada uno
+        - label: Criterio
+          text: Que cada cambio se pueda defender por legibilidad y no por gusto personal
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El tamaño depende de la plataforma
+          desc: long mide 4 bytes en Windows y 8 en Linux, con el mismo código y el mismo estándar
+        - title: Pasarse de rango no da error
+          desc: El valor da la vuelta en silencio, así que el tipo se elige por el rango que necesitas
+        - title: std es un espacio de nombres
+          desc: El prefijo dice de qué biblioteca sale cada nombre, y en una cabecera nunca se omite
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Una ficha de alumno con texto y tipos elegidos
+      brief: Escriban un programa que arme la ficha de un alumno con nombre y matrícula en std::string, un enum class para el nivel, y que imprima el nombre completo concatenado, su longitud y las primeras tres letras de la matrícula.
+      meta:
+        - [Entrega, Antes de la sesión 4]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Tipos", "Requisito", "Cada variable usa el tipo que le corresponde y el enum es enum class"]
+        - ["Texto", "Requisito", "La concatenación, la longitud y el corte dan los valores correctos"]
+        - ["Estilo", "Requisito", "Sin using namespace fuera de un archivo de implementación"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, funciones. Cómo se parte un programa en piezas que se prueban por separado.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

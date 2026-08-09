@@ -1,0 +1,316 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 9
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 09 · Unit 7 · Inheritance and composition
+      title: Advanced Programming
+      subtitle: Reusing a class without writing it again, and deciding between inheriting from it and simply using it.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 9 of 17]
+      notes: |
+        First session after the partial. Worth opening with the most frequent mistakes from
+        the exam before starting the new topic, because everything that went wrong there
+        comes back in the second partial.
+
+        This session has a design decision at its centre, not a piece of syntax. Inheritance
+        is taught in full and then the argument is made for why composition usually wins.
+        Students arriving from other courses tend to believe the opposite.
+
+        All outputs were measured by building the slide programs on Visual Studio Community
+        2026.
+
+        The protected access slide is the one that justifies that level existing. Without
+        inheritance, protected and private look identical from outside, and that was the
+        right-hand column of the week 6 figure.
+
+        Reading: Malik, eighth edition, chapter 11. The course documents cite 13, right for
+        the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Inheriting
+          desc: A class that takes on the state and behaviour of another
+        - title: The protected level
+          desc: What the child can see and an outsider cannot
+        - title: Composing
+          desc: A class that contains another instead of descending from it
+        - title: Which to pick
+          desc: The question that separates "is a" from "has a"
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare a derived class
+          sub: With the colon syntax and the call to the base constructor
+        - head: Use the protected level
+          sub: And explain why it sits between public and private, once inheritance is involved
+        - head: Reuse by composition
+          sub: Declaring an object of another class as a member and delegating work to it
+        - head: Choose between the two
+          sub: Applying the "is a" against "has a" test before writing the class
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Inheriting
+      lede: A derived class starts with everything the base had and adds its own. That is the easy part.
+      block: 1
+
+  - figure:
+      eyebrow: Diagnosis
+      title: Two levels work, four start to hurt
+      image: img/en/hierarchy.png
+      caption: The long chain inherits behaviour nobody asked for. Every new level is a decision that can no longer be undone.
+      alt: A two-level tree beside a four-level chain that ends up inheriting something it should not
+
+  - code:
+      eyebrow: Inheritance
+      title: A class that starts where another one ends
+      filename: student.cpp
+      lang: cpp
+      source: |
+        class Person {
+        public:
+            Person(std::string n) { name = n; }
+            std::string getName() { return name; }
+        protected:
+            std::string name;
+        };
+
+        class Student : public Person {
+        public:
+            Student(std::string n, std::string m) : Person(n), id(m) {}
+        private:
+            std::string id;
+        };
+      annotations:
+        - label: Line 9
+          text: The colon and public Person are the inheritance. Student already has name and getName.
+        - label: Line 11
+          text: The initialiser list calls the base constructor, and it runs before the body
+        - label: Line 6
+          text: protected is what lets Student read name directly. With private it could not.
+        - label: Risk
+          text: Without the call to Person(n), the compiler looks for a no-argument constructor in the base and does not find one.
+          accent: true
+
+  - code_output:
+      eyebrow: Running it
+      title: What was inherited works without writing it again
+      filename: student.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        Student a("Luis", "A01");
+
+        std::cout << a.getName() << "\n";
+      output: |
+        Luis
+      notes: |
+        getName appears nowhere inside Student and can still be called on a Student object.
+        That is exactly what the inheritance line bought.
+
+        Worth pointing out that there is only one object. There is no Person sitting inside
+        a Student as though they were two objects; there is one object carrying both parts.
+
+  - figure:
+      eyebrow: Access
+      title: What the middle level is for
+      image: img/en/access-levels-cpp.png
+      caption: The right-hand column is the one that turned up this week. Protected is what the child can see and the world cannot.
+      alt: Three class members against two columns, from outside and from a derived class, with ticks and crosses
+
+  - divider:
+      eyebrow: Block 02
+      title: Composing
+      lede: The other way to reuse, and usually the better one. A class that contains another instead of descending from it.
+      block: 2
+
+  - code_output:
+      eyebrow: Composition
+      title: A car that does not inherit from engine
+      filename: car.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        class Engine {
+        public:
+            void start() { std::cout << "engine running\n"; }
+        };
+
+        class Car {
+        public:
+            void turnOn() { engine.start(); }
+        private:
+            Engine engine;
+        };
+      output: |
+        engine running
+      notes: |
+        Car does not descend from Engine, it has one. The difference reads on the private
+        member line, and it changes everything else.
+
+        Changing the engine means replacing that member. No other class notices, because the
+        engine is not part of what Car promises to the outside.
+
+        A car has an engine. A car is not an engine. That sentence is the whole decision rule
+        of this session.
+
+  - table:
+      eyebrow: The decision
+      title: Two ways to reuse, and what each one costs
+      headers: ["Aspect", "Inheritance", "Composition"]
+      rows:
+        - ["The relationship", "Is a", "Has a"]
+        - ["What comes across", "All public and protected", "Nothing but what you delegate"]
+        - ["Changing the part", "Touches the whole branch", "One line"]
+        - ["Coupling", "High and permanent", "Low"]
+        - ["When it suits", "A real, stable relationship", "Almost always"]
+      notes: |
+        The last row is a defensible opinion rather than a dogma, and it is worth presenting
+        that way. Inheritance earns its place when there is a genuine "is a" relationship and
+        when polymorphism will be used, which is the week 12 topic.
+
+        Outside that case, inheriting just to reuse three functions ties two classes together
+        forever in exchange for saving a few lines.
+
+  - divider:
+      eyebrow: Block 03
+      title: Which to pick
+      lede: The question is answered in one sentence, before the first line of the class is written.
+      block: 3
+
+  - method:
+      eyebrow: Criterion
+      title: The sentence test
+      statement: Before inheriting, say the relationship out loud. If "is a" sounds strange and "has a" sounds natural, the answer is composition and there is nothing left to argue.
+      points:
+        - label: Sounds right
+          text: A student is a person. A square is a shape. There the inheritance describes something real.
+        - label: Sounds odd
+          text: A car is an engine. A payroll is an employee. What you have there is containment.
+        - label: The usual doubt
+          text: Is a stack a vector, or does it have one. It has one. A stack exposes fewer operations, not more.
+
+  - quiz:
+      eyebrow: Quick question
+      question: Which of the four lines does not compile, from main?
+      filename: access.cpp
+      lang: cpp
+      source: |
+        Student a("Luis", "A01");
+
+        a.getName();
+        a.name;
+        Person p("Ana");
+        p.getName();
+      options:
+        - 'a.name, because protected does not show from outside'
+        - 'a.getName(), because it is declared in the base'
+        - 'Person p("Ana"), because the base already has a child'
+        - 'None, protected does show from main'
+
+  - trace:
+      eyebrow: Answer
+      title: Protected opens the door to the child, not to the world
+      headers: ["Line", "Who is asking", "Level", "Compiles"]
+      rows:
+        - ["a.getName()", "main, from outside", "public", "Yes"]
+        - ["a.name", "main, from outside", "protected", "No, C2248"]
+        - ["name inside Student", "the derived class", "protected", "Yes"]
+        - ["p.getName()", "main, from outside", "public", "Yes"]
+      verdict: From main, protected and private behave identically. The only difference shows up inside the derived class, which is why the level makes no sense without inheritance.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Forgetting the base constructor
+          desc: Without the initialiser list, the compiler looks for a no-argument one and does not find it
+        - label: Error 02
+          title: Inheriting purely to reuse
+          desc: Ties two classes together forever to save a few lines a function would have handled
+        - label: Error 03
+          title: Chains four levels deep
+          desc: Every level drags along behaviour the one below never asked for and cannot remove
+        - label: Error 04
+          title: Making everything protected
+          desc: Turns the internal data into part of the contract with every future derived class
+
+  - lab:
+      eyebrow: Lab
+      title: One hierarchy and one composition, in pairs
+      brief: Write a Person class and a Teacher class that inherits from it, with a department of its own. Then write a Course class that has a Teacher as a member, inheriting from nobody.
+      blocks:
+        - label: Constraint
+          text: Two levels of inheritance at most. If a third appears, check whether it was composition.
+        - label: Deliverable
+          text: A .cpp with the three classes and a main that uses both forms of reuse
+        - label: Criterion
+          text: That you can say in one sentence why Teacher inherits and Course does not
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The derived starts with the base
+          desc: The public and protected parts arrive on their own, without another line written
+        - title: Protected only matters with inheritance
+          desc: From outside it behaves exactly like private, which is why the figure has two columns
+        - title: Has a wins almost every time
+          desc: Composition swaps a part in one line, inheritance touches the whole branch
+
+  - homework:
+      eyebrow: For the next session
+      title: The hierarchy finished and one decision justified
+      brief: Finish the lab and add a third class where you had to decide between inheriting and composing, with a block comment explaining in three lines why you chose one over the other.
+      meta:
+        - [Due, Before session 10]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Inheritance", "Required", "The base constructor is called from the initialiser list"]
+        - ["Composition", "Required", "Course delegates to its member without inheriting from it"]
+        - ["Justification", "Required", "The comment applies the is a against has a test"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, arrays and strings. Many values of one type under a single name.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

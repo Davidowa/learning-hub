@@ -1,0 +1,336 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 6
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 06 · Unit 5 · Classes and data abstraction
+      title: Advanced Programming
+      subtitle: Putting the data next to the functions that look after it, and deciding what shows from outside the class.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 6 of 17]
+      notes: |
+        This closes the functions and classes block. It is the last session before control
+        structures, so all of today's code is still straight-line: constructors that assign,
+        accessors that return, member functions with no branches.
+
+        That constraint bites harder here than in the previous weeks, because the natural
+        example of a mutator is one that validates its argument, and validating needs an if.
+        Worth saying out loud when somebody asks, and noting it as what week 7 adds.
+
+        The numeric results were measured by building the slide's program on Visual Studio
+        Community 2026. The area comes out at 12 and, after the mutator, at 20.
+
+        The first project checkpoint falls this week on the syllabus calendar. The project
+        itself is not assigned yet, that happens after the first partial, so the checkpoint
+        refers to the review calendar rather than to a project deliverable.
+
+        Reading: Malik, eighth edition, chapter 10. The course documents cite 12, which is
+        right for the fifth edition.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Why a class
+          desc: What problem is solved by keeping data next to its behaviour
+        - title: Anatomy
+          desc: Data members, member functions and the constructor
+        - title: What shows
+          desc: The three access levels, and who can reach each one
+        - title: The interface
+          desc: Accessors and mutators, and what a class promises whoever uses it
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare a class with state
+          sub: With private data members and public member functions
+        - head: Write a constructor
+          sub: And explain why it runs on its own, without anyone calling it by name
+        - head: Choose the access level
+          sub: And say who can reach a public, a protected and a private member
+        - head: Design a minimal interface
+          sub: Exposing what the class promises to hold up and hiding what may change
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: now
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why a class
+      lede: Until today the data went one way and the functions that touch it went another. Nothing made them travel together.
+      block: 1
+
+  - figure:
+      eyebrow: Concept
+      title: The cutter and what comes out of it
+      image: img/en/class-object.png
+      caption: The class is written once. Objects are made as many times as needed, each with its own state.
+      alt: A cookie cutter and the cookies it produces, with the class and its objects labelled
+
+  - concept:
+      eyebrow: Key concept
+      title: A class is a type you define yourself
+      lead: >-
+        int holds a whole number and knows how to add itself. A Rectangle holds a width and
+        a length, and knows how to compute its area. The difference is that the first came
+        with the language and the second you write, under the same rules.
+      panel:
+        label: What you gain
+        title: The rules live in one place
+        note: >-
+          If the area is computed inside the class, there is no way for a distant file to
+          compute it differently. It stops being a convention and becomes code.
+      steps:
+        - text: Data and behaviour together
+        - text: One place to fix it
+        - text: Whoever uses it sees no detail
+          loop: ↺ which is why the detail can change without warning
+
+  - divider:
+      eyebrow: Block 02
+      title: Anatomy of a class
+      lede: "Three things inside the braces: what it remembers, what it can do, and how it comes into being."
+      block: 2
+
+  - figure:
+      eyebrow: Notation
+      title: The same class, drawn and written
+      image: img/en/uml-class-cpp.png
+      caption: The three compartments of the diagram are the three parts of the code. Minus is private and plus is public.
+      alt: A three-compartment UML box, each joined by an arrow to the line of C++ it becomes
+
+  - code:
+      eyebrow: The whole class
+      title: A rectangle that already does something
+      filename: rectangle.cpp
+      lang: cpp
+      source: |
+        class Rectangle {
+        public:
+            Rectangle(double w, double l) { width = w; length = l; }
+            double getWidth() { return width; }
+            void setWidth(double w) { width = w; }
+            double area() { return width * length; }
+        private:
+            double width;
+            double length;
+        };
+      annotations:
+        - label: Line 3
+          text: The constructor shares the class name and declares no return type
+        - label: Line 4
+          text: An accessor returns and does not modify. A mutator modifies and does not return.
+        - label: Line 7
+          text: Everything after private can only be touched by the functions of the class
+        - label: Risk
+          text: The semicolon after the closing brace is required. Without it the error lands on the next line and does not say why.
+          accent: true
+
+  - code_output:
+      eyebrow: Running it
+      title: Making the object and asking it for things
+      filename: rectangle.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        Rectangle r(3.0, 4.0);
+        std::cout << r.area() << "\n";
+
+        r.setWidth(5.0);
+        std::cout << r.area() << "\n";
+      output: |
+        12
+        20
+      notes: |
+        Nobody called the constructor by name. The line declaring r runs it, and that is the
+        whole difference from an ordinary function.
+
+        The second result comes from a single changed line. The area was not stored
+        anywhere, it is computed every time it is asked for, which is why it is never stale.
+
+  - table:
+      eyebrow: The parts
+      title: Six pieces, and what each one does
+      headers: ["Piece", "What it is", "In the example"]
+      rows:
+        - ["Class", "The mould, written once", "Rectangle"]
+        - ["Object", "Each copy, with its own state", "r"]
+        - ["Data member", "What the object remembers", "width, length"]
+        - ["Member function", "What the object can do", "area()"]
+        - ["Constructor", "Runs when the object is made", "Rectangle(3.0, 4.0)"]
+        - ["Accessor", "Returns without modifying", "getWidth()"]
+
+  - divider:
+      eyebrow: Block 03
+      title: What shows from outside
+      lede: The three access levels are not a formality. The compiler enforces them, and that is where C++ parts company with other languages.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnosis
+      title: Who can reach which member
+      image: img/en/access-levels-cpp.png
+      caption: The right-hand column is what separates protected from private. Without inheritance the two look identical from outside.
+      alt: Three class members against two columns, from outside and from a derived class, with ticks and crosses
+
+  - code_output:
+      eyebrow: Demonstration
+      title: What happens when you touch a private from outside
+      filename: access.cpp
+      lang: cpp
+      output_label: Error list
+      source: |
+        Rectangle r(3.0, 4.0);
+
+        r.setWidth(5.0);
+        r.width = 5.0;
+      output: |
+        error C2248: 'Rectangle::width':
+        cannot access private member
+        declared in class 'Rectangle'
+      notes: |
+        The third line compiles and the fourth does not. Both do the same thing, and that is
+        the group's reasonable question: why write a mutator that only assigns.
+
+        The honest answer today is that the benefit is not visible yet, because this week's
+        mutator cannot validate anything. From week 7 it can, and that one-line mutator
+        becomes the single place where the width is checked for being negative. Worth
+        promising now and delivering then.
+
+  - concept:
+      eyebrow: Criterion
+      title: Start closed and open what you must
+      lead: >-
+        Opening a member later is easy and nobody notices. Closing one later breaks all the
+        code already using it. So the sensible default is private, with only what the class
+        promises to hold up made public.
+      panel:
+        label: The design question
+        title: Will you hold this unchanged?
+        note: >-
+          If the answer is no, that member should not be public. Everything public is a
+          promise somebody else is about to start relying on.
+      steps:
+        - text: The data, private
+        - text: The interface, public
+        - text: Protected only with inheritance
+          loop: ↺ and inheritance does not arrive until week 9
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Forgetting the final semicolon
+          desc: The brace closing the class takes a semicolon, and without it the error lands on the next line
+        - label: Error 02
+          title: Leaving the data public
+          desc: It compiles, it works, and it turns every member into a promise that cannot be withdrawn
+        - label: Error 03
+          title: Uninitialised members
+          desc: A constructor that misses one leaves garbage inside, exactly like a loose variable
+        - label: Error 04
+          title: An accessor that hands it all over
+          desc: If it returns the internal data as it is, whoever receives it can modify it without going through the class
+
+  - quiz:
+      eyebrow: Quick question
+      question: Which of the four lines does not compile?
+      filename: access.cpp
+      lang: cpp
+      source: |
+        Rectangle r(3.0, 4.0);
+
+        double a = r.area();
+        double b = r.getWidth();
+        r.setWidth(5.0);
+        double c = r.length;
+      options:
+        - 'The last one, because length is private'
+        - 'The first one, because new is missing'
+        - 'The third one, because getWidth modifies nothing'
+        - 'None of them, all four are valid from outside'
+
+  - trace:
+      eyebrow: Answer
+      title: Three go through the interface and one goes round it
+      headers: ["Line", "What it touches", "Level", "Compiles"]
+      rows:
+        - ["r.area()", "Member function", "public", "Yes"]
+        - ["r.getWidth()", "Member function", "public", "Yes"]
+        - ["r.setWidth(5.0)", "Member function", "public", "Yes"]
+        - ["r.length", "Data member", "private", "No, C2248"]
+      verdict: The first three come in through the door the class left open. The fourth tries the window, and the compiler stops it before the program exists.
+
+  - lab:
+      eyebrow: Lab
+      title: A Student class, in pairs
+      brief: Write a Student class with a name and three marks as private members, a constructor that takes them, accessors for the name and the average, and a member function that returns the average plus its rounding.
+      blocks:
+        - label: Constraint
+          text: No if and no loops, which arrive next week. Constructors that assign and accessors that return.
+        - label: Deliverable
+          text: A .cpp with the class, and a main that makes two different objects and asks each for its average
+        - label: Criterion
+          text: That no data member is public and that main need not know how the average is computed
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A class is a type of your own
+          desc: Under the same rules as int, except that you write the behaviour yourself
+        - title: The constructor runs on its own
+          desc: It executes when the object is declared, which is why there is never a half-built object
+        - title: The compiler enforces private
+          desc: It is not an agreement between programmers, it is error C2248 before the program runs
+
+  - homework:
+      eyebrow: For the next session
+      title: The report card turned into a class
+      brief: Take the report card from the previous weeks and turn it into a Student class with private data. main should end up three or four lines long, making the object and asking for results.
+      meta:
+        - [Due, Before session 7]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Encapsulation", "Required", "No data member is public"]
+        - ["Constructor", "Required", "It leaves the object complete, with no uninitialised members"]
+        - ["Interface", "Required", "main computes nothing, it only asks"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, at last, if and switch. The program stops being a straight line.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

@@ -1,0 +1,349 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 8
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 08 · Unit 3 · Decisions and the first midterm
+      title: Information Analysis and Processing
+      subtitle: Compare, combine, decide. And the four comparisons that answer the opposite of what they look like.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 8 of 17]
+      notes: |
+        Ninety minutes. Forty on decisions, twenty on the traps, the rest on midterm
+        logistics.
+
+        This opens unit 3 and closes the first half of the course. The midterm covers
+        units 1, 2 and 3, which is everything so far, and it is worth twenty per cent.
+
+        The four traps in block 2 are verified in Excel 16.0 and the room should bet
+        before they are shown. The most useful one for the rest of the term is that VBA
+        compares text case-sensitively, so Norte and norte are different. That comes back
+        in week 13 cleaning databases.
+
+        The other one worth its weight is that an empty cell equals zero and also equals
+        an empty string, both true. Asking whether it is zero does not separate a
+        captured zero from a value that never arrived, and that changes an average.
+
+        The code comes from modules 05, 06 and 07 of
+        docs/en/courses/vba-course/.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Comparing
+          desc: The six operators, and what happens when what you compare is text
+        - title: Combining and deciding
+          desc: And, Or and Not, and the two ways to write the decision they feed
+        - title: The first midterm
+          desc: What it covers, how it is sat, and what you may bring with you
+        - title: Your turn
+          desc: A customer classification written both ways
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Use the six comparison operators
+          sub: Equal, not equal, greater, less, and the two that include equality
+        - head: Anticipate how two strings compare
+          sub: Character by character, case-sensitively, and why 10 can be less than 9
+        - head: Combine conditions with And, Or and Not
+          sub: And know both sides always evaluate, whatever the first one answered
+        - head: Write a decision two ways
+          sub: If with a chain of ElseIf, and Select Case when one variable is being tested
+        - head: Sit the first midterm
+          sub: What it covers, what you may consult, and how the answer is uploaded
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Comparing
+      lede: A comparison returns neither a number nor a string. It returns true or false, and everything else is decided from that.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · All six
+      title: Every comparison operator VBA has
+      headers: [Operator, What it asks, Example, Result]
+      rows:
+        - ["=", "Are they equal?", "5 = 5", "True"]
+        - ["<>", "Are they different?", "5 <> 10", "True"]
+        - [">", "Is the first greater?", "5 > 10", "False"]
+        - ["<", "Is the first smaller?", "5 < 10", "True"]
+        - [">=", "Greater or equal?", "5 >= 5", "True"]
+        - ["<=", "Smaller or equal?", "5 <= 10", "True"]
+
+  - code:
+      eyebrow: Block 01 · One sign, two jobs
+      title: The same symbol doing two different things
+      filename: ComparissonOperators.bas
+      lang: vba
+      source: |
+        Sub Compare()
+            Dim a As Integer
+            Dim b As Integer
+            Dim areEqual As Boolean
+
+            a = 5
+            b = 5
+            areEqual = a = b
+
+            MsgBox "Is a equal to b? " & areEqual
+        End Sub
+      annotations:
+        - label: The first equals
+          text: Assigns. It stores whatever comes out of the right-hand side into areEqual.
+        - label: The second equals
+          text: Compares. It returns True or False, and that is the value being stored.
+        - label: How to read it
+          text: Right to left. a = b resolves first, then the result is stored.
+        - label: Risk
+          text: VBA has no two separate symbols the way other languages do. Context decides which one you wrote.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · Verified
+      title: Comparing text is not comparing numbers
+      headers: [Comparison, Returns, Why]
+      rows:
+        - ["10 < 9", "False", "As numbers, nine is the smaller one"]
+        - ["\"10\" < \"9\"", "True", "As text, the 1 sorts before the 9"]
+        - ["\"Norte\" = \"norte\"", "False", "VBA respects case by default"]
+        - ["\"abc\" < \"abd\"", "True", "Letter by letter, to the first that differs"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Combining and deciding
+      lede: Three words for joining conditions, and two ways of writing the decision that comes out of them.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · All three
+      title: And, Or and Not, with their truth table
+      headers: [Combination, And, Or]
+      rows:
+        - ["True with True", "True", "True"]
+        - ["True with False", "False", "True"]
+        - ["False with True", "False", "True"]
+        - ["False with False", "False", "False"]
+        - ["Not True", "False", "Not flips whatever it gets"]
+        - ["Not False", "True", "and it takes one condition only"]
+
+  - code:
+      eyebrow: Block 02 · The chain
+      title: If, ElseIf and Else, in the order that matters
+      filename: ConditionalStatements.bas
+      lang: vba
+      source: |
+        Sub Classify()
+            Dim grade As Double
+            grade = 7.5
+
+            If grade >= 9 Then
+                MsgBox "A"
+            ElseIf grade >= 8 Then
+                MsgBox "B"
+            ElseIf grade >= 7 Then
+                MsgBox "C"
+            Else
+                MsgBox "Fail"
+            End If
+        End Sub
+      annotations:
+        - label: Order rules
+          text: Checked top to bottom, stopping at the first true one. Verified, 7.5 gives C.
+        - label: Why high to low
+          text: If the first test were greater or equal to seven, a nine would land there and never reach the A.
+        - label: Else
+          text: Catches everything that did not match. Without it, a grade of five produces nothing at all.
+        - label: Risk
+          text: ElseIf is one word. Else If as two opens a fresh If that demands its own End If.
+          accent: true
+
+  - compare:
+      eyebrow: Block 02 · The other way
+      title: The same decision, written with Select Case
+      before:
+        label: With a chain of ElseIf
+        file: Module1.bas
+        lang: vba
+        code: |
+          If grade >= 9 Then
+              level = "A"
+          ElseIf grade >= 8 Then
+              level = "B"
+          End If
+      after:
+        label: With Select Case
+        file: Module1.bas
+        lang: vba
+        code: |
+          Select Case grade
+              Case Is >= 9:   level = "A"
+              Case 8 To 8.99: level = "B"
+          End Select
+      note: >-
+        Both give C for 7.5, verified. Select Case wins when every condition asks about
+        the same variable, and it takes ranges with To and comparisons with Is. If wins
+        when each branch asks about something different.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four comparisons that answer the opposite
+      items:
+        - label: Error 01
+          title: True is not one, it is minus one
+          desc: "CInt(True) is -1. That is why (5 > 1) * 3 gives -3, and adding two true conditions gives -2."
+        - label: Error 02
+          title: Norte does not equal norte
+          desc: VBA compares text case-sensitively. A database with mixed capture never adds up when grouped.
+        - label: Error 03
+          title: An empty cell equals zero
+          desc: It also equals an empty string, both true. Asking whether it is zero does not find the missing value.
+        - label: Error 04
+          title: And evaluates both sides
+          desc: It does not stop at the first False. The right-hand condition runs even after the left one failed.
+
+  - divider:
+      eyebrow: Block 03
+      title: The first midterm
+      lede: It covers units 1, 2 and 3. That is everything we have done, and it is sat at the machine with your notes beside you.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · What it covers
+      title: The three units, week by week
+      headers: [Unit, Weeks, What is assessed]
+      rows:
+        - ["1", "2 to 5", "Editor, types, variables, operators and data entry"]
+        - ["2", "1, 6 and 7", "Recording, editing, variable ranges and Goal Seek"]
+        - ["3", "8", "If, comparison and logical operators"]
+        - ["Weight", "Week 8", "20 % of the final grade"]
+
+  - steps:
+      eyebrow: Block 03 · How it works
+      title: Five things to know before sitting down
+      items:
+        - label: '01'
+          title: On the classroom machine
+          desc: Solved in Excel, not on paper. You may bring a USB drive with whatever you like.
+        - label: '02'
+          title: With your own material
+          desc: Notes, submitted assignments, the books, the web, and anything you generated with AI beforehand.
+        - label: '03'
+          title: No communication channel
+          desc: There is web access, but no email and no messaging. The network is for uploading, nothing else.
+        - label: '04'
+          title: Devices at the front
+          desc: Phone, headphones and AI glasses go to the front of the room before starting.
+        - label: '05'
+          title: Uploaded compressed
+          desc: A .zip named with your full name, for instance PedroPerezGonzalez.zip, to Blackboard.
+
+  - method:
+      eyebrow: Block 03 · What is actually asked
+      title: You may consult everything, and you still have to know
+      statement: The exam does not measure what you memorised. It measures whether you can read a requirement, write the macro and defend it.
+      points:
+        - label: What is assessed
+          text: That the code runs, that it does what the brief asks, and that it uses a variable range instead of a fixed address
+        - label: The defence
+          text: I may ask you to talk through one of your own procedures out loud. Reading it is not explaining it.
+        - label: How to prepare
+          text: By redoing the assignments without looking at your solution. Consulting is fast once you know what to look for.
+
+  - quiz:
+      eyebrow: Quick check
+      question: Cell A1 is empty. What goes into B1?
+      filename: Decisions.bas
+      lang: vba
+      source: |
+        If Range("A1").Value = 0 Then
+            Range("B1").Value = "No sale"
+        Else
+            Range("B1").Value = "Sale"
+        End If
+      options:
+        - "Sale, because the cell is empty and does not equal zero"
+        - "No sale, because an empty cell does equal zero"
+        - "Nothing, because comparing an empty cell raises an error"
+        - "It depends on the cell's format"
+
+  - lab:
+      eyebrow: Lab
+      title: Classify a customer portfolio
+      brief: Take a customer database from your own area and write a macro that sorts every row into three tiers by balance. Write it twice, once with a chain of ElseIf and once with Select Case, and decide which one reads better for this case.
+      blocks:
+        - label: Submission
+          text: The module with both procedures and a note on which you chose, on Blackboard
+        - label: Constraint
+          text: No customer may go unclassified. Anything matching nothing lands in the Else.
+        - label: The test
+          text: Add a row with an empty balance. If it classifies as zero, you know what is missing.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Comparing text is not comparing numbers
+          desc: As text 10 is less than 9, and Norte is not norte. A code captured as text sorts differently
+        - title: An empty cell equals zero
+          desc: And also an empty string. Asking about zero does not separate the missing value from a real zero
+        - title: The order of the ElseIf decides
+          desc: It stops at the first true condition, so it runs from the strictest test to the loosest
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        On the amortization table, write a macro that walks every period and marks the
+        ones that have already paid off more than half the principal. Use the variable
+        range from week 6 and sort them into three tiers.
+      meta:
+        - [Due, Before week 9]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Conditions", "40 %", "All three branches exist and no row goes unclassified"]
+        - ["Variable range", "30 %", "It walks whatever is there, not a hand-typed address"]
+        - ["Empties", "30 %", "A period with no value is not counted as zero"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, repetition. For and For Each, where the macro finally walks a
+        thousand rows without you writing a thousand lines.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,324 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 13
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 13 · Unidad 11 · Entrada y salida
+      title: Programación Avanzada
+      subtitle: Datos que sobreviven a que se cierre el programa, y la logística del segundo parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 13 de 17]
+      notes: |
+        Sesión doble otra vez. Se cierra la unidad 11 con archivos y va la logística del
+        segundo parcial al final.
+
+        El tema es corto de sintaxis y tiene una trampa grande: un archivo que no se pudo
+        abrir no lanza ningún error. El programa sigue y lee nada. Esa es la lámina que hay
+        que dejar clara.
+
+        Las salidas se midieron en Visual Studio Community 2026. El archivo se escribió y se
+        volvió a leer en la misma corrida, y el intento de abrir un archivo inexistente
+        devolvió cero en is_open.
+
+        Esta semana cae el tercer avance del proyecto según el calendario del syllabus.
+
+        Lectura: Malik, octava edición, capítulo 3.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Escribir
+          desc: Mandar datos a un archivo con el mismo operador de siempre
+        - title: Leer
+          desc: Recuperarlos, y saber cuándo se acabó el archivo
+        - title: Cuando falla
+          desc: Lo que pasa si el archivo no existe, que no es un error
+        - title: El parcial
+          desc: Qué cubre el segundo y cómo se prepara
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir y leer un archivo de texto
+          sub: Con ofstream e ifstream, y el mismo operador que ya usa para la consola
+        - head: Comprobar que el archivo se abrió
+          sub: Antes de leer, porque un archivo inexistente no lanza ningún error
+        - head: Recorrer un archivo completo
+          sub: Con un ciclo cuya condición es la propia lectura, y no un contador
+        - head: Cerrar lo que abrió
+          sub: Y explicar por qué un archivo sin cerrar puede quedar incompleto en el disco
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Escribir y leer
+      lede: Un archivo se comporta como cout y como cin. Los operadores son los mismos y eso es a propósito.
+      block: 1
+
+  - code_output:
+      eyebrow: Ida y vuelta
+      title: Escribir un archivo y volver a leerlo
+      filename: archivo.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        std::ofstream out("datos.txt");
+        out << "Ana 95\n";
+        out.close();
+
+        std::ifstream in("datos.txt");
+        std::string nombre;
+        int calificacion;
+        in >> nombre >> calificacion;
+        in.close();
+
+        std::cout << nombre << " " << calificacion << "\n";
+      output: |
+        Ana 95
+      notes: |
+        Necesita la cabecera fstream. ofstream es de salida y ifstream de entrada, y los dos
+        usan los operadores que ya conocen desde la semana 1.
+
+        El operador de entrada corta por espacios, así que nombre recibió Ana y calificacion
+        recibió 95, cada uno convertido a su tipo. Para leer una línea completa, con espacios
+        incluidos, está std::getline.
+
+        Abrir con ofstream un archivo que ya existe lo vacía. Para agregar al final hay que
+        pedirlo explícitamente con el modo de apertura.
+
+  - figure:
+      eyebrow: Acceso
+      title: Leer en orden o saltar a una posición
+      image: img/es/seek-tell.png
+      caption: La lectura secuencial avanza un paso a la vez. seek mueve el cursor de golpe y tell dice dónde quedó.
+      alt: Un cursor sobre un archivo dibujado como posiciones numeradas, con una lectura secuencial y un salto
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cuando el archivo no está
+      lede: El error más silencioso de la unidad. El programa no falla, simplemente no lee nada.
+      block: 2
+
+  - code_output:
+      eyebrow: Demostración
+      title: Abrir un archivo que no existe
+      filename: falta.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        std::ifstream in("no_existe.txt");
+
+        std::cout << in.is_open() << "\n";
+      output: |
+        0
+      notes: |
+        Ni excepción, ni mensaje, ni caída. El objeto se construyó, el archivo no se abrió, y
+        el programa siguió como si nada.
+
+        Si después de esa línea se intenta leer, las variables se quedan con lo que tuvieran
+        antes. Si nunca se inicializaron, con basura, que es el mismo problema de la semana 2
+        llegando por otra puerta.
+
+        Por eso la comprobación no es opcional. Toda apertura de archivo se revisa antes de
+        leer, siempre, y esa es la línea que más se olvida en el proyecto final.
+
+  - code:
+      eyebrow: La forma correcta
+      title: Revisar primero, leer después
+      filename: seguro.cpp
+      lang: cpp
+      source: |
+        std::ifstream in("datos.txt");
+
+        if (!in.is_open())
+        {
+            std::cout << "no se pudo abrir\n";
+            return 1;
+        }
+        std::string nombre;
+        int calificacion;
+        while (in >> nombre >> calificacion)
+        {
+            std::cout << nombre << "\n";
+        }
+        in.close();
+      annotations:
+        - label: La comprobación
+          text: Va inmediatamente después de abrir, antes de cualquier lectura
+        - label: El ciclo
+          text: La condición es la lectura misma. Devuelve falso cuando ya no hay nada que leer.
+        - label: Por qué así
+          text: Preguntar por el fin de archivo antes de leer da una vuelta de más, con la última línea repetida
+        - label: Riesgo
+          text: Un return dentro del if deja el archivo abierto. Con archivos grandes conviene cerrar antes de salir.
+          accent: true
+
+  - table:
+      eyebrow: Los estados
+      title: Cuatro maneras de preguntarle a un flujo cómo va
+      headers: ["Consulta", "Es cierta cuando", "Se usa"]
+      rows:
+        - ["is_open()", "El archivo se abrió", "Justo después de abrir"]
+        - ["eof()", "Se llegó al final", "Casi nunca, ver la nota"]
+        - ["fail()", "La última lectura falló", "Al leer un tipo que no cuadra"]
+        - ["good()", "Todo va bien", "Como condición general"]
+      notes: |
+        eof es la que se usa mal. Escribir un ciclo con la condición de que no se haya
+        llegado al final produce una vuelta de más, porque la bandera se enciende hasta
+        después de intentar leer y fallar.
+
+        La forma correcta es poner la lectura como condición del ciclo, que es lo que hace
+        la lámina anterior. Ahí la lectura se intenta y su resultado decide si se sigue.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Segundo parcial
+      lede: Martes 20 de octubre. Acumulativo, como los tres.
+      block: 3
+
+  - tiers:
+      eyebrow: El examen
+      title: Cuatro cosas que conviene saber antes
+      items:
+        - key: '01'
+          title: Cubre de la unidad 1 a la 11
+          desc: Todo lo del primer parcial otra vez, más funciones, clases, herencia, arreglos, registros y punteros
+        - key: '02'
+          title: Lo del primer parcial vuelve a entrar
+          desc: Acumulativo quiere decir eso. Lo que quedó mal en septiembre sigue contando en octubre.
+        - key: '03'
+          title: Entra la memoria dinámica
+          desc: new y delete emparejados, y una fuga que haya que encontrar
+        - key: '04'
+          title: Entra el polimorfismo
+          desc: El par de la semana pasada, 9 y menos 1, con otra jerarquía
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El archivo no existe. ¿Qué imprime el programa?
+      filename: falta.cpp
+      lang: cpp
+      source: |
+        std::ifstream in("no_existe.txt");
+        int n = 7;
+
+        in >> n;
+        std::cout << n << "\n";
+      options:
+        - '7, porque la lectura ni siquiera se intentó'
+        - '0, porque una lectura fallida pone la variable en cero'
+        - 'Basura, porque el archivo no existe'
+        - 'El programa termina con una excepción'
+      notes: |
+        Medido en Visual Studio Community 2026 con C++20: imprime 7, is_open devuelve 0 y
+        fail devuelve 1.
+
+        La distinción es fina y vale la pena. Desde C++11, una extracción que se intenta y
+        falla sí escribe cero en la variable. Pero aquí el flujo ya venía en estado de fallo
+        desde que no pudo abrir el archivo, así que el operador se sale de inmediato sin
+        intentar nada, y la variable se queda con lo que tenía.
+
+        El resultado práctico es el peor de los dos: el programa sigue trabajando con un
+        valor viejo que parece legítimo.
+
+  - trace:
+      eyebrow: Respuesta
+      title: La lectura falló, y aun así tocó la variable
+      headers: ["Paso", "Qué ocurre", "El flujo", "n"]
+      rows:
+        - ["1", "int n = 7", "no abrió, ya falló", "7"]
+        - ["2", "in >> n se sale de inmediato", "en estado de fallo", "7"]
+        - ["3", "Se imprime", "en estado de fallo", "7"]
+      verdict: Lo importante no es el número, es que el programa no se enteró. Sin la comprobación de is_open, una lectura que nunca ocurrió se ve exactamente igual que una exitosa.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: No revisar is_open
+          desc: El archivo no existe, el programa sigue y trabaja con datos que nunca llegaron
+        - label: Error 02
+          title: Un ciclo con eof
+          desc: La bandera se enciende después de fallar, así que el cuerpo corre una vez de más
+        - label: Error 03
+          title: Olvidar cerrar
+          desc: Lo escrito puede quedarse en el buffer y no llegar al disco si el programa termina mal
+        - label: Error 04
+          title: Abrir para escribir sin querer
+          desc: ofstream vacía el archivo al abrirlo, y el contenido anterior ya no está
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El grupo, guardado y recuperado, en parejas
+      brief: Tomen el arreglo de registros de la semana 11 y escríbanlo a un archivo de texto, un alumno por línea. Después escriban un segundo programa que lo lea completo y calcule el promedio del grupo.
+      blocks:
+        - label: Restricción
+          text: El segundo programa no puede saber cuántos alumnos hay. Lo tiene que descubrir leyendo.
+        - label: Entregable
+          text: Dos .cpp y el archivo de texto que produjo el primero
+        - label: Criterio
+          text: Que el segundo revise is_open y avise si el archivo no está, en lugar de imprimir cero
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un archivo se usa como la consola
+          desc: Los mismos operadores, con un objeto distinto y una cabecera más
+        - title: Que no abra no es un error
+          desc: is_open es la línea que separa un programa correcto de uno que lee la nada
+        - title: La lectura es la condición
+          desc: El ciclo se controla con el resultado de leer, no preguntando por el fin de archivo
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La persistencia terminada y el parcial preparado
+      brief: Terminen el laboratorio y agreguen al segundo programa el manejo del caso en que el archivo tenga una línea mal formada, avisando cuál fue sin detener la lectura del resto.
+      meta:
+        - [Entrega, Antes de la sesión 14]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Escritura", "Requisito", "El archivo queda con un alumno por línea y se cierra"]
+        - ["Lectura", "Requisito", "El segundo programa descubre cuántos hay y revisa is_open"]
+        - ["Robustez", "Requisito", "Una línea mal formada se reporta y no detiene el programa"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, sobrecarga de operadores y plantillas. Escribir una vez lo que sirve para muchos tipos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

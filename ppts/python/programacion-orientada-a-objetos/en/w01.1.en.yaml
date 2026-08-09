@@ -1,0 +1,381 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 1.1
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Review 1 of 5 · Module 1 · Data and text
+      title: Object-Oriented Programming
+      subtitle: Storing a value and giving it a name. Types, strings, numbers and console input.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, Review 1 of 5]
+      notes: |
+        First of five review sessions, one per module of
+        docs/en/courses/python-course/01 - Basics. They sit between week 1 and week 2.
+
+        This one covers module 1 end to end, Code001 to Code005. If the group is
+        strong, blocks 01 and 02 run fast and the time goes to the operators in
+        block 03, which is where they lose marks in the midterm.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Declare variables of the five basic types
+          sub: int, float, bool, str and None, and know which one each piece of data wants
+        - head: Explain what dynamic typing means
+          sub: Why the name carries no type and the value does
+        - head: Cut and compose text
+          sub: Indexes, slices, f-strings and the methods that hand back copies
+        - head: Use the seven arithmetic operators
+          sub: Add, subtract, multiply, both divisions, remainder and power
+        - head: Convert whatever input returns
+          sub: input always hands back text, and doing arithmetic on it raises TypeError
+
+  - roadmap:
+      eyebrow: Review map
+      title: Five sessions, one module each
+      phases:
+        - label: Review 1
+          title: Data and text
+          desc: Variables, types, strings, numbers and input
+          state: now
+        - label: Review 2
+          title: Decisions and loops
+          desc: Comparison, logic, if, for and while
+          state: todo
+        - label: Review 3
+          title: Functions
+          desc: Parameters, return values and scope
+          state: todo
+        - label: Review 4
+          title: Collections
+          desc: Lists, tuples, sets and dictionaries
+          state: todo
+        - label: Review 5
+          title: Errors
+          desc: try, except and the types you meet first
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Variables and types
+      lede: The first thing any program does is put something somewhere and give it a name to find it again.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a variable is
+      lead: >-
+        A name tied to a value held in memory. The name carries no type; the value does.
+        That is why the same variable can hold a number and then a string, without Python
+        objecting.
+      panel:
+        label: The consequence
+        title: Reassigning changes the type, silently
+        note: >-
+          Nothing warns you at that moment. The program breaks later, when something
+          tries to do arithmetic on what stopped being a number.
+      steps:
+        - text: You pick a name that describes the data
+        - text: You assign a value with the equals sign
+        - text: Python gives the value its type
+          loop: ↺ every reassignment can change that type
+
+  - table:
+      eyebrow: Module 1 · Types
+      title: The five types you will use all semester
+      headers: ["Type", "What it holds", "Example", "Its falsy value"]
+      rows:
+        - ["int", "Whole numbers, no size limit", "student_count = 1000", "0"]
+        - ["float", "Decimals, limited precision", "rating = 4.99", "0.0"]
+        - ["bool", "True or false", "is_published = False", "False"]
+        - ["str", "Text, inside quotes", "course = 'Python'", "'' empty"]
+        - ["NoneType", "The absence of a value", "result = None", "None"]
+
+  - code:
+      eyebrow: Module 1 · Variables
+      title: Python picks the type, you pick the name
+      filename: Code002.py
+      lang: python
+      source: |
+        student_count = 1000          # int
+        rating = 4.99                 # float
+        is_published = False          # bool
+        course_name = "Python"        # str
+
+        student_count = "1000"        # now it is a str
+
+        x, y = 1, 2                   # two names in one line
+      annotations:
+        - label: Line 6
+          text: The same variable went from integer to string and nothing complained
+        - label: Line 8
+          text: Multiple assignment hands out the values in order, left to right
+        - label: Risk
+          text: A name that holds something else halfway through the program is the cheapest bug to avoid
+          accent: true
+
+  - code_output:
+      eyebrow: Module 1 · Types
+      title: type() answers what is inside
+      filename: types.py
+      lang: python
+      output_label: Output
+      source: |
+        print(type(1000))
+        print(type(4.99))
+        print(type(False))
+        print(type("Python"))
+        print(type(None))
+      output: |
+        <class 'int'>
+        <class 'float'>
+        <class 'bool'>
+        <class 'str'>
+        <class 'NoneType'>
+
+  - divider:
+      eyebrow: Block 02
+      title: Text
+      lede: A string is a sequence of characters, and nearly everything you learn about it works on lists later.
+      block: 2
+
+  - code:
+      eyebrow: Module 1 · Strings
+      title: Indexes and slices
+      filename: Code003.py
+      lang: python
+      source: |
+        course = "Python Programming"
+
+        course[0]        # 'P'    first character
+        course[-1]       # 'g'    last character
+        course[0:3]      # 'Pyt'  from 0 up to 2
+        course[:3]       # 'Pyt'  same, without writing the 0
+        course[7:]       # 'Programming'
+        course[1:-1]     # without the first or the last
+      annotations:
+        - label: The index starts at zero
+          text: The first character is course[0], not course[1]
+        - label: Negative index
+          text: Counts from the end. course[-1] is the last, course[-2] the one before.
+        - label: The slicing rule
+          text: The first index is included, the second is not. That is why [0:3] returns three characters.
+
+  - figure:
+      eyebrow: Module 1 · Strings
+      title: The slicing rule, drawn
+      image: img/en/slicing.png
+      caption: The first index is included, the second is not. That is why [0:3] returns three characters.
+      alt: The word PYTHON in tiles, with positive index above and negative below
+
+  - table:
+      eyebrow: Module 1 · Strings
+      title: The string methods you will actually reach for
+      headers: ["Method", "What it does", "Example", "Result"]
+      rows:
+        - ["upper()", "All to capitals", "'python'.upper()", "'PYTHON'"]
+        - ["lower()", "All to lower case", "'PYTHON'.lower()", "'python'"]
+        - ["title()", "First letter of each", "'python 3'.title()", "'Python 3'"]
+        - ["strip()", "Trims the edges", "'  py  '.strip()", "'py'"]
+        - ["find(x)", "Position, or -1", "'python'.find('th')", "2"]
+        - ["replace(a, b)", "Swaps a for b", "'py'.replace('p','j')", "'jy'"]
+
+  - concept:
+      eyebrow: Module 1 · Strings
+      title: No method changes the original string
+      lead: >-
+        Strings are immutable. upper, lower, strip and replace do not touch the variable:
+        they build a new copy and hand it back. If you do not store that result, the work
+        is lost and nothing warns you.
+      panel:
+        label: The classic mistake
+        title: Calling the method and storing nothing
+        note: >-
+          course.upper() on its own does not change course. It has to be
+          course = course.upper(), or stored in another variable.
+      steps:
+        - text: The method reads the original
+        - text: It builds a modified copy
+        - text: It returns that copy to you
+          loop: ↺ the original is left exactly as it was
+
+  - code:
+      eyebrow: Module 1 · Strings
+      title: f-strings, the way to build text out of values
+      filename: fstrings.py
+      lang: python
+      source: |
+        first, last = "John", "Doe"
+        rating = 4.97
+
+        full = first + " " + last          # works, but reads badly
+        full = f"{first} {last}"           # 'John Doe'
+
+        print(f"{len(first)} letters")     # 4 letters
+        print(f"{2 + 3}")                  # 5
+        print(f"{rating:.1f}")             # 5.0
+      annotations:
+        - label: The f goes before the quote
+          text: Without it the braces print literally, as if they were text
+        - label: Inside the braces
+          text: Any expression fits, including a function call
+        - label: After the colon
+          text: The format spec rounds or aligns without a separate calculation
+
+  - divider:
+      eyebrow: Block 03
+      title: Numbers and input
+      lede: Seven arithmetic operators, seven assignment ones, and a function that always returns text.
+      block: 3
+
+  - table:
+      eyebrow: Module 1 · Arithmetic operators
+      title: All seven, in order
+      headers: ["Operator", "Name", "Example", "Result"]
+      rows:
+        - ["+", "Addition", "10 + 3", "13"]
+        - ["-", "Subtraction", "10 - 3", "7"]
+        - ["*", "Multiplication", "10 * 3", "30"]
+        - ["/", "True division", "10 / 3", "3.3333333333333335"]
+        - ["//", "Floor division", "10 // 3", "3"]
+        - ["%", "Remainder", "10 % 3", "1"]
+        - ["**", "Power", "10 ** 3", "1000"]
+
+  - table:
+      eyebrow: Module 1 · Assignment operators
+      title: The same seven, in short form
+      headers: ["Operator", "Same as", "Starting from x = 10", "x becomes"]
+      rows:
+        - ["+=", "x = x + 3", "x += 3", "13"]
+        - ["-=", "x = x - 3", "x -= 3", "7"]
+        - ["*=", "x = x * 3", "x *= 3", "30"]
+        - ["/=", "x = x / 3", "x /= 3", "3.333…"]
+        - ["//=", "x = x // 3", "x //= 3", "3"]
+        - ["%=", "x = x % 3", "x %= 3", "1"]
+        - ["**=", "x = x ** 3", "x **= 3", "1000"]
+
+  - concept:
+      eyebrow: Module 1 · Numbers
+      title: The two divisions do not agree
+      lead: >-
+        The single slash always returns a float, even when the division is exact. The
+        double slash drops the decimal part and returns an integer. The remainder answers
+        a different question: what was left over.
+      panel:
+        label: What the remainder is for
+        title: Testing for even, or repeating in cycles
+        note: >-
+          n % 2 == 0 is the test for even. n % 3 == 0 is the test for a multiple of
+          three, which is exactly what FizzBuzz needs in review 3.
+      steps:
+        - text: 10 / 4 gives 2.5
+        - text: 10 // 4 gives 2
+        - text: 10 % 4 gives 2
+          loop: ↺ the whole quotient and the remainder rebuild the original
+
+  - code_output:
+      eyebrow: Module 1 · Input
+      title: input always hands you text
+      filename: Code005.py
+      lang: python
+      output_label: Output
+      source: |
+        x = input("x: ")
+        print(type(x))
+
+        x = int(input("x: "))
+        print(type(x))
+
+        print(bool(""), bool("0"), bool(" "))
+      output: |
+        x: 5
+        <class 'str'>
+        x: 5
+        <class 'int'>
+        False True True
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors from this module
+      items:
+        - label: Error 01
+          title: Doing arithmetic on what input returned
+          desc: 'TypeError. input returns str, so convert with int() or float() first.'
+        - label: Error 02
+          title: Assuming bool("0") is False
+          desc: Any non-empty string is truthy, including "0" and a single space
+        - label: Error 03
+          title: Calling a method and not storing it
+          desc: 'course.upper() does not change course. It has to be course = course.upper().'
+        - label: Error 04
+          title: Confusing the single slash with the double
+          desc: The single one always gives a float. For indexes and counts you almost always want the double.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: quiz.py
+      lang: python
+      source: |
+        price = "100"
+
+        total = price * 2
+
+        print(len(total))
+      options:
+        - '3, because 200 has three digits'
+        - '6, because it repeated the text "100" twice'
+        - 'An error, text cannot be multiplied'
+        - '2, because total is 200 and len counts two things'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 6, because price was never a number
+      headers: ["Step", "Statement", "price", "total", "Type of total"]
+      rows:
+        - ["1", "price = '100'", "'100'", "–", "str"]
+        - ["2", "total = price * 2", "'100'", "'100100'", "str"]
+        - ["3", "len(total)", "'100'", "'100100'", "6"]
+      verdict: Multiplying a string by an integer repeats it. To do arithmetic you need int(price) first.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The name has no type, the value does
+          desc: In three weeks that same fact explains how an attribute can break a method
+        - title: Strings are not modified, they are copied
+          desc: Every string method returns something new, so it has to be stored
+        - title: input returns text, always
+          desc: Converting is your job, and forgetting it is the most common TypeError of the course
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write a program that reads a name and an age, then greets the person with an f-string saying which year they turned that age.
+      meta:
+        - [Due, Before review 2]
+        - [Format, Blackboard · .py]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Conversion", "40 %", "The age is converted with int() before any arithmetic"]
+        - ["f-string", "40 %", "The greeting is built with an f-string, not by concatenating with plus"]
+        - ["Names", "20 %", "Variables are named after the data they hold"]
+
+  - closing:
+      title: Questions
+      subtitle: Next review, comparison, logic and the two kinds of loop.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

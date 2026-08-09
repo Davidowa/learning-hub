@@ -1,0 +1,20 @@
+{
+  // The lesson sources under ppts/ are plain YAML consumed by kit/build.py.
+  // They have no published JSON schema, so the YAML language server picks one
+  // out of the schema store by guesswork and then reports
+  //     Incorrect type. Expected "array".
+  // against line 1 of every deck, because the schema it chose wants a list at
+  // the root and a lesson is a mapping. The files are valid; the schema is not
+  // theirs. Turning the store off removes the false error and leaves real
+  // syntax checking in place.
+  "yaml.schemaStore.enable": false,
+  "yaml.schemas": {},
+
+  // The validation that actually matters runs from the command line and knows
+  // the layouts, the caps and the collisions:
+  //     cd ppts && python -m kit.preflight python
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.mypy_cache": true
+  }
+}

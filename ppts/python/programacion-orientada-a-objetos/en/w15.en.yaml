@@ -1,0 +1,348 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 15
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 15 · Topic 6 · Graphical interfaces
+      title: Object-Oriented Programming
+      subtitle: Who decides where each control goes, how the window meets your domain classes, and what makes an interface usable.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 15 of 17]
+      notes: |
+        Last session before the project, so block 2 counts double. The temptation to put all
+        the logic inside the slot is enormous, and it is exactly what makes a submitted
+        project impossible to grade in parts.
+
+        The examples come from docs/en/courses/python-course/05 - GUI/9th Module, in PyQt6:
+        QHBoxLayout is Code039.py, QVBoxLayout is Code040.py, QGridLayout with spans is
+        Code042.py, QFormLayout is Code043.py and the full form is Code044.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Containers
+          desc: The widget that groups and the layout that arranges it
+        - title: The four layouts
+          desc: Horizontal, vertical, grid and form
+        - title: Integration
+          desc: Connecting the window to the classes you already wrote
+        - title: Visual design
+          desc: Four criteria you can check without arguing about taste
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Arrange controls with a layout
+          sub: Rather than fixing coordinates, which stop working the moment the window resizes
+        - head: Choose among the four layouts
+          sub: By the shape of the content, nesting them when none of them is enough alone
+        - head: Keep the window out of the domain
+          sub: The slot reads, calls a class that knows nothing of Qt, and shows the result
+        - head: Review an interface against criteria
+          sub: Grouping, hierarchy, error response and the size of the click targets
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Containers and layouts
+      lede: Placing a control at coordinate 120, 40 works until somebody makes the window bigger. And somebody always does.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Who decides where everything goes
+      lead: >-
+        A container is a widget holding other widgets. A layout is the object deciding where
+        each one sits and how large it is inside that container. You declare the order they
+        go in, and the layout recomputes everything whenever the size changes.
+      panel:
+        label: What handing it over buys
+        title: The window adapts on its own
+        note: >-
+          With fixed coordinates you recompute by hand on every change of size, font and
+          language. With a layout, those three changes touch not one line of your code.
+      steps:
+        - text: Create the container widget
+        - text: Create the layout on it
+        - text: Add the controls in order
+          loop: ↺ the layout handles the rest, and every resize after that
+
+  - figure:
+      eyebrow: Comparison
+      title: The three arrangements that cover nearly everything
+      image: img/en/layouts.png
+      caption: In the grid the coordinates are row and column, not pixels. One control can span several cells.
+      alt: Three windows with the same controls arranged in a horizontal box, a vertical box and a grid
+
+  - code:
+      eyebrow: Boxes
+      title: A row, with a column inside it
+      filename: boxes.py
+      lang: python
+      source: |
+        central = QWidget(self)
+        row = QHBoxLayout(central)
+
+        row.addWidget(QLabel("Username"))
+        row.addWidget(QLineEdit())
+
+        column = QVBoxLayout()
+        column.addWidget(QPushButton("Sign in"))
+        column.addWidget(QPushButton("Quit"))
+        row.addLayout(column)
+
+        self.setCentralWidget(central)
+      annotations:
+        - label: Line 2
+          text: The layout is built on the container, and from there it rules everything that goes in
+        - label: Line 10
+          text: addLayout puts one layout inside another. Nesting is what solves real windows.
+        - label: The order
+          text: Controls land in the order they were added, left to right or top to bottom
+
+  - code:
+      eyebrow: Grid
+      title: A control spanning two rows and two columns
+      filename: grid.py
+      lang: python
+      source: |
+        central = QWidget(self)
+        grid = QGridLayout(central)
+
+        label = QLabel("This is a label")
+        button = QPushButton("Press me")
+
+        grid.addWidget(label, 0, 0)
+        grid.addWidget(button, 0, 1, 2, 2)
+
+        self.setCentralWidget(central)
+      annotations:
+        - label: Line 7
+          text: The two numbers are row and column, starting at zero, exactly like list indexes
+        - label: Line 8
+          text: The two extra numbers are how many rows and how many columns that control spans
+        - label: Risk
+          text: Two controls in the same cell overlap without warning, and it only shows when you run it
+          accent: true
+
+  - table:
+      eyebrow: Decision table
+      title: Which layout each shape of content asks for
+      headers: ["Layout", "Arranges", "When it is used"]
+      rows:
+        - ["QHBoxLayout", "In one row", "Toolbars and button strips"]
+        - ["QVBoxLayout", "In one column", "Stacked sections"]
+        - ["QGridLayout", "In rows and columns", "Boards and calculators"]
+        - ["QFormLayout", "Label and field per line", "Data entry forms"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Integrating components
+      lede: The window already works. Now it has to meet the classes from topic 2 without the two contaminating each other.
+      block: 2
+
+  - method:
+      eyebrow: Design criterion
+      title: No domain class knows Qt exists
+      statement: The slot does three things and nothing else. It reads the controls, calls a class that never imports PyQt6, and shows whatever that class handed back.
+      points:
+        - label: Why it matters
+          text: A class that does not depend on Qt can be tested without opening a window, saving hours
+        - label: How to check
+          text: Search for the word import in your domain classes. If PyQt6 shows up, they are contaminated.
+        - label: What it enables
+          text: The same class serves the window, a console script and the final exam
+
+  - compare:
+      eyebrow: Refactor
+      title: The logic inside the slot, or outside it
+      before:
+        label: All in the slot
+        file: window.py
+        code: |
+          def on_sign_in(self):
+              u = self.box.text()
+              if len(u) < 3:
+                  self.warn("Too short")
+                  return
+              self.save(u)
+      after:
+        label: With a separate class
+        file: window.py
+        code: |
+          def on_sign_in(self):
+              try:
+                  self.registry.add(self.box.text())
+              except InvalidData as ex:
+                  self.warn(str(ex))
+      note: The three-character rule lives in Registry, which knows nothing about windows. The window only translates between the controls and that class.
+
+  - code:
+      eyebrow: Integration
+      title: The window calls, the class decides
+      filename: integrating.py
+      lang: python
+      source: |
+        class Registry:
+            def __init__(self) -> None:
+                self.users: list[str] = []
+
+            def add(self, name: str) -> None:
+                if len(name) < 3:
+                    raise InvalidData("Three letters minimum")
+                self.users.append(name)
+
+
+        class Window(QMainWindow):
+            def __init__(self, registry: Registry) -> None:
+                super().__init__()
+                self.registry = registry
+      annotations:
+        - label: Line 1
+          text: Registry never imports PyQt6, so it can be tested from a terminal with no window at all
+        - label: Line 7
+          text: The business rule raises an exception. It does not print and it does not open a dialog.
+        - label: Line 12
+          text: The window is handed the finished registry. That is week 6 composition, applied here.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to make a project impossible to grade
+      items:
+        - label: Error 01
+          title: All the logic inside the slots
+          desc: If the rule lives in the button handler, there is no way to test it without opening the window
+        - label: Error 02
+          title: Fixed coordinates instead of a layout
+          desc: It looks right on your screen and overlaps on the classroom projector, which has another resolution
+        - label: Error 03
+          title: A domain class that imports PyQt6
+          desc: It is tied to the interface and stops being usable from a console script or a test
+        - label: Error 04
+          title: Errors that only reach the console
+          desc: Whoever uses a window never sees the console. The error has to reach the screen.
+
+  - divider:
+      eyebrow: Block 03
+      title: Visual application design
+      lede: Four criteria you can check without arguing about taste, and that carry marks in the project.
+      block: 3
+
+  - tiers:
+      eyebrow: Criteria
+      title: How to review an interface without discussing taste
+      items:
+        - key: '01'
+          title: Grouping
+          desc: What is used together sits together. White space separates better than a line does.
+        - key: '02'
+          title: Hierarchy
+          desc: The main action stands out by size or position, not by colour
+        - key: '03'
+          title: Error response
+          desc: Every error appears next to the field that caused it and says what to fix
+        - key: '04'
+          title: Click targets
+          desc: A small button next to another small button produces wrong clicks in every session
+
+  - quiz:
+      eyebrow: Quick question
+      question: Where does the button end up in the window?
+      filename: cells.py
+      lang: python
+      source: |
+        grid = QGridLayout(central)
+
+        grid.addWidget(QLabel("A"), 0, 0)
+        grid.addWidget(QLabel("B"), 1, 0)
+        grid.addWidget(button, 0, 1, 2, 1)
+      options:
+        - 'On the right, as tall as both labels together'
+        - 'Underneath, as wide as both labels together'
+        - 'Overlapping label A'
+        - 'In cell 2, 1, because the indexes start at one'
+
+  - trace:
+      eyebrow: Answer
+      title: On the right, spanning two rows
+      headers: ["Control", "Row", "Column", "Spans"]
+      rows:
+        - ["QLabel A", "0", "0", "1 x 1"]
+        - ["QLabel B", "1", "0", "1 x 1"]
+        - ["button", "0", "1", "2 rows x 1 column"]
+      verdict: The four numbers in addWidget are row, column, how many rows it spans and how many columns. The button starts top right and reaches down to cover label B's line.
+
+  - lab:
+      eyebrow: Lab
+      title: A data entry form, in pairs
+      brief: Build a student enrolment window with four fields, a save button and a list showing what was entered, using a form layout inside a vertical one.
+      blocks:
+        - label: Constraints
+          text: No fixed coordinates, and the validating class may not import PyQt6
+        - label: Deliverable
+          text: Two .py files, one with the window and one with the domain class, plus a screenshot
+        - label: Criterion
+          text: The domain class can be tested from a terminal without opening any window
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The layout decides, you declare the order
+          desc: Fixed coordinates break on the first change of size, font or language
+        - title: Nesting layouts solves real windows
+          desc: No real window fits in a single layout, and putting one inside another is one line
+        - title: The domain does not know Qt exists
+          desc: If your classes import PyQt6, you can no longer test them without opening a window
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Take the lab form and add validation for all four fields in the domain class, with a different message per field shown inside the window.
+      meta:
+        - [Due, Before session 16]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Layouts", "35 %", "There are no fixed coordinates and layouts are nested where needed"]
+        - ["Separation", "40 %", "The domain class never imports PyQt6 and runs from a terminal"]
+        - ["Errors", "25 %", "Every message reaches the window beside the field that caused it"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, databases, queries and the start of the integrating project.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

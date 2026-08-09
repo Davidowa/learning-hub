@@ -1,0 +1,35 @@
+# What belongs in git here is the source, not the output.
+#
+# A lesson is its .yaml. The .pptx beside it is produced by `python -m kit.build`
+# and is reproducible from the .yaml plus the kit, so it is 130 MB of binary that
+# would change on every rebuild and diff as noise. Rebuild instead of cloning it.
+*/*/es/*.pptx
+*/*/en/*.pptx
+
+# The template and the instructor's original decks are sources, not output, so
+# they stay tracked. Listed here so the rule above is not read as "no pptx".
+!Programming_course_slide_template.pptx
+
+# Reference material, not ours to redistribute. 628 MB of it, and two files are
+# over GitHub's 100 MB hard limit, so a push carrying them is rejected outright.
+# The Malik textbook additionally carries "may not be copied, scanned, or
+# duplicated, in whole or in part" on its own cover.
+*.pdf
+
+# The MySQL course's inherited decks, 678 MB of them. They are the material the
+# new course is being written to replace, the same role `Introducción al curso.pptx`
+# plays for COM103, and they are reference rather than source. Keep them on disk,
+# out of history.
+mysql/PRESENTACIONES NUEVAS/
+mysql/PRESENTACIONES ANTIGUAS/
+
+# Working databases produced by the lessons that use sqlite.
+*.db
+
+# Preview contact sheets. They are throwaway, so they belong in a temp folder,
+# but they land here by default and get forgotten.
+/*-[0-9].png
+/*-[0-9][0-9].png
+
+__pycache__/
+~$*

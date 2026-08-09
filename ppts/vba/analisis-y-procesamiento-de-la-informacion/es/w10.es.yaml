@@ -1,0 +1,378 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 10
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 10 · Unidades 1 y 3 · Procedimientos y funciones
+      title: Análisis y Procesamiento de la Información
+      subtitle: Partir una macro larga en piezas que se prueban solas, y escribir una función que Excel acepta en una celda.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 10 de 17]
+      notes: |
+        Noventa minutos. Veinte en partir, treinta en Sub contra Function, y el resto en
+        parámetros y en la función usada como fórmula.
+
+        La diapositiva que cierra la sesión es la de la función en una celda. El alumno
+        escribe TasaMensual una vez en un módulo y a partir de ahí Excel la reconoce en
+        cualquier celda, junto a SUMA y BUSCARV. Verificado: la celda con
+        igual TasaMensual de A1 devuelve el mismo número que el código.
+
+        La trampa del bloque 3 es que ByRef es el valor por omisión. Un Sub que recibe una
+        variable y la modifica está cambiando la del que lo llamó, aunque nadie lo haya
+        pedido. Verificado, cinco entra y cincuenta sale.
+
+        La segunda trampa es una Function que nunca se asigna a sí misma. No marca error,
+        devuelve cero. Verificado.
+
+        El código sale de
+        docs/en/courses/vba-course/09 - Subs and Functions/, los dos módulos.
+
+        Cuidado al abrirlos juntos: SubFunctions, SetupFieldsInWorksheet,
+        ReadInputParameters y ReadInputParametersValidation están declarados en los dos
+        archivos. Importados al mismo proyecto, ninguna llamada sabe a cuál ir.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Partir una macro larga
+          desc: Por qué una de doscientos renglones no se puede probar ni arreglar
+        - title: Sub contra Function
+          desc: Uno hace algo, la otra devuelve un valor, y eso cambia dónde se usa
+        - title: Parámetros y reuso
+          desc: Qué entra, qué sale, y qué se modifica sin que nadie lo haya pedido
+        - title: Tu turno
+          desc: Tu proyecto partido en piezas, y una función tuya en la hoja
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Partir una macro larga en procedimientos
+          sub: Una tarea por procedimiento, y una maestra que solo llama
+        - head: Distinguir un Sub de una Function
+          sub: Cuándo devolver un valor y cuándo solo actuar sobre la hoja
+        - head: Escribir una función con parámetros
+          sub: Lo que entra entre paréntesis, y el nombre que se asigna para devolver
+        - head: Elegir entre ByRef y ByVal
+          sub: Y saber cuál es el valor por omisión, que no es el que uno esperaría
+        - head: Usar su función en una celda
+          sub: Escrita una vez en el módulo, disponible en toda la hoja como cualquier fórmula
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Partir una macro larga
+      lede: No por elegancia. Porque una macro de doscientos renglones que falla no dice en cuál de las siete cosas que hace se rompió.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Lo que no se puede probar por partes no se puede arreglar
+      lead: >-
+        Una macro larga hace siete cosas seguidas. Cuando el resultado sale mal, hay que
+        leerla entera para saber cuál falló, y para probar la quinta hay que correr las
+        cuatro anteriores. Partida en siete procedimientos, cada uno se corre solo desde
+        el cuadro de macros, y el que falla se encuentra en un minuto en vez de una tarde.
+      panel:
+        label: La regla práctica
+        title: Un procedimiento, una tarea, un nombre que la diga
+        note: >-
+          Si al nombrarlo tienes que usar la palabra y, probablemente son dos
+          procedimientos y no uno.
+      steps:
+        - text: Identificas las tareas dentro de la macro larga
+        - text: Cada una se vuelve un procedimiento con nombre
+        - text: La maestra las llama en orden
+          loop: ↺ y cada pieza se prueba sola antes de encadenarla
+
+  - compare:
+      eyebrow: Bloque 01 · Antes y después
+      title: La misma macro, en piezas que se prueban solas
+      before:
+        label: Una sola macro
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          Sub HacerTodo()
+              ' 40 renglones de limpieza
+              ' 30 renglones de formato
+              ' 25 renglones de cálculo
+              ' 20 renglones de reporte
+          End Sub
+      after:
+        label: Cuatro y una maestra
+        file: Modulo1.bas
+        lang: vba
+        code: |
+          Sub HacerTodo()
+              Call LimpiarBase
+              Call FormatearImportes
+              Call CalcularSaldos
+              Call GenerarReporte
+          End Sub
+      note: >-
+        La versión de la derecha se lee como el índice de lo que hace el libro, y
+        cualquiera de las cuatro se corre sola desde el cuadro de macros para probarla. Es
+        la forma que va a pedir el proyecto de la semana 16.
+
+  - code:
+      eyebrow: Bloque 01 · El módulo 09
+      title: La maestra llama, los demás trabajan
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Sub SubFunctions()
+            Call SetupFieldsInWorksheet
+            Call ReadInputParameters
+
+            Dim resultado As Double
+            resultado = Summation(5, 3)
+            MsgBox "El resultado es " & resultado
+        End Sub
+      annotations:
+        - label: Los dos Call
+          text: Cada uno va a un procedimiento que hace una cosa. La maestra no sabe cómo, solo qué.
+        - label: La tercera línea
+          text: Summation no se llama con Call. Devuelve un valor, así que va del lado derecho del igual.
+        - label: Por qué importa
+          text: Los dos primeros actúan sobre la hoja. El tercero contesta una pregunta. Son cosas distintas.
+        - label: Riesgo
+          text: Este nombre está declarado también en AmortizationTable.bas. Con los dos módulos abiertos, Call no sabe a cuál ir.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Sub contra Function
+      lede: Un Sub hace algo y no contesta nada. Una Function contesta, y por eso se puede poner del lado derecho de un igual, o dentro de una celda.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Las diferencias
+      title: Cuándo cada uno
+      headers: [Aspecto, Sub, Function]
+      rows:
+        - ["Devuelve valor", "No", "Sí, el de su propio nombre"]
+        - ["Cómo se llama", "Call Nombre", "x = Nombre(args)"]
+        - ["Sale en el cuadro de macros", "Sí, si es público", "No"]
+        - ["Se usa en una celda", "No", "Sí, como cualquier fórmula"]
+        - ["Para qué sirve", "Actuar sobre la hoja", "Contestar una pregunta"]
+
+  - code:
+      eyebrow: Bloque 02 · Una función completa
+      title: Lo que entra, lo que sale, y cómo se devuelve
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Function TasaMensual(anual As Double) As Double
+            TasaMensual = ((1 + anual) ^ (1 / 12)) - 1
+        End Function
+
+        Function Summation(n1 As Double, n2 As Double) As Double
+            Summation = n1 + n2
+        End Function
+      annotations:
+        - label: Los paréntesis
+          text: Ahí van los parámetros, con su tipo. Es lo que la función necesita para trabajar.
+        - label: El As del final
+          text: El tipo de lo que devuelve. Sin él la función devuelve Variant, igual que una variable sin declarar.
+        - label: Cómo se devuelve
+          text: Asignándole el valor al nombre de la función. No hay una palabra return como en otros lenguajes.
+        - label: Riesgo
+          text: Si nunca le asignas el nombre, no marca error. Devuelve cero, y el cálculo sigue con ese cero.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Verificado
+      title: Lo que devuelve cada una
+      filename: SubsFunctions.bas
+      lang: vba
+      output_label: Lo que contesta
+      source: |
+        MsgBox Summation(5, 3)
+        MsgBox TasaMensual(0.12)
+        MsgBox SinAsignar(7)
+      output: |
+        8
+
+        9.48879293458305E-03
+
+        0
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Parámetros y reuso
+      lede: Lo que entra a un procedimiento puede entrar de dos formas, y la que VBA usa por omisión es la que sorprende.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Verificado
+      title: ByRef y ByVal, con la variable en cinco antes de llamar
+      headers: [Cómo se declara, Qué pasa adentro, Cuánto vale afuera después]
+      rows:
+        - ["ByRef n As Long", "n se multiplica por 10", "50"]
+        - ["ByVal n As Long", "n se multiplica por 10", "5"]
+        - ["n As Long, sin declarar", "n se multiplica por 10", "50"]
+        - ["Conclusión", "Sin escribir nada, es ByRef", "y el cambio sale del procedimiento"]
+
+  - code:
+      eyebrow: Bloque 03 · La trampa
+      title: Un Sub que cambia lo que nadie le pidió cambiar
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub AplicarIVA(monto As Double)
+            monto = monto * 1.16
+        End Sub
+
+        Sub Facturar()
+            Dim subtotal As Double
+            subtotal = 1000
+
+            AplicarIVA subtotal
+            Range("A1").Value = subtotal
+        End Sub
+      annotations:
+        - label: Lo que parece
+          text: Que AplicarIVA trabaja con su propia copia y subtotal se queda en 1000.
+        - label: Lo que pasa
+          text: A1 queda en 1160. Sin escribir ByVal, el parámetro es por referencia y el cambio sale.
+        - label: Cómo se evita
+          text: ByVal monto As Double. O mejor, una Function que devuelva el total y no toque nada.
+        - label: Riesgo
+          text: El error aparece lejos de donde está la causa, en la macro que llamó, no en la que cambió el valor.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · El pago de la sesión
+      title: Tu función, escrita una vez, disponible en toda la hoja
+      filename: hoja.xlsx
+      lang: excel
+      output_label: Lo que devuelve
+      source: |
+        =TasaMensual(A1)
+        =Summation(5,3)
+        =TasaMensual(A1)*12
+      output: |
+        9.48879293458305E-03
+
+        8
+
+        0.113865515214997
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de que una función mienta
+      items:
+        - label: Error 01
+          title: No asignarle el nombre
+          desc: Una Function que nunca hace nombre igual a algo devuelve cero y no marca error. Verificado.
+        - label: Error 02
+          title: Olvidar que el parámetro es ByRef
+          desc: Sin escribir ByVal, lo que el procedimiento le haga al parámetro se lo hace a la variable original.
+        - label: Error 03
+          title: Llamar un Sub con paréntesis
+          desc: Con dos o más argumentos y sin Call, los paréntesis sobran y VBA se queja de sintaxis.
+        - label: Error 04
+          title: Repetir el nombre en dos módulos
+          desc: Es lo que ya trae el módulo 09 del repositorio. Ninguna llamada sabe a cuál de los dos ir.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué queda en A1 al terminar?
+      filename: Modulo1.bas
+      lang: vba
+      source: |
+        Sub Duplicar(n As Long)
+            n = n * 2
+        End Sub
+
+        Sub Probar()
+            Dim x As Long
+            x = 7
+            Duplicar x
+            Range("A1").Value = x
+        End Sub
+      options:
+        - "7, porque el Sub trabaja con su propia copia"
+        - "14, porque sin ByVal el parámetro va por referencia"
+        - "0, porque el Sub no devuelve nada"
+        - "Marca error, porque un Sub no puede recibir parámetros"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Parte tu proyecto y escribe una función tuya
+      brief: Toma la macro más larga que tengas y pártela en procedimientos de una tarea cada uno, con una maestra que solo llame. Además, escribe una Function de tu área, por ejemplo el margen de una venta o el saldo de un plazo, y úsala en una celda de la hoja.
+      blocks:
+        - label: Entrega
+          text: El módulo exportado y el .xlsm con la función usada en al menos tres celdas
+        - label: Restricción
+          text: La maestra no pasa de diez renglones, y ningún procedimiento pasa de cuarenta.
+        - label: La prueba
+          text: Corre cada procedimiento solo desde el cuadro de macros. Si alguno truena aparte, depende de otro sin decirlo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un procedimiento, una tarea
+          desc: Si al nombrarlo necesitas la palabra y, son dos, y partirlos es lo que permite probar cada uno solo
+        - title: Sin ByVal, el cambio sale
+          desc: El valor por omisión es por referencia, así que el procedimiento modifica la variable de quien lo llamó
+        - title: Tu función vive en la hoja
+          desc: Escrita una vez en un módulo, Excel la reconoce en cualquier celda como si viniera de fábrica
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Refactoriza la macro de la tabla de amortización en procedimientos de una tarea
+        cada uno, y saca el cálculo de la tasa mensual a una Function que puedas usar
+        también desde una celda.
+      meta:
+        - [Entrega, Antes de la semana 11]
+        - [Formato, Blackboard · .bas y .xlsm]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["La partición", "40 %", "Cada procedimiento hace una cosa y corre solo desde el cuadro de macros"]
+        - ["La función", "40 %", "Devuelve valor, se usa en una celda, y declara el tipo de lo que devuelve"]
+        - ["Parámetros", "20 %", "Lo que no debe cambiar va con ByVal"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, los eventos. Macros que corren solas al abrir el libro, al
+        guardar o al cambiar una celda.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

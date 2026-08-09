@@ -1,0 +1,393 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1.2
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Repaso 2 de 5 · Módulo 2 · Decisiones y ciclos
+      title: Programación Orientada a Objetos
+      subtitle: Comparar, decidir y repetir. Los cuatro grupos de operadores y las dos formas de ciclo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, Repaso 2 de 5]
+      notes: |
+        Cubre el módulo 2 completo, Code006 a Code009 más Exercise001.
+
+        Las cuatro tablas de operadores van seguidas a propósito: comparación,
+        lógicos, pertenencia e identidad. Es la única sesión donde conviene verlos
+        juntos, porque después se usan mezclados sin avisar.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Usar los seis operadores de comparación
+          sub: Y saber que comparar cadenas compara el valor numérico de sus letras
+        - head: Combinar condiciones con and, or y not
+          sub: Incluida la evaluación de cortocircuito, que decide qué no se evalúa
+        - head: Distinguir in de is
+          sub: Pertenencia contra identidad, dos preguntas que se confunden todo el semestre
+        - head: Escribir if, elif, else y el ternario
+          sub: Y entender por qué el orden de las condiciones cambia el resultado
+        - head: Elegir entre for y while
+          sub: Cuántas vueltas sé de antemano contra hasta que pase algo
+
+  - roadmap:
+      eyebrow: Mapa del repaso
+      title: Cinco sesiones, un módulo cada una
+      phases:
+        - label: Repaso 1
+          title: Datos y texto
+          desc: Variables, tipos, cadenas, números y entrada
+          state: done
+        - label: Repaso 2
+          title: Decisiones y ciclos
+          desc: Comparación, lógica, if, for y while
+          state: now
+        - label: Repaso 3
+          title: Funciones
+          desc: Parámetros, retorno y alcance
+          state: todo
+        - label: Repaso 4
+          title: Colecciones
+          desc: Listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: Repaso 5
+          title: Errores
+          desc: try, except y los tipos más comunes
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Comparar
+      lede: Toda decisión empieza por una pregunta cuya respuesta es verdadero o falso.
+      block: 1
+
+  - table:
+      eyebrow: Módulo 2 · Comparación
+      title: Los seis, en orden
+      headers: ["Operador", "Pregunta", "Ejemplo", "Resultado"]
+      rows:
+        - ["==", "¿Son iguales?", "5 == 5", "True"]
+        - ["!=", "¿Son distintos?", "5 != 5", "False"]
+        - [">", "¿Mayor que?", "5 > 3", "True"]
+        - ["<", "¿Menor que?", "5 < 3", "False"]
+        - [">=", "¿Mayor o igual?", "5 >= 5", "True"]
+        - ["<=", "¿Menor o igual?", "5 <= 5", "True"]
+
+  - code_output:
+      eyebrow: Módulo 2 · Comparación
+      title: Las cadenas se comparan letra por letra
+      filename: Code006.py
+      lang: python
+      output_label: Salida
+      source: |
+        print("Python" == "python")
+        print("bag" > "apple")
+        print(ord("b"), ord("B"))
+        print("Z" < "a")
+      output: |
+        False
+        True
+        98 66
+        True
+      notes: |
+        ord() devuelve el número que representa a la letra. Las mayúsculas van antes
+        que las minúsculas en esa numeración, por eso "Z" < "a" es verdadero.
+
+  - table:
+      eyebrow: Módulo 2 · Operadores lógicos
+      title: Los tres que combinan condiciones
+      headers: [Operador, Es verdadero cuando, Ejemplo, Resultado]
+      rows:
+        - ["and", "Las dos partes son verdaderas", "True and False", "False"]
+        - ["or", "Al menos una es verdadera", "True or False", "True"]
+        - ["not", "La parte es falsa", "not True", "False"]
+
+  - table:
+      eyebrow: Módulo 2 · Pertenencia e identidad
+      title: Los cuatro que se confunden entre sí
+      headers: ["Operador", "Pregunta", "Ejemplo", "Resultado"]
+      rows:
+        - ["in", "¿Está dentro?", "'Pro' in 'Programming'", "True"]
+        - ["not in", "¿No está dentro?", "'swift' not in 'Python'", "True"]
+        - ["is", "¿Es el mismo objeto?", "a = [1]; b = a; a is b", "True"]
+        - ["is not", "¿Es otro objeto?", "[1] is not [1]", "True"]
+
+  - concept:
+      eyebrow: Módulo 2 · Identidad
+      title: is no es lo mismo que ==
+      lead: >-
+        El doble igual pregunta si dos cosas valen lo mismo. is pregunta si son
+        exactamente el mismo objeto en memoria. Dos listas con el mismo contenido son
+        iguales, pero no son la misma.
+      panel:
+        label: Cuándo se usa is
+        title: Solo con None, True y False
+        note: >-
+          La forma correcta de comprobar ausencia es "if resultado is None". Para
+          cualquier otra comparación, el doble igual es lo que quieres.
+      steps:
+        - text: '[1, 2] == [1, 2] es verdadero'
+        - text: '[1, 2] is [1, 2] es falso'
+        - text: 'Son iguales pero no son la misma'
+          loop: ↺ el repaso 4 vuelve a esto con las copias de listas
+
+  - concept:
+      eyebrow: Módulo 2 · Cortocircuito
+      title: A veces la segunda condición ni se evalúa
+      lead: >-
+        Con and, si la primera parte es falsa, Python ya sabe la respuesta y no mira la
+        segunda. Con or pasa lo contrario: si la primera es verdadera, se salta el resto.
+        A eso se le llama evaluación de cortocircuito.
+      panel:
+        label: Por qué importa
+        title: Permite escribir guardas seguras
+        note: >-
+          if datos and datos[0] no truena con una lista vacía, porque el índice nunca
+          llega a evaluarse. Invertir el orden sí levanta IndexError.
+      steps:
+        - text: Python evalúa la primera condición
+        - text: Si ya puede decidir, se detiene
+        - text: Si no, evalúa la siguiente
+          loop: ↺ de izquierda a derecha, siempre
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Decidir
+      lede: Una condición sin bloque no sirve de nada. La indentación es la que dice qué se ejecuta.
+      block: 2
+
+  - code:
+      eyebrow: Módulo 2 · Condicionales
+      title: if, elif, else
+      filename: Code007.py
+      lang: python
+      source: |
+        temperature = 20
+
+        if temperature > 30:
+            print("Hace calor")
+        elif temperature > 20:
+            print("Buen día")
+        elif temperature > 10:
+            print("Hace algo de frío")
+        else:
+            print("Hace frío")
+
+        print("Listo")
+      annotations:
+        - label: El orden manda
+          text: Se evalúan de arriba abajo y se detiene en la primera verdadera
+        - label: else es opcional
+          text: Sirve como caso por defecto. Sin él, si nada se cumple no pasa nada.
+        - label: Riesgo
+          text: La indentación define el bloque. Un espacio de más cambia qué se ejecuta.
+          accent: true
+
+  - code_output:
+      eyebrow: Módulo 2 · Condicionales
+      title: Con 20 grados, ¿qué rama entra?
+      filename: temperatura.py
+      lang: python
+      output_label: Salida
+      source: |
+        temperature = 20
+
+        if temperature > 30:
+            print("Hace calor")
+        elif temperature > 20:
+            print("Buen día")
+        else:
+            print("Hace frío")
+      output: |
+        Hace frío
+      notes: |
+        Trampa deliberada. Con temperature = 20, la condición temperature > 20 es
+        falsa, porque 20 no es mayor que 20. Cae al else. Es el error de frontera
+        más común, y vale la pena que lo descubran ellos antes de explicarlo.
+
+  - code:
+      eyebrow: Módulo 2 · Ternario
+      title: El if de una sola línea
+      filename: ternario.py
+      lang: python
+      source: |
+        age = 22
+
+        message = "Elegible" if age >= 18 else "No elegible"
+
+        # equivale exactamente a:
+        if age >= 18:
+            message = "Elegible"
+        else:
+            message = "No elegible"
+      annotations:
+        - label: Cuándo usarlo
+          text: Cuando la decisión es asignar uno de dos valores a la misma variable
+        - label: Cuándo no
+          text: Si hay más de dos casos, o si cada rama hace algo distinto, usa el if normal
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Repetir
+      lede: Dos formas de ciclo, y la pregunta que decide cuál usar.
+      block: 3
+
+  - concept:
+      eyebrow: Módulo 2 · Ciclos
+      title: for o while, según lo que sepas de antemano
+      lead: >-
+        Si sabes cuántas vueltas van a ser, o recorres algo que ya existe, es un for. Si
+        repites hasta que pase algo que no puedes contar por adelantado, es un while.
+      panel:
+        label: Las tres piezas de todo ciclo
+        title: Inicialización, condición de salida y avance
+        note: >-
+          En el for las tres las pone Python. En el while las escribes tú, y olvidar el
+          avance es la receta exacta del ciclo infinito.
+      steps:
+        - text: Inicializa la variable de control
+        - text: Evalúa la condición de salida
+        - text: Ejecuta el cuerpo y avanza
+          loop: ↺ vuelve al paso 2 hasta que la condición sea falsa
+
+  - code_output:
+      eyebrow: Módulo 2 · for
+      title: for con range, y qué imprime cada vuelta
+      filename: Code009.py
+      lang: python
+      output_label: Salida
+      source: |
+        for number in range(4):
+            print("Intento", number, number * ".")
+      output: |
+        Intento 0
+        Intento 1 .
+        Intento 2 ..
+        Intento 3 ...
+
+  - table:
+      eyebrow: Módulo 2 · range
+      title: Las tres formas de range
+      headers: [Forma, Qué produce, Ejemplo, Valores]
+      rows:
+        - ["range(n)", "De 0 a n menos 1", "range(4)", "0 1 2 3"]
+        - ["range(a, b)", "De a a b menos 1", "range(2, 6)", "2 3 4 5"]
+        - ["range(a, b, p)", "De a a b, de p en p", "range(0, 10, 3)", "0 3 6 9"]
+        - ["range(b, a, -1)", "Hacia atrás", "range(3, 0, -1)", "3 2 1"]
+
+  - code:
+      eyebrow: Módulo 2 · while
+      title: while, y las dos palabras que cortan un ciclo
+      filename: ciclos.py
+      lang: python
+      source: |
+        contador = 0
+        while contador < 3:
+            print(contador)
+            contador += 1        # sin esta línea, nunca termina
+
+        for n in range(10):
+            if n == 3:
+                continue         # salta a la siguiente vuelta
+            if n == 6:
+                break            # abandona el ciclo
+            print(n)
+      annotations:
+        - label: continue
+          text: Se salta el resto del cuerpo y sigue con la vuelta siguiente
+        - label: break
+          text: Sale del ciclo por completo, sin evaluar la condición otra vez
+        - label: Riesgo
+          text: Un while cuya variable de control no cambia dentro del cuerpo no termina nunca
+          accent: true
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores de este módulo
+      items:
+        - label: Error 01
+          title: Comparar con un solo igual
+          desc: 'SyntaxError. Un signo asigna, dos comparan. En un if siempre van dos.'
+        - label: Error 02
+          title: Fallar en la frontera
+          desc: '"mayor que 20" excluye al 20. Si el 20 debe entrar, la condición es >=.'
+        - label: Error 03
+          title: Ciclo infinito
+          desc: El while cuya variable de control nunca se modifica dentro del cuerpo
+        - label: Error 04
+          title: Usar is en lugar de ==
+          desc: is compara identidad, no valor. Solo se usa con None, True y False.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuántas veces se imprime "hola"?
+      filename: quiz.py
+      lang: python
+      source: |
+        contador = 0
+
+        while contador < 3:
+            print("hola")
+            contador += 1
+
+        for i in range(2):
+            print("hola")
+      options:
+        - Tres veces
+        - Cinco veces
+        - Seis veces
+        - Nunca, el programa entra en bucle infinito
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cinco veces, y la traza lo demuestra
+      headers: [Paso, Instrucción, contador, i, Impresiones]
+      rows:
+        - ['1', "contador = 0", '0', '–', '0']
+        - ['2', "while 0 < 3", '1', '–', '1']
+        - ['3', "while 1 < 3", '2', '–', '2']
+        - ['4', "while 2 < 3", '3', '–', '3']
+        - ['5', "while 3 < 3 es falso", '3', '–', '3']
+        - ['6', "for i in range(2)", '3', "0, 1", '5']
+      verdict: El while corre tres veces y el for dos. Sumadas, cinco impresiones.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El orden de las condiciones importa
+          desc: Se detiene en la primera verdadera, así que la más específica va arriba
+        - title: El cortocircuito no es un detalle
+          desc: Es lo que permite escribir guardas que no truenan con datos vacíos
+        - title: Todo ciclo necesita tres piezas
+          desc: Inicialización, condición de salida y avance, aunque el for las ponga solo
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe un programa que pida números hasta que el usuario escriba cero, y al final diga cuántos fueron pares y cuántos impares.
+      meta:
+        - [Entrega, Antes del repaso 3]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Ciclo", "40 %", "Usa while, porque no se sabe de antemano cuántos números serán"]
+        - ["Condición", "40 %", "La prueba de par usa el residuo, no una lista de casos"]
+        - ["Salida", "20 %", "Los dos conteos se imprimen con f-string al terminar"]
+
+  - closing:
+      title: Preguntas
+      subtitle: El siguiente repaso, funciones con parámetros, retorno y alcance.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

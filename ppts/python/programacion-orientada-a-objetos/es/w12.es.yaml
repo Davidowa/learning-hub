@@ -1,0 +1,352 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 12
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 12 · Tema 5 · Archivos
+      title: Programación Orientada a Objetos
+      subtitle: Los datos dejan de vivir en memoria. Rutas que sirven en cualquier sistema, el bloque que cierra solo, y el CSV de siempre.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 12 de 17]
+      notes: |
+        Primera sesión en la que el programa deja rastro después de terminar, y eso cambia
+        cómo se depura. Conviene abrir la carpeta del proyecto en el explorador, a un lado
+        del editor, para que el grupo vea aparecer los archivos mientras corre el código.
+
+        Los ejemplos salen de docs/en/courses/python-course/03 - Paths and Files/7th Module:
+        pathlib es de Code029.py, los modos de apertura y read_text de Code030.py, la
+        lectura línea por línea de Code31.py, el CSV de Code32.py, y el bloque de errores
+        con archivos de Code035.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Rutas
+          desc: Path en lugar de cadenas, y por qué la diferencia importa
+        - title: Abrir y cerrar
+          desc: El ciclo de vida de un archivo y el bloque que lo cierra por ti
+        - title: Modos
+          desc: Leer, escribir, agregar, y cuál de ellos borra lo que había
+        - title: Texto y CSV
+          desc: Línea por línea, y la primera fila como encabezado
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Armar rutas con pathlib
+          sub: Unir carpetas con la diagonal y leer el nombre, la extensión y la carpeta padre
+        - head: Usar el bloque with
+          sub: Y explicar qué se rompe cuando se abre un archivo sin él
+        - head: Elegir el modo de apertura
+          sub: Sabiendo cuál crea el archivo, cuál lo conserva y cuál lo deja vacío al abrirlo
+        - head: Leer y escribir un CSV
+          sub: Con DictReader y DictWriter, sin depender del orden de las columnas
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Rutas y archivos
+      lede: Antes de leer nada hay que saber dónde está. Y una ruta escrita a mano funciona en tu máquina y falla en la de al lado.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es una ruta y por qué no es una cadena
+      lead: >-
+        Una ruta apunta a un lugar del disco. Escrita como cadena depende del sistema, de
+        hacia dónde van las barras y de si alguien se acordó de escapar los caracteres. Path
+        la trata como lo que es, un camino con partes, y la arma bien en cualquier máquina.
+      panel:
+        label: Lo que hay que separar
+        title: La ruta, el archivo y el contenido
+        note: >-
+          La ruta existe aunque el archivo no. El archivo existe aunque esté vacío. Y el
+          contenido aparece cuando alguien lo lee, no cuando se construye la ruta.
+      steps:
+        - text: Arma la ruta
+        - text: Comprueba o intenta abrirla
+        - text: Lee o escribe dentro del with
+          loop: ↺ el with cierra al salir del bloque, con error o sin él
+
+  - code:
+      eyebrow: Python
+      title: Una ruta que sirve en Windows y en Linux
+      filename: rutas.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        ruta = Path("datos") / "alumnos.csv"
+
+        print(ruta)
+        print(ruta.name)
+        print(ruta.suffix)
+        print(ruta.parent)
+        print(ruta.exists())
+      annotations:
+        - label: Línea 3
+          text: La diagonal une pedazos de ruta, y Python pone la barra que le toca a cada sistema
+        - label: Por qué no una cadena
+          text: 'Escribir "datos\alumnos.csv" mete un carácter de escape que nadie quería'
+        - label: Riesgo
+          text: exists() contesta por lo que hay ahora. Un segundo después puede ser mentira.
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: Las partes de una ruta, ya separadas
+      filename: rutas.py
+      lang: python
+      output_label: Salida
+      source: |
+        print(ruta)
+        print(ruta.name)
+        print(ruta.suffix)
+        print(ruta.parent)
+      output: |
+        datos\alumnos.csv
+        alumnos.csv
+        .csv
+        datos
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Abrir, procesar y cerrar
+      lede: Un archivo abierto es un recurso prestado. Todo lo que se presta se devuelve, y conviene que se devuelva solo.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: El ciclo de vida de un archivo abierto
+      image: img/es/file-lifecycle.png
+      caption: El with hace el primer paso y el último. Lo único que queda por escribir es el de en medio.
+      alt: Tres cajas con open, read y close, con un corchete debajo rotulado with que abarca las tres
+
+  - code:
+      eyebrow: El bloque with
+      title: Abrir un archivo sin tener que acordarse de cerrarlo
+      filename: leer.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        ruta = Path("datos") / "notas.txt"
+
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            contenido = archivo.read()
+
+        print(len(contenido))
+      annotations:
+        - label: Línea 5
+          text: El with cierra el archivo al salir del bloque, incluso si adentro se lanza una excepción
+        - label: El encoding
+          text: Sin él Python usa el del sistema, y los acentos salen rotos en la máquina de al lado
+        - label: Riesgo
+          text: read() carga el archivo completo en memoria, y con un archivo grande eso no cabe
+          accent: true
+
+  - table:
+      eyebrow: Vocabulario
+      title: Los cinco modos de apertura
+      headers: ["Modo", "Qué hace", "Si no existe", "Si ya existe"]
+      rows:
+        - ["r", "Lee", "FileNotFoundError", "Lo deja intacto"]
+        - ["w", "Escribe", "Lo crea", "Lo vacía al abrirlo"]
+        - ["a", "Agrega al final", "Lo crea", "Conserva y agrega"]
+        - ["x", "Crea y escribe", "Lo crea", "FileExistsError"]
+        - ["rb wb", "Bytes en crudo", "Igual que r y w", "Igual que r y w"]
+
+  - code:
+      eyebrow: Procesamiento
+      title: Recorrer un archivo sin cargarlo entero
+      filename: procesar.py
+      lang: python
+      source: |
+        with open(ruta, encoding="utf-8") as archivo:
+            for linea in archivo:
+                print(linea.strip())
+
+        with open(ruta, "a", encoding="utf-8") as archivo:
+            archivo.write("Sofía,8.0\n")
+      annotations:
+        - label: Línea 2
+          text: Recorrer el archivo entrega una línea a la vez, así que uno de un giga cabe igual
+        - label: Línea 3
+          text: strip quita el salto de línea que cada línea trae pegado al final
+        - label: Línea 6
+          text: Escribir no agrega el salto de línea por su cuenta. Si lo olvidas, todo queda pegado.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores con archivos
+      items:
+        - label: Error 01
+          title: Abrir sin with
+          desc: Si algo falla entre el open y el close, el archivo queda abierto y lo escrito no llega al disco
+        - label: Error 02
+          title: Rutas con barras escritas a mano
+          desc: 'La cadena "datos\notas.txt" lleva un salto de línea escondido. Usa Path.'
+        - label: Error 03
+          title: read() sobre un archivo grande
+          desc: Carga todo en memoria de golpe, y recorrer línea por línea cuesta lo mismo y siempre cabe
+        - label: Error 04
+          title: Olvidar el encoding
+          desc: El archivo se lee bien en tu máquina y con los acentos rotos en la de quien califica
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Archivos de texto y CSV
+      lede: El formato más simple que sigue siendo legible por una persona, y el que abre Excel sin preguntar nada.
+      block: 3
+
+  - code:
+      eyebrow: Leer un CSV
+      title: La primera fila como encabezado
+      filename: leer_csv.py
+      lang: python
+      source: |
+        import csv
+        from pathlib import Path
+
+        ruta = Path("datos") / "alumnos.csv"
+
+        with open(ruta, newline="", encoding="utf-8") as archivo:
+            lector = csv.DictReader(archivo)
+            for fila in lector:
+                print(fila["nombre"], fila["nota"])
+      annotations:
+        - label: Línea 7
+          text: DictReader toma la primera fila como encabezado y entrega cada fila como diccionario
+        - label: El newline vacío
+          text: Se lo pide el módulo csv. Sin él, en Windows aparecen renglones en blanco de más.
+        - label: Con csv.reader
+          text: Cada fila llega como lista, y hay que acordarse de qué columna es cada índice
+
+  - code_output:
+      eyebrow: Escribir un CSV
+      title: Del diccionario al archivo, con encabezado
+      filename: escribir_csv.py
+      lang: python
+      output_label: alumnos.csv
+      source: |
+        filas = [
+            {"nombre": "Ana", "nota": 9.1},
+            {"nombre": "Luis", "nota": 6.4},
+        ]
+
+        with open(ruta, "w", newline="", encoding="utf-8") as f:
+            campos = ["nombre", "nota"]
+            escritor = csv.DictWriter(f, fieldnames=campos)
+            escritor.writeheader()
+            escritor.writerows(filas)
+      output: |
+        nombre,nota
+        Ana,9.1
+        Luis,6.4
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: modos.py
+      lang: python
+      source: |
+        ruta = Path("notas.txt")
+
+        with open(ruta, "w") as f:
+            f.write("primera")
+
+        with open(ruta, "w") as f:
+            f.write("segunda")
+
+        print(ruta.read_text())
+      options:
+        - 'primerasegunda'
+        - 'segunda, porque w vacía el archivo al abrirlo'
+        - 'primera, porque el archivo ya existía'
+        - 'FileExistsError al abrirlo la segunda vez'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime segunda, y el vaciado ocurre antes de escribir
+      headers: ["Paso", "Instrucción", "Contenido en disco"]
+      rows:
+        - ["1", 'open(ruta, "w")', "queda vacío"]
+        - ["2", 'f.write("primera")', "primera"]
+        - ["3", 'open(ruta, "w")', "queda vacío otra vez"]
+        - ["4", 'f.write("segunda")', "segunda"]
+      verdict: El modo w vacía el archivo en el momento de abrirlo, antes de que se escriba un solo carácter. Para conservar lo que había hay que abrir con a.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un reporte que sale de un archivo, en parejas
+      brief: Reciben un CSV con cien calificaciones. Escriban un programa que lo lea, saque el promedio por materia y guarde un reporte en un archivo de texto nuevo.
+      blocks:
+        - label: Restricciones
+          text: Todo acceso va con with, todas las rutas con Path y todas las aperturas con encoding
+        - label: Entregable
+          text: El archivo .py y el reporte generado, los dos en la misma entrega
+        - label: Criterio
+          text: Que el programa termine bien aunque el CSV venga vacío o le falte una columna
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Path arma rutas que sirven en todo
+          desc: Unir con la diagonal evita el problema de las barras y del carácter de escape escondido
+        - title: El with cierra aunque truene
+          desc: Abrir a mano obliga a escribir un finally, y ese finally es justo el que se olvida
+        - title: El modo w borra al abrir
+          desc: No al escribir. El archivo queda vacío en el instante en que se abre, aunque no escribas nada.
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Amplía el reporte del laboratorio para que además escriba un CSV con una fila por materia, y agrégale el manejo de un archivo de entrada que no existe.
+      meta:
+        - [Entrega, Antes de la sesión 13]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Lectura", "35 %", "El CSV se lee con DictReader y el programa no supone el orden de las columnas"]
+        - ["Escritura", "35 %", "El reporte y el CSV se generan con with y con encoding explícito"]
+        - ["Robustez", "30 %", "Un archivo faltante o vacío produce un mensaje claro y no un traceback"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, archivos binarios, acceso secuencial y aleatorio, y el segundo parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

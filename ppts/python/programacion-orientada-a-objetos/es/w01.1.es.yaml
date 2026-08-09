@@ -1,0 +1,381 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1.1
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Repaso 1 de 5 · Módulo 1 · Datos y texto
+      title: Programación Orientada a Objetos
+      subtitle: Guardar un valor y darle un nombre. Tipos, cadenas, números y entrada por consola.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, Repaso 1 de 5]
+      notes: |
+        Primera de cinco sesiones de repaso, una por módulo de
+        docs/en/courses/python-course/01 - Basics. Van entre la semana 1 y la 2.
+
+        Esta cubre el módulo 1 completo, Code001 a Code005. Si el grupo viene fuerte,
+        los bloques 01 y 02 se corren rápido y el tiempo se va a los operadores del
+        bloque 03, que es donde suelen fallar en el parcial.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar variables de los cinco tipos básicos
+          sub: int, float, bool, str y None, y saber cuál corresponde a cada dato
+        - head: Explicar qué es el tipado dinámico
+          sub: Por qué el nombre no tiene tipo y el valor sí
+        - head: Cortar y componer texto
+          sub: Índices, rebanadas, f-strings y los métodos que devuelven copias
+        - head: Usar los siete operadores aritméticos
+          sub: Suma, resta, producto, las dos divisiones, residuo y potencia
+        - head: Convertir lo que llega de input
+          sub: input siempre devuelve texto, y operar sin convertir levanta TypeError
+
+  - roadmap:
+      eyebrow: Mapa del repaso
+      title: Cinco sesiones, un módulo cada una
+      phases:
+        - label: Repaso 1
+          title: Datos y texto
+          desc: Variables, tipos, cadenas, números y entrada
+          state: now
+        - label: Repaso 2
+          title: Decisiones y ciclos
+          desc: Comparación, lógica, if, for y while
+          state: todo
+        - label: Repaso 3
+          title: Funciones
+          desc: Parámetros, retorno y alcance
+          state: todo
+        - label: Repaso 4
+          title: Colecciones
+          desc: Listas, tuplas, conjuntos y diccionarios
+          state: todo
+        - label: Repaso 5
+          title: Errores
+          desc: try, except y los tipos más comunes
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Variables y tipos
+      lede: Lo primero que hace cualquier programa es guardar algo y darle un nombre para volver a encontrarlo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es una variable
+      lead: >-
+        Un nombre atado a un valor guardado en memoria. El nombre no tiene tipo; el valor
+        sí. Por eso la misma variable puede guardar un número y después una cadena, sin
+        que Python se queje.
+      panel:
+        label: La consecuencia
+        title: Reasignar cambia el tipo, en silencio
+        note: >-
+          Ningún error avisa en ese momento. El programa truena más adelante, cuando
+          alguien intenta operar con lo que ya dejó de ser un número.
+      steps:
+        - text: Eliges un nombre que describa el dato
+        - text: Le asignas un valor con el signo igual
+        - text: Python le pone el tipo al valor
+          loop: ↺ cada reasignación puede cambiar ese tipo
+
+  - table:
+      eyebrow: Módulo 1 · Tipos
+      title: Los cinco tipos que vas a usar todo el semestre
+      headers: [Tipo, Qué guarda, Ejemplo, Su valor falso]
+      rows:
+        - ["int", "Enteros, sin límite de tamaño", "student_count = 1000", "0"]
+        - ["float", "Decimales, con precisión limitada", "rating = 4.99", "0.0"]
+        - ["bool", "Verdadero o falso", "is_published = False", "False"]
+        - ["str", "Texto, entre comillas", "course = 'Python'", "'' vacía"]
+        - ["NoneType", "La ausencia de valor", "resultado = None", "None"]
+
+  - code:
+      eyebrow: Módulo 1 · Variables
+      title: Python decide el tipo, tú decides el nombre
+      filename: Code002.py
+      lang: python
+      source: |
+        student_count = 1000          # int
+        rating = 4.99                 # float
+        is_published = False          # bool
+        course_name = "Python"        # str
+
+        student_count = "1000"        # ahora es str
+
+        x, y = 1, 2                   # dos nombres en una línea
+      annotations:
+        - label: Línea 6
+          text: La misma variable pasó de entero a cadena y nadie protestó
+        - label: Línea 8
+          text: La asignación múltiple reparte los valores en orden, de izquierda a derecha
+        - label: Riesgo
+          text: Un nombre que a mitad del programa guarda otra cosa es la fuente de bugs más barata de evitar
+          accent: true
+
+  - code_output:
+      eyebrow: Módulo 1 · Tipos
+      title: type() responde qué hay dentro
+      filename: tipos.py
+      lang: python
+      output_label: Salida
+      source: |
+        print(type(1000))
+        print(type(4.99))
+        print(type(False))
+        print(type("Python"))
+        print(type(None))
+      output: |
+        <class 'int'>
+        <class 'float'>
+        <class 'bool'>
+        <class 'str'>
+        <class 'NoneType'>
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Texto
+      lede: Una cadena es una secuencia de caracteres, y casi todo lo que aprendas de ella sirve después para las listas.
+      block: 2
+
+  - code:
+      eyebrow: Módulo 1 · Cadenas
+      title: Índices y rebanadas
+      filename: Code003.py
+      lang: python
+      source: |
+        course = "Python Programming"
+
+        course[0]        # 'P'    primer carácter
+        course[-1]       # 'g'    último carácter
+        course[0:3]      # 'Pyt'  del 0 al 2
+        course[:3]       # 'Pyt'  lo mismo, sin escribir el 0
+        course[7:]       # 'Programming'
+        course[1:-1]     # sin el primero ni el último
+      annotations:
+        - label: El índice empieza en cero
+          text: El primer carácter es course[0], no course[1]
+        - label: Índice negativo
+          text: Cuenta desde el final. course[-1] es el último y course[-2] el penúltimo.
+        - label: La regla del corte
+          text: El primer índice entra, el segundo no. Por eso [0:3] devuelve tres caracteres.
+
+  - figure:
+      eyebrow: Módulo 1 · Cadenas
+      title: La regla del corte, dibujada
+      image: img/es/slicing.png
+      caption: El primer índice entra, el segundo no. Por eso [0:3] devuelve tres caracteres.
+      alt: La palabra PYTHON en fichas, con reglas de índice positivo arriba y negativo abajo
+
+  - table:
+      eyebrow: Módulo 1 · Cadenas
+      title: Los métodos de cadena que sí vas a usar
+      headers: [Método, Qué hace, Ejemplo, Resultado]
+      rows:
+        - ["upper()", "Todo a mayúsculas", "'python'.upper()", "'PYTHON'"]
+        - ["lower()", "Todo a minúsculas", "'PYTHON'.lower()", "'python'"]
+        - ["title()", "Inicial de cada palabra", "'python 3'.title()", "'Python 3'"]
+        - ["strip()", "Quita espacios de orilla", "'  py  '.strip()", "'py'"]
+        - ["find(x)", "Posición, o -1 si no está", "'python'.find('th')", "2"]
+        - ["replace(a, b)", "Cambia a por b", "'py'.replace('p','j')", "'jy'"]
+
+  - concept:
+      eyebrow: Módulo 1 · Cadenas
+      title: Ningún método modifica la cadena original
+      lead: >-
+        Las cadenas son inmutables. upper, lower, strip y replace no cambian la variable:
+        construyen una copia nueva y te la devuelven. Si no guardas ese resultado, el
+        trabajo se pierde sin que nada avise.
+      panel:
+        label: El error típico
+        title: Llamar al método y no guardar nada
+        note: >-
+          course.upper() por sí solo no cambia course. Tiene que ser
+          course = course.upper(), o guardarlo en otra variable.
+      steps:
+        - text: El método lee la cadena original
+        - text: Construye una copia modificada
+        - text: Te devuelve esa copia
+          loop: ↺ la original sigue exactamente igual
+
+  - code:
+      eyebrow: Módulo 1 · Cadenas
+      title: f-strings, la forma de armar texto con valores
+      filename: fstrings.py
+      lang: python
+      source: |
+        first, last = "John", "Doe"
+        rating = 4.97
+
+        full = first + " " + last          # funciona, pero se lee mal
+        full = f"{first} {last}"           # 'John Doe'
+
+        print(f"{len(first)} letras")      # 4 letras
+        print(f"{2 + 3}")                  # 5
+        print(f"{rating:.1f}")             # 5.0
+      annotations:
+        - label: La f va antes de la comilla
+          text: Sin ella las llaves se imprimen tal cual, como si fueran texto
+        - label: Dentro de las llaves
+          text: Cabe cualquier expresión, incluida una llamada a función
+        - label: Después de los dos puntos
+          text: El formato permite redondear o alinear sin hacer el cálculo aparte
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Números y entrada
+      lede: Siete operadores aritméticos, siete de asignación, y una función que siempre devuelve texto.
+      block: 3
+
+  - table:
+      eyebrow: Módulo 1 · Operadores aritméticos
+      title: Los siete, en orden
+      headers: [Operador, Nombre, Ejemplo, Resultado]
+      rows:
+        - ["+", "Suma", "10 + 3", "13"]
+        - ["-", "Resta", "10 - 3", "7"]
+        - ["*", "Multiplicación", "10 * 3", "30"]
+        - ["/", "División real", "10 / 3", "3.3333333333333335"]
+        - ["//", "División entera", "10 // 3", "3"]
+        - ["%", "Residuo", "10 % 3", "1"]
+        - ["**", "Potencia", "10 ** 3", "1000"]
+
+  - table:
+      eyebrow: Módulo 1 · Operadores de asignación
+      title: Los mismos siete, en versión corta
+      headers: [Operador, Equivale a, Partiendo de x = 10, x queda en]
+      rows:
+        - ["+=", "x = x + 3", "x += 3", "13"]
+        - ["-=", "x = x - 3", "x -= 3", "7"]
+        - ["*=", "x = x * 3", "x *= 3", "30"]
+        - ["/=", "x = x / 3", "x /= 3", "3.333…"]
+        - ["//=", "x = x // 3", "x //= 3", "3"]
+        - ["%=", "x = x % 3", "x %= 3", "1"]
+        - ["**=", "x = x ** 3", "x **= 3", "1000"]
+
+  - concept:
+      eyebrow: Módulo 1 · Números
+      title: Las dos divisiones no dan lo mismo
+      lead: >-
+        La barra sencilla siempre devuelve un float, aunque la división sea exacta. La
+        barra doble descarta la parte decimal y devuelve un entero. El residuo contesta
+        otra pregunta: qué sobró después de repartir.
+      panel:
+        label: Para qué sirve el residuo
+        title: Saber si un número es par, o repartir en ciclos
+        note: >-
+          n % 2 == 0 es la prueba de par. n % 3 == 0 es la de múltiplo de tres, que es
+          justo lo que pide FizzBuzz en el repaso 3.
+      steps:
+        - text: 10 / 4 devuelve 2.5
+        - text: 10 // 4 devuelve 2
+        - text: 10 % 4 devuelve 2
+          loop: ↺ el cociente entero y el residuo reconstruyen el original
+
+  - code_output:
+      eyebrow: Módulo 1 · Entrada
+      title: input siempre devuelve texto
+      filename: Code005.py
+      lang: python
+      output_label: Salida
+      source: |
+        x = input("x: ")
+        print(type(x))
+
+        x = int(input("x: "))
+        print(type(x))
+
+        print(bool(""), bool("0"), bool(" "))
+      output: |
+        x: 5
+        <class 'str'>
+        x: 5
+        <class 'int'>
+        False True True
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores de este módulo
+      items:
+        - label: Error 01
+          title: Operar con lo que llegó de input
+          desc: 'TypeError. input devuelve str, así que hay que convertir con int() o float() antes.'
+        - label: Error 02
+          title: Creer que bool("0") es False
+          desc: Cualquier cadena no vacía es verdadera, incluidas "0" y un solo espacio en blanco
+        - label: Error 03
+          title: Llamar a un método y no guardarlo
+          desc: 'course.upper() no cambia course. Tiene que ser course = course.upper().'
+        - label: Error 04
+          title: Confundir la barra sencilla con la doble
+          desc: La sencilla siempre da float. Para índices y conteos casi siempre quieres la doble.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: quiz.py
+      lang: python
+      source: |
+        precio = "100"
+
+        total = precio * 2
+
+        print(len(total))
+      options:
+        - '3, porque 200 tiene tres dígitos'
+        - '6, porque repitió el texto "100" dos veces'
+        - 'Error, no se puede multiplicar texto'
+        - '2, porque total vale 200 y len cuenta dos cosas'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 6, porque precio nunca fue un número
+      headers: [Paso, Instrucción, precio, total, Tipo de total]
+      rows:
+        - ["1", "precio = '100'", "'100'", "–", "str"]
+        - ["2", "total = precio * 2", "'100'", "'100100'", "str"]
+        - ["3", "len(total)", "'100'", "'100100'", "6"]
+      verdict: Multiplicar una cadena por un entero la repite. Para operar con números hace falta int(precio) primero.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El nombre no tiene tipo, el valor sí
+          desc: En tres semanas eso mismo explicará por qué un atributo puede romper un método
+        - title: Las cadenas no se modifican, se copian
+          desc: Todo método de cadena devuelve algo nuevo, así que hay que guardarlo
+        - title: input devuelve texto, siempre
+          desc: Convertir es tu responsabilidad, y olvidarlo es el TypeError más común del curso
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe un programa que pida nombre y edad, y salude con una f-string diciendo en qué año cumplió esa edad.
+      meta:
+        - [Entrega, Antes del repaso 2]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Conversión", "40 %", "La edad se convierte con int() antes de operar con ella"]
+        - ["f-string", "40 %", "El saludo se arma con f-string, no concatenando con el signo más"]
+        - ["Nombres", "20 %", "Las variables se llaman como el dato que guardan"]
+
+  - closing:
+      title: Preguntas
+      subtitle: El siguiente repaso, comparación, lógica y los dos tipos de ciclo.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

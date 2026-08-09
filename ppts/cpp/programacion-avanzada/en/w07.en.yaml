@@ -1,0 +1,339 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 7
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 07 · Unit 6 · Control structures I
+      title: Advanced Programming
+      subtitle: The program stops being a straight line. Comparing, combining conditions, and choosing what runs.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 7 of 17]
+      notes: |
+        The constraint the last six sessions carried is lifted. Worth saying at the start:
+        last week's mutator, which only assigned, can now check what it receives.
+
+        Every result in this deck was measured by building each program exactly as it
+        appears on its slide, on Visual Studio Community 2026. The switch without a break
+        and the real-number comparison came from real runs, not from memory.
+
+        The slide about real numbers is the most important of the session and the most
+        easily forgotten. 0.1 plus 0.2 does not equal 0.3, and cout still prints 0.3. Worth
+        running live.
+
+        Reading: Malik, eighth edition, chapter 4.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Comparing
+          desc: All six relational operators, and what they hand back
+        - title: Combining
+          desc: The three logical ones, and the shortcut that avoids extra work
+        - title: Choosing
+          desc: if, if-else and nesting, with the problem nesting brings
+        - title: Many cases
+          desc: switch, and the break almost nobody forgets twice
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a correct condition
+          sub: Using the comparison operator and not the assignment one, which compiles just as well
+        - head: Combine conditions
+          sub: With the three logical operators, and make use of short-circuit evaluation
+        - head: Choose between several paths
+          sub: With if, if-else and switch, knowing which suits each case
+        - head: Compare real numbers
+          sub: Without exact equality, which comes out false when the result looks correct
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: now
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Comparing and combining
+      lede: A condition is an expression worth true or false. In C++ that means it is worth 1 or 0, and it can be stored.
+      block: 1
+
+  - figure:
+      eyebrow: Notation
+      title: The four shapes of a flow chart
+      image: img/en/ct-05.png
+      caption: The diamond is what arrives this week. Everything in the course so far fitted inside the other three.
+      alt: The four shapes of a flow chart, with the decision diamond among them
+
+  - table:
+      eyebrow: Relational
+      title: All six, complete and in order
+      headers: ["Operator", "Reads as", "Example", "Gives"]
+      rows:
+        - ["==", "Equal to", "7 == 7", "true"]
+        - ["!=", "Not equal to", "7 != 7", "false"]
+        - ["<", "Less than", "3 < 7", "true"]
+        - [">", "Greater than", "3 > 7", "false"]
+        - ["<=", "Less or equal", "7 <= 7", "true"]
+        - [">=", "Greater or equal", "3 >= 7", "false"]
+      notes: |
+        All six give back a bool. Since bool converts to an integer without asking, cout
+        prints them as 1 and 0 unless told otherwise.
+
+        The first one causes the most trouble, and not because it is hard. It is written
+        with two signs and the one-sign version compiles too, which is the next slide.
+
+  - table:
+      eyebrow: Logical
+      title: All three, and when they stop early
+      headers: ["Operator", "Reads as", "True when"]
+      rows:
+        - ["&&", "And", "Both conditions are true"]
+        - ["||", "Or", "At least one is true"]
+        - ["!", "Not", "The condition is false"]
+      notes: |
+        C++ evaluates in short circuit. With &&, if the first condition is false the second
+        is never evaluated; with ||, if the first is true the second is skipped too.
+
+        That is not an invisible optimisation, it is guaranteed behaviour and it gets used
+        on purpose. Putting the cheap check on the left and the expensive one on the right
+        changes what the program costs.
+
+  - code_output:
+      eyebrow: The classic mistake
+      title: One sign fewer and the condition stops comparing
+      filename: equals.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        int x = 5;
+
+        std::cout << (x = 6) << " " << x << "\n";
+      output: |
+        6 6
+      notes: |
+        The single sign assigns and hands back the assigned value. Since 6 is not zero, that
+        counts as true inside an if, so the condition always holds and the variable has been
+        modified into the bargain.
+
+        It compiles, it runs, and no warning reports it under the options a default project
+        ships with. When an if always fires, this is the first thing to check.
+
+  - divider:
+      eyebrow: Block 02
+      title: Choosing a path
+      lede: The most used statement in the language, and the one that gets nested until it stops being readable.
+      block: 2
+
+  - code:
+      eyebrow: Selection
+      title: Last week's mutator, now finished
+      filename: rectangle.cpp
+      lang: cpp
+      source: |
+        void setWidth(double w)
+        {
+            if (w > 0)
+            {
+                width = w;
+            }
+            else
+            {
+                std::cout << "invalid width\n";
+            }
+        }
+      annotations:
+        - label: The promise kept
+          text: This is the line week 6 could not write, and the reason the data member is private
+        - label: One place
+          text: Nobody outside can set a negative width, because nobody outside can touch the member
+        - label: The braces
+          text: With a single statement they are optional, and they are still worth writing every time
+        - label: Risk
+          text: Without braces, adding a second line to the if leaves it outside the if even when it lines up.
+          accent: true
+
+  - code_output:
+      eyebrow: Real numbers
+      title: The comparison that looks right and is false
+      filename: reals.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        double d = 0.1 + 0.2;
+
+        std::cout << (d == 0.3) << " " << d << "\n";
+      output: |
+        0 0.3
+      notes: |
+        The first number is the comparison and it is false. The second is the value, printed
+        as 0.3. Both are true at the same time.
+
+        0.1 and 0.2 cannot be represented exactly in binary, so the sum lands a tiny
+        distance from 0.3. cout rounds to six digits when printing and hides the difference.
+
+        The practical rule is not to compare reals with equality. Compare the absolute
+        difference against a small tolerance instead, say smaller than 0.000001.
+
+  - divider:
+      eyebrow: Block 03
+      title: Many cases at once
+      lede: Once the same variable is compared against five values, the if-else chain stops reading.
+      block: 3
+
+  - code_output:
+      eyebrow: switch
+      title: What happens when a break is missing
+      filename: menu.cpp
+      lang: cpp
+      output_label: Output with option set to 2
+      source: |
+        switch (option)
+        {
+        case 1: std::cout << "one\n";
+        case 2: std::cout << "two\n";
+        case 3: std::cout << "three\n"; break;
+        default: std::cout << "other\n";
+        }
+      output: |
+        two
+        three
+      notes: |
+        A switch does not choose a case, it chooses where to come in. From there it runs
+        everything that follows until it meets a break or reaches the end.
+
+        Which is why with option set to 2 it prints two and three, but neither one nor
+        other. Measured on a real run.
+
+        This is called fall-through and it is sometimes wanted, so two cases can share the
+        same code. When it is deliberate, write a comment saying so, or the next person to
+        read it will assume it was an oversight.
+
+  - table:
+      eyebrow: Which to use
+      title: Three ways to choose, and when each suits
+      headers: ["Form", "When", "Watch out for"]
+      rows:
+        - ["if", "One condition, one path", "The braces once it grows"]
+        - ["if-else", "Two exclusive paths", "Nesting past two levels"]
+        - ["switch", "One variable, many values", "The break on each case"]
+      notes: |
+        switch only works with integers and with types that convert to integer, such as char
+        and enum. It does not accept double or std::string, which is the first limitation
+        anyone hits trying to use it for a text menu.
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the program print, with mark set to 5?
+      filename: mark.cpp
+      lang: cpp
+      source: |
+        int mark = 5;
+
+        if (mark = 6)
+            std::cout << "passed\n";
+        else
+            std::cout << "failed\n";
+      options:
+        - 'passed, and mark is now holding 6'
+        - 'failed, because 5 does not reach 6'
+        - 'It does not compile, an equals sign is missing'
+        - 'passed, but mark still holds 5'
+
+  - trace:
+      eyebrow: Answer
+      title: The condition compared nothing, it assigned
+      headers: ["Step", "What happens", "mark", "The condition is"]
+      rows:
+        - ["1", "int mark = 5", "5", "nothing yet"]
+        - ["2", "mark = 6 assigns", "6", "6"]
+        - ["3", "6 is not zero", "6", "true"]
+        - ["4", "It takes the first path", "6", "true"]
+      verdict: The condition would be true for any value other than zero, so the else is never reached. And along the way the program modified the variable it thought it was reading.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: One equals instead of two
+          desc: It assigns rather than compares, the condition always fires, and no warning appears
+        - label: Error 02
+          title: A semicolon after the if
+          desc: The body becomes the empty statement and the block below runs every time
+        - label: Error 03
+          title: Forgetting a break
+          desc: The switch falls into the next case and runs the code of two cases in one go
+        - label: Error 04
+          title: Comparing reals with equality
+          desc: 0.1 plus 0.2 is not 0.3, even printed as 0.3. Compare against a tolerance.
+
+  - lab:
+      eyebrow: Lab
+      title: A class that defends itself, in pairs
+      brief: Take last week's Student class and add validation to the mutators. A mark outside the range of zero to ten must be rejected, and the average should return its letter grade through a chained if-else.
+      blocks:
+        - label: Constraint
+          text: No loops, which arrive next week. Selection only.
+        - label: Deliverable
+          text: A .cpp with the validated class and a main that deliberately tries to assign an invalid value
+        - label: Criterion
+          text: That the validation lives inside the class and not in main
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: One equals assigns, two compare
+          desc: The single one compiles inside an if, always fires, and modifies the variable
+        - title: A switch falls through without break
+          desc: It picks where to enter, not which case to run, and carries on to the first break
+        - title: Reals are not compared with equality
+          desc: Compare the difference against a tolerance, because the exact value rarely exists
+
+  - homework:
+      eyebrow: For the next session
+      title: The validated class and a switch menu
+      brief: Finish the lab validation and add a four-option switch menu to main that lets the user ask for the average, the letter grade, the name, and quit.
+      meta:
+        - [Due, Before session 8]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Validation", "Required", "An out-of-range value is rejected inside the class"]
+        - ["Selection", "Required", "The letter grade comes from a correct chained if-else"]
+        - ["switch", "Required", "Every case carries its break and a default exists"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, repetition, and the first partial. The three loops and when each one suits.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

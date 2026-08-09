@@ -1,0 +1,379 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 9
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 09 · Tema 4 · Funciones y estructuras avanzadas
+      title: Programación Orientada a Objetos
+      subtitle: Empieza la unidad de aplicación. Funciones que se prueban solas, código repartido en piezas, y funciones que se llaman a sí mismas.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 9 de 17]
+      notes: |
+        Primera sesión después del parcial, así que el grupo llega descargado. El bloque de
+        recursividad es el que cuesta: conviene trazar la pila en el pizarrón antes de
+        mostrar la diapositiva, y solo después enseñar el dibujo.
+
+        Los ejemplos salen de docs/en/courses/python-course: los parámetros por omisión son
+        de 01 - Basics/3rd Module/Code010.py, el alcance de variables de Code011.py, y
+        lambda con enumerate de 01 - Basics/4th Module/Code017.py. Las torres de Hanói son
+        de 07 - Activities/Projects/02 - Hanoi Tower/hanoi_tower.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Parámetros
+          desc: Por omisión, por nombre y de cantidad variable
+        - title: Funciones como valor
+          desc: lambda, key y las funciones que se pasan a otras funciones
+        - title: Modularidad
+          desc: Una función, un trabajo, y un nombre que lo diga entero
+        - title: Recursividad
+          desc: El caso base, la llamada que se acerca y la pila que crece
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Diseñar la firma de una función
+          sub: Qué va posicional, qué lleva valor por omisión y qué conviene exigir por nombre
+        - head: Pasar una función como argumento
+          sub: Escribir un criterio de orden con lambda y saber cuándo darle un nombre propio
+        - head: Partir un script en funciones
+          sub: Separar lo que calcula de lo que imprime, para poder probar la primera parte
+        - head: Escribir una función recursiva
+          sub: Con un caso base que corte y una llamada que se acerque a él en cada paso
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Funciones avanzadas
+      lede: Nada de sintaxis nueva. Lo avanzado es decidir bien qué entra, qué sale y qué queda tocado del mundo exterior.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué hace avanzada a una función
+      lead: >-
+        Lo avanzado son tres decisiones, no tres palabras reservadas. Qué recibe, qué
+        devuelve y qué deja modificado fuera de sí misma. Una función que devuelve un valor
+        y no toca nada más se puede probar sola, y ahí está toda la diferencia.
+      panel:
+        label: La distinción que ordena todo
+        title: Devolver no es lo mismo que imprimir
+        note: >-
+          Una función que imprime sirve una vez, en la consola. Una que devuelve sirve en un
+          reporte, en una prueba automática y dentro de otra función, sin cambiar una línea.
+      steps:
+        - text: Decide qué recibe
+        - text: Decide qué devuelve
+        - text: Revisa qué más deja tocado
+          loop: ↺ si toca variables globales, ya no se puede probar sola
+
+  - code:
+      eyebrow: Parámetros
+      title: Tres maneras de llamar a la misma función
+      filename: registro.py
+      lang: python
+      source: |
+        def registrar(nombre: str, carrera: str = "Sin definir",
+                      activo: bool = True) -> None:
+            print(nombre, carrera, activo)
+
+
+        registrar("Ana")
+        registrar("Luis", "Mecatrónica")
+        registrar("Sofía", activo=False)
+      annotations:
+        - label: Línea 1
+          text: Los parámetros con valor por omisión van al final. Al revés, Python marca SyntaxError.
+        - label: Línea 8
+          text: Pasar activo por nombre deja que carrera se quede con su valor por omisión
+        - label: Riesgo
+          text: Nunca pongas una lista como valor por omisión. Se crea una sola vez y todas las llamadas la comparten.
+          accent: true
+
+  - code:
+      eyebrow: Funciones como valor
+      title: Una función que se le pasa a otra función
+      filename: ordenar.py
+      lang: python
+      source: |
+        productos = [
+            ("Teclado", 890),
+            ("Monitor", 4200),
+            ("Mouse", 350),
+        ]
+
+        productos.sort(key=lambda p: p[1])
+        print(productos[0])
+      annotations:
+        - label: Línea 7
+          text: key recibe una función que dice por cuál valor ordenar, y lambda la escribe en una línea
+        - label: Sin key
+          text: sort compara las tuplas completas, así que ordenaría por nombre y no por precio
+        - label: Cuándo no usar lambda
+          text: Si el cálculo no cabe cómodo en una línea, dale un nombre con def y gana claridad
+
+  - code_output:
+      eyebrow: Demostración
+      title: El índice y el elemento, en el mismo ciclo
+      filename: enumerar.py
+      lang: python
+      output_label: Salida
+      source: |
+        frutas = ["manzana", "plátano", "cereza"]
+
+        for i, fruta in enumerate(frutas, start=1):
+            print(i, fruta)
+      output: |
+        1 manzana
+        2 plátano
+        3 cereza
+
+  - table:
+      eyebrow: Vocabulario
+      title: Las cinco formas de recibir un dato
+      headers: ["Forma", "Cómo se ve", "Qué recibe"]
+      rows:
+        - ["Posicional", "def f(a, b)", "En el orden en que se pasan"]
+        - ["Con omisión", "def f(a, b=0)", "El valor dado, o el de omisión"]
+        - ["Por nombre", "f(b=3)", "Sin importar la posición"]
+        - ["Variable", "def f(*args)", "Una tupla con lo que llegue"]
+        - ["Nombrada variable", "def f(**kw)", "Un diccionario con lo nombrado"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Modularidad
+      lede: Repartir el trabajo en piezas que se puedan leer, probar y cambiar por separado.
+      block: 2
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: Una función, una razón para cambiar
+      statement: Una función hace una sola cosa y su nombre la describe entera. Si el nombre necesita una conjunción, adentro había dos funciones.
+      points:
+        - label: La prueba del nombre
+          text: Si no puedes nombrarla sin decir la palabra y, todavía está haciendo de más
+        - label: La prueba del tamaño
+          text: Si no cabe en una pantalla sin bajar, hay algo adentro que quiere salir
+        - label: La prueba del retorno
+          text: Una función que devuelve un valor y además imprime está haciendo dos trabajos
+
+  - compare:
+      eyebrow: Refactorización
+      title: Separar lo que calcula de lo que imprime
+      before:
+        label: Todo junto
+        file: reporte.py
+        code: |
+          def procesar(alumnos):
+              total = 0
+              for a in alumnos:
+                  total += a["nota"]
+              print(total / len(alumnos))
+      after:
+        label: Separado
+        file: reporte.py
+        code: |
+          def promedio(notas):
+              return sum(notas) / len(notas)
+
+
+          notas = [a["nota"] for a in alumnos]
+          print(promedio(notas))
+      note: La primera calcula e imprime, así que solo sirve en la consola. La segunda devuelve un número, y ese número se puede probar, guardar en un archivo o meter en otra cuenta.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores que salen del laboratorio de hoy
+      items:
+        - label: Error 01
+          title: Valor por omisión mutable
+          desc: 'def f(items=[]) crea la lista una sola vez, al definir la función, y todas las llamadas escriben en ella'
+        - label: Error 02
+          title: global para comunicar funciones
+          desc: Cualquiera puede cambiar la variable y ninguna traza dice cuál de todas lo hizo
+        - label: Error 03
+          title: Una función de doscientas líneas
+          desc: Cada if anidado esconde una función con nombre propio esperando a que la saquen
+        - label: Error 04
+          title: Booleanos sin nombre en la llamada
+          desc: 'f(True, False) no dice nada al leerlo. f(activo=True, enviar=False) se entiende solo.'
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Recursividad
+      lede: Una función que se llama a sí misma con un problema más chico, hasta que el problema es tan chico que ya no hay nada que hacer.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Cómo se ve una recursión por dentro
+      image: img/es/recursion.png
+      caption: La pila baja hasta el caso base y el resultado se arma de regreso, un marco a la vez.
+      alt: Cuatro marcos de llamada apilados hacia abajo hasta el caso base, con los valores que devuelve cada uno al subir
+
+  - code:
+      eyebrow: Python
+      title: Las dos piezas que toda recursión necesita
+      filename: factorial.py
+      lang: python
+      source: |
+        def factorial(n: int) -> int:
+            if n <= 1:
+                return 1
+            return n * factorial(n - 1)
+
+
+        print(factorial(4))
+      annotations:
+        - label: Línea 2
+          text: El caso base corta la cadena. Sin él la función se llama a sí misma para siempre.
+        - label: Línea 4
+          text: Cada llamada resuelve un problema más chico y espera el resultado de la siguiente
+        - label: Riesgo
+          text: Python corta a las mil llamadas con RecursionError, así que el error se ve pero tarde
+          accent: true
+
+  - code_output:
+      eyebrow: Demostración
+      title: El resultado y el techo que impone el intérprete
+      filename: probar_factorial.py
+      lang: python
+      output_label: Salida
+      source: |
+        import sys
+
+        print(factorial(4))
+        print(factorial(1))
+        print(sys.getrecursionlimit())
+      output: |
+        24
+        1
+        1000
+
+  - code:
+      eyebrow: Un caso real
+      title: Las torres de Hanói, en seis líneas
+      filename: hanoi.py
+      lang: python
+      source: |
+        def hanoi(n, origen, destino, auxiliar):
+            if n == 0:
+                return
+            hanoi(n - 1, origen, auxiliar, destino)
+            print(f"Disco {n}: {origen} -> {destino}")
+            hanoi(n - 1, auxiliar, destino, origen)
+
+
+        hanoi(3, "A", "C", "B")
+      annotations:
+        - label: Línea 2
+          text: El caso base son cero discos, y ahí no hay absolutamente nada que mover
+        - label: Líneas 4 y 6
+          text: Dos llamadas por nivel. El problema de n discos se convierte en dos de n menos uno.
+        - label: Lo que cuesta
+          text: Tres discos son siete movimientos, diez discos son mil veintitrés, y así se dispara
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: cuenta.py
+      lang: python
+      source: |
+        def cuenta(n):
+            if n == 0:
+                return 0
+            return n + cuenta(n - 1)
+
+        print(cuenta(3))
+      options:
+        - '6, porque suma 3 más 2 más 1 más 0'
+        - '3, porque solo cuenta la primera llamada'
+        - '0, porque el caso base devuelve cero'
+        - 'RecursionError, la función no tiene caso base'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 6, y la pila explica en qué orden
+      headers: ["Llamada", "n", "Qué devuelve", "Marcos abiertos"]
+      rows:
+        - ["cuenta(3)", "3", "3 + cuenta(2)", "1"]
+        - ["cuenta(2)", "2", "2 + cuenta(1)", "2"]
+        - ["cuenta(1)", "1", "1 + cuenta(0)", "3"]
+        - ["cuenta(0)", "0", "0", "4"]
+      verdict: 'La pila crece hasta el caso base y se vacía sumando de regreso: primero 0, luego 1, luego 3 y al final 6.'
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Partir un script en funciones, en parejas
+      brief: Reciben un script de cincuenta líneas que lee notas, saca el promedio, cuenta aprobados e imprime un reporte, todo seguido. Pártanlo en funciones con un solo trabajo cada una.
+      blocks:
+        - label: Restricciones
+          text: Ninguna función pasa de quince líneas, y ninguna calcula e imprime al mismo tiempo
+        - label: Entregable
+          text: Un archivo .py con las funciones y un bloque principal que las llama en orden
+        - label: Criterio
+          text: Que el nombre de cada función se pueda decir completo sin usar la palabra y
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El valor por omisión mutable se comparte
+          desc: Se crea una sola vez, al definir la función, y todas las llamadas escriben en la misma lista
+        - title: Una función, una razón para cambiar
+          desc: Si el nombre necesita una conjunción, adentro hay dos funciones esperando a que las separen
+        - title: Toda recursión necesita un caso base
+          desc: Y una llamada que se acerque a él, o el intérprete corta a las mil con RecursionError
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe la misma operación dos veces, una con recursión y otra con un ciclo, y compara en un párrafo cuál se lee mejor y cuál aguanta datos más grandes.
+      meta:
+        - [Entrega, Antes de la sesión 10]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Funciones", "40 %", "Cada función hace una sola cosa y su nombre lo dice sin conjunciones"]
+        - ["Recursión", "30 %", "El caso base existe y la llamada se acerca a él en cada paso"]
+        - ["Comparación", "30 %", "El párrafo nombra un caso concreto donde cada versión gana"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, colecciones, arreglos dinámicos y procesamiento de datos en memoria.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

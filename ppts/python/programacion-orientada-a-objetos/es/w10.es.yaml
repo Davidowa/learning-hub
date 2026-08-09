@@ -1,0 +1,352 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 10
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 10 · Tema 4 · Funciones y estructuras avanzadas
+      title: Programación Orientada a Objetos
+      subtitle: Cuatro maneras de guardar varias cosas en una variable, cómo crece una lista por dentro, y qué se hace sin tocar el disco.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 10 de 17]
+      notes: |
+        El tema se repasó en la sesión 1.4, así que aquí lo nuevo es el criterio de
+        elección y el costo. Si el grupo sale sabiendo por qué buscar en una lista es caro
+        y en un diccionario no, la sesión cumplió.
+
+        Los ejemplos salen de docs/en/courses/python-course/01 - Basics/4th Module:
+        las operaciones de lista son de Code012.py y el módulo array es de Code016.py.
+        La comprensión de listas y getsizeof vienen de Code017.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Las cuatro colecciones
+          desc: Lista, tupla, conjunto y diccionario, y qué contesta rápido cada una
+        - title: Arreglos dinámicos
+          desc: Por qué agregar al final sale barato y al principio no
+        - title: Procesamiento en memoria
+          desc: Filtrar, transformar y agrupar sin escribir un solo archivo
+        - title: Laboratorio
+          desc: Elegir el contenedor correcto para cinco consultas
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir entre las cuatro colecciones
+          sub: Con tres preguntas sobre orden, cambio y forma de buscar, en ese orden
+        - head: Explicar qué es un arreglo dinámico
+          sub: Reserva de más, copia al llenarse, y el costo que eso reparte entre las llamadas
+        - head: Filtrar y agrupar en memoria
+          sub: Comprensiones de lista para lo simple y un diccionario acumulador para lo demás
+        - head: Distinguir copiar de compartir
+          sub: Por qué el signo igual deja dos nombres sobre un mismo objeto
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: done
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Colecciones
+      lede: Cuatro contenedores que parecen intercambiables hasta que la colección crece y uno de ellos se vuelve lentísimo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cuatro contenedores y una sola pregunta
+      lead: >-
+        Lista, tupla, conjunto y diccionario guardan varias cosas en una variable. Elegir
+        entre ellos no es cuestión de gusto. Cada uno contesta rápido a una pregunta
+        distinta, y lento a todas las demás, y esa diferencia se nota con muchos datos.
+      panel:
+        label: La pregunta que decide
+        title: Qué le vas a preguntar a esta colección
+        note: >-
+          Si la vas a recorrer en orden, lista. Si no debe cambiar nunca, tupla. Si preguntas
+          si algo está adentro, conjunto. Si buscas por una llave, diccionario.
+      steps:
+        - text: ¿Importa el orden?
+        - text: ¿Va a cambiar?
+        - text: ¿Se busca por llave?
+          loop: ↺ tres preguntas y el contenedor queda elegido
+
+  - figure:
+      eyebrow: Comparación
+      title: Los cuatro, con la propiedad que los separa
+      image: img/es/collections.png
+      caption: La sintaxis se olvida y se busca. Lo que hay que recordar es la propiedad de abajo.
+      alt: Cuatro cajas rotuladas lista, tupla, conjunto y diccionario, cada una con su sintaxis y su propiedad
+
+  - table:
+      eyebrow: Tabla de decisión
+      title: Qué cuesta buscar en cada una
+      headers: ["Colección", "Sintaxis", "Ordenada", "Buscar un valor"]
+      rows:
+        - ["Lista", "[1, 2, 3]", "Sí", "Recorre todo"]
+        - ["Tupla", "(1, 2, 3)", "Sí, y no cambia", "Recorre todo"]
+        - ["Conjunto", "{1, 2, 3}", "No", "Inmediato"]
+        - ["Diccionario", "{'a': 1}", "Por inserción", "Inmediato, por llave"]
+
+  - code:
+      eyebrow: Python
+      title: Las operaciones que se usan todos los días
+      filename: listas.py
+      lang: python
+      source: |
+        frutas = ["manzana", "plátano", "cereza", "uva"]
+
+        print(frutas[1])
+        print(frutas[-1])
+        print(frutas[1:3])
+        print(frutas[::2])
+
+        frutas.append("kiwi")
+        frutas.remove("uva")
+        print(len(frutas))
+      annotations:
+        - label: Los índices
+          text: El primero es 0 y el último es -1. Esa es toda la aritmética que hace falta.
+        - label: Los cortes
+          text: frutas[1:3] devuelve una lista nueva con dos elementos, porque el límite derecho no entra
+        - label: Riesgo
+          text: remove borra la primera coincidencia y lanza ValueError si no está. Pregunta con in antes.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Arreglos dinámicos
+      lede: Una lista de Python no es una fila de casillas fija. Es un bloque que se muda a uno más grande cuando se llena.
+      block: 2
+
+  - diagram:
+      eyebrow: Diagrama
+      title: Cómo crece una lista por dentro
+      blocks:
+        - label: Al crearse
+          title: Reserva de más
+          desc: Pide más espacio del que usa, para que el siguiente append no cueste nada
+        - label: Al llenarse
+          title: Copia y crece
+          desc: Cuando se acaba el hueco reserva un bloque mayor y copia todo lo que tenía
+          dark: true
+        - label: En promedio
+          title: Costo constante
+          desc: La copia ocurre pocas veces, así que agregar al final sale barato casi siempre
+      note: >-
+        Por eso una lista de Python se llama arreglo dinámico. Lo caro es insertar al
+        principio, porque hay que recorrer todo lo demás para hacerle lugar.
+
+  - code:
+      eyebrow: Arreglos de tipo fijo
+      title: Cuando todos los datos son del mismo tipo
+      filename: arreglos.py
+      lang: python
+      source: |
+        import array
+
+        numeros = array.array("i", [1, 2, 3, 4, 5])
+        numeros.append(6)
+        numeros.insert(0, 0)
+        print(numeros[0], len(numeros))
+
+        mezclada = [1, "dos", 3.0, True]
+        print(mezclada)
+      annotations:
+        - label: Línea 3
+          text: El primer argumento es el tipo. La i son enteros con signo, y solo entran enteros.
+        - label: Línea 8
+          text: Una lista acepta cualquier mezcla de tipos, que es cómodo y se paga en memoria
+        - label: Cuándo usar array
+          text: Cuando son millones de números del mismo tipo y la memoria empieza a importar de verdad
+
+  - code_output:
+      eyebrow: Demostración
+      title: La lista guarda referencias, el arreglo guarda los números
+      filename: medir.py
+      lang: python
+      output_label: Salida
+      source: |
+        from sys import getsizeof
+
+        lista = list(range(1000))
+        arreglo = array.array("i", range(1000))
+
+        print(getsizeof(lista))
+        print(getsizeof(arreglo))
+      output: |
+        8056
+        4064
+      notes: |
+        Los números exactos cambian con la versión y la plataforma, así que conviene
+        correrlo en vivo en lugar de citarlos. Lo importante es la proporción y la razón:
+        getsizeof de la lista solo mide el bloque de referencias, no los enteros a los que
+        apunta, así que la diferencia real es todavía mayor que la que se ve en pantalla.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro errores con colecciones
+      items:
+        - label: Error 01
+          title: Modificar la lista mientras se recorre
+          desc: Borrar dentro del for hace que el ciclo se salte elementos, porque los índices siguen avanzando
+        - label: Error 02
+          title: Copiar con el signo igual
+          desc: 'copia = lista no copia nada. Son dos nombres para el mismo objeto en memoria.'
+        - label: Error 03
+          title: Usar una lista para buscar
+          desc: Preguntar si algo está en una lista recorre todo. Un conjunto contesta de inmediato.
+        - label: Error 04
+          title: Tuplas para datos que cambian
+          desc: Una tupla no se modifica, así que corregir un dato obliga a construir la tupla entera otra vez
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Procesamiento de datos en memoria
+      lede: Filtrar, transformar y agrupar antes de que nada toque el disco. La semana que entra ya habrá archivos.
+      block: 3
+
+  - code:
+      eyebrow: Filtrar
+      title: Una comprensión de lista, línea por línea
+      filename: filtrar.py
+      lang: python
+      source: |
+        alumnos = [
+            {"nombre": "Ana", "nota": 9.1},
+            {"nombre": "Luis", "nota": 6.4},
+            {"nombre": "Sofía", "nota": 8.0},
+        ]
+
+        aprobados = [a["nombre"] for a in alumnos if a["nota"] >= 7]
+        print(aprobados)
+      annotations:
+        - label: Línea 7
+          text: Se lee de izquierda a derecha, primero qué guardo, luego de dónde sale y luego con qué condición
+        - label: Qué reemplaza
+          text: Un for de cuatro líneas con un append adentro, escrito como una sola expresión
+        - label: Cuándo no usarla
+          text: Si necesita dos condiciones y un else, el for de siempre se lee mejor que la comprensión
+
+  - code_output:
+      eyebrow: Agrupar
+      title: Un diccionario que cuenta mientras recorre
+      filename: agrupar.py
+      lang: python
+      output_label: Salida
+      source: |
+        conteo = {}
+
+        for a in alumnos:
+            clave = "aprobado" if a["nota"] >= 7 else "reprobado"
+            conteo[clave] = conteo.get(clave, 0) + 1
+
+        print(conteo)
+      output: |
+        {'aprobado': 2, 'reprobado': 1}
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: copia.py
+      lang: python
+      source: |
+        numeros = [1, 2, 3, 4]
+        copia = numeros
+
+        copia.append(5)
+        print(len(numeros))
+      options:
+        - '4, porque copia es una lista aparte'
+        - '5, porque los dos nombres apuntan a la misma lista'
+        - 'TypeError, una lista no se copia con el igual'
+        - '1, porque copia solo guardó el primer elemento'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Imprime 5, porque nunca hubo dos listas
+      headers: ["Paso", "Instrucción", "numeros", "copia", "Mismo objeto"]
+      rows:
+        - ["1", "numeros = [1, 2, 3, 4]", "[1, 2, 3, 4]", "–", "–"]
+        - ["2", "copia = numeros", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Sí"]
+        - ["3", "copia.append(5)", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Sí"]
+        - ["4", "len(numeros)", "5", "5", "Sí"]
+      verdict: El signo igual copia la referencia, no el contenido. Para tener dos listas independientes hay que pedirlo, con numeros.copy() o con list(numeros).
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Dos etiquetas en una caja, contra dos cajas
+      image: img/es/reference-vs-copy.png
+      caption: A la izquierda hay un solo objeto con dos nombres. A la derecha hay dos objetos que ya no se enteran uno del otro.
+      alt: Dos etiquetas atadas a una misma caja frente a dos etiquetas atadas a dos cajas distintas
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Elegir el contenedor correcto, en parejas
+      brief: Reciben cinco consultas sobre un padrón de alumnos y para cada una eligen el contenedor que la contesta más rápido, con una línea de justificación.
+      blocks:
+        - label: Restricciones
+          text: Un contenedor por consulta, y hay que usar al menos tres de los cuatro
+        - label: Entregable
+          text: Un archivo .py que carga el padrón en memoria y contesta las cinco consultas
+        - label: Criterio
+          text: Que ninguna consulta recorra la colección completa si otro contenedor lo evita
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Tres preguntas eligen el contenedor
+          desc: Si importa el orden, si va a cambiar y si se busca por llave. En ese orden y ya está.
+        - title: La lista es un arreglo dinámico
+          desc: Reserva de más y copia cuando se llena, y por eso agregar al final casi nunca cuesta
+        - title: El igual no copia, comparte
+          desc: Dos nombres sobre la misma lista se ven idénticos hasta que uno de los dos escribe
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe la misma búsqueda dos veces sobre el padrón del laboratorio, una sobre lista y otra sobre diccionario, mídelas con time.perf_counter y explica la diferencia.
+      meta:
+        - [Entrega, Antes de la sesión 11]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Elección", "40 %", "Cada consulta usa el contenedor que la contesta sin recorrer de más"]
+        - ["Medición", "30 %", "Las dos versiones se miden con el mismo padrón y las mismas repeticiones"]
+        - ["Explicación", "30 %", "El párrafo explica la diferencia con el mecanismo y no solo con el número"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, manejo de excepciones, validación de errores y robustez.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

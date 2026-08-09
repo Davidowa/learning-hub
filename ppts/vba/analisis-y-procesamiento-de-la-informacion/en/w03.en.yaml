@@ -1,0 +1,361 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 3
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 03 · Unit 1 · Types, variables and cells
+      title: Information Analysis and Processing
+      subtitle: Which type each piece of data gets, why Long and not Integer, and the three ways to reach a cell.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 3 of 17]
+      notes: |
+        Ninety minutes. Twenty on types, twenty-five on declaring properly, the rest at
+        the machine moving cells around.
+
+        The idea that holds the session together is that Long is not a luxury. A sheet
+        has 1,048,576 rows and an Integer stops at 32,767, so a row counter declared as
+        Integer breaks. That is not theory: it is verified, and it carries the big-number
+        slide and the error slide.
+
+        The code comes from
+        docs/en/courses/vba-course/01 - Basic Concepts/BasicConcepts.bas (Variables and
+        Constants) and 02 - Access Cells/AccessCells.bas.
+
+        Every result in this session was run in Excel 16.0. The 2.5 rounding down to 2
+        surprises the whole room, and it is worth letting them bet on it first.
+
+        The Option Explicit error shows here in English, "Variable not defined". A
+        Spanish Excel says "No se ha definido la variable". Same for Overflow, which
+        comes out as Desbordamiento.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: The data types
+          desc: The ten that exist, what each one is for, and which one falls short
+        - title: Declaring properly
+          desc: Dim, As, Const and the line that turns a silent error into a visible one
+        - title: Reaching a cell
+          desc: Range, Offset and ActiveCell, and what each one leaves in the sheet
+        - title: Your turn
+          desc: A customer database walked with variables instead of by hand
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Pick the type each value needs
+          sub: And know why a row counter has to be a Long
+        - head: Declare variables and constants
+          sub: Dim with As, Const on one line, and names that say what they hold
+        - head: Turn on Option Explicit
+          sub: And explain which error stops being silent the moment you add it
+        - head: Read and write cells from VBA
+          sub: Range, Offset and ActiveCell, and when each one is the right choice
+        - head: Spot an implicit conversion
+          sub: When VBA converts on its own, when it rounds, and when it stops
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: now
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: todo
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The data types
+      lede: >-
+        An Excel cell guesses what you put in it. VBA does not guess: you say how big the
+        box is, and it holds you to it.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A variable is a box with a name and a size
+      lead: >-
+        It holds a value and has a name so you can find it again, same as a cell. Two
+        things are different: you pick the name and it says what the value is, and the
+        type decides in advance what fits inside. B7 says nothing; loan_amount does. And
+        an Integer box will not take a seven-digit number, even though the cell would.
+      panel:
+        label: Worth knowing
+        title: The type is chosen once and does not change
+        note: >-
+          A variable declared as Long cannot hold text later on. Excel allows exactly
+          that in a cell, and the difference is half the errors of the month.
+      steps:
+        - text: You pick a name that describes the value
+        - text: You declare the type with Dim and As
+        - text: You assign a value with the equals sign
+          loop: ↺ and from then on only that fits
+
+  - table:
+      eyebrow: Block 01 · Types · 1 of 2
+      title: The numeric ones, complete and in order
+      headers: [Type, Range, When you use it]
+      rows:
+        - ["Integer", "-32,768 to 32,767", "Almost never. Too small."]
+        - ["Long", "±2,147,483,647", "The default for counting"]
+        - ["Single", "7 significant digits", "Rarely. Double gives more."]
+        - ["Double", "15 significant digits", "Rates, amounts, decimals"]
+        - ["Currency", "4 exact decimals", "Money, no rounding"]
+
+  - table:
+      eyebrow: Block 01 · Types · 2 of 2
+      title: And the ones that are not numbers
+      headers: [Type, What it holds, When you use it]
+      rows:
+        - ["String", "Text, no practical limit", "Names, codes, tax IDs, anything you do not add up"]
+        - ["Boolean", "True or False", "Flags and yes-or-no answers"]
+        - ["Date", "Year 100 to year 9999", "Dates and times, with arithmetic of their own"]
+        - ["Object", "A reference", "Range, Worksheet, Workbook. Assigned with Set."]
+        - ["Variant", "Anything at all", "What you get when you declare nothing. Avoid it."]
+
+  - stat:
+      eyebrow: The type that falls short
+      value: '32,767'
+      text: >-
+        is the largest number an Integer can hold, and an Excel sheet has 1,048,576 rows.
+      note: >-
+        Declaring the row counter as an Integer is the most expensive mistake of the
+        week, because it never shows up on test data and always shows up on the real
+        thing. Verified in Excel: with Long it runs and returns 1,048,576.
+
+  - code_output:
+      eyebrow: Block 01 · The error
+      title: What happens when the box is too small
+      filename: Types.bas
+      lang: vba
+      output_label: Excel stops
+      source: |
+        Sub CountRows()
+            Dim lastRow As Integer
+            lastRow = Rows.Count
+        End Sub
+      output: |
+        Run-time error '6':
+
+        Overflow
+
+  - divider:
+      eyebrow: Block 02
+      title: Declaring properly
+      lede: Two words, Dim and As. And a third, Option Explicit, that turns a silent error into one you can see.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · The basics
+      title: Declare, assign, and pin down a constant
+      filename: BasicConcepts.bas
+      lang: vba
+      source: |
+        Sub Loan()
+            Const pi As Double = 3.14159
+            Dim clientName As String
+            Dim termMonths As Long
+            Dim annualRate As Double
+            Dim isCurrent As Boolean
+
+            clientName = "Servicios del Norte"
+            termMonths = 120
+            annualRate = 0.15
+            isCurrent = True
+        End Sub
+      annotations:
+        - label: Dim and As
+          text: Dim opens the declaration, As fixes the type. With no As, the variable ends up a Variant.
+        - label: Const
+          text: Declared and given its value on the same line, and it cannot be changed afterwards.
+        - label: The names
+          text: Each one says what it holds. VBA ignores case, so the editor rewrites your capitals as you type.
+        - label: Risk
+          text: Dim termMonths, annualRate As Double only declares the second one as Double. The first stays a Variant.
+          accent: true
+
+  - code:
+      eyebrow: Block 02 · The line that saves the afternoon
+      title: Without Option Explicit a typo says nothing
+      filename: Inventory.bas
+      lang: vba
+      source: |
+        Option Explicit
+
+        Sub Inventory()
+            Dim units As Long
+            units = 250
+            unts = 300
+            MsgBox units
+        End Sub
+      annotations:
+        - label: The typo
+          text: unts does not exist. It is units missing two letters, and it reads identical at speed.
+        - label: Without the first line
+          text: VBA invents unts on the spot, sets it to 300, and the message shows 250. Verified in Excel.
+        - label: With the first line
+          text: It stops compiling. You get the line pointed at, before the macro runs at all.
+        - label: Risk
+          text: A wrong result that raises no error costs more than one that breaks. The program went on, the number was useless.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four type traps, all verified
+      items:
+        - label: Error 01
+          title: A row counted with an Integer
+          desc: It holds up to row 32,767 and then stops with Overflow. On test data it never fails, on real data it does.
+        - label: Error 02
+          title: Declaring two on one line
+          desc: >-
+            Dim a, b As Integer leaves a as a Variant. Verified: a takes 40,000 and b
+            stops with Overflow.
+        - label: Error 03
+          title: Expecting the rounding you were taught
+          desc: Storing 2.5 in an Integer gives 2, and 3.5 gives 4. VBA rounds to the nearest even number, not always up.
+        - label: Error 04
+          title: Adding up something that looks numeric
+          desc: "\"5\" + 3 gives 8 because VBA converts, but \"5a\" + 3 stops with error 13. Convert it yourself, with CDbl or CLng."
+
+  - divider:
+      eyebrow: Block 03
+      title: Reaching a cell
+      lede: Three routes to the same cell. Two of them read equally well, and the third is the one the recorder writes.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The first two routes
+      title: Range on its own, and Range with Offset
+      filename: AccessCells.bas
+      lang: vba
+      source: |
+        Sub AccessCells()
+            Range("A1").Value = 1
+            Range("A2").Value = 2
+            Range("A3").Value = 3
+
+            Range("B1").Value = 2
+            Range("B1").Offset(1, 0).Value = 4
+            Range("B1").Offset(2, 0).Value = 6
+        End Sub
+      annotations:
+        - label: Range
+          text: The exact address, written the way you would in the sheet. Perfectly clear, and rigid.
+        - label: Offset
+          text: Moves from a base cell. Offset(rows, columns), and negatives go up or to the left.
+        - label: Why it matters
+          text: Offset is what works when the starting point moves from month to month. A fixed Range does not.
+        - label: Risk
+          text: Offset(1, 0) goes down one row, not across to column B. The first number is rows.
+          accent: true
+
+  - table:
+      eyebrow: Block 03 · The result
+      title: What the full macro leaves in the sheet
+      headers: [Column, How it was written, What ended up there]
+      rows:
+        - ["A1:A5", "Range directly, one by one", "1, 2, 3, 4, 5"]
+        - ["B1:B5", "Range(\"B1\") plus Offset", "2, 4, 6, 8, 10"]
+        - ["C1:C3", "Select and ActiveCell", "3, 6, 9"]
+        - ["ActiveCell", "Where it ended up", "$C$3"]
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: After Range("C1").Select, line by line
+      headers: [Line, ActiveCell afterwards, Cell written]
+      rows:
+        - ["ActiveCell.Value = 3", "$C$1", "C1 = 3"]
+        - ["ActiveCell.Offset(1, 0).Value = 6", "$C$1", "C2 = 6"]
+        - ["ActiveCell.Offset(2, 0).Select", "$C$3", "none"]
+        - ["ActiveCell.Value = 9", "$C$3", "C3 = 9"]
+      verdict: Without Select, Offset writes into the neighbour and the selection does not move.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What is left in the cell when this finishes?
+      filename: Types.bas
+      lang: vba
+      source: |
+        Sub Rounding()
+            Dim pieces As Integer
+            pieces = 2.5
+            Range("A1").Value = pieces
+        End Sub
+      options:
+        - "3, because .5 rounds up"
+        - "2, because VBA rounds to the nearest even number"
+        - "2.5, because the cell does take decimals"
+        - "An error, because an Integer takes no decimals"
+
+  - lab:
+      eyebrow: Lab
+      title: Type a customer database
+      brief: Take a customer database from your own area with at least eight fields and write a procedure that declares one variable per field, with the type it deserves, and writes them into row 1 of an empty sheet. Put Option Explicit on the first line of the module.
+      blocks:
+        - label: Submission
+          text: The module exported as .bas and the .xlsm with the sheet written, on Blackboard
+        - label: Constraint
+          text: No Variants and no single-letter names. Tax IDs and postal codes go in as String.
+        - label: The test
+          text: Change one value for one that does not match its type. If nothing breaks, the type was wrong.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Long is the default, not Integer
+          desc: Integer stops at 32,767 and a sheet has 1,048,576 rows, so the counter breaks exactly when the data becomes real
+        - title: Option Explicit on the first line
+          desc: Without it a typo invents a new variable and the program carries on with the wrong number, saying nothing
+        - title: An identifier is text
+          desc: Tax IDs, postal codes and customer numbers. Being made of digits does not make them numbers you add up
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Write a procedure that reads a loan amount and its annual rate from the sheet,
+        computes the monthly rate and writes it back. Declare every variable with its
+        type, and use a constant for the twelve months.
+      meta:
+        - [Due, Before week 4]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Types", "40 %", "Every variable carries the right type and there are no Variants"]
+        - ["Option Explicit", "20 %", "It is on the first line of the module"]
+        - ["Cells", "40 %", "It reads and writes the right cells and the result checks out"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the operations: the seven arithmetic operators and the range names
+        that make a formula readable.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,389 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 7
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 07 · Tema 3 · Propiedades fundamentales
+      title: Programación Orientada a Objetos
+      subtitle: Qué recibe una clase de su padre, hasta dónde conviene que crezca el árbol, y el guion bajo que le abre la puerta a las hijas.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 7 de 17]
+      notes: |
+        Esta sesión se puede arruinar de una sola manera: enseñando herencia como si fuera
+        la respuesta por omisión. La mitad de la clase la usará para no repetir código, que
+        es justo el motivo equivocado. El laboratorio existe para corregir eso.
+
+        Los ejemplos salen de docs/en/courses/python-course/02 - POO/6th Module:
+        Animal, Pez y el atributo protegido son de Code020.py; la herencia múltiple con
+        Gerente es de Code021.py; la jerarquía de Stream es de Code026.py; isinstance e
+        issubclass vienen de Code025.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Herencia
+          desc: Qué se hereda, qué no, y para qué sirve super
+        - title: Protegido
+          desc: El guion bajo que las subclases sí pueden leer
+        - title: Jerarquía
+          desc: Cuántos niveles aguanta un árbol antes de estorbar
+        - title: Heredar o componer
+          desc: La prueba que decide entre las dos, dicha en voz alta
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir una subclase
+          sub: Declarar el padre entre paréntesis y encadenar los constructores con super
+        - head: Elegir entre protegido y privado
+          sub: Un guion bajo llega a las hijas, dos se renombran y se quedan en el padre
+        - head: Limitar la profundidad del árbol
+          sub: Por qué dos niveles alcanzan y qué se rompe a partir del tercero
+        - head: Aplicar la prueba de es un
+          sub: Y reescribir con composición la relación que no la pase
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: done
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: done
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: now
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Herencia
+      lede: Una clase que empieza donde otra terminó. La parte fácil es la sintaxis; la difícil es decidir cuándo se justifica.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué recibe una subclase
+      lead: >-
+        Todo lo público y lo protegido del padre, sin escribir una línea. Los atributos
+        existen solo si el constructor del padre llegó a correr, y eso no pasa solo. Hay que
+        llamarlo con super, y ese olvido es el error más común de toda la unidad.
+      panel:
+        label: La frase que lo decide todo
+        title: La relación tiene que ser de tipo, no de uso
+        note: >-
+          Si "un pez es un animal" suena verdadera sin peros, la herencia se sostiene. Si hay
+          que explicar la frase para que funcione, lo que había era composición.
+      steps:
+        - text: El padre reúne lo compartido
+        - text: super enlaza los constructores
+        - text: La hija agrega lo que cambia
+          loop: ↺ si la hija sobrescribe casi todo, es que no compartían nada
+
+  - code:
+      eyebrow: Python
+      title: Una clase que empieza donde termina otra
+      filename: animales.py
+      lang: python
+      source: |
+        class Animal:
+            def __init__(self, nombre: str) -> None:
+                self.nombre = nombre
+
+            def comer(self) -> None:
+                print(f"{self.nombre} come")
+
+
+        class Pez(Animal):
+            def __init__(self, nombre: str) -> None:
+                super().__init__(nombre)
+
+            def nadar(self) -> None:
+                print("nada")
+      annotations:
+        - label: Línea 9
+          text: El paréntesis declara la herencia. Pez ya tiene nombre y comer sin escribirlos.
+        - label: Línea 11
+          text: super().__init__ corre el constructor del padre. Sin esa línea, nombre no existe.
+        - label: Línea 14
+          text: nadar solo vive en Pez. El padre no lo conoce, y hacerlo subir sería un error.
+
+  - code_output:
+      eyebrow: Demostración
+      title: Lo heredado y lo propio, en la misma llamada
+      filename: usar_pez.py
+      lang: python
+      output_label: Salida
+      source: |
+        p = Pez("tiburón")
+
+        p.comer()
+        p.nadar()
+        print(isinstance(p, Animal))
+        print(issubclass(Pez, object))
+      output: |
+        tiburón come
+        nada
+        True
+        True
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El modificador protected
+      lede: Un guion bajo abre la puerta a las hijas. Dos la cierran incluso para ellas, y eso sorprende a casi todos.
+      block: 2
+
+  - code:
+      eyebrow: Herencia y visibilidad
+      title: Lo que la hija alcanza y lo que no
+      filename: protegido.py
+      lang: python
+      source: |
+        class Persona:
+            def __init__(self, nombre: str) -> None:
+                self._nombre = nombre
+                self.__clave = "secreta"
+
+
+        class Alumno(Persona):
+            def presentarse(self) -> None:
+                print(self._nombre)
+                print(self.__clave)
+
+
+        Alumno("Ana").presentarse()
+      annotations:
+        - label: Línea 3
+          text: Un guion bajo significa esto es mío y de mis hijas. La subclase lo lee sin problema.
+        - label: Línea 4
+          text: Dos guiones bajos renombran el atributo a _Persona__clave, y la hija no lo encuentra
+        - label: Riesgo
+          text: La última línea lanza AttributeError. Lo privado no baja a la subclase con ese nombre.
+          accent: true
+
+  - table:
+      eyebrow: Tabla de alcance
+      title: Quién ve qué, desde dónde
+      headers: ["Miembro", "En la clase", "En la subclase", "Desde fuera"]
+      rows:
+        - ["edad", "Sí", "Sí", "Sí"]
+        - ["_nombre", "Sí", "Sí", "Sí, aunque no deberías"]
+        - ["__clave", "Sí", "No", "No, con ese nombre"]
+        - ["comer()", "Sí", "Sí", "Sí"]
+        - ["__decir()", "Sí", "No", "No, con ese nombre"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Jerarquía de clases
+      lede: Cada nivel nuevo es un archivo más que abrir para entender una sola llamada. El árbol se paga en lecturas.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Un árbol que se sostiene y una cadena que no
+      image: img/es/hierarchy.png
+      caption: Tres hermanos colgando del mismo padre se leen de un vistazo. Tres niveles encadenados heredan cosas que no querías.
+      alt: A la izquierda un árbol de dos niveles con tres hijos, a la derecha una cadena de tres clases con un método heredado tachado
+
+  - code:
+      eyebrow: Jerarquía sana
+      title: Un padre con lo común y las hijas con lo que cambia
+      filename: streams.py
+      lang: python
+      source: |
+        class Stream:
+            def __init__(self) -> None:
+                self.abierto = False
+
+            def abrir(self) -> None:
+                if self.abierto:
+                    raise RuntimeError("Ya estaba abierto")
+                self.abierto = True
+
+
+        class ArchivoStream(Stream):
+            def leer(self) -> None:
+                print("Leyendo de un archivo")
+      annotations:
+        - label: Línea 1
+          text: Stream reúne lo que comparten todos, que es el estado abierto y cómo se abre y se cierra
+        - label: Línea 11
+          text: ArchivoStream solo agrega lo que de verdad cambia entre un hijo y otro, que es leer
+        - label: La regla
+          text: RedStream y MemoriaStream se cuelgan del mismo padre. Ninguno cuelga de otro hijo.
+
+  - code:
+      eyebrow: Herencia múltiple
+      title: Cuando dos padres traen el mismo método
+      filename: gerente.py
+      lang: python
+      source: |
+        class Persona:
+            def saludar(self) -> None:
+                print("Hola, soy una persona")
+
+
+        class Empleado:
+            def saludar(self) -> None:
+                print("Hola, soy un empleado")
+
+
+        class Gerente(Empleado, Persona):
+            pass
+
+
+        Gerente().saludar()
+      annotations:
+        - label: Línea 11
+          text: El orden de la lista decide. Empleado va primero, así que su saludar es el que corre.
+        - label: Cómo comprobarlo
+          text: Gerente.__mro__ imprime el orden exacto en que Python busca cada método
+        - label: Riesgo
+          text: Si alguien invierte el orden en un refactor, el programa cambia de comportamiento sin un solo error
+          accent: true
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro formas de abusar de la herencia
+      items:
+        - label: Error 01
+          title: Un árbol de cuatro niveles
+          desc: Para entender una llamada hay que subir cuatro archivos, y en el camino la gallina aprende a volar
+        - label: Error 02
+          title: Heredar para no repetir código
+          desc: Si la relación no es de tipo, una instancia recibida como parámetro hace exactamente el mismo trabajo
+        - label: Error 03
+          title: Olvidar super().__init__
+          desc: El objeto nace sin los atributos del padre y revienta en la primera línea que los use
+        - label: Error 04
+          title: Dos padres con el mismo método
+          desc: El orden de la lista decide en silencio, y nadie lo vuelve a leer al hacer un cambio
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: olvido.py
+      lang: python
+      source: |
+        class Animal:
+            def __init__(self, nombre):
+                self.nombre = nombre
+
+
+        class Perro(Animal):
+            def __init__(self, nombre, raza):
+                self.raza = raza
+
+
+        p = Perro("Bobby", "pastor")
+        print(p.nombre)
+      options:
+        - 'Bobby, porque el padre guardó el nombre'
+        - 'AttributeError, el objeto no tiene nombre'
+        - 'None, porque nombre quedó sin asignar'
+        - 'TypeError, faltan argumentos en Perro'
+
+  - trace:
+      eyebrow: Respuesta
+      title: AttributeError, y la traza señala la línea que falta
+      headers: ["Paso", "Instrucción", "p.raza", "p.nombre"]
+      rows:
+        - ["1", "Perro('Bobby', 'pastor')", "–", "–"]
+        - ["2", "corre Perro.__init__", "pastor", "no existe"]
+        - ["3", "Animal.__init__", "nunca se llamó", "no existe"]
+        - ["4", "print(p.nombre)", "pastor", "AttributeError"]
+      verdict: Definir __init__ en la subclase reemplaza al del padre. Si no lo llamas con super().__init__(nombre), el constructor del padre no corre nunca.
+
+  - method:
+      eyebrow: Criterio de diseño
+      title: La prueba de es un
+      statement: Hereda solo si puedes decir en voz alta que la hija es un caso particular del padre, y la frase suena verdadera sin explicaciones.
+      points:
+        - label: La pasa
+          text: Un pez es un animal. Un archivo abierto es un flujo de datos.
+        - label: No la pasa
+          text: Un carrito es una lista. Un pedido es un cliente. Una gallina es un ave que vuela.
+        - label: Si no la pasa
+          text: La clase recibe a la otra como parámetro y le delega el trabajo. Eso es composición.
+
+  - code_output:
+      eyebrow: Comprobación
+      title: Toda clase hereda de object, aunque no lo escribas
+      filename: comprobar.py
+      lang: python
+      output_label: Salida
+      source: |
+        perro = Perro("Bobby", "pastor")
+
+        print(isinstance(perro, Perro))
+        print(isinstance(perro, Animal))
+        print(isinstance(perro, object))
+        print(issubclass(Animal, Perro))
+      output: |
+        True
+        True
+        True
+        False
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Ordenar una jerarquía, en parejas
+      brief: Reciben siete clases sueltas de un sistema de transporte y las acomodan en una jerarquía de dos niveles como máximo, justificando cada padre en una línea.
+      blocks:
+        - label: Restricciones
+          text: Dos niveles como máximo, sin herencia múltiple, y todo método repetido sube al padre
+        - label: Entregable
+          text: El diagrama de la jerarquía y un archivo .py con las clases y sus constructores encadenados
+        - label: Criterio
+          text: Que cada relación pase la prueba de es un, dicha en voz alta frente al otro integrante
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La hija recibe todo menos lo privado
+          desc: Lo público y lo protegido se heredan; el doble guion bajo cambia de nombre y se queda arriba
+        - title: Dos niveles alcanzan casi siempre
+          desc: Cada nivel extra es un archivo más que abrir para entender qué hace una sola llamada
+        - title: Heredar compromete, componer presta
+          desc: Si la frase de tipo no suena verdadera, la relación era de uso y se resuelve con un parámetro
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Toma dos clases de tu jerarquía del laboratorio y reescríbelas con composición. Compara en un párrafo qué se ganó y qué se perdió con el cambio.
+      meta:
+        - [Entrega, Antes de la sesión 8]
+        - [Formato, Blackboard · .py + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Jerarquía", "40 %", "Ninguna rama pasa de dos niveles y cada padre justifica su existencia"]
+        - ["Composición", "30 %", "Las dos clases reescritas reciben sus piezas y les delegan el trabajo"]
+        - ["Comparación", "30 %", "El párrafo nombra un costo concreto de cada una de las dos versiones"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, polimorfismo, sobrescritura, clases abstractas e interfaces, y el primer parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

@@ -1,0 +1,337 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 6
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 06 · Unidad 5 · Clases y abstracción de datos
+      title: Programación Avanzada
+      subtitle: Juntar los datos con las funciones que los cuidan, y decidir qué se ve desde fuera de la clase.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 6 de 17]
+      notes: |
+        Cierra el bloque de funciones y clases. Es la última sesión antes de las estructuras
+        de control, así que todo el código de hoy sigue siendo de flujo recto: constructores
+        que asignan, accesores que devuelven, funciones miembro sin ramas.
+
+        Esa limitación se nota más aquí que en las semanas anteriores, porque el ejemplo
+        natural de un mutador es uno que valida su argumento, y validar necesita un if. Vale
+        la pena decirlo en voz alta cuando alguien lo pregunte, y anotarlo como lo que se
+        agrega en la semana 7.
+
+        Los resultados numéricos se midieron compilando el programa de la lámina en Visual
+        Studio Community 2026. El área da 12 y, después del mutador, 20.
+
+        En esta semana cae el primer avance del proyecto según el calendario del syllabus.
+        El proyecto todavía no se asigna, eso ocurre después del primer parcial, así que el
+        avance se refiere al calendario de revisiones y no a una entrega del proyecto.
+
+        Lectura: Malik, octava edición, capítulo 10. Los documentos del curso citan el 12,
+        que es correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: Por qué una clase
+          desc: Qué problema resuelve juntar los datos con su comportamiento
+        - title: Anatomía
+          desc: Miembros de datos, funciones miembro y el constructor
+        - title: Qué se ve
+          desc: Los tres niveles de acceso, y quién puede llegar a cada uno
+        - title: La interfaz
+          desc: Accesores y mutadores, y qué promete una clase a quien la usa
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar una clase con estado
+          sub: Con sus miembros de datos privados y sus funciones miembro públicas
+        - head: Escribir un constructor
+          sub: Y explicar por qué corre solo, sin que nadie lo llame por su nombre
+        - head: Elegir el nivel de acceso
+          sub: Y decir quién puede llegar a un público, a un protegido y a un privado
+        - head: Diseñar una interfaz mínima
+          sub: Exponiendo lo que la clase promete sostener y escondiendo lo que puede cambiar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: now
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: todo
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué una clase
+      lede: Hasta hoy los datos iban por un lado y las funciones que los tocan por otro. Nada obligaba a que viajaran juntos.
+      block: 1
+
+  - figure:
+      eyebrow: Concepto
+      title: El molde y lo que sale del molde
+      image: img/es/class-object.png
+      caption: La clase se escribe una vez. Los objetos se crean tantas veces como haga falta, cada uno con su propio estado.
+      alt: Un cortador de galletas y las galletas que salen de él, con la clase y sus objetos etiquetados
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una clase es un tipo que tú defines
+      lead: >-
+        int guarda un entero y sabe sumarse. Un Rectangulo guarda un ancho y un largo, y
+        sabe calcular su área. La diferencia es que el primero venía con el lenguaje y el
+        segundo lo escribes tú, con las mismas reglas.
+      panel:
+        label: Lo que se gana
+        title: Las reglas viven en un solo lugar
+        note: >-
+          Si el área se calcula dentro de la clase, no hay manera de que un archivo lejano
+          la calcule distinto. Deja de ser una convención y pasa a ser código.
+      steps:
+        - text: Los datos y su comportamiento juntos
+        - text: Un solo lugar donde corregir
+        - text: Quien la usa no ve el detalle
+          loop: ↺ y por eso el detalle se puede cambiar sin avisar
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Anatomía de una clase
+      lede: "Tres cosas dentro de las llaves: qué recuerda, qué sabe hacer, y cómo nace."
+      block: 2
+
+  - figure:
+      eyebrow: Notación
+      title: La misma clase, dibujada y escrita
+      image: img/es/uml-class-cpp.png
+      caption: Los tres compartimentos del diagrama son las tres partes del código. El signo menos es privado y el más es público.
+      alt: Una caja UML de tres compartimentos, cada uno unido con una flecha a la línea de C++ en la que se convierte
+
+  - code:
+      eyebrow: La clase completa
+      title: Un rectángulo que ya sirve de algo
+      filename: rectangulo.cpp
+      lang: cpp
+      source: |
+        class Rectangulo {
+        public:
+            Rectangulo(double a, double l) { ancho = a; largo = l; }
+            double getAncho() { return ancho; }
+            void setAncho(double a) { ancho = a; }
+            double area() { return ancho * largo; }
+        private:
+            double ancho;
+            double largo;
+        };
+      annotations:
+        - label: Línea 3
+          text: El constructor se llama igual que la clase y no declara tipo de retorno
+        - label: Línea 4
+          text: Un accesor devuelve y no modifica. Un mutador modifica y no devuelve.
+        - label: Línea 7
+          text: Todo lo que va después de private solo lo pueden tocar las funciones de la clase
+        - label: Riesgo
+          text: El punto y coma después de la llave final es obligatorio. Sin él, el error sale en la línea siguiente y no dice por qué.
+          accent: true
+
+  - code_output:
+      eyebrow: Ejecución
+      title: Crear el objeto y pedirle cosas
+      filename: rectangulo.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        Rectangulo r(3.0, 4.0);
+        std::cout << r.area() << "\n";
+
+        r.setAncho(5.0);
+        std::cout << r.area() << "\n";
+      output: |
+        12
+        20
+      notes: |
+        Nadie llamó al constructor por su nombre. La línea que declara r lo ejecuta, y esa
+        es toda la diferencia con una función normal.
+
+        El segundo resultado sale de una sola línea de cambio. El área no se guardó en
+        ningún lado, se calcula cada vez que se pide, y por eso siempre está al día.
+
+  - table:
+      eyebrow: Las partes
+      title: Seis piezas, y qué hace cada una
+      headers: ["Pieza", "Qué es", "En el ejemplo"]
+      rows:
+        - ["Clase", "El molde, se escribe una vez", "Rectangulo"]
+        - ["Objeto", "Cada ejemplar, con su estado", "r"]
+        - ["Miembro de datos", "Lo que el objeto recuerda", "ancho, largo"]
+        - ["Función miembro", "Lo que el objeto sabe hacer", "area()"]
+        - ["Constructor", "Corre al crear el objeto", "Rectangulo(3.0, 4.0)"]
+        - ["Accesor", "Devuelve sin modificar", "getAncho()"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Qué se ve desde fuera
+      lede: Los tres niveles de acceso no son una formalidad. El compilador los cobra, y ahí está la diferencia con otros lenguajes.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnóstico
+      title: Quién puede llegar a cada miembro
+      image: img/es/access-levels-cpp.png
+      caption: La columna de la derecha es la que separa protegido de privado. Sin herencia, los dos se ven igual desde fuera.
+      alt: Tres miembros de una clase contra dos columnas, desde fuera y desde una clase hija, con palomas y cruces
+
+  - code_output:
+      eyebrow: Demostración
+      title: Lo que pasa al tocar un privado desde fuera
+      filename: acceso.cpp
+      lang: cpp
+      output_label: Lista de errores
+      source: |
+        Rectangulo r(3.0, 4.0);
+
+        r.setAncho(5.0);
+        r.ancho = 5.0;
+      output: |
+        error C2248: 'Rectangulo::ancho':
+        cannot access private member
+        declared in class 'Rectangulo'
+      notes: |
+        La tercera línea compila y la cuarta no. Las dos hacen lo mismo, y esa es la
+        pregunta razonable del grupo: para qué escribir un mutador que solo asigna.
+
+        La respuesta honesta hoy es que todavía no se ve el beneficio, porque el mutador de
+        esta semana no puede validar nada. A partir de la semana 7 sí, y ese mutador de una
+        línea se convierte en el único lugar donde se revisa que el ancho no sea negativo.
+        Conviene prometerlo ahora y cumplirlo entonces.
+
+  - concept:
+      eyebrow: Criterio
+      title: Empieza cerrado y abre lo que haga falta
+      lead: >-
+        Abrir un miembro después es fácil y nadie se entera. Cerrarlo después rompe todo el
+        código que ya lo estaba usando. Por eso la decisión sensata es declarar privado por
+        omisión y hacer público solo lo que la clase promete sostener.
+      panel:
+        label: La pregunta de diseño
+        title: ¿Esto lo vas a sostener sin cambios?
+        note: >-
+          Si la respuesta es no, ese miembro no debería ser público. Todo lo público es una
+          promesa que alguien más va a empezar a usar.
+      steps:
+        - text: Los datos, privados
+        - text: La interfaz, pública
+        - text: Protegido solo si hay herencia
+          loop: ↺ y la herencia llega hasta la semana 9
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Olvidar el punto y coma final
+          desc: La llave que cierra la clase lleva punto y coma, y sin él el error aparece en la línea siguiente
+        - label: Error 02
+          title: Dejar los datos públicos
+          desc: Compila, funciona, y convierte cada miembro en una promesa que ya no se puede retirar
+        - label: Error 03
+          title: Miembros sin inicializar
+          desc: Un constructor que olvida uno deja basura adentro, igual que una variable suelta
+        - label: Error 04
+          title: Un accesor que devuelve todo
+          desc: Si entrega el dato interno tal cual, quien lo reciba puede modificarlo sin pasar por la clase
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Cuál de las cuatro líneas no compila?
+      filename: acceso.cpp
+      lang: cpp
+      source: |
+        Rectangulo r(3.0, 4.0);
+
+        double a = r.area();
+        double b = r.getAncho();
+        r.setAncho(5.0);
+        double c = r.largo;
+      options:
+        - 'La última, porque largo es privado'
+        - 'La primera, porque falta el operador new'
+        - 'La tercera, porque getAncho no modifica nada'
+        - 'Ninguna, las cuatro son válidas desde fuera'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Tres pasan por la interfaz y una se la salta
+      headers: ["Línea", "Qué toca", "Nivel", "Compila"]
+      rows:
+        - ["r.area()", "Función miembro", "público", "Sí"]
+        - ["r.getAncho()", "Función miembro", "público", "Sí"]
+        - ["r.setAncho(5.0)", "Función miembro", "público", "Sí"]
+        - ["r.largo", "Miembro de datos", "privado", "No, C2248"]
+      verdict: Las tres primeras entran por la puerta que la clase dejó abierta. La cuarta intenta entrar por la ventana, y el compilador la detiene antes de que el programa exista.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una clase Alumno, en parejas
+      brief: Escriban una clase Alumno con nombre y tres calificaciones como miembros privados, un constructor que las reciba, accesores para el nombre y el promedio, y una función miembro que devuelva la calificación más el redondeo.
+      blocks:
+        - label: Restricción
+          text: Sin if y sin ciclos, que llegan la próxima semana. Constructores que asignan y accesores que devuelven.
+        - label: Entregable
+          text: Un .cpp con la clase, y un main que cree dos objetos distintos y pida el promedio de cada uno
+        - label: Criterio
+          text: Que ningún miembro de datos sea público y que main no necesite saber cómo se calcula el promedio
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una clase es un tipo tuyo
+          desc: Con las mismas reglas que int, solo que el comportamiento lo escribes tú
+        - title: El constructor corre solo
+          desc: Se ejecuta al declarar el objeto, y por eso nunca hay un objeto a medio armar
+        - title: Privado lo cobra el compilador
+          desc: No es un acuerdo entre programadores, es un error C2248 antes de que el programa corra
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La boleta convertida en clase
+      brief: Tomen la boleta de las semanas anteriores y conviértanla en una clase Alumno con los datos privados. El main debe quedar en tres o cuatro líneas que solo creen el objeto y pidan resultados.
+      meta:
+        - [Entrega, Antes de la sesión 7]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Encapsulamiento", "Requisito", "Ningún miembro de datos es público"]
+        - ["Constructor", "Requisito", "Deja el objeto completo, sin miembros sin inicializar"]
+        - ["Interfaz", "Requisito", "main no calcula nada, solo pide"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, por fin, if y switch. El programa deja de ser una línea recta.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

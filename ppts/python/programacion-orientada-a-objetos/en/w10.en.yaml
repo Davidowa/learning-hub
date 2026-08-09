@@ -1,0 +1,352 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 10
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 10 · Topic 4 · Advanced functions and structures
+      title: Object-Oriented Programming
+      subtitle: Four ways to hold several things in one variable, how a list grows inside, and what you can do before anything touches the disk.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 10 of 17]
+      notes: |
+        Session 1.4 already reviewed the four containers, so what is new here is the choosing
+        criterion and the cost. If the group leaves knowing why searching a list is expensive
+        and searching a dictionary is not, the session did its job.
+
+        The examples come from docs/en/courses/python-course/01 - Basics/4th Module:
+        the list operations are from Code012.py and the array module is Code016.py.
+        List comprehensions and getsizeof come from Code017.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: The four collections
+          desc: List, tuple, set and dictionary, and what each one answers quickly
+        - title: Dynamic arrays
+          desc: Why appending at the end is cheap and inserting at the front is not
+        - title: Processing in memory
+          desc: Filtering, transforming and grouping without writing a single file
+        - title: Lab
+          desc: Picking the right container for five queries
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Choose among the four collections
+          sub: With three questions about order, change and how you search, in that order
+        - head: Explain what a dynamic array is
+          sub: Over-allocate, copy on filling up, and how that cost is spread across the calls
+        - head: Filter and group in memory
+          sub: List comprehensions for the simple cases and an accumulating dictionary for the rest
+        - head: Tell copying from sharing
+          sub: Why the equals sign leaves two names pointing at one object
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Collections
+      lede: Four containers that look interchangeable, right up until the collection grows and one of them turns unbearably slow.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Four containers and a single question
+      lead: >-
+        List, tuple, set and dictionary all hold several things in one variable. Choosing
+        between them is not a matter of taste. Each one answers a different question quickly
+        and every other question slowly, and that gap shows up once the data grows.
+      panel:
+        label: The question that decides
+        title: What you are going to ask this collection
+        note: >-
+          If you will walk it in order, a list. If it must never change, a tuple. If you ask
+          whether something is in there, a set. If you look things up by a key, a dictionary.
+      steps:
+        - text: Does the order matter?
+        - text: Will it change?
+        - text: Do you search by key?
+          loop: ↺ three questions and the container has picked itself
+
+  - figure:
+      eyebrow: Comparison
+      title: The four, with the property that separates them
+      image: img/en/collections.png
+      caption: The syntax gets forgotten and looked up. What you have to remember is the property underneath.
+      alt: Four boxes labelled list, tuple, set and dictionary, each with its syntax and its property
+
+  - table:
+      eyebrow: Decision table
+      title: What searching costs in each one
+      headers: ["Collection", "Syntax", "Ordered", "Finding a value"]
+      rows:
+        - ["List", "[1, 2, 3]", "Yes", "Walks the whole thing"]
+        - ["Tuple", "(1, 2, 3)", "Yes, and never changes", "Walks the whole thing"]
+        - ["Set", "{1, 2, 3}", "No", "Immediate"]
+        - ["Dictionary", "{'a': 1}", "By insertion", "Immediate, by key"]
+
+  - code:
+      eyebrow: Python
+      title: The operations you use every single day
+      filename: lists.py
+      lang: python
+      source: |
+        fruits = ["apple", "banana", "cherry", "grape"]
+
+        print(fruits[1])
+        print(fruits[-1])
+        print(fruits[1:3])
+        print(fruits[::2])
+
+        fruits.append("kiwi")
+        fruits.remove("grape")
+        print(len(fruits))
+      annotations:
+        - label: The indexes
+          text: The first is 0 and the last is -1. That is all the arithmetic you ever need.
+        - label: The slices
+          text: fruits[1:3] returns a new list of two items, because the right bound is left out
+        - label: Risk
+          text: remove deletes the first match and raises ValueError if there is none. Ask with in first.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: Dynamic arrays
+      lede: A Python list is not a fixed row of slots. It is a block that moves to a bigger one when it fills up.
+      block: 2
+
+  - diagram:
+      eyebrow: Diagram
+      title: How a list grows on the inside
+      blocks:
+        - label: On creation
+          title: Over-allocates
+          desc: Asks for more room than it uses, so the next append costs nothing at all
+        - label: On filling up
+          title: Copies and grows
+          desc: When the room runs out it reserves a bigger block and copies everything over
+          dark: true
+        - label: On average
+          title: Constant cost
+          desc: The copy happens rarely, so appending at the end stays cheap nearly every time
+      note: >-
+        That is why a Python list is called a dynamic array. What is expensive is inserting at
+        the front, because everything else has to shift along to make room.
+
+  - code:
+      eyebrow: Fixed-type arrays
+      title: When every value is of the same type
+      filename: arrays.py
+      lang: python
+      source: |
+        import array
+
+        numbers = array.array("i", [1, 2, 3, 4, 5])
+        numbers.append(6)
+        numbers.insert(0, 0)
+        print(numbers[0], len(numbers))
+
+        mixed = [1, "two", 3.0, True]
+        print(mixed)
+      annotations:
+        - label: Line 3
+          text: The first argument is the type. The i means signed integers, and only integers go in.
+        - label: Line 8
+          text: A list takes any mixture of types, which is convenient and is paid for in memory
+        - label: When to use array
+          text: When there are millions of numbers of one type and memory has started to matter
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The list stores references, the array stores the numbers
+      filename: measure.py
+      lang: python
+      output_label: Output
+      source: |
+        from sys import getsizeof
+
+        numbers = list(range(1000))
+        packed = array.array("i", range(1000))
+
+        print(getsizeof(numbers))
+        print(getsizeof(packed))
+      output: |
+        8056
+        4064
+      notes: |
+        The exact numbers move with the version and the platform, so run it live rather than
+        quoting them. What matters is the ratio and the reason: getsizeof on the list measures
+        only the block of references, not the integer objects it points at, so the real gap is
+        wider than what shows on screen.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors with collections
+      items:
+        - label: Error 01
+          title: Modifying a list while walking it
+          desc: Deleting inside the for makes the loop skip items, because the indexes keep moving on
+        - label: Error 02
+          title: Copying with the equals sign
+          desc: 'copy = items copies nothing. They are two names for the same object in memory.'
+        - label: Error 03
+          title: Using a list to search
+          desc: Asking whether something is in a list walks all of it. A set answers immediately.
+        - label: Error 04
+          title: Tuples for data that changes
+          desc: A tuple cannot be modified, so fixing one value means building the whole tuple again
+
+  - divider:
+      eyebrow: Block 03
+      title: Processing data in memory
+      lede: Filter, transform and group before anything reaches the disk. Files arrive next week.
+      block: 3
+
+  - code:
+      eyebrow: Filtering
+      title: A list comprehension, read left to right
+      filename: filtering.py
+      lang: python
+      source: |
+        students = [
+            {"name": "Ana", "grade": 9.1},
+            {"name": "Luis", "grade": 6.4},
+            {"name": "Sofia", "grade": 8.0},
+        ]
+
+        passing = [s["name"] for s in students if s["grade"] >= 7]
+        print(passing)
+      annotations:
+        - label: Line 7
+          text: Read it left to right, first what you keep, then where it comes from, then the condition
+        - label: What it replaces
+          text: A four-line for loop with an append inside it, written as a single expression
+        - label: When to skip it
+          text: If it needs two conditions and an else, the ordinary for loop reads better
+
+  - code_output:
+      eyebrow: Grouping
+      title: A dictionary that counts as it walks
+      filename: grouping.py
+      lang: python
+      output_label: Output
+      source: |
+        tally = {}
+
+        for s in students:
+            key = "pass" if s["grade"] >= 7 else "fail"
+            tally[key] = tally.get(key, 0) + 1
+
+        print(tally)
+      output: |
+        {'pass': 2, 'fail': 1}
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: copying.py
+      lang: python
+      source: |
+        numbers = [1, 2, 3, 4]
+        copy = numbers
+
+        copy.append(5)
+        print(len(numbers))
+      options:
+        - '4, because copy is a separate list'
+        - '5, because both names point at the same list'
+        - 'TypeError, a list is not copied with equals'
+        - '1, because copy only kept the first item'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 5, because there were never two lists
+      headers: ["Step", "Statement", "numbers", "copy", "Same object"]
+      rows:
+        - ["1", "numbers = [1, 2, 3, 4]", "[1, 2, 3, 4]", "–", "–"]
+        - ["2", "copy = numbers", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Yes"]
+        - ["3", "copy.append(5)", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Yes"]
+        - ["4", "len(numbers)", "5", "5", "Yes"]
+      verdict: The equals sign copies the reference, not the contents. Two independent lists have to be asked for, with numbers.copy() or with list(numbers).
+
+  - figure:
+      eyebrow: Diagnosis
+      title: Two tags on one box, against two boxes
+      image: img/en/reference-vs-copy.png
+      caption: On the left there is one object with two names. On the right there are two objects that no longer hear about each other.
+      alt: Two tags tied to the same box beside two tags tied to two separate boxes
+
+  - lab:
+      eyebrow: Lab
+      title: Picking the right container, in pairs
+      brief: You get five queries about a student roll and for each one you pick the container that answers it fastest, with one line of justification.
+      blocks:
+        - label: Constraints
+          text: One container per query, and at least three of the four have to be used
+        - label: Deliverable
+          text: A .py file that loads the roll into memory and answers the five queries
+        - label: Criterion
+          text: No query walks the whole collection if another container would avoid it
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Three questions pick the container
+          desc: Whether order matters, whether it will change, whether you search by key. In that order.
+        - title: A list is a dynamic array
+          desc: It over-allocates and copies when it fills, which is why appending is nearly always free
+        - title: Equals does not copy, it shares
+          desc: Two names on one list look identical right up until one of the two writes to it
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write the same search twice over the lab roll, once against a list and once against a dictionary, time both with time.perf_counter and explain the difference.
+      meta:
+        - [Due, Before session 11]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Choice", "40 %", "Every query uses the container that answers it without walking too much"]
+        - ["Measurement", "30 %", "Both versions are timed on the same roll with the same repetitions"]
+        - ["Explanation", "30 %", "The paragraph explains the gap with the mechanism, not just the number"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, exception handling, input validation and robustness.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

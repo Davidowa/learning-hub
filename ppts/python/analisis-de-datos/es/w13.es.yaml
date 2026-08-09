@@ -1,0 +1,303 @@
+meta:
+  course: Análisis de Datos
+  code: TIA502
+  lang: es
+  language: python
+  week: 13
+  footer: ANÁLISIS DE DATOS · TIA502 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 13 · Tema 6 · Conjuntos y diccionarios · Segundo parcial
+      title: Análisis de Datos
+      subtitle: El BUSCARV de Python y la forma más rápida de saber cuántos valores distintos hay. Más la logística del segundo parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA502 · Empresariales]
+        - [Sesión, 13 de 17]
+      notes: |
+        Cierre del bloque de colecciones y del segundo parcial, que cubre las unidades 4 a
+        6 y vale 20 %.
+
+        El diccionario es la pieza que más rendimiento da en este curso. Es BUSCARV, y en
+        la semana 15 es lo que hace groupby por dentro. Decirlo así les da un ancla.
+
+        El conjunto se corre rápido: quitar duplicados y saber cuántos distintos hay. Las
+        operaciones de conjuntos son bonitas y se usan menos, pero van completas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El diccionario
+          desc: Una llave, un valor. Es el BUSCARV que ya usas todos los días
+        - title: El conjunto
+          desc: Valores distintos, sin orden y sin repetidos
+        - title: Cuál usar
+          desc: Cuatro colecciones y la pregunta que decide entre ellas
+        - title: El parcial
+          desc: Qué entra, cómo es y qué puedes llevar
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Crear y consultar un diccionario
+          sub: Por llave, y con get para cuando la llave puede no existir
+        - head: Recorrer llaves, valores y pares
+          sub: Con keys, values e items, según lo que necesite el ciclo
+        - head: Quitar duplicados con un conjunto
+          sub: En una línea, en lugar de un ciclo con una lista auxiliar
+        - head: Usar las cuatro operaciones de conjuntos
+          sub: Unión, intersección, diferencia y diferencia simétrica
+        - head: Elegir la colección correcta
+          sub: Por la pregunta que va a contestar, no por costumbre
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento computacional
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos y decisiones
+          desc: Tipos, operadores, condiciones y repetición
+          state: done
+        - label: 03 · Semanas 10–13
+          title: Estructura y colecciones
+          desc: Funciones, listas, tuplas, conjuntos y diccionarios
+          state: now
+        - label: 04 · Semanas 14–17
+          title: Datos reales
+          desc: Archivos, pandas y visualización
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El diccionario
+      lede: Una tabla de dos columnas donde la primera es única. Es lo que buscas con BUSCARV, sin la columna número tres.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · Traducción
+      title: BUSCARV, dicho en Python
+      before:
+        label: En la hoja
+        file: tasas.xlsx
+        lang: excel
+        code: |
+          =BUSCARV(B2; Catalogo; 2; FALSO)
+      after:
+        label: En Python
+        file: tasas.py
+        code: |
+          tasas = {"AAA": 0.12, "AA": 0.18,
+                   "A": 0.24, "B": 0.32}
+
+          tasa = tasas["AA"]
+      note: >-
+        BUSCARV pide el rango, el número de columna y el modo exacto. El diccionario pide
+        la llave y ya. La columna número tres no existe porque no hace falta.
+
+  - code:
+      eyebrow: Bloque 01 · En contexto
+      title: La tasa que le toca a cada calificación
+      filename: tasas.py
+      source: |
+        tasas = {"AAA": 0.12, "AA": 0.18,
+                 "A": 0.24, "B": 0.32}
+
+        print(tasas["AA"])
+        print(tasas.get("C"))
+        print(tasas.get("C", 0.40))
+      annotations:
+        - label: Llave y valor
+          text: A la izquierda de los dos puntos la llave, a la derecha el valor. Las llaves no se repiten.
+        - label: El acceso directo
+          text: Con corchetes, igual que una lista, solo que el índice es la llave en lugar de un número.
+        - label: get
+          text: Devuelve None si la llave no existe, en lugar de reventar. Y admite un valor por omisión.
+        - label: Riesgo
+          text: tasas["C"] con una llave que no existe lanza KeyError y detiene el programa ahí mismo.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Resultado
+      title: Las tres consultas
+      filename: tasas.py
+      source: |
+        print(tasas["AA"])
+        print(tasas.get("C"))
+        print(tasas.get("C", 0.40))
+      output: |
+        0.18
+        None
+        0.4
+
+  - table:
+      eyebrow: Bloque 01 · Recorridos
+      title: Las tres formas de recorrer un diccionario
+      headers: [Método, Qué entrega, Cuándo se usa]
+      rows:
+        - ["keys", "Solo las llaves", "Cuando basta con saber cuáles hay"]
+        - ["values", "Solo los valores", "Para sumar o promediar"]
+        - ["items", "Los pares completos", "Para imprimir la tabla entera"]
+
+  - code_output:
+      eyebrow: Bloque 01 · items
+      title: La tabla completa, en tres líneas
+      filename: recorrido.py
+      source: |
+        for clave, valor in tasas.items():
+            print(f"{clave:<4} {valor:.0%}")
+      output: |
+        AAA  12%
+        AA   18%
+        A    24%
+        B    32%
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El conjunto
+      lede: Valores distintos, sin repetidos y sin orden. Es quitar duplicados en una línea.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Duplicados
+      title: Cuántas regiones distintas hay de verdad
+      filename: regiones.py
+      source: |
+        regiones = ["Norte", "Centro", "Norte",
+                    "Sur", "Centro", "Norte"]
+
+        unicas = set(regiones)
+
+        print(sorted(unicas))
+        print(len(unicas), "de", len(regiones))
+      output: |
+        ['Centro', 'Norte', 'Sur']
+        3 de 6
+
+  - table:
+      eyebrow: Bloque 02 · Operaciones
+      title: Las cuatro operaciones de conjuntos
+      headers: [Operación, Símbolo, Qué devuelve]
+      rows:
+        - ["Unión", "|", "Lo que está en cualquiera de los dos"]
+        - ["Intersección", "&", "Solo lo que está en los dos"]
+        - ["Diferencia", "-", "Lo del primero que no está en el segundo"]
+        - ["Diferencia simétrica", "^", "Lo que está en uno pero no en ambos"]
+
+  - code_output:
+      eyebrow: Bloque 02 · En contexto
+      title: Regiones de este año contra las del anterior
+      filename: comparar.py
+      source: |
+        este = {"Norte", "Centro", "Sur"}
+        pasado = {"Centro", "Sur", "Este"}
+
+        print(sorted(este & pasado))
+        print(sorted(este - pasado))
+        print(sorted(este ^ pasado))
+      output: |
+        ['Centro', 'Sur']
+        ['Norte']
+        ['Este', 'Norte']
+
+  - figure:
+      eyebrow: Bloque 02 · Las cuatro
+      title: Las cuatro colecciones, lado a lado
+      image: img/es/collections.png
+      caption: Lista, tupla, conjunto y diccionario. Lo que cambia entre ellas es si mantienen orden, si admiten repetidos y si se pueden cambiar.
+      alt: Cuatro contenedores dibujados a mano, uno por cada tipo de colección
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cuál usar, y el parcial
+      lede: Cuatro colecciones y una sola pregunta que decide entre ellas.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Decisión
+      title: La pregunta que elige la colección
+      headers: [Si necesitas, Usa, Por qué]
+      rows:
+        - ["Orden y repetidos", "Lista", "Es la columna de tu tabla"]
+        - ["Que nadie la cambie", "Tupla", "Los términos de un contrato"]
+        - ["Valores distintos", "Conjunto", "Quita duplicados solo"]
+        - ["Buscar por llave", "Diccionario", "Es el BUSCARV, y es inmediato"]
+
+  - table:
+      eyebrow: Segundo parcial
+      title: Qué entra, y cómo es el examen
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Unidades 4, 5 y 6: repetición, funciones y colecciones"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Formato", "En la computadora del salón, y se sube comprimido a Blackboard"]
+        - ["Puedes llevar", "Apuntes, tareas, libros y lo que hayas generado con IA antes"]
+        - ["No puedes", "Teléfono, audífonos, lentes con IA ni mensajería"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime la última línea?
+      filename: llaves.py
+      source: |
+        conteo = {"Norte": 3, "Sur": 1}
+        conteo["Norte"] = 5
+        conteo["Este"] = 2
+
+        print(len(conteo))
+      options:
+        - "4, porque se agregaron dos entradas"
+        - "3, porque Norte ya existía y se sobreescribió"
+        - "2, porque el diccionario no crece"
+        - "Un error, porque Este no existía"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un catálogo de tu área
+      brief: Construye un diccionario que traduzca un código de tu carrera a su descripción o a su valor, con al menos seis entradas. Recórrelo imprimiendo la tabla, y usa un conjunto para contar cuántos valores distintos tiene.
+      blocks:
+        - label: Entrega
+          text: El archivo .py con la tabla impresa y el conteo de valores distintos
+        - label: Restricción
+          text: La consulta tiene que usar get con un valor por omisión, no corchetes
+        - label: La prueba
+          text: Consulta una llave que no existe. El programa tiene que seguir corriendo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un diccionario es un BUSCARV
+          desc: La llave, el valor, y ninguna columna número tres. En la semana 15 esto es lo que hace groupby
+        - title: get no revienta
+          desc: Los corchetes lanzan KeyError con una llave que falta, y get devuelve lo que tú decidas
+        - title: Un conjunto quita duplicados solo
+          desc: Una línea reemplaza al ciclo con lista auxiliar que casi todos escriben la primera vez
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Con las listas de campañas del curso, arma un diccionario de canal a inversión, calcula el total con values, e imprime cuáles canales aparecen este año y no el pasado usando conjuntos.
+      meta:
+        - [Entrega, Antes de la semana 14]
+        - [Formato, Blackboard · .py]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Diccionario", "40 %", "Se construye desde las listas y no se escribe a mano"]
+        - ["Suma", "30 %", "El total sale de values, no de recorrer las listas otra vez"]
+        - ["Conjuntos", "30 %", "La comparación usa una operación de conjuntos, no un ciclo con if"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La siguiente sesión, archivos. Ahí dejan de escribirse los datos a mano y empiezan a leerse de verdad.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

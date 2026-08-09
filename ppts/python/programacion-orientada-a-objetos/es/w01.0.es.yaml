@@ -1,0 +1,283 @@
+meta:
+  course: Programación Orientada a Objetos
+  code: COM102
+  lang: es
+  language: python
+  week: 1
+  footer: PROGRAMACIÓN ORIENTADA A OBJETOS · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Encuadre del curso
+      title: Programación Orientada a Objetos
+      subtitle: Cómo vamos a trabajar este semestre. Qué se evalúa, con qué herramientas y qué tienes que entregar.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM102 · Semestre 2]
+        - [Sesión, 1 de 17]
+      notes: |
+        Presentarse. Preguntar quién ya programó antes y en qué lenguaje: sirve para
+        calibrar el ritmo de las semanas 3 a 5. No prometer que el curso es fácil.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué evalúa el curso
+          sub: Los cinco componentes de la calificación y la semana en que se aplica cada uno
+        - head: Verificar su entorno de trabajo
+          sub: Python 3.12 o superior corriendo, en su equipo o en el navegador
+        - head: Ubicar el paradigma entre otros
+          sub: Qué hace distinto a la POO frente a la programación estructurada que ya conoce
+        - head: Reconocer qué se considera copia
+          sub: Los límites del Código de Honor y los lineamientos de uso de IA de la Universidad
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–2
+          title: Encuadre y paradigmas
+          desc: Por qué existe la POO y qué problema vino a resolver
+          state: now
+        - label: 02 · Semanas 3–5
+          title: Elementos básicos
+          desc: Clases, objetos, atributos, métodos y propiedades
+          state: todo
+        - label: 03 · Semanas 6–8
+          title: Propiedades del paradigma
+          desc: Encapsulamiento, herencia, polimorfismo e interfaces
+          state: todo
+        - label: 04 · Semanas 9–17
+          title: Aplicación
+          desc: Colecciones, archivos, interfaces gráficas y bases de datos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: De qué trata la materia
+      lede: Antes del syllabus conviene contestar una pregunta más simple, qué problema estamos aprendiendo a resolver.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué es programar orientado a objetos
+      lead: >-
+        Organizar un programa alrededor de las cosas del problema (un alumno, un préstamo,
+        un carrito de compras) en lugar de organizarlo alrededor de los pasos que hay que
+        ejecutar. Cada cosa guarda sus propios datos y sabe hacer lo suyo.
+      panel:
+        label: La diferencia en una frase
+        title: Programación estructurada, pasos. POO, responsabilidades.
+        note: >-
+          El paradigma no cambia lo que la computadora hace, cambia cómo repartes el código
+          para que siga siendo legible cuando el programa crezca.
+      steps:
+        - text: Identificas las cosas del problema
+        - text: Decides qué recuerda cada una
+        - text: Decides qué sabe hacer cada una
+          loop: ↺ el ciclo se repite cada vez que aparece un requisito nuevo
+
+  - figure:
+      eyebrow: Modelar
+      title: Antes de la sintaxis, agrupar
+      image: img/es/ct-02.png
+      caption: Programar orientado a objetos empieza por decidir qué cosas hay y qué las distingue
+      alt: Un pato ordena un montón de figuras revueltas en tres grupos
+
+  - table:
+      eyebrow: Evaluación del curso
+      title: Cinco componentes, veinte por ciento cada uno
+      headers: [Componente, Contenido, Momento, Peso]
+      rows:
+        - ["Parcial 1", "Unidades 1, 2 y 3", "Semana 8", "20 %"]
+        - ["Parcial 2", "Unidades 4 y 5", "Semana 13", "20 %"]
+        - ["Proyecto", "Aplicación integradora con datos e interfaz", "Semana 16", "20 %"]
+        - ["Examen final", "Todas las unidades", "Semana 17", "20 %"]
+        - ["Tareas", "Actividades fuera de clase", "Todo el curso", "20 %"]
+
+  - steps:
+      eyebrow: Metodología
+      title: Cómo trabajamos en clase
+      items:
+        - label: '01'
+          title: Práctica antes que teoría
+          desc: Cada concepto llega con código que corre el mismo día
+        - label: '02'
+          title: Problemas, no ejercicios
+          desc: Enunciados con contexto, donde primero hay que decidir qué modelar
+        - label: '03'
+          title: Resolución guiada
+          desc: Se resuelve en el pizarrón hasta que la mitad del grupo va sola
+        - label: '04'
+          title: Trabajo autónomo
+          desc: Lo que se entrega fuera de clase se revisa, no se recolecta
+        - label: '05'
+          title: Investigación
+          desc: Dos entregas del semestre piden documentación oficial, no tutoriales
+
+  - stat:
+      eyebrow: Carga de la materia
+      value: 128 h
+      text: son las horas totales del curso, 72 con docente y 56 de trabajo independiente.
+      note: Repartidas por semana, alrededor de tres horas y media de clase y otras tres y media por tu cuenta. La materia da ocho créditos.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Herramientas y reglas
+      lede: Lo que necesitas funcionando hoy, y las cuatro reglas que no se negocian.
+      block: 2
+
+  - code:
+      eyebrow: Verificación
+      title: Si esto corre, tu entorno está listo
+      filename: verifica.py
+      lang: python
+      source: |
+        import sys
+        import sqlite3
+
+        print(sys.version)
+        print("sqlite:", sqlite3.sqlite_version)
+      annotations:
+        - label: Línea 1
+          text: Necesitas Python 3.12 o superior; abajo de esa versión hay sintaxis del curso que no compila
+        - label: Línea 2
+          text: sqlite3 viene con Python y lo usaremos en la unidad de bases de datos
+        - label: Si falla
+          text: Si trabajas local, reinstala desde python.org marcando "Add Python to PATH". En el navegador ya viene listo.
+          accent: true
+
+  - tiers:
+      eyebrow: Herramientas
+      title: Con qué vamos a trabajar
+      items:
+        - key: '01'
+          title: Python 3.12+
+          desc: Lenguaje de referencia de la academia. El syllabus es independiente del lenguaje, la evaluación no.
+        - key: '02'
+          title: VS Code, Colab o PyCharm
+          desc: Cualquiera sirve. Colab corre en el navegador y JetBrains da licencia educativa gratuita con tu correo institucional.
+        - key: '03'
+          title: Blackboard
+          desc: Único canal de entrega. Lo que llegue por correo no se califica.
+        - key: '04'
+          title: GitHub Education
+          desc: Repositorio del curso con los códigos de cada sesión y acceso a Copilot
+
+  - pitfalls:
+      eyebrow: Entregas
+      title: Cuatro formas de perder puntos sin equivocarse en el código
+      items:
+        - label: Regla 01
+          title: Entregar por correo
+          desc: Blackboard es el único canal válido. Un correo con el .py adjunto cuenta como no entregado.
+        - label: Regla 02
+          title: Subir capturas de pantalla
+          desc: Se entrega el archivo fuente. Una imagen del código no se puede ejecutar ni revisar.
+        - label: Regla 03
+          title: Código que no corre
+          desc: Un proyecto que no ejecuta tiene 30 % como calificación máxima, por buena que sea la idea.
+        - label: Regla 04
+          title: Entregar tarde
+          desc: La plataforma cierra a la hora indicada. No hay prórroga individual.
+
+  - method:
+      eyebrow: Código de Honor
+      title: Qué cuenta como trabajo propio
+      statement: Puedes usar IA para entender un concepto. No puedes entregar código que no sabes explicar.
+      points:
+        - label: Permitido
+          text: Consultar documentación, preguntar en clase, usar IA para que te explique un error o un concepto
+        - label: No permitido
+          text: Entregar código generado que no puedas leer línea por línea si te lo pido en el escritorio
+        - label: Cómo se detecta
+          text: En la revisión te pido que expliques una función a tu elección. Si no la sostienes, la entrega es cero.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Diagnóstico y cierre
+      lede: Un ejercicio corto para saber de dónde partimos, y qué llevas para la próxima sesión.
+      block: 3
+
+  - quiz:
+      eyebrow: Diagnóstico
+      question: ¿Cuántas veces se imprime "hola" al ejecutar este programa?
+      filename: diagnostico.py
+      lang: python
+      source: |
+        contador = 0
+
+        while contador < 3:
+            print("hola")
+            contador += 1
+
+        for i in range(2):
+            print("hola")
+      options:
+        - Tres veces
+        - Cinco veces
+        - Seis veces
+        - Nunca, el programa entra en bucle infinito
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cinco veces, y la traza lo demuestra
+      headers: [Paso, Instrucción, contador, i, Impresiones]
+      rows:
+        - ['1', "contador = 0", '0', '–', '0']
+        - ['2', "while 0 < 3", '1', '–', '1']
+        - ['3', "while 1 < 3", '2', '–', '2']
+        - ['4', "while 2 < 3", '3', '–', '3']
+        - ['5', "for i in range(2)", '3', "0, 1", '5']
+      verdict: El while corre tres veces y el for dos. Sumadas, cinco impresiones.
+
+  - quote:
+      text: Programar es el arte de decirle a otra persona lo que quieres que la computadora haga.
+      author: Donald Knuth
+      source: Literate Programming, 1984
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El paradigma reparte responsabilidades
+          desc: Programar orientado a objetos es decidir qué cosa del problema se hace cargo de qué
+        - title: La calificación se juega en cinco fechas
+          desc: Semanas 8, 13, 16 y 17, más las tareas que van corriendo todo el semestre
+        - title: Lo que no puedas explicar, no lo entregues
+          desc: La revisión oral es parte de la evaluación, no una amenaza
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Corre verifica.py en la herramienta que prefieras, entrega el archivo con la captura de su salida, y agrega un párrafo sobre qué esperas de la materia.
+      meta:
+        - [Entrega, Antes de la sesión 2]
+        - [Formato, Blackboard · .py + PNG + PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Entorno", "60 %", "La salida muestra Python 3.12 o superior y la versión de sqlite3"]
+        - ["Párrafo", "30 %", "Dice algo concreto sobre la materia, no 'aprender mucho'"]
+        - ["Formato", "10 %", "Los tres archivos con tu nombre, en la actividad correcta"]
+
+  - takeaways:
+      eyebrow: Recursos
+      title: Dónde buscar cuando te atores
+      items:
+        - title: Documentación oficial de Python
+          desc: docs.python.org · la referencia que vamos a citar en clase, en ese orden
+        - title: Biblioteca digital UP
+          desc: Matthes (2023) y Deitel (2019) están disponibles sin costo con tu cuenta
+        - title: Repositorio del curso
+          desc: github.com/davidowa/learning-hub · el código de cada sesión, comentado
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, paradigmas de programación y qué vino a resolver la POO.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

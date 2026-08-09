@@ -1,0 +1,350 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 7
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 07 · Unit 2 · Goal Seek and chaining
+      title: Information Analysis and Processing
+      subtitle: Turning the question around from a macro, bounding what the macro touches, and chaining several without collisions.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Empresariales]
+        - [Session, 7 of 17]
+      notes: |
+        Ninety minutes. Thirty on Goal Seek, twenty on bounding, the rest chaining.
+
+        Everything on the number slides came out of running the model. A 500,000 loan at
+        twelve per cent annual, a hundred and twenty periods. Goal Seek leaves the payment
+        at 6,997.36 and the closing balance at minus 5.56 times ten to the minus ten,
+        which is not zero. That detail is the one to use: Goal Seek does not solve the
+        equation, it gropes for the answer, which is why it has a residue and a hundred
+        iteration ceiling.
+
+        The big-number slide says 339,683, the interest on that same loan. That is
+        sixty-eight per cent of what was borrowed, and for a business school room it
+        lands harder than any argument about programming.
+
+        The code comes from
+        docs/en/courses/vba-course/00 - Record Macro - Amortization Table/RecordMacroAmortization.bas
+        and from 09 - Subs and Functions/SubsFunctions.bas for the chaining.
+
+        A warning about that module 00 file: it uses the range names of the workbook in
+        the same folder, the ones with double underscores. Copied into a fresh workbook
+        without creating those names, it stops with error 1004.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Goal Seek
+          desc: Asking backwards, and how exact the answer that comes back actually is
+        - title: Bounded automation
+          desc: Switching off what the macro does not need, and back on whatever happens
+        - title: Chaining macros
+          desc: One that directs and several that work, instead of one of two hundred lines
+        - title: Your turn
+          desc: A scenario from your own area, solved backwards from a button
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Turn a question around with Goal Seek
+          sub: Fix the result you want and let Excel find the input that produces it
+        - head: Write Goal Seek from a macro
+          sub: Its two named arguments, and which cell it gets invoked on
+        - head: Recognise that the answer is approximate
+          sub: There is a residue and an iteration ceiling, and both can be adjusted
+        - head: Bound what the macro touches
+          sub: Screen and calculation off while it runs, and back on when it ends
+        - head: Chain procedures with Call
+          sub: A short master macro calling several that each do one thing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, data types, variables, operations and data-entry forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, Goal Seek and bounded automation
+          state: now
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Excel through macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Goal Seek
+      lede: >-
+        The sheet works out the result from the inputs. Here it goes the other way: you
+        fix the result and Excel hunts for the input.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The question gets turned around
+      lead: >-
+        The amortization table answers how much debt is left if the monthly payment is
+        seven thousand. The question actually asked in a meeting is the opposite one: how
+        big does the payment have to be for the debt to reach zero. Solving that by hand
+        takes algebra. Goal Seek gropes for it, and from a macro it fits on one line.
+      panel:
+        label: Worth settling straight away
+        title: Goal Seek does not solve, it gropes
+        note: >-
+          It tries a value, sees how far off it landed, corrects and tries again. That is
+          why it leaves a residue and has a ceiling on attempts, and why sometimes it
+          finds nothing.
+      steps:
+        - text: You point at the result cell
+        - text: You say what you want it to equal
+        - text: You say which cell it may move
+          loop: ↺ and Excel keeps trying until it is close enough
+
+  - code:
+      eyebrow: Block 01 · Module 00
+      title: The whole of Goal Seek, on one line
+      filename: RecordMacroAmortization.bas
+      lang: vba
+      source: |
+        Sub FindMonthlyPayment()
+            Range("ClosingBalance").GoalSeek _
+                Goal:=0, _
+                ChangingCell:=Range("MonthlyPayment")
+        End Sub
+      annotations:
+        - label: Which cell
+          text: It is invoked on the result cell, the one holding the formula you want to force.
+        - label: Goal
+          text: The value you want it to reach. Zero here, because we want the debt cleared.
+        - label: ChangingCell
+          text: The cell Excel is allowed to move. It has to hold a value, never a formula.
+        - label: Risk
+          text: If ChangingCell holds a formula, it stops with error 1004. It can only move typed-in values.
+          accent: true
+
+  - stat:
+      eyebrow: The module 00 loan
+      value: '339,683'
+      text: >-
+        is the interest on a 500,000 loan over ten years, at twelve per cent a year.
+      note: >-
+        That is sixty-eight per cent of what was borrowed, and it appears in no cell of
+        the table until somebody works it out. Verified with Goal Seek in Excel 16.0, on
+        the hundred and twenty period model.
+
+  - code_output:
+      eyebrow: Block 01 · Verified
+      title: Before and after running the macro
+      filename: RecordMacroAmortization.bas
+      lang: vba
+      output_label: The sheet
+      source: |
+        Range("ClosingBalance").GoalSeek _
+            Goal:=0, ChangingCell:=Range("MonthlyPayment")
+      output: |
+        Payment before: 1,000.00
+        Closing:        1,330,994.06
+
+        Payment after:  6,997.36
+        Closing:        -5.56E-10
+
+  - table:
+      eyebrow: Block 01 · The limits
+      title: Why the closing balance is not exactly zero
+      headers: [What governs it, Default, What it means]
+      rows:
+        - ["Application.MaxChange", "0.001", "How near the goal it settles for"]
+        - ["Application.MaxIterations", "100", "How many tries before it gives up"]
+        - ["Residue obtained", "-5.56E-10", "The debt left over, in hundredths of a billionth"]
+        - ["Payment over 60 periods", "10,967.85", "Same model, half the term"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Bounded automation
+      lede: A macro that recalculates the sheet on every line and redraws the screen at every step does the work twice. Bounding it means switching off what is not needed.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Off and back on
+      title: Whatever you switch off has to go back on
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Sub ProcessDatabase()
+            Application.ScreenUpdating = False
+            Application.Calculation = xlCalculationManual
+
+            Call CleanDatabase
+            Call FormatAmounts
+            Call FindMonthlyPayment
+
+            Application.Calculation = xlCalculationAutomatic
+            Application.ScreenUpdating = True
+        End Sub
+      annotations:
+        - label: ScreenUpdating
+          text: Stops redrawing while it runs. That is where nearly all the perceived slowness comes from.
+        - label: Calculation
+          text: On manual the sheet does not recalculate on every write. xlCalculationManual is -4135.
+        - label: The order
+          text: They go back on in the reverse order they went off, and always before the macro ends.
+        - label: Risk
+          text: If the macro stops halfway, Excel is left on manual and the user never finds out.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways to leave Excel broken
+      items:
+        - label: Error 01
+          title: Not switching calculation back on
+          desc: Excel stays on manual, formulas stop updating, and the user concludes their data is wrong.
+        - label: Error 02
+          title: Freezing the screen and leaving it
+          desc: The sheet stays frozen even as the user types. It looks like Excel has hung.
+        - label: Error 03
+          title: Goal seeking onto a formula
+          desc: ChangingCell has to hold a typed value. If it holds a formula, it stops with error 1004.
+        - label: Error 04
+          title: Trusting the exact zero
+          desc: Goal Seek leaves a residue. Comparing its result against exact zero is almost never true.
+
+  - divider:
+      eyebrow: Block 03
+      title: Chaining macros
+      lede: A macro of two hundred lines cannot be tested in pieces. Five of forty, called by a sixth, can.
+      block: 3
+
+  - diagram:
+      eyebrow: Block 03 · The shape
+      title: One that directs, several that work
+      blocks:
+        - label: Master
+          title: It only calls
+          desc: Six lines, all of them Call
+          dark: true
+        - label: Clean
+          title: One task
+          desc: Strips duplicates and spaces
+        - label: Format
+          title: Another task
+          desc: Currency and percentage
+        - label: Seek
+          title: The third
+          desc: Goal Seek on the balance
+      note: >-
+        Each one can be run on its own from the macro dialog to test it, and the master
+        reads like a table of contents for what the workbook does. It is the same shape
+        the week 16 project will ask for.
+
+  - code:
+      eyebrow: Block 03 · Call
+      title: How one macro calls another
+      filename: SubsFunctions.bas
+      lang: vba
+      source: |
+        Sub SubFunctions()
+            Call SetupFieldsInWorksheet
+            Call ReadInputParameters
+
+            Dim result As Double
+            result = Summation(5, 3)
+            Range("A1").Value = result
+        End Sub
+
+        Function Summation(n1 As Double, n2 As Double) As Double
+            Summation = n1 + n2
+        End Function
+      annotations:
+        - label: Call
+          text: It is optional. It works without it, and with it you see at a glance that control leaves here.
+        - label: The difference
+          text: A Sub does something. A Function returns a value, which is why it can sit on the right of an equals sign.
+        - label: The arguments
+          text: A Function takes parentheses with values inside. A Sub called with Call takes none.
+        - label: Risk
+          text: Two procedures with the same name in different modules leave Call with no way to choose.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick check
+      question: What happens if the macro stops on the middle line?
+      filename: Module1.bas
+      lang: vba
+      source: |
+        Application.Calculation = xlCalculationManual
+
+        Call ProcessEverything
+
+        Application.Calculation = xlCalculationAutomatic
+      options:
+        - "Excel goes back to automatic on its own when the macro ends"
+        - "Excel stays on manual and formulas stop updating"
+        - "The workbook is lost and has to be reopened"
+        - "Nothing happens, manual calculation is the same thing"
+
+  - lab:
+      eyebrow: Lab
+      title: A backwards scenario from your own area
+      brief: Take a model from your area where a result depends on an input, for instance the break-even point as a function of price, or the monthly payment as a function of term. Write a macro that fixes the wanted result and finds the input with Goal Seek, and put it behind a button.
+      blocks:
+        - label: Submission
+          text: The .xlsm with the button and the module exported, on Blackboard
+        - label: Constraint
+          text: The master macro may not exceed ten lines. Everything else goes in separate procedures.
+        - label: The test
+          text: Change one input in the model and run it again. The result has to move on its own.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Goal Seek gropes, it does not solve
+          desc: It leaves a residue and has a ceiling of a hundred attempts, so comparing its result against exact zero fails
+        - title: Whatever you switch off you must switch on
+          desc: A macro that dies halfway leaves Excel on manual calculation, and the user finds out long after closing it
+        - title: A master macro is a table of contents
+          desc: Five procedures of forty lines can each be tested alone, one of two hundred cannot
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        On the amortization table, write a master macro that bounds screen and
+        calculation, calls three procedures, and finishes by finding the monthly payment
+        with Goal Seek. Report the residue it left.
+      meta:
+        - [Due, Before week 8]
+        - [Format, Blackboard · .bas and .xlsm]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Goal Seek", "40 %", "It finds the payment and the residue is reported rather than assumed to be zero"]
+        - ["Bounded", "30 %", "Screen and calculation are switched off and back on"]
+        - ["Chained", "30 %", "The master only calls, and each procedure does one thing"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the first decision: If, the comparison operators and the logical
+        ones, plus the first midterm.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

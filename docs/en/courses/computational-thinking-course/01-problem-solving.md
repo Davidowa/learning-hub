@@ -1,6 +1,6 @@
 # 01 · Problem Solving
 
-<img src="../assets/problem-solving.png" alt="Worried → thinking → eureka doodle sequence" width="100%">
+<img src="../assets/problem-solving.jpg" alt="Worried → thinking → eureka doodle sequence" width="100%">
 
 Every program is born from a **problem**. Before touching a keyboard, a skilled programmer walks through a mental process to **understand** that problem and **design** a solution. This module teaches that process.
 

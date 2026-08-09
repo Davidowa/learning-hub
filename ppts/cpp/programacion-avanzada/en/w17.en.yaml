@@ -1,0 +1,220 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 17
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 17 · Closing · Integrating project
+      title: Advanced Programming
+      subtitle: What is handed in, how it is marked, and what the final presentation should look like.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 17 of 17]
+      notes: |
+        Deliberately short. The deck runs to sixteen slides because the hour goes on
+        questions about the project, and that is the right use for it.
+
+        There is no new material. Everything said here is already in the syllabus, and the
+        session exists so nobody arrives at the final exam date with a logistics question.
+
+        Worth having the syllabus open while teaching it, and asking them to open it too.
+        The rubric on the slide is literal, not a summary.
+
+        If there is time left, the best use of it is reviewing two or three teams' projects
+        live, with the group watching. Design mistakes are easier to see in somebody else's
+        code.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks and the questions
+      cards:
+        - title: What is handed in
+          desc: Code, document and presentation, on the final exam date
+        - title: How it is marked
+          desc: The four rubric criteria and what each one looks at
+        - title: Expensive mistakes
+          desc: The commonest ways to lose marks without the program failing
+        - title: Questions
+          desc: The rest of the session, with your own project open
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: List the three deliverables
+          sub: And know which of them goes to Blackboard and which is presented live
+        - head: Apply the rubric to your own project
+          sub: Working out where you stand before somebody else marks it
+        - head: Prepare the presentation
+          sub: Knowing what gets asked and why the mark is individual
+        - head: Close the technical loose ends
+          sub: Memory leaks, unchecked files and validations that are still missing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: done
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: done
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: What is handed in
+      lede: Three things, one date, and one of the three is not uploaded anywhere.
+      block: 1
+
+  - tiers:
+      eyebrow: Deliverables
+      title: Three, and none of them replaces the others
+      items:
+        - key: '01'
+          title: The code
+          desc: Compressed, without the x64 folder or executables. One team member uploads it.
+        - key: '02'
+          title: The document
+          desc: PDF or DOCX. It explains the problem, the design, and the decisions you made.
+        - key: '03'
+          title: The oral presentation
+          desc: Live, on the final exam date. It is not uploaded, it is defended.
+
+  - table:
+      eyebrow: Marking
+      title: The rubric, exactly as the syllabus has it
+      headers: ["Criterion", "Weight", "What it looks at"]
+      rows:
+        - ["Correctness", "40 %", "That it does what it promises and survives bad input"]
+        - ["Design", "25 %", "Classes with one responsibility, short functions"]
+        - ["Efficiency", "20 %", "Memory use, and no leaks"]
+        - ["Documentation", "15 %", "The document and the presentation"]
+      notes: |
+        The first criterion carries almost half and has two parts. A program that works with
+        the sample data and breaks on an empty input is not finished.
+
+        The third is the most neglected. Every new needs its delete, every file opened gets
+        checked and closed. That is weeks 12 and 13.
+
+  - method:
+      eyebrow: Criterion
+      title: How to review your own project before handing it in
+      statement: The cheapest way to raise the mark is to run the rubric yourselves, with the project open, a week before the date.
+      points:
+        - label: For correctness
+          text: Feed it empty, negative and wrong-typed input. If it breaks, an if is missing there.
+        - label: For design
+          text: Find the longest function. If it does not fit on one screen, it is usually two functions.
+        - label: For memory
+          text: Count the news against the deletes. If the numbers differ, there is a leak to find.
+
+  - divider:
+      eyebrow: Block 02
+      title: The presentation
+      lede: It is marked individually even though the work was done as a team. That is not a threat, it is how credit gets shared fairly.
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: The work is a team's and the mark is each person's
+      lead: >-
+        Every member has to be able to explain any part of the project, not only the part
+        they wrote. If somebody cannot defend a design decision in their own program, that
+        shows in their mark and not in anybody else's.
+      panel:
+        label: The same thing said in week 0
+        title: Reading code aloud is not explaining it
+        note: >-
+          The question will not be what this line does. It will be why it is written that
+          way, and what would have happened the other way.
+      steps:
+        - text: Everyone knows the whole project
+        - text: Each defends what they hand in
+        - text: The mark is individual
+          loop: ↺ share out the explaining, not only the work
+
+  - steps:
+      eyebrow: The final session
+      title: What the presentation looks like, in five steps
+      items:
+        - label: Step 01
+          title: The problem
+          desc: What the program solves, in one sentence, without mentioning code yet
+        - label: Step 02
+          title: The design
+          desc: Which classes exist and why those. The document's diagram goes here.
+        - label: Step 03
+          title: The demonstration
+          desc: The program running, including one deliberately bad input
+        - label: Step 04
+          title: One decision
+          desc: Something that sat between two options, and why you picked the one you picked
+        - label: Step 05
+          title: Questions
+          desc: Aimed at any member, about any part of the project
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to lose marks with a working program
+      items:
+        - label: Error 01
+          title: Submitting with the x64 folder
+          desc: The antivirus blocks the archive, the submission cannot be opened, and the date has passed
+        - label: Error 02
+          title: All the code in main
+          desc: The program can work perfectly and still lose a quarter of the mark
+        - label: Error 03
+          title: Memory leaks
+          desc: They do not show while running, they show on reading the code, and that is twenty per cent
+        - label: Error 04
+          title: A member who only knows their part
+          desc: The mark is individual, so it costs that person and not the team
+
+  - table:
+      eyebrow: Dates
+      title: What is left of the term
+      headers: ["What", "When", "Where"]
+      rows:
+        - ["Third partial", "Tuesday 17 November", "In class"]
+        - ["Code and document", "Final exam date", "Blackboard"]
+        - ["Oral presentation", "Final exam date", "In class"]
+      notes: |
+        The partial dates come from the grading table in the syllabus, which is the document
+        the students hold. The final exam date is set by the faculty calendar.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Correctness is almost half
+          desc: And not just that it works, that it survives an input nobody expected
+        - title: Memory is worth twenty per cent
+          desc: Count the news against the deletes before handing in, it is the cheapest thing to fix
+        - title: The mark is individual
+          desc: Everyone has to be able to explain any part, not only the one they wrote
+
+  - closing:
+      title: Thank you
+      subtitle: Seventeen weeks, fourteen units, and a language that is forty years old and still changing.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

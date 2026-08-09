@@ -1,0 +1,352 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 12
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 12 · Topic 5 · Files
+      title: Object-Oriented Programming
+      subtitle: Data stops living in memory. Paths that work on any system, the block that closes on its own, and the text format everybody already uses.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 12 of 17]
+      notes: |
+        First session where the program leaves a trace after it ends, and that changes how
+        you debug it. Open the project folder in the file explorer next to the editor so the
+        group watches the files appear while the code runs.
+
+        The examples come from docs/en/courses/python-course/03 - Paths and Files/7th Module:
+        pathlib is Code029.py, the open modes and read_text are Code030.py, reading line by
+        line is Code31.py, the CSV work is Code32.py, and the error handling around files
+        is Code035.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Paths
+          desc: Path instead of strings, and why the difference matters
+        - title: Open and close
+          desc: The life of an open file and the block that closes it for you
+        - title: Modes
+          desc: Read, write, append, and which of them wipes what was there
+        - title: Text and CSV
+          desc: Line by line, and the first row as the header
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Build paths with pathlib
+          sub: Join folders with the slash and read the name, the suffix and the parent folder
+        - head: Use the with block
+          sub: And explain what breaks when a file gets opened without one
+        - head: Pick an open mode
+          sub: Knowing which one creates the file, which keeps it, and which empties it on opening
+        - head: Read and write a CSV
+          sub: With DictReader and DictWriter, without depending on the order of the columns
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Paths and files
+      lede: Before reading anything you have to know where it is. And a path typed by hand works on your machine and fails on the next one.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a path is, and why it is not a string
+      lead: >-
+        A path points at a place on disk. Written as a string it depends on the system, on
+        which way the slashes lean and on whether somebody remembered to escape the
+        characters. Path treats it as what it is, a route with parts, and builds it correctly.
+      panel:
+        label: What has to stay separate
+        title: The path, the file and the contents
+        note: >-
+          The path exists even when the file does not. The file exists even when it is empty.
+          And the contents appear when somebody reads them, not when the path is built.
+      steps:
+        - text: Build the path
+        - text: Check it or try to open it
+        - text: Read or write inside the with
+          loop: ↺ the with closes on the way out, error or no error
+
+  - code:
+      eyebrow: Python
+      title: A path that works on Windows and on Linux
+      filename: paths.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        path = Path("data") / "students.csv"
+
+        print(path)
+        print(path.name)
+        print(path.suffix)
+        print(path.parent)
+        print(path.exists())
+      annotations:
+        - label: Line 3
+          text: The slash joins pieces of a path, and Python inserts whatever separator the system uses
+        - label: Why not a string
+          text: 'Writing "data\students.csv" smuggles in an escape character nobody asked for'
+        - label: Risk
+          text: exists() answers for right now. A second later the answer can already be wrong.
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The parts of a path, already separated
+      filename: paths.py
+      lang: python
+      output_label: Output
+      source: |
+        print(path)
+        print(path.name)
+        print(path.suffix)
+        print(path.parent)
+      output: |
+        data\students.csv
+        students.csv
+        .csv
+        data
+
+  - divider:
+      eyebrow: Block 02
+      title: Opening, processing and closing
+      lede: An open file is a borrowed resource. Everything borrowed gets returned, and it is better if it returns itself.
+      block: 2
+
+  - figure:
+      eyebrow: Diagnosis
+      title: The life of an open file
+      image: img/en/file-lifecycle.png
+      caption: The with does the first step and the last one. All that is left to write is the middle.
+      alt: Three boxes with open, read and close, with a bracket underneath labelled with spanning all three
+
+  - code:
+      eyebrow: The with block
+      title: Opening a file without having to remember to close it
+      filename: reading.py
+      lang: python
+      source: |
+        from pathlib import Path
+
+        path = Path("data") / "grades.txt"
+
+        with open(path, "r", encoding="utf-8") as handle:
+            contents = handle.read()
+
+        print(len(contents))
+      annotations:
+        - label: Line 5
+          text: The with closes the file on the way out of the block, even if something raises inside
+        - label: The encoding
+          text: Without it Python uses the system default, and accents break on the next machine along
+        - label: Risk
+          text: read() pulls the whole file into memory, and with a large file that does not fit
+          accent: true
+
+  - table:
+      eyebrow: Vocabulary
+      title: The five open modes
+      headers: ["Mode", "What it does", "If it is missing", "If it exists"]
+      rows:
+        - ["r", "Reads", "FileNotFoundError", "Leaves it untouched"]
+        - ["w", "Writes", "Creates it", "Empties it on opening"]
+        - ["a", "Appends", "Creates it", "Keeps it and adds"]
+        - ["x", "Creates and writes", "Creates it", "FileExistsError"]
+        - ["rb wb", "Raw bytes", "Same as r and w", "Same as r and w"]
+
+  - code:
+      eyebrow: Processing
+      title: Walking a file without loading all of it
+      filename: processing.py
+      lang: python
+      source: |
+        with open(path, encoding="utf-8") as handle:
+            for line in handle:
+                print(line.strip())
+
+        with open(path, "a", encoding="utf-8") as handle:
+            handle.write("Sofia,8.0\n")
+      annotations:
+        - label: Line 2
+          text: Walking the file hands over one line at a time, so a one-gigabyte file fits just the same
+        - label: Line 3
+          text: strip removes the line break that every line carries on its tail
+        - label: Line 6
+          text: Writing does not add the line break for you. Forget it and everything runs together.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors with files
+      items:
+        - label: Error 01
+          title: Opening without with
+          desc: If something fails between open and close, the file stays open and the writes never reach disk
+        - label: Error 02
+          title: Paths with hand-typed slashes
+          desc: 'The string "data\notes.txt" carries a hidden line break. Use Path.'
+        - label: Error 03
+          title: read() on a large file
+          desc: It loads everything at once, while walking line by line costs the same and always fits
+        - label: Error 04
+          title: Forgetting the encoding
+          desc: The file reads fine on your machine and with broken accents on the marker's
+
+  - divider:
+      eyebrow: Block 03
+      title: Text files and CSV
+      lede: The simplest format that a person can still read, and the one Excel opens without asking any questions.
+      block: 3
+
+  - code:
+      eyebrow: Reading a CSV
+      title: The first row as the header
+      filename: read_csv.py
+      lang: python
+      source: |
+        import csv
+        from pathlib import Path
+
+        path = Path("data") / "students.csv"
+
+        with open(path, newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                print(row["name"], row["grade"])
+      annotations:
+        - label: Line 7
+          text: DictReader takes the first row as the header and hands each row over as a dictionary
+        - label: The empty newline
+          text: The csv module asks for it. Without it, Windows grows blank rows between records.
+        - label: With csv.reader
+          text: Each row arrives as a list, and you have to remember which column each index is
+
+  - code_output:
+      eyebrow: Writing a CSV
+      title: From dictionaries to a file, header included
+      filename: write_csv.py
+      lang: python
+      output_label: students.csv
+      source: |
+        rows = [
+            {"name": "Ana", "grade": 9.1},
+            {"name": "Luis", "grade": 6.4},
+        ]
+
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            fields = ["name", "grade"]
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+      output: |
+        name,grade
+        Ana,9.1
+        Luis,6.4
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: modes.py
+      lang: python
+      source: |
+        path = Path("grades.txt")
+
+        with open(path, "w") as f:
+            f.write("first")
+
+        with open(path, "w") as f:
+            f.write("second")
+
+        print(path.read_text())
+      options:
+        - 'firstsecond'
+        - 'second, because w empties the file on opening'
+        - 'first, because the file already existed'
+        - 'FileExistsError on the second open'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints second, and the emptying happens before any writing
+      headers: ["Step", "Statement", "Contents on disk"]
+      rows:
+        - ["1", 'open(path, "w")', "left empty"]
+        - ["2", 'f.write("first")', "first"]
+        - ["3", 'open(path, "w")', "left empty again"]
+        - ["4", 'f.write("second")', "second"]
+      verdict: Mode w empties the file the moment it opens it, before a single character gets written. To keep what was there you have to open with a.
+
+  - lab:
+      eyebrow: Lab
+      title: A report that comes out of a file, in pairs
+      brief: You get a CSV with a hundred grades. Write a program that reads it, works out the average per subject and saves a report into a new text file.
+      blocks:
+        - label: Constraints
+          text: Every access goes through with, every path through Path and every open with an encoding
+        - label: Deliverable
+          text: The .py file and the generated report, both in the same submission
+        - label: Criterion
+          text: The program finishes cleanly even when the CSV is empty or missing a column
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Path builds routes that work anywhere
+          desc: Joining with the slash sidesteps the separator problem and the hidden escape character
+        - title: The with closes even on a crash
+          desc: Opening by hand forces you to write a finally, and that finally is the one people forget
+        - title: Mode w wipes on opening
+          desc: Not on writing. The file is empty the instant it opens, even if you never write anything.
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Extend the lab report so it also writes a CSV with one row per subject, and add handling for an input file that is not there.
+      meta:
+        - [Due, Before session 13]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Reading", "35 %", "The CSV is read with DictReader and the program assumes no column order"]
+        - ["Writing", "35 %", "The report and the CSV are produced with with and an explicit encoding"]
+        - ["Robustness", "30 %", "A missing or empty file produces a clear message rather than a traceback"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, binary files, sequential and random access, plus the second midterm.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

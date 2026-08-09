@@ -1,0 +1,379 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 9
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 09 · Topic 4 · Advanced functions and structures
+      title: Object-Oriented Programming
+      subtitle: The application unit starts here. Functions you can test alone, code split into one-job pieces, and functions that call themselves.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 9 of 17]
+      notes: |
+        First session after the midterm, so the room arrives drained. Recursion is the block
+        that costs: trace the stack on the board before showing the slide, and only then
+        put the drawing up.
+
+        The examples come from docs/en/courses/python-course: default parameters are from
+        01 - Basics/3rd Module/Code010.py, variable scope from Code011.py, and lambda with
+        enumerate from 01 - Basics/4th Module/Code017.py. The Towers of Hanoi come from
+        07 - Activities/Projects/02 - Hanoi Tower/hanoi_tower.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Parameters
+          desc: Defaults, by name, and however many arrive
+        - title: Functions as values
+          desc: lambda, key, and functions handed to other functions
+        - title: Modularity
+          desc: One function, one job, and a name that says the whole of it
+        - title: Recursion
+          desc: The base case, the call that closes in, and the stack that grows
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Design a function signature
+          sub: What goes positional, what carries a default, and what is better demanded by name
+        - head: Pass a function as an argument
+          sub: Write a sort criterion with lambda and know when to give it a name of its own
+        - head: Split a script into functions
+          sub: Separate what computes from what prints, so the first part can be tested
+        - head: Write a recursive function
+          sub: With a base case that cuts and a call that closes in on it every step
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: done
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Advanced functions
+      lede: No new syntax at all. The advanced part is deciding what goes in, what comes out, and what is left changed on the way through.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What makes a function advanced
+      lead: >-
+        Three decisions, not three keywords. What it takes, what it returns, and what it
+        leaves modified outside itself. A function that returns a value and touches nothing
+        else can be tested on its own, and that is the whole of the difference.
+      panel:
+        label: The distinction that sorts everything
+        title: Returning is not the same as printing
+        note: >-
+          A function that prints is useful once, at the console. One that returns is useful in
+          a report, in an automated test and inside another function, without changing a line.
+      steps:
+        - text: Decide what it takes
+        - text: Decide what it returns
+        - text: Check what else it changes
+          loop: ↺ if it touches globals, it can no longer be tested alone
+
+  - code:
+      eyebrow: Parameters
+      title: Three ways to call the same function
+      filename: register.py
+      lang: python
+      source: |
+        def register(name: str, degree: str = "Undeclared",
+                     active: bool = True) -> None:
+            print(name, degree, active)
+
+
+        register("Ana")
+        register("Luis", "Mechatronics")
+        register("Sofia", active=False)
+      annotations:
+        - label: Line 1
+          text: Parameters with defaults go last. The other way round, Python reports a SyntaxError.
+        - label: Line 8
+          text: Passing active by name lets degree keep the default it was given
+        - label: Risk
+          text: Never use a list as a default. It is created once and every call writes into the same one.
+          accent: true
+
+  - code:
+      eyebrow: Functions as values
+      title: A function handed to another function
+      filename: sorting.py
+      lang: python
+      source: |
+        products = [
+            ("Keyboard", 890),
+            ("Monitor", 4200),
+            ("Mouse", 350),
+        ]
+
+        products.sort(key=lambda p: p[1])
+        print(products[0])
+      annotations:
+        - label: Line 7
+          text: key takes a function saying which value to sort by, and lambda writes it in one line
+        - label: Without key
+          text: sort compares the whole tuples, so it would order by name instead of by price
+        - label: When not to use lambda
+          text: If the expression does not sit comfortably on one line, name it with def and gain clarity
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The index and the item, in the same loop
+      filename: enumerating.py
+      lang: python
+      output_label: Output
+      source: |
+        fruits = ["apple", "banana", "cherry"]
+
+        for i, fruit in enumerate(fruits, start=1):
+            print(i, fruit)
+      output: |
+        1 apple
+        2 banana
+        3 cherry
+
+  - table:
+      eyebrow: Vocabulary
+      title: The five ways of taking a value
+      headers: ["Form", "How it looks", "What it takes"]
+      rows:
+        - ["Positional", "def f(a, b)", "In the order they are passed"]
+        - ["With a default", "def f(a, b=0)", "The value given, or the default"]
+        - ["By name", "f(b=3)", "Regardless of position"]
+        - ["Variable", "def f(*args)", "A tuple with whatever arrives"]
+        - ["Named variable", "def f(**kw)", "A dictionary with the named ones"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Modularity
+      lede: Splitting the work into pieces that can be read, tested and changed separately.
+      block: 2
+
+  - method:
+      eyebrow: Design criterion
+      title: One function, one reason to change
+      statement: A function does one thing and its name describes the whole of it. If the name needs a conjunction, there were two functions in there.
+      points:
+        - label: The name test
+          text: If you cannot name it without saying the word and, it is still doing too much
+        - label: The size test
+          text: If it does not fit on one screen without scrolling, something in there wants out
+        - label: The return test
+          text: A function that returns a value and also prints is holding down two jobs
+
+  - compare:
+      eyebrow: Refactor
+      title: Separating what computes from what prints
+      before:
+        label: All together
+        file: report.py
+        code: |
+          def process(students):
+              total = 0
+              for s in students:
+                  total += s["grade"]
+              print(total / len(students))
+      after:
+        label: Separated
+        file: report.py
+        code: |
+          def average(grades):
+              return sum(grades) / len(grades)
+
+
+          grades = [s["grade"] for s in students]
+          print(average(grades))
+      note: The first one computes and prints, so it only ever works at the console. The second returns a number, and that number can be tested, written to a file or fed into another calculation.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four errors that come straight out of today's lab
+      items:
+        - label: Error 01
+          title: A mutable default value
+          desc: 'def f(items=[]) creates the list once, at definition time, and every call writes into it'
+        - label: Error 02
+          title: global as a way to talk between functions
+          desc: Anyone can change the variable and no traceback tells you which of them did
+        - label: Error 03
+          title: A two-hundred-line function
+          desc: Every nested if hides a function with a name of its own, waiting to be pulled out
+        - label: Error 04
+          title: Unnamed booleans at the call site
+          desc: 'f(True, False) says nothing on reading. f(active=True, send=False) explains itself.'
+
+  - divider:
+      eyebrow: Block 03
+      title: Recursion
+      lede: A function calling itself with a smaller problem, until the problem is small enough that there is nothing left to do.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnosis
+      title: What a recursion looks like from the inside
+      image: img/en/recursion.png
+      caption: The stack goes down to the base case and the result is assembled on the way back, one frame at a time.
+      alt: Four call frames stacked downwards to the base case, with the value each returns on the way up
+
+  - code:
+      eyebrow: Python
+      title: The two pieces every recursion needs
+      filename: factorial.py
+      lang: python
+      source: |
+        def factorial(n: int) -> int:
+            if n <= 1:
+                return 1
+            return n * factorial(n - 1)
+
+
+        print(factorial(4))
+      annotations:
+        - label: Line 2
+          text: The base case cuts the chain. Without it the function calls itself forever.
+        - label: Line 4
+          text: Every call solves a smaller problem and waits on the result of the next one
+        - label: Risk
+          text: Python stops at a thousand calls with RecursionError, so the mistake shows up late
+          accent: true
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The result, and the ceiling the interpreter imposes
+      filename: try_factorial.py
+      lang: python
+      output_label: Output
+      source: |
+        import sys
+
+        print(factorial(4))
+        print(factorial(1))
+        print(sys.getrecursionlimit())
+      output: |
+        24
+        1
+        1000
+
+  - code:
+      eyebrow: A real case
+      title: The Towers of Hanoi, in six lines
+      filename: hanoi.py
+      lang: python
+      source: |
+        def hanoi(n, source, target, spare):
+            if n == 0:
+                return
+            hanoi(n - 1, source, spare, target)
+            print(f"Disk {n}: {source} -> {target}")
+            hanoi(n - 1, spare, target, source)
+
+
+        hanoi(3, "A", "C", "B")
+      annotations:
+        - label: Line 2
+          text: The base case is zero disks, and there is absolutely nothing to move there
+        - label: Lines 4 and 6
+          text: Two calls per level. A problem of n disks turns into two problems of n minus one.
+        - label: What it costs
+          text: Three disks are seven moves, ten disks are one thousand and twenty-three, and off it goes
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: countdown.py
+      lang: python
+      source: |
+        def total(n):
+            if n == 0:
+                return 0
+            return n + total(n - 1)
+
+        print(total(3))
+      options:
+        - '6, because it adds 3 plus 2 plus 1 plus 0'
+        - '3, because only the first call counts'
+        - '0, because the base case returns zero'
+        - 'RecursionError, the function has no base case'
+
+  - trace:
+      eyebrow: Answer
+      title: It prints 6, and the stack explains in what order
+      headers: ["Call", "n", "What it returns", "Open frames"]
+      rows:
+        - ["total(3)", "3", "3 + total(2)", "1"]
+        - ["total(2)", "2", "2 + total(1)", "2"]
+        - ["total(1)", "1", "1 + total(0)", "3"]
+        - ["total(0)", "0", "0", "4"]
+      verdict: 'The stack grows down to the base case and empties adding on the way back: first 0, then 1, then 3, and finally 6.'
+
+  - lab:
+      eyebrow: Lab
+      title: Splitting a script into functions, in pairs
+      brief: You get a fifty-line script that reads grades, works out the average, counts passes and prints a report, all in one run. Split it into functions with one job each.
+      blocks:
+        - label: Constraints
+          text: No function goes past fifteen lines, and none computes and prints at the same time
+        - label: Deliverable
+          text: A .py file with the functions and a main block calling them in order
+        - label: Criterion
+          text: Every function name can be said in full without using the word and
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A mutable default is shared
+          desc: It is created once, at definition time, and every call afterwards writes into the same list
+        - title: One function, one reason to change
+          desc: If the name needs a conjunction, there are two functions in there waiting to be separated
+        - title: Every recursion needs a base case
+          desc: And a call that closes in on it, or the interpreter stops at a thousand with RecursionError
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write the same operation twice, once with recursion and once with a loop, and compare in one paragraph which reads better and which survives larger inputs.
+      meta:
+        - [Due, Before session 10]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Functions", "40 %", "Every function does one thing and its name says so without conjunctions"]
+        - ["Recursion", "30 %", "The base case exists and the call closes in on it at every step"]
+        - ["Comparison", "30 %", "The paragraph names a concrete case where each version wins"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, collections, dynamic arrays and processing data in memory.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

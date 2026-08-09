@@ -1,0 +1,295 @@
+meta:
+  course: Programación Avanzada
+  code: COM103
+  lang: es
+  language: cpp
+  week: 15
+  footer: PROGRAMACIÓN AVANZADA · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 15 · Unidad 13 · Manejo de excepciones
+      title: Programación Avanzada
+      subtitle: Qué hacer cuando una función no puede cumplir lo que prometió, y quién se hace cargo del problema.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM103 · Semestre 2]
+        - [Sesión, 15 de 17]
+      notes: |
+        El tema conecta con casi todo lo anterior. La división entre cero de la semana 2, el
+        archivo que no abre de la semana 13 y el índice fuera de rango de la semana 10 son
+        los tres ejemplos naturales, y el grupo ya los vivió.
+
+        Conviene ser honesto sobre el alcance: las excepciones no reemplazan la validación.
+        Un dato que el programa puede revisar se revisa con un if. La excepción es para lo
+        que la función no puede resolver por su cuenta.
+
+        Las salidas se midieron en Visual Studio Community 2026.
+
+        Lectura: Malik, octava edición, capítulo 14. Los documentos del curso citan el 16,
+        correcto en la quinta edición.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Cuatro bloques de trabajo
+      cards:
+        - title: El problema
+          desc: Por qué devolver un código de error deja de servir
+        - title: Los tres bloques
+          desc: try, throw y catch, y en qué orden ocurren
+        - title: Los tipos
+          desc: Atrapar por tipo y usar los de la biblioteca estándar
+        - title: Cuándo no
+          desc: Lo que se resuelve con un if y no merece una excepción
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Lanzar y atrapar una excepción
+          sub: Con throw dentro de la función y catch en quien está en condiciones de decidir
+        - head: Elegir el tipo que lanza
+          sub: Usando los de la cabecera stdexcept en lugar de lanzar cadenas sueltas
+        - head: Atrapar por referencia constante
+          sub: Y explicar por qué atrapar por valor corta la parte derivada del objeto
+        - head: Decidir cuándo no usarlas
+          sub: Distinguiendo un dato inválido esperado de una condición que la función no puede resolver
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Fundamentos
+          desc: Entorno, depuración, tipos, operadores y cadenas
+          state: done
+        - label: 02 · Semanas 4–6
+          title: Funciones y clases
+          desc: Modularidad, paso por referencia y abstracción de datos
+          state: done
+        - label: 03 · Semanas 7–13
+          title: Control, datos y memoria
+          desc: Ciclos, herencia, arreglos, registros, punteros y archivos
+          state: done
+        - label: 04 · Semanas 14–17
+          title: Genéricos y cierre
+          desc: Plantillas, excepciones, recursión, concurrencia y proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El problema que resuelven
+      lede: Una función que falla tiene que avisarle a alguien. El problema es que quien puede detectar la falla casi nunca es quien puede arreglarla.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Detectar y decidir son trabajos de dos personas distintas
+      lead: >-
+        La función que abre el archivo sabe que no abrió, y no sabe si eso significa avisar
+        al usuario, usar un valor por omisión o terminar el programa. Quien sí lo sabe está
+        varios niveles más arriba y no tiene forma de enterarse.
+      panel:
+        label: Lo que se hacía antes
+        title: Devolver un código que nadie revisa
+        note: >-
+          Un valor de retorno especial funciona si todos lo revisan. En la práctica se
+          ignora, y el programa sigue con un dato que nunca llegó.
+      steps:
+        - text: La función detecta y lanza
+        - text: El error sube solo
+        - text: Lo atrapa quien puede decidir
+          loop: ↺ y nadie de en medio tiene que escribir nada
+
+  - divider:
+      eyebrow: Bloque 02
+      title: try, throw y catch
+      lede: Tres palabras, y un orden que no es el de lectura.
+      block: 2
+
+  - code_output:
+      eyebrow: Los tres bloques
+      title: Lanzar, subir y atrapar
+      filename: excepcion.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        try
+        {
+            throw std::runtime_error("division entre cero");
+        }
+        catch (const std::runtime_error& e)
+        {
+            std::cout << e.what() << "\n";
+        }
+      output: |
+        division entre cero
+      notes: |
+        throw termina la función de inmediato. No se ejecuta ni una línea más del bloque
+        try, se salta directamente al catch que corresponda.
+
+        what devuelve el texto que se le dio al construir la excepción. Es una función de la
+        clase base, así que todas las de la biblioteca estándar la tienen.
+
+        Necesita la cabecera stdexcept. Este ejemplo lanza y atrapa en el mismo lugar por
+        claridad; el caso real es que el throw viva dentro de una función y el catch varios
+        niveles arriba.
+
+  - code_output:
+      eyebrow: De la biblioteca
+      title: Una excepción que ya venía escrita
+      filename: rango.cpp
+      lang: cpp
+      output_label: Salida
+      source: |
+        std::string s = "abc";
+
+        try
+        {
+            std::cout << s.at(10) << "\n";
+        }
+        catch (const std::out_of_range& e)
+        {
+            std::cout << "fuera de rango\n";
+        }
+      output: |
+        fuera de rango
+      notes: |
+        at es la función de la semana 10 que sí revisa el índice. Aquí se ve qué hace cuando
+        el índice no existe: lanza out_of_range, que es una clase de la biblioteca estándar.
+
+        Con corchetes no habría pasado nada de esto. Se habría leído memoria ajena en
+        silencio, como el arreglo de la semana 10. Esa es la diferencia que se paga con un
+        poco de tiempo de ejecución.
+
+  - table:
+      eyebrow: Los tipos
+      title: Cuatro excepciones de la biblioteca que vale la pena conocer
+      headers: ["Tipo", "Se lanza cuando", "Viene de"]
+      rows:
+        - ["out_of_range", "Un índice no existe", "at, en string y vector"]
+        - ["invalid_argument", "Un argumento no sirve", "stoi con texto no numérico"]
+        - ["runtime_error", "Falla algo al ejecutar", "Uso general"]
+        - ["bad_alloc", "No hay memoria", "new, cuando no puede reservar"]
+      notes: |
+        Las cuatro descienden de std::exception, así que un catch de esa clase base los
+        atrapa todos. Sirve como red al final, y no sustituye a los específicos.
+
+        Lanzar tipos propios es válido y común en proyectos grandes. Para este curso basta
+        con los de la biblioteca, que ya traen el mensaje y la jerarquía resuelta.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cuándo no usarlas
+      lede: Una excepción es cara y ruidosa. La mitad de los casos donde se usan se resolvían con un if.
+      block: 3
+
+  - method:
+      eyebrow: Criterio
+      title: La pregunta es si la función puede resolverlo sola
+      statement: Si el dato malo es algo que la función puede revisar y manejar en su lugar, va un if. La excepción es para lo que la función detecta y no está en condiciones de decidir.
+      points:
+        - label: Va un if
+          text: El usuario escribió una letra donde iba un número. Se revisa, se avisa y se vuelve a pedir.
+        - label: Va una excepción
+          text: El constructor recibió un denominador cero. No puede construir el objeto ni puede decidir qué hacer.
+        - label: La señal de alarma
+          text: Un try alrededor de todo el programa con un catch que solo imprime, casi siempre esconde un if que faltaba
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro tropiezos de esta unidad
+      items:
+        - label: Error 01
+          title: Atrapar por valor
+          desc: Copia el objeto y corta su parte derivada, así que se pierde el tipo real de la excepción
+        - label: Error 02
+          title: Un catch vacío
+          desc: Atrapa el problema y lo tira. El programa sigue como si nada y el error se vuelve invisible.
+        - label: Error 03
+          title: Lanzar desde un destructor
+          desc: Si ya se estaba propagando otra excepción, el programa termina de golpe
+        - label: Error 04
+          title: Usarlas para el flujo normal
+          desc: Un dato inválido esperado no es excepcional, y manejarlo así cuesta y se lee peor
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime el programa?
+      filename: orden.cpp
+      lang: cpp
+      source: |
+        try
+        {
+            std::cout << "A";
+            throw std::runtime_error("x");
+            std::cout << "B";
+        }
+        catch (const std::exception& e)
+        {
+            std::cout << "C";
+        }
+        std::cout << "D\n";
+      options:
+        - 'ACD, porque la B nunca se ejecuta'
+        - 'ABCD, porque el throw no interrumpe el bloque'
+        - 'ACBD, porque vuelve al try después del catch'
+        - 'AC, porque el programa termina al atrapar'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El throw abandona el bloque y no vuelve
+      headers: ["Paso", "Qué ocurre", "Imprime"]
+      rows:
+        - ["1", "Se ejecuta la primera línea", "A"]
+        - ["2", "throw abandona el try", "–"]
+        - ["3", "La línea de la B se salta", "–"]
+        - ["4", "Entra al catch", "C"]
+        - ["5", "Sigue después del catch", "D"]
+      verdict: El catch atrapó una runtime_error con un catch de exception, porque runtime_error desciende de ella. Y después del catch el programa continúa con normalidad, que es todo el punto.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La fracción que se niega a existir mal, en parejas
+      brief: Tomen la clase Fraccion de la semana pasada y hagan que su constructor lance invalid_argument si el denominador es cero. Agreguen un main que intente crear una fracción inválida y la atrape, sin que el programa termine.
+      blocks:
+        - label: Restricción
+          text: El catch va en main, no dentro de la clase. La clase detecta, main decide.
+        - label: Entregable
+          text: Un .cpp con la clase, el throw en el constructor y el catch por referencia constante
+        - label: Criterio
+          text: Que después de atrapar el error el programa siga corriendo y muestre las fracciones válidas
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Detectar y decidir se separan
+          desc: La función lanza porque sabe que falló, y atrapa quien sabe qué hacer al respecto
+        - title: Se atrapa por referencia constante
+          desc: Atrapar por valor copia y corta la parte derivada, y se pierde el tipo real
+        - title: No sustituyen a la validación
+          desc: Lo que un if puede revisar y manejar no es excepcional y no merece una excepción
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La fracción robusta y la lectura protegida
+      brief: Terminen el laboratorio y vuelvan al programa de archivos de la semana 13 para que lance una excepción cuando el archivo no abra, atrapándola en main con un mensaje claro.
+      meta:
+        - [Entrega, Antes de la sesión 16]
+        - [Formato, Blackboard · .zip sin la carpeta x64]
+        - [Peso, Los ejercicios promediados suman un punto al periodo]
+      rubric:
+        - ["Lanzamiento", "Requisito", "El constructor rechaza el denominador cero con invalid_argument"]
+        - ["Captura", "Requisito", "El catch es por referencia constante y el programa continúa"]
+        - ["Criterio", "Requisito", "La validación de entrada del usuario sigue siendo un if, no una excepción"]
+
+  - closing:
+      title: Preguntas
+      subtitle: La próxima sesión, recursión e hilos, y el tercer parcial. Una función que se llama a sí misma y dos cosas ocurriendo a la vez.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Entregas, Blackboard]

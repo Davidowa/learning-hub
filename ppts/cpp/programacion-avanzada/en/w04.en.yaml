@@ -1,0 +1,364 @@
+meta:
+  course: Advanced Programming
+  code: COM103
+  lang: en
+  language: cpp
+  week: 4
+  footer: ADVANCED PROGRAMMING · COM103 · C++
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 04 · Unit 3 · User-defined functions I
+      title: Advanced Programming
+      subtitle: Splitting a program into named pieces that can be tested on their own and fixed without touching the rest.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM103 · Term 2]
+        - [Session, 4 of 17]
+      notes: |
+        First session of the functions and classes block. Until today everything fitted
+        inside main, and from here on that stops being a reasonable option.
+
+        There are still no control structures. They are unit 6 and arrive in week 7, so
+        every function today has a single route from top to bottom with no branches. That is
+        a real constraint when writing the examples, and it is also the reason today's
+        functions can be understood completely in one reading.
+
+        The block of compiler errors on the missing prototype slide is real and trimmed. The
+        full run on Visual Studio Community 2026 produced thirty-three lines from one
+        misplaced identifier.
+
+        Reading: Malik, eighth edition, chapter 6.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four blocks of work
+      cards:
+        - title: Why split
+          desc: What a program gains when it stops being one single piece
+        - title: Anatomy
+          desc: Prototype, definition and call, and what each one is for
+        - title: The first error
+          desc: What happens when the compiler meets a name it does not know
+        - title: What stays local
+          desc: Where a variable declared inside a function lives, and for how long
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Break a problem into functions
+          sub: Each with one clear responsibility, and a name that announces it
+        - head: Write a prototype and a definition
+          sub: And explain why the compiler needs the first before it has seen the second
+        - head: Tell a parameter from an argument
+          sub: What the function declares it takes against the concrete value it is called with
+        - head: Recognise the scope of a local variable
+          sub: And predict the error you get from using it outside the function that declared it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Foundations
+          desc: Environment, debugging, types, operators and strings
+          state: done
+        - label: 02 · Weeks 4–6
+          title: Functions and classes
+          desc: Modularity, passing by reference and data abstraction
+          state: now
+        - label: 03 · Weeks 7–13
+          title: Control, data and memory
+          desc: Loops, inheritance, arrays, records, pointers and files
+          state: todo
+        - label: 04 · Weeks 14–17
+          title: Generics and closing
+          desc: Templates, exceptions, recursion, concurrency and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Breaking it down
+      lede: A three-hundred-line program inside main is not badly written because it is long. It is badly written because no part of it can be tested without running all of it.
+      block: 1
+
+  - figure:
+      eyebrow: Decomposition
+      title: Separating a problem into pieces that solve themselves
+      image: img/en/ct-01.png
+      caption: Each piece can be tested, corrected and explained on its own. That is what the extra line it costs to declare it buys you.
+      alt: A tangle of thread pulled apart into several tidy coils
+
+  - concept:
+      eyebrow: Key concept
+      title: A function is a promise with three parts
+      lead: >-
+        A function promises that if you hand it certain values, of certain types, it gives
+        back a result of a known type. Whoever calls it does not need to know how. That is
+        the whole idea, and it is the same one that holds up the rest of the course.
+      panel:
+        label: The test of a good function
+        title: It explains in a single sentence
+        note: >-
+          If saying what it does needs an "and also", it is probably two functions that got
+          stuck together, and separating them now is cheaper than later.
+      steps:
+        - text: It takes typed values
+        - text: It does one thing
+        - text: It gives back a result
+          loop: ↺ whoever uses it needs only those three lines
+
+  - divider:
+      eyebrow: Block 02
+      title: Prototype, definition and call
+      lede: Three different things written in three different places, and the compiler insists they appear in a certain order.
+      block: 2
+
+  - code:
+      eyebrow: Anatomy
+      title: A complete function, and the three times its name appears
+      filename: average.cpp
+      lang: cpp
+      source: |
+        double average(int a, int b, int c);
+
+        int main()
+        {
+            double p = average(78, 85, 91);
+            std::cout << p << "\n";
+            return 0;
+        }
+
+        double average(int a, int b, int c)
+        {
+            double total = a + b + c;
+            return total / 3;
+        }
+      annotations:
+        - label: Line 1
+          text: The prototype announces the function. It ends in a semicolon and has no body.
+        - label: Line 5
+          text: The call. 78, 85 and 91 are the arguments, this time's concrete values.
+        - label: Line 10
+          text: The definition. Here a, b and c are the parameters, the names the body uses.
+        - label: Line 12
+          text: total is a double, so the division on the next line is already between reals
+      notes: |
+        The #include for iostream goes above and was left off the slide so the whole
+        function would fit on one card.
+
+        Worth pointing out that the name average appears three times and means something
+        different each time: on line 1 it is an announcement, on line 5 an order, and on
+        line 10 the recipe. Students who confuse prototype with definition almost always do
+        so because nobody separated those three jobs for them.
+
+  - code_output:
+      eyebrow: Running it
+      title: And what it hands back
+      filename: average.cpp
+      lang: cpp
+      output_label: Output
+      source: |
+        double p = average(78, 85, 91);
+
+        std::cout << p << "\n";
+      output: |
+        84.6667
+      notes: |
+        84.6667 and not 84. The difference from last week is the line declaring total as a
+        double before the division, so by the time the division happens there is already a
+        real involved.
+
+        cout prints six significant digits by default. The stored value carries more
+        precision than what is shown, and controlling how many appear is a unit 11 topic.
+
+  - table:
+      eyebrow: The parts
+      title: Seven pieces, and where each one shows up
+      headers: ["Piece", "What it is", "In the example"]
+      rows:
+        - ["Return type", "The type of what it hands back", "double"]
+        - ["Name", "What you call it by", "average"]
+        - ["Parameters", "What it declares it takes", "int a, int b, int c"]
+        - ["Arguments", "This call's actual values", "78, 85, 91"]
+        - ["Body", "What it does, inside braces", "total / 3"]
+        - ["return", "Hands back and ends the function", "return total / 3;"]
+        - ["Prototype", "The announcement, above main", "double average(int, int, int);"]
+      notes: |
+        In the prototype the parameter names are optional, the types alone are enough.
+        Writing them the same as in the definition costs nothing and tells whoever reads the
+        header what each slot means.
+
+  - code_output:
+      eyebrow: When the announcement is missing
+      title: An identifier the compiler does not know yet
+      filename: noproto.cpp
+      lang: cpp
+      output_label: Error list, trimmed
+      source: |
+        int main()
+        {
+            std::cout << twice(4);
+            return 0;
+        }
+
+        int twice(int n)
+        {
+            return n * 2;
+        }
+      output: |
+        error C3861: 'twice':
+        identifier not found
+        error C2593: 'operator <<'
+        is ambiguous
+        ... 29 more lines of notes
+      notes: |
+        The compiler reads top to bottom. By the time it reaches line 3 it has not seen the
+        definition of twice, so it does not know what it returns or whether it exists.
+
+        The first error is the only one that matters. The second appears because, not
+        knowing what twice returns, it cannot pick which version of << to use, and behind it
+        come twenty-nine notes listing every one it tried. The real run gave thirty-three
+        lines.
+
+        There are two fixes and both are valid: put the prototype above main, or move the
+        whole definition up. The first scales better once several functions call each other.
+
+  - method:
+      eyebrow: Criterion
+      title: The cause is at the top, the consequences are below
+      statement: A compile error in C++ rarely arrives alone. The discipline that saves the most time in this course is fixing only the first one and rebuilding before reading the second.
+      points:
+        - label: Why it happens
+          text: The compiler carries on with incomplete information, and every bad assumption generates new errors
+        - label: What to do
+          text: Double click the first line of the list, fix that, rebuild. Nothing else.
+        - label: When to doubt it
+          text: If the first error points into a standard library file, the problem is almost always in your call
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Defining the function after main
+          desc: With no prototype above, one unknown name produces thirty lines of errors
+        - label: Error 02
+          title: Prototype without a semicolon
+          desc: The compiler reads it as the start of a definition and complains about the next line
+        - label: Error 03
+          title: Using a local outside its function
+          desc: You get C2065, undeclared identifier, even with the variable written three lines up
+        - label: Error 04
+          title: Expecting the original to change
+          desc: The parameter is a copy. Modifying it inside does not touch the caller's variable.
+
+  - divider:
+      eyebrow: Block 03
+      title: What is local stays inside
+      lede: A variable declared inside a function is born when the function starts and disappears when it ends.
+      block: 3
+
+  - code:
+      eyebrow: Copies
+      title: The parameter receives a copy of the value
+      filename: copy.cpp
+      lang: cpp
+      source: |
+        int doubled(int n)
+        {
+            n = n * 2;
+            return n;
+        }
+
+        int main()
+        {
+            int original = 10;
+            int result = doubled(original);
+            std::cout << original << " " << result << "\n";
+            return 0;
+        }
+      annotations:
+        - label: No prototype
+          text: The definition sits above main, which is the other valid fix for the previous slide
+        - label: Line 3
+          text: n changes to 20 inside the function, and n only exists inside the function
+        - label: Line 10
+          text: It is handed the value of original, not original. The function receives a loose 10.
+        - label: Risk
+          text: This looks like a limitation and for now it is. Changing it is called passing by reference, and it is next session.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the program on the previous slide print?
+      filename: copy.cpp
+      lang: cpp
+      source: |
+        int original = 10;
+        int result = doubled(original);
+
+        std::cout << original << " " << result << "\n";
+      options:
+        - '10 20, because the function worked on a copy'
+        - '20 20, because n and original are the same variable'
+        - '10 10, because the return was never stored anywhere'
+        - '20 10, because the change applies on leaving the function'
+
+  - trace:
+      eyebrow: Answer
+      title: Two separate variables that hold the same value for an instant
+      headers: ["Step", "What happens", "original", "n"]
+      rows:
+        - ["1", "int original = 10", "10", "does not exist"]
+        - ["2", "doubled(original) is called", "10", "10, freshly copied"]
+        - ["3", "n = n * 2", "10", "20"]
+        - ["4", "return n, result receives 20", "10", "stops existing"]
+      verdict: original never changed because the function never had it. It received a copy, in a different place, destroyed when the call ends.
+
+  - lab:
+      eyebrow: Lab
+      title: A report card split into functions, in pairs
+      brief: Take the report card program from week 2, which today sits entirely inside main, and separate it into three functions with prototypes, one that computes the average, one that turns it into a percentage, and one that assembles the final line of text.
+      blocks:
+        - label: Constraint
+          text: No if and no loops, which arrive in week 7. One route through each function.
+        - label: Deliverable
+          text: A .cpp with the three prototypes above, main in the middle and the three definitions below
+        - label: Criterion
+          text: That main reads straight through and no function needs an "and also" to explain itself
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The prototype comes before the use
+          desc: The compiler reads top to bottom, and a name it does not know generates errors in a chain
+        - title: The parameter is a copy
+          desc: Modifying it inside the function does not touch the variable the call was made with
+        - title: Fix only the first error
+          desc: The ones below are usually consequences, and they disappear on the next build
+
+  - homework:
+      eyebrow: For the next session
+      title: The modular report card and one function tested apart
+      brief: Finish the split into functions from the lab and add a fourth function that takes the total and the number of subjects and returns the average, so it can be called with made-up values to check that it gives the right answer.
+      meta:
+        - [Due, Before session 5]
+        - [Format, Blackboard · .zip without the x64 folder]
+        - [Weight, Exercises are averaged into one point of the term grade]
+      rubric:
+        - ["Decomposition", "Required", "Four functions, each with one responsibility"]
+        - ["Prototypes", "Required", "Declared above main and with the right types"]
+        - ["Checking", "Required", "Three test calls with known values and their expected result"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, functions that return nothing, parameters passed by reference, and several functions sharing one name.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]

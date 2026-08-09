@@ -1,0 +1,389 @@
+meta:
+  course: Object-Oriented Programming
+  code: COM102
+  lang: en
+  language: python
+  week: 7
+  footer: OBJECT-ORIENTED PROGRAMMING · COM102 · PYTHON
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 07 · Topic 3 · Core properties
+      title: Object-Oriented Programming
+      subtitle: What a class gets from its parent, how far the tree should be allowed to grow, and the underscore that opens the door to its children.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM102 · Term 2]
+        - [Session, 7 of 17]
+      notes: |
+        There is exactly one way to ruin this session: teaching inheritance as the default
+        answer. Half the room will use it to avoid repeating code, which is the wrong
+        reason. The lab exists to correct that.
+
+        The examples come from docs/en/courses/python-course/02 - POO/6th Module:
+        Animal, Fish and the protected attribute are from Code020.py; the multiple
+        inheritance with Manager is Code021.py; the Stream hierarchy is Code026.py;
+        isinstance and issubclass come from Code025.py.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Four working blocks
+      cards:
+        - title: Inheritance
+          desc: What is inherited, what is not, and what super is for
+        - title: Protected
+          desc: The underscore that subclasses are allowed to read
+        - title: Hierarchy
+          desc: How many levels a tree holds before it gets in the way
+        - title: Inherit or compose
+          desc: The test that decides between the two, said out loud
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of this session you will be able to…
+      items:
+        - head: Write a subclass
+          sub: Declare the parent in parentheses and chain the constructors with super
+        - head: Choose between protected and private
+          sub: One underscore reaches the children, two get renamed and stay with the parent
+        - head: Cap how deep the tree goes
+          sub: Why two levels are enough and what breaks from the third one on
+        - head: Apply the is-a test
+          sub: And rewrite with composition any relationship that does not pass it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the semester
+      phases:
+        - label: 01 · Weeks 1–2
+          title: Orientation and paradigms
+          desc: Why OOP exists and what it was built to fix
+          state: done
+        - label: 02 · Weeks 3–5
+          title: Building blocks
+          desc: Classes, objects, attributes, methods and properties
+          state: done
+        - label: 03 · Weeks 6–8
+          title: Core properties
+          desc: Encapsulation, inheritance, polymorphism and interfaces
+          state: now
+        - label: 04 · Weeks 9–17
+          title: Application
+          desc: Collections, files, graphical interfaces and data
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Inheritance
+      lede: A class that starts where another one stopped. The syntax is the easy part; deciding when it is justified is not.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What a subclass receives
+      lead: >-
+        Everything public and protected from the parent, without writing a line. The
+        attributes only exist if the parent constructor actually ran, and that does not
+        happen by itself. You call it with super, and forgetting is the unit's classic bug.
+      panel:
+        label: The sentence that decides
+        title: The relationship has to be about type, not use
+        note: >-
+          If "a fish is an animal" sounds true with no buts, inheritance holds. If the
+          sentence needs explaining before it works, what you had was composition.
+      steps:
+        - text: The parent holds what is shared
+        - text: super chains the constructors
+        - text: The child adds what changes
+          loop: ↺ if the child overrides nearly everything, they shared nothing
+
+  - code:
+      eyebrow: Python
+      title: A class that starts where another one stops
+      filename: animals.py
+      lang: python
+      source: |
+        class Animal:
+            def __init__(self, name: str) -> None:
+                self.name = name
+
+            def eat(self) -> None:
+                print(f"{self.name} eats")
+
+
+        class Fish(Animal):
+            def __init__(self, name: str) -> None:
+                super().__init__(name)
+
+            def swim(self) -> None:
+                print("swims")
+      annotations:
+        - label: Line 9
+          text: The parentheses declare the inheritance. Fish already has name and eat for free.
+        - label: Line 11
+          text: super().__init__ runs the parent constructor. Without that line, name never exists.
+        - label: Line 14
+          text: swim lives only in Fish. The parent does not know it, and pushing it up would be a mistake.
+
+  - code_output:
+      eyebrow: Demonstration
+      title: What was inherited and what is its own
+      filename: use_fish.py
+      lang: python
+      output_label: Output
+      source: |
+        f = Fish("shark")
+
+        f.eat()
+        f.swim()
+        print(isinstance(f, Animal))
+        print(issubclass(Fish, object))
+      output: |
+        shark eats
+        swims
+        True
+        True
+
+  - divider:
+      eyebrow: Block 02
+      title: The protected modifier
+      lede: One underscore opens the door to the children. Two close it even for them, and that surprises almost everybody.
+      block: 2
+
+  - code:
+      eyebrow: Inheritance and visibility
+      title: What the child can reach and what it cannot
+      filename: protected.py
+      lang: python
+      source: |
+        class Person:
+            def __init__(self, name: str) -> None:
+                self._name = name
+                self.__key = "secret"
+
+
+        class Student(Person):
+            def introduce(self) -> None:
+                print(self._name)
+                print(self.__key)
+
+
+        Student("Ana").introduce()
+      annotations:
+        - label: Line 3
+          text: One underscore means this is mine and my children's. The subclass reads it without trouble.
+        - label: Line 4
+          text: Two underscores rename the attribute to _Person__key, and the child cannot find it
+        - label: Risk
+          text: The last line raises AttributeError. Private does not travel down under that name.
+          accent: true
+
+  - table:
+      eyebrow: Reach
+      title: Who sees what, and from where
+      headers: ["Member", "In the class", "In the subclass", "From outside"]
+      rows:
+        - ["age", "Yes", "Yes", "Yes"]
+        - ["_name", "Yes", "Yes", "Yes, though you should not"]
+        - ["__key", "Yes", "No", "Not under that name"]
+        - ["eat()", "Yes", "Yes", "Yes"]
+        - ["__say()", "Yes", "No", "Not under that name"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Class hierarchies
+      lede: Every extra level is one more file to open before a single call makes sense. The tree is paid for in reading.
+      block: 3
+
+  - figure:
+      eyebrow: Diagnosis
+      title: A tree that holds and a chain that does not
+      image: img/en/hierarchy.png
+      caption: Three siblings hanging off one parent read at a glance. Three chained levels inherit things you never wanted.
+      alt: On the left a two-level tree with three children, on the right a chain of three classes with an inherited method crossed out
+
+  - code:
+      eyebrow: A healthy hierarchy
+      title: A parent with the common part, children with what changes
+      filename: streams.py
+      lang: python
+      source: |
+        class Stream:
+            def __init__(self) -> None:
+                self.opened = False
+
+            def open(self) -> None:
+                if self.opened:
+                    raise RuntimeError("Already open")
+                self.opened = True
+
+
+        class FileStream(Stream):
+            def read(self) -> None:
+                print("Reading from a file")
+      annotations:
+        - label: Line 1
+          text: Stream holds what they all share, which is the open state and how you open and close it
+        - label: Line 11
+          text: FileStream only adds what genuinely differs from one child to the next, which is read
+        - label: The rule
+          text: NetworkStream and MemoryStream hang off the same parent. None of them hangs off a sibling.
+
+  - code:
+      eyebrow: Multiple inheritance
+      title: When two parents bring the same method
+      filename: manager.py
+      lang: python
+      source: |
+        class Person:
+            def greet(self) -> None:
+                print("Hello, I am a person")
+
+
+        class Employee:
+            def greet(self) -> None:
+                print("Hello, I am an employee")
+
+
+        class Manager(Employee, Person):
+            pass
+
+
+        Manager().greet()
+      annotations:
+        - label: Line 11
+          text: The order of the list decides. Employee comes first, so its greet is the one that runs.
+        - label: How to check
+          text: Manager.__mro__ prints the exact order in which Python looks for each method
+        - label: Risk
+          text: Flip that order in a refactor and the program changes behaviour without a single error
+          accent: true
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four ways to overuse inheritance
+      items:
+        - label: Error 01
+          title: A four-level tree
+          desc: Understanding one call means climbing four files, and somewhere up there the chicken learns to fly
+        - label: Error 02
+          title: Inheriting to avoid repeating code
+          desc: If the relationship is not about type, an instance taken as a parameter does exactly the same job
+        - label: Error 03
+          title: Forgetting super().__init__
+          desc: The object is born without the parent's attributes and breaks on the first line that uses one
+        - label: Error 04
+          title: Two parents with the same method
+          desc: The order of the list decides in silence, and nobody rereads it when making a change
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: forgotten.py
+      lang: python
+      source: |
+        class Animal:
+            def __init__(self, name):
+                self.name = name
+
+
+        class Dog(Animal):
+            def __init__(self, name, breed):
+                self.breed = breed
+
+
+        d = Dog("Bobby", "collie")
+        print(d.name)
+      options:
+        - 'Bobby, because the parent stored the name'
+        - 'AttributeError, the object has no name'
+        - 'None, because name was never assigned'
+        - 'TypeError, Dog is missing arguments'
+
+  - trace:
+      eyebrow: Answer
+      title: AttributeError, and the trace points at the missing line
+      headers: ["Step", "Statement", "d.breed", "d.name"]
+      rows:
+        - ["1", "Dog('Bobby', 'collie')", "–", "–"]
+        - ["2", "Dog.__init__ runs", "collie", "does not exist"]
+        - ["3", "Animal.__init__", "never called", "does not exist"]
+        - ["4", "print(d.name)", "collie", "AttributeError"]
+      verdict: Defining __init__ in the subclass replaces the parent's. Unless you call it with super().__init__(name), the parent constructor never runs at all.
+
+  - method:
+      eyebrow: Design criterion
+      title: The is-a test
+      statement: Inherit only if you can say out loud that the child is a particular case of the parent, and the sentence sounds true with no explanation attached.
+      points:
+        - label: Passes
+          text: A fish is an animal. An open file is a stream of data.
+        - label: Fails
+          text: A cart is a list. An order is a customer. A chicken is a bird that flies.
+        - label: If it fails
+          text: The class takes the other one as a parameter and delegates to it. That is composition.
+
+  - code_output:
+      eyebrow: Checking
+      title: Every class inherits from object, even unwritten
+      filename: check.py
+      lang: python
+      output_label: Output
+      source: |
+        dog = Dog("Bobby", "collie")
+
+        print(isinstance(dog, Dog))
+        print(isinstance(dog, Animal))
+        print(isinstance(dog, object))
+        print(issubclass(Animal, Dog))
+      output: |
+        True
+        True
+        True
+        False
+
+  - lab:
+      eyebrow: Lab
+      title: Sorting out a hierarchy, in pairs
+      brief: You get seven loose classes from a transport system and arrange them into a hierarchy at most two levels deep, justifying each parent in one line.
+      blocks:
+        - label: Constraints
+          text: Two levels at most, no multiple inheritance, and every repeated method moves up to the parent
+        - label: Deliverable
+          text: The hierarchy diagram and a .py file with the classes and their chained constructors
+        - label: Criterion
+          text: Every relationship passes the is-a test, said out loud to the other person in the pair
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The child gets everything but the private
+          desc: Public and protected are inherited; the double underscore is renamed and stays upstairs
+        - title: Two levels are almost always enough
+          desc: Every extra level is one more file to open before a single call makes any sense
+        - title: Inheriting commits, composing borrows
+          desc: If the is-a sentence does not sound true, the relationship was about use and a parameter solves it
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Take two classes from your lab hierarchy and rewrite them with composition. Compare in one paragraph what was gained and what was lost.
+      meta:
+        - [Due, Before session 8]
+        - [Format, Blackboard · .py + PDF]
+        - [Weight, Part of the 20 % homework block]
+      rubric:
+        - ["Hierarchy", "40 %", "No branch goes past two levels and every parent justifies its existence"]
+        - ["Composition", "30 %", "The two rewritten classes take their parts and delegate the work"]
+        - ["Comparison", "30 %", "The paragraph names one concrete cost of each of the two versions"]
+
+  - closing:
+      title: Questions
+      subtitle: Next session, polymorphism, overriding, abstract classes and interfaces, plus the first midterm.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Submissions, Blackboard]
