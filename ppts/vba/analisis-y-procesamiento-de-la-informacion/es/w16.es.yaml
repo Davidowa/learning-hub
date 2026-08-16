@@ -1,0 +1,443 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 16
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Escuela de Empresariales · 2026
+      unit: Semana 16 · Unidades 4 y 6 · Dinámicas, errores y protección
+      title: Análisis y Procesamiento de la Información
+      subtitle: >-
+        Lo último que le falta a tu proyecto para poder entregarlo: que resuma solo, que no
+        se caiga y que nadie lo desarme.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 16 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Tablas dinámicas
+          desc: Crearlas desde código, y las dos razones por las que muestran datos viejos
+        - title: Manejo de errores
+          desc: La diferencia entre atender un error y taparlo, que no es la misma cosa
+        - title: Proteger y entregar
+          desc: Cerrar la hoja sin cerrarle la puerta a tus macros, y la entrega del proyecto
+        - title: Tu turno
+          desc: El proyecto completo, con su resumen, su red y su candado
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión vas a poder…
+      items:
+        - head: Crear una tabla dinámica desde macro
+          sub: Con PivotCaches, los campos de fila y los de dato, y refrescarla cuando toca
+        - head: Atender un error de verdad
+          sub: Con On Error GoTo y una etiqueta, en vez de taparlo con Resume Next
+        - head: Leer Err sin que te engañe
+          sub: Sabiendo que se queda puesto y que la línea siguiente carga con la culpa
+        - head: Proteger sin romper tus macros
+          sub: Con UserInterfaceOnly, y reponerlo al abrir porque no se guarda
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde vamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programar en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Editar macros grabadas
+          desc: Rangos variables, buscar objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Tablas dinámicas
+      lede: Una dinámica no lee tus datos. Lee una copia que se sacó el día que la creaste.
+      block: 1
+
+  - code:
+      eyebrow: Crearla
+      title: El corte por departamento, armado desde código
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub CorteMensual()
+            Dim pc As PivotCache, pt As PivotTable
+            Dim ws As Worksheet, wd As Worksheet
+            Set ws = ThisWorkbook.Sheets("Datos")
+            Set wd = ThisWorkbook.Sheets("Resumen")
+
+            Set pc = ThisWorkbook.PivotCaches.Create( _
+                xlDatabase, ws.Range("A1").CurrentRegion)
+            Set pt = pc.CreatePivotTable(wd.Range("A1"), "Corte")
+
+            pt.PivotFields("Depto").Orientation = xlRowField
+            pt.PivotFields("Monto").Orientation = xlDataField
+        End Sub
+      annotations:
+        - label: El caché
+          text: Es la copia de los datos. La dinámica lee de ahí, no de la hoja.
+        - label: Orientation
+          text: xlRowField es lo que va en los renglones, xlDataField es lo que se suma
+        - label: CurrentRegion
+          text: El bloque alrededor de A1, para no escribir el rango a mano
+        - label: Riesgo
+          text: Si ya existe una dinámica con ese nombre, la segunda corrida truena. Bórrala antes.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Cuatro momentos de la misma dinámica
+      filename: Modulo1
+      lang: vba
+      output_label: El gran total
+      source: |
+        ' Ventas 100, Compras 200,
+        ' Ventas 300, Compras 400
+        ' el cache se creo sobre A1:B5
+
+        ' 1. recien creada
+        ' 2. cambio B2 de 100 a 999
+        ' 3. pt.RefreshTable
+        ' 4. agrego A6 con 1000, y refresco
+      output: |
+        recien creada ...... 1000
+        cambie B2 a 999 .... 1000
+        tras RefreshTable .. 1899
+        fila nueva en A6 ... 1899
+
+  - concept:
+      eyebrow: Lo que revelan esos cuatro números
+      title: Son dos fallas distintas, y la segunda no se arregla refrescando
+      lead: >-
+        Cambiar un dato no movió el total, porque la dinámica leía del caché. Refrescar lo
+        arregló. Pero la fila nueva tampoco apareció después de refrescar, y ahí ya no es
+        cosa del caché: el rango con el que se creó llegaba hasta la fila 5.
+      panel:
+        label: Cómo se arregla cada una
+        title: Una con RefreshTable, la otra con una tabla
+        note: >-
+          Refrescar resuelve los datos que cambiaron. Para que entren los renglones nuevos,
+          el origen tiene que ser una tabla, igual que la gráfica de la semana pasada.
+      steps:
+        - text: Dato que cambia, se arregla con RefreshTable
+        - text: Renglón que llega, no lo arregla refrescar
+        - text: El origen se vuelve tabla y ya crece solo
+          loop: ↺ y es la tercera semana seguida que el rango fijo cobra la factura
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Manejo de errores
+      lede: Hay dos maneras de que un error deje de detener tu macro. Una lo atiende y la otra lo esconde.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido
+      title: Qué guarda Err después de cada línea
+      filename: Modulo1
+      lang: vba
+      output_label: Salida
+      source: |
+        On Error Resume Next
+
+        x = 1 / 0
+        v = CDbl("no soy numero")
+
+        Err.Clear
+      output: |
+        tras 1 / 0 ......... Err 11
+        tras CDbl(texto) ... Err 13
+                     Type mismatch
+        tras Err.Clear ..... Err 0
+
+  - code_output:
+      eyebrow: Medido
+      title: La línea inocente que carga con la culpa
+      filename: Modulo1
+      lang: vba
+      output_label: Al revisar Err
+      source: |
+        On Error Resume Next
+
+        x = 1 / 0
+        x = 2 + 2
+
+        Debug.Print Err.Number
+      output: |
+        x = 1 / 0   ->  Err 11
+        x = 2 + 2   ->  Err 11
+
+        la suma reporta un error
+        que no fue suyo
+
+  - concept:
+      eyebrow: Por qué pasa
+      title: Resume Next no maneja el error, nada más sigue de largo
+      lead: >-
+        Le dice a VBA que no se detenga. No limpia nada. El número se queda puesto hasta que
+        alguien lo limpia o hasta que llega otro error, así que revisar Err tres líneas
+        después te dice que falló algo que salió perfecto.
+      panel:
+        label: La regla de trabajo
+        title: Revisar de inmediato, limpiar antes de seguir
+        note: >-
+          Resume Next se pone justo antes de la línea que puede fallar, se revisa Err en la
+          siguiente, y se apaga con On Error GoTo 0 en cuanto pasó el tramo peligroso.
+      steps:
+        - text: Enciende Resume Next donde lo necesitas
+        - text: Revisa Err en la línea de inmediato
+        - text: Limpia y apágalo en cuanto salgas del tramo
+          loop: ↺ y así deja de ser una manta que tapa toda la macro
+
+  - code:
+      eyebrow: La otra forma
+      title: Un manejador de verdad, con etiqueta y salida
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub ProcesarConRed()
+            On Error GoTo Falla
+
+            Limpiar
+            Ordenar
+            Reportar
+            Exit Sub
+
+        Falla:
+            MsgBox "Se detuvo en " & Err.Source & _
+                   ": " & Err.Number & " " & Err.Description
+            Application.EnableEvents = True
+        End Sub
+      annotations:
+        - label: La etiqueta
+          text: Un nombre con dos puntos. No es un procedimiento, es un punto al que se salta.
+        - label: El Exit Sub
+          text: Si falta, el flujo normal se mete al manejador y reporta un error que no hubo
+        - label: Para qué sirve
+          text: Para dejar las cosas en orden, como devolver los eventos que apagaste en la semana 11
+        - label: Riesgo
+          text: Un manejador que solo pone MsgBox y ya, esconde el problema igual que Resume Next.
+          accent: true
+
+  - table:
+      eyebrow: Las tres formas
+      title: Qué hace cada instrucción On Error
+      headers: ["Se escribe", "Qué hace", "Cuándo conviene"]
+      rows:
+        - ["On Error GoTo etiqueta", "Salta al manejador", "Casi siempre"]
+        - ["On Error Resume Next", "Sigue en la siguiente", "Una línea que puede fallar"]
+        - ["On Error GoTo 0", "Apaga lo anterior", "Al salir del tramo"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Proteger y entregar
+      lede: Proteger la hoja también le cierra la puerta a tus macros, y hay una forma de que no.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: La hoja protegida no distingue quién escribe
+      filename: Modulo1
+      lang: vba
+      output_label: Al correr la macro
+      source: |
+        ws.Protect Password:="abc"
+
+        ws.Range("A1").Value = "la macro escribio"
+      output: |
+        Err 1004
+        The cell or chart you're
+        trying to change is on a
+        protected sheet.
+
+  - code_output:
+      eyebrow: Medido
+      title: UserInterfaceOnly sirve, y no sobrevive al guardado
+      filename: Modulo1
+      lang: vba
+      output_label: Antes y después de reabrir
+      source: |
+        ws.Protect Password:="abc", _
+                   UserInterfaceOnly:=True
+
+        ws.Range("A1").Value = "la macro escribio"
+      output: |
+        recien puesto
+          la macro escribio
+          ProtectContents = True
+
+        tras guardar y reabrir
+          Err 1004
+          ProtectContents = True
+
+  - code:
+      eyebrow: La solución
+      title: Reponerla cada vez que el libro abre
+      filename: ThisWorkbook
+      lang: vba
+      source: |
+        Private Sub Workbook_Open()
+            Dim ws As Worksheet
+
+            For Each ws In ThisWorkbook.Worksheets
+                ws.Protect Password:="abc", _
+                           UserInterfaceOnly:=True
+            Next ws
+        End Sub
+      annotations:
+        - label: Dónde va
+          text: En ThisWorkbook, no en un módulo. Es lo de la semana 11.
+        - label: Por qué al abrir
+          text: La bandera es de la sesión, no del archivo. Al abrir hay que volver a ponerla.
+        - label: Qué logras
+          text: El usuario no puede tocar las celdas y tus macros siguen escribiendo
+        - label: Riesgo
+          text: La contraseña queda escrita en el código. Esto evita accidentes, no detiene a nadie decidido.
+          accent: true
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El archivo no existe. ¿Qué muestra el mensaje?
+      filename: Modulo1
+      lang: vba
+      source: |
+        On Error Resume Next
+
+        Set wb = Workbooks.Open(ruta)
+
+        total = 2 + 2
+
+        If Err.Number <> 0 Then
+            MsgBox "Fallo la suma"
+        End If
+      options:
+        - 'Sale "Fallo la suma", aunque la suma salió perfecta.'
+        - 'No sale nada, porque la suma no falló.'
+        - 'Sale un error sin manejar y la macro se detiene.'
+        - 'Sale el mensaje y además se detiene la macro.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Err se quedó puesto y la suma pagó el plato
+      headers: ["Paso", "Qué pasa", "Err.Number"]
+      rows:
+        - ["1", "On Error Resume Next", "0"]
+        - ["2", "Workbooks.Open no encuentra el archivo", "1004"]
+        - ["3", "total = 2 + 2 corre bien", "1004, sigue puesto"]
+        - ["4", "Se revisa Err", "Culpa a la suma"]
+      verdict: >-
+        Resume Next no limpia Err. El número se queda hasta que alguien lo limpia o hasta el
+        siguiente error, así que la revisión hay que hacerla en la línea de inmediato y con
+        Err.Clear antes de seguir.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: La dinámica muestra datos viejos
+          desc: Sin RefreshTable lee del caché, y con rango fijo tampoco ve los renglones nuevos
+        - label: Error 02
+          title: Revisar Err demasiado tarde
+          desc: Se queda puesto, así que la línea siguiente parece la culpable
+        - label: Error 03
+          title: Manejador sin Exit Sub
+          desc: El flujo normal se mete a la etiqueta y reporta un error que nunca ocurrió
+        - label: Error 04
+          title: Proteger y romperte las macros
+          desc: Sin UserInterfaceOnly tu propio código recibe 1004, igual que el usuario
+
+  - table:
+      eyebrow: Bloque 03 · El proyecto
+      title: Cómo se reparten los cien puntos
+      headers: ["Qué se evalúa", "Peso", "Qué se mira"]
+      rows:
+        - ["Corre", "30 %", "Con una base que no habías visto"]
+        - ["Código", "20 %", "Procedimientos, ciclos y condiciones"]
+        - ["Errores", "20 %", "Manejo de errores y protección"]
+        - ["Narrativa", "15 %", "Que el reporte se entienda solo"]
+        - ["Diseño", "10 %", "Por qué lo hiciste así"]
+        - ["Evidencia", "5 %", "Capturas dentro del texto"]
+
+  - steps:
+      eyebrow: Bloque 03 · La entrega
+      title: Cinco cosas sobre cómo se entrega
+      items:
+        - label: '01'
+          title: El libro y el código
+          desc: El .xlsm más los módulos exportados, para poder leerlos sin abrir Excel.
+        - label: '02'
+          title: Un reporte escrito
+          desc: Qué automatizaste, por qué así, y qué decidiste dejar fuera.
+        - label: '03'
+          title: Se presenta en clase
+          desc: Con revisión de pares. Vas a ver el proyecto de otro equipo y ellos el tuyo.
+        - label: '04'
+          title: Si no corre, el techo es 30 %
+          desc: Un libro que no abre o que truena a la primera no llega a la mitad.
+        - label: '05'
+          title: Se califica individual
+          desc: Aunque el trabajo sea en equipo, cada quien responde por lo que entregó.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Cerrar el proyecto
+      brief: Agrégale a tu proyecto una hoja de resumen con una tabla dinámica creada desde macro, un manejador de errores en el procedimiento principal, y la protección con UserInterfaceOnly repuesta al abrir.
+      blocks:
+        - label: Restricción
+          text: El origen de la dinámica tiene que ser una tabla, para que crezca con los datos
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con el resumen, el manejador y la protección
+        - label: Criterio
+          text: Que al agregar renglones y volver a correr, el resumen los incluya sin tocar nada
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarte
+      items:
+        - title: La dinámica lee una copia
+          desc: Refrescar arregla los datos que cambiaron, pero no los renglones que llegaron
+        - title: Resume Next no maneja
+          desc: Deja Err puesto, y tres líneas después le echa la culpa a quien no fue
+        - title: UserInterfaceOnly no se guarda
+          desc: Hay que reponerla al abrir el libro, y eso vive en ThisWorkbook
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina el proyecto y prepárate para presentarlo. En el reporte escrito explica una decisión de diseño que tomaste y qué alternativa descartaste.
+      meta:
+        - [Entrega, Antes de la sesión 17]
+        - [Formato, Blackboard · .xlsm + módulos + reporte]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - ["El libro", "70 %", "Corre con datos nuevos, con errores y protección atendidos"]
+        - ["El reporte", "25 %", "Narrativa clara y las decisiones justificadas"]
+        - ["La evidencia", "5 %", "Capturas y salidas integradas al texto, no pegadas al final"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, examen final del curso, sobre todas las unidades.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

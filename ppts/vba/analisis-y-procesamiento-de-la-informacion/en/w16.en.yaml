@@ -1,0 +1,443 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 16
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 16 · Units 4 and 6 · Pivots, errors and protection
+      title: Information Analysis and Processing
+      subtitle: >-
+        The last things your project needs before it can be handed in: that it summarises
+        itself, does not fall over, and nobody takes it apart.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 16 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: PivotTables
+          desc: Building them from code, and the two reasons they show stale data
+        - title: Error handling
+          desc: The difference between dealing with an error and covering it up
+        - title: Protect and hand in
+          desc: Locking the sheet without locking out your macros, and the project handover
+        - title: Your turn
+          desc: The whole project, with its summary, its safety net and its lock
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Build a PivotTable from a macro
+          sub: With PivotCaches, the row fields and the data fields, refreshing it when due
+        - head: Actually handle an error
+          sub: With On Error GoTo and a label, instead of papering over it with Resume Next
+        - head: Read Err without being misled
+          sub: Knowing it stays set and that the next line takes the blame for it
+        - head: Protect without breaking your macros
+          sub: With UserInterfaceOnly, and reapply it on open because it is not saved
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: PivotTables
+      lede: A pivot does not read your data. It reads a copy that was taken the day you created it.
+      block: 1
+
+  - code:
+      eyebrow: Building it
+      title: The breakdown by department, assembled from code
+      filename: Module1
+      lang: vba
+      source: |
+        Sub MonthlyBreakdown()
+            Dim pc As PivotCache, pt As PivotTable
+            Dim ws As Worksheet, wd As Worksheet
+            Set ws = ThisWorkbook.Sheets("Data")
+            Set wd = ThisWorkbook.Sheets("Summary")
+
+            Set pc = ThisWorkbook.PivotCaches.Create( _
+                xlDatabase, ws.Range("A1").CurrentRegion)
+            Set pt = pc.CreatePivotTable(wd.Range("A1"), "Breakdown")
+
+            pt.PivotFields("Dept").Orientation = xlRowField
+            pt.PivotFields("Amount").Orientation = xlDataField
+        End Sub
+      annotations:
+        - label: The cache
+          text: It is the copy of the data. The pivot reads from there, not from the sheet.
+        - label: Orientation
+          text: xlRowField is what goes down the rows, xlDataField is what gets added up
+        - label: CurrentRegion
+          text: The block around A1, so the range is not typed by hand
+        - label: Risk
+          text: If a pivot by that name already exists, the second run fails. Delete it first.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Four moments of the same PivotTable
+      filename: Module1
+      lang: vba
+      output_label: The grand total
+      source: |
+        ' Sales 100, Buying 200,
+        ' Sales 300, Buying 400
+        ' the cache was built over A1:B5
+
+        ' 1. freshly created
+        ' 2. B2 changed from 100 to 999
+        ' 3. pt.RefreshTable
+        ' 4. A6 added with 1000, then refreshed
+      output: |
+        freshly created .... 1000
+        B2 changed to 999 .. 1000
+        after RefreshTable . 1899
+        new row in A6 ...... 1899
+
+  - concept:
+      eyebrow: What those four numbers give away
+      title: These are two different failures, and refreshing does not fix the second
+      lead: >-
+        Changing a value did not move the total, because the pivot was reading the cache.
+        Refreshing fixed that. But the new row did not show up after refreshing either, and
+        that is no longer the cache: the range it was built over stopped at row 5.
+      panel:
+        label: How each one is fixed
+        title: One with RefreshTable, the other with a table
+        note: >-
+          Refreshing settles the values that changed. For new rows to be counted, the source
+          has to be a table, the same as last week's chart.
+      steps:
+        - text: A value that changes is fixed by RefreshTable
+        - text: A row that arrives is not fixed by refreshing
+        - text: Make the source a table and it grows on its own
+          loop: ↺ third week running that the fixed range sends the bill
+
+  - divider:
+      eyebrow: Block 02
+      title: Error handling
+      lede: There are two ways to stop an error halting your macro. One deals with it and the other hides it.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured
+      title: What Err holds after each line
+      filename: Module1
+      lang: vba
+      output_label: Output
+      source: |
+        On Error Resume Next
+
+        x = 1 / 0
+        v = CDbl("not a number")
+
+        Err.Clear
+      output: |
+        after 1 / 0 ........ Err 11
+        after CDbl(text) ... Err 13
+                     Type mismatch
+        after Err.Clear .... Err 0
+
+  - code_output:
+      eyebrow: Measured
+      title: The innocent line that takes the blame
+      filename: Module1
+      lang: vba
+      output_label: On checking Err
+      source: |
+        On Error Resume Next
+
+        x = 1 / 0
+        x = 2 + 2
+
+        Debug.Print Err.Number
+      output: |
+        x = 1 / 0   ->  Err 11
+        x = 2 + 2   ->  Err 11
+
+        the sum reports an error
+        that was never its own
+
+  - concept:
+      eyebrow: Why it happens
+      title: Resume Next does not handle the error, it just carries on
+      lead: >-
+        It tells VBA not to stop. It clears nothing. The number stays set until somebody
+        clears it or until another error arrives, so checking Err three lines later tells
+        you something failed that ran perfectly.
+      panel:
+        label: The working rule
+        title: Check immediately, clear before carrying on
+        note: >-
+          Resume Next goes right before the line that might fail, Err is checked on the very
+          next line, and it is switched off with On Error GoTo 0 as soon as the risk is past.
+      steps:
+        - text: Switch Resume Next on where you need it
+        - text: Check Err on the line straight after
+        - text: Clear it and switch off once you are clear
+          loop: ↺ so it stops being a blanket thrown over the whole macro
+
+  - code:
+      eyebrow: The other way
+      title: A real handler, with a label and a way out
+      filename: Module1
+      lang: vba
+      source: |
+        Sub ProcessWithNet()
+            On Error GoTo Failed
+
+            CleanUp
+            SortData
+            Report
+            Exit Sub
+
+        Failed:
+            MsgBox "Stopped in " & Err.Source & _
+                   ": " & Err.Number & " " & Err.Description
+            Application.EnableEvents = True
+        End Sub
+      annotations:
+        - label: The label
+          text: A name with a colon. It is not a procedure, it is a point you jump to.
+        - label: The Exit Sub
+          text: Leave it out and the normal flow falls into the handler and reports an error that never was
+        - label: What it is for
+          text: To leave things tidy, like returning the events you switched off in week 11
+        - label: Risk
+          text: A handler that only shows a MsgBox and stops there hides the problem as well as Resume Next does.
+          accent: true
+
+  - table:
+      eyebrow: The three forms
+      title: What each On Error statement does
+      headers: ["Written as", "What it does", "When it suits"]
+      rows:
+        - ["On Error GoTo label", "Jumps to the handler", "Nearly always"]
+        - ["On Error Resume Next", "Carries on at the next line", "One line that may fail"]
+        - ["On Error GoTo 0", "Switches off the previous one", "On leaving the risky part"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Protect and hand in
+      lede: Protecting the sheet locks your macros out too, and there is a way to stop that.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: A protected sheet does not care who is writing
+      filename: Module1
+      lang: vba
+      output_label: On running the macro
+      source: |
+        ws.Protect Password:="abc"
+
+        ws.Range("A1").Value = "the macro wrote this"
+      output: |
+        Err 1004
+        The cell or chart you're
+        trying to change is on a
+        protected sheet.
+
+  - code_output:
+      eyebrow: Measured
+      title: UserInterfaceOnly works, and does not survive a save
+      filename: Module1
+      lang: vba
+      output_label: Before and after reopening
+      source: |
+        ws.Protect Password:="abc", _
+                   UserInterfaceOnly:=True
+
+        ws.Range("A1").Value = "the macro wrote this"
+      output: |
+        just applied
+          the macro wrote this
+          ProtectContents = True
+
+        after saving and reopening
+          Err 1004
+          ProtectContents = True
+
+  - code:
+      eyebrow: The fix
+      title: Reapplying it every time the workbook opens
+      filename: ThisWorkbook
+      lang: vba
+      source: |
+        Private Sub Workbook_Open()
+            Dim ws As Worksheet
+
+            For Each ws In ThisWorkbook.Worksheets
+                ws.Protect Password:="abc", _
+                           UserInterfaceOnly:=True
+            Next ws
+        End Sub
+      annotations:
+        - label: Where it goes
+          text: In ThisWorkbook, not in a module. This is week 11 again.
+        - label: Why on open
+          text: The flag belongs to the session, not the file. On opening it has to be set again.
+        - label: What you get
+          text: The user cannot touch the cells and your macros keep writing
+        - label: Risk
+          text: The password sits in the code. This prevents accidents, it does not stop anyone determined.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick question
+      question: The file does not exist. What does the message say?
+      filename: Module1
+      lang: vba
+      source: |
+        On Error Resume Next
+
+        Set wb = Workbooks.Open(path)
+
+        total = 2 + 2
+
+        If Err.Number <> 0 Then
+            MsgBox "The sum failed"
+        End If
+      options:
+        - '"The sum failed" appears, although the sum ran perfectly.'
+        - 'Nothing appears, because the sum did not fail.'
+        - 'An unhandled error appears and the macro stops.'
+        - 'The message appears and the macro stops as well.'
+
+  - trace:
+      eyebrow: Answer
+      title: Err stayed set and the sum carried the can
+      headers: ["Step", "What happens", "Err.Number"]
+      rows:
+        - ["1", "On Error Resume Next", "0"]
+        - ["2", "Workbooks.Open cannot find the file", "1004"]
+        - ["3", "total = 2 + 2 runs fine", "1004, still set"]
+        - ["4", "Err gets checked", "Blames the sum"]
+      verdict: >-
+        Resume Next does not clear Err. The number stays until somebody clears it or the next
+        error arrives, so the check has to happen on the very next line and with Err.Clear
+        before carrying on.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: The pivot shows stale data
+          desc: Without RefreshTable it reads the cache, and over a fixed range it misses new rows
+        - label: Error 02
+          title: Checking Err too late
+          desc: It stays set, so the following line looks like the guilty one
+        - label: Error 03
+          title: A handler with no Exit Sub
+          desc: The normal flow falls into the label and reports an error that never happened
+        - label: Error 04
+          title: Protecting and breaking your macros
+          desc: Without UserInterfaceOnly your own code gets 1004, the same as the user
+
+  - table:
+      eyebrow: Block 03 · The project
+      title: How the hundred points are split
+      headers: ["What is assessed", "Weight", "What is looked at"]
+      rows:
+        - ["Runs", "30 %", "On a data set you had not seen"]
+        - ["Code", "20 %", "Procedures, loops and conditions"]
+        - ["Errors", "20 %", "Error handling and protection"]
+        - ["Narrative", "15 %", "That the report stands on its own"]
+        - ["Design", "10 %", "Why you did it this way"]
+        - ["Evidence", "5 %", "Screenshots inside the text"]
+
+  - steps:
+      eyebrow: Block 03 · The handover
+      title: Five things about how it is handed in
+      items:
+        - label: '01'
+          title: The workbook and the code
+          desc: The .xlsm plus the exported modules, so they can be read without opening Excel.
+        - label: '02'
+          title: A written report
+          desc: What you automated, why that way, and what you decided to leave out.
+        - label: '03'
+          title: Presented in class
+          desc: With peer review. You will see another team's project and they will see yours.
+        - label: '04'
+          title: If it does not run, 30 % is the ceiling
+          desc: A workbook that will not open, or fails on the first try, does not reach half marks.
+        - label: '05'
+          title: Graded individually
+          desc: Even though the work is done in teams, each of you answers for what you handed in.
+
+  - lab:
+      eyebrow: Lab
+      title: Closing the project
+      brief: Add to your project a summary sheet with a PivotTable created from a macro, an error handler on the main procedure, and protection with UserInterfaceOnly reapplied on open.
+      blocks:
+        - label: Constraint
+          text: The pivot source has to be a table, so that it grows along with the data
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with the summary, the handler and the protection
+        - label: Criterion
+          text: That adding rows and running again includes them in the summary, untouched
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A pivot reads a copy
+          desc: Refreshing settles the values that changed, but not the rows that arrived
+        - title: Resume Next does not handle
+          desc: It leaves Err set, and three lines later it blames somebody who was not there
+        - title: UserInterfaceOnly is not saved
+          desc: It has to be reapplied when the workbook opens, and that lives in ThisWorkbook
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the project and get ready to present it. In the written report, explain one design decision you took and which alternative you ruled out.
+      meta:
+        - [Due, Before session 17]
+        - [Format, Blackboard · .xlsm + modules + report]
+        - [Weight, 20 % of the final grade]
+      rubric:
+        - ["The workbook", "70 %", "Runs on new data, with errors and protection dealt with"]
+        - ["The report", "25 %", "Clear narrative and the decisions justified"]
+        - ["The evidence", "5 %", "Screenshots and output woven into the text, not stapled at the end"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the final exam of the course, covering every unit.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]
