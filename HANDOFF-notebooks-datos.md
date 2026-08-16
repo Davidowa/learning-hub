@@ -90,7 +90,15 @@ A con `poo_`.
 ```bash
 cd notebooks
 python -m kit.build
-python -m kit.verify
+python kit/verify.py <rutas>
+```
+
+**`python -m kit.verify` sin argumentos no revisa nada** y sale con cero, así que
+parece que pasó. `verify.py` solo recorre `sys.argv[1:]`. Pásale las rutas de los
+dos idiomas explícitamente o no estás verificando:
+
+```bash
+python kit/verify.py analisis-de-datos/es/*.ipynb analisis-de-datos/en/*.ipynb
 ```
 
 Cero errores en los dos idiomas. Y como esta sesión edita prosa y no código,

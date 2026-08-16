@@ -92,7 +92,15 @@ Los `lessons/*.py` y los árboles de salida no se pisan: los tuyos empiezan con
 ```bash
 cd notebooks
 python -m kit.build          # los cuadernos salen junto a su modulo
-python -m kit.verify         # ejecuta cada celda, cuenta errores
+python kit/verify.py <rutas>  # ejecuta cada celda, cuenta errores
+```
+
+**`python -m kit.verify` sin argumentos no revisa nada** y sale con cero, así que
+parece que pasó. `verify.py` solo recorre `sys.argv[1:]`. Pásale las rutas de los
+dos idiomas explícitamente o no estás verificando:
+
+```bash
+python kit/verify.py programacion-orientada-a-objetos/es/*.ipynb programacion-orientada-a-objetos/en/*.ipynb
 ```
 
 Cero errores en los dos idiomas antes de dar una semana por terminada.
