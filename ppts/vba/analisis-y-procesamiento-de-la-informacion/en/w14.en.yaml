@@ -1,0 +1,455 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 14
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 14 · Unit 4 · Filters, subtotals and tables
+      title: Information Analysis and Processing
+      subtitle: Filtering hides rows, it does not remove them. And your macro never finds out, because the loop still sees them all.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 14 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Filtering
+          desc: AutoFilter, advanced filter, and why your loop adds up what you cannot see
+        - title: Subtotals
+          desc: Breaks by group, and the earlier step without which they come out wrong
+        - title: Tables
+          desc: ListObjects and the reference that grows by itself when more rows arrive
+        - title: Your turn
+          desc: A filtered report with subtotals over your project database
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Filter from a macro
+          sub: With AutoFilter and with an advanced filter, and know when each one suits
+        - head: Work only with what is visible
+          sub: With SpecialCells and with SUBTOTAL, the two ways of respecting the filter
+        - head: Insert subtotals by group
+          sub: And sort beforehand, which is what decides whether the breaks land right
+        - head: Handle tables from VBA
+          sub: Create them, add rows, and use the column name instead of the address
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Filtering
+      lede: A filter deletes nothing. It hides. And what is hidden is still there for anyone who does not know how to ask.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Filtering is a decision about the view, not about the data
+      lead: >-
+        When you filter, Excel marks the rows that do not match as hidden and leaves them
+        where they are. The file weighs the same, row 3 is still row 3 and its contents are
+        untouched. The only thing that changed is what you can see.
+      panel:
+        label: Why it matters
+        title: Your macro does not see what you see
+        note: >-
+          You see two rows on the screen. The For Each loop walks all four, because nobody
+          told it to skip the ones that are hidden.
+      steps:
+        - text: You filter and two rows are left in view
+        - text: The loop walks all four anyway
+        - text: The total comes out double what you expected
+          loop: ↺ and the number looks reasonable, which is the worst part
+
+  - code_output:
+      eyebrow: Measured
+      title: The same range, filtered, added up four ways
+      filename: Module1
+      lang: vba
+      output_label: Filtered to Sales
+      source: |
+        ' Sales 100, Buying 200,
+        ' Sales 300, Buying 400
+
+        Range("A1:B5").AutoFilter 1, "Sales"
+      output: |
+        For Each loop ....... 1000
+        visible only ........  400
+        SUBTOTAL(9) .........  400
+        SUM .................. 1000
+
+  - code:
+      eyebrow: The right way
+      title: Asking the range for the visible cells only
+      filename: Module1
+      lang: vba
+      source: |
+        Sub AddVisibleOnly()
+            Dim ws As Worksheet, c As Range, total As Double
+            Set ws = ThisWorkbook.Sheets("Data")
+
+            ws.Range("A1:B5").AutoFilter 1, "Sales"
+
+            For Each c In ws.Range("B2:B5") _
+                    .SpecialCells(xlCellTypeVisible)
+                total = total + c.Value
+            Next c
+        End Sub
+      annotations:
+        - label: SpecialCells
+          text: Returns a new range holding the cells that meet the condition you ask for
+        - label: xlCellTypeVisible
+          text: The constant that leaves out everything the filter hid
+        - label: The other way
+          text: SUBTOTAL(9, range) does the same from a formula, without walking anything
+        - label: Risk
+          text: If the filter left no rows at all, SpecialCells raises error 1004 instead of returning an empty range.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: The advanced filter reads its criteria off the sheet
+      filename: Module1
+      lang: vba
+      output_label: Rows visible out of 4
+      source: |
+        ' D1: Dept       D2: Sales
+        Range("A1:B5").AdvancedFilter _
+            xlFilterInPlace, Range("D1:D2")
+
+        ' and now with D1: Department
+      output: |
+        header matches ......  2 of 4
+        header differs ......  0 of 4
+
+  - concept:
+      eyebrow: The costly part of that
+      title: A misspelled header raises no error, it gives an empty report
+      lead: >-
+        The advanced filter matches the criteria header against the data header. Write
+        Department where the data says Dept and it does not find the column, matches
+        nothing, and hides all four rows. No message and no error.
+      panel:
+        label: How to avoid it
+        title: The criteria header is copied, not typed
+        note: >-
+          The macro can copy the header cell into the criteria range. That way the match
+          stops depending on how you happened to spell it today.
+      steps:
+        - text: Copy the header from the data
+        - text: Write only the value underneath
+        - text: The criteria always match
+          loop: ↺ and renaming a column no longer breaks your filter
+
+  - table:
+      eyebrow: Which to use
+      title: The two ways of filtering from a macro
+      headers: ["What", "AutoFilter", "Advanced filter"]
+      rows:
+        - ["Where the criteria go", "In the call", "In a range on the sheet"]
+        - ["The header", "Not needed", "Spelled like the data one"]
+        - ["If it is misspelled", "Not applicable", "Hides everything, no error"]
+        - ["Copy somewhere else", "No", "Yes, with xlFilterCopy"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Subtotals
+      lede: Excel does not group. It breaks every time the value changes, which makes the order part of the result.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured
+      title: The same Subtotal, before and after sorting
+      filename: Module1
+      lang: vba
+      output_label: Rows when it finishes
+      source: |
+        ' Sales, Buying, Sales, Buying
+
+        Range("A1:B5").Subtotal _
+            GroupBy:=1, Function:=xlSum, _
+            TotalList:=Array(2)
+      output: |
+        unsorted .......  10 rows
+        sorted .........   8 rows
+
+        label:   Buying Total
+        formula: =SUBTOTAL(9,B2:B3)
+
+  - concept:
+      eyebrow: Why it happens
+      title: Subtotal does not group, it breaks when the value changes
+      lead: >-
+        It walks down the column and every time the department differs from the row above,
+        it inserts a break. With the data shuffled, Sales and Buying alternate, so it
+        inserts four breaks instead of two and none of them adds up a whole department.
+      panel:
+        label: Checked
+        title: Ten rows shuffled against eight sorted
+        note: >-
+          With the same call, the unsorted data finished at ten rows and the sorted one at
+          eight. The difference is two extra breaks that mean nothing.
+      steps:
+        - text: Sort by the column you are grouping on
+        - text: Only then insert the subtotals
+        - text: Each break closes a whole department
+          loop: ↺ and sorting stops being cosmetic and becomes part of the sum
+
+  - code:
+      eyebrow: The macro
+      title: Sort and break, in that order
+      filename: Module1
+      lang: vba
+      source: |
+        Sub SubtotalsByDept()
+            Dim ws As Worksheet, data As Range
+            Set ws = ThisWorkbook.Sheets("Data")
+            Set data = ws.Range("A1").CurrentRegion
+
+            data.RemoveSubtotal
+            data.Sort Key1:=ws.Range("A1"), _
+                      Order1:=xlAscending, Header:=xlYes
+            data.Subtotal GroupBy:=1, Function:=xlSum, _
+                          TotalList:=Array(2)
+        End Sub
+      annotations:
+        - label: RemoveSubtotal
+          text: Clear the previous breaks first, or the second run breaks over the breaks.
+        - label: CurrentRegion
+          text: The block of cells around A1, so the range is not typed by hand
+        - label: TotalList
+          text: The columns to add up, by number. Array(2) is the second of the range.
+        - label: What it writes
+          text: SUBTOTAL formulas, not SUM, which is why the breaks do not count themselves.
+
+  - divider:
+      eyebrow: Block 03
+      title: Tables
+      lede: A table names itself. The formula stops saying B2:B5 and starts saying the name of the column.
+      block: 3
+
+  - code:
+      eyebrow: Creating one
+      title: Turning a block of cells into a table
+      filename: Module1
+      lang: vba
+      source: |
+        Sub CreateTable()
+            Dim ws As Worksheet, tbl As ListObject
+            Set ws = ThisWorkbook.Sheets("Data")
+
+            Set tbl = ws.ListObjects.Add( _
+                xlSrcRange, ws.Range("A1").CurrentRegion, , xlYes)
+            tbl.Name = "Sales2026"
+        End Sub
+      annotations:
+        - label: xlSrcRange
+          text: The source is a range on the sheet. There are others, but in this course always this one.
+        - label: The xlYes
+          text: Says the first row holds headers, the same as it does in Sort
+        - label: The name
+          text: It is what you will call it by from formulas, so give it one that means something
+        - label: Risk
+          text: Run the macro twice on the same sheet and the second one fails, because the name already exists.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: The formula is untouched and the result changes on its own
+      filename: Module1
+      lang: vba
+      output_label: With two rows, then three
+      source: |
+        Range("D1").Formula = "=SUM(Sales2026[Amount])"
+
+        ' the table holds 100 and 200
+
+        tbl.ListRows.Add     ' and I put 300 in it
+      output: |
+        rows = 2
+        =SUM(...[Amount])  ->  300
+
+        I add a row of 300
+        the same formula   ->  600
+
+  - code_output:
+      eyebrow: Measured
+      title: A table with no rows has no body
+      filename: Module1
+      lang: vba
+      output_label: Freshly created table
+      source: |
+        Set tbl = ws.ListObjects.Add( _
+            xlSrcRange, ws.Range("A1:B1"), , xlYes)
+
+        Debug.Print tbl.DataBodyRange.Rows.Count
+      output: |
+        ListRows.Count = 0
+        DataBodyRange Is Nothing = True
+
+        Error 91
+        Object variable or With block
+        variable not set
+
+  - concept:
+      eyebrow: You have seen this one
+      title: The same error 91 from week 12, arriving another way
+      lead: >-
+        In week 12 error 91 came from declaring without creating, from forgetting the New.
+        Here the table does exist and the property does exist, but it returns Nothing
+        because there are no rows. Same error, different cause.
+      panel:
+        label: How to avoid it
+        title: Ask before you use it
+        note: >-
+          If Not tbl.DataBodyRange Is Nothing Then, before walking it. An empty table is an
+          ordinary case, not a strange one.
+      steps:
+        - text: Ask whether the body is Nothing
+        - text: If it is, there is nothing to walk
+        - text: If it is not, you can use it safely
+          loop: ↺ and the macro stops depending on somebody having typed data in
+
+  - code:
+      eyebrow: From the repository
+      title: Module 13 of the course does not compile
+      filename: Tables.bas
+      lang: vba
+      source: |
+        Sub AddColumnToTable()
+            Dim found As Boolean
+            ' ...
+            Dim found As Boolean
+
+            MsgBox "Table '" & tableNameToFind & "' not found."
+        End Sub
+      annotations:
+        - label: The repeated Dim
+          text: Declared twice in the same procedure. That is a compile error.
+        - label: What you see
+          text: The debugger opens and marks the repeated line. Not one instruction runs.
+        - label: The other one
+          text: tableNameToFind is declared nowhere, and it turns up four times in the file.
+        - label: Risk
+          text: That second one does not fail. Without Option Explicit, VBA invents it empty and the message comes out gapped.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick question
+      question: The module has no Option Explicit. What does the message show?
+      filename: Tables.bas
+      lang: vba
+      source: |
+        Dim tableName As String
+        tableName = "Sales2026"
+
+        ' ... it looks for it and does not find it ...
+
+        MsgBox "Table '" & tableNameToFind & "' not found."
+      options:
+        - "Table '' not found. The name comes out empty and nothing warns you."
+        - "Table 'Sales2026' not found. VBA matches the similar name."
+        - 'A compile error, variable not defined.'
+        - 'Error 91, the variable has nothing assigned to it.'
+
+  - trace:
+      eyebrow: Answer
+      title: VBA invents it on the spot and leaves it empty
+      headers: ["Step", "What VBA does", "Result"]
+      rows:
+        - ["1", "It meets tableNameToFind for the first time", "Creates it itself, a Variant"]
+        - ["2", "Nobody assigned anything to it", "It stays Empty"]
+        - ["3", "It is concatenated with &", "Empty becomes an empty string"]
+        - ["4", "It builds the message", "Table '' not found."]
+      verdict: This is the defect Tables.bas ships with, four times over. With Option Explicit at the top of the module the same code refuses to run, which is exactly what you want to happen.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: The loop ignores the filter
+          desc: For Each walks the hidden rows too and the total comes out too high
+        - label: Error 02
+          title: Subtotal without sorting first
+          desc: It breaks every time the value changes, not once per group
+        - label: Error 03
+          title: A misspelled criteria header
+          desc: The advanced filter hides every row and raises no error at all
+        - label: Error 04
+          title: Walking an empty table
+          desc: DataBodyRange returns Nothing and you get the error 91 from week 12
+
+  - lab:
+      eyebrow: Lab
+      title: A filtered report over your project database
+      brief: Turn your project database into a table and write a macro that filters it by a criterion living in a cell on the sheet, totals what is left in view, and writes subtotals by group on a separate sheet.
+      blocks:
+        - label: Constraint
+          text: The total has to come from what is visible. Clear the filter and if it does not change, it is wrong.
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with the criteria sheet and the report sheet
+        - label: Criterion
+          text: That changing the criterion in the cell and running again changes the report on its own
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Filtering hides, it does not remove
+          desc: For the loop to respect the filter you have to ask SpecialCells or use SUBTOTAL
+        - title: Sorting is part of the subtotal
+          desc: Excel breaks when the value changes, so unsorted the breaks mean nothing
+        - title: The table grows by itself
+          desc: A formula that names the column stays right when new rows arrive
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Add a second criteria sheet to the report, with two conditions at once, using an advanced filter. Comment why the criteria header is copied instead of typed.
+      meta:
+        - [Due, Before session 15]
+        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The filter", "35 %", "The criterion lives on the sheet and the macro reads it from there"]
+        - ["What is visible", "35 %", "The total comes from the visible rows, not the whole range"]
+        - ["Subtotals", "30 %", "Sorted before breaking, and one break per group"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, reports that combine Excel functions with macros, and the R1C1 formula.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

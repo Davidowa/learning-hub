@@ -1,0 +1,455 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 14
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Escuela de Empresariales · 2026
+      unit: Semana 14 · Unidad 4 · Filtros, subtotales y tablas
+      title: Análisis y Procesamiento de la Información
+      subtitle: Filtrar esconde filas, no las quita. Y tu macro no se entera, porque el ciclo las sigue viendo todas.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 14 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Filtrar
+          desc: AutoFilter, filtro avanzado, y por qué tu ciclo suma lo que no se ve
+        - title: Subtotales
+          desc: Cortes por grupo, y el paso previo sin el cual salen al revés
+        - title: Tablas
+          desc: ListObjects y la referencia que crece sola cuando llegan más filas
+        - title: Tu turno
+          desc: Un reporte filtrado y con subtotales sobre la base de tu proyecto
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión vas a poder…
+      items:
+        - head: Filtrar desde una macro
+          sub: Con AutoFilter y con filtro avanzado, y saber cuándo sirve cada uno
+        - head: Trabajar solo con lo visible
+          sub: Con SpecialCells y con SUBTOTAL, que son las dos formas de respetar el filtro
+        - head: Insertar subtotales por grupo
+          sub: Y ordenar antes, que es lo que decide si los cortes salen bien
+        - head: Manejar tablas desde VBA
+          sub: Crearlas, agregarles filas y usar el nombre de la columna en vez de la dirección
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde vamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programar en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Editar macros grabadas
+          desc: Rangos variables, buscar objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Filtrar
+      lede: Un filtro no borra nada. Esconde. Y lo que está escondido sigue ahí para el que no sepa preguntarlo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Filtrar es una decisión de la vista, no de los datos
+      lead: >-
+        Cuando filtras, Excel marca como ocultas las filas que no cumplen y las deja en su
+        lugar. El archivo pesa lo mismo, la fila 3 sigue siendo la fila 3 y su contenido
+        sigue intacto. Lo único que cambió es lo que se alcanza a ver.
+      panel:
+        label: Por qué importa
+        title: Tu macro no ve lo mismo que tú
+        note: >-
+          Tú ves dos renglones en la pantalla. El ciclo For Each recorre los cuatro, porque
+          nadie le dijo que se saltara los que están ocultos.
+      steps:
+        - text: Filtras y quedan dos renglones a la vista
+        - text: El ciclo recorre los cuatro de todas formas
+        - text: El total sale del doble de lo que esperabas
+          loop: ↺ y el número se ve razonable, que es lo peor
+
+  - code_output:
+      eyebrow: Medido
+      title: El mismo rango, filtrado, sumado de cuatro maneras
+      filename: Modulo1
+      lang: vba
+      output_label: Filtrado a Ventas
+      source: |
+        ' Ventas 100, Compras 200,
+        ' Ventas 300, Compras 400
+
+        Range("A1:B5").AutoFilter 1, "Ventas"
+      output: |
+        ciclo For Each ...... 1000
+        solo visibles .......  400
+        SUBTOTAL(9) .........  400
+        SUM .................. 1000
+
+  - code:
+      eyebrow: La forma correcta
+      title: Pedirle al rango solo las celdas visibles
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub SumarSoloVisible()
+            Dim ws As Worksheet, c As Range, total As Double
+            Set ws = ThisWorkbook.Sheets("Datos")
+
+            ws.Range("A1:B5").AutoFilter 1, "Ventas"
+
+            For Each c In ws.Range("B2:B5") _
+                    .SpecialCells(xlCellTypeVisible)
+                total = total + c.Value
+            Next c
+        End Sub
+      annotations:
+        - label: SpecialCells
+          text: Devuelve un rango nuevo con las celdas que cumplen la condición que le pides
+        - label: xlCellTypeVisible
+          text: La constante que deja fuera todo lo que el filtro escondió
+        - label: La otra vía
+          text: SUBTOTAL(9, rango) hace lo mismo desde una fórmula, sin recorrer nada
+        - label: Riesgo
+          text: Si el filtro no dejó ninguna fila, SpecialCells lanza error 1004 en vez de devolver un rango vacío.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: El filtro avanzado lee el criterio de la hoja
+      filename: Modulo1
+      lang: vba
+      output_label: Filas visibles de 4
+      source: |
+        ' D1: Depto      D2: Ventas
+        Range("A1:B5").AdvancedFilter _
+            xlFilterInPlace, Range("D1:D2")
+
+        ' y ahora con D1: Departamento
+      output: |
+        encabezado igual ....  2 de 4
+        encabezado distinto .  0 de 4
+
+  - concept:
+      eyebrow: Lo caro de esa medición
+      title: Un encabezado mal escrito no da error, da un reporte vacío
+      lead: >-
+        El filtro avanzado empareja el encabezado del criterio con el de los datos. Si
+        escribiste Departamento donde los datos dicen Depto, no encuentra la columna, no
+        empareja nada y esconde las cuatro filas. Sin mensaje y sin error.
+      panel:
+        label: Cómo se evita
+        title: El encabezado del criterio se copia, no se escribe
+        note: >-
+          La macro puede copiar la celda del encabezado al rango de criterios. Así la
+          coincidencia deja de depender de cómo lo escribiste hoy.
+      steps:
+        - text: Copia el encabezado desde los datos
+        - text: Escribe abajo nada más el valor
+        - text: El criterio empareja siempre
+          loop: ↺ y un cambio de nombre en los datos ya no te rompe el filtro
+
+  - table:
+      eyebrow: Cuál usar
+      title: Las dos formas de filtrar desde una macro
+      headers: ["Qué", "AutoFilter", "Filtro avanzado"]
+      rows:
+        - ["Dónde va el criterio", "En la llamada", "En un rango de la hoja"]
+        - ["El encabezado", "No hace falta", "Igualito al de los datos"]
+        - ["Si está mal escrito", "No aplica", "Esconde todo, sin error"]
+        - ["Copiar a otro lado", "No", "Sí, con xlFilterCopy"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Subtotales
+      lede: Excel no agrupa. Corta cada vez que el valor cambia, y eso hace que el orden sea parte del resultado.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido
+      title: El mismo Subtotal, antes y después de ordenar
+      filename: Modulo1
+      lang: vba
+      output_label: Filas al terminar
+      source: |
+        ' Ventas, Compras, Ventas, Compras
+
+        Range("A1:B5").Subtotal _
+            GroupBy:=1, Function:=xlSum, _
+            TotalList:=Array(2)
+      output: |
+        sin ordenar ....  10 filas
+        ordenado .......   8 filas
+
+        etiqueta: Compras Total
+        formula:  =SUBTOTAL(9,B2:B3)
+
+  - concept:
+      eyebrow: Por qué pasa
+      title: Subtotal no agrupa, corta cuando el valor cambia
+      lead: >-
+        Va bajando por la columna y cada vez que el departamento es distinto al de la fila
+        anterior, mete un corte. Con los datos revueltos, Ventas y Compras alternan, así que
+        mete cuatro cortes en vez de dos y ninguno suma el departamento completo.
+      panel:
+        label: Comprobado
+        title: Diez filas revueltas contra ocho ordenadas
+        note: >-
+          Con la misma llamada, la base sin ordenar terminó en diez filas y la ordenada en
+          ocho. La diferencia son dos cortes de más que no significan nada.
+      steps:
+        - text: Ordena por la columna que vas a agrupar
+        - text: Recién entonces inserta los subtotales
+        - text: Cada corte cierra un departamento completo
+          loop: ↺ y ordenar deja de ser cosmético para ser parte del cálculo
+
+  - code:
+      eyebrow: La macro
+      title: Ordenar y cortar, en ese orden
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub SubtotalesPorDepto()
+            Dim ws As Worksheet, base As Range
+            Set ws = ThisWorkbook.Sheets("Datos")
+            Set base = ws.Range("A1").CurrentRegion
+
+            base.RemoveSubtotal
+            base.Sort Key1:=ws.Range("A1"), _
+                      Order1:=xlAscending, Header:=xlYes
+            base.Subtotal GroupBy:=1, Function:=xlSum, _
+                          TotalList:=Array(2)
+        End Sub
+      annotations:
+        - label: RemoveSubtotal
+          text: Primero limpia los cortes anteriores. Si no, la segunda corrida corta sobre los cortes.
+        - label: CurrentRegion
+          text: El bloque de celdas alrededor de A1, así el rango no se escribe a mano
+        - label: TotalList
+          text: Las columnas que se suman, por número. Array(2) es la segunda del rango.
+        - label: Lo que escribe
+          text: Fórmulas SUBTOTAL, no SUM, y por eso los cortes no se cuentan a sí mismos.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Tablas
+      lede: Una tabla se llama a sí misma. La fórmula deja de decir B2:B5 y empieza a decir el nombre de la columna.
+      block: 3
+
+  - code:
+      eyebrow: Crear una
+      title: Convertir un bloque de celdas en tabla
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub CrearTabla()
+            Dim ws As Worksheet, tbl As ListObject
+            Set ws = ThisWorkbook.Sheets("Datos")
+
+            Set tbl = ws.ListObjects.Add( _
+                xlSrcRange, ws.Range("A1").CurrentRegion, , xlYes)
+            tbl.Name = "Ventas2026"
+        End Sub
+      annotations:
+        - label: xlSrcRange
+          text: El origen es un rango de la hoja. Hay otros, pero en este curso siempre es este.
+        - label: El xlYes
+          text: Dice que la primera fila son encabezados, igual que en Sort
+        - label: El nombre
+          text: Es con el que la vas a llamar desde las fórmulas, así que ponle uno que signifique algo
+        - label: Riesgo
+          text: Si corres la macro dos veces sobre la misma hoja, la segunda truena porque el nombre ya existe.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: La fórmula no se toca y el resultado cambia solo
+      filename: Modulo1
+      lang: vba
+      output_label: Con dos filas, luego tres
+      source: |
+        Range("D1").Formula = "=SUM(Ventas2026[Monto])"
+
+        ' la tabla trae 100 y 200
+
+        tbl.ListRows.Add     ' y le pongo 300
+      output: |
+        filas = 2
+        =SUM(...[Monto])  ->  300
+
+        agrego una fila de 300
+        la misma formula  ->  600
+
+  - code_output:
+      eyebrow: Medido
+      title: Una tabla sin filas no tiene cuerpo
+      filename: Modulo1
+      lang: vba
+      output_label: Tabla recién creada
+      source: |
+        Set tbl = ws.ListObjects.Add( _
+            xlSrcRange, ws.Range("A1:B1"), , xlYes)
+
+        Debug.Print tbl.DataBodyRange.Rows.Count
+      output: |
+        ListRows.Count = 0
+        DataBodyRange Is Nothing = True
+
+        Error 91
+        Object variable or With block
+        variable not set
+
+  - concept:
+      eyebrow: Ya lo habías visto
+      title: El mismo error 91 de la semana 12, por otro camino
+      lead: >-
+        En la semana 12 el error 91 salía por declarar sin crear, por olvidar el New. Aquí la
+        tabla sí existe y la propiedad sí existe, pero devuelve Nothing porque no hay
+        renglones. El error es el mismo y la causa es distinta.
+      panel:
+        label: Cómo se evita
+        title: Preguntar antes de usar
+        note: >-
+          If Not tbl.DataBodyRange Is Nothing Then, antes de recorrerla. Una tabla vacía es
+          un caso normal, no una situación rara.
+      steps:
+        - text: Pregunta si el cuerpo es Nothing
+        - text: Si lo es, no hay nada que recorrer
+        - text: Si no, ya puedes usarlo tranquilo
+          loop: ↺ y la macro deja de depender de que alguien haya capturado datos
+
+  - code:
+      eyebrow: Del repositorio
+      title: El módulo 13 del curso no compila
+      filename: Tables.bas
+      lang: vba
+      source: |
+        Sub AddColumnToTable()
+            Dim found As Boolean
+            ' ...
+            Dim found As Boolean
+
+            MsgBox "Table '" & tableNameToFind & "' not found."
+        End Sub
+      annotations:
+        - label: El Dim repetido
+          text: Está declarada dos veces en el mismo procedimiento. Eso es error de compilación.
+        - label: Qué se ve
+          text: El depurador abre y te marca la línea repetida. No corre ni la primera instrucción.
+        - label: La otra
+          text: tableNameToFind no está declarada en ningún lado, y aparece cuatro veces en el archivo.
+        - label: Riesgo
+          text: Esa segunda no truena. Sin Option Explicit, VBA la inventa vacía y el mensaje sale mocho.
+          accent: true
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El módulo no trae Option Explicit. ¿Qué muestra el mensaje?
+      filename: Tables.bas
+      lang: vba
+      source: |
+        Dim tableName As String
+        tableName = "Ventas2026"
+
+        ' ... la busca y no la encuentra ...
+
+        MsgBox "Table '" & tableNameToFind & "' not found."
+      options:
+        - "Table '' not found. El nombre sale vacío y nada avisa."
+        - "Table 'Ventas2026' not found. VBA empareja el nombre parecido."
+        - 'Error de compilación, variable no definida.'
+        - 'Error 91, la variable no tiene nada asignado.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: VBA la inventa en el momento y la deja vacía
+      headers: ["Paso", "Qué hace VBA", "Resultado"]
+      rows:
+        - ["1", "Ve tableNameToFind por primera vez", "La crea sola, tipo Variant"]
+        - ["2", "Nadie le asignó nada", "Se queda en Empty"]
+        - ["3", "La concatena con &", "Empty se vuelve cadena vacía"]
+        - ["4", "Arma el mensaje", "Table '' not found."]
+      verdict: Es el defecto que trae Tables.bas del repositorio, repetido cuatro veces. Con Option Explicit hasta arriba del módulo el mismo código se niega a correr, que es justo lo que quieres que pase.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: El ciclo no respeta el filtro
+          desc: For Each recorre también las filas ocultas y el total sale de más
+        - label: Error 02
+          title: Subtotal sin ordenar antes
+          desc: Mete un corte cada vez que el valor cambia, no uno por grupo
+        - label: Error 03
+          title: Encabezado del criterio mal escrito
+          desc: El filtro avanzado esconde las filas todas y no da ningún error
+        - label: Error 04
+          title: Recorrer una tabla vacía
+          desc: DataBodyRange devuelve Nothing y sale el error 91 de la semana 12
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un reporte filtrado sobre la base de tu proyecto
+      brief: Convierte la base de tu proyecto en tabla y escribe una macro que la filtre por un criterio que viva en una celda de la hoja, saque el total de lo que quedó a la vista y escriba subtotales por grupo en una hoja aparte.
+      blocks:
+        - label: Restricción
+          text: El total tiene que salir de lo visible. Si borras el filtro y no cambia, está mal.
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con la hoja de criterios y la de reporte
+        - label: Criterio
+          text: Que al cambiar el criterio en la celda y volver a correr, el reporte cambie solo
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarte
+      items:
+        - title: Filtrar esconde, no quita
+          desc: Para que el ciclo respete el filtro hay que pedirle SpecialCells o usar SUBTOTAL
+        - title: Ordenar es parte del subtotal
+          desc: Excel corta cuando el valor cambia, así que sin ordenar los cortes no significan nada
+        - title: La tabla crece sola
+          desc: La fórmula que nombra la columna sigue bien cuando llegan filas nuevas
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Agrégale al reporte una segunda hoja de criterios con dos condiciones a la vez, con filtro avanzado. Comenta por qué el encabezado se copia en vez de escribirse.
+      meta:
+        - [Entrega, Antes de la sesión 15]
+        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["El filtro", "35 %", "El criterio vive en la hoja y la macro lo lee de ahí"]
+        - ["Lo visible", "35 %", "El total sale de las filas visibles, no del rango completo"]
+        - ["Subtotales", "30 %", "Ordenados antes de cortar, y un corte por grupo"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, reportes que combinan funciones de Excel con macros, y la fórmula R1C1.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]
