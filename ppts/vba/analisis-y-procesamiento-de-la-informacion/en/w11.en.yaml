@@ -1,0 +1,342 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 11
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 11 · Units 2 and 3 · Events
+      title: Information Analysis and Processing
+      subtitle: Macros nobody starts. They fire on their own when the workbook opens, when it is saved, or when a cell changes.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 11 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Who starts the macro
+          desc: Until today, you. From today, something that happens in the workbook
+        - title: Where the code lives
+          desc: Not in a module. In the sheet or in the workbook, and that is not a detail.
+        - title: When it bites its tail
+          desc: The handler writes, the write fires it again, and Excel goes down
+        - title: Your turn
+          desc: Automating your own workbook with two events
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write an event handler
+          sub: In the sheet or workbook module, with the exact signature Excel looks for
+        - head: Tell the four syllabus events apart
+          sub: Change, SelectionChange, Open and BeforeSave, and what triggers each
+        - head: Use the Target parameter
+          sub: To find out which cell changed, and decide whether the event applies to it
+        - head: Stop an event firing itself
+          sub: With an address guard or by switching events off while it writes
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Who starts the macro
+      lede: Ten weeks of pressing a button. An event is the macro that runs while you are not watching.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: An event is a macro with a trigger instead of a button
+      lead: >-
+        An event handler is an ordinary procedure with one difference: you do not call it.
+        Excel calls it when something specific happens in the workbook. A cell changes,
+        another is selected, the file opens, the file is saved. That is all that is new.
+      panel:
+        label: Why it matters
+        title: The user does not have to remember
+        note: >-
+          A macro you have to go and find in a menu gets used in week one and forgotten in
+          week two. One that runs by itself does not get forgotten.
+      steps:
+        - text: Something happens in the workbook
+        - text: Excel looks for the handler
+        - text: If it exists, it runs it
+          loop: ↺ and if it does not, nothing happens and nobody finds out
+
+  - table:
+      eyebrow: The four on the syllabus
+      title: What triggers each one, and where it lives
+      headers: ["Event", "Fires when", "Lives in"]
+      rows:
+        - ["Worksheet_Change", "A cell value changes", "The sheet"]
+        - ["Worksheet_SelectionChange", "Another cell is selected", "The sheet"]
+        - ["Workbook_Open", "The file is opened", "ThisWorkbook"]
+        - ["Workbook_BeforeSave", "Just before saving", "ThisWorkbook"]
+
+  - code:
+      eyebrow: The simplest one
+      title: Announcing which cell was just selected
+      filename: Sheet1
+      lang: vba
+      source: |
+        Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+            MsgBox "You selected cell " & Target.Address
+        End Sub
+      annotations:
+        - label: Private Sub
+          text: Private because nobody outside the sheet calls it. Excel calls it.
+        - label: The name
+          text: You do not choose it. Worksheet_SelectionChange is the name Excel looks for.
+        - label: Target
+          text: The range just selected. Address gives it back in A1 notation.
+        - label: Risk
+          text: Paste it in an ordinary module instead of the sheet and it compiles and never fires.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: Where the code lives
+      lede: The one time in this course when putting code in the wrong place raises no error. Nothing simply happens.
+      block: 2
+
+  - diagram:
+      eyebrow: Where to paste
+      title: Three places, and only one works for each
+      blocks:
+        - label: For sheet events
+          title: The sheet module
+          desc: Right click the tab, View Code. Change and SelectionChange go here, and only for that sheet.
+          dark: true
+        - label: For workbook events
+          title: ThisWorkbook
+          desc: At the top of the project explorer. Open and BeforeSave go here, and they cover the whole file.
+      note: >-
+        An ordinary module, the kind you have used since week 2, fires no events at all. The
+        code compiles, the macro shows up in the list, and the trigger never happens. It is
+        the commonest mistake of this session and it produces no message.
+
+  - code:
+      eyebrow: With a condition
+      title: Reacting only when the cell that matters changes
+      filename: Sheet1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            If Target.Address = "$A$1" Then
+                CheckIfNumber Target
+            End If
+        End Sub
+
+        Sub CheckIfNumber(Target As Range)
+            If IsNumeric(Target.Value) Then
+                Target.Offset(0, 1).Value = "Number"
+            Else
+                Target.Offset(0, 1).Value = "Not a Number"
+            End If
+        End Sub
+      annotations:
+        - label: The guard
+          text: Without that If, the handler runs on every change to any cell in the sheet
+        - label: Offset
+          text: Offset(0, 1) is one cell to the right. Zero rows down, one column across.
+        - label: The module
+          text: The first goes in the sheet. The second can live in an ordinary module, since you do call that one.
+        - label: Risk
+          text: That guard is not decoration. Without it the program bites its own tail, which is the next slide.
+          accent: true
+
+  - table:
+      eyebrow: Measured
+      title: What IsNumeric counts as a number
+      headers: ["What gets typed", "IsNumeric", "What it writes beside it"]
+      rows:
+        - ["123", "True", "Number"]
+        - ["12.5", "True", "Number"]
+        - ["1e3", "True", "Number"]
+        - ["$5", "False", "Not a Number"]
+        - ["5%", "False", "Not a Number"]
+        - ["2026-01-01", "False", "Not a Number"]
+        - ["abc", "False", "Not a Number"]
+
+  - divider:
+      eyebrow: Block 03
+      title: When the event fires itself
+      lede: The handler writes to a cell. Writing to a cell is a change. A change fires the handler.
+      block: 3
+
+  - code_output:
+      eyebrow: Demonstration
+      title: The same code, without the guard
+      filename: Sheet1
+      lang: vba
+      output_label: What happens on writing in A1
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            Target.Offset(0, 1).Value = "echo"
+        End Sub
+      output: |
+        Excel stops responding
+        and the process dies on its own
+
+  - concept:
+      eyebrow: Why it happens
+      title: Every write by the handler calls the handler again
+      lead: >-
+        You write in A1. Excel calls the handler. The handler writes in B1. That is a change
+        too, so Excel calls the handler again, which writes in C1, which calls it again.
+        Nothing stops it and the stack runs out.
+      panel:
+        label: Checked
+        title: It took Excel down twice, with two different scripts
+        note: >-
+          This is not a theoretical warning. It was run against real Excel and the process
+          died both times, with the same remote call failure.
+      steps:
+        - text: You write once
+        - text: The handler writes once
+        - text: That write fires it again
+          loop: ↺ and that round is the one that never ends
+
+  - table:
+      eyebrow: The two ways out
+      title: How the loop gets cut
+      headers: ["Way", "How it looks", "When it suits"]
+      rows:
+        - ["Address guard", "If Target.Address = ", "When only one cell matters"]
+        - ["Switch events off", "Application.EnableEvents = False", "When the handler writes to several"]
+
+  - code:
+      eyebrow: The second way out
+      title: Switching events off while the handler writes
+      filename: Sheet1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            Application.EnableEvents = False
+            Target.Offset(0, 1).Value = "echo"
+            Application.EnableEvents = True
+        End Sub
+      annotations:
+        - label: The idea
+          text: Excel stops announcing changes while the flag is off
+        - label: Switching it back
+          text: The flag belongs to Excel, not to your macro. Leave it off and it stays off.
+        - label: Risk
+          text: If the code fails between the two lines, events stay dead until you close Excel. That needs error handling, which arrives in week 16.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick question
+      question: The handler sits in an ordinary module, not the sheet. What happens on writing in A1?
+      filename: Module1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            MsgBox "Changed " & Target.Address
+        End Sub
+      options:
+        - 'Nothing. It compiles, and the event never fires.'
+        - 'The message appears, because the name is right'
+        - 'A compile error, Target is not defined'
+        - 'The message appears only the first time'
+
+  - trace:
+      eyebrow: Answer
+      title: The right name in the wrong place is nothing at all
+      headers: ["Step", "What happens", "Anything visible"]
+      rows:
+        - ["1", "You write in A1", "No"]
+        - ["2", "Excel looks in the sheet module", "No"]
+        - ["3", "There is nothing in the sheet", "No"]
+        - ["4", "The one in the module is never consulted", "No"]
+      verdict: Excel looks for sheet handlers only in that sheet's module. One with the right name anywhere else is an ordinary procedure nobody calls, and nothing warns you it was orphaned.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: Code in the wrong module
+          desc: It compiles, never fires and says nothing. It goes in the sheet or ThisWorkbook, not a module.
+        - label: Error 02
+          title: The handler that calls itself
+          desc: It writes to a cell with no guard, every write refires it, and Excel goes down
+        - label: Error 03
+          title: Leaving events switched off
+          desc: If it fails between off and on, Excel has no events until you close it
+        - label: Error 04
+          title: Renaming the handler
+          desc: Excel looks for an exact name. One with another name is code nobody will call.
+
+  - lab:
+      eyebrow: Lab
+      title: Your workbook, automated with two events
+      brief: Take your project workbook and add two events. A sheet one that validates an input cell and writes the verdict beside it. A workbook one that on opening sends the user to the input sheet with the cell already selected.
+      blocks:
+        - label: Constraint
+          text: The sheet one has to carry a guard or EnableEvents. Without that it is not accepted.
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with both events and a comment saying what triggers each
+        - label: Criterion
+          text: That writing in the input cell twenty times running does not take Excel down
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The event lives in the sheet
+          desc: In an ordinary module the same code compiles and never fires, with no warning at all
+        - title: Target says what changed
+          desc: And it is what decides whether the event applies to that cell or should be ignored
+        - title: Writing fires it again
+          desc: A handler that writes without a guard calls itself until Excel goes down
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the lab and add a third event, BeforeSave, that writes the date and time of the save into a log cell before the file is written.
+      meta:
+        - [Due, Before session 12]
+        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Placement", "40 %", "Each handler sits in the sheet or in ThisWorkbook, as it should"]
+        - ["No loop", "40 %", "The sheet event carries a guard or switches events off while writing"]
+        - ["BeforeSave", "20 %", "The log is written before the file is saved"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, custom classes. Packing data and behaviour into a type you define, and
+        using it as though it shipped with VBA.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

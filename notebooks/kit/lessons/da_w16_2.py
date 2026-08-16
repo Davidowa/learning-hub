@@ -137,7 +137,8 @@ Una barra que dice promedio cuando el lector esperaba total es un número correc
 exactamente la misma trampa que `pivot_table` sin `aggfunc` en la semana 15.3.
 
 **`errorbar=None`** también importa: sin él, seaborn dibuja un intervalo de confianza encima de
-cada barra, que casi nunca es lo que querías y que nadie te va a preguntar si entendiste.
+cada barra. Casi nunca es lo que querías, y afirma algo sobre el muestreo que tu gráfica no está
+diciendo.
 """),
 
 code("""

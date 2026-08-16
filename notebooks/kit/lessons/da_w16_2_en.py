@@ -138,7 +138,8 @@ A bar showing a mean when the reader expected a total is a correct number that m
 exactly the same trap as `pivot_table` without `aggfunc` in week 15.3.
 
 **`errorbar=None`** matters too: without it, seaborn draws a confidence interval on top of every
-bar, which is almost never what you wanted and which nobody will ask whether you understood.
+bar. That is almost never what you wanted, and it claims something about sampling your chart is
+not saying.
 """),
 
 code("""

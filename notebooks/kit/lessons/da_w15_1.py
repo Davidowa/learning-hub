@@ -871,7 +871,7 @@ for nombre in ventas.columns:
 ```
 
 La comparación contra `"object"` y contra `"str"` cubre las dos versiones de pandas. Si solo
-comparas contra una, el ejercicio funciona en tu máquina y falla en la de tu compañero.
+comparas contra una, el ejercicio funciona en tu sesión de Colab y falla en la de tu compañero.
 
 ### Ejercicio 5
 
@@ -1808,7 +1808,7 @@ for name in sales.columns:
 ```
 
 Comparing against both `"object"` and `"str"` covers the two pandas versions. Compare against
-only one and the exercise works on your machine and fails on your classmate's.
+only one and the exercise works in your Colab session and fails in your classmate's.
 
 ### Exercise 5
 

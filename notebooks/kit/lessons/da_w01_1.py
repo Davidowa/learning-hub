@@ -42,7 +42,7 @@ presiona **Shift + Enter**. El resultado aparece justo debajo.
 Ejecuta las celdas en orden, de arriba hacia abajo. Varias usan un valor que definió la
 anterior, así que saltarte una da un error que no tiene que ver con el tema.
 
-Dos celdas fallan a propósito, para que veas cómo se ve un error antes de encontrártelo solo.
+Cuatro celdas fallan a propósito, para que veas cómo se ve un error antes de encontrártelo solo.
 Llevan un comentario que lo dice.
 """),
 
@@ -190,8 +190,7 @@ md("""
 ---
 # Bloque 2 · Dónde deja de parecerse
 
-Cuatro diferencias reales. Ninguna es difícil, y todas cuestan una tarde si nadie las dice a
-tiempo.
+Cuatro diferencias reales, y cada una cuesta una tarde si nadie la dice a tiempo.
 
 | Punto | En la hoja de cálculo | En Python |
 |---|---|---|
@@ -879,8 +878,7 @@ md("""
 ---
 # Block 2 · Where it stops looking alike
 
-Four real differences. None of them is hard, and all of them cost you an afternoon if nobody
-mentions them in time.
+Four real differences, and each one costs you an afternoon if nobody mentions it in time.
 
 | Point | In the spreadsheet | In Python |
 |---|---|---|

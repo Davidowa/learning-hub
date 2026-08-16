@@ -65,8 +65,10 @@ Los decks de TIA502 cambiaron esta semana y los cuadernos no se han alineado:
   semana 1 abre un cuaderno en lugar de instalar Python, y la rúbrica acepta
   "el cuaderno o el archivo". Revisa que los cuadernos no sigan pidiendo una
   instalación local.
-- La tarea ya no pide activar DataCamp. El bono sigue existiendo en TIA502,
-  eso no cambió, pero no es requisito de la primera entrega.
+- **Corrección.** Una versión anterior de este archivo decía que la tarea de la
+  semana 1 ya no pide activar DataCamp. Es falso: eso se quitó de COM101, no de
+  TIA502. Aquí el bono existe, lo concede el syllabus, y la tarea sigue pidiendo
+  la cuenta activa con su renglón de 30 % en la rúbrica. No hay nada que alinear.
 
 ## Sin notas de orador
 

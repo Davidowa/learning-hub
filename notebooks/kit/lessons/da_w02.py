@@ -113,8 +113,8 @@ print(bono_anual(45000, 30, 4.8))
 """),
 
 md("""
-Tres veces los mismos datos, tres veces el mismo resultado. Eso es estar definido, y suena
-tan obvio que da pena escribirlo. Hasta que ves lo contrario.
+Tres veces los mismos datos, tres veces el mismo resultado. Eso es estar definido. Suena obvio
+hasta que ves lo contrario.
 """),
 
 code("""
@@ -850,8 +850,8 @@ print(annual_bonus(45000, 30, 4.8))
 """),
 
 md("""
-Three times the same data, three times the same result. That is what being defined means, and
-it sounds so obvious it is embarrassing to write down. Until you see the opposite.
+Three times the same data, three times the same result. That is what being defined means. It
+sounds obvious until you see the opposite.
 """),
 
 code("""

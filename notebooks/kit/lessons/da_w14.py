@@ -671,7 +671,8 @@ nadie te va a avisar.
 **Qué hacer con lo que falta es tu decisión.** Descartar, rellenar o ignorar dan tres respuestas
 distintas, y las tres se tienen que poder defender.
 
-La siguiente sesión es pandas. Todo lo que hiciste hoy a mano, en ocho líneas.
+La siguiente sesión es pandas, que hace en ocho líneas lo que hoy escribiste a mano. Haberlo
+escrito es lo que después te deja leer esas ocho líneas y saber qué están haciendo.
 """),
 
 md("""

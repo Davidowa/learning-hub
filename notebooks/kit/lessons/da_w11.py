@@ -275,9 +275,10 @@ programa. Están agrupadas por tema en **módulos**, y se traen con `import` cua
 | `math` | Raíz, potencias, redondeos | Hoy |
 | `datetime` | Fechas y diferencias entre ellas | Semana 14 |
 | `csv` | Leer y escribir archivos de datos | Semana 14 |
-| `pandas` | Tablas completas, y no viene incluido | Semana 15 |
+| `pandas` | Tablas completas, y viene aparte | Semana 15 |
 
-Los cuatro primeros vienen con la instalación, así que importarlos no descarga nada.
+Los cuatro primeros son parte de Python mismo. `pandas` no lo es, pero Colab ya lo trae, así que
+los cinco se importan igual y ninguno descarga nada.
 
 ## Las dos formas de importar
 """),
@@ -549,7 +550,7 @@ de sintaxis, no una decisión de estilo.
 posiciones deja de ser viable, y el 50 que cae en `iva` no lanza ningún error.
 
 **`import` es la puerta a todo.** Lo que hoy trae `statistics` es exactamente lo que en la semana
-15 va a traer pandas. La única diferencia es que pandas hay que instalarlo una vez.
+15 va a traer pandas, con la misma línea y sin instalar nada.
 
 La siguiente sesión son listas y tuplas, que son la columna de tu hoja de cálculo.
 """),

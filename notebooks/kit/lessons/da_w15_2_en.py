@@ -65,7 +65,7 @@ md("""
 
 In a spreadsheet this is scrolling, hiding columns and switching the AutoFilter on and off.
 In pandas you describe what you want and get a new table back. The original is never
-touched, which means you can try a filter without fear of ruining anything.
+touched, so you can try one filter after another and always still have your starting point.
 
 This block works on `employees.csv`, which has 120 rows and comes in clean. Practising
 filtering on dirty data mixes two problems together, and today we want them one at a time.
@@ -291,7 +291,7 @@ print(top[["employee_id", "monthly_salary"]].head(1))
 
 md("""
 `employees` is unchanged. Nearly every pandas method gives back a new table and leaves the
-original alone, which is exactly why you can filter without fear. If you want the change to
+original alone, which is exactly why no filter is ever final. If you want the change to
 stick, reassign: `employees = employees.sort_values(...)`.
 """),
 
@@ -743,8 +743,8 @@ md("""
 ## Three ideas to take away
 
 **A filter is a column of true and false.** Handed back to the table inside brackets, it
-leaves only the marked rows and never touches the original. That is why you can experiment
-without fear.
+leaves only the marked rows and never touches the original, which is still there for the
+next filter.
 
 **Clean before you calculate.** A sum over dirty data returns a number, and a wrong number
 never announces itself. Today's twelve million only means something because of the four

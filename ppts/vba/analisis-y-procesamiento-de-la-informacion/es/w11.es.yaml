@@ -1,0 +1,342 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 11
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 11 · Unidades 2 y 3 · Eventos
+      title: Análisis y Procesamiento de la Información
+      subtitle: Macros que nadie manda a correr. Se disparan solas al abrir el libro, al guardar o al cambiar una celda.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 11 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Quién dispara la macro
+          desc: Hasta hoy tú. A partir de hoy, algo que pasa en el libro
+        - title: Dónde vive el código
+          desc: No en un módulo. En la hoja o en el libro, y eso no es un detalle.
+        - title: Cuando se muerde la cola
+          desc: El manejador escribe, la escritura lo vuelve a disparar, y Excel se cae
+        - title: Tu turno
+          desc: Automatizar tu propio libro con dos eventos
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un manejador de evento
+          sub: En el módulo de la hoja o del libro, con la firma exacta que Excel espera
+        - head: Distinguir los cuatro eventos del temario
+          sub: Change, SelectionChange, Open y BeforeSave, y qué provoca cada uno
+        - head: Usar el parámetro Target
+          sub: Para saber qué celda cambió, y decidir si el evento le toca o no
+        - head: Evitar que un evento se dispare a sí mismo
+          sub: Con una guarda de dirección o apagando los eventos mientras escribe
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Quién dispara la macro
+      lede: Diez semanas presionando un botón. Un evento es la macro que corre cuando tú no estás viendo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un evento es una macro con un disparador en vez de un botón
+      lead: >-
+        Un manejador de evento es un procedimiento normal, con una diferencia: no lo llamas
+        tú. Excel lo llama cuando ocurre algo concreto en el libro. Cambiar una celda,
+        seleccionar otra, abrir el archivo, guardarlo. Eso es todo lo nuevo.
+      panel:
+        label: Por qué importa
+        title: El usuario no tiene que acordarse
+        note: >-
+          Una macro que hay que ir a buscar en el menú se usa la primera semana y se olvida
+          la segunda. Una que corre sola no se olvida.
+      steps:
+        - text: Pasa algo en el libro
+        - text: Excel busca el manejador
+        - text: Si existe, lo corre
+          loop: ↺ y si no existe, no pasa nada y nadie se entera
+
+  - table:
+      eyebrow: Los cuatro del temario
+      title: Qué dispara cada uno, y dónde vive
+      headers: ["Evento", "Se dispara cuando", "Vive en"]
+      rows:
+        - ["Worksheet_Change", "Cambia el valor de una celda", "La hoja"]
+        - ["Worksheet_SelectionChange", "Se selecciona otra celda", "La hoja"]
+        - ["Workbook_Open", "Se abre el archivo", "ThisWorkbook"]
+        - ["Workbook_BeforeSave", "Justo antes de guardar", "ThisWorkbook"]
+
+  - code:
+      eyebrow: El más simple
+      title: Avisar qué celda acaban de seleccionar
+      filename: Hoja1
+      lang: vba
+      source: |
+        Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+            MsgBox "Seleccionaste la celda " & Target.Address
+        End Sub
+      annotations:
+        - label: Private Sub
+          text: Va privado porque nadie fuera de la hoja lo llama. Lo llama Excel.
+        - label: El nombre
+          text: No lo eliges tú. Worksheet_SelectionChange es el nombre que Excel busca.
+        - label: Target
+          text: El rango que se acaba de seleccionar. Address lo devuelve en notación A1.
+        - label: Riesgo
+          text: Si lo pegas en un módulo normal en vez de en la hoja, compila y no se dispara nunca.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Dónde vive el código
+      lede: Es la única vez en el curso en que pegar el código en el lugar equivocado no da error. Simplemente no pasa nada.
+      block: 2
+
+  - diagram:
+      eyebrow: Dónde pegar
+      title: Tres lugares, y solo uno sirve para cada cosa
+      blocks:
+        - label: Para eventos de hoja
+          title: El módulo de la hoja
+          desc: Clic derecho en la pestaña, Ver código. Ahí van Change y SelectionChange, y solo valen para esa hoja.
+          dark: true
+        - label: Para eventos de libro
+          title: ThisWorkbook
+          desc: En el explorador de proyecto, arriba. Ahí van Open y BeforeSave, y valen para el archivo entero.
+      note: >-
+        Un módulo normal, de los que llevas usando desde la semana 2, no dispara ningún
+        evento. El código compila, la macro aparece en la lista, y el disparador nunca
+        ocurre. Es el error más frecuente de esta sesión y no produce ningún mensaje.
+
+  - code:
+      eyebrow: Con condición
+      title: Reaccionar solo cuando cambia la celda que importa
+      filename: Hoja1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            If Target.Address = "$A$1" Then
+                RevisarSiEsNumero Target
+            End If
+        End Sub
+
+        Sub RevisarSiEsNumero(Target As Range)
+            If IsNumeric(Target.Value) Then
+                Target.Offset(0, 1).Value = "Número"
+            Else
+                Target.Offset(0, 1).Value = "No es número"
+            End If
+        End Sub
+      annotations:
+        - label: La guarda
+          text: Sin ese If, el manejador corre con cada cambio de cualquier celda de la hoja
+        - label: Offset
+          text: Offset(0, 1) es una celda a la derecha. Cero renglones abajo, una columna a la derecha.
+        - label: El módulo
+          text: El primero va en la hoja. El segundo puede vivir en un módulo normal, porque a ese sí lo llamas tú.
+        - label: Riesgo
+          text: Esa guarda no es adorno. Sin ella el programa se muerde la cola, y es la lámina que sigue.
+          accent: true
+
+  - table:
+      eyebrow: Medido
+      title: Qué considera número IsNumeric, y qué no
+      headers: ["Lo que se escribe", "IsNumeric", "Qué escribe al lado"]
+      rows:
+        - ["123", "True", "Número"]
+        - ["12.5", "True", "Número"]
+        - ["1e3", "True", "Número"]
+        - ["$5", "False", "No es número"]
+        - ["5%", "False", "No es número"]
+        - ["2026-01-01", "False", "No es número"]
+        - ["abc", "False", "No es número"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cuando el evento se dispara a sí mismo
+      lede: El manejador escribe en una celda. Escribir en una celda es un cambio. Un cambio dispara el manejador.
+      block: 3
+
+  - code_output:
+      eyebrow: Demostración
+      title: El mismo código, sin la guarda
+      filename: Hoja1
+      lang: vba
+      output_label: Lo que pasa al escribir en A1
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            Target.Offset(0, 1).Value = "eco"
+        End Sub
+      output: |
+        Excel deja de responder
+        y el proceso termina solo
+
+  - concept:
+      eyebrow: Por qué pasa
+      title: Cada escritura del manejador vuelve a llamar al manejador
+      lead: >-
+        Escribes en A1. Excel llama al manejador. El manejador escribe en B1. Eso también
+        es un cambio, así que Excel vuelve a llamar al manejador, que escribe en C1, que lo
+        llama otra vez. No hay nada que lo detenga y la pila se acaba.
+      panel:
+        label: Comprobado
+        title: Tumbó Excel dos veces, con dos guiones distintos
+        note: >-
+          No es una advertencia teórica. Se corrió contra Excel real y el proceso murió las
+          dos veces, con el mismo error de llamada remota.
+      steps:
+        - text: Escribes tú una vez
+        - text: El manejador escribe una vez
+        - text: Esa escritura lo dispara otra vez
+          loop: ↺ y esa vuelta es la que ya no termina
+
+  - table:
+      eyebrow: Las dos salidas
+      title: Cómo se corta el ciclo
+      headers: ["Manera", "Cómo se ve", "Cuándo conviene"]
+      rows:
+        - ["Guarda de dirección", "If Target.Address = ", "Cuando solo te importa una celda"]
+        - ["Apagar los eventos", "Application.EnableEvents = False", "Cuando el manejador escribe en varias"]
+
+  - code:
+      eyebrow: La segunda salida
+      title: Apagar los eventos mientras el manejador escribe
+      filename: Hoja1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            Application.EnableEvents = False
+            Target.Offset(0, 1).Value = "eco"
+            Application.EnableEvents = True
+        End Sub
+      annotations:
+        - label: La idea
+          text: Excel deja de avisar de los cambios mientras la bandera está apagada
+        - label: Volver a prender
+          text: La bandera es de Excel, no de tu macro. Si no la prendes, se queda apagada.
+        - label: Riesgo
+          text: Si el código truena entre las dos líneas, los eventos quedan muertos hasta que cierres Excel. Ahí hace falta manejo de errores, que llega en la semana 16.
+          accent: true
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El manejador está en un módulo normal, no en la hoja. ¿Qué pasa al escribir en A1?
+      filename: Modulo1
+      lang: vba
+      source: |
+        Private Sub Worksheet_Change(ByVal Target As Range)
+            MsgBox "Cambió " & Target.Address
+        End Sub
+      options:
+        - 'Nada. Compila, y el evento no se dispara nunca.'
+        - 'Sale el mensaje, porque el nombre es el correcto'
+        - 'Error de compilación, Target no está definido'
+        - 'Sale el mensaje solo la primera vez'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El nombre correcto en el lugar equivocado no es nada
+      headers: ["Paso", "Qué ocurre", "Se ve algo"]
+      rows:
+        - ["1", "Escribes en A1", "No"]
+        - ["2", "Excel busca el manejador en la hoja", "No"]
+        - ["3", "En la hoja no hay nada", "No"]
+        - ["4", "El del módulo nunca se consulta", "No"]
+      verdict: Excel busca los manejadores de hoja solo en el módulo de esa hoja. Uno con el nombre correcto en otro lado es un procedimiento cualquiera que nadie llama, y no hay ningún aviso de que quedó huérfano.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: El código en el módulo equivocado
+          desc: Compila, no se dispara y no avisa. Va en la hoja o en ThisWorkbook, no en un módulo.
+        - label: Error 02
+          title: El manejador que se llama solo
+          desc: Escribe en una celda sin guarda, cada escritura lo redispara y Excel se cae
+        - label: Error 03
+          title: Dejar los eventos apagados
+          desc: Si truena entre apagar y prender, Excel queda sin eventos hasta que lo cierres
+        - label: Error 04
+          title: Cambiar el nombre del manejador
+          desc: Excel busca un nombre exacto. Uno con otro nombre es código que nadie va a llamar.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tu libro, automatizado con dos eventos
+      brief: Toma el libro de tu proyecto y agrégale dos eventos. Uno de hoja, que valide una celda de captura y escriba el resultado al lado. Uno de libro, que al abrir mande al usuario a la hoja de captura con la celda ya seleccionada.
+      blocks:
+        - label: Restricción
+          text: El de hoja tiene que llevar guarda o EnableEvents. Sin eso no se recibe.
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con los dos eventos y un comentario que diga qué dispara cada uno
+        - label: Criterio
+          text: Que escribir en la celda de captura veinte veces seguidas no tumbe Excel
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El evento vive en la hoja
+          desc: En un módulo normal el mismo código compila y no se dispara jamás, sin ningún aviso
+        - title: Target dice qué cambió
+          desc: Y sirve para decidir si el evento le toca a esa celda o hay que ignorarlo
+        - title: Escribir vuelve a disparar
+          desc: Un manejador que escribe sin guarda se llama a sí mismo hasta que Excel se cae
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina el laboratorio y agrega un tercer evento, BeforeSave, que escriba la fecha y hora del guardado en una celda de bitácora antes de que el archivo se guarde.
+      meta:
+        - [Entrega, Antes de la sesión 12]
+        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Ubicación", "40 %", "Cada manejador está en la hoja o en ThisWorkbook, según corresponda"]
+        - ["Sin ciclo", "40 %", "El evento de hoja lleva guarda o apaga los eventos al escribir"]
+        - ["BeforeSave", "20 %", "La bitácora queda escrita antes de que el archivo se guarde"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, clases propias. Empaquetar datos y comportamiento en un tipo
+        que tú defines, y usarlo como si viniera con VBA.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

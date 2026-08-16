@@ -669,7 +669,8 @@ will warn you.
 **What to do with what is missing is your decision.** Dropping, filling or ignoring give three
 different answers, and all three have to be defensible.
 
-Next session is pandas. Everything you did by hand today, in eight lines.
+Next session is pandas, which does in eight lines what you wrote by hand today. Having written it
+is what later lets you read those eight lines and know what they are doing.
 """),
 
 md('''

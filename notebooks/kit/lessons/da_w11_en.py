@@ -272,9 +272,10 @@ needed.
 | `math` | Roots, powers, rounding | Today |
 | `datetime` | Dates and the gaps between them | Week 14 |
 | `csv` | Reading and writing data files | Week 14 |
-| `pandas` | Whole tables, and it is not included | Week 15 |
+| `pandas` | Whole tables, and it ships separately | Week 15 |
 
-The first four come with the installation, so importing them downloads nothing.
+The first four are part of Python itself. `pandas` is not, but Colab already carries it, so all
+five import the same way and none of them downloads anything.
 
 ## The two forms of import
 """),
@@ -542,7 +543,7 @@ not a style decision.
 stops being viable, and the 50 that lands in `tax` raises nothing.
 
 **`import` is the door to everything.** What brings in `statistics` today is exactly what will
-bring in pandas in week 15. The only difference is that pandas has to be installed once.
+bring in pandas in week 15, with the same line and nothing to install.
 
 Next session is lists and tuples, which are the column of your spreadsheet.
 """),

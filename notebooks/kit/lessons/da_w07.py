@@ -35,8 +35,8 @@ Al terminar este cuaderno vas a poder:
 Ejecuta las celdas en orden. Cuatro fallan a propósito o dan un resultado inesperado a propósito,
 y llevan un comentario que lo dice.
 
-La regla práctica del final vale más que toda la teoría de arriba: **si las dos ramas del anidado
-hacen lo mismo, era un `and` disfrazado.**
+Todo lo anterior desemboca en una regla que conviene traer a la mano desde ahora: **si las dos
+ramas del anidado hacen lo mismo, era un `and` disfrazado.**
 """),
 
 md("""
@@ -815,8 +815,8 @@ By the end of this notebook you will be able to:
 Run the cells in order. Four fail on purpose or give a deliberately surprising result, and carry a
 comment saying so.
 
-The practical rule at the end is worth more than all the theory above it: **if both branches of
-the nesting do the same thing, it was an `and` in disguise.**
+All of it lands on one rule, worth carrying from the start: **if both branches of the nesting do
+the same thing, it was an `and` in disguise.**
 """),
 
 md("""

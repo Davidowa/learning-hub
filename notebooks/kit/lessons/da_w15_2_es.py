@@ -73,7 +73,7 @@ md("""
 
 En la hoja esto es hacer scroll, ocultar columnas y prender y apagar el autofiltro. En
 pandas describes lo que quieres y recibes una tabla nueva. La original nunca se toca, así
-que puedes probar un filtro sin miedo a arruinar nada.
+que puedes probar un filtro tras otro y siempre tienes el punto de partida.
 
 Este bloque trabaja sobre `employees.csv`, que trae 120 renglones y viene limpio. Practicar
 el filtrado sobre datos sucios mezcla dos problemas, y hoy queremos uno a la vez.
@@ -299,8 +299,8 @@ print(top[["employee_id", "monthly_salary"]].head(1))
 
 md("""
 `empleados` sigue igual. Casi todos los métodos de pandas devuelven una tabla nueva y dejan
-la original intacta, que es exactamente por qué puedes filtrar sin miedo. Si quieres que el
-cambio se quede, hay que reasignar: `empleados = empleados.sort_values(...)`.
+la original intacta, y por eso un filtro nunca es definitivo. Si quieres que el cambio se
+quede, hay que reasignar: `empleados = empleados.sort_values(...)`.
 """),
 
 # ──────────────────────────────────────────────────────────── bloque 2
@@ -759,7 +759,7 @@ md("""
 ## Tres ideas para llevarse
 
 **Un filtro es una columna de verdadero y falso.** Devuelta a la tabla entre corchetes, deja
-solo los renglones marcados y no toca la original. Por eso puedes probar sin miedo.
+solo los renglones marcados y no toca la original, que sigue ahí para el filtro siguiente.
 
 **Limpiar antes de calcular.** La suma sobre datos sucios devuelve un número, y un número
 equivocado nunca se anuncia solo. Los doce millones de hoy solo significan algo por las

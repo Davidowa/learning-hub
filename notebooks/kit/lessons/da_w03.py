@@ -21,8 +21,8 @@ md("""
 **TIA502 · Facultad de Empresariales · Profesor David Escobar-Castillejos**
 
 Esta es la primera sesión con computadora, y cierra el bloque de pensamiento computacional. La
-parte de paradigmas se corre rápido: no te sirve una taxonomía, te sirve saber que vas a
-escribir estructurado y por qué eso alcanza para todo el curso.
+parte de paradigmas se corre rápido: lo que hace falta no es la taxonomía completa, sino saber
+que vas a escribir estructurado y por qué eso alcanza para todo el curso.
 
 Lo que vale la sesión entera es el primer programa. Que corra hoy, aquí, y que imprima algo.
 
@@ -125,7 +125,7 @@ peldaño alto.
 |---|---|---|
 | Cuándo traduce | Todo el programa antes de correrlo | Instrucción por instrucción, al ejecutar |
 | Qué produce | Un ejecutable independiente | Nada permanente, corre y se acaba |
-| Velocidad | Más rápido al ejecutar | Más lento, y para tu trabajo da igual |
+| Velocidad | Más rápido al ejecutar | Más lento, y a la escala de este curso no se nota |
 | Cuándo avisa del error | Al compilar, antes de correr | Al llegar a la línea que falla |
 | Ejemplos | C, C++, Go | Python, R, JavaScript |
 
@@ -610,8 +610,8 @@ md("""
 **TIA502 · School of Business · Instructor David Escobar-Castillejos**
 
 This is the first session with a computer, and it closes the computational thinking block. The
-paradigms part goes quickly: a taxonomy is no use to you, knowing that you will write structured
-code and why that is enough for the course is.
+paradigms part goes quickly: what the course needs is not the full taxonomy but knowing that you
+will write structured code, and why that is enough.
 
 What makes the session worth it is the first program. That it runs today, here, and prints
 something.
@@ -713,7 +713,7 @@ language sits, the more it resembles how you think, and Python lives on the high
 |---|---|---|
 | When it translates | The whole program before running it | Statement by statement, while running |
 | What it produces | A standalone executable | Nothing permanent, it runs and it is over |
-| Speed | Faster to execute | Slower, and for your work it makes no difference |
+| Speed | Faster to execute | Slower, and at this course's scale you cannot tell |
 | When it reports an error | At compile time, before running | On reaching the line that fails |
 | Examples | C, C++, Go | Python, R, JavaScript |
 
