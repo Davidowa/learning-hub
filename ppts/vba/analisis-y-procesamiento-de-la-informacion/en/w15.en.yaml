@@ -1,0 +1,448 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 15
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 15 · Units 4 and 5 · Reports and R1C1
+      title: Information Analysis and Processing
+      subtitle: Sheet functions can be called from a macro. But not all of them, and not all of them behave the same way.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 15 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Two libraries
+          desc: The VBA functions and the sheet ones, and which answers to which name
+        - title: Formula or value
+          desc: Leaving the calculation live or freezing the number, which is not the same
+        - title: R1C1 and charts
+          desc: The notation the recorder speaks, and a chart built from code
+        - title: Your turn
+          desc: Your project's automated report, with its chart
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Call sheet functions
+          sub: With WorksheetFunction, and know which are not there because they are VBA's
+        - head: Look up without crashing the macro
+          sub: With Application instead of WorksheetFunction, and checking with IsError
+        - head: Decide between formula and value
+          sub: Live if the report gets reopened, frozen if it is a snapshot of the close
+        - head: Write formulas in R1C1
+          sub: One string for a whole column, without building it by gluing text together
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Two libraries
+      lede: VBA brings its own functions and the sheet brings its own. They look alike, they overlap, and they are not the same.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Some functions only live on one side
+      lead: >-
+        Left, Mid and Replace are VBA's and do not appear under WorksheetFunction. VLookup,
+        SumIfs and CountIf are the sheet's and do not exist loose in VBA. And a few, like
+        Trim, sit on both sides doing different things, which was week 13.
+      panel:
+        label: How to tell which is which
+        title: The editor tells you as you type
+        note: >-
+          If the function does not show up in the list after you type the dot following
+          WorksheetFunction, it is VBA's and it is called on its own, with no prefix.
+      steps:
+        - text: Write the name with no prefix
+        - text: If the editor does not know it, add WorksheetFunction
+        - text: If it is not there either, it does not exist by that name
+          loop: ↺ and that is the whole rule, no lists to memorise
+
+  - code_output:
+      eyebrow: Measured
+      title: The same function asked for three ways
+      filename: Module1
+      lang: vba
+      output_label: Output
+      source: |
+        WorksheetFunction.Left("Hello world", 5)
+
+        Left("Hello world", 5)
+
+        WorksheetFunction.Trim("a    b")
+      output: |
+        Error 438
+        Object doesn't support this
+        property or method
+
+        Hello
+
+        [a b]
+
+  - code_output:
+      eyebrow: Measured
+      title: VLookup when the value is not in the catalogue
+      filename: Module1
+      lang: vba
+      output_label: Looking up "Zoe"
+      source: |
+        ' catalogue: Ana 100, Beto 200, Carla 300
+
+        WorksheetFunction.VLookup("Zoe", cat, 2, False)
+
+        Application.VLookup("Zoe", cat, 2, False)
+      output: |
+        WorksheetFunction:
+          Error 1004
+          Unable to get the VLookup
+          property of the
+          WorksheetFunction class
+
+        Application:
+          #N/A, and IsError gives True
+
+  - code:
+      eyebrow: The right way
+      title: Looking up five hundred times without dying on number 38
+      filename: Module1
+      lang: vba
+      source: |
+        Sub SafeLookup()
+            Dim i As Long, v As Variant
+
+            For i = 2 To 500
+                v = Application.VLookup(Cells(i, 1).Value, _
+                        Range("Catalogue"), 2, False)
+
+                If IsError(v) Then
+                    Cells(i, 2).Value = "not in catalogue"
+                Else
+                    Cells(i, 2).Value = v
+                End If
+            Next i
+        End Sub
+      annotations:
+        - label: Application, not WorksheetFunction
+          text: The same name without the middleman. It returns the error as a value instead of raising it.
+        - label: IsError
+          text: Asks whether what came back is an error value, without touching VBA's error handling
+        - label: What the report gains
+          text: The rows that do not match are flagged, and the other four hundred odd still get written
+        - label: Risk
+          text: Store the result in a String rather than a Variant and the assignment fails before you can check it.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: Formula or value
+      lede: You can leave the calculation live in the cell or write the number and be done. Both are valid and they mean different things.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured
+      title: The same sum, written two ways
+      filename: Module1
+      lang: vba
+      output_label: Before and after
+      source: |
+        ' A1 = 10, A2 = 20
+
+        Range("C1").Formula = "=SUM(A1:A2)"
+        Range("D1").Value = WorksheetFunction.Sum(Range("A1:A2"))
+
+        ' and now A1 becomes 100
+      output: |
+        when written
+          C1 = 30      D1 = 30
+
+        after A1 = 100
+          C1 = 120     D1 = 30
+
+  - concept:
+      eyebrow: Which to use
+      title: One is the calculation, the other is a photograph of it
+      lead: >-
+        The formula stays in the cell and re-evaluates itself every time something it
+        depends on changes. The value is the number that calculation gave at the moment you
+        ran the macro, and it never hears about anything again.
+      panel:
+        label: The working rule
+        title: Formulas for what gets reviewed, values for what gets closed
+        note: >-
+          A dashboard somebody will open tomorrow carries formulas. A month-end close that
+          gets filed carries values, because if it changes later it is no longer that close.
+      steps:
+        - text: Ask whether the number should follow the data
+        - text: If it should, write the formula
+        - text: If it should not, write the value
+          loop: ↺ and decide it on purpose, not by whichever came out first
+
+  - code_output:
+      eyebrow: Measured
+      title: Adding up by criterion from the macro
+      filename: Module1
+      lang: vba
+      output_label: Output
+      source: |
+        ' Sales 100, Buying 200, Sales 300
+
+        WorksheetFunction.SumIfs( _
+            Range("B1:B3"), Range("A1:A3"), "Sales")
+      output: |
+        SumIfs "Sales" ........ 400
+        SumIfs "Nothing" ...... 0
+        CountIf "Sales" ....... 2
+
+  - divider:
+      eyebrow: Block 03
+      title: R1C1 and charts
+      lede: The macro recorder does not write A1. It writes R1C1, and until today you have been reading it without knowing what it said.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: One single string for a whole column
+      filename: Module1
+      lang: vba
+      output_label: What ended up written
+      source: |
+        ' A2:A4 hold 2, 3, 4
+        ' B2:B4 hold 20, 30, 40
+
+        Range("C2:C4").FormulaR1C1 = "=RC[-2]*RC[-1]"
+      output: |
+        C2   =A2*B2   ->   40
+        C3   =A3*B3   ->   90
+        C4   =A4*B4   ->  160
+
+  - concept:
+      eyebrow: Why it matters
+      title: The same formula works on any row, so there is no text to glue together
+      lead: >-
+        In A1 you would need to know which row you are on to write the string, and you would
+        end up gluing pieces with the ampersand. In R1C1 the formula says two columns left
+        times one column left, and that is true whichever row it lands on.
+      panel:
+        label: Where you know it from
+        title: It is what the recorder has been writing for you since week 6
+        note: >-
+          When you record a macro and FormulaR1C1 shows up with brackets, this is it. Now
+          you can read it and, more to the point, change it.
+      steps:
+        - text: You record a macro that writes a formula
+        - text: The recorder leaves it in R1C1
+        - text: You edit it so it works on every row
+          loop: ↺ and there it stops being pasted output and becomes your code
+
+  - code_output:
+      eyebrow: Measured
+      title: The same cell, read in both notations
+      filename: Module1
+      lang: vba
+      output_label: Asking for .FormulaR1C1
+      source: |
+        Range("C5").Formula = "=A5*B5"
+
+        Range("C6").Formula = "=$A$1*B6"
+      output: |
+        =A5*B5    ->  =RC[-2]*RC[-1]
+
+        =$A$1*B6  ->  =R1C1*RC[-1]
+
+  - table:
+      eyebrow: The notation
+      title: The brackets are the whole difference
+      headers: ["Written as", "Means", "In A1 it would be"]
+      rows:
+        - ["RC[-1]", "One column to the left", "Relative, like B6"]
+        - ["R[-1]C", "One row up", "Relative, like C5"]
+        - ["R1C1", "Row 1, column 1", "Absolute, $A$1"]
+        - ["RC", "The cell itself", "Rarely used at all"]
+
+  - code:
+      eyebrow: The chart
+      title: A column chart built from code
+      filename: Module1
+      lang: vba
+      source: |
+        Sub ChartByDept()
+            Dim ws As Worksheet, ch As ChartObject
+            Set ws = ThisWorkbook.Sheets("Data")
+
+            Set ch = ws.ChartObjects.Add(200, 20, 300, 200)
+            ch.Chart.SetSourceData ws.Range("A1:B3")
+            ch.Chart.ChartType = xlColumnClustered
+            ch.Chart.HasTitle = True
+            ch.Chart.ChartTitle.Text = "Amount by dept"
+        End Sub
+      annotations:
+        - label: The four numbers
+          text: Left, top, width and height, in points. It is where the frame lands on the sheet.
+        - label: SetSourceData
+          text: The whole range with headers. It takes the labels and the values from there.
+        - label: ChartType
+          text: A constant. xlColumnClustered is clustered columns, the ordinary one.
+        - label: Risk
+          text: Run the macro twice and you stack one chart on top of another. Delete them first.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: What the chart kept on the inside
+      filename: Module1
+      lang: vba
+      output_label: Asking the series
+      source: |
+        Debug.Print ws.ChartObjects.Count
+        Debug.Print ch.Chart.SeriesCollection.Count
+        Debug.Print ch.Chart.SeriesCollection(1).Formula
+      output: |
+        charts = 1      series = 1
+
+        =SERIES(Sheet1!$B$1,
+          Sheet1!$A$2:$A$3,
+          Sheet1!$B$2:$B$3, 1)
+
+  - concept:
+      eyebrow: What that formula gives away
+      title: The chart kept fixed addresses
+      lead: >-
+        It says $A$2:$A$3, dollar signs and all. If ten more rows arrive tomorrow, the chart
+        still shows those two and nobody finds out, because an out-of-date chart looks
+        exactly as good as a current one.
+      panel:
+        label: How to fix it
+        title: With last week's material
+        note: >-
+          If the source is a table rather than a range, the series grows with it. It is the
+          structured-reference argument again, now applied to the chart.
+      steps:
+        - text: Turn the source into a table
+        - text: Point SetSourceData at the table
+        - text: The chart grows when the table grows
+          loop: ↺ and there stops being a chart that lies quietly
+
+  - quiz:
+      eyebrow: Quick question
+      question: The catalogue is missing the code on row 38. What is left in the report?
+      filename: Module1
+      lang: vba
+      source: |
+        For i = 2 To 500
+            Cells(i, 2).Value = _
+                WorksheetFunction.VLookup( _
+                    Cells(i, 1).Value, cat, 2, False)
+        Next i
+      options:
+        - 'Error 1004 and the macro stops. Thirty-six rows are written.'
+        - 'Cell 38 gets #N/A and the loop carries on with 39.'
+        - 'Cell 38 gets a zero and the loop carries on.'
+        - 'Cell 38 is left empty and the loop carries on.'
+
+  - trace:
+      eyebrow: Answer
+      title: It stops right there and leaves the report half done
+      headers: ["Step", "What happens", "The report"]
+      rows:
+        - ["1", "Rows 2 to 37, all of them found", "36 rows written"]
+        - ["2", "Row 38, the code is missing", "Error 1004"]
+        - ["3", "Nobody caught the error", "The macro stops"]
+        - ["4", "What is written stays written", "36 of 499, unannounced"]
+      verdict: >-
+        WorksheetFunction raises the error; Application returns #N/A as a value. With
+        Application and an IsError, row 38 is flagged as not in the catalogue and the other
+        462 still get written.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: A lookup with no net
+          desc: With WorksheetFunction, the first missing value stops the macro and splits the report
+        - label: Error 02
+          title: Holding the result in a String
+          desc: An error value does not fit in a String. It has to be a Variant to be checked.
+        - label: Error 03
+          title: Freezing what should stay live
+          desc: Writing .Value where .Formula belonged leaves a dashboard that never updates
+        - label: Error 04
+          title: A chart over a fixed range
+          desc: It keeps $A$2:$A$3 and does not grow. Over a table it does.
+
+  - lab:
+      eyebrow: Lab
+      title: Your project's automated report
+      brief: Write a macro that builds a report sheet with totals by group using SumIfs, brings in the description for each code with a lookup that cannot crash, and adds a column chart of the result.
+      blocks:
+        - label: Constraint
+          text: The lookup uses Application and checks with IsError. A missing code cannot stop the report.
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with the report sheet and the chart
+        - label: Criterion
+          text: That adding rows to the data and running again shows the new ones on the chart
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: There are two libraries
+          desc: Left is VBA's, VLookup is the sheet's, and Trim is in both doing different things
+        - title: Formula stays live, value freezes
+          desc: It is a decision about what the report is for, not a detail of how it is written
+        - title: Brackets mean relative
+          desc: RC[-1] is one column left, R1C1 is cell A1 and it does not move
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the report and add a calculated column written with FormulaR1C1 in a single statement, without building the string by gluing the row number in.
+      meta:
+        - [Due, Before session 16]
+        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The lookup", "35 %", "With Application and IsError, and the missing rows flagged"]
+        - ["The report", "35 %", "Totals by group, and formula or value chosen on purpose"]
+        - ["R1C1 and chart", "30 %", "One statement for the column, and the chart built from code"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, PivotTables from macros, error handling and protecting the project.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

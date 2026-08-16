@@ -157,6 +157,12 @@ def check(path: str) -> tuple[list[str], int]:
             problems.append(f'line {i}: unquoted colon -> {value[:64]}')
         if value.lstrip()[:1] in '@*&%`':
             problems.append(f'line {i}: needs quoting -> {value[:64]}')
+        # A bare '#' after whitespace opens a YAML comment, so the rest of the
+        # value is dropped without a word. Quote the scalar to keep it.
+        if re.search(r'(?:^|\s)#', value):
+            kept = re.split(r'(?:^|\s)#', value)[0].strip()
+            problems.append(f'line {i}: unquoted # starts a comment and YAML drops the rest '
+                            f'of the value, keeping only -> {kept[:56]}')
 
     try:
         doc = yaml.safe_load(open(path, encoding='utf-8'))

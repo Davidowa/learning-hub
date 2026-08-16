@@ -1,0 +1,448 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 15
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Escuela de Empresariales · 2026
+      unit: Semana 15 · Unidades 4 y 5 · Reportes y R1C1
+      title: Análisis y Procesamiento de la Información
+      subtitle: Las funciones de la hoja se pueden llamar desde una macro. Pero no todas, y no todas se portan igual.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 15 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Dos bibliotecas
+          desc: Las funciones de VBA y las de la hoja, y cuál responde a qué nombre
+        - title: Fórmula o valor
+          desc: Dejar el cálculo vivo o congelar el número, que no es lo mismo
+        - title: R1C1 y gráficas
+          desc: La notación que habla la grabadora, y una gráfica hecha desde código
+        - title: Tu turno
+          desc: El reporte automático de tu proyecto, con su gráfica
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión vas a poder…
+      items:
+        - head: Llamar funciones de la hoja
+          sub: Con WorksheetFunction, y saber cuáles no están ahí porque ya son de VBA
+        - head: Buscar sin que truene la macro
+          sub: Con Application en vez de WorksheetFunction, y revisando con IsError
+        - head: Decidir entre fórmula y valor
+          sub: Vivo si el reporte se vuelve a ver, congelado si es una foto del cierre
+        - head: Escribir fórmulas en R1C1
+          sub: Una sola cadena para toda una columna, sin armarla pegando texto
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde vamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programar en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Editar macros grabadas
+          desc: Rangos variables, buscar objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Dos bibliotecas
+      lede: VBA trae sus funciones y la hoja trae las suyas. Se parecen, se cruzan, y no son la misma.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Hay funciones que solo viven de un lado
+      lead: >-
+        Left, Mid y Replace son de VBA y no aparecen en WorksheetFunction. BuscarV, SumarSi
+        y Contar.Si son de la hoja y no existen sueltas en VBA. Y unas cuantas, como Trim,
+        están de los dos lados haciendo cosas distintas, que fue lo de la semana 13.
+      panel:
+        label: Cómo saber cuál es cuál
+        title: El editor te lo dice mientras escribes
+        note: >-
+          Si al teclear el punto después de WorksheetFunction la función no aparece en la
+          lista, es porque es de VBA y se llama sola, sin prefijo.
+      steps:
+        - text: Escribe el nombre sin prefijo
+        - text: Si el editor no la conoce, ponle WorksheetFunction
+        - text: Si tampoco está ahí, no existe con ese nombre
+          loop: ↺ y esa es toda la regla, no hay que memorizar listas
+
+  - code_output:
+      eyebrow: Medido
+      title: Las tres formas de pedir la misma función
+      filename: Modulo1
+      lang: vba
+      output_label: Salida
+      source: |
+        WorksheetFunction.Left("Hola mundo", 4)
+
+        Left("Hola mundo", 4)
+
+        WorksheetFunction.Trim("a    b")
+      output: |
+        Error 438
+        Object doesn't support this
+        property or method
+
+        Hola
+
+        [a b]
+
+  - code_output:
+      eyebrow: Medido
+      title: BuscarV cuando el dato no está en el catálogo
+      filename: Modulo1
+      lang: vba
+      output_label: Buscando "Zoe"
+      source: |
+        ' catalogo: Ana 100, Beto 200, Carla 300
+
+        WorksheetFunction.VLookup("Zoe", cat, 2, False)
+
+        Application.VLookup("Zoe", cat, 2, False)
+      output: |
+        WorksheetFunction:
+          Error 1004
+          Unable to get the VLookup
+          property of the
+          WorksheetFunction class
+
+        Application:
+          #N/A, y IsError da True
+
+  - code:
+      eyebrow: La forma correcta
+      title: Buscar quinientas veces sin que se caiga en la número 38
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub BuscarSeguro()
+            Dim i As Long, v As Variant
+
+            For i = 2 To 500
+                v = Application.VLookup(Cells(i, 1).Value, _
+                        Range("Catalogo"), 2, False)
+
+                If IsError(v) Then
+                    Cells(i, 2).Value = "sin catalogo"
+                Else
+                    Cells(i, 2).Value = v
+                End If
+            Next i
+        End Sub
+      annotations:
+        - label: Application, no WorksheetFunction
+          text: El mismo nombre, sin el intermediario. Devuelve el error como valor en vez de lanzarlo.
+        - label: IsError
+          text: Pregunta si lo que volvió es un valor de error, sin tocar el manejo de errores de VBA
+        - label: Qué gana el reporte
+          text: Las filas que no casan quedan marcadas, y las otras cuatrocientas y pico se escriben igual
+        - label: Riesgo
+          text: En un String en vez de un Variant, la asignación truena antes de que puedas revisarlo.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Fórmula o valor
+      lede: Puedes dejar el cálculo vivo en la celda o escribir el número y ya. Las dos son válidas y significan cosas distintas.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido
+      title: La misma suma, escrita de dos maneras
+      filename: Modulo1
+      lang: vba
+      output_label: Antes y después
+      source: |
+        ' A1 = 10, A2 = 20
+
+        Range("C1").Formula = "=SUM(A1:A2)"
+        Range("D1").Value = WorksheetFunction.Sum(Range("A1:A2"))
+
+        ' y ahora A1 pasa a 100
+      output: |
+        al escribirlas
+          C1 = 30      D1 = 30
+
+        despues de A1 = 100
+          C1 = 120     D1 = 30
+
+  - concept:
+      eyebrow: Cuál usar
+      title: Una es el cálculo, la otra es la foto del cálculo
+      lead: >-
+        La fórmula se queda en la celda y se vuelve a evaluar sola cada vez que cambia algo
+        de lo que depende. El valor es el número que dio ese cálculo en el momento en que
+        corriste la macro, y ya no se entera de nada más.
+      panel:
+        label: La regla de trabajo
+        title: Fórmula para lo que se revisa, valor para lo que se cierra
+        note: >-
+          Un tablero que alguien va a abrir mañana lleva fórmulas. Un corte de mes que se
+          archiva lleva valores, porque si cambia después ya no es el corte de ese mes.
+      steps:
+        - text: Pregunta si el número debe seguir a los datos
+        - text: Si sí, escribe la fórmula
+        - text: Si no, escribe el valor
+          loop: ↺ y decidirlo a propósito, no por cuál te salió primero
+
+  - code_output:
+      eyebrow: Medido
+      title: Sumar por criterio desde la macro
+      filename: Modulo1
+      lang: vba
+      output_label: Salida
+      source: |
+        ' Ventas 100, Compras 200, Ventas 300
+
+        WorksheetFunction.SumIfs( _
+            Range("B1:B3"), Range("A1:A3"), "Ventas")
+      output: |
+        SumIfs "Ventas" ....... 400
+        SumIfs "Nada" ......... 0
+        CountIf "Ventas" ...... 2
+
+  - divider:
+      eyebrow: Bloque 03
+      title: R1C1 y gráficas
+      lede: La grabadora de macros no escribe A1. Escribe R1C1, y hasta hoy lo has estado leyendo sin saber qué dice.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: Una sola cadena para toda la columna
+      filename: Modulo1
+      lang: vba
+      output_label: Lo que quedó escrito
+      source: |
+        ' A2:A4 traen 2, 3, 4
+        ' B2:B4 traen 20, 30, 40
+
+        Range("C2:C4").FormulaR1C1 = "=RC[-2]*RC[-1]"
+      output: |
+        C2   =A2*B2   ->   40
+        C3   =A3*B3   ->   90
+        C4   =A4*B4   ->  160
+
+  - concept:
+      eyebrow: Por qué importa
+      title: La misma fórmula sirve para cualquier fila, y por eso no hay que armarla pegando texto
+      lead: >-
+        En A1 tendrías que saber en qué fila estás para escribir la cadena, y acabarías
+        pegando pedazos con el ampersand. En R1C1 la fórmula dice dos columnas a la
+        izquierda por una a la izquierda, y eso es cierto en la fila que sea.
+      panel:
+        label: De dónde te suena
+        title: Es lo que la grabadora lleva escribiéndote desde la semana 6
+        note: >-
+          Cuando grabas una macro y aparece FormulaR1C1 con corchetes, es esto. Ahora ya
+          puedes leerla y, sobre todo, cambiarla.
+      steps:
+        - text: Grabas una macro que escribe una fórmula
+        - text: La grabadora la deja en R1C1
+        - text: Tú la editas para que sirva en todas las filas
+          loop: ↺ y ahí deja de ser un pegote y se vuelve código tuyo
+
+  - code_output:
+      eyebrow: Medido
+      title: La misma celda, leída en las dos notaciones
+      filename: Modulo1
+      lang: vba
+      output_label: Al pedir .FormulaR1C1
+      source: |
+        Range("C5").Formula = "=A5*B5"
+
+        Range("C6").Formula = "=$A$1*B6"
+      output: |
+        =A5*B5    ->  =RC[-2]*RC[-1]
+
+        =$A$1*B6  ->  =R1C1*RC[-1]
+
+  - table:
+      eyebrow: La notación
+      title: Los corchetes son toda la diferencia
+      headers: ["Se escribe", "Quiere decir", "En A1 sería"]
+      rows:
+        - ["RC[-1]", "Una columna a la izquierda", "Relativa, como B6"]
+        - ["R[-1]C", "Un renglón arriba", "Relativa, como C5"]
+        - ["R1C1", "Renglón 1, columna 1", "Absoluta, $A$1"]
+        - ["RC", "La celda misma", "Se usa poco, casi nunca"]
+
+  - code:
+      eyebrow: La gráfica
+      title: Un gráfico de columnas hecho desde código
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub GraficaPorDepto()
+            Dim ws As Worksheet, ch As ChartObject
+            Set ws = ThisWorkbook.Sheets("Datos")
+
+            Set ch = ws.ChartObjects.Add(200, 20, 300, 200)
+            ch.Chart.SetSourceData ws.Range("A1:B3")
+            ch.Chart.ChartType = xlColumnClustered
+            ch.Chart.HasTitle = True
+            ch.Chart.ChartTitle.Text = "Monto por depto"
+        End Sub
+      annotations:
+        - label: Los cuatro números
+          text: Izquierda, arriba, ancho y alto, en puntos. Es dónde queda el recuadro en la hoja.
+        - label: SetSourceData
+          text: El rango completo con encabezados. De ahí saca las etiquetas y los valores.
+        - label: ChartType
+          text: Una constante. xlColumnClustered son columnas agrupadas, la de siempre.
+        - label: Riesgo
+          text: Si la macro corre dos veces, se te encima una gráfica sobre la otra. Bórralas antes.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Con qué se quedó la gráfica por dentro
+      filename: Modulo1
+      lang: vba
+      output_label: Al preguntarle a la serie
+      source: |
+        Debug.Print ws.ChartObjects.Count
+        Debug.Print ch.Chart.SeriesCollection.Count
+        Debug.Print ch.Chart.SeriesCollection(1).Formula
+      output: |
+        graficas = 1    series = 1
+
+        =SERIES(Sheet1!$B$1,
+          Sheet1!$A$2:$A$3,
+          Sheet1!$B$2:$B$3, 1)
+
+  - concept:
+      eyebrow: Lo que revela esa fórmula
+      title: La gráfica se quedó con direcciones fijas
+      lead: >-
+        Ahí dice $A$2:$A$3, con los signos de pesos. Si mañana llegan diez filas más, la
+        gráfica sigue mostrando esas dos y nadie se entera, porque una gráfica desactualizada
+        se ve igual de bien que una al día.
+      panel:
+        label: Cómo se arregla
+        title: Con lo de la semana pasada
+        note: >-
+          Si el origen es una tabla en vez de un rango, la serie crece con ella. Es el mismo
+          argumento de la referencia estructurada, ahora aplicado al gráfico.
+      steps:
+        - text: Convierte el origen en tabla
+        - text: Apunta SetSourceData a la tabla
+        - text: La gráfica crece cuando crece la tabla
+          loop: ↺ y deja de haber una gráfica que miente en silencio
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El catálogo no trae el código de la fila 38. ¿Qué queda en el reporte?
+      filename: Modulo1
+      lang: vba
+      source: |
+        For i = 2 To 500
+            Cells(i, 2).Value = _
+                WorksheetFunction.VLookup( _
+                    Cells(i, 1).Value, cat, 2, False)
+        Next i
+      options:
+        - 'Error 1004 y la macro se detiene. Quedan 36 renglones escritos.'
+        - 'La celda 38 queda con #N/A y el ciclo sigue con la 39.'
+        - 'La celda 38 queda en cero y el ciclo sigue.'
+        - 'La celda 38 queda vacía y el ciclo sigue.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Se detiene ahí y deja el reporte a medias
+      headers: ["Paso", "Qué pasa", "El reporte"]
+      rows:
+        - ["1", "Filas 2 a 37, todas encontradas", "36 renglones escritos"]
+        - ["2", "Fila 38, el código no está", "Error 1004"]
+        - ["3", "Nadie atrapó el error", "La macro se detiene"]
+        - ["4", "Lo escrito se queda escrito", "36 de 499, sin aviso"]
+      verdict: >-
+        WorksheetFunction lanza el error; Application devuelve #N/A como valor. Con
+        Application y un IsError, la fila 38 se marca como sin catálogo y las otras 462 se
+        escriben igual.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: BuscarV sin red
+          desc: Con WorksheetFunction, el primer dato que falte detiene la macro y deja el reporte partido
+        - label: Error 02
+          title: Guardar el resultado en un String
+          desc: El valor de error no cabe en un String. Tiene que ser Variant para poder revisarlo.
+        - label: Error 03
+          title: Congelar lo que debía seguir vivo
+          desc: Escribir .Value donde iba .Formula deja un tablero que ya no se actualiza
+        - label: Error 04
+          title: Gráfica sobre rango fijo
+          desc: Se queda con $A$2:$A$3 y no crece. Sobre una tabla sí.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El reporte automático de tu proyecto
+      brief: Escribe una macro que arme una hoja de reporte con totales por grupo usando SumIfs, traiga la descripción de cada código con una búsqueda que no truene, y agregue una gráfica de columnas del resultado.
+      blocks:
+        - label: Restricción
+          text: La búsqueda usa Application y revisa con IsError. Un código que falte no puede detener el reporte.
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con la hoja de reporte y la gráfica
+        - label: Criterio
+          text: Que al agregar filas a los datos y volver a correr, la gráfica muestre las nuevas
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarte
+      items:
+        - title: Son dos bibliotecas
+          desc: Left es de VBA, BuscarV es de la hoja, y Trim está en las dos haciendo cosas distintas
+        - title: Fórmula queda viva, valor congela
+          desc: Es una decisión sobre para qué sirve el reporte, no un detalle de cómo se escribe
+        - title: Los corchetes son relativos
+          desc: RC[-1] es una columna a la izquierda, R1C1 es la celda A1 y no se mueve
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina el reporte y agrégale una columna calculada que escribas con FormulaR1C1 en una sola instrucción, sin armar la cadena pegando el número de fila.
+      meta:
+        - [Entrega, Antes de la sesión 16]
+        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["La búsqueda", "35 %", "Con Application e IsError, y las filas sin catálogo marcadas"]
+        - ["El reporte", "35 %", "Totales por grupo, y fórmula o valor elegido a propósito"]
+        - ["R1C1 y gráfica", "30 %", "Una sola instrucción para la columna, y la gráfica desde código"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, tablas dinámicas desde macros, manejo de errores y protección del proyecto.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]
