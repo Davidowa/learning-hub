@@ -6,8 +6,11 @@ editar nada del kit.
 
 ## Encargo
 
-Terminar los cuadernos de COM102. Van tres semanas de diecisiete, en los dos
-idiomas, así que faltan **catorce semanas por dos idiomas**.
+Terminar los cuadernos de COM102. Van tres de veintiuna, en los dos idiomas.
+
+Faltan **dieciocho semanas por dos idiomas, treinta y seis cuadernos**: `w01.4`,
+`w01.5`, y de `w02` a `w17`. La semana `w01.0` es el encuadre y no lleva
+cuaderno, igual que en Análisis de Datos.
 
 Empieza por `w01.4` y sigue en orden hasta `w17`.
 
