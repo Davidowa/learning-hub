@@ -1,0 +1,432 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 13
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 13 · Unit 4 · Cleaning and sorting
+      title: Information Analysis and Processing
+      subtitle: Data arrives dirty. Cleaning it by hand does not scale, and sorting it wrong decouples the rows with no warning.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 13 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Cleaning
+          desc: Spaces you cannot see, uneven case, duplicates and blank rows
+        - title: Sorting
+          desc: By several criteria, and the mistake that corrupts the data with no warning
+        - title: The second midterm
+          desc: What it covers, how it is sat, and what you may bring with you
+        - title: Your turn
+          desc: Your project database, cleaned and sorted from a macro
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Clean text from a macro
+          sub: Spare spaces, hard spaces and case, across the whole range at once
+        - head: Remove duplicates and blank rows
+          sub: And know which of the repeated rows is the one that survives
+        - head: Sort by several criteria
+          sub: With Sort, its keys and the header declared, which is not optional
+        - head: Sit the second midterm
+          sub: What it covers, what you may consult, and how the answer is uploaded
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Cleaning
+      lede: The database they send you is not clean. And the worse part is that it looks clean.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What makes data dirty does not show on the screen
+      lead: >-
+        A name with a trailing space looks identical to one without. Two cells that look the
+        same are not, the lookup does not find them, the PivotTable counts them separately,
+        and nobody understands why there are two rows for Sales.
+      panel:
+        label: Why it matters
+        title: The error turns up three steps later
+        note: >-
+          The dirty cell does not complain. The report complains, the following week, when
+          the total does not add up and nobody remembers where the data came from.
+      steps:
+        - text: Somebody pastes data from another system
+        - text: It looks fine and nobody checks it
+        - text: The report gives a total that is wrong
+          loop: ↺ and by then the cause is three steps away
+
+  - code_output:
+      eyebrow: Measured
+      title: VBA Trim and Excel Trim do not do the same thing
+      filename: Module1
+      lang: vba
+      output_label: Output
+      source: |
+        Debug.Print Trim("  Ana Lopez  ")
+        Debug.Print Trim("Ana    Lopez")
+        Debug.Print WorksheetFunction.Trim("Ana    Lopez")
+      output: |
+        [Ana Lopez]
+        [Ana    Lopez]
+        [Ana Lopez]
+
+  - code_output:
+      eyebrow: Measured
+      title: The space Trim does not remove
+      filename: Module1
+      lang: vba
+      output_label: With "Ana" and Chr(160)
+      source: |
+        s = "Ana" & Chr(160)
+
+        Debug.Print Len(s), Len(Trim(s))
+        Debug.Print Trim(s) = "Ana"
+
+        s = Replace(s, Chr(160), " ")
+        Debug.Print Trim(s) = "Ana"
+      output: |
+        4    4
+        False
+
+        True
+
+  - code:
+      eyebrow: The macro
+      title: Cleaning a column of names in one go
+      filename: Module1
+      lang: vba
+      source: |
+        Sub CleanNames()
+            Dim cell As Range
+
+            For Each cell In Range("A2:A200")
+                cell.Value = WorksheetFunction.Trim( _
+                    Replace(cell.Value, Chr(160), " "))
+                cell.Value = WorksheetFunction.Proper(cell.Value)
+            Next cell
+        End Sub
+      annotations:
+        - label: The order
+          text: Replace first. Clean before translating and the hard space is still there.
+        - label: Excel Trim
+          text: The sheet one, not the VBA one, so it also collapses the spaces in the middle
+        - label: For Each
+          text: Walks the range cell by cell, without you caring how many rows it brings
+        - label: Risk
+          text: Proper does not always get it right. The next slide has the measured cases.
+          accent: true
+
+  - table:
+      eyebrow: Measured
+      title: What Proper actually returns
+      headers: ["In", "Out", "Right?"]
+      rows:
+        - ["ana MARIA lopez", "Ana Maria Lopez", "Yes"]
+        - ["o'brien", "O'Brien", "Yes"]
+        - ["juan de la cruz", "Juan De La Cruz", "No"]
+        - ["mcdonald", "Mcdonald", "No"]
+        - ["EMPRESA S.A. de C.V.", "Empresa S.A. De C.V.", "No"]
+        - ["ana3ana", "Ana3Ana", "No"]
+
+  - code_output:
+      eyebrow: Measured
+      title: When duplicates go, the first one stays
+      filename: Module1
+      lang: vba
+      output_label: Before and after
+      source: |
+        ' A: Dept      B: Name
+        ' Sales        first
+        ' Buying       second
+        ' Sales        third
+
+        Range("A1:B4").RemoveDuplicates _
+            Columns:=1, Header:=xlYes
+      output: |
+        Sales     first
+        Buying    second
+        (empty row)
+
+  - quiz:
+      eyebrow: Quick question
+      question: The data now lives in B and C. How many rows are left?
+      filename: Module1
+      lang: vba
+      source: |
+        ' B: Dept      C: Name
+        ' Sales        first
+        ' Buying       second
+        ' Sales        third
+
+        Range("B1:C4").RemoveDuplicates _
+            Columns:=2, Header:=xlYes
+      options:
+        - 'All three. Columns:=2 looks at column C and the names differ.'
+        - 'Two, same as before. Columns:=2 is column B.'
+        - 'Error 1004, because the range does not start at column A.'
+        - 'Two, and it also clears the contents of column C.'
+
+  - trace:
+      eyebrow: Answer
+      title: Columns counts inside the range, not on the sheet
+      headers: ["Step", "What VBA looks at", "Result"]
+      rows:
+        - ["1", "The range is B1:C4", "Two columns"]
+        - ["2", "Columns:=2 is the second of the range", "Column C"]
+        - ["3", "It compares first, second, third", "All three differ"]
+        - ["4", "It finds nothing to remove", "The three rows stay"]
+      verdict: To remove duplicates by Dept, which sits in B, you have to pass Columns:=1. The macro does not fail, does not warn and does nothing. The number it wants is the position inside the range.
+
+  - code_output:
+      eyebrow: Measured
+      title: Deleting rows downwards skips half of them
+      filename: Module1
+      lang: vba
+      output_label: With 2 and 3 empty
+      source: |
+        For i = 1 To 4
+            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+        Next i
+
+        For i = 4 To 1 Step -1
+            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+        Next i
+      output: |
+        downwards:  a  .  d
+        upwards:    a  d
+
+  - divider:
+      eyebrow: Block 02
+      title: Sorting
+      lede: Sorting moves whole rows. Ask it to move less and it destroys your data and says nothing.
+      block: 2
+
+  - code:
+      eyebrow: Two criteria
+      title: By department, and by salary inside each one
+      filename: Module1
+      lang: vba
+      source: |
+        Sub SortData()
+            Dim ws As Worksheet
+            Set ws = ThisWorkbook.Sheets("Data")
+
+            ws.Range("A1:C200").Sort _
+                Key1:=ws.Range("B1"), Order1:=xlAscending, _
+                Key2:=ws.Range("C1"), Order2:=xlDescending, _
+                Header:=xlYes
+        End Sub
+      annotations:
+        - label: Key1 and Key2
+          text: A cell in the column you sort by. Key2 breaks ties inside Key1.
+        - label: The range
+          text: Every column of the data, not only the one you are sorting by
+        - label: Header
+          text: xlYes leaves the first row where it is instead of sorting it in
+        - label: Risk
+          text: If the range falls short, the columns outside it do not move and the rows decouple.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Leave the header undeclared and the header gets sorted
+      filename: Module1
+      lang: vba
+      output_label: Column A afterwards
+      source: |
+        Range("A1:C5").Sort _
+            Key1:=Range("A1"), _
+            Order1:=xlAscending, _
+            Header:=xlNo
+      output: |
+        Ana
+        Beto
+        Carla
+        Dario
+        Name
+
+  - code_output:
+      eyebrow: Measured
+      title: Sorting one column decouples the whole database
+      filename: Module1
+      lang: vba
+      output_label: Name and salary after
+      source: |
+        ' Ana 15000, Beto 22000,
+        ' Carla 18000, Dario 12000
+
+        Range("C2:C5").Sort _
+            Key1:=Range("C2"), _
+            Order1:=xlAscending, _
+            Header:=xlNo
+      output: |
+        Ana     12000
+        Beto    15000
+        Carla   18000
+        Dario   22000
+
+  - concept:
+      eyebrow: The costliest of the session
+      title: The salaries got sorted and the names stayed put
+      lead: >-
+        Ana earned 15000 and now shows 12000, which was Dario's. No cell is empty, no data
+        was lost and no error was raised. Every row simply says something false, and the
+        file looks perfectly normal.
+      panel:
+        label: How to avoid it
+        title: The Sort range covers the whole database
+        note: >-
+          Sorting is an operation on rows. The range runs from the first column to the last,
+          and the key only points at which of them to order by.
+      steps:
+        - text: Select the whole database
+        - text: Point at the column with Key1
+        - text: Excel moves the entire rows
+          loop: ↺ and each salary travels with its own name
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: Sorting a single column
+          desc: The rows decouple, no error is raised and the file looks normal
+        - label: Error 02
+          title: Forgetting Header:=xlYes
+          desc: The header is sorted with the data and ends up in the middle of it
+        - label: Error 03
+          title: RemoveDuplicates Columns
+          desc: It counts inside the range, not on the sheet. Get it wrong and it removes nothing, silently.
+        - label: Error 04
+          title: Deleting rows top to bottom
+          desc: Delete one and the next moves up into a position the loop has already passed
+
+  - divider:
+      eyebrow: Block 03
+      title: The second midterm
+      lede: It covers unit 3 in full and the start of unit 4. It is sat at the machine, with your notes beside you.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · What it covers
+      title: From week 8 onwards
+      headers: [Weeks, Topic, What is assessed]
+      rows:
+        - ["8", "Decisions", "If, comparison and logical operators"]
+        - ["9", "Loops", "For, For Each and walking ranges"]
+        - ["10", "Modularity", "Procedures, functions and parameters"]
+        - ["11 and 12", "Events and classes", "Change, Open, BeforeSave and classes"]
+        - ["13", "Unit 4", "Cleaning and sorting from macros"]
+        - ["Weight", "Week 13", "20 % of the final grade"]
+
+  - steps:
+      eyebrow: Block 03 · How it works
+      title: Five things to know before sitting down
+      items:
+        - label: '01'
+          title: On the classroom machine
+          desc: Solved in Excel, not on paper. You may bring a USB drive with whatever you like.
+        - label: '02'
+          title: With your own material
+          desc: Notes, submitted assignments, the books, the web, and anything you generated with AI beforehand.
+        - label: '03'
+          title: No communication channel
+          desc: There is web access, but no email and no messaging. The network is for uploading, nothing else.
+        - label: '04'
+          title: Devices at the front
+          desc: Phone, headphones and AI glasses go to the front of the room before starting.
+        - label: '05'
+          title: Uploaded compressed
+          desc: A .zip named with your full name, for instance PedroPerezGonzalez.zip, to Blackboard.
+
+  - method:
+      eyebrow: Block 03 · What is actually asked
+      title: You may consult everything, and you still have to know
+      statement: The midterm will hand you a dirty, unsorted database. What is measured is whether you leave it usable with a macro, not whether you remembered the syntax.
+      points:
+        - label: What is assessed
+          text: That the macro runs on data you had not seen and that it uses a variable range instead of a fixed address
+        - label: The defence
+          text: I may ask you to talk through one of your own procedures out loud. Reading it is not explaining it.
+        - label: How to prepare
+          text: By redoing the weeks 9 to 12 assignments without looking at your solution. Consulting is fast once you know what to look for.
+
+  - lab:
+      eyebrow: Lab
+      title: Your project database, cleaned from a macro
+      brief: Take your project database and write a macro that leaves it usable. It should remove spare and hard spaces, even out the case, delete the blank rows and sort by two criteria.
+      blocks:
+        - label: Constraint
+          text: The range is calculated, not typed. The macro has to work if a thousand more rows arrive tomorrow.
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with the data before and after on two sheets
+        - label: Criterion
+          text: That after sorting, every row still says what it said before sorting
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Dirt does not show
+          desc: A hard space survives Trim and makes two identical cells compare as different
+        - title: Sorting moves rows
+          desc: If the range misses part of the data, the rows decouple with no error at all
+        - title: Delete from the bottom up
+          desc: Remove a row and the next one moves up into a spot the loop has already passed
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the lab macro and add a report, on a separate sheet, saying how many rows were cleaned, how many were deleted as blank and how many as duplicates.
+      meta:
+        - [Due, Before session 14]
+        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Cleaning", "40 %", "Spaces, hard spaces and case, across the whole range"]
+        - ["Sorting", "30 %", "Two criteria, header declared and the whole database in the range"]
+        - ["The report", "30 %", "The three counts come from the run, not typed by hand"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, advanced filters and subtotals from macros, and handling tables.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

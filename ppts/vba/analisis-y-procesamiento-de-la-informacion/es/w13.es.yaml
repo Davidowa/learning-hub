@@ -1,0 +1,432 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 13
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Escuela de Empresariales · 2026
+      unit: Semana 13 · Unidad 4 · Limpiar y ordenar
+      title: Análisis y Procesamiento de la Información
+      subtitle: Los datos llegan sucios. Limpiarlos a mano no escala, y ordenarlos mal despareja las filas sin que nada te avise.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 13 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Limpiar
+          desc: Espacios que no se ven, mayúsculas disparejas, duplicados y filas en blanco
+        - title: Ordenar
+          desc: Por varios criterios, y el error que corrompe la base sin dar un solo aviso
+        - title: El segundo parcial
+          desc: Qué abarca, cómo se presenta y qué puedes traer contigo
+        - title: Tu turno
+          desc: La base de tu proyecto, limpia y ordenada desde una macro
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión vas a poder…
+      items:
+        - head: Limpiar texto desde una macro
+          sub: Espacios de sobra, espacios duros y mayúsculas, recorriendo el rango completo
+        - head: Quitar duplicados y filas vacías
+          sub: Y saber cuál de las filas repetidas es la que sobrevive
+        - head: Ordenar por varios criterios
+          sub: Con Sort, sus llaves y el encabezado declarado, que no es opcional
+        - head: Presentar el segundo parcial
+          sub: Qué abarca, qué puedes consultar y cómo se sube la respuesta
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde vamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programar en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Editar macros grabadas
+          desc: Rangos variables, buscar objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Limpiar
+      lede: La base que te van a mandar no está limpia. Y lo peor es que se ve limpia.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Lo que ensucia una base no se ve en la pantalla
+      lead: >-
+        Un nombre con un espacio al final se ve idéntico a uno sin él. Dos celdas que
+        parecen iguales no lo son, la búsqueda no las encuentra, la tabla dinámica las
+        cuenta por separado y nadie entiende por qué salen dos renglones de Ventas.
+      panel:
+        label: Por qué importa
+        title: El error aparece tres pasos después
+        note: >-
+          La celda sucia no se queja. Se queja el reporte, la semana siguiente, cuando el
+          total no cuadra y ya nadie se acuerda de dónde salieron los datos.
+      steps:
+        - text: Alguien pega datos de otro sistema
+        - text: Se ven bien y nadie los revisa
+        - text: El reporte da un total que no cuadra
+          loop: ↺ y para entonces la causa está a tres pasos de distancia
+
+  - code_output:
+      eyebrow: Medido
+      title: Trim de VBA y Trim de Excel no hacen lo mismo
+      filename: Modulo1
+      lang: vba
+      output_label: Salida
+      source: |
+        Debug.Print Trim("  Ana Lopez  ")
+        Debug.Print Trim("Ana    Lopez")
+        Debug.Print WorksheetFunction.Trim("Ana    Lopez")
+      output: |
+        [Ana Lopez]
+        [Ana    Lopez]
+        [Ana Lopez]
+
+  - code_output:
+      eyebrow: Medido
+      title: El espacio que Trim no quita
+      filename: Modulo1
+      lang: vba
+      output_label: Con "Ana" y Chr(160)
+      source: |
+        s = "Ana" & Chr(160)
+
+        Debug.Print Len(s), Len(Trim(s))
+        Debug.Print Trim(s) = "Ana"
+
+        s = Replace(s, Chr(160), " ")
+        Debug.Print Trim(s) = "Ana"
+      output: |
+        4    4
+        False
+
+        True
+
+  - code:
+      eyebrow: La macro
+      title: Limpiar una columna de nombres de un jalón
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub LimpiarNombres()
+            Dim celda As Range
+
+            For Each celda In Range("A2:A200")
+                celda.Value = WorksheetFunction.Trim( _
+                    Replace(celda.Value, Chr(160), " "))
+                celda.Value = WorksheetFunction.Proper(celda.Value)
+            Next celda
+        End Sub
+      annotations:
+        - label: El orden
+          text: Replace primero. Si limpias antes de traducir, el espacio duro sigue ahí.
+        - label: Trim de Excel
+          text: El de la hoja, no el de VBA, para que también colapse los espacios de en medio
+        - label: For Each
+          text: Recorre el rango celda por celda, sin que te importe cuántas filas trae
+        - label: Riesgo
+          text: Proper no siempre acierta. La siguiente lámina trae los casos medidos.
+          accent: true
+
+  - table:
+      eyebrow: Medido
+      title: Qué devuelve Proper de verdad
+      headers: ["Entra", "Sale", "¿Correcto?"]
+      rows:
+        - ["ana MARIA lopez", "Ana Maria Lopez", "Sí"]
+        - ["o'brien", "O'Brien", "Sí"]
+        - ["juan de la cruz", "Juan De La Cruz", "No"]
+        - ["mcdonald", "Mcdonald", "No"]
+        - ["EMPRESA S.A. de C.V.", "Empresa S.A. De C.V.", "No"]
+        - ["ana3ana", "Ana3Ana", "No"]
+
+  - code_output:
+      eyebrow: Medido
+      title: Al quitar duplicados, gana la primera
+      filename: Modulo1
+      lang: vba
+      output_label: Antes y después
+      source: |
+        ' A: Depto     B: Nombre
+        ' Ventas       primero
+        ' Compras      segundo
+        ' Ventas       tercero
+
+        Range("A1:B4").RemoveDuplicates _
+            Columns:=1, Header:=xlYes
+      output: |
+        Ventas    primero
+        Compras   segundo
+        (fila vacia)
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: La base ahora vive en B y C. ¿Cuántas filas quedan?
+      filename: Modulo1
+      lang: vba
+      source: |
+        ' B: Depto     C: Nombre
+        ' Ventas       primero
+        ' Compras      segundo
+        ' Ventas       tercero
+
+        Range("B1:C4").RemoveDuplicates _
+            Columns:=2, Header:=xlYes
+      options:
+        - 'Las tres. Columns:=2 mira la columna C y los nombres son distintos.'
+        - 'Dos, igual que antes. Columns:=2 es la columna B.'
+        - 'Error 1004, porque el rango no empieza en la columna A.'
+        - 'Dos, y además borra el contenido de la columna C.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Columns cuenta dentro del rango, no en la hoja
+      headers: ["Paso", "Qué mira VBA", "Resultado"]
+      rows:
+        - ["1", "El rango es B1:C4", "Dos columnas"]
+        - ["2", "Columns:=2 es la segunda del rango", "La columna C"]
+        - ["3", "Compara primero, segundo, tercero", "Los tres distintos"]
+        - ["4", "No encuentra qué quitar", "Siguen las tres filas"]
+      verdict: Para quitar duplicados por Depto, que está en B, hay que pasar Columns:=1. La macro no falla, no avisa y no hace nada. El número que espera es la posición dentro del rango.
+
+  - code_output:
+      eyebrow: Medido
+      title: Borrar filas hacia adelante se salta la mitad
+      filename: Modulo1
+      lang: vba
+      output_label: Con vacías en 2 y 3
+      source: |
+        For i = 1 To 4
+            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+        Next i
+
+        For i = 4 To 1 Step -1
+            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+        Next i
+      output: |
+        hacia adelante:  a  .  d
+        hacia atras:     a  d
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Ordenar
+      lede: Ordenar mueve filas completas. Si le pides que mueva menos, te destruye la base y no te dice nada.
+      block: 2
+
+  - code:
+      eyebrow: Dos criterios
+      title: Por departamento, y dentro de cada uno por sueldo
+      filename: Modulo1
+      lang: vba
+      source: |
+        Sub OrdenarBase()
+            Dim ws As Worksheet
+            Set ws = ThisWorkbook.Sheets("Datos")
+
+            ws.Range("A1:C200").Sort _
+                Key1:=ws.Range("B1"), Order1:=xlAscending, _
+                Key2:=ws.Range("C1"), Order2:=xlDescending, _
+                Header:=xlYes
+        End Sub
+      annotations:
+        - label: Key1 y Key2
+          text: Una celda de la columna por la que ordenas. Key2 desempata dentro de Key1.
+        - label: El rango
+          text: Todas las columnas de la base, no solo la que ordenas
+        - label: Header
+          text: xlYes deja la primera fila en su sitio y no la mete al montón
+        - label: Riesgo
+          text: Si el rango se queda corto, las columnas de fuera no se mueven y la base se despareja.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Sin declarar el encabezado, el encabezado se ordena
+      filename: Modulo1
+      lang: vba
+      output_label: Columna A después
+      source: |
+        Range("A1:C5").Sort _
+            Key1:=Range("A1"), _
+            Order1:=xlAscending, _
+            Header:=xlNo
+      output: |
+        Ana
+        Beto
+        Carla
+        Dario
+        Nombre
+
+  - code_output:
+      eyebrow: Medido
+      title: Ordenar una sola columna despareja toda la base
+      filename: Modulo1
+      lang: vba
+      output_label: Nombre y sueldo después
+      source: |
+        ' Ana 15000, Beto 22000,
+        ' Carla 18000, Dario 12000
+
+        Range("C2:C5").Sort _
+            Key1:=Range("C2"), _
+            Order1:=xlAscending, _
+            Header:=xlNo
+      output: |
+        Ana     12000
+        Beto    15000
+        Carla   18000
+        Dario   22000
+
+  - concept:
+      eyebrow: El más caro de la sesión
+      title: Los sueldos se ordenaron y los nombres se quedaron quietos
+      lead: >-
+        Ana ganaba 15000 y ahora aparece con 12000, que era el de Darío. Ninguna celda está
+        vacía, ningún dato se perdió y no salió ningún error. Simplemente todos los
+        renglones dicen algo falso, y el archivo se ve perfectamente normal.
+      panel:
+        label: Cómo se evita
+        title: El rango del Sort abarca la base completa
+        note: >-
+          Ordenar es una operación de filas. El rango va de la primera columna a la última,
+          y la llave nada más señala por cuál de ellas.
+      steps:
+        - text: Selecciona toda la base
+        - text: Señala la columna con Key1
+        - text: Excel mueve las filas enteras
+          loop: ↺ y ahí cada sueldo se va con su nombre
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: Ordenar una columna sola
+          desc: Las filas se desparejan, no sale ningún error y el archivo se ve normal
+        - label: Error 02
+          title: Olvidar Header:=xlYes
+          desc: El encabezado se ordena con los datos y termina en medio de la base
+        - label: Error 03
+          title: Columns de RemoveDuplicates
+          desc: Cuenta dentro del rango, no en la hoja. Si te equivocas, no quita nada y no avisa.
+        - label: Error 04
+          title: Borrar filas de arriba hacia abajo
+          desc: Al borrar una, la de abajo sube y el ciclo ya pasó de largo por ese renglón
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El segundo parcial
+      lede: Abarca la unidad 3 completa y el arranque de la unidad 4. Se presenta en la máquina, con tus apuntes al lado.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Qué abarca
+      title: De la semana 8 para acá
+      headers: [Semanas, Tema, Qué se evalúa]
+      rows:
+        - ["8", "Decisiones", "If y operadores de comparación"]
+        - ["9", "Ciclos", "For, For Each y recorrido de rangos"]
+        - ["10", "Modularidad", "Procedimientos y funciones"]
+        - ["11 y 12", "Eventos y clases", "Change, Open, BeforeSave y clases"]
+        - ["13", "Unidad 4", "Limpieza y ordenación desde macros"]
+        - ["Peso", "Semana 13", "20 % de la calificación final"]
+
+  - steps:
+      eyebrow: Bloque 03 · Cómo funciona
+      title: Cinco cosas antes de sentarte
+      items:
+        - label: '01'
+          title: En la máquina del salón
+          desc: Se resuelve en Excel, no en papel. Puedes traer una USB con lo que quieras.
+        - label: '02'
+          title: Con tu propio material
+          desc: Apuntes, tareas entregadas, los libros, la web y lo que hayas generado antes con IA.
+        - label: '03'
+          title: Sin canal de comunicación
+          desc: Hay web, pero no correo ni mensajería. La red es para subir, nada más.
+        - label: '04'
+          title: Dispositivos al frente
+          desc: Celular, audífonos y lentes con IA se dejan al frente del salón antes de empezar.
+        - label: '05'
+          title: Se sube comprimido
+          desc: Un .zip con tu nombre completo, por ejemplo PedroPerezGonzalez.zip, a Blackboard.
+
+  - method:
+      eyebrow: Bloque 03 · Qué se pregunta
+      title: Puedes consultar todo, y aun así tienes que saber
+      statement: El parcial te va a dar una base sucia y desordenada. Lo que se mide es si la dejas usable con una macro, no si te acordabas de la sintaxis.
+      points:
+        - label: Qué se evalúa
+          text: Que la macro corra sobre datos que no habías visto y que use un rango variable en vez de una dirección fija
+        - label: La defensa
+          text: Te puedo pedir que expliques uno de tus procedimientos en voz alta. Leerlo no es explicarlo.
+        - label: Cómo prepararte
+          text: Rehaciendo las tareas de las semanas 9 a 12 sin ver tu solución. Consultar es rápido cuando ya sabes qué buscar.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La base de tu proyecto, limpia desde una macro
+      brief: Toma la base de tu proyecto y escribe una macro que la deje usable. Que quite espacios de sobra y espacios duros, empareje las mayúsculas, borre las filas en blanco y la ordene por dos criterios.
+      blocks:
+        - label: Restricción
+          text: El rango se calcula, no se escribe. La macro tiene que servir si mañana llegan mil filas más.
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con la base antes y después en dos hojas
+        - label: Criterio
+          text: Que después de ordenar, cada renglón siga diciendo lo mismo que antes de ordenar
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarte
+      items:
+        - title: Lo que ensucia no se ve
+          desc: Un espacio duro sobrevive a Trim y hace que dos celdas idénticas no sean iguales
+        - title: Ordenar mueve filas
+          desc: Si el rango no abarca la base completa, los datos se desparejan sin un solo error
+        - title: Borrar es de abajo hacia arriba
+          desc: Al quitar una fila, la siguiente sube al lugar por el que el ciclo ya pasó
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina la macro del laboratorio y agrégale un reporte, en una hoja aparte, que diga cuántas filas se limpiaron, cuántas se borraron por vacías y cuántas por duplicadas.
+      meta:
+        - [Entrega, Antes de la sesión 14]
+        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Limpieza", "40 %", "Espacios, espacios duros y mayúsculas, sobre el rango completo"]
+        - ["Ordenación", "30 %", "Dos criterios, encabezado declarado y la base entera en el rango"]
+        - ["El reporte", "30 %", "Los tres conteos salen de la corrida, no están escritos a mano"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, filtros avanzados y subtotales desde macros, y el manejo de tablas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]
