@@ -1,0 +1,343 @@
+meta:
+  course: Análisis y Procesamiento de la Información
+  code: TIA503
+  lang: es
+  language: vba
+  week: 12
+  footer: ANÁLISIS Y PROCESAMIENTO DE LA INFORMACIÓN · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 12 · Unidad 3 · Clases propias
+      title: Análisis y Procesamiento de la Información
+      subtitle: Empaquetar datos y comportamiento en un tipo que tú defines, y usarlo como si viniera con VBA.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA503 · Empresariales]
+        - [Sesión, 12 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El problema
+          desc: Seis variables sueltas que siempre viajan juntas y nadie obliga a que cuadren
+        - title: El módulo de clase
+          desc: Propiedades, validación en un solo lugar y el procedimiento que corre al nacer
+        - title: Objetos y referencias
+          desc: New, el error 91, y por qué dos nombres pueden ser el mismo objeto
+        - title: Tu turno
+          desc: Una clase propia dentro de tu proyecto
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Crear un módulo de clase
+          sub: Con su campo privado y sus propiedades Get y Let, y saber por qué son dos
+        - head: Validar dentro de la clase
+          sub: Para que un valor inválido no pueda entrar desde ninguna macro
+        - head: Crear objetos con New
+          sub: Y reconocer el error 91 cuando se olvida, que es el más frecuente
+        - head: Distinguir dos objetos de dos nombres
+          sub: Set b = a no copia nada, deja dos nombres apuntando a lo mismo
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–5
+          title: Programación en VBA
+          desc: Editor, tipos, variables, operaciones y formularios de captura
+          state: done
+        - label: 02 · Semanas 6–7
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
+          state: done
+        - label: 03 · Semanas 8–12
+          title: Decisiones, ciclos y eventos
+          desc: If, For, For Each, procedimientos, funciones y clases propias
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Excel desde macros
+          desc: Limpieza, filtros, tablas dinámicas, fórmula R1C1 y seguridad
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué una clase
+      lede: La semana 10 partió una macro larga en piezas. Esta semana parte los datos.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cuando seis variables siempre viajan juntas, son una sola cosa
+      lead: >-
+        Nombre, sueldo, puesto, fecha de ingreso, departamento y antigüedad. Seis variables
+        que se declaran juntas, se pasan juntas a cada procedimiento y se leen juntas. Eso
+        ya no son seis datos sueltos, es un empleado que todavía no tiene nombre en el
+        código.
+      panel:
+        label: Lo que cuesta dejarlas sueltas
+        title: La regla vive fuera y hay que recordarla
+        note: >-
+          Si el sueldo no puede ser negativo, cada macro que lo asigna tiene que acordarse.
+          Alguna no se va a acordar, y no hay manera de enterarse.
+      steps:
+        - text: Los datos que van juntos, juntos
+        - text: La regla que los cuida, con ellos
+        - text: Quien lo use no la puede saltar
+          loop: ↺ y ahí deja de depender de que alguien se acuerde
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El módulo de clase
+      lede: No es un módulo normal. Se inserta distinto, se nombra distinto, y ese nombre es el del tipo nuevo.
+      block: 2
+
+  - diagram:
+      eyebrow: Cómo se crea
+      title: Dos pasos que no se parecen a insertar un módulo
+      blocks:
+        - label: Primero
+          title: Insertar · Módulo de clase
+          desc: En el menú del editor, debajo de Módulo. Es otra opción, no la misma.
+          dark: true
+        - label: Después
+          title: Ponerle nombre en Propiedades
+          desc: El nombre del módulo es el nombre del tipo. Si se queda en Clase1, tu tipo se llama Clase1.
+      note: >-
+        Esa segunda parte se olvida y no da error. El código compila, funciona, y el
+        proyecto queda con tipos llamados Clase1 y Clase2 que en tres semanas nadie
+        recuerda qué eran.
+
+  - code:
+      eyebrow: La clase
+      title: Un empleado que no acepta un sueldo negativo
+      filename: Empleado
+      lang: vba
+      source: |
+        Private pSueldo As Double
+
+        Public Property Get Sueldo() As Double
+            Sueldo = pSueldo
+        End Property
+
+        Public Property Let Sueldo(valor As Double)
+            If valor < 0 Then pSueldo = 0 Else pSueldo = valor
+        End Property
+
+        Public Function Anual() As Double
+            Anual = pSueldo * 12
+        End Function
+      annotations:
+        - label: La p del principio
+          text: pSueldo es el dato guardado y es privado. Nadie de fuera lo puede tocar directo.
+        - label: Get y Let
+          text: Get es cuando alguien lee la propiedad. Let es cuando alguien la escribe.
+        - label: La validación
+          text: Está en Let, así que aplica venga de donde venga la asignación
+        - label: Riesgo
+          text: Si el campo privado se llamara igual que la propiedad, VBA entra en recursión y truena por pila.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Lo que pasa al usarla
+      filename: Modulo1
+      lang: vba
+      output_label: Salida
+      source: |
+        Dim e As Empleado
+        Set e = New Empleado
+
+        e.Sueldo = 15000
+        Debug.Print e.Anual
+
+        e.Sueldo = -500
+        Debug.Print e.Sueldo
+      output: |
+        180000
+        0
+
+  - concept:
+      eyebrow: El que corre solo
+      title: Class_Initialize es el procedimiento que nadie llama
+      lead: >-
+        Si la clase tiene un procedimiento llamado Class_Initialize, VBA lo ejecuta en el
+        momento de New, antes de que ninguna macro toque el objeto. Es donde se ponen los
+        valores de arranque, para que un objeto recién creado nunca esté a medias.
+      panel:
+        label: Comprobado
+        title: Un objeto recién creado ya trae sus valores
+        note: >-
+          Con Class_Initialize poniendo el nombre en "sin nombre" y el sueldo en cero, un
+          objeto recién creado devuelve exactamente eso, sin que nadie le asigne nada.
+      steps:
+        - text: Set e = New Empleado
+        - text: VBA corre Class_Initialize
+        - text: El objeto ya está completo
+          loop: ↺ y no existe el estado de recién creado y vacío
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Objetos y referencias
+      lede: Un objeto no se comporta como un número. Dos variables pueden ser el mismo objeto, y eso sorprende la primera vez.
+      block: 3
+
+  - code_output:
+      eyebrow: El error 91
+      title: Declarar no es crear
+      filename: Modulo1
+      lang: vba
+      output_label: Al correr
+      source: |
+        Dim e As Empleado
+
+        e.Nombre = "Luis"
+      output: |
+        Error 91
+        Object variable or With block
+        variable not set
+
+  - table:
+      eyebrow: Las dos líneas
+      title: Qué hace cada una, y por qué hacen falta las dos
+      headers: ["Línea", "Qué hace", "Después de ella"]
+      rows:
+        - ["Dim e As Empleado", "Reserva el nombre", "e no apunta a nada"]
+        - ["Set e = New Empleado", "Crea el objeto", "e ya se puede usar"]
+
+  - code_output:
+      eyebrow: Medido
+      title: Dos objetos, y dos nombres del mismo objeto
+      filename: Modulo1
+      lang: vba
+      output_label: Salida de las dos pruebas
+      source: |
+        Set a = New Empleado
+        Set b = New Empleado
+        a.Nombre = "Ana"
+        b.Nombre = "Beto"
+
+        Set a = New Empleado
+        Set b = a
+        a.Nombre = "Ana"
+        b.Nombre = "Beto"
+      output: |
+        primera:  a=Ana   b=Beto
+        segunda:  a=Beto  b=Beto
+
+  - concept:
+      eyebrow: Por qué
+      title: Set b = a no copia el objeto, copia dónde está
+      lead: >-
+        En la segunda prueba solo se creó un objeto. b quedó apuntando al mismo, así que
+        escribir en b.Nombre y leer a.Nombre es leer y escribir la misma cosa. La última
+        asignación gana y las dos variables la muestran.
+      panel:
+        label: Dónde muerde
+        title: Pasar un objeto a un procedimiento
+        note: >-
+          Un objeto que se pasa a un procedimiento se pasa por referencia aunque digas
+          ByVal. Lo que se copia es la dirección, no el objeto.
+      steps:
+        - text: Set copia la referencia
+        - text: Los dos nombres van al mismo lugar
+        - text: Modificar por uno se ve por el otro
+          loop: ↺ para dos objetos, dos New
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: ¿Qué imprime la última línea?
+      filename: Modulo1
+      lang: vba
+      source: |
+        Dim a As Empleado, b As Empleado
+        Set a = New Empleado
+        Set b = a
+
+        a.Sueldo = 10000
+        b.Sueldo = 20000
+        Debug.Print a.Anual
+      options:
+        - '240000, porque a y b son el mismo objeto'
+        - '120000, porque a se asignó primero'
+        - '360000, porque se suman las dos asignaciones'
+        - 'Error 91, porque b nunca recibió New'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Solo hubo un New, así que solo hay un objeto
+      headers: ["Paso", "Qué ocurre", "El objeto", "a.Anual"]
+      rows:
+        - ["1", "Set a = New Empleado", "sueldo 0", "0"]
+        - ["2", "Set b = a", "el mismo", "0"]
+        - ["3", "a.Sueldo = 10000", "sueldo 10000", "120000"]
+        - ["4", "b.Sueldo = 20000", "sueldo 20000", "240000"]
+      verdict: b.Sueldo escribió en el mismo objeto que a. La segunda asignación pisó la primera, y a.Anual devuelve 240000 porque está leyendo lo que b acaba de escribir.
+
+  - pitfalls:
+      eyebrow: Diagnóstico
+      title: Cuatro cosas que van a pasar esta semana
+      items:
+        - label: Error 01
+          title: Olvidar el New
+          desc: Error 91 en la primera línea que use el objeto. Dim reserva el nombre, no crea nada.
+        - label: Error 02
+          title: Dejar la clase en Clase1
+          desc: El nombre del módulo es el nombre del tipo, y cambiarlo después toca todo el código
+        - label: Error 03
+          title: Set b = a esperando una copia
+          desc: Quedan dos nombres del mismo objeto, y escribir por uno se ve por el otro
+        - label: Error 04
+          title: El campo con el nombre de la propiedad
+          desc: La propiedad se llama a sí misma, entra en recursión y el programa se queda sin pila
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una clase dentro de tu proyecto
+      brief: Encuentra en tu proyecto tres o más variables que siempre viajen juntas y conviértelas en una clase. Ponle al menos una propiedad con validación en Let y una función que calcule algo a partir de sus propios datos.
+      blocks:
+        - label: Restricción
+          text: La validación va dentro de la clase, no en la macro que la usa
+        - label: Entregable
+          text: El .xlsm y los módulos exportados, con el módulo de clase nombrado y una macro que lo use
+        - label: Criterio
+          text: Que asignar un valor inválido desde cualquier macro deje el objeto en un estado válido
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La regla vive con el dato
+          desc: Validar en Property Let cierra la puerta a todas las macros a la vez, no de una en una
+        - title: Dim reserva, New crea
+          desc: Sin la segunda línea, la primera vez que uses el objeto sale el error 91
+        - title: Set copia la referencia
+          desc: Set b = a deja dos nombres del mismo objeto. Para dos objetos hacen falta dos New.
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Termina la clase del laboratorio y agrégale un Class_Initialize que deje el objeto con valores de arranque válidos. Escribe una macro que cree dos objetos y demuestre, imprimiendo, que su estado es independiente.
+      meta:
+        - [Entrega, Antes de la sesión 13]
+        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["La clase", "40 %", "Campo privado, propiedades Get y Let, y validación dentro de Let"]
+        - ["Inicialización", "30 %", "Class_Initialize deja el objeto usable sin asignarle nada"]
+        - ["Independencia", "30 %", "La macro demuestra con salida que los dos objetos no comparten estado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, limpiar y ordenar bases de datos con macros. Y el segundo
+        parcial.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

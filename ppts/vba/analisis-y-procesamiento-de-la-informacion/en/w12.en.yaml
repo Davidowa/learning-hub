@@ -1,0 +1,342 @@
+meta:
+  course: Information Analysis and Processing
+  code: TIA503
+  lang: en
+  language: vba
+  week: 12
+  footer: INFORMATION ANALYSIS AND PROCESSING · TIA503 · VBA
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Business · 2026
+      unit: Week 12 · Unit 3 · Custom classes
+      title: Information Analysis and Processing
+      subtitle: Packing data and behaviour into a type you define, and using it as though it shipped with VBA.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA503 · Business]
+        - [Session, 12 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: The problem
+          desc: Six loose variables that always travel together with nothing keeping them in step
+        - title: The class module
+          desc: Properties, validation in one place, and the procedure that runs at birth
+        - title: Objects and references
+          desc: New, error 91, and why two names can be the same object
+        - title: Your turn
+          desc: A class of your own inside your project
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Create a class module
+          sub: With its private field and its Get and Let properties, and know why there are two
+        - head: Validate inside the class
+          sub: So an invalid value cannot get in from any macro at all
+        - head: Create objects with New
+          sub: And recognise error 91 when it is forgotten, which is the commonest one
+        - head: Tell two objects from two names
+          sub: Set b = a copies nothing, it leaves two names pointing at the same thing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–5
+          title: Programming in VBA
+          desc: Editor, types, variables, operations and input forms
+          state: done
+        - label: 02 · Weeks 6–7
+          title: Editing recorded macros
+          desc: Variable ranges, goal seek and bounded automation
+          state: done
+        - label: 03 · Weeks 8–12
+          title: Decisions, loops and events
+          desc: If, For, For Each, procedures, functions and custom classes
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Excel from macros
+          desc: Cleaning, filters, PivotTables, the R1C1 formula and security
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why a class
+      lede: Week 10 split a long macro into pieces. This week splits the data.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: When six variables always travel together, they are one thing
+      lead: >-
+        Name, salary, role, start date, department and length of service. Six variables
+        declared together, passed together to every procedure and read together. Those are
+        no longer six loose values, they are an employee that does not yet have a name in
+        the code.
+      panel:
+        label: What leaving them loose costs
+        title: The rule lives outside and has to be remembered
+        note: >-
+          If the salary cannot be negative, every macro that assigns it has to remember.
+          One of them will not, and there is no way to find out.
+      steps:
+        - text: Data that goes together, together
+        - text: The rule that guards it, with it
+        - text: Whoever uses it cannot skip it
+          loop: ↺ and there it stops depending on somebody remembering
+
+  - divider:
+      eyebrow: Block 02
+      title: The class module
+      lede: It is not an ordinary module. It gets inserted differently, named differently, and that name is the name of the new type.
+      block: 2
+
+  - diagram:
+      eyebrow: How it is created
+      title: Two steps that do not look like inserting a module
+      blocks:
+        - label: First
+          title: Insert · Class Module
+          desc: In the editor menu, below Module. It is a different entry, not the same one.
+          dark: true
+        - label: Then
+          title: Name it in Properties
+          desc: The module name is the type name. Leave it as Class1 and your type is called Class1.
+      note: >-
+        That second part gets forgotten and raises no error. The code compiles, it works,
+        and the project ends up with types called Class1 and Class2 that in three weeks
+        nobody remembers the purpose of.
+
+  - code:
+      eyebrow: The class
+      title: An employee that will not take a negative salary
+      filename: Employee
+      lang: vba
+      source: |
+        Private pSalary As Double
+
+        Public Property Get Salary() As Double
+            Salary = pSalary
+        End Property
+
+        Public Property Let Salary(value As Double)
+            If value < 0 Then pSalary = 0 Else pSalary = value
+        End Property
+
+        Public Function Annual() As Double
+            Annual = pSalary * 12
+        End Function
+      annotations:
+        - label: The leading p
+          text: pSalary is the stored value and it is private. Nobody outside can touch it directly.
+        - label: Get and Let
+          text: Get is when somebody reads the property. Let is when somebody writes it.
+        - label: The validation
+          text: It sits in Let, so it applies wherever the assignment comes from
+        - label: Risk
+          text: Name the private field the same as the property and VBA recurses into itself until the stack runs out.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: What happens when it gets used
+      filename: Module1
+      lang: vba
+      output_label: Output
+      source: |
+        Dim e As Employee
+        Set e = New Employee
+
+        e.Salary = 15000
+        Debug.Print e.Annual
+
+        e.Salary = -500
+        Debug.Print e.Salary
+      output: |
+        180000
+        0
+
+  - concept:
+      eyebrow: The one that runs itself
+      title: Class_Initialize is the procedure nobody calls
+      lead: >-
+        If the class has a procedure called Class_Initialize, VBA runs it at the moment of
+        New, before any macro touches the object. It is where the starting values go, so a
+        freshly created object is never half built.
+      panel:
+        label: Checked
+        title: A freshly created object already carries its values
+        note: >-
+          With Class_Initialize setting the name to "no name" and the salary to zero, a
+          freshly created object returns exactly that, without anything being assigned.
+      steps:
+        - text: Set e = New Employee
+        - text: VBA runs Class_Initialize
+        - text: The object is already complete
+          loop: ↺ and the freshly-created-and-empty state does not exist
+
+  - divider:
+      eyebrow: Block 03
+      title: Objects and references
+      lede: An object does not behave like a number. Two variables can be the same object, and that surprises everyone the first time.
+      block: 3
+
+  - code_output:
+      eyebrow: Error 91
+      title: Declaring is not creating
+      filename: Module1
+      lang: vba
+      output_label: On running
+      source: |
+        Dim e As Employee
+
+        e.Name = "Luis"
+      output: |
+        Error 91
+        Object variable or With block
+        variable not set
+
+  - table:
+      eyebrow: The two lines
+      title: What each one does, and why both are needed
+      headers: ["Line", "What it does", "After it"]
+      rows:
+        - ["Dim e As Employee", "Reserves the name", "e points at nothing"]
+        - ["Set e = New Employee", "Creates the object", "e can now be used"]
+
+  - code_output:
+      eyebrow: Measured
+      title: Two objects, and two names for one object
+      filename: Module1
+      lang: vba
+      output_label: Output of both tests
+      source: |
+        Set a = New Employee
+        Set b = New Employee
+        a.Name = "Ana"
+        b.Name = "Beto"
+
+        Set a = New Employee
+        Set b = a
+        a.Name = "Ana"
+        b.Name = "Beto"
+      output: |
+        first:   a=Ana   b=Beto
+        second:  a=Beto  b=Beto
+
+  - concept:
+      eyebrow: Why
+      title: Set b = a does not copy the object, it copies where it is
+      lead: >-
+        The second test created only one object. b ended up pointing at the same one, so
+        writing b.Name and reading a.Name is writing and reading the same thing. The last
+        assignment wins and both variables show it.
+      panel:
+        label: Where it bites
+        title: Passing an object to a procedure
+        note: >-
+          An object passed to a procedure goes by reference even if you write ByVal. What
+          gets copied is the address, not the object.
+      steps:
+        - text: Set copies the reference
+        - text: Both names reach the same place
+        - text: Changing through one shows in the other
+          loop: ↺ for two objects, two News
+
+  - quiz:
+      eyebrow: Quick question
+      question: What does the last line print?
+      filename: Module1
+      lang: vba
+      source: |
+        Dim a As Employee, b As Employee
+        Set a = New Employee
+        Set b = a
+
+        a.Salary = 10000
+        b.Salary = 20000
+        Debug.Print a.Annual
+      options:
+        - '240000, because a and b are the same object'
+        - '120000, because a was assigned first'
+        - '360000, because the two assignments add up'
+        - 'Error 91, because b never got a New'
+
+  - trace:
+      eyebrow: Answer
+      title: There was only one New, so there is only one object
+      headers: ["Step", "What happens", "The object", "a.Annual"]
+      rows:
+        - ["1", "Set a = New Employee", "salary 0", "0"]
+        - ["2", "Set b = a", "the same one", "0"]
+        - ["3", "a.Salary = 10000", "salary 10000", "120000"]
+        - ["4", "b.Salary = 20000", "salary 20000", "240000"]
+      verdict: b.Salary wrote into the same object as a. The second assignment overwrote the first, and a.Annual gives 240000 because it is reading what b has just written.
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four things that will happen this week
+      items:
+        - label: Error 01
+          title: Forgetting the New
+          desc: Error 91 on the first line that uses the object. Dim reserves the name, it creates nothing.
+        - label: Error 02
+          title: Leaving the class as Class1
+          desc: The module name is the type name, and changing it later touches all the code
+        - label: Error 03
+          title: Set b = a expecting a copy
+          desc: You end up with two names for one object, and writing through one shows in the other
+        - label: Error 04
+          title: A field named like the property
+          desc: The property calls itself, recurses, and the program runs out of stack
+
+  - lab:
+      eyebrow: Lab
+      title: A class inside your project
+      brief: Find three or more variables in your project that always travel together and turn them into a class. Give it at least one property with validation in Let and a function that computes something from its own data.
+      blocks:
+        - label: Constraint
+          text: The validation goes inside the class, not in the macro that uses it
+        - label: Deliverable
+          text: The .xlsm and the exported modules, with the class module named and a macro that uses it
+        - label: Criterion
+          text: That assigning an invalid value from any macro leaves the object in a valid state
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The rule lives with the data
+          desc: Validating in Property Let closes the door on every macro at once, not one at a time
+        - title: Dim reserves, New creates
+          desc: Without the second line, the first use of the object raises error 91
+        - title: Set copies the reference
+          desc: Set b = a leaves two names for one object. Two objects need two News.
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Finish the lab class and add a Class_Initialize that leaves the object with valid starting values. Write a macro that creates two objects and proves, by printing, that their state is independent.
+      meta:
+        - [Due, Before session 13]
+        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The class", "40 %", "Private field, Get and Let properties, and validation inside Let"]
+        - ["Initialisation", "30 %", "Class_Initialize leaves the object usable with nothing assigned"]
+        - ["Independence", "30 %", "The macro proves with output that the two objects share no state"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, cleaning and sorting databases with macros. And the second midterm.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]
