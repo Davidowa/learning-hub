@@ -1,0 +1,545 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 7
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 07 · Unit 4.4 · Selection in depth
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Conditions that combine, conditions that live inside other conditions, and the
+        construction that turns a ladder into a table the compiler can check.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 7 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Combining
+          desc: The three logical operators, and the one character that disarms the guard
+        - title: Nesting
+          desc: A decision inside another, and the else that does not bind where it looks
+        - title: switch
+          desc: The ladder as a table, and the two checks the compiler runs on it
+        - title: Your turn
+          desc: The triangle inspector, with the tolerance comparison
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Combine conditions with the three operators
+          sub: And say out loud which one demands both and which one settles for one
+        - head: Explain what short-circuiting is
+          sub: And why the whole safety of the idiom lives in the second ampersand
+        - head: Put braces on every nested decision
+          sub: Because the else binds to the inner if and indentation changes nothing
+        - head: Write a switch expression
+          sub: With its arms in order and its discard arm at the end
+        - head: Compare two doubles by tolerance
+          sub: Never with a double equals, always as an absolute difference against a margin
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line of code is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Combining conditions
+      lede: >-
+        Three operators, and between them they build any rule however complicated it
+        sounds said out loud. One of them also decides whether the guard guards.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Logical
+      title: The three operators with p = 4.2, door = true and autoMode = false
+      headers: [Operator, What it demands, Example, Result]
+      rows:
+        - ["&&", "Both conditions", "p >= 3.5 && door", "True"]
+        - ["||", "At least one of the two", "door || autoMode", "True"]
+        - ["!", "Flips the result", "!door", "False"]
+
+  - code:
+      eyebrow: Block 01 · In context
+      title: The machine interlock matrix
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double p = 4.2;
+        bool door = true;
+        int mode = 1;
+
+        bool pressureOk = p >= 3.5 && p <= 5.0;
+        bool start = pressureOk && door && mode == 1;
+
+        Console.WriteLine($"pressure in range -> {pressureOk}");
+        Console.WriteLine($"start             -> {start}");
+      annotations:
+        - label: The band, in two halves
+          text: >-
+            A pressure inside the band is two comparisons joined. A named bool keeps the
+            next line readable.
+        - label: All or nothing
+          text: >-
+            Double ampersands, because starting demands all three. One failure and the
+            machine does not turn.
+        - label: Say it in English first
+          text: >-
+            Pressure in range AND door closed AND automatic mode. State it properly and
+            the code is direct.
+        - label: Risk
+          text: >-
+            Swap one double ampersand for a double bar and the machine starts with the
+            door open.
+          accent: true
+
+  - trace:
+      eyebrow: Measured
+      title: The matrix run over four combinations
+      headers: [Pressure, Door, Mode, start]
+      rows:
+        - ["4.2 bar", "True", "1", "True"]
+        - ["4.2 bar", "False", "1", "False"]
+        - ["0.5 bar", "True", "1", "False"]
+        - ["4.2 bar", "True", "0", "False"]
+      verdict: >-
+        The whole condition is p >= 3.5 && p <= 5.0 && door && mode == 1. One failed
+        interlock is enough to leave the start at False.
+
+  - code_output:
+      eyebrow: Measured · short circuit
+      title: With the guard door open, the expensive test never runs
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int calls = 0;
+        bool Probe() { calls++; return true; }
+
+        bool doorClosed = false;
+
+        if (doorClosed && Probe()) { }
+        Console.WriteLine($"with && -> {calls} calls");
+
+        calls = 0;
+        if (doorClosed & Probe()) { }
+        Console.WriteLine($"with &  -> {calls} calls");
+      output: |
+        with && -> 0 calls
+        with &  -> 1 calls
+
+  - code_output:
+      eyebrow: Measured · the guard that falls
+      title: One character short and the empty window blows the program up
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int sum = 0, count = 0;
+
+        if (count > 0 && sum / count > 1500) { }
+        Console.WriteLine("with && the empty window survives");
+
+        try { if (count > 0 & sum / count > 1500) { } }
+        catch (DivideByZeroException ex)
+        {
+            Console.WriteLine($"with &  {ex.Message}");
+        }
+      output: |
+        with && the empty window survives
+        with &  Attempted to divide by zero.
+
+  - divider:
+      eyebrow: Block 02
+      title: Nesting, and the dangling else
+      lede: >-
+        A decision inside another reads fine as long as the braces are there. Without
+        them, you and the compiler are reading two different programs.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · The dangling else
+      title: The same else, bound to two different ifs
+      before:
+        label: No braces
+        file: Program.cs
+        lang: csharp
+        code: |
+          if (c > 0)
+              if (c > 10)
+                  said = "over limit";
+          else
+              said = "under limit";
+      after:
+        label: With braces
+        file: Program.cs
+        lang: csharp
+        code: |
+          if (c > 0)
+          {
+              if (c > 10) said = "over limit";
+          }
+          else
+              said = "under limit";
+      note: >-
+        The indentation on the left promises that the else belongs to the outer if. It
+        does not. The else always binds to the nearest if that has not got one yet, and
+        both versions compile with zero warnings.
+
+  - trace:
+      eyebrow: Measured
+      title: The same three readings, two different answers
+      headers: [Reading, No braces, With braces]
+      rows:
+        - ["20 C", "over limit", "over limit"]
+        - ["5 C", "under limit", "(printed nothing)"]
+        - ["-3 C", "(printed nothing)", "under limit"]
+      verdict: >-
+        One pair of braces changes the answer on two of the three readings. The −3 degree
+        row is the unplugged thermocouple, and the version without braces says absolutely
+        nothing about it.
+
+  - code_output:
+      eyebrow: Block 02 · Tolerance
+      title: Never compare two readings with a double equals
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        double reading = 0.1 + 0.2;
+        bool exact = reading == 0.3;
+        bool close = Math.Abs(reading - 0.3) < 1e-9;
+
+        Console.WriteLine($"0.1 + 0.2   {reading}");
+        Console.WriteLine($"== 0.3      {exact}");
+        Console.WriteLine($"|d| < 1e-9  {close}");
+
+        double measured = 24.97, nominal = 25.0;
+        double off = Math.Abs(measured - nominal);
+
+        Console.WriteLine($"|24.97-25.0| {off}");
+        Console.WriteLine($"<= 0.05      {off <= 0.05}");
+      output: |
+        0.1 + 0.2   0.30000000000000004
+        == 0.3      False
+        |d| < 1e-9  True
+        |24.97-25.0| 0.030000000000001137
+        <= 0.05      True
+
+  - divider:
+      eyebrow: Block 03
+      title: The ladder, made a table
+      lede: >-
+        The switch expression says exactly what last week's ladder said, and on top of
+        that it lets the compiler check two things the ladder never checked.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The switch expression
+      title: The band table, written as a table
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static string Band(int rpm) => rpm switch
+        {
+            < 0 => "invalid",
+            < 800 => "idle",
+            < 3000 => "nominal",
+            _ => "overspeed"
+        };
+
+        foreach (int r in new[] { -5, 799, 800, 2999, 3000 })
+            Console.WriteLine($"Band({r,5}) = {Band(r)}");
+      annotations:
+        - label: One arm per band
+          text: >-
+            Pattern on the left, result on the right. The arrow replaces the return and
+            the ladder's braces.
+        - label: The discard arm
+          text: >-
+            The underscore catches what no earlier pattern caught. It is the ladder's
+            final else, renamed.
+        - label: Strictly less than
+          text: >-
+            Less than, so 799 is still idle and 800 already nominal. The limit belongs to
+            the band above.
+        - label: It is an expression
+          text: >-
+            It returns a value, so it fits on the right of an assignment or, as here,
+            behind a method arrow.
+
+  - trace:
+      eyebrow: Measured
+      title: The boundaries, run one at a time
+      headers: [Reading, Arm that wins, What it returns]
+      rows:
+        - ["-5", "< 0", "invalid"]
+        - ["799", "< 800", "idle"]
+        - ["800", "< 3000", "nominal"]
+        - ["2999", "< 3000", "nominal"]
+        - ["3000", "_", "overspeed"]
+      verdict: >-
+        It is last week's greater than against greater or equal argument written with
+        different punctuation. Always run the value that sits on the boundary.
+
+  - code_output:
+      eyebrow: Measured · reordering
+      title: Move one arm up and it stops building
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        static string Band(int rpm) => rpm switch
+        {
+            < 800 => "idle",
+            < 0 => "invalid",
+            < 3000 => "nominal",
+            _ => "overspeed"
+        };
+
+        Console.WriteLine(Band(-5));
+      output: |
+        Program.cs(4,5): error CS8510
+        The pattern is unreachable.
+        It has already been handled
+        by a previous arm of the
+        switch expression or it is
+        impossible to match.
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Measured · exhaustiveness
+      title: Without the discard arm it builds, answers once, and dies on the next call
+      filename: Program.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        static string Band(int rpm) => rpm switch
+        {
+            < 0 => "invalid",
+            < 800 => "idle",
+            < 3000 => "nominal"
+        };
+
+        Console.WriteLine(Band(500));
+        Console.WriteLine(Band(4000));
+      output: |
+        warning CS8509
+        The switch expression does
+        not handle all possible
+        values of its input type
+        (it is not exhaustive). For
+        example, the pattern '3000'
+        is not covered.
+
+        Unmatched value was 4000.
+
+  - code_output:
+      eyebrow: Measured · the classic switch
+      title: A case with statements inside it has to end
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int mode = 1;
+
+        switch (mode)
+        {
+            case 0:
+                Console.WriteLine("drive stopped");
+            case 1:
+                Console.WriteLine("drive jogging");
+                break;
+            default:
+                Console.WriteLine("unknown mode");
+                break;
+        }
+      output: |
+        Program.cs(5,5): error CS0163
+        Control cannot fall through
+        from one case label
+        ('case 0:') to another
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Measured · the deliberate fall
+      title: The two legal ways for two cases to share a body
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        static string Mode(int c)
+        {
+            switch (c)
+            {
+                case 0: return "stopped";
+                case 1: Console.WriteLine("jog checks"); goto case 2;
+                case 2:
+                case 3: return "interlocks ok";
+                default: return "unknown";
+            }
+        }
+
+        foreach (int c in new[] { 0, 1, 2, 3 })
+            Console.WriteLine($"Mode({c}) = {Mode(c)}");
+      output: |
+        Mode(0) = stopped
+        jog checks
+        Mode(1) = interlocks ok
+        Mode(2) = interlocks ok
+        Mode(3) = interlocks ok
+
+  - method:
+      eyebrow: A note before week 8
+      title: Today's break is not yet the loop's break
+      statement: >-
+        Today break ends the switch and nothing else. Next week the same word ends a loop,
+        and once the two show up together it pays to have kept them apart from the start.
+      points:
+        - label: Inside a switch
+          text: >-
+            It closes the case and jumps to the brace that closes the switch. Without it a
+            case with statements inside does not even compile.
+        - label: Inside a loop
+          text: >-
+            From week 9 on it ends the whole loop. It is a different statement with the
+            same name, not the same one with another effect.
+        - label: When they cross
+          text: >-
+            A break inside a switch inside a loop ends the switch, not the loop. We
+            measure the two side by side in week 9.
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four traps of compound conditions
+      items:
+        - label: Error 01
+          title: Writing a single ampersand
+          desc: >-
+            On two bools it is legal and silent, but it evaluates both sides. The guard
+            stops guarding and the division by zero goes all the way through.
+        - label: Error 02
+          title: Nesting without braces
+          desc: >-
+            The else binds to the nearest if. The indentation promises something else and
+            the compiler never reads it.
+        - label: Error 03
+          title: Comparing two doubles with a double equals
+          desc: >-
+            0.1 + 0.2 is not 0.3 and never will be. On a measurement you compare the
+            absolute difference against a margin you wrote down.
+        - label: Error 04
+          title: Leaving the switch expression without a discard
+          desc: >-
+            It builds with a warning that names the exact value that will bring it down,
+            and it falls the first time that value arrives from the sensor.
+
+  - quiz:
+      eyebrow: Quick check
+      question: With the sampling window empty, what does this program do?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int sum = 0, count = 0;
+
+        if (count > 0 & sum / count > 1500)
+            Console.WriteLine("mean is high");
+
+        Console.WriteLine("done");
+      options:
+        - "Prints done, because the first condition is false"
+        - "Does not compile, an ampersand is not for bools"
+        - "Throws DivideByZeroException before printing anything"
+        - "Prints mean is high and then done"
+
+  - lab:
+      eyebrow: Lab
+      title: The triangle inspector, with tolerance
+      brief: >-
+        Write a program that reads three sides and decides whether they form a triangle
+        and which kind. The triangle inequality guard goes first, and equality between
+        sides is decided by tolerance, never with a double equals.
+      blocks:
+        - label: Deliverable
+          text: The Program.cs and one run per kind, plus one impossible set of sides
+        - label: The question
+          text: >-
+            Why does the guard go FIRST? Answer it in writing, in two lines, using
+            short-circuiting as the argument.
+        - label: The tolerance
+          text: >-
+            Two sides are equal when their absolute difference fits inside the margin you
+            declared and wrote into the code.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The second ampersand is the guard
+          desc: >-
+            The double one stops the moment the left side is false. The single one
+            evaluates both sides, builds without a warning, and lets the division by zero
+            through
+        - title: Every nested decision takes braces
+          desc: >-
+            The else binds to the nearest if however it is indented, and one pair of braces
+            changes the answer on two readings out of three
+        - title: The switch expression can be checked
+          desc: >-
+            An impossible order is a build error and an uncovered case is a warning that
+            names the very value it is going to choke on
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Write the interlock matrix first as a truth table, one row per combination of
+        pressure, door and mode, and then as a switch expression. Both versions have to
+        answer the same thing on every row.
+      meta:
+        - [Due, Before week 8]
+        - [Format, Blackboard · truth table PDF and Program.cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Truth table", "40 %", "Every combination is there and none is repeated"]
+        - ["switch", "40 %", "The arms are in order and a discard arm is present"]
+        - ["Equivalence", "20 %", "Both versions agree row by row"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, repetition and the first midterm. Bring the ladder and the matrix
+        running, because the loop is built on top of them.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

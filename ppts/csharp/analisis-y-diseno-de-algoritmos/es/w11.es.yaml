@@ -1,0 +1,495 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 11
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 11 · Tema 5.3 · Paso de parámetros por referencia
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        La pared que levantamos la semana pasada alrededor de cada método está ahí a
+        propósito. Hoy le abrimos dos agujeros con etiqueta, y encontramos el que ya
+        llevaba abierto desde antes.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 11 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El Swap roto
+          desc: Predícelo en el pizarrón, córrelo después, y explica por qué compila sin una queja
+        - title: La palabra ref
+          desc: Leer, modificar y escribir de vuelta en la variable del llamador
+        - title: La palabra out
+          desc: El método se compromete a llenarla, y TryParse se vuelve la regla de entrada
+        - title: Tu turno
+          desc: Mínimo y máximo del trío de termopares con dos parámetros de salida
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar por qué el Swap por valor falla
+          sub: Sin culpar al cuerpo del método, que está perfectamente escrito
+        - head: Compartir una variable con ref
+          sub: Con la palabra en la firma y otra vez en el sitio de llamada
+        - head: Llenar un parámetro con out
+          sub: Y decir quién queda obligado a inicializarlo en cada uno de los dos casos
+        - head: Leer los errores del contrato
+          sub: CS1620, CS0165, CS0177 y CS1510, que dicen cosas distintas
+        - head: Usar TryParse como regla fija
+          sub: Y saber qué le deja adentro a la variable cuando la conversión falla
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El intercambio que no intercambia
+      lede: >-
+        Predícelo primero en el pizarrón, sin correrlo. El cuerpo del método está bien
+        escrito y aun así no hace lo que dice el nombre.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La pared existe a propósito
+      lead: >-
+        La semana pasada marcamos los métodos con static justo para que no pudieran leer
+        nada de afuera. Esa pared no es un descuido del lenguaje ni un obstáculo que haya
+        que rodear; es lo que permite probar una pieza sola. Hoy la abrimos en dos puntos,
+        cada uno con su palabra, y las dos hay que escribirlas dos veces.
+      panel:
+        label: Lo que hay detrás
+        title: Compartir una variable se declara
+        note: >-
+          Nadie comparte una variable por accidente. La palabra va en la firma y otra vez
+          en la llamada, y si falta cualquiera de las dos el compilador se detiene.
+      steps:
+        - text: El método recibe una copia
+        - text: Con ref recibe la variable misma
+        - text: Con out se compromete a llenarla
+          loop: ↺ y el compilador revisa las tres
+
+  - code:
+      eyebrow: Bloque 01 · Predice
+      title: Tres líneas de intercambio, escritas como en el libro
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int x = 1, y = 2;
+        SwapByValue(x, y);
+        Console.WriteLine($"{x}, {y}");
+
+        static void SwapByValue(int a, int b)
+        {
+            int t = a;
+            a = b;
+            b = t;
+        }
+      annotations:
+        - label: El cuerpo
+          text: >-
+            Las tres líneas del intercambio son correctas. Con una variable temporal, tal
+            como se enseña, y el orden es el bueno.
+        - label: a y b
+          text: >-
+            Son copias de x y de y, hechas en el momento de la llamada. Se intercambian
+            entre ellas y luego se destruyen.
+        - label: Predice
+          text: >-
+            Escribe en tu cuaderno qué imprime la tercera línea antes de que la corramos.
+            Después compárala con la medición.
+        - label: Riesgo
+          text: >-
+            Compila, corre, sale con 0 y no reporta nada raro. Este es el tipo de defecto
+            que llega hasta la demostración.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Cuatro palabras separan un intercambio del otro
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int x = 1, y = 2;
+        SwapByValue(x, y);
+        Console.WriteLine($"{x}, {y}");
+        SwapByRef(ref x, ref y);
+        Console.WriteLine($"{x}, {y}");
+
+        static void SwapByValue(int a, int b)
+        {
+            int t = a; a = b; b = t;
+        }
+        static void SwapByRef(ref int a, ref int b)
+        {
+            int t = a; a = b; b = t;
+        }
+      output: |
+        1, 2
+        2, 1
+
+  - code_output:
+      eyebrow: Medido
+      title: El ref del sitio de llamada es lo que elige el método
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        double reading = 39.5;
+        Probe.Clamp(reading);      Console.WriteLine(reading);
+        Probe.Clamp(ref reading);  Console.WriteLine(reading);
+
+        class Probe
+        {
+            public static void Clamp(double r)
+            { if (r > 30.0) r = 30.0; }
+            public static void Clamp(ref double r)
+            { if (r > 30.0) r = 30.0; }
+        }
+      output: |
+        39.5
+        30
+
+  - code_output:
+      eyebrow: Medido
+      title: La palabra va en los dos lados o no va en ninguno
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        double reading = 39.5;
+        ClampByRef(reading, 30.0);
+        Console.WriteLine(reading);
+
+        static void ClampByRef(ref double r, double limit)
+        {
+            if (r > limit) r = limit;
+        }
+      output: |
+        error CS1620: Argument 1 must
+        be passed with the 'ref' keyword
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Leer, modificar y escribir de vuelta
+      lede: >-
+        Con ref el método trabaja sobre la variable del llamador, no sobre una copia. Y hay
+        un caso en el que eso ya pasaba sin que nadie escribiera la palabra.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido
+      title: Un elemento de arreglo sí es un destino legal
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        double[] readings = { 21.0, 39.5, 22.4 };
+        ClampByRef(ref readings[1], 30.0);
+        Console.WriteLine(string.Join(", ", readings));
+
+        static void ClampByRef(ref double r, double limit)
+        {
+            if (r > limit) r = limit;
+        }
+      output: |
+        21, 30, 22.4
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Cuatro descuidos
+      title: Dónde se rompe el contrato
+      items:
+        - label: Error 01
+          title: Pasarle un literal
+          desc: >-
+            ref necesita dónde escribir de vuelta. Con un número escrito a mano no lo hay,
+            y el compilador contesta error CS1510, A ref or out value must be an assignable
+            variable. Una variable sirve, y un elemento de arreglo también.
+        - label: Error 02
+          title: Poner ref donde no lo pidieron
+          desc: >-
+            Es la misma regla desde el otro lado, y también se detiene. error CS1615,
+            Argument 1 may not be passed with the 'ref' keyword. En las dos direcciones hay
+            que estar de acuerdo.
+        - label: Error 03
+          title: Usar ref para pasar un arreglo
+          desc: >-
+            Casi nunca hace falta. Escribir un elemento ya le llega al llamador sin la
+            palabra, como se midió la semana pasada. ref solo entra si vas a reemplazar el
+            arreglo entero.
+        - label: Error 04
+          title: Marcar todo con ref por si acaso
+          desc: >-
+            Por omisión, parámetros normales y un valor de retorno. Se usa ref cuando el
+            llamador es dueño de la muestra y mutarla en su lugar es de verdad la forma
+            correcta, como en la calibración de un canal.
+
+  - code_output:
+      eyebrow: Medido
+      title: El llenado del tanque de refrigerante, con su guarda
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        double tank = 40.0;
+        Fill(ref tank, 15.0);   Console.WriteLine(tank);
+        Fill(ref tank, 10.0);   Console.WriteLine(tank);
+
+        static void Fill(ref double litros, double add)
+        {
+            bool espacio = litros + add <= 60.0;
+            if (!espacio)
+            {
+                Console.WriteLine("  sin espacio sobre 60 L");
+                return;
+            }
+            litros += add;
+        }
+      output: |
+        55
+          sin espacio sobre 60 L
+        55
+
+  - code_output:
+      eyebrow: Medido
+      title: El agujero que ya estaba abierto desde la semana pasada
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine(src[0]);
+        Console.WriteLine(ReferenceEquals(src, alias));
+      output: |
+        99
+        True
+
+  - compare:
+      eyebrow: Bloque 02 · La misma regla
+      title: Lo que el compilador protege no es el arreglo
+      before:
+        label: double[]
+        file: crudo.cs
+        code: |
+          double[] raw = { 21.0, 39.5 };
+
+          foreach (double c in raw)
+          {
+              if (c > 30.0) c = 30.0;
+          }
+      after:
+        label: Channel[]
+        file: banco.cs
+        code: |
+          foreach (Channel ch in bank)
+          {
+              if (ch.Celsius > 30.0)
+                  ch.Celsius = 30.0;
+          }
+
+          class Channel
+          { public double Celsius; }
+      note: >-
+        La izquierda no compila: error CS1656, Cannot assign to 'c' because it is a
+        'foreach iteration variable'. La derecha compila y recorta 39.5, porque la copia es
+        copia de una referencia; al banco le queda 21, 30. Lo prohibido es editar una copia
+        que no va a ningún lado, no tocar el arreglo.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La palabra out, y la regla de entrada
+      lede: >-
+        ref dice que el llamador ya llenó la variable. out dice que el método está obligado
+        a llenarla. Quién inicializa es toda la diferencia.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: El compilador persigue el camino que se olvidó de llenarla
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        double[] empty = new double[0];
+        Console.WriteLine(TryMean(empty, out double m));
+
+        static bool TryMean(double[] v, out double mean)
+        {
+            if (v.Length == 0) return false;
+            mean = 0;
+            foreach (double x in v) mean += x;
+            mean /= v.Length;
+            return true;
+        }
+      output: |
+        error CS0177: The out parameter
+        'mean' must be assigned to
+        before control leaves the
+        current method
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Bloque 03 · El contrato
+      title: Quién inicializa, y qué se lleva el llamador
+      headers: [Forma, Quién inicializa, Qué se lleva el llamador]
+      rows:
+        - ["por valor", "El llamador", "Nada, el método vio una copia"]
+        - ["ref", "El llamador", "Lo que el método haya escrito"]
+        - ["out", "El método", "Un valor, siempre y sin falta"]
+        - ["int[]", "El llamador", "Los elementos, no el reemplazo"]
+
+  - code_output:
+      eyebrow: Medido
+      title: Un solo descuido, y el compilador contesta cuatro veces
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        double lo, hi;
+        double[] probes = { 21.0, 39.5, 22.4 };
+        MinMax(probes, lo, hi);
+
+        static void MinMax(double[] v, out double lo, out double hi)
+        {
+            lo = v[0];
+            hi = v[0];
+            foreach (double x in v)
+            {
+                if (x < lo) lo = x;
+                if (x > hi) hi = x;
+            }
+        }
+      output: |
+        error CS1620: Argument 2 must
+        be passed with the 'out' keyword
+        error CS1620: Argument 3 must
+        be passed with the 'out' keyword
+        error CS0165: Use of unassigned
+        local variable 'lo'
+        error CS0165: Use of unassigned
+        local variable 'hi'
+        Build FAILED.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: >-
+        keep vale 999 y la conversión va a fallar. ¿Qué queda dentro de keep?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int keep = 999;
+        bool ok = int.TryParse("abc", out keep);
+        Console.WriteLine(ok + ", keep=" + keep);
+      options:
+        - 'False y keep=999, porque la conversión ni la tocó'
+        - 'False y keep=0, porque TryParse la sobrescribe'
+        - 'True y keep=0, porque abc se interpreta como cero'
+        - 'Lanza FormatException al no poder convertirla'
+
+  - code_output:
+      eyebrow: Medido
+      title: TryParse no deja la variable en paz cuando falla
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int keep = 999;
+        bool ok = int.TryParse("abc", out keep);
+        Console.WriteLine(ok + ", keep=" + keep);
+      output: |
+        False, keep=0
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Mínimo y máximo con dos parámetros de salida
+      brief: >-
+        Escribe MinMax sobre el trío de termopares con dos parámetros out, y delante de él
+        un lector que use int.TryParse para no aceptar basura. Agrega después Drain, que
+        vacía el tanque de refrigerante por referencia.
+      blocks:
+        - label: Entrega
+          text: >-
+            El archivo Program.cs con MinMax, el lector con TryParse y Drain, más la
+            corrida con una entrada válida y una inválida
+        - label: Restricción
+          text: >-
+            Drain rechaza cualquier operación que deje el tanque bajo 5 L, y el mensaje de
+            rechazo dice por qué, no solo que no se pudo
+        - label: La prueba
+          text: >-
+            Dale de comer algo que no sea número. Si el programa revienta o si acepta un
+            cero disfrazado, la guarda todavía no sirve
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: ref va en los dos lados
+          desc: En la firma y en la llamada. Nadie termina compartiendo una variable sin haberlo escrito
+        - title: Quién inicializa lo decide todo
+          desc: Con out el obligado es el método; con ref, el llamador. Esa es la diferencia entera
+        - title: Un arreglo ya viajaba compartido
+          desc: La variable lleva una referencia, así que la copia del parámetro apunta al mismo arreglo
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Entrega MinMax con sus dos parámetros out sobre el trío de termopares, con la
+        guarda de TryParse delante, y explica en tres renglones por qué aquí conviene out y
+        no un valor de retorno.
+      meta:
+        - [Entrega, Antes de la semana 12]
+        - [Formato, Blackboard · .cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Contrato", "40 %", "Los dos out se llenan siempre"]
+        - ["Entrada", "40 %", "TryParse antes de usar el valor"]
+        - ["Justificación", "20 %", "Dices por qué out y no retorno"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La semana que viene, antes de escribir un método, revisamos si el framework ya lo
+        escribió. Y ahí aparece que Math.Clamp llevaba trece sobrecargas esperándonos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

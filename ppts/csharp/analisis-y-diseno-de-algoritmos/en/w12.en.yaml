@@ -1,0 +1,503 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 12
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 12 · Unit 5.4 · Predefined functions
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Before you write a function, check whether the framework already wrote it. Then
+        check what it actually returns, because the name will not tell you.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 12 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Math
+          desc: The library that was already there, and the four times it surprises
+        - title: The signature
+          desc: How many parameters, of what type, and what comes back
+        - title: Random and Convert
+          desc: The other two libraries you were using without naming them
+        - title: Your turn
+          desc: Three hand-written helpers, traded in for one call each
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Look before you write
+          sub: Root, power, absolute value, minimum, maximum and clamp already exist
+        - head: Read a full signature
+          sub: The parameters it asks for, the type it returns and how it reports failure
+        - head: Recognise NaN and infinity
+          sub: The two values that break the comparison you have used all term
+        - head: Seed a generator
+          sub: So that a program with randomness in it can be tested the same way twice
+        - head: Choose between Convert and TryParse
+          sub: By who wrote the text you are about to convert
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Math, and the four times it surprises
+      lede: >-
+        The standard library already holds what you were about to write. It also holds how
+        it fails, and that is the half almost nobody reads.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · On the bench
+      title: The RMS value of one vibration window
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double[] v = { 0.42, -0.31, 0.55, -0.48, 0.12, -0.27, 0.61 };
+
+        double ss = 0;
+        foreach (double x in v)
+        {
+            ss += x * x;
+        }
+
+        double rms = Math.Sqrt(ss / v.Length);
+
+        Console.WriteLine($"RMS raw   = {rms}");
+        Console.WriteLine($"RMS :F4   = {rms:F4} mm/s");
+      annotations:
+        - label: What you write
+          text: The sum of squares and the division. That part really is yours.
+        - label: What you do not write
+          text: The square root. Math.Sqrt has been written and tested by more people than you will ever meet.
+        - label: The format
+          text: The F4 specifier trims the reading to four decimals. It does not change the stored value.
+        - label: Risk
+          text: Math.Sqrt hands back a double with all of its digits. Print it raw and you get seventeen.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Seventeen raw digits and four on the slide
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double rms = Math.Sqrt(ss / v.Length);
+        double mag = Math.Sqrt(3 * 3 + 4 * 4 + 0 * 0);
+
+        Console.WriteLine($"RMS raw   = {rms}");
+        Console.WriteLine($"RMS :F4   = {rms:F4} mm/s");
+        Console.WriteLine($"magnitude = {mag}");
+      output: |
+        RMS raw   = 0.42507142257003616
+        RMS :F4   = 0.4251 mm/s
+        magnitude = 5
+
+  - code_output:
+      eyebrow: Block 01 · Surprise 01
+      title: The only value that is not equal to itself
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(Math.Sqrt(2));
+        Console.WriteLine(Math.Sqrt(2).ToString("F3"));
+
+        double nan = Math.Sqrt(-1);
+        Console.WriteLine(
+            $"{nan} {nan == nan} {nan != nan} {double.IsNaN(nan)}");
+      output: |
+        1.4142135623730951
+        1.414
+        NaN False True True
+
+  - code_output:
+      eyebrow: Block 01 · Surprise 02
+      title: The sine of pi is not zero, and there is a reason
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(Math.Sin(Math.PI));
+        Console.WriteLine(Math.Sin(Math.PI) == 0);
+        Console.WriteLine(Math.Abs(Math.Sin(Math.PI)) < 1e-9);
+        Console.WriteLine(Math.Cos(Math.PI));
+        Console.WriteLine(Math.Sin(Math.PI / 2));
+        Console.WriteLine(Math.PI);
+      output: |
+        1.2246467991473532E-16
+        False
+        True
+        -1
+        1
+        3.141592653589793
+
+  - trace:
+      eyebrow: Block 01 · Surprise 03
+      title: The library works in radians, and the conversion is not exact
+      headers: [Expression, Prints, Reading]
+      rows:
+        - ["Math.Sin(30 * Math.PI / 180)", "0.49999999999999994", "not 0.5"]
+        - ["Math.Sin(double.DegreesToRadians(30))", "0.49999999999999994", "the same error"]
+        - ["double.RadiansToDegrees(Math.PI)", "180", "exact"]
+        - ["Math.Sqrt(3*3 + 4*4 + 0*0)", "5", "exact"]
+      verdict: >-
+        Which of the two cases you get is not something you can predict by reading the
+        formula. That is why the tolerance comparison from week 7 is the rule and exact
+        equality is the exception.
+
+  - table:
+      eyebrow: Block 01 · Surprise 04
+      title: Five ways to drop the decimals and they disagree
+      headers: [Value, "(int)", Round, Convert, Floor, Truncate]
+      rows:
+        - ["2.5", "2", "2", "2", "2", "2"]
+        - ["3.5", "3", "4", "4", "3", "3"]
+        - ["-2.5", "-2", "-2", "-2", "-3", "-2"]
+        - ["3.9", "3", "4", "4", "3", "3"]
+
+  - code_output:
+      eyebrow: Block 01 · Metrology
+      title: Why round half to even exists at all
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double[] halves = { 0.5, 1.5, 2.5, 3.5, 4.5 };
+        foreach (double m in halves)
+            Console.Write(Math.Round(m) + " ");
+        Console.WriteLine();
+
+        double even = 0, away = 0, trueSum = 0;
+        for (int k = 0; k < 100; k++)
+        {
+            double v = k + 0.5;
+            trueSum += v;
+            even += Math.Round(v, MidpointRounding.ToEven);
+            away += Math.Round(v, MidpointRounding.AwayFromZero);
+        }
+        Console.WriteLine($"{trueSum} {even} {away}");
+      output: |
+        0 2 2 4 4
+        5000 5000 5050
+
+  - divider:
+      eyebrow: Block 02
+      title: Reading a signature
+      lede: >-
+        How many parameters it asks for, of what type, and what type it returns. All three
+        are written down, and all three charge you if you skip them.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Already written
+      title: Math.Clamp is last week's ClampToLimit
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(Math.Clamp(39.5, 0.0, 30.0));
+        Console.WriteLine(Math.Clamp(-3.0, 0.0, 30.0));
+        Console.WriteLine(Math.Clamp(21.0, 0.0, 30.0));
+        Console.WriteLine(Math.Clamp(39.5, 0, 30));
+      output: |
+        30
+        0
+        21
+        30
+
+  - code_output:
+      eyebrow: Block 02 · The return type
+      title: Two lines that look fine and neither one compiles
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        // each one in its own program
+
+        int capacity = Math.Pow(2, 10);
+
+        Console.WriteLine(Math.Sqrt("9"));
+      output: |
+        Program.cs(1,16): error CS0266
+        Cannot implicitly convert type
+        'double' to 'int'. An explicit
+        conversion exists (are you
+        missing a cast?)
+
+        Program.cs(1,29): error CS1503
+        Argument 1: cannot convert
+        from 'string' to 'double'
+
+  - code_output:
+      eyebrow: Block 02 · The same rule as week 4
+      title: The compiler protects you while it can still see the value
+      filename: Program.cs
+      lang: csharp
+      output_label: Running and building
+      source: |
+        Console.WriteLine(1.0 / 0);
+        Console.WriteLine(0.0 / 0.0);
+
+        int zero = 0;
+        try { Console.WriteLine(5 / zero); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+
+        // and this one, in its own program
+        Console.WriteLine(5 / 0);
+      output: |
+        ∞
+        NaN
+        Attempted to divide by zero.
+
+        Program.cs(1,19): error CS0020
+        Division by constant zero
+        Build FAILED.
+
+  - trace:
+      eyebrow: Block 02 · Two rules stacked
+      title: Math.Round with digits, and the decimal that was never stored
+      headers: [Call, Prints, What was actually stored]
+      rows:
+        - ["Math.Round(21.35, 1)", "21.4", "21.350000000000001"]
+        - ["Math.Round(21.45, 1)", "21.4", "21.449999999999999"]
+        - ["Math.Round(24.985, 2)", "24.98", "24.984999999999999"]
+        - ["Math.Round(24.975, 2)", "24.98", "24.975000000000001"]
+      verdict: >-
+        Predict all four with the half-to-even rule and you get them right, yet not one of
+        the four decimals you typed was stored as a midpoint. Underneath sits week 4's
+        0.1 + 0.2.
+
+  - divider:
+      eyebrow: Block 03
+      title: Random and Convert
+      lede: >-
+        Two more libraries, with signatures and failure modes like any other. One of the
+        two decides whether your program can be tested twice.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Unseeded
+      title: A hundred fresh generators give a hundred distinct numbers
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] first = new int[100];
+        for (int k = 0; k < 100; k++)
+            first[k] = new Random().Next(1, 1000000);
+
+        Console.WriteLine(first.Distinct().Count() + " of 100");
+
+        Random a1 = new Random();
+        Random a2 = new Random();
+        Console.WriteLine($"a1 = {a1.Next(1, 7)} {a1.Next(1, 7)}");
+        Console.WriteLine($"a2 = {a2.Next(1, 7)} {a2.Next(1, 7)}");
+      output: |
+        100 of 100
+        a1 = 3 5
+        a2 = 5 3
+
+  - code_output:
+      eyebrow: Block 03 · Seeded
+      title: The same simulated run, as many times as you like
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        for (int k = 0; k < 3; k++)
+        {
+            Random r = new Random(2026);
+            int[] sim = new int[5];
+
+            for (int i = 0; i < 5; i++)
+                sim[i] = r.Next(1400, 1601);
+
+            Console.WriteLine(string.Join(", ", sim));
+        }
+      output: |
+        1432, 1456, 1584, 1599, 1584
+        1432, 1456, 1584, 1599, 1584
+        1432, 1456, 1584, 1599, 1584
+
+  - compare:
+      eyebrow: Block 03 · Not a matter of style
+      title: Where the generator is built decides what comes out
+      before:
+        label: Inside the loop
+        file: bad.cs
+        lang: csharp
+        code: |
+          string bad = "";
+          for (int k = 0; k < 8; k++)
+              bad += new Random(42).Next(1, 7) + " ";
+
+          Console.WriteLine(bad.Trim());
+      after:
+        label: Once, outside
+        file: good.cs
+        lang: csharp
+        code: |
+          Random r = new Random(42);
+          string good = "";
+          for (int k = 0; k < 8; k++)
+              good += r.Next(1, 7) + " ";
+
+          Console.WriteLine(good.Trim());
+      note: >-
+        The left one prints 5 5 5 5 5 5 5 5 and the right one prints 5 1 1 4 2 2 5 4. A
+        seed is the starting point of a sequence, so re-seeding on every pass reads its
+        first number eight times over.
+
+  - code_output:
+      eyebrow: Block 03 · The half-open convention
+      title: A hundred thousand draws of Next(1, 7) and never a 7
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Random s = new Random(1);
+        int lo = int.MaxValue, hi = int.MinValue;
+
+        for (int k = 0; k < 100000; k++)
+        {
+            int v = s.Next(1, 7);
+            if (v < lo) lo = v;
+            if (v > hi) hi = v;
+        }
+        Console.WriteLine($"{lo}, {hi}");
+
+        try { new Random(1).Next(7, 1); }
+        catch (Exception e) { Console.WriteLine(e.GetType().Name); }
+      output: |
+        1, 6
+        ArgumentOutOfRangeException
+
+  - code_output:
+      eyebrow: Block 03 · Convert
+      title: Base conversion was already written, and so was its failure
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        string? nothing = null;
+        Console.WriteLine(Convert.ToInt32(nothing));
+        Console.WriteLine(Convert.ToString(255, 2));
+        Console.WriteLine(Convert.ToInt32("FF", 16));
+        Console.WriteLine(Convert.ToChar(65));
+
+        try { Convert.ToInt32("3.7"); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+
+        try { Convert.ToInt32("2147483648"); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+      output: |
+        0
+        11111111
+        255
+        A
+        The input string '3.7' was not
+        in a correct format.
+        Value was either too large or
+        too small for an Int32.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does the last line print?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double reading = 39.5;
+        double limit = 30.0;
+
+        Math.Clamp(reading, 0.0, limit);
+
+        Console.WriteLine(reading);
+      options:
+        - "30, because Clamp trimmed the reading to the limit"
+        - "39.5, because Clamp returns and modifies nothing"
+        - "An error, because the using for Math is missing"
+        - "0, because Clamp starts from the lower bound"
+
+  - lab:
+      eyebrow: Lab
+      title: Testing the accumulators with no bench in the room
+      brief: >-
+        Generate twenty simulated rpm samples from a seed of your own choosing and push
+        them through the week 9 accumulators. Report the sum, the mean and how many fall
+        outside the 1480 to 1520 band.
+      blocks:
+        - label: Deliverable
+          text: The .cs file and the run, with the seed written above the result
+        - label: Constraint
+          text: The generator is built once, and outside the loop
+        - label: The test
+          text: Run the program twice. If all twenty numbers change, you did not seed it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Look before you write it
+          desc: Math.Clamp was last week's ClampToLimit, already written and already tested
+        - title: The signature is the contract
+          desc: Math.Pow returns a double even though it prints 1024, and CS0266 stops the build
+        - title: The seed goes in the report
+          desc: A program with randomness can only be tested twice if the generator is seeded
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Replace three hand-written helpers with Math calls, and for one of them read the
+        official signature and report in three lines what it promises about return type,
+        valid domain and how it fails.
+      meta:
+        - [Due, Before week 13]
+        - [Format, Blackboard · .cs and .pdf]
+        - [Reading, Deitel & Deitel · standard library]
+      rubric:
+        - ["Replacement", "40 %", "The three calls produce the same result your code did"]
+        - ["Signature read", "40 %", "Return type, domain and failure, with the source cited"]
+        - ["Evidence", "20 %", "The real output pasted in, not described in words"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, arrays and strings, and the second midterm. The seven rpm readings
+        finally fit under a single name.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

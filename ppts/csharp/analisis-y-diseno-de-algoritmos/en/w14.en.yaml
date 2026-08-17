@@ -1,0 +1,484 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 14
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 14 · Unit 6.2–6.3 · Grids, sorting and searching
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Two indices instead of one, and the first session of the term in which two correct
+        programs are not worth the same.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 14 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The grid
+          desc: Two indices, two ways of writing it, and what the library will not do with them
+        - title: Four sorts
+          desc: The same seven numbers, and a counter inside each algorithm
+        - title: Two searches
+          desc: What each one costs, and what happens when the array grows
+        - title: Your turn
+          desc: Instrument two algorithms and report whatever counts come out
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare an array with two indices
+          sub: And tell the rectangular form from the jagged one, which are not the same type
+        - head: Walk a grid by row and by column
+          sub: With GetLength(0) and GetLength(1) instead of a number typed by hand
+        - head: Write the four sorts the syllabus names
+          sub: Bubble, selection, insertion and Shell, each one with its counter inside
+        - head: Compare algorithms with measured numbers
+          sub: Comparisons and movements, over three different inputs
+        - head: Choose between sequential and binary search
+          sub: And say out loud the precondition binary search needs in order to be of use
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The grid
+      lede: One row per part position, one column per measurement point. A single name and two indices.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · The two forms
+      title: The inspection fixture map
+      filename: Grid.cs
+      lang: csharp
+      source: |
+        int[,] grid = new int[3, 4];
+        int[][] jagged = new int[3][];
+
+        grid[0, 0] = -12;
+        grid[2, 3] = 47;
+
+        jagged[0] = new int[2];
+        jagged[1] = new int[5];
+        jagged[2] = new int[1];
+
+        int cells = 0;
+        foreach (int[] row in jagged)
+        {
+            cells += row.Length;
+        }
+      annotations:
+        - label: Two indices
+          text: The first picks the row and the second the column. The comma goes inside the same brackets.
+        - label: Jagged
+          text: Every row is its own array and can be a different length. All three start out as null.
+        - label: The cells
+          text: The rectangle has 12 cells. The jagged one has 8, and that number is yours to count row by row.
+        - label: Risk
+          text: jagged[0][0] before the row is assigned throws NullReferenceException, not IndexOutOfRangeException.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Length and Rank do not mean the same in both forms
+      filename: Grid.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(grid.GetLength(0));
+        Console.WriteLine(grid.GetLength(1));
+        Console.WriteLine(grid.Length);
+        Console.WriteLine(grid.Rank);
+        Console.WriteLine(jagged.Length);
+        Console.WriteLine(jagged.Rank);
+        Console.WriteLine(cells);
+      output: |
+        3
+        4
+        12
+        2
+        3
+        1
+        8
+
+  - code_output:
+      eyebrow: Block 01 · On build
+      title: They are two different types and will not mix
+      filename: Mix.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        Console.WriteLine(grid[1][2]);
+        Console.WriteLine(jagged[1, 2]);
+
+        int[][] wrong = new int[3, 4];
+      output: |
+        error CS0022: Wrong number of
+        indices inside []; expected 2
+
+        error CS0022: Wrong number of
+        indices inside []; expected 1
+
+        error CS0029: Cannot implicitly
+        convert type 'int[*,*]'
+        to 'int[][]'
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: It compiles with no error and no warning, then throws
+      filename: Sorting.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[,] grid = new int[3, 4];
+
+        Array.Sort(grid);
+        Array.BinarySearch(grid, 0);
+      output: |
+        RankException: Only single
+        dimension arrays are
+        supported here.
+
+        RankException: Only single
+        dimension arrays are
+        supported here.
+
+  - divider:
+      eyebrow: Block 02
+      title: Four ways to sort the same seven numbers
+      lede: The syllabus names four algorithms. Today all four run on the same logged run, each one carrying its counter.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · The first two
+      title: Bubble and selection, with the counter inside
+      before:
+        label: Bubble
+        file: Bubble.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - 1 - i; j++)
+            {
+              cmp++;
+              if (a[j] > a[j + 1])
+              { Swap(a, j, j + 1); mov++; }
+            }
+      after:
+        label: Selection
+        file: Selection.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < n - 1; i++)
+          {
+            int min = i;
+            for (int j = i + 1; j < n; j++)
+            { cmp++; if (a[j] < a[min]) min = j; }
+            if (min != i) { Swap(a, i, min); mov++; }
+          }
+      note: >-
+        Both make 21 comparisons on the same run. Bubble swaps 10 times and selection 4,
+        because selection swaps once per pass and only when the minimum was not already
+        sitting in its place.
+
+  - compare:
+      eyebrow: Block 02 · The other two
+      title: Shell is insertion with a gap
+      before:
+        label: Insertion
+        file: Insertion.cs
+        lang: csharp
+        code: |
+          int gap = 1;
+          for (int i = gap; i < n; i++)
+          {
+            int key = a[i], j = i;
+            while (j >= gap && a[j - gap] > key)
+            { a[j] = a[j - gap]; j -= gap; }
+            a[j] = key;
+          }
+      after:
+        label: Shell
+        file: Shell.cs
+        lang: csharp
+        code: |
+          for (int gap = n / 2; gap > 0; gap /= 2)
+          for (int i = gap; i < n; i++)
+          {
+            int key = a[i], j = i;
+            while (j >= gap && a[j - gap] > key)
+            { a[j] = a[j - gap]; j -= gap; }
+            a[j] = key;
+          }
+      note: >-
+        Insertion is Shell with a single gap of 1. The comparison being counted is every
+        evaluation of a[j - gap] > key, and on that count insertion makes 15 and Shell 12
+        over the same seven readings.
+
+  - table:
+      eyebrow: Block 02 · Measured
+      title: All four, on the same seven readings
+      headers: [Algorithm, Comparisons, Movements]
+      rows:
+        - ["Bubble", "21", "10 swaps"]
+        - ["Selection", "21", "4 swaps"]
+        - ["Insertion", "15", "10 shifts"]
+        - ["Shell 3-1", "12", "4 shifts"]
+
+  - trace:
+      eyebrow: Block 02 · Measured
+      title: Every count moves when the implementation moves
+      headers: [Algorithm, Variant, Comparisons, Movements]
+      rows:
+        - ["bubble", "no flag", "21", "10"]
+        - ["bubble", "with flag", "20", "10"]
+        - ["selection", "guard / no guard", "21", "4 / 6"]
+        - ["Shell", "gaps 3, 1", "12", "4"]
+        - ["Shell", "gaps 4, 1", "17", "10"]
+      verdict: >-
+        Shell nearly doubles its comparison count on the choice of gap sequence alone.
+        Comparing alternatives has to include the alternatives that live inside one
+        algorithm.
+
+  - trace:
+      eyebrow: Block 02 · Measured
+      title: A single input is not a comparison
+      headers: [Algorithm, The run, Already sorted, Reversed]
+      rows:
+        - ["bubble, no flag", "21", "21", "21"]
+        - ["bubble, with flag", "20", "6", "21"]
+        - ["selection", "21", "21", "21"]
+        - ["insertion", "15", "6", "21"]
+        - ["Shell 3-1", "12", "10", "13"]
+      verdict: >-
+        The one that won with 12 is third the moment the input arrives sorted, and there the
+        early-exit flag buys 15 comparisons out of 21. Selection never changes its count,
+        because it looks at everything regardless.
+
+  - divider:
+      eyebrow: Block 03
+      title: Finding one
+      lede: Two algorithms that answer the same question, and a difference you only see once the array grows.
+      block: 3
+
+  - compare:
+      eyebrow: Block 03 · The two searches
+      title: Walk it all, or cut the array in half
+      before:
+        label: Sequential
+        file: Sequential.cs
+        lang: csharp
+        code: |
+          int c = 0;
+          for (int i = 0; i < a.Length; i++)
+          {
+            c++;
+            if (a[i] == k) return c;
+          }
+      after:
+        label: Binary
+        file: Binary.cs
+        lang: csharp
+        code: |
+          int lo = 0, hi = a.Length - 1, c = 0;
+          while (lo <= hi)
+          {
+            c++;
+            int mid = lo + (hi - lo) / 2;
+            if (a[mid] == k) return c;
+            if (a[mid] < k) lo = mid+1; else hi = mid-1;
+          }
+      note: >-
+        Both bodies live inside the same signature, static int Find(int[] a, int k), and both
+        return how many comparisons it took to reach the key. A comparison here is one
+        a[i] == k test in the sequential one and one visit to a[mid] in the binary one.
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: A thousand sample ids, and the last one of all
+      filename: Find.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] ids = new int[1000];
+        for (int i = 0; i < 1000; i++) ids[i] = 2 * i;
+
+        Console.WriteLine(Seq(ids, 1998));
+        Console.WriteLine(Bin(ids, 1998));
+      output: |
+        1000
+        10
+
+  - trace:
+      eyebrow: Block 03 · Measured
+      title: What happens to each one when the array doubles
+      headers: [n, Sequential, Binary]
+      rows:
+        - ["500", "500", "9"]
+        - ["1000", "1000", "10"]
+        - ["2000", "2000", "11"]
+        - ["4000", "4000", "12"]
+        - ["8000", "8000", "13"]
+      verdict: >-
+        Every doubling doubles the sequential cost and adds one comparison to the binary.
+        Read the columns downwards. One gains a digit, the other a unit.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The array is not sorted and 7 is in it. What does binary search return?
+      filename: Search.cs
+      lang: csharp
+      source: |
+        int[] data = { 5, 1, 9, 3, 7 };
+
+        Console.WriteLine(
+            Array.BinarySearch(data, 7));
+      options:
+        - 'It returns 4, which is where 7 actually lives.'
+        - 'It returns -3, a negative that also points at the wrong place.'
+        - 'It throws an exception for being handed an unsorted array.'
+        - 'It returns -1, the not-found sentinel everybody writes.'
+
+  - trace:
+      eyebrow: Answer
+      title: On unsorted input binary search does not fail — it lies
+      headers: [Value, Real index, BinarySearch]
+      rows:
+        - ["5", "0", "0"]
+        - ["1", "1", "-1"]
+        - ["9", "2", "2"]
+        - ["7", "4", "-3"]
+      verdict: >-
+        All five values are in the array, and the 3 behaves like the 1. Only two come back
+        right, and by luck. The 7 comes back as -3, which decodes to insertion point 2,
+        wrong twice over. No exception was thrown for any of the five.
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The bitwise complement, and the clash with your own -1
+      filename: Complement.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] log = new int[1000];
+        for (int i = 0; i < 1000; i++) log[i] = 2 * i;
+
+        Console.WriteLine(Array.BinarySearch(log, 1999));
+        Console.WriteLine(Array.BinarySearch(log, 2000));
+        Console.WriteLine(Array.BinarySearch(log, -1));
+        Console.WriteLine(~(-1001));
+        Console.WriteLine(~(-1));
+      output: |
+        -1001
+        -1001
+        -1
+        1000
+        0
+
+  - code_output:
+      eyebrow: Block 03 · Networking case
+      title: The negative return is the packet-loss detection
+      filename: Latency.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double[] lat = { 12.4, 11.9, 48.2, 12.1 };
+        double sum = 0;
+        foreach (double v in lat) sum += v;
+        Array.Sort(lat);
+
+        Console.WriteLine(sum / lat.Length);
+        Console.WriteLine((lat[1] + lat[2]) / 2);
+
+        int[] seqs = { 40, 41, 42, 44, 45 };
+        Console.WriteLine(Array.BinarySearch(seqs, 43));
+        Console.WriteLine(~Array.BinarySearch(seqs, 43));
+      output: |
+        21.15
+        12.25
+        -4
+        3
+
+  - table:
+      eyebrow: Block 03 · Measured
+      title: Four times the data, sixteen times the work
+      headers: [n, Bubble comparisons, "n(n-1)/2"]
+      rows:
+        - ["1000", "499500", "499500"]
+        - ["2000", "1999000", "1999000"]
+        - ["4000", "7998000", "7998000"]
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Two forms, two types
+          desc: The rectangular one has Rank 2 and the jagged one Rank 1, and the compiler lets no assignment pass between them
+        - title: Shell wins, and not always
+          desc: 12 comparisons on the logged run, 10 on an already sorted one where insertion makes 6. The data decides
+        - title: Binary search demands order
+          desc: Without a sorted array it does not fail, it answers wrong and keeps going. The precondition is part of the algorithm
+
+  - lab:
+      eyebrow: Lab
+      title: The fixture deviation map
+      brief: Load an array of three rows by four columns with the measured deviation of every part position, print the mean of each row and of each column, and report the worst cell by its two indices.
+      blocks:
+        - label: Deliverable
+          text: The .cs and the output, with the means and the index pair of the worst cell
+        - label: Constraint
+          text: Loop bounds come from GetLength, not from a 3 and a 4 typed by hand
+        - label: The test
+          text: Add a column to the array. The program has to keep running without a single loop being touched
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Instrument two of the four sorts with comparison and movement counters, choose a gap sequence for Shell and cite where you got it, and report the counts over the three inputs from today.
+      meta:
+        - [Due, Before week 15]
+        - [Format, Blackboard · .cs and .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Instrumentation", "40 %", "The counters live inside the algorithm and are not estimated from outside"]
+        - ["The citation", "30 %", "The source of the chosen gap sequence for Shell is named"]
+        - ["The counts", "30 %", "They are reported over all three inputs and the differences are discussed"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, structures. Seven parallel arrays become one array of a type you
+        invented yourself.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

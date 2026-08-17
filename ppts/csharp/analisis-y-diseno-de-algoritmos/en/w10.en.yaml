@@ -1,0 +1,567 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 10
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 10 · Unit 5.1 · User-defined functions
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        The pieces we named on paper in week 2 now get names the compiler recognises, and
+        one of them can be tested on its own.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 10 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Anatomy
+          desc: Return type, name, parameters, and what the word static is doing there
+        - title: Scope and overloading
+          desc: What is born inside the method stays inside, and one name can serve several signatures
+        - title: Arrays
+          desc: How they go into a method and come out, and which changes survive the return
+        - title: Your turn
+          desc: A sixty-line Main split into four methods, without the output changing
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and call a method of your own
+          sub: And explain why declaring it runs absolutely nothing
+        - head: Read a full signature
+          sub: Return type, name, and the parameter list with its types
+        - head: Justify the word static
+          sub: With the error that appears when you drop it, not with what the tutorial says
+        - head: Tell returning from printing
+          sub: And decide when a method should be void and when it should hand back a value
+        - head: Pass and return arrays
+          sub: And predict which changes reach the caller and which stay inside
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The anatomy of a method
+      lede: >-
+        Declaring, calling, and the keyword every tutorial makes you type without ever
+        telling you why.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A calculation with a name of its own
+      lead: >-
+        A method wraps a calculation, declares what it needs to receive and what it hands
+        back, and from that moment the caller no longer has to open the body to trust the
+        result. It is the same decomposition as week 2, except the compiler now understands
+        it and checks it for you.
+      panel:
+        label: The real argument
+        title: A named piece can be tested alone
+        note: >-
+          The same calculation pasted into five places cannot be tested. It can only be
+          checked by hand, place by place, and nobody does that.
+      steps:
+        - text: Declared once, with its signature
+        - text: Called as many times as needed
+        - text: Fixed in a single place
+          loop: ↺ and the fix reaches every call
+
+  - code:
+      eyebrow: Block 01 · Anatomy
+      title: The mean of three thermocouples, packaged
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double mean = Mean(21.0, 39.5, 22.4);
+        Console.WriteLine(mean);
+
+        static double Mean(double a, double b, double c)
+        {
+            double total = a + b + c;
+            return total / 3.0;
+        }
+      annotations:
+        - label: The return type
+          text: >-
+            double sits before the name and says what the method hands back. Half of the
+            caller's contract.
+        - label: The parameters
+          text: >-
+            Three slots with a name and a type. A call fills them in order and the
+            compiler checks types.
+        - label: return
+          text: >-
+            Hands the value back and ends the method there. Anything after the return
+            never runs.
+        - label: static
+          text: >-
+            It says the method works from its parameters alone. The next three slides
+            measure that.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Declaring a method runs nothing at all
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        static void PrintHeader()
+        {
+            Console.WriteLine("BATCH 07 - TELEMETRY");
+        }
+      output: |
+        warning CS8321: The local
+        function 'PrintHeader' is
+        declared but never used
+
+        Build succeeded.
+            1 Warning(s)
+            0 Error(s)
+
+        dotnet run -> no output
+
+  - code_output:
+      eyebrow: Measured
+      title: Calling it does run it, and the order of declaration is free
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        PrintHeader();
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(Mean(Mean(21.0, 39.5), 22.4));
+
+        static void PrintHeader()
+        {
+            Console.WriteLine("BATCH 07 - TELEMETRY");
+        }
+
+        static double Mean(double a, double b)
+        {
+            return (a + b) / 2;
+        }
+      output: |
+        BATCH 07 - TELEMETRY
+        30.25
+        26.325
+
+  - code_output:
+      eyebrow: Measured
+      title: Drop static from this same method and it prints 9
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int limitCelsius = 30;
+        Console.WriteLine(OverLimit(39));
+
+        static int OverLimit(int reading)
+        {
+            return reading - limitCelsius;
+        }
+      output: |
+        error CS8421: A static local
+        function cannot contain a
+        reference to 'limitCelsius'.
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - pitfalls:
+      eyebrow: Block 01 · Placement
+      title: Four errors of placing a method
+      items:
+        - label: Error 01
+          title: Writing public in front
+          desc: >-
+            Every tutorial shows public static. On a top-level method the compiler answers
+            error CS0106, The modifier 'public' is not valid for this item, and it points
+            at column 1.
+        - label: Error 02
+          title: Leaving code below a class
+          desc: >-
+            error CS8803, Top-level statements must precede namespace and type
+            declarations. Every class you write goes at the bottom of the file, after the
+            last executable line.
+        - label: Error 03
+          title: Dropping static inside a class
+          desc: >-
+            There it is compulsory. Without it you get error CS0120, An object reference is
+            required. And calling it by its bare name is CS0103, the same one as week 9.
+        - label: Error 04
+          title: Thinking static makes it callable
+          desc: >-
+            It does not. Under top-level statements both forms build without a single
+            warning and both print 7. What static buys you is the isolation.
+
+  - divider:
+      eyebrow: Block 02
+      title: Returning, scope and overloading
+      lede: >-
+        What is born inside the method stays inside. And one name can serve several
+        signatures, as long as every call has an obvious winner.
+      block: 2
+
+  - compare:
+      eyebrow: Block 02 · The distinction
+      title: Returning is not printing
+      before:
+        label: void
+        file: prints.cs
+        code: |
+          static void ShowMean(double a,
+                               double b)
+          {
+              Console.WriteLine((a + b) / 2);
+          }
+
+          double m = ShowMean(21.0, 39.5);
+      after:
+        label: With a return
+        file: returns.cs
+        code: |
+          static double Mean(double a,
+                             double b)
+          {
+              return (a + b) / 2;
+          }
+
+          double m = Mean(21.0, 39.5);
+      note: >-
+        The left one shows the number and does not hand it back, so the last line does not
+        even build. The compiler answers error CS0029, Cannot implicitly convert type
+        'void' to 'double'. If the method computes a value, return it; if it causes an
+        effect, void.
+
+  - code_output:
+      eyebrow: Measured
+      title: The same CS0103 as week 9, now with another name inside
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(result);
+
+        static double Mean(double a, double b)
+        {
+            double result = (a + b) / 2;
+            return result;
+        }
+      output: |
+        error CS0103: The name 'result'
+        does not exist in the current
+        context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - compare:
+      eyebrow: Block 02 · Overloading
+      title: One name, two methods, the shape that builds
+      before:
+        label: Does not build
+        file: local.cs
+        code: |
+          int Mean(int a, int b)
+          {
+              return (a + b) / 2;
+          }
+          double Mean(double a, double b)
+          {
+              return (a + b) / 2;
+          }
+      after:
+        label: Does build
+        file: partial.cs
+        code: |
+          partial class Program
+          {
+              static int Mean(int a, int b)
+                  => (a + b) / 2;
+              static double Mean(double a,
+                                 double b)
+                  => (a + b) / 2;
+          }
+      note: >-
+        The left is not two methods, only one name used twice: error CS0128, A local
+        variable or function named 'Mean' is already defined in this scope. Top-level code
+        already lives in a class called Program; reopen it below for real methods.
+
+  - code_output:
+      eyebrow: Measured
+      title: Three Mean methods, and the compiler picks by the types
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        Console.WriteLine(Mean(1480, 1502));
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(Mean(1480, 1502, 1495));
+
+        partial class Program
+        {
+            static int Mean(int a, int b) => (a + b) / 2;
+            static double Mean(double a, double b) => (a + b) / 2;
+            static int Mean(int a, int b, int c) => (a + b + c) / 3;
+        }
+      output: |
+        1491
+        30.25
+        1492
+
+  - code_output:
+      eyebrow: Measured
+      title: A char widens to int before it widens to anything else
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        Console.WriteLine(Which(5));
+        Console.WriteLine(Which(5.0));
+        Console.WriteLine(Which(5L));
+        Console.WriteLine(Which('A'));
+
+        partial class Program
+        {
+            static string Which(int v) => "int overload";
+            static string Which(double v) => "double overload";
+            static string Which(long v) => "long overload";
+        }
+      output: |
+        int overload
+        double overload
+        long overload
+        int overload
+
+  - table:
+      eyebrow: Measured
+      title: You have been using overloading since week 1
+      headers: [Member, Overloads, What that saved you]
+      rows:
+        - ["Console.WriteLine", "20", "Printing int, double or string"]
+        - ["Convert.ToString", "36", "Converting almost anything"]
+        - ["Convert.ToInt32", "19", "Reading input of several types"]
+        - ["Math.Clamp", "13", "Clamping int, double or long"]
+        - ["Math.Round", "8", "Rounding under different rules"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Arrays going in and coming out
+      lede: >-
+        An array is passed by value like everything else, and the method can still change
+        it. That sentence is not a contradiction, and today it gets measured.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: An array parameter never needs a count beside it
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        Console.WriteLine(Sum(rpm));
+        Console.WriteLine(Count(rpm));
+
+        static int Sum(int[] v)
+        {
+            int total = 0;
+            foreach (int x in v) total += x;
+            return total;
+        }
+
+        static int Count(int[] v) => v.Length;
+      output: |
+        10478
+        7
+
+  - code_output:
+      eyebrow: Measured
+      title: The element stays written; the replacement does not
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        ZeroFirst(src);
+        Console.WriteLine(src[0]);
+        Replace(src);
+        Console.WriteLine(src[0]);
+        ReplaceRef(ref src);
+        Console.WriteLine(src[0]);
+
+        static void ZeroFirst(int[] v) { v[0] = 0; }
+        static void Replace(int[] v) { v = new int[] { -1, -1, -1 }; }
+        static void ReplaceRef(ref int[] v)
+        {
+            v = new int[] { -1, -1, -1 };
+        }
+      output: |
+        0
+        0
+        -1
+
+  - code_output:
+      eyebrow: Measured
+      title: The return type does not say whether you got a copy or the original
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int[] w = Window(rpm, 2, 3);
+        w[0] = 0;   Console.WriteLine(rpm[2]);
+        int[] s = Same(rpm);
+        s[0] = 0;   Console.WriteLine(rpm[0]);
+
+        static int[] Window(int[] v, int start, int count)
+        {
+            int[] w = new int[count];
+            for (int i = 0; i < count; i++) w[i] = v[start + i];
+            return w;
+        }
+        static int[] Same(int[] v) { return v; }
+      output: |
+        1495
+        0
+
+  - code_output:
+      eyebrow: Measured
+      title: One method for two samples, for seven, or for none at all
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        Console.WriteLine(Mean(1480, 1502));
+        int[] run = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        Console.WriteLine(Mean(run));
+        Console.WriteLine(Mean());
+
+        static double Mean(params int[] samples)
+        {
+            if (samples.Length == 0) return double.NaN;
+            int total = 0;
+            foreach (int s in samples) total += s;
+            return (double)total / samples.Length;
+        }
+      output: |
+        1491
+        1496.857142857143
+        NaN
+
+  - quiz:
+      eyebrow: Quick check
+      question: >-
+        The first two lines print 98 and 98.6. What do the last two print?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        Console.WriteLine(C2F(37));
+        Console.WriteLine(C2F(37.0));
+        Console.WriteLine(C2F(25));
+        Console.WriteLine(C2F(25.0));
+
+        partial class Program
+        {
+            static int C2F(int c) => c * 9 / 5 + 32;
+            static double C2F(double c)
+                => c * 9.0 / 5.0 + 32.0;
+        }
+      options:
+        - '77 both, which is why testing at 25 degrees hides the defect'
+        - '77 and 77.0, because the second one keeps the decimal point'
+        - '77 and 78.6, because the real division raises the result'
+        - 'An error, C2F is already defined with that name'
+
+  - lab:
+      eyebrow: Lab
+      title: Split the sixty-line Main
+      brief: >-
+        Take a program of yours from week 8 or week 9 that already works and split it into
+        four named methods. The behaviour must not change. Run it before and after with the
+        same inputs and keep both outputs.
+      blocks:
+        - label: Deliverable
+          text: >-
+            The Program.cs file with the four methods, and both runs pasted into a .txt,
+            the before and the after
+        - label: Constraint
+          text: >-
+            Mark all four static. If one of them reads a variable it did not receive as a
+            parameter, the compiler will say so with CS8421
+        - label: The test
+          text: >-
+            If the two outputs are not identical line by line, the refactor changed
+            something and it is not finished yet
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Declaring runs nothing
+          desc: The file builds, runs, prints nothing and exits 0, and the compiler warns you with CS8321
+        - title: static is a wall, not decoration
+          desc: Mark the method and the compiler forbids it from reading the outside. That is its whole job
+        - title: The array is shared
+          desc: Writing an element reaches the caller; replacing the whole array stays inside the method
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Submit the lab refactor with both runs, and add one more method that takes the
+        array of seven rpm readings and returns the highest reading together with its
+        index.
+      meta:
+        - [Due, Before week 11]
+        - [Format, Blackboard · .cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Behaviour", "40 %", "The two runs are identical"]
+        - ["Isolation", "40 %", "The methods build with static"]
+        - ["Naming", "20 %", "Each name says what it returns"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week the wall we have just built gets two labelled holes, ref and out, and we
+        find the one that was already open all along.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

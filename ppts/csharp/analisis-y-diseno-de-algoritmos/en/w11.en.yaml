@@ -1,0 +1,494 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 11
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 11 · Unit 5.3 · Passing parameters by reference
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        The wall we built around every method last week is there on purpose. Today we punch
+        two labelled holes in it, and we find the one that had been open all along.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 11 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The broken Swap
+          desc: Predict it on the board, run it afterwards, and explain why it builds without a complaint
+        - title: The word ref
+          desc: Reading, changing and writing back into the caller's own variable
+        - title: The word out
+          desc: The method commits to filling it, and TryParse becomes the permanent input rule
+        - title: Your turn
+          desc: Lowest and highest of the thermocouple trio through two output parameters
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain why the by-value Swap fails
+          sub: Without blaming the body of the method, which is perfectly written
+        - head: Share a variable with ref
+          sub: With the keyword in the signature and again at the call site
+        - head: Fill a parameter with out
+          sub: And say who is obliged to initialise it in each of the two cases
+        - head: Read the contract errors
+          sub: CS1620, CS0165, CS0177 and CS1510, which say different things
+        - head: Use TryParse as a fixed rule
+          sub: And know what it leaves inside the variable when the conversion fails
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: now
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The swap that does not swap
+      lede: >-
+        Predict it on the board first, without running it. The body of the method is
+        correctly written and it still does not do what its name says.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The wall is there on purpose
+      lead: >-
+        Last week we marked methods static precisely so they could not read anything from
+        outside. That wall is not an oversight in the language or an obstacle to work
+        around; it is what makes a piece testable on its own. Today we open it at two
+        points, each with its own keyword, and both keywords have to be written twice.
+      panel:
+        label: What is behind it
+        title: Sharing a variable is declared
+        note: >-
+          Nobody shares a variable by accident. The keyword goes in the signature and again
+          at the call, and if either one is missing the compiler stops.
+      steps:
+        - text: The method receives a copy
+        - text: With ref it receives the variable itself
+        - text: With out it commits to filling it
+          loop: ↺ and the compiler checks all three
+
+  - code:
+      eyebrow: Block 01 · Predict
+      title: Three lines of swapping, written straight out of the book
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int x = 1, y = 2;
+        SwapByValue(x, y);
+        Console.WriteLine($"{x}, {y}");
+
+        static void SwapByValue(int a, int b)
+        {
+            int t = a;
+            a = b;
+            b = t;
+        }
+      annotations:
+        - label: The body
+          text: >-
+            The three lines of the swap are correct. With a temporary variable, exactly as
+            it is taught, and the order is the right one.
+        - label: a and b
+          text: >-
+            They are copies of x and y, made at the moment of the call. They swap with each
+            other and are then thrown away.
+        - label: Predict
+          text: >-
+            Write in your notebook what the third line prints before we run it. Then
+            compare your answer with the measurement.
+        - label: Risk
+          text: >-
+            It builds, runs, exits 0 and reports nothing odd. This is the kind of defect
+            that survives all the way to the demo.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Four keywords separate one swap from the other
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int x = 1, y = 2;
+        SwapByValue(x, y);
+        Console.WriteLine($"{x}, {y}");
+        SwapByRef(ref x, ref y);
+        Console.WriteLine($"{x}, {y}");
+
+        static void SwapByValue(int a, int b)
+        {
+            int t = a; a = b; b = t;
+        }
+        static void SwapByRef(ref int a, ref int b)
+        {
+            int t = a; a = b; b = t;
+        }
+      output: |
+        1, 2
+        2, 1
+
+  - code_output:
+      eyebrow: Measured
+      title: The ref at the call site is what selects the method
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        double reading = 39.5;
+        Probe.Clamp(reading);      Console.WriteLine(reading);
+        Probe.Clamp(ref reading);  Console.WriteLine(reading);
+
+        class Probe
+        {
+            public static void Clamp(double r)
+            { if (r > 30.0) r = 30.0; }
+            public static void Clamp(ref double r)
+            { if (r > 30.0) r = 30.0; }
+        }
+      output: |
+        39.5
+        30
+
+  - code_output:
+      eyebrow: Measured
+      title: The keyword goes on both sides or on neither
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        double reading = 39.5;
+        ClampByRef(reading, 30.0);
+        Console.WriteLine(reading);
+
+        static void ClampByRef(ref double r, double limit)
+        {
+            if (r > limit) r = limit;
+        }
+      output: |
+        error CS1620: Argument 1 must
+        be passed with the 'ref' keyword
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - divider:
+      eyebrow: Block 02
+      title: Read it, change it, write it back
+      lede: >-
+        With ref the method works on the caller's variable, not on a copy. And there is one
+        case where that was already happening without anyone writing the keyword.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured
+      title: An array element is a legal target after all
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        double[] readings = { 21.0, 39.5, 22.4 };
+        ClampByRef(ref readings[1], 30.0);
+        Console.WriteLine(string.Join(", ", readings));
+
+        static void ClampByRef(ref double r, double limit)
+        {
+            if (r > limit) r = limit;
+        }
+      output: |
+        21, 30, 22.4
+
+  - pitfalls:
+      eyebrow: Block 02 · Four slips
+      title: Where the contract breaks
+      items:
+        - label: Error 01
+          title: Handing it a literal
+          desc: >-
+            ref needs somewhere to write back to. A number typed by hand is not somewhere,
+            and the compiler answers error CS1510, A ref or out value must be an assignable
+            variable. A variable works, and so does an array element.
+        - label: Error 02
+          title: Putting ref where it was not asked
+          desc: >-
+            It is the same rule from the other side, and it stops too. error CS1615,
+            Argument 1 may not be passed with the 'ref' keyword. Both directions have to
+            agree with each other.
+        - label: Error 03
+          title: Using ref to pass an array
+          desc: >-
+            It is almost never needed. Writing an element already reaches the caller
+            without the keyword, as we measured last week. ref only comes in if you are
+            going to replace the whole array.
+        - label: Error 04
+          title: Marking everything ref just in case
+          desc: >-
+            Default to plain parameters and a return value. Reach for ref when the caller
+            owns the sample and mutating it in place really is the right shape, as in
+            calibrating one channel.
+
+  - code_output:
+      eyebrow: Measured
+      title: Filling the coolant tank, with its guard in place
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        double tank = 40.0;
+        Fill(ref tank, 15.0);   Console.WriteLine(tank);
+        Fill(ref tank, 10.0);   Console.WriteLine(tank);
+
+        static void Fill(ref double litres, double add)
+        {
+            bool room = litres + add <= 60.0;
+            if (!room)
+            {
+                Console.WriteLine("  no headroom above 60 L");
+                return;
+            }
+            litres += add;
+        }
+      output: |
+        55
+          no headroom above 60 L
+        55
+
+  - code_output:
+      eyebrow: Measured
+      title: The hole that had been open since last week
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine(src[0]);
+        Console.WriteLine(ReferenceEquals(src, alias));
+      output: |
+        99
+        True
+
+  - compare:
+      eyebrow: Block 02 · The same rule
+      title: What the compiler protects is not the array
+      before:
+        label: double[]
+        file: raw.cs
+        code: |
+          double[] raw = { 21.0, 39.5 };
+
+          foreach (double c in raw)
+          {
+              if (c > 30.0) c = 30.0;
+          }
+      after:
+        label: Channel[]
+        file: bank.cs
+        code: |
+          foreach (Channel ch in bank)
+          {
+              if (ch.Celsius > 30.0)
+                  ch.Celsius = 30.0;
+          }
+
+          class Channel
+          { public double Celsius; }
+      note: >-
+        The left one does not build: error CS1656, Cannot assign to 'c' because it is a
+        'foreach iteration variable'. The right one builds and clamps 39.5, because the
+        copy is a copy of a reference; the bank ends at 21, 30. What is blocked is editing
+        a copy that goes nowhere, not touching the array.
+
+  - divider:
+      eyebrow: Block 03
+      title: The word out, and the input rule
+      lede: >-
+        ref says the caller has already filled the variable. out says the method is obliged
+        to fill it. Who initialises is the whole difference.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: The compiler chases the path that forgot to fill it
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        double[] empty = new double[0];
+        Console.WriteLine(TryMean(empty, out double m));
+
+        static bool TryMean(double[] v, out double mean)
+        {
+            if (v.Length == 0) return false;
+            mean = 0;
+            foreach (double x in v) mean += x;
+            mean /= v.Length;
+            return true;
+        }
+      output: |
+        error CS0177: The out parameter
+        'mean' must be assigned to
+        before control leaves the
+        current method
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Block 03 · The contract
+      title: Who initialises, and what the caller takes home
+      headers: [Form, Who initialises, What the caller takes home]
+      rows:
+        - ["by value", "The caller", "Nothing, the method saw a copy"]
+        - ["ref", "The caller", "Whatever the method wrote there"]
+        - ["out", "The method", "A value, always and without fail"]
+        - ["int[]", "The caller", "The elements, not the replacement"]
+
+  - code_output:
+      eyebrow: Measured
+      title: One single slip, and the compiler answers four times
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        double lo, hi;
+        double[] probes = { 21.0, 39.5, 22.4 };
+        MinMax(probes, lo, hi);
+
+        static void MinMax(double[] v, out double lo, out double hi)
+        {
+            lo = v[0];
+            hi = v[0];
+            foreach (double x in v)
+            {
+                if (x < lo) lo = x;
+                if (x > hi) hi = x;
+            }
+        }
+      output: |
+        error CS1620: Argument 2 must
+        be passed with the 'out' keyword
+        error CS1620: Argument 3 must
+        be passed with the 'out' keyword
+        error CS0165: Use of unassigned
+        local variable 'lo'
+        error CS0165: Use of unassigned
+        local variable 'hi'
+        Build FAILED.
+
+  - quiz:
+      eyebrow: Quick check
+      question: >-
+        keep holds 999 and the conversion is going to fail. What is left inside keep?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int keep = 999;
+        bool ok = int.TryParse("abc", out keep);
+        Console.WriteLine(ok + ", keep=" + keep);
+      options:
+        - 'False and keep=999, because the conversion never touched it'
+        - 'False and keep=0, because TryParse overwrites it'
+        - 'True and keep=0, because abc is read as zero'
+        - 'It throws FormatException when it cannot convert'
+
+  - code_output:
+      eyebrow: Measured
+      title: TryParse does not leave the variable alone when it fails
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int keep = 999;
+        bool ok = int.TryParse("abc", out keep);
+        Console.WriteLine(ok + ", keep=" + keep);
+      output: |
+        False, keep=0
+
+  - lab:
+      eyebrow: Lab
+      title: Lowest and highest through two output parameters
+      brief: >-
+        Write MinMax over the thermocouple trio with two out parameters, and in front of it
+        a reader that uses int.TryParse so it refuses rubbish. Then add Drain, which empties
+        the coolant tank by reference.
+      blocks:
+        - label: Deliverable
+          text: >-
+            The Program.cs file with MinMax, the TryParse reader and Drain, plus the run
+            with one valid input and one invalid one
+        - label: Constraint
+          text: >-
+            Drain refuses any operation that would leave the tank below 5 L, and the
+            refusal message says why, not just that it could not
+        - label: The test
+          text: >-
+            Feed it something that is not a number. If the program crashes, or if it
+            accepts a zero in disguise, the guard is not working yet
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: ref goes on both sides
+          desc: In the signature and at the call. Nobody ends up sharing a variable without writing it
+        - title: Who initialises decides it all
+          desc: With out the method is obliged; with ref, the caller. That is the entire difference
+        - title: An array already travelled shared
+          desc: The variable holds a reference, so the parameter's copy points at the very same array
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Submit MinMax with its two out parameters over the thermocouple trio, with the
+        TryParse guard in front of it, and explain in three lines why out suits this case
+        better than a return value.
+      meta:
+        - [Due, Before week 12]
+        - [Format, Blackboard · .cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Contract", "40 %", "Both out parameters always filled"]
+        - ["Input", "40 %", "TryParse before the value is used"]
+        - ["Justification", "20 %", "You say why out and not a return"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week, before writing a method, we check whether the framework already wrote
+        it. And that is where Math.Clamp turns out to have had thirteen overloads waiting.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

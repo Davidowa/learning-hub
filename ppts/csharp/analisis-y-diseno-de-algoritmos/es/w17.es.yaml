@@ -1,0 +1,506 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 17
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 17 · Todas las unidades · Repaso y examen final
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        El semestre completo en un solo archivo, los seis errores que más se cobran corridos
+        otra vez en vivo, y la logística del examen.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 17 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Dos bloques y las dudas
+      cards:
+        - title: El mapa
+          desc: Siete temas del programa y cómo se encadenan dentro de un solo archivo
+        - title: Los seis errores
+          desc: Los que más se cobran, corridos otra vez delante del salón
+        - title: El examen
+          desc: Qué entra, qué cambia respecto a los parciales y qué se puede llevar
+        - title: Tus dudas
+          desc: La segunda mitad de la sesión, con lo que trajiste por escrito
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Ubicar cada tema en el mapa
+          sub: Y decir de qué depende y qué habilita para el tema que sigue
+        - head: Reconocer los seis errores caros
+          sub: Los que aparecieron en cada entrega del semestre, sin excepción
+        - head: Leer un programa integrador
+          sub: De la línea de captura al reporte alineado, sin saltarse la validación
+        - head: Citar lo que el programa imprimió
+          sub: Y no lo que uno cree que imprime, que es de donde salen las sorpresas
+        - head: Llegar preparado al examen
+          sub: Sabiendo qué entra, qué se permite y cómo se entrega
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: El semestre completo
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El semestre en un archivo
+      lede: >-
+        Nada de lo que vimos está suelto. Un solo programa de repaso toca los siete temas
+        del programa, y lo vamos a correr renglón por renglón.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Encadenamiento
+      title: De qué depende cada tema
+      headers: [Tema, Se apoya en, Lo habilita]
+      rows:
+        - ["Tipos", "El algoritmo en papel", "Cualquier cálculo correcto"]
+        - ["Instrucciones", "Tipos y expresiones", "Leer, calcular y formatear"]
+        - ["Selección", "Comparaciones booleanas", "Guardas y enclavamientos"]
+        - ["Repetición", "Selección", "Recorrer una corrida entera"]
+        - ["Funciones", "Repetición", "Código que se puede probar"]
+        - ["Arreglos", "Funciones", "Cadenas y la corrida en memoria"]
+        - ["Estructuras", "Arreglos", "Un tipo que tú diseñaste"]
+
+  - code:
+      eyebrow: Bloque 01 · Validar
+      title: La línea de captura, con una lectura mala adentro
+      filename: Repaso.cs
+      lang: csharp
+      source: |
+        string captura = "1480,1502,1495,abc,1533,1471,1509,1488";
+        string[] campos = captura.Split(',');
+        int[] rpm = new int[campos.Length];
+        int n = 0, rechazadas = 0;
+        foreach (string campo in campos)
+        {
+            bool ok = int.TryParse(campo, out int valor);
+            if (ok) { rpm[n] = valor; n++; }
+            else { rechazadas++; }
+        }
+        Console.WriteLine($"leidas {n}, rechazadas {rechazadas}");
+      annotations:
+        - label: Split
+          text: La semana 13 parte una línea de texto en piezas. Aquí son ocho campos, uno de ellos basura.
+        - label: TryParse
+          text: Devuelve un bool y escribe la variable. El bool se revisa primero, siempre.
+        - label: Dos contadores
+          text: n dice cuántas entraron y rechazadas cuántas no. El arreglo tiene ocho lugares y solo siete sirven.
+        - label: Riesgo
+          text: Con Convert.ToInt32 en lugar de TryParse, el programa muere en el cuarto campo.
+          accent: true
+
+  - code:
+      eyebrow: Bloque 01 · Clasificar
+      title: La banda, el struct y el enum, en un solo ciclo
+      filename: Repaso.cs
+      lang: csharp
+      source: |
+        // struct Sample { int Channel; int Rpm; Status State; }
+        Sample[] banco = new Sample[n];
+        int suma = 0, fuera = 0;
+        for (int i = 0; i < n; i++)
+        {
+            bool malo = rpm[i] < 1480 || rpm[i] > 1520;
+            banco[i].Channel = i;
+            banco[i].Rpm = rpm[i];
+            banco[i].State = malo ? Status.Fault : Status.Ok;
+            if (malo) fuera++;
+            suma += rpm[i];
+        }
+      annotations:
+        - label: La regla de banda
+          text: r < 1480 || r > 1520, escrita en la lámina. Con la otra convención el conteo cambia.
+        - label: banco[i].Channel
+          text: El elemento del arreglo es el struct, así que escribirle un campo escribe en el banco.
+        - label: El enum
+          text: Status.Ok y Status.Fault son nombres, y adentro siguen siendo 0 y 2.
+        - label: Un ciclo
+          text: Clasifica, acumula y cuenta en el mismo recorrido. Tres acumuladores, una pasada.
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El error más repetido del semestre, otra vez
+      filename: Repaso.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        Console.WriteLine($"fuera de banda {fuera} de {n}");
+        Console.WriteLine($"media entera {suma / n}");
+        Console.WriteLine($"media real {(double)suma / n}");
+        Console.WriteLine($"media :F3 {(double)suma / n:F3}");
+      output: |
+        leidas 7, rechazadas 1
+        fuera de banda 2 de 7
+        media entera 1496
+        media real 1496.857142857143
+        media :F3 1496.857
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Ordenar primero, y leer el retorno negativo
+      filename: Repaso.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        int[] ordenadas = new int[n];
+        Array.Copy(rpm, ordenadas, n);
+        Array.Sort(ordenadas);
+
+        Console.WriteLine("ordenadas:");
+        Console.WriteLine(string.Join(" ", ordenadas));
+        int i1495 = Array.BinarySearch(ordenadas, 1495);
+        int i1500 = Array.BinarySearch(ordenadas, 1500);
+        Console.WriteLine($"binaria 1495 -> {i1495}");
+        Console.WriteLine($"binaria 1500 -> {i1500}");
+      output: |
+        ordenadas:
+        1471 1480 1488 1495 1502 1509 1533
+        binaria 1495 -> 3
+        binaria 1500 -> -5
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El reporte alineado, que es donde termina todo
+      filename: Repaso.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        Console.WriteLine("canal   rpm  estado");
+        foreach (Sample s in banco)
+            Console.WriteLine($"{s.Channel,-5}{s.Rpm,6}  {s.State}");
+      output: |
+        canal   rpm  estado
+        0      1480  Ok
+        1      1502  Ok
+        2      1495  Ok
+        3      1533  Fault
+        4      1471  Fault
+        5      1509  Ok
+        6      1488  Ok
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La cadena que atraviesa el curso entero
+      lead: >-
+        Un tipo es una decisión sobre qué cabe. Una condición es un valor. Un ciclo es esa
+        condición repetida hasta que deja de ser cierta. Una función es un ciclo con nombre
+        y contrato. Un arreglo es una corrida completa en memoria, y un struct es el renglón
+        de esa corrida con los campos que tú elegiste.
+      panel:
+        label: Lo que significa para el examen
+        title: No hay siete temas sueltos que memorizar
+        note: >-
+          Si sabes qué hace un acumulador dentro de un for, ya sabes qué hace el reporte
+          final de este programa. Cambia la sintaxis, no la idea.
+      steps:
+        - text: Un tipo decide qué cabe
+        - text: Una condición decide por dónde
+        - text: Un ciclo repite hasta que se cumple
+          loop: ↺ y la función le pone nombre
+
+  - table:
+      eyebrow: Bloque 01 · Los otros bancos
+      title: Nadie cierra el semestre sin haber visto el suyo
+      headers: [Banco, El número que lo define, Para quién]
+      rows:
+        - ["Cuadros", "16.666666666666668 ms, 3 de 8", "Animación y Videojuegos"]
+        - ["Paquetes", "mediana 12.25, media 21.15", "Datos, Ciberseguridad, TI"]
+        - ["Colisión", "cuatro comparaciones con &&", "Animación y Videojuegos"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Lo que más se cobra
+      lede: >-
+        Seis errores. No son los más difíciles del semestre, son los que aparecieron en cada
+        entrega, y los seis se vuelven a correr aquí en vivo.
+      block: 2
+
+  - code_output:
+      eyebrow: Error 01 · Medido
+      title: La división entera trunca, y el cast va antes
+      filename: uno.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        Console.WriteLine($"7 / 2            = {7 / 2}");
+        Console.WriteLine($"7 / 2.0          = {7 / 2.0}");
+        int suma = 10478, n = 7;
+        Console.WriteLine($"suma / n         = {suma / n}");
+        Console.WriteLine($"(double)suma / n = {(double)suma / n}");
+        Console.WriteLine($"... :F3          = {(double)suma / n:F3}");
+      output: |
+        7 / 2            = 3
+        7 / 2.0          = 3.5
+        suma / n         = 1496
+        (double)suma / n = 1496.857142857143
+        ... :F3          = 1496.857
+
+  - code_output:
+      eyebrow: Error 02 · Medido
+      title: Dos lecturas nunca se comparan con igual
+      filename: dos.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        double lectura = 0.1 + 0.2;
+        Console.WriteLine($"0.1 + 0.2    = {lectura}");
+        Console.WriteLine($"== 0.3       = {lectura == 0.3}");
+        double dif = Math.Abs(24.97 - 25.0);
+        Console.WriteLine($"|24.97-25.0| = {dif}");
+        Console.WriteLine($"<= 0.05      = {dif <= 0.05}");
+      output: |
+        0.1 + 0.2    = 0.30000000000000004
+        == 0.3       = False
+        |24.97-25.0| = 0.030000000000001137
+        <= 0.05      = True
+
+  - code_output:
+      eyebrow: Error 03 · Medido
+      title: Convertir sin preguntar, o preguntar antes de convertir
+      filename: tres.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        try
+        {
+            Console.WriteLine(Convert.ToInt32("abc"));
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine("Convert -> " + e.GetType().Name);
+        }
+        bool ok = int.TryParse("abc", out int v);
+        Console.WriteLine($"TryParse -> {ok}, v = {v}");
+        string? nada = null;
+        Console.WriteLine($"Convert(null) -> {Convert.ToInt32(nada)}");
+      output: |
+        Convert -> FormatException
+        TryParse -> False, v = 0
+        Convert(null) -> 0
+
+  - code_output:
+      eyebrow: Error 04 · Medido
+      title: Un struct copia y un arreglo no
+      filename: cuatro.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        Sample s1 = new Sample
+        {
+            SensorId = 1, Celsius = 20.0, Estado = Status.Ok
+        };
+        Sample s2 = s1;
+        s2.Celsius = 99.9;
+        Console.WriteLine($"struct: s1.Celsius = {s1.Celsius}");
+
+        int[] src = { 20, 21, 22 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine($"arreglo: src[0] = {src[0]}");
+      output: |
+        struct: s1.Celsius = 20
+        arreglo: src[0] = 99
+
+  - code_output:
+      eyebrow: Error 05 · Medido
+      title: El alcance es una regla, no dos
+      filename: cinco.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        for (int i = 0; i < 3; i++)
+        {
+            Console.WriteLine(i);
+        }
+        Console.WriteLine(i);
+
+        // programa aparte:
+        Console.WriteLine(Media(21.0, 39.5));
+        Console.WriteLine(result);
+        static double Media(double a, double b)
+        {
+            double result = (a + b) / 2;
+            return result;
+        }
+      output: |
+        error CS0103: The name 'i'
+        does not exist in the
+        current context
+
+        error CS0103: The name 'result'
+        does not exist in the
+        current context
+
+  - code_output:
+      eyebrow: Error 06 · Medido
+      title: El programa que imprime un número seguro y falso
+      filename: seis.cs
+      lang: csharp
+      output_label: La corrida
+      source: |
+        int ciclos = int.MaxValue - 2;
+        for (int k = 0; k < 5; k++)
+        {
+            ciclos++;
+            Console.WriteLine($"+1 ciclo   {ciclos}");
+        }
+        long ciclosL = int.MaxValue - 2;
+        for (int k = 0; k < 5; k++) ciclosL++;
+        Console.WriteLine($"en long    {ciclosL}");
+      output: |
+        +1 ciclo   2147483646
+        +1 ciclo   2147483647
+        +1 ciclo   -2147483648
+        +1 ciclo   -2147483647
+        +1 ciclo   -2147483646
+        en long    2147483650
+
+  - compare:
+      eyebrow: Bloque 02 · La otra mitad
+      title: El compilador te cuida mientras puede ver el valor
+      before:
+        label: Escrito como literal
+        file: lit.cs
+        lang: csharp
+        code: |
+          Console.WriteLine(int.MaxValue + 1);
+      after:
+        label: El mismo valor por variable
+        file: var.cs
+        lang: csharp
+        code: |
+          int ciclos = int.MaxValue;
+          Console.WriteLine(ciclos);
+          Console.WriteLine(ciclos + 1);
+      note: >-
+        La izquierda ni siquiera produce ejecutable. El compilador evalúa la constante y se
+        niega con error CS0220, The operation overflows at compile time in checked mode. La
+        derecha compila con 0 advertencias y 0 errores, e imprime 2147483647 y −2147483648.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: Un contador de ciclos llega al tope de int. ¿Qué hace el programa?
+      filename: tope.cs
+      lang: csharp
+      source: |
+        int ciclos = int.MaxValue;
+        ciclos++;
+        Console.WriteLine(ciclos);
+      options:
+        - 'Lanza OverflowException y ahí termina.'
+        - 'Imprime -2147483648, sin error y sin advertencia.'
+        - 'Se queda en 2147483647, porque ya llegó al tope.'
+        - 'No compila, porque el compilador ve el desbordamiento.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: La misma suma, cuatro desenlaces
+      headers: [La forma, Qué pasa, Dónde se ve]
+      rows:
+        - ["int.MaxValue + 1", "error CS0220", "al compilar"]
+        - ["ciclos++", "-2147483648", "al correr"]
+        - ["en long", "2147483650", "al correr"]
+        - ["checked { }", "OverflowException", "al correr"]
+      verdict: >-
+        A 25 ciclos por segundo, ese tope llega a los 994.2 días de corrida continua. Es un
+        reporte de mantenimiento que alguien habría creído.
+
+  - table:
+      eyebrow: Examen final
+      title: Qué entra, y cómo es
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Todas las unidades del curso"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Nuevo", "El for, el anidamiento y break o continue entran por primera vez"]
+        - ["Nuevo", "Los arreglos de dos índices, la ordenación y la búsqueda también"]
+        - ["Formato", "En la computadora del salón, y se sube a Blackboard"]
+        - ["Puedes llevar", "Apuntes, tareas, libros y tu propio código del semestre"]
+        - ["No puedes", "Teléfono, audífonos, mensajería ni asistentes de IA"]
+
+  - method:
+      eyebrow: Examen final · Alcance
+      title: Dos temas nunca han estado en un examen de este curso
+      statement: >-
+        El programa dice «todas las unidades del curso», y eso incluye dos temas que los
+        parciales no alcanzaron a cubrir. Aquí van dichos en voz alta.
+      points:
+        - label: Del primer parcial
+          text: >-
+            El parcial 1 examinó la repetición al nivel de la semana 8, con while, do-while
+            y una salida probada. El for, el anidamiento y break o continue entran aquí.
+        - label: Del segundo parcial
+          text: >-
+            El parcial 2 cubrió la unidad 5 completa y la 6 hasta 6.1.3. Los arreglos de dos
+            índices y la ordenación y búsqueda entran aquí.
+        - label: Lo que no cambia
+          text: >-
+            Nada fuera del temario. Decirlo en voz alta es la diferencia entre un examen
+            justo y una sorpresa el día del examen.
+
+  - pitfalls:
+      eyebrow: Cierre · Honestidad
+      title: Lo que este curso no te enseñó, dicho aquí y no en febrero
+      items:
+        - label: No vimos 01
+          title: Clases propias con comportamiento
+          desc: Las clases aparecieron dos veces y solo como contraste medido. Escribir una es el curso que sigue.
+        - label: No vimos 02
+          title: try / catch como herramienta de diseño
+          desc: Aquí las excepciones fueron fallas que se previenen. La regla fue guardar la entrada, no atrapar el choque.
+        - label: No vimos 03
+          title: Colecciones más allá del arreglo
+          desc: List de T apareció una vez y fallando, con CS1612. Archivos y bases de datos tampoco entraron.
+        - label: No vimos 04
+          title: Genéricos, LINQ y programación asíncrona
+          desc: Un solo rpm.Sum() en la lámina de paradigmas de la semana 2, y nada más. No es una disculpa, es el mapa.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para el semestre entero
+      items:
+        - title: Corre el programa, luego cita
+          desc: Lo que el programa imprimió es un dato. Lo que crees que imprime es una hipótesis sin probar
+        - title: El compilador ve lo que puede ver
+          desc: En cuanto el valor entra a una variable, la única defensa que queda es la que tú escribiste
+        - title: Guarda el código de tu proyecto
+          desc: Es tu primera pieza de portafolio, y es la prueba de que puedes construir algo que corre
+
+  - closing:
+      title: Gracias
+      subtitle: >-
+        Cualquier duda sobre la calificación o sobre qué sigue, por correo o por Google
+        Chat. Corre el programa, y después cita lo que imprimió.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

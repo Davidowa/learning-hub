@@ -1,0 +1,530 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 2
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 02 · Unit 1 · Algorithm design
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Nothing you write today compiles. Everything on these slides was run first, and
+        the diff against a trace written by hand is the proof.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 2 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What an algorithm is
+          desc: And the five phases that run from the statement to maintenance
+        - title: How it gets written
+          desc: Seven words, four shapes, and a trace predicted before anything runs
+        - title: The paradigms
+          desc: Four names, the same seven readings, and the same 10478
+        - title: Your turn
+          desc: A sequence from your own field, executed to the letter by somebody else
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Define what an algorithm is
+          sub: And put it through the two-people test
+        - head: Name the five phases
+          sub: Analysis, design, coding, testing and maintenance
+        - head: Write pseudocode and flowcharts
+          sub: Seven words and four shapes, with no syntax from any language
+        - head: Predict a trace and check it
+          sub: Write the expected output before running, then measure the difference
+        - head: Tell the four paradigms apart
+          sub: Imperative, structured, declarative and object-oriented
+        - head: Justify the three shapes
+          sub: Sequence, selection and repetition, and why the limit is a human choice
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: todo
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections and project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What an algorithm is
+      lede: >-
+        A finite sequence of steps, written precisely enough that whoever follows it never
+        has to decide anything on their own.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Precision is the requirement, not the decoration
+      lead: >-
+        An algorithm is a finite sequence of steps that solves a problem and leaves
+        nothing to the judgement of whoever runs it. The practical test is quick and
+        uncomfortable. If two people follow your steps with the same data and reach
+        different results, it was not an algorithm yet.
+      panel:
+        label: The test
+        title: Same steps, same data, same result
+        note: >-
+          It works the same for starting a 3D printer as for tightening a flange in a
+          cross pattern. If anybody has to guess at some point, a step is missing there.
+      steps:
+        - text: It takes input data
+        - text: It runs steps with no ambiguity
+        - text: It returns a result and stops
+          loop: ↺ and with the same data it always returns the same thing
+
+  - table:
+      eyebrow: Block 01 · Unit 1.1
+      title: The five properties it has to satisfy
+      headers: [Property, What it demands, How it breaks]
+      rows:
+        - ["Finite", "It ends in countable steps", "«Heat it until it looks right»"]
+        - ["Precise", "No step reads two ways", "«Tighten the bolt as usual»"]
+        - ["Definite", "Same data, same result", "A step that depends on the reader"]
+        - ["With input", "It takes zero or more data", "A calculation with no source"]
+        - ["With output", "It produces at least a result", "It ends without saying what"]
+
+  - compare:
+      eyebrow: Block 01 · The difference
+      title: The same order, given twice
+      before:
+        label: An instruction
+        file: order.txt
+        lang: text
+        code: |
+          Start the printer and get
+          the bed ready before you
+          begin printing.
+      after:
+        label: An algorithm
+        file: startup.txt
+        lang: text
+        code: |
+          HOME axes X Y Z
+          WHILE bed < 60.0
+              bed = bed + 12.0
+              WRITE bed
+          IF bed >= 60.0 THEN
+              purge nozzle
+          ELSE
+              abort
+      note: >-
+        The one on the left sounds clear and is not. How much «ready» is gets decided by
+        whoever reads it, and two operators will decide differently. The one on the right
+        names the setpoint, names the step, and says what to do if it is not reached.
+
+  - steps:
+      eyebrow: Block 01 · Unit 1.3
+      title: The five phases of solving a problem
+      items:
+        - label: '01'
+          title: Analysis
+          desc: Produces the statement, the inputs, the outputs and the constraint. Returns in week 16.
+        - label: '02'
+          title: Design
+          desc: Produces the pseudocode or the flowchart, plus the expected trace. Returns in weeks 5, 6 and 8.
+        - label: '03'
+          title: Coding
+          desc: Produces source that compiles. It starts next week and never stops.
+        - label: '04'
+          title: Testing
+          desc: Produces the comparison against the expected trace, and one deliberately broken input.
+        - label: '05'
+          title: Maintenance
+          desc: Produces the code somebody else reads in January. Returns in weeks 10 and 15.
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Order is correctness, and the compiler has no opinion
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double bedA = 22.0;
+        Console.WriteLine($"A: purge nozzle at {bedA:F1} C");
+        bedA = 60.0;
+        Console.WriteLine($"A: bed at {bedA:F1} C");
+
+        double bedB = 22.0;
+        bedB = 60.0;
+        Console.WriteLine($"B: bed at {bedB:F1} C");
+        Console.WriteLine($"B: purge nozzle at {bedB:F1} C");
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        A: purge nozzle at 22.0 C
+        A: bed at 60.0 C
+        B: bed at 60.0 C
+        B: purge nozzle at 60.0 C
+
+  - divider:
+      eyebrow: Block 02
+      title: How an algorithm gets written
+      lede: >-
+        Seven words and four shapes. Neither one is a language, and both exist for the
+        same reason, to settle it before translating it.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Unit 1.2
+      title: The seven words of pseudocode
+      headers: [Word, What it does, Example from the bench]
+      rows:
+        - ["START · END", "They open and close it", "START … END"]
+        - ["READ", "Takes a value from outside", "READ rpm"]
+        - ["WRITE", "Hands back a result", "WRITE bed"]
+        - ["=", "Stores a value in a name", "bed = bed + 12.0"]
+        - ["IF · ELSE", "Picks one of two paths", "IF bed >= 60.0 THEN"]
+        - ["WHILE", "Repeats while the test holds", "WHILE bed < 60.0"]
+        - ["FOR", "Repeats a counted number of times", "FOR i = 1 TO 7"]
+
+  - code:
+      eyebrow: Block 02 · Pseudocode
+      title: The startup sequence, written to be read
+      filename: printer_startup.txt
+      lang: text
+      source: |
+        START
+            bed = 22.0
+            WRITE "HOME axes X Y Z"
+
+            WHILE bed < 60.0
+                bed = bed + 12.0
+                WRITE "heating bed", bed
+
+            IF bed >= 60.0 THEN
+                WRITE "purging nozzle"
+            ELSE
+                WRITE "ABORT"
+
+            WRITE "starting print"
+        END
+      annotations:
+        - label: No language
+          text: This is not C# or any other language. It is the plan, which is why a non-programmer can read it.
+        - label: The indentation
+          text: It marks which instructions fall inside the loop and which fall inside each branch.
+        - label: The three shapes
+          text: Sequence, selection and repetition. No fourth one shows up anywhere in this session.
+        - label: Risk
+          text: If the heating step does not move the test, the WHILE never ends.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The same plan in C#, with the three shapes
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double bed = 22.0;
+        string abort = "ABORT: the bed did not reach the setpoint";
+
+        Console.WriteLine("HOME axes X Y Z");
+        while (bed < 60.0)
+        {
+            bed += 12.0;
+            Console.WriteLine($"heating bed: {bed:F1} C");
+        }
+        if (bed >= 60.0)
+            Console.WriteLine("bed at setpoint, purging nozzle");
+        else
+            Console.WriteLine(abort);
+        Console.WriteLine("starting print");
+      output: |
+        HOME axes X Y Z
+        heating bed: 34.0 C
+        heating bed: 46.0 C
+        heating bed: 58.0 C
+        heating bed: 70.0 C
+        bed at setpoint, purging nozzle
+        starting print
+
+  - compare:
+      eyebrow: Block 02 · Unit 1.5
+      title: The expected trace gets written before running
+      before:
+        label: expected.txt · what the team predicted
+        file: expected.txt
+        lang: text
+        code: |
+          HOME axes X Y Z
+          heating bed: 34.0 C
+          heating bed: 46.0 C
+          heating bed: 58.0 C
+          heating bed: 70.0 C
+          bed at setpoint, purging nozzle
+          starting print
+      after:
+        label: wrong.txt · one heating pass short
+        file: wrong.txt
+        lang: text
+        code: |
+          HOME axes X Y Z
+          heating bed: 34.0 C
+          heating bed: 46.0 C
+          heating bed: 58.0 C
+          bed at setpoint, purging nozzle
+          starting print
+      note: >-
+        Against the real output, diff --strip-trailing-cr expected.txt real.txt prints
+        nothing and returns 0. With wrong.txt it prints 4a5 followed by the missing line,
+        and returns 1. That zero is the only thing that counts as «I designed it right»,
+        and it is the same ritual in weeks 5, 6 and 8.
+
+  - trace:
+      eyebrow: Block 02 · The finger trace
+      title: A ten-sample window, followed by hand
+      headers: [Step, Instruction, sum, i]
+      rows:
+        - ['1', "sum = 0   i = 1", '0', '1']
+        - ['2', "is i <= 10?   yes", '0', '1']
+        - ['3–4', "sum = sum+i, i = i+1", '1', '2']
+        - ['…', "eight more passes", '…', '…']
+        - ['22–23', "i = i + 1, i<=10? no", '55', '11']
+      verdict: >-
+        Half the room writes 10 in the last row. The counter has to overshoot the limit
+        for the test to be false, and that extra step is exactly what makes the loop end.
+        The machine settles it on the next slide.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The counter ends at 11, and FOR is not a for
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int sum = 0, i = 1;
+        while (i <= 10) { sum += i; i++; }
+        Console.WriteLine($"sum = {sum}   i = {i}");
+
+        int n = 4;
+        Console.Write("FOR i = 1 TO n     -> ");
+        for (int k = 1; k <= n; k++) Console.Write(k + " ");
+        Console.WriteLine();
+        Console.Write("for (k=0; k<n)     -> ");
+        for (int k = 0; k < n; k++) Console.Write(k + " ");
+        Console.WriteLine();
+      output: |
+        sum = 55   i = 11
+        FOR i = 1 TO n     -> 1 2 3 4
+        for (k=0; k<n)     -> 0 1 2 3
+
+  - quiz:
+      eyebrow: Quick check
+      question: When does this control loop end?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double x = 0;
+        int steps = 0;
+
+        while (x != 1.0 && steps < 1000)
+        {
+            x += 0.1;
+            steps++;
+        }
+
+        Console.WriteLine($"steps = {steps}");
+        Console.WriteLine($"x = {x}");
+      options:
+        - 'At ten passes, with x holding exactly 1.0'
+        - 'Never on its own, the cap of 1000 stops it'
+        - 'At eleven passes, when x overshoots 1.0'
+        - 'It does not compile, a double is not compared with !='
+
+  - trace:
+      eyebrow: Answer
+      title: The 1.0 never arrives, and less-than arrives late
+      headers: [Version, Passes, Final value, "Does it end?"]
+      rows:
+        - ["x != 1.0", "1000 and going", "99.9999999999986", "no, the cap cut it"]
+        - ["x == 1.0", "—", "False", "equality never holds"]
+        - ["y < 1.0", "11", "1.0999999999999999", "yes, but not at 1.0"]
+      verdict: >-
+        Adding 0.1 ten times does not give 1.0 in binary. With != the loop sails past and
+        never comes back; with < it does end, but at eleven passes and at
+        1.0999999999999999. «Every loop needs an exit» stops being a slogan here.
+
+  - divider:
+      eyebrow: Block 03
+      title: Paradigms, and why we live in three shapes
+      lede: >-
+        Four ways of organising the same solution. Three of them produce exactly the same
+        number over the same seven readings.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Unit 1.4
+      title: The four paradigms over the same seven readings
+      headers: [Paradigm, How it organises the solution, What it gives]
+      rows:
+        - ["Imperative", "I say the how, step by step", "sum = 10478"]
+        - ["Structured", "Imperative with three shapes only", "sum = 10478"]
+        - ["Declarative", "I say the what, not the walk", "rpm.Sum() = 10478"]
+        - ["Unstructured", "It jumps to a label with goto", "sum = 10478"]
+        - ["Object-oriented", "The object holds the data", "mean = 1496.857"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: Three different routes, the same 10478
+      filename: Program.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int sum = 0;
+        for (int i = 0; i < rpm.Length; i++) sum += rpm[i];
+        Console.WriteLine("imperative   sum = " + sum);
+
+        Console.WriteLine("declarative  sum = " + rpm.Sum());
+
+        int j = 0, total = 0;
+        start:
+        total += rpm[j];
+        j++;
+        if (j < rpm.Length) goto start;
+        Console.WriteLine("with goto    sum = " + total);
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        imperative   sum = 10478
+        declarative  sum = 10478
+        with goto    sum = 10478
+
+  - compare:
+      eyebrow: Block 03 · The fourth paradigm
+      title: The function receives the data, the object holds it
+      before:
+        label: Structured
+        file: Program.cs
+        lang: csharp
+        code: |
+          double a = Mean(rpm);
+
+          static double Mean(int[] v)
+          {
+              int s = 0;
+              foreach (int x in v) s += x;
+              return (double)s / v.Length;
+          }
+      after:
+        label: Object-oriented
+        file: Program.cs
+        lang: csharp
+        code: |
+          Run c = new Run(rpm);
+          double b = c.Mean();
+
+          class Run(int[] m)
+          {
+              public double Mean() =>
+                  (double)m.Sum() / m.Length;
+          }
+      note: >-
+        Both print 1496.857 over the same seven readings and comparing the two means
+        returns True. The difference is not the number, it is who holds the data. Week 15
+        builds half of that road with struct.
+
+  - method:
+      eyebrow: Block 03 · Unit 1.5
+      title: Structured programming
+      statement: >-
+        Three shapes are enough to write any program, and staying inside those three is a
+        human decision, not a limit of the language.
+      points:
+        - label: Sequence
+          text: One instruction after another, in the order they are written.
+        - label: Selection
+          text: One of two paths, on a condition evaluated before you enter.
+        - label: Repetition
+          text: The same block several times, while the condition still holds.
+        - label: The one argued point
+          text: >-
+            That those three suffice is the Böhm and Jacopini theorem, of 1966. No number
+            of examples proves it. It is cited, and labelled for what it is.
+
+  - lab:
+      eyebrow: Lab
+      title: Pick and place, empty gripper included
+      brief: >-
+        Write on paper the algorithm for the robot that picks a part off the belt and sets
+        it on the pallet, and cover the case where the gripper closes on nothing.
+      blocks:
+        - label: Deliverable
+          text: Half a page, pseudocode and flowchart, with no computer involved
+        - label: The test
+          text: >-
+            Swap sheets and run your partner's to the letter, assuming nothing. Every time
+            you have to guess, write it down as a failure.
+        - label: The score
+          text: >-
+            Fewer failures, better algorithm. That count is the first rehearsal of the
+            peer review week 16 asks for in writing.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: An algorithm leaves nothing to judgement
+          desc: If two people following your steps get different results, it is not one yet
+        - title: Order is correctness, not style
+          desc: The same two instructions swapped purge at 22 °C or at 60 °C, and both compile clean
+        - title: A design gets tested, not trusted
+          desc: The expected trace is written before running, and the difference against the real one is counted
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Draw the flowchart for a drone pre-flight checklist and write its expected output,
+        line by line, before anybody runs anything at all.
+      meta:
+        - [Due, Before week 3]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Flowchart", "40 %", "Each shape is used for what it is for and the flow follows with no jumps"]
+        - ["Expected trace", "40 %", "Written before running, line by line and never touched up"]
+        - ["Edge case", "20 %", "One check fails and the flowchart says what happens then"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week today's robot becomes the compiler. The same rules and a great deal less
+        patience.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

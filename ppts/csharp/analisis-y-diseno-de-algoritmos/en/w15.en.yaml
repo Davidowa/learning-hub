@@ -1,0 +1,492 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 15
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 15 · Unit 7.1 · Records and enumerations
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Seven parallel arrays are a defect waiting to happen. One array of a type you
+        invented is not, and that type carries a default value that will lie to you.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 15 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The record
+          desc: Choosing the fields is the design, and the compiler will audit that choice
+        - title: The enumeration
+          desc: A named set that on the inside still knows it is a number
+        - title: The sensor bank
+          desc: An array of structures and the scans you already know how to write
+        - title: Your turn
+          desc: The field table for the record behind your final project
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare a record and an enumeration
+          sub: With every field named, typed and justified in a single line
+        - head: Explain why a struct copies
+          sub: And why a class in its place does not, with the measurement beside it
+        - head: Fill and walk an array of structures
+          sub: With for when you have to write and foreach when you only read
+        - head: Recognise the default value that lies
+          sub: The first name in the enumeration is 0, and 0 is what an unfilled field holds
+        - head: Compile with not one warning
+          sub: The three CS0649 in the course's own example, and the line that takes them to zero
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The record
+      lede: One name, several fields, and a design decision in every one of them. Choosing the fields is today's work.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · The type
+      title: The sensor bank, declared and filled
+      filename: Sample.cs
+      lang: csharp
+      source: |
+        Sample s = new Sample
+        {
+            SensorId = 1, Celsius = 20.0, State = Status.Ok
+        };
+
+        Console.WriteLine(s.Celsius);
+
+        enum Status { Ok, Warning, Fault }
+
+        struct Sample
+        {
+            public int SensorId;
+            public double Celsius;
+            public Status State;
+        }
+      annotations:
+        - label: The fields
+          text: A name, a type and a justification per line. Choosing these three fields is the design work of the week.
+        - label: The initialiser
+          text: With braces after new, the fields are assigned by name inside the same expression.
+        - label: Where types go
+          text: In a file with top-level statements, enum and struct are declared at the very end.
+        - label: Risk
+          text: Without that initialiser the program compiles with three CS0649 warnings, one per field.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: A struct fills itself in before you do
+      filename: Sample.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Sample s = new Sample();
+
+        Console.WriteLine(s.SensorId);
+        Console.WriteLine(s.Celsius);
+        Console.WriteLine(s.State);
+      output: |
+        0
+        0
+        Ok
+
+  - code_output:
+      eyebrow: Block 01 · On build
+      title: Three fields that are only ever read are three warnings
+      filename: Sample.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        struct Sample
+        {
+            public int SensorId;
+            public double Celsius;
+            public Status State;
+        }
+      output: |
+        warning CS0649: Field
+        'Sample.SensorId' is never
+        assigned to, and will always
+        have its default value 0
+
+        Build succeeded.
+            3 Warning(s)
+            0 Error(s)
+
+  - code_output:
+      eyebrow: Block 01 · On build
+      title: A struct without new is not ready yet
+      filename: NoNew.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        // program 1
+        Sample s;
+        Console.WriteLine(s.Celsius);
+
+        // program 2
+        Sample s;
+        Console.WriteLine(s);
+      output: |
+        error CS0170: Use of possibly
+        unassigned field 'Celsius'
+
+        error CS0165: Use of
+        unassigned local variable 's'
+
+  - compare:
+      eyebrow: Block 01 · The measurement that carries the block
+      title: The same three lines, two different results
+      before:
+        label: struct
+        file: Struct.cs
+        lang: csharp
+        code: |
+          Sample s1 = new Sample
+          { SensorId = 7, Celsius = 20.0 };
+
+          Sample s2 = s1;
+          s2.Celsius = 99.9;
+
+          Console.WriteLine(s1.Celsius);
+      after:
+        label: class
+        file: Class.cs
+        lang: csharp
+        code: |
+          BenchSample b1 = new BenchSample
+          { SensorId = 7, Celsius = 20.0 };
+
+          BenchSample b2 = b1;
+          b2.Celsius = 99.9;
+
+          Console.WriteLine(b1.Celsius);
+      note: >-
+        The left prints 20. The right prints 99.9, and ReferenceEquals(b1, b2) is True.
+        Assigning a struct copies it field by field; assigning a class hands you the same
+        thing under a second name.
+
+  - divider:
+      eyebrow: Block 02
+      title: The enumeration
+      lede: A set of names the compiler audits, and which on the inside is still an ordinary integer.
+      block: 2
+
+  - trace:
+      eyebrow: Block 02 · Measured
+      title: A name that still knows it is a number
+      headers: [Expression, Result]
+      rows:
+        - ["(int)Status.Fault, then (Status)2", "2, then Fault"]
+        - ["(Status)7", "7"]
+        - ["Enum.IsDefined((Status)7)", "False"]
+        - ['Enum.TryParse("Warning")', "True, hands back Warning"]
+        - ['Enum.TryParse("warning")', "False, leaves Ok"]
+      verdict: >-
+        The cast into an enumeration is not checked, and TryParse is no guard. Bogus returns
+        False and leaves Ok. The digit 7 returns True and hands back the nameless value.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Today's warning is week 16's demo falling over
+      filename: Describe.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        static string Describe(Status st) => st switch
+        {
+            Status.Ok => "ok",
+            Status.Warning => "warning",
+            Status.Fault => "fault"
+        };
+
+        Console.WriteLine(Describe((Status)7));
+      output: |
+        warning CS8524: The switch
+        expression does not handle
+        some values of its input type
+
+        Build succeeded.
+            1 Warning(s)
+
+        SwitchExpressionException
+        Unmatched value was 7.
+
+  - divider:
+      eyebrow: Block 03
+      title: The sensor bank
+      lede: An array of a type you invented, with the usual scans running on top of it.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The slot nobody ever filled reports itself healthy
+      filename: Bank.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Sample[] bank = new Sample[3];
+        bank[0] = new Sample { SensorId = 1, Celsius = 20.0 };
+        bank[1] = new Sample { SensorId = 2, Celsius = 99.9 };
+
+        Console.WriteLine(bank[2].SensorId);
+        Console.WriteLine(bank[2].Celsius);
+        Console.WriteLine(bank[2].State);
+        Console.WriteLine(bank[2].State == Status.Ok);
+        Console.WriteLine(Enum.IsDefined(bank[2].State));
+      output: |
+        0
+        0
+        Ok
+        True
+        True
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The array element is the struct, the local is a copy
+      filename: Bank.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Sample[] bank = new Sample[3];
+        bank[1] = new Sample { SensorId = 2, Celsius = 20.0 };
+
+        bank[1].Celsius = 99.9;
+        Console.WriteLine(bank[1].Celsius);
+
+        Sample copy = bank[1];
+        copy.Celsius = 0.0;
+        Console.WriteLine(bank[1].Celsius);
+        Console.WriteLine(copy.Celsius);
+      output: |
+        99.9
+        99.9
+        0
+
+  - compare:
+      eyebrow: Block 03 · The two walks
+      title: foreach reads, for writes
+      before:
+        label: foreach
+        file: Foreach.cs
+        lang: csharp
+        code: |
+          foreach (Sample s in bank)
+          {
+            s.Celsius = 99.9;
+          }
+      after:
+        label: for
+        file: For.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < bank.Length; i++)
+          {
+            bank[i].Celsius = 99.9;
+          }
+      note: >-
+        The left does not compile. The compiler answers error CS1654, Cannot modify members
+        of 's' because it is a 'foreach iteration variable', and if the whole variable is
+        reassigned instead of the field the code is CS1656. The right does write.
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The version of the same mistake that does compile
+      filename: Silent.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        foreach (Sample s in trio)
+        {
+            Sample local = s;
+            local.Celsius = 0.0;
+        }
+        Console.WriteLine(trio[1].Celsius);
+
+        for (int i = 0; i < trio.Length; i++)
+        {
+            trio[i].Celsius = trio[i].Celsius + 1.0;
+        }
+        Console.WriteLine(trio[1].Celsius);
+      output: |
+        99.9
+        100.9
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The max-scan, on the type you invented
+      filename: Scan.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        static Sample HottestSensor(Sample[] b)
+        {
+            int idx = 0;
+            for (int i = 1; i < b.Length; i++)
+            {
+                if (b[i].Celsius > b[idx].Celsius) idx = i;
+            }
+            return b[idx];
+        }
+
+        Sample hot = HottestSensor(bank);
+        Console.WriteLine(hot.SensorId);
+        Console.WriteLine(hot.Celsius);
+        Console.WriteLine(hot.State);
+      output: |
+        2
+        99.9
+        Fault
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The mean that hides the fault
+      filename: Mean.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double sum = 0;
+        foreach (Sample s in trio)
+        {
+            sum += s.Celsius;
+        }
+        double mean = sum / trio.Length;
+
+        Console.WriteLine(sum);
+        Console.WriteLine(mean);
+        Console.WriteLine($"{mean:F2}");
+      output: |
+        141.9
+        47.300000000000004
+        47.30
+
+  - quiz:
+      eyebrow: Quick check
+      question: The struct was copied whole. What do the last two lines print?
+      filename: Trace.cs
+      lang: csharp
+      source: |
+        Trace t1 = new Trace();
+        t1.Name = "RUN-A";
+        t1.Samples = new double[] { 20.0, 21.0 };
+
+        Trace t2 = t1;
+        t2.Name = "RUN-B";
+        t2.Samples[0] = 99.9;
+
+        Console.WriteLine(t1.Name);
+        Console.WriteLine(t1.Samples[0]);
+      options:
+        - 'RUN-A and 20, because the copy took both fields with it.'
+        - 'RUN-A and 99.9, because both structs hold the same array.'
+        - 'RUN-B and 99.9, because t2 and t1 are the same thing.'
+        - 'RUN-B and 20, because the name is shared and the array is not.'
+
+  - trace:
+      eyebrow: Answer
+      title: The copy is field by field, references included
+      headers: [Field, t1, t2]
+      rows:
+        - ["Name", "RUN-A", "RUN-B"]
+        - ["Samples[0]", "99.9", "99.9"]
+      verdict: >-
+        The text field did not move, because a string cannot be edited in place. The array
+        field did, because both structs hold the same reference. If the record behind your
+        project carries an array, the copy is not the independent thing it looks like.
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to get this week wrong
+      items:
+        - label: Error 01
+          title: Reading a struct without new
+          desc: CS0170 on reading the field and CS0165 on reading the whole variable. Neither program is ever produced.
+        - label: Error 02
+          title: Editing inside a foreach
+          desc: CS1654 on the field and CS1656 on the variable. Copying the loop variable into a local does compile, and writes nothing.
+        - label: Error 03
+          title: Keeping the bank in a List
+          desc: Writing into an element of a List of structures does not compile. CS1612 says the indexer does not return a variable.
+        - label: Error 04
+          title: A switch with no final arm
+          desc: CS8524 still lets it build, and the first nameless value kills the process with SwitchExpressionException.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A struct copies
+          desc: Assigning it copies field by field. A class in its place hands you the same thing, and ReferenceEquals confirms it with True
+        - title: The default value lies
+          desc: The first name in the enumeration is 0 and an unfilled field is 0, so the slot nobody filled reports Ok at 0 degrees
+        - title: for writes, foreach reads
+          desc: bank[i] is the struct and the write lands. The foreach variable is a copy, and the compiler stops you in time
+
+  - lab:
+      eyebrow: Lab
+      title: The bill of materials for the assembly
+      brief: Declare a record with a name, a mass in kilograms, a count and a material, fill an array of three parts, print the aligned table with the format widths from week 13, add up the total assembly mass, and flag every part with a count of zero as a kitting gap.
+      blocks:
+        - label: Deliverable
+          text: The .cs and the output, with the aligned table and the total mass to three decimals
+        - label: Constraint
+          text: No money column. Mass, count, material and tolerance class
+        - label: The test
+          text: With flange 1.250 kg times 4, bushing 0.080 kg times 0 and cover 2.400 kg times 1, the total mass is 7.400 kg and there is one gap
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: Write the field table for the record behind your final project. Every field with its name, its type and one line justifying why it exists. Then declare it, compile it, and hand in the compiler output alongside the table.
+      meta:
+        - [Due, Before week 16]
+        - [Format, Blackboard · .cs and .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The table", "40 %", "Every field with a name, a type and a justification on one line"]
+        - ["Zero warnings", "40 %", "The declared record compiles without a single CS0649"]
+        - ["The state", "20 %", "The enumeration does not leave the fault value living at zero"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the final project. This record is its data model and this max-scan is
+        its statistics screen.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

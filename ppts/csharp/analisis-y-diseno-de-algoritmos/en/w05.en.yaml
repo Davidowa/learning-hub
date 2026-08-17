@@ -1,0 +1,499 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 5
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 05 · Unit 4 · Statements, input and output
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        A program that cannot read a value can only ever print the same answer. Today
+        data comes in, results go out, and the first guard of the term shows up.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 5 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Kinds of statement
+          desc: What counts as a statement, according to the compiler and not to the slide
+        - title: Writing
+          desc: Write against WriteLine, interpolation, units and formatting
+        - title: Reading
+          desc: ReadLine always returns text, and three converters that disagree
+        - title: Your turn
+          desc: The bench data-entry front end, on paper first and then run
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Classify the kinds of statement
+          sub: Declaration, assignment, input and output, selection, repetition and jump
+        - head: Write output somebody can read
+          sub: With a label, a unit and a fixed number of decimals, not bare figures
+        - head: Read a value from the keyboard
+          sub: And remember that what arrives is text even when it looks like a number
+        - head: Choose a converter on purpose
+          sub: Convert.ToInt32, int.Parse and int.TryParse do not fail the same way
+        - head: Check a reading before using it
+          sub: The bool first, the value second, and never the other way round
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written, and the compiler that checks it
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What counts as a statement
+      lede: >-
+        The subtopic asks for a list of statement kinds. You do not have to trust the
+        slide for it, because the compiler enumerates them itself.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A statement has to do something
+      lead: >-
+        Computing a value and throwing it away is not a statement, it is waste, and C#
+        treats it as an error. Out of that comes the shape of every program this term.
+        First the data comes in, then what matters is computed, at the end the result is
+        presented. When something misbehaves, the first useful question is which of the
+        three parts broke.
+      panel:
+        label: What to know
+        title: Input, process and output are three separate things
+        note: >-
+          If the calculation is tangled up with the prints you cannot check a number
+          without running everything again and reading the whole screen.
+      steps:
+        - text: Input, you obtain the data
+        - text: Process, you compute what matters
+        - text: Output, you present it readably
+          loop: ↺ and each part is checked on its own
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The compiler enumerates the legal statements itself
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int rpm = 1500;
+
+        rpm == 1500;
+      output: |
+        error CS0201
+        Only assignment, call,
+        increment, decrement, await,
+        and new object expressions
+        can be used as a statement
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Block 01 · Taxonomy
+      title: The seven kinds of statement in this course
+      headers: [Kind, Example, Where you meet it]
+      rows:
+        - ["declaration", "int rpm;", "Today, in this block"]
+        - ["assignment", "rpm = 1502;   rpm += 33;", "Week 4"]
+        - ["input and output", "ReadLine   WriteLine", "Today, blocks 02 and 03"]
+        - ["selection", "if   else if   switch", "Weeks 6 and 7"]
+        - ["repetition", "while   do-while   for", "Weeks 8 and 9"]
+        - ["invocation", "Mean(a, b);", "Week 10"]
+        - ["jump", "break   continue   return", "Weeks 8 and 9"]
+
+  - compare:
+      eyebrow: Block 01 · Measured
+      title: Declaring, assigning and reading are three different things
+      before:
+        label: Builds, with two warnings
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm = 1500;
+          int count;
+          Console.WriteLine("header");
+
+          // CS0219 'rpm' is assigned but its
+          // value is never used
+          // CS0168 'count' is declared but
+          // never used
+      after:
+        label: Does not build
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm;
+
+          Console.WriteLine(rpm);
+
+          // error CS0165
+          // Use of unassigned local
+          // variable 'rpm'
+          // Build FAILED.
+      note: >-
+        The compiler has a different diagnostic for each slip. Reserving the box and not
+        using it is a warning and the program still runs. Reading it before filling it
+        is an error, the build stops and no executable is left behind.
+
+  - divider:
+      eyebrow: Block 02
+      title: How results get out
+      lede: >-
+        The right number, badly presented, is a number nobody will use. And gluing text
+        to numbers carries a trap that collects on its own.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · In context
+      title: The bench header, written by hand
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string tag = "EST-07";
+        char channel = 'A';
+        int samples = 7;
+        double rpm = 1496.857142857143;
+
+        Console.Write("Station ");
+        Console.WriteLine(tag);
+
+        Console.WriteLine($"{tag} channel {channel}");
+        Console.WriteLine($"{samples} samples");
+        Console.WriteLine($"{rpm:F3} rpm");
+      annotations:
+        - label: Write
+          text: It writes and stays on the same line. That is what a prompt expecting an answer beside it needs.
+        - label: WriteLine
+          text: It writes and drops a line. Every call starts a new row, and an empty call leaves a blank one.
+        - label: Interpolation
+          text: The dollar sign before the quote and the value inside braces. A whole expression fits in there.
+        - label: Risk
+          text: What comes after the colon picks the shape, not the value. The variable still holds what it held.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: What comes out, line by line
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.Write("Station ");
+        Console.WriteLine(tag);
+
+        Console.WriteLine($"{tag} channel {channel}");
+        Console.WriteLine($"{samples} samples");
+        Console.WriteLine($"{rpm:F3} rpm");
+      output: |
+        Station EST-07
+        EST-07 channel A
+        7 samples
+        1496.857 rpm
+
+  - table:
+      eyebrow: Block 02 · Measured
+      title: The specifier picks the shape, the machine picks the punctuation
+      headers: [Specifier, What it does, en-US, de-DE]
+      rows:
+        - ["{3.14159:F2}", "Two fixed decimals", "3.14", "3,14"]
+        - ["{3.14159,10:F3}", "Ten columns, right aligned", "[     3.142]", "[     3,142]"]
+        - ["{148230:N0}", "Cycles to first inspection", "148,230", "148.230"]
+        - ["{0.0342:P1}", "The out-of-band fraction", "3.4%", "3,4 %"]
+
+  - trace:
+      eyebrow: Block 02 · Trace
+      title: Plus changes job the moment text shows up
+      headers: [Expression, What happens first, Result]
+      rows:
+        - ['"5" + 3', 'It glues the 3 to the text', "53"]
+        - ['3 + "5"', 'It glues the text to the 3', "35"]
+        - ['"5" + 1 + 2', 'It glues the 1, then the 2', "512"]
+        - ['"5" + (1 + 2)', 'The bracket adds first', "53"]
+        - ['1 + 2 + "5" + 1 + 2', 'Add, glue, glue, glue', "3512"]
+      verdict: >-
+        It reads left to right. Up to the first piece of text it adds, and from there on
+        it glues. None of the five lines is an error, so the only way to notice is to
+        read the result.
+
+  - compare:
+      eyebrow: Block 02 · The same trap on the bench
+      title: Two readings glued into a number that does not exist
+      before:
+        label: Concatenating
+        file: Program.cs
+        lang: csharp
+        code: |
+          int lo = 1480, hi = 1520;
+
+          Console.WriteLine("rpm " + lo + hi);
+
+          // rpm 14801520
+      after:
+        label: Interpolating
+        file: Program.cs
+        lang: csharp
+        code: |
+          int lo = 1480, hi = 1520;
+
+          Console.WriteLine($"rpm {lo + hi}");
+          Console.WriteLine($"rpm {lo}{hi}");
+
+          // rpm 3000
+          // rpm 14801520
+      note: >-
+        Interpolation does not abolish the trap, it makes the boundary visible. The
+        second line on the right glues the two numbers again, and now you can see why.
+        The same run gives two more facts, concatenating a null yields the empty string
+        instead of blowing up, and a doubled brace is how a literal brace is written.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The safety factor, with the raw output beside it
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        const double Rated = 480.50;
+        const double FS = 1.10;
+
+        double allowable = Rated / FS;
+        Console.WriteLine(allowable);
+        Console.WriteLine($"{allowable:F2} kN");
+
+        double design = 400.0;
+        double required = design * FS;
+        Console.WriteLine(required);
+        Console.WriteLine($"{required:F2} kN");
+        Console.WriteLine(required <= Rated);
+      output: |
+        436.81818181818176
+        436.82 kN
+        440.00000000000006
+        440.00 kN
+        True
+
+  - divider:
+      eyebrow: Block 03
+      title: How data gets in
+      lede: >-
+        ReadLine always returns text, even when the operator typed a number. Converting
+        is your job, and there are three ways to do it that fail differently.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · In context
+      title: The bench data-entry front end
+      filename: Program.cs
+      lang: csharp
+      source: |
+        Console.Write("Station tag: ");
+        string tag = Console.ReadLine() ?? "";
+
+        Console.Write("Samples: ");
+        string sSamples = Console.ReadLine();
+        bool okN = int.TryParse(sSamples, out int n);
+
+        Console.Write("Reading in rpm: ");
+        string sReading = Console.ReadLine();
+        bool okR = double.TryParse(sReading, out double rpm);
+
+        Console.WriteLine($"{tag} | {n} samples");
+      annotations:
+        - label: The prompt
+          text: With Write, because the operator types on the same line. Without one the program looks frozen.
+        - label: The middle variable
+          text: Holding the line before converting it splits the row in two and lets you see what is being converted.
+        - label: The bool
+          text: TryParse returns whether it managed. That value is what gets checked, and from week 6 it is a condition.
+        - label: Risk
+          text: As written, this version builds with two CS8600 warnings. The next slide explains why.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: ReadLine may bring you nothing, and the compiler says so
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        Console.Write("Station tag: ");
+        string tag = Console.ReadLine();
+
+        Console.Write("Samples: ");
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine($"{tag} / {n}");
+      output: |
+        warning CS8600
+        Converting null literal or
+        possible null value to
+        non-nullable type.
+
+        Build succeeded.
+            1 Warning(s)
+            0 Error(s)
+
+  - table:
+      eyebrow: Block 03 · Measured
+      title: One bad reading, three different behaviours
+      headers: [Input, Convert.ToInt32, int.Parse, int.TryParse]
+      rows:
+        - ['"abc"', "FormatException", "FormatException", "False and 0"]
+        - ['"3.7"', "FormatException", "FormatException", "False and 0"]
+        - ["null", "0, in silence", "ArgumentNullException", "False and 0"]
+        - ["A bare Enter", "FormatException", "FormatException", "False and 0"]
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: The spaces are not the problem, the size is
+      headers: [What they typed, Which converter, What happened]
+      rows:
+        - ['"  42 "', "int.TryParse", "True and 42"]
+        - ['"  42 "', "int.Parse", "42"]
+        - ['"4 2"', "int.TryParse", "False and 0"]
+        - ['"2147483648"', "int.Parse", "OverflowException"]
+        - ['"2147483648"', "int.TryParse", "False and 0"]
+      verdict: >-
+        All three trim the spaces at the ends. A space in the middle they do not, and a
+        reading larger than int.MaxValue is a third failure mode. Do not write code that
+        trims before converting, write code that checks the answer afterwards.
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: TryParse does not leave the variable alone when it fails
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int keep = 999;
+
+        bool ok = int.TryParse("abc", out keep);
+
+        Console.WriteLine(ok);
+        Console.WriteLine(keep);
+      output: |
+        False
+        0
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The decimal separator is a machine setting
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        using System.Globalization;
+
+        CultureInfo.CurrentCulture = new CultureInfo("en-US");
+        bool okUs = double.TryParse("480.50", out double us);
+        Console.WriteLine(okUs);
+        Console.WriteLine(us);
+
+        CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+        bool okDe = double.TryParse("480.50", out double de);
+        Console.WriteLine(okDe);
+        Console.WriteLine(de);
+      output: |
+        True
+        480.5
+        True
+        48050
+
+  - quiz:
+      eyebrow: Quick check
+      question: Which of the three leaves the program in control?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string line = Console.ReadLine();
+
+        int n1 = Convert.ToInt32(line);
+        int n2 = int.Parse(line);
+        bool ok = int.TryParse(line, out int n3);
+      options:
+        - 'Convert.ToInt32, because it never throws anything.'
+        - 'int.Parse, because it reports the error right away.'
+        - 'int.TryParse, because it returns a bool you can check.'
+        - 'All three, as long as the operator types it correctly.'
+
+  - lab:
+      eyebrow: Lab · RAA05
+      title: The data-entry front end, on paper first
+      brief: >-
+        Write out by hand the pseudocode for the front end that reads the station tag,
+        the channel, the sample count and one raw reading, then prints the header with a
+        unit and fixed decimals. Before running anything, write into esperado.txt the
+        output you predict for two inputs, one valid and one not.
+      blocks:
+        - label: Deliverable
+          text: The pseudocode on paper, plus esperado.txt and real.txt
+        - label: The test
+          text: diff --strip-trailing-cr esperado.txt real.txt has to return 0
+        - label: Constraint
+          text: No conversion without first checking the bool it returns
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: What comes in is text
+          desc: ReadLine returns a string even when the operator typed a number, and converting it is your job
+        - title: The guard goes before the value
+          desc: TryParse returns a bool and also overwrites the variable with 0 when it fails, so check it first
+        - title: Culture is not assumable
+          desc: 480.50 reads as 48050 under de-DE and TryParse returns True, so the guard passes and the value is wrong
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Submit the data-entry front end with its three prompts, its three checked
+        conversions and the formatted header, together with esperado.txt, real.txt and
+        the output of the diff pasted exactly as it came out.
+      meta:
+        - [Due, Before week 6]
+        - [Format, Blackboard · Program.cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Reading", "40 %", "Every conversion checks the bool before using the value"]
+        - ["Output", "40 %", "Label, unit and fixed decimals on every line"]
+        - ["Prediction", "20 %", "esperado.txt written before running, and the diff pasted"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the value you just read finally gets compared against something
+        and the program takes two different paths.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

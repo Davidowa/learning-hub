@@ -1,0 +1,545 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 7
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 07 · Tema 4.4 · Selección, profundización
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Condiciones que se combinan, condiciones que viven dentro de otras, y la
+        construcción que convierte una escalera en una tabla que el compilador revisa.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 7 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Combinar
+          desc: Los tres operadores lógicos, y el carácter de menos que desarma al guardia
+        - title: Anidar
+          desc: Una decisión dentro de otra, y el else que no se liga donde parece
+        - title: switch
+          desc: La escalera como tabla, y las dos revisiones que el compilador le hace
+        - title: Tu turno
+          desc: El inspector de triángulos, con la comparación por tolerancia
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Combinar condiciones con los tres operadores
+          sub: Y decir en voz alta cuál pide las dos cosas y cuál se conforma con una
+        - head: Explicar qué es el corto circuito
+          sub: Y por qué toda la seguridad del modismo vive en el segundo ampersand
+        - head: Poner llaves en toda decisión anidada
+          sub: Porque el else se liga al if de adentro y la sangría no cambia nada
+        - head: Escribir una expresión switch
+          sub: Con sus brazos en orden y su brazo de descarte al final
+        - head: Comparar dos double por tolerancia
+          sub: Nunca con doble igual, siempre con una diferencia absoluta contra un margen
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar, y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea de código
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: now
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y el proyecto integrador
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Combinar condiciones
+      lede: >-
+        Tres operadores, y entre ellos arman cualquier regla por complicada que suene
+        dicha en voz alta. Uno de ellos, además, decide si el guardia guarda.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Lógicos
+      title: Los tres operadores con p = 4.2, puerta = true y modoAuto = false
+      headers: [Operador, Qué exige, Ejemplo, Resultado]
+      rows:
+        - ["&&", "Las dos condiciones", "p >= 3.5 && puerta", "True"]
+        - ["||", "Al menos una de las dos", "puerta || modoAuto", "True"]
+        - ["!", "Invierte el resultado", "!puerta", "False"]
+
+  - code:
+      eyebrow: Bloque 01 · En contexto
+      title: La matriz de enclavamiento de la máquina
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double p = 4.2;
+        bool puerta = true;
+        int modo = 1;
+
+        bool presionOk = p >= 3.5 && p <= 5.0;
+        bool arrancar = presionOk && puerta && modo == 1;
+
+        Console.WriteLine($"presión en rango -> {presionOk}");
+        Console.WriteLine($"arrancar         -> {arrancar}");
+      annotations:
+        - label: La banda, en dos mitades
+          text: >-
+            Una presión en rango son dos comparaciones unidas. El bool con nombre deja
+            legible el resto.
+        - label: Todas o ninguna
+          text: >-
+            Van con doble ampersand porque arrancar exige los tres enclavamientos. Si uno
+            falla, no gira.
+        - label: Dilo en español primero
+          text: >-
+            Presión en rango Y puerta cerrada Y modo automático. Dicha así, la traducción
+            es directa.
+        - label: Riesgo
+          text: >-
+            Cambiar un doble ampersand por doble barra arranca la máquina con la puerta
+            abierta mientras la presión sea correcta.
+          accent: true
+
+  - trace:
+      eyebrow: Medido
+      title: La matriz corrida sobre cuatro combinaciones
+      headers: [Presión, Puerta, Modo, arrancar]
+      rows:
+        - ["4.2 bar", "True", "1", "True"]
+        - ["4.2 bar", "False", "1", "False"]
+        - ["0.5 bar", "True", "1", "False"]
+        - ["4.2 bar", "True", "0", "False"]
+      verdict: >-
+        La condición completa es p >= 3.5 && p <= 5.0 && puerta && modo == 1. Basta con
+        que un enclavamiento falle para que el arranque quede en False.
+
+  - code_output:
+      eyebrow: Medido · el corto circuito
+      title: Con la puerta abierta, la prueba cara no llega a correr
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int caras = 0;
+        bool Cara() { caras++; return true; }
+
+        bool puerta = false;
+
+        if (puerta && Cara()) { }
+        Console.WriteLine($"con && -> {caras} llamadas");
+
+        caras = 0;
+        if (puerta & Cara()) { }
+        Console.WriteLine($"con &  -> {caras} llamadas");
+      output: |
+        con && -> 0 llamadas
+        con &  -> 1 llamadas
+
+  - code_output:
+      eyebrow: Medido · el guardia que se cae
+      title: Un carácter de menos y la ventana vacía revienta el programa
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int suma = 0, cuenta = 0;
+
+        if (cuenta > 0 && suma / cuenta > 1500) { }
+        Console.WriteLine("con && la ventana vacía sobrevive");
+
+        try { if (cuenta > 0 & suma / cuenta > 1500) { } }
+        catch (DivideByZeroException ex)
+        {
+            Console.WriteLine($"con &  {ex.Message}");
+        }
+      output: |
+        con && la ventana vacía sobrevive
+        con &  Attempted to divide by zero.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Anidar, y el else colgante
+      lede: >-
+        Una decisión dentro de otra se lee bien mientras las llaves estén puestas. Sin
+        ellas, el compilador y tú leen dos programas distintos.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · El else colgante
+      title: El mismo else, ligado a dos if distintos
+      before:
+        label: Sin llaves
+        file: Program.cs
+        lang: csharp
+        code: |
+          if (c > 0)
+              if (c > 10)
+                  dijo = "sobre el límite";
+          else
+              dijo = "bajo el límite";
+      after:
+        label: Con llaves
+        file: Program.cs
+        lang: csharp
+        code: |
+          if (c > 0)
+          {
+              if (c > 10) dijo = "sobre el límite";
+          }
+          else
+              dijo = "bajo el límite";
+      note: >-
+        La sangría de la izquierda promete que el else pertenece al if de afuera. No es
+        cierto. El else se liga siempre al if más cercano que aún no tenga uno, y las dos
+        versiones compilan con cero advertencias.
+
+  - trace:
+      eyebrow: Medido
+      title: Las mismas tres lecturas, dos respuestas distintas
+      headers: [Lectura, Sin llaves, Con llaves]
+      rows:
+        - ["20 C", "sobre el límite", "sobre el límite"]
+        - ["5 C", "bajo el límite", "(no imprimió nada)"]
+        - ["-3 C", "(no imprimió nada)", "bajo el límite"]
+      verdict: >-
+        Un par de llaves cambia la respuesta en dos de las tres lecturas. La de −3 grados
+        es el termopar desconectado, y la versión sin llaves no dice absolutamente nada
+        sobre ella.
+
+  - code_output:
+      eyebrow: Bloque 02 · Tolerancia
+      title: Nunca compares dos lecturas con doble igual
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        double lectura = 0.1 + 0.2;
+        bool exacto = lectura == 0.3;
+        bool cerca = Math.Abs(lectura - 0.3) < 1e-9;
+
+        Console.WriteLine($"0.1 + 0.2   {lectura}");
+        Console.WriteLine($"== 0.3      {exacto}");
+        Console.WriteLine($"|d| < 1e-9  {cerca}");
+
+        double medida = 24.97, nominal = 25.0;
+        double desvio = Math.Abs(medida - nominal);
+
+        Console.WriteLine($"|24.97-25.0| {desvio}");
+        Console.WriteLine($"<= 0.05      {desvio <= 0.05}");
+      output: |
+        0.1 + 0.2   0.30000000000000004
+        == 0.3      False
+        |d| < 1e-9  True
+        |24.97-25.0| 0.030000000000001137
+        <= 0.05      True
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La escalera, hecha tabla
+      lede: >-
+        La expresión switch dice lo mismo que la escalera de la semana pasada, y encima
+        deja que el compilador revise dos cosas que la escalera nunca revisó.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · La expresión switch
+      title: La tabla de bandas, escrita como tabla
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static string Banda(int rpm) => rpm switch
+        {
+            < 0 => "inválida",
+            < 800 => "en reposo",
+            < 3000 => "nominal",
+            _ => "sobrevelocidad"
+        };
+
+        foreach (int r in new[] { -5, 799, 800, 2999, 3000 })
+            Console.WriteLine($"Banda({r,5}) = {Banda(r)}");
+      annotations:
+        - label: Un brazo por banda
+          text: >-
+            A la izquierda el patrón, a la derecha el resultado. La flecha reemplaza al
+            return y a las llaves.
+        - label: El brazo de descarte
+          text: >-
+            El guion bajo atrapa lo que ningún patrón anterior atrapó. Es el else de la
+            escalera, renombrado.
+        - label: Menor estricto
+          text: >-
+            El brazo dice menor que, así que 799 todavía cae en reposo y 800 ya es
+            nominal. El límite pertenece a la banda de arriba.
+        - label: Es una expresión
+          text: >-
+            Devuelve un valor, así que cabe a la derecha de una asignación o tras una
+            flecha de método.
+
+  - trace:
+      eyebrow: Medido
+      title: Los límites, corridos uno por uno
+      headers: [Lectura, Brazo que gana, Lo que devuelve]
+      rows:
+        - ["-5", "< 0", "inválida"]
+        - ["799", "< 800", "en reposo"]
+        - ["800", "< 3000", "nominal"]
+        - ["2999", "< 3000", "nominal"]
+        - ["3000", "_", "sobrevelocidad"]
+      verdict: >-
+        Es el mismo argumento de mayor que contra mayor o igual que de la semana pasada,
+        escrito con otra puntuación. Corran siempre el valor de la frontera.
+
+  - code_output:
+      eyebrow: Medido · reordenar
+      title: Sube un brazo de lugar y ya no compila
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        static string Banda(int rpm) => rpm switch
+        {
+            < 800 => "en reposo",
+            < 0 => "inválida",
+            < 3000 => "nominal",
+            _ => "sobrevelocidad"
+        };
+
+        Console.WriteLine(Banda(-5));
+      output: |
+        Program.cs(4,5): error CS8510
+        The pattern is unreachable.
+        It has already been handled
+        by a previous arm of the
+        switch expression or it is
+        impossible to match.
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Medido · exhaustividad
+      title: Sin el brazo de descarte compila, acierta una vez y muere en la siguiente
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y al correr
+      source: |
+        static string Banda(int rpm) => rpm switch
+        {
+            < 0 => "inválida",
+            < 800 => "en reposo",
+            < 3000 => "nominal"
+        };
+
+        Console.WriteLine(Banda(500));
+        Console.WriteLine(Banda(4000));
+      output: |
+        warning CS8509
+        The switch expression does
+        not handle all possible
+        values of its input type
+        (it is not exhaustive). For
+        example, the pattern '3000'
+        is not covered.
+
+        Unmatched value was 4000.
+
+  - code_output:
+      eyebrow: Medido · el switch clásico
+      title: Un caso con instrucciones dentro tiene que terminar
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int modo = 1;
+
+        switch (modo)
+        {
+            case 0:
+                Console.WriteLine("motor detenido");
+            case 1:
+                Console.WriteLine("motor en jog");
+                break;
+            default:
+                Console.WriteLine("modo desconocido");
+                break;
+        }
+      output: |
+        Program.cs(5,5): error CS0163
+        Control cannot fall through
+        from one case label
+        ('case 0:') to another
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Medido · la caída deliberada
+      title: Las dos maneras legales de que dos casos compartan cuerpo
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        static string Modo(int c)
+        {
+            switch (c)
+            {
+                case 0: return "detenido";
+                case 1: Console.WriteLine("jog revisa"); goto case 2;
+                case 2:
+                case 3: return "enclavamientos ok";
+                default: return "desconocido";
+            }
+        }
+
+        foreach (int c in new[] { 0, 1, 2, 3 })
+            Console.WriteLine($"Modo({c}) = {Modo(c)}");
+      output: |
+        Modo(0) = detenido
+        jog revisa
+        Modo(1) = enclavamientos ok
+        Modo(2) = enclavamientos ok
+        Modo(3) = enclavamientos ok
+
+  - method:
+      eyebrow: Una nota antes de la semana 8
+      title: El break de hoy todavía no es el break del ciclo
+      statement: >-
+        Hoy break termina el switch y nada más. La semana que entra la misma palabra
+        termina un ciclo, y cuando aparezcan las dos juntas conviene tenerlas separadas
+        desde ahora.
+      points:
+        - label: En un switch
+          text: >-
+            Cierra el caso y salta a la llave que cierra el switch. Sin él, un caso con
+            instrucciones dentro ni siquiera compila.
+        - label: En un ciclo
+          text: >-
+            A partir de la semana 9 termina el ciclo entero. Es otra instrucción con el
+            mismo nombre, no la misma con otro efecto.
+        - label: Cuando se cruzan
+          text: >-
+            Un break dentro de un switch dentro de un ciclo termina el switch, no el
+            ciclo. Lo medimos lado a lado en la semana 9.
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro trampas de las condiciones compuestas
+      items:
+        - label: Error 01
+          title: Escribir un solo ampersand
+          desc: >-
+            Sobre dos bool es legal y silencioso, pero evalúa los dos lados. El guardia
+            deja de guardar y la división entre cero llega hasta el final.
+        - label: Error 02
+          title: Anidar sin poner llaves
+          desc: >-
+            El else se liga al if más cercano. La sangría promete otra cosa y el
+            compilador no la lee.
+        - label: Error 03
+          title: Comparar dos double con doble igual
+          desc: >-
+            0.1 + 0.2 no es 0.3 y nunca lo será. Sobre una medición se compara la
+            diferencia absoluta contra un margen declarado.
+        - label: Error 04
+          title: Dejar la expresión switch sin descarte
+          desc: >-
+            Compila con una advertencia que nombra el valor exacto que la va a tumbar, y
+            se cae la primera vez que ese valor llega del sensor.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Con la ventana de muestreo vacía, ¿qué hace este programa?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int suma = 0, cuenta = 0;
+
+        if (cuenta > 0 & suma / cuenta > 1500)
+            Console.WriteLine("media alta");
+
+        Console.WriteLine("fin");
+      options:
+        - "Imprime fin, porque la primera condición es falsa"
+        - "No compila, porque un ampersand no va sobre bool"
+        - "Truena con DivideByZeroException antes de imprimir nada"
+        - "Imprime media alta y luego fin"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El inspector de triángulos, con tolerancia
+      brief: >-
+        Escribe un programa que lea tres lados y decida si forman un triángulo y de qué
+        tipo. El guardia de la desigualdad triangular va primero, y la igualdad entre
+        lados se decide por tolerancia, nunca con doble igual.
+      blocks:
+        - label: Entrega
+          text: El Program.cs y una corrida por cada tipo, más un juego de lados imposible
+        - label: La pregunta
+          text: >-
+            ¿Por qué el guardia va primero? Contéstala por escrito en dos renglones, con
+            el corto circuito como argumento.
+        - label: La tolerancia
+          text: >-
+            Dos lados son iguales cuando su diferencia absoluta cabe dentro del margen que
+            tú declaraste y escribiste en el código.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El segundo ampersand es el guardia
+          desc: >-
+            El doble corta en cuanto la izquierda es falsa. El sencillo evalúa los dos
+            lados, compila sin una advertencia, y deja pasar la división entre cero
+        - title: Toda decisión anidada lleva llaves
+          desc: >-
+            El else se liga al if más cercano sin importar cómo esté sangrado, y un par de
+            llaves cambia la respuesta en dos de tres lecturas
+        - title: La expresión switch se deja revisar
+          desc: >-
+            Un orden imposible es un error de compilación y un caso sin cubrir es una
+            advertencia que nombra el valor con el que se va a atragantar
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe la matriz de enclavamiento primero como tabla de verdad, con una fila por
+        combinación de presión, puerta y modo, y después como expresión switch. Las dos
+        versiones tienen que contestar lo mismo en todas las filas.
+      meta:
+        - [Entrega, Antes de la semana 8]
+        - [Formato, Blackboard · PDF de la tabla y Program.cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Tabla de verdad", "40 %", "Están todas las combinaciones y ninguna repetida"]
+        - ["switch", "40 %", "Los brazos están en orden y hay brazo de descarte"]
+        - ["Equivalencia", "20 %", "Las dos versiones coinciden fila por fila"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, la repetición y el primer parcial. Traigan la escalera y la
+        matriz corriendo, porque el ciclo se construye encima de ellas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

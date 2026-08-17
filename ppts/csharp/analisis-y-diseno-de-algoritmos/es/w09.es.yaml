@@ -1,0 +1,552 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 9
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 09 · Tema 4.5 · Repetición, profundización
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        El for es el while con uniforme, el foreach es el for sin contador, y el
+        acumulador es el patrón sobre el que se construye toda la segunda mitad del curso.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 9 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: for y foreach
+          desc: Los tres tiempos en un renglón, el paso programable y el ciclo sin índice
+        - title: Anidar y su precio
+          desc: Un ciclo dentro de otro, contado en pasadas y cronometrado con etiqueta
+        - title: Acumuladores
+          desc: Suma, cuenta, máximo con su índice y cuántas lecturas salieron de banda
+        - title: Tu turno
+          desc: Reescribir los acumuladores con foreach y decir cuál sigue necesitando for
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un for con sus tres tiempos
+          sub: Y programar el paso para recorrer de dos en dos o hacia atrás
+        - head: Recorrer un arreglo con foreach
+          sub: Sin contador, sin cota y sin posibilidad de salirse por el final
+        - head: Decidir cuándo el foreach no sirve
+          sub: Porque la pregunta pasó de cuál es el máximo a dónde está el máximo
+        - head: Contar lo que cuesta anidar
+          sub: Cuatro veces la entrada son dieciséis veces el trabajo, y se cuenta sin reloj
+        - head: Reconocer un desbordamiento silencioso
+          sub: Un contador de ciclos en int pasa de 2147483647 y reporta un total negativo
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar, y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea de código
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: now
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y el proyecto integrador
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: for, y el ciclo sin contador
+      lede: Los cuatro tiempos de la semana pasada, tres de ellos recogidos en un solo renglón.
+      block: 1
+
+  - compare:
+      eyebrow: Bloque 01 · Traducción
+      title: El mismo recorrido, escrito de las dos maneras
+      before:
+        label: La semana pasada
+        file: Program.cs
+        lang: csharp
+        code: |
+          int i = 0;
+          while (i < rpm.Length)
+          {
+              suma += rpm[i];
+              i++;
+          }
+      after:
+        label: Esta semana
+        file: Program.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < rpm.Length; i++)
+          {
+              suma += rpm[i];
+          }
+      note: >-
+        Inicializa, revisa y cambia caben en el encabezado, separados por punto y coma. El
+        cuerpo se queda con el trabajo y con nada más. No hay ciclo nuevo aquí, hay una
+        forma de escribir el mismo que evita olvidar el cuarto tiempo.
+
+  - code:
+      eyebrow: Bloque 01 · for
+      title: El recorrido de la corrida rpm, con el índice a la vista
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int suma = 0;
+
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            suma += rpm[i];
+        }
+
+        Console.WriteLine(suma);
+      annotations:
+        - label: Los tres tiempos
+          text: Declaración, condición y cambio, en ese orden y separados por punto y coma dentro del encabezado.
+        - label: El alcance de i
+          text: La i nace y muere en el encabezado. Fuera del lazo el compilador no la conoce y lo dice con CS0103.
+        - label: El índice sirve
+          text: Con i puedes preguntar dónde, no sólo qué. Esa es la razón para no usar foreach en algunos recorridos.
+        - label: Riesgo
+          text: Escribir i <= rpm.Length en vez de menor estricto pide el elemento 7 de un arreglo que llega al 6.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: La ranura de cambio es tuya, no tiene que decir i++
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.WriteLine("i = 10; i >= 0; i -= 2");
+        for (int i = 10; i >= 0; i -= 2) Console.Write(i + " ");
+        Console.WriteLine();
+
+        Console.WriteLine("i = 0; i < 20; i += 5");
+        for (int i = 0; i < 20; i += 5) Console.Write(i + " ");
+        Console.WriteLine();
+
+        Console.WriteLine("i = 0; i < 3; i++");
+        for (int i = 0; i < 3; i++) Console.Write(i + " ");
+        Console.WriteLine();
+      output: |
+        i = 10; i >= 0; i -= 2
+        10 8 6 4 2 0
+        i = 0; i < 20; i += 5
+        0 5 10 15
+        i = 0; i < 3; i++
+        0 1 2
+
+  - code:
+      eyebrow: Bloque 01 · foreach
+      title: El ciclo que recorre sin contador y sin cota que equivocar
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int suma = 0, cuenta = 0;
+        foreach (int lectura in rpm)
+        {
+            suma += lectura;
+            cuenta++;
+        }
+        int maxIdx = 0;
+        for (int i = 1; i < rpm.Length; i++)
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+        Console.WriteLine($"foreach: {cuenta} lecturas, suma {suma}");
+        Console.WriteLine($"for: max {rpm[maxIdx]}, índice {maxIdx}");
+      annotations:
+        - label: Sin cota
+          text: El foreach no tiene condición que equivocar, así que no puede salirse por el final del arreglo.
+        - label: Y sin índice
+          text: Tampoco te lo da. En cuanto la pregunta es dónde está el máximo y no cuál es, vuelves al for.
+        - label: Por qué importa
+          text: 1533 en el índice 3 es lo que le dice al técnico qué muestra ir a revisar en el banco.
+        - label: Riesgo
+          text: Asignar la variable del foreach no compila. Es una copia y el compilador no te deja editarla.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Siete lecturas caminadas, y un índice que sólo el for entrega
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        foreach (int lectura in rpm)
+        {
+            suma += lectura;
+            cuenta++;
+        }
+        int maxIdx = 0;
+        for (int i = 1; i < rpm.Length; i++)
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+      output: |
+        foreach: 7 lecturas, suma 10478
+        for: max 1533, índice 3
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: La variable del foreach es una copia, y no se deja escribir
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        foreach (int lectura in rpm)
+        {
+            lectura = 1500;
+            Console.WriteLine(lectura);
+        }
+      output: |
+        Program.cs(4,5): error CS1656:
+        Cannot assign to 'lectura'
+        because it is a 'foreach
+        iteration variable'
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Bloque 01 · Medido
+      title: Tres tipos de elemento, tres respuestas, una sola regla
+      headers: [Qué recorres, Qué intentas escribir, Qué contesta]
+      rows:
+        - ["int[]", "La variable del foreach", "error CS1656"]
+        - ["struct[]", "Un campo de la variable", "error CS1654"]
+        - ["class[]", "Un campo del objeto", "Compila y sí cambia"]
+        - ["int[]", "El arreglo por índice", "1481, 1503, 1496"]
+        - ["List<int>", "Agregar durante el recorrido", "InvalidOperationException"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Un ciclo dentro de otro
+      lede: El de adentro da todas sus vueltas por cada vuelta del de afuera, y eso tiene un precio que se cuenta.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: La malla completa, la cota triangular y lo que cuesta cada una
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] tam = { 7, 1000, 4000 };
+        for (int t = 0; t < tam.Length; t++)
+        {
+            int n = tam[t];
+            long malla = 0, pares = 0;
+            for (int a = 0; a < n; a++)
+                for (int b = 0; b < n; b++) malla++;
+            for (int a = 0; a < n; a++)
+                for (int b = a + 1; b < n; b++) pares++;
+            Console.WriteLine($"n = {n,-5} malla {malla}");
+            Console.WriteLine($"n = {n,-5} pares {pares}");
+        }
+      output: |
+        n = 7     malla 49
+        n = 7     pares 21
+        n = 1000  malla 1000000
+        n = 1000  pares 499500
+        n = 4000  malla 16000000
+        n = 4000  pares 7998000
+
+  - table:
+      eyebrow: Bloque 02 · Medido, y depende del entorno
+      title: El mismo código, dos configuraciones, una razón cerca de dieciséis
+      headers: [Configuración, Los dos extremos, Razón medida]
+      rows:
+        - ["Debug", "n = 2000 son 9 ms, n = 8000 son 150 ms", "16.7"]
+        - ["Release", "n = 8000 son 23 ms, n = 32000 son 359 ms", "15.6"]
+        - ["Conteo", "1000000 pasadas internas contra 16000000", "16.0"]
+        - ["Lo que se afirma", "La razón, no los milisegundos", "Vuelve a medirlo"]
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: De cuál de los dos lazos sale un break
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int internas = 0, externas = 0;
+        for (int a = 0; a < 3; a++)
+        {
+            externas++;
+            for (int b = 0; b < 4; b++)
+            {
+                internas++;
+                if (b == 1) break;
+            }
+        }
+        Console.WriteLine($"pasadas externas {externas}");
+        Console.WriteLine($"pasadas internas {internas}");
+        Console.WriteLine("ni 12, ni 3");
+      output: |
+        pasadas externas 3
+        pasadas internas 6
+        ni 12, ni 3
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Acumuladores
+      lede: Suma, cuenta, máximo con su índice y cuántas salieron de banda. Un recorrido, cuatro respuestas.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · El patrón
+      title: Las cuatro variables que viven fuera del ciclo
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int suma = 0;
+        int fuera = 0;
+        int maxIdx = 0, minIdx = 0;
+
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            suma += rpm[i];
+            if (rpm[i] < 1480 || rpm[i] > 1520) fuera++;
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+            if (rpm[i] < rpm[minIdx]) minIdx = i;
+        }
+      annotations:
+        - label: Fuera del ciclo
+          text: Las cuatro se declaran antes del for. Adentro se reinician en cada pasada y nadie te avisa.
+        - label: La regla de banda
+          text: Va escrita completa porque 1480 cae justo en el límite inferior. Ese carácter decide el conteo.
+        - label: Máximo y mínimo
+          text: Medidos sobre estas siete lecturas dan max 1533 en el índice 3, min 1471 en el índice 4 y rango 62.
+        - label: Riesgo
+          text: Arrancar maxIdx en 0 sirve porque el arreglo tiene elementos. En uno vacío hay que preguntar antes.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Un cast cambia el valor y un especificador cambia la lectura
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int suma = 0;
+        for (int i = 0; i < rpm.Length; i++) suma += rpm[i];
+        int entera = suma / rpm.Length;
+        double real = (double)suma / rpm.Length;
+        Console.WriteLine($"suma        {suma}");
+        Console.WriteLine($"media int   {entera}");
+        Console.WriteLine($"media real  {real}");
+        Console.WriteLine($"media a F3  {real:F3}");
+      output: |
+        suma        10478
+        media int   1496
+        media real  1496.857142857143
+        media a F3  1496.857
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El mismo carácter de diferencia, ahora en un porcentaje
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int inc = 0, exc = 0;
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            if (rpm[i] < 1480 || rpm[i] > 1520) inc++;
+            if (rpm[i] <= 1480 || rpm[i] >= 1520) exc++;
+        }
+        int pctEnt = inc * 100 / 7; double pct = inc * 100.0 / 7;
+        Console.WriteLine($"<  y >   fuera {inc} de 7");
+        Console.WriteLine($"<= y >=  fuera {exc} de 7");
+        Console.WriteLine($"{inc} * 100 / 7   = {pctEnt}");
+        Console.WriteLine($"{inc} * 100.0 / 7 = {pct}");
+        Console.WriteLine($"a F1          = {pct:F1}");
+      output: |
+        <  y >   fuera 2 de 7
+        <= y >=  fuera 3 de 7
+        2 * 100 / 7   = 28
+        2 * 100.0 / 7 = 28.571428571428573
+        a F1          = 28.6
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El contador del banco de fatiga pasa el tope y reporta negativo
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int ciclos = int.MaxValue - 2;
+        Console.WriteLine($"arranque   {ciclos}");
+        for (int k = 0; k < 3; k++)
+        {
+            ciclos++;
+            Console.WriteLine($"+1 ciclo   {ciclos}");
+        }
+        long largo = int.MaxValue - 2;
+        for (int k = 0; k < 3; k++) largo++;
+        Console.WriteLine($"en long    {largo}");
+        double horas = int.MaxValue / 25.0 / 3600.0;
+        Console.WriteLine($"a 25/s -> {horas / 24:F1} días");
+      output: |
+        arranque   2147483645
+        +1 ciclo   2147483646
+        +1 ciclo   2147483647
+        +1 ciclo   -2147483648
+        en long    2147483648
+        a 25/s -> 994.2 días
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: La cadencia de muestreo con la escalera así. ¿Qué pasa con la muestra 15?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        for (int i = 1; i <= 15; i++)
+        {
+            if (i % 3 == 0) Console.Write("[REG] ");
+            else if (i % 5 == 0) Console.Write("[CAL] ");
+            else if (i % 15 == 0)
+                Console.Write("[REG+CAL] ");
+            else Console.Write($"{i} ");
+        }
+      options:
+        - Se registra y se calibra, porque 15 cumple las tres condiciones
+        - Se registra pero nunca se calibra, y compila sin advertencias
+        - Se calibra pero no se registra, porque el 5 gana al 3
+        - El compilador marca el tercer brazo como inalcanzable
+
+  - code_output:
+      eyebrow: Respuesta · Medido
+      title: El caso combinado tiene que ir primero, y sólo la corrida lo enseña
+      filename: Program.cs
+      lang: csharp
+      output_label: Las dos escaleras
+      source: |
+        for (int p = 0; p < 2; p++)
+        {
+            for (int i = 1; i <= 15; i++)
+            {
+                if (p == 0 && i % 15 == 0) Console.Write("[REG+CAL] ");
+                else if (i % 3 == 0) Console.Write("[REG] ");
+                else if (i % 5 == 0) Console.Write("[CAL] ");
+                else Console.Write($"{i} ");
+                if (i == 8 || i == 13) Console.WriteLine();
+            }
+            Console.WriteLine(p == 0 ? "\ncombinado al final:" : "");
+        }
+      output: |
+        1 2 [REG] 4 [CAL] [REG] 7 8
+        [REG] [CAL] 11 [REG] 13
+        14 [REG+CAL]
+        combinado al final:
+        1 2 [REG] 4 [CAL] [REG] 7 8
+        [REG] [CAL] 11 [REG] 13
+        14 [REG]
+
+  - code_output:
+      eyebrow: Bloque 03 · Caso secundario
+      title: El presupuesto de cuadro a 60 Hz, que no es 16.67
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double[] ms = { 15.2, 16.9, 14.8, 22.4,
+                        15.9, 16.61, 33.1, 15.0 };
+        double presu = 1000.0 / 60.0;
+        int caidos = 0, peorIdx = -1; double peor = 0;
+        for (int i = 0; i < ms.Length; i++)
+        {
+            if (ms[i] <= presu) continue;
+            caidos++;
+            if (ms[i] > peor) { peor = ms[i]; peorIdx = i; }
+        }
+        Console.WriteLine($"presupuesto {presu}");
+        Console.WriteLine($"a F2 {presu:F2} ms");
+        Console.WriteLine($"fuera {caidos}, peor {peor} en {peorIdx}");
+      output: |
+        presupuesto 16.666666666666668
+        a F2 16.67 ms
+        fuera 3, peor 33.1 en 6
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro trampas de la repetición profunda
+      items:
+        - label: Error 01
+          title: La i fuera del ciclo
+          desc: >-
+            El contador nace y muere en el encabezado del for. Usarlo después da error
+            CS0103 The name 'i' does not exist in the current context, y no hay excepción.
+        - label: Error 02
+          title: break dentro de un switch
+          desc: >-
+            Termina el switch y no el lazo. Medido, las cuatro pasadas del for corrieron
+            igual. Un continue en esa misma posición sí se va a la siguiente pasada.
+        - label: Error 03
+          title: Confiar en que el int aguanta
+          desc: >-
+            El mismo lazo dentro de checked lo obliga a admitirlo con OverflowException
+            Arithmetic operation resulted in an overflow. Sin checked no dice nada.
+        - label: Error 04
+          title: Escribir una List durante el foreach
+          desc: >-
+            Sobre un arreglo puedes escribir por índice mientras recorres. Sobre una
+            List se cae en ejecución con Collection was modified.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El for es el while ordenado
+          desc: Los tres tiempos en el encabezado, y el cuerpo se queda sólo con el trabajo de la pasada
+        - title: foreach recorre, for sabe dónde
+          desc: En cuanto la pregunta es dónde y no cuál, el ciclo sin índice deja de servir
+        - title: Las pasadas se cuentan, no se estiman
+          desc: Cuatro veces la entrada son dieciséis veces el trabajo, y arrancar el interno en i más uno deja 21 pares sobre siete sensores
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Reescribe los cuatro acumuladores de la clase usando foreach donde se pueda, y
+        escribe una línea por cada uno diciendo si sobrevivió al cambio. Al menos uno de
+        ellos tiene que seguir necesitando un for, y tu texto debe explicar por qué.
+      meta:
+        - [Entrega, Antes de la semana 10]
+        - [Formato, Blackboard · Program.cs y PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Reescritura", "40 %", "Los que pueden pasar a foreach quedan sin índice"]
+        - ["El que no puede", "40 %", "Se identifica y se explica en una línea"]
+        - ["Salida", "20 %", "Las cuatro respuestas coinciden con las de la clase"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, cómo empaquetar uno de estos recorridos con un nombre para no
+        volver a escribirlo, y qué le pasa a una variable cuando cruza esa frontera.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

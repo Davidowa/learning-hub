@@ -1,0 +1,507 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 17
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 2
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 17 · All course units · Review and final exam
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        The whole term inside one file, the six mistakes that cost the most run live one
+        more time, and the exam logistics.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 17 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Two blocks and your questions
+      cards:
+        - title: The map
+          desc: Seven syllabus topics and how they chain together inside one file
+        - title: The six mistakes
+          desc: The ones that cost the most, run again in front of the room
+        - title: The exam
+          desc: What it covers, what changed since the midterms, and what you may bring
+        - title: Your questions
+          desc: The second half of the session, on what you brought in writing
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Place every topic on the map
+          sub: And say what it rests on and what it enables for the topic after it
+        - head: Recognise the six expensive mistakes
+          sub: The ones that showed up in every submission of the term, without exception
+        - head: Read an integrative program
+          sub: From the capture line to the aligned report, without skipping validation
+        - head: Quote what the program printed
+          sub: Not what you think it prints, which is where the surprises come from
+        - head: Arrive ready for the exam
+          sub: Knowing what it covers, what is allowed and how it is submitted
+
+  - roadmap:
+      eyebrow: Course map
+      title: The whole term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Yours, by value and by reference, and the ones already written
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The term inside one file
+      lede: >-
+        Nothing we covered stands alone. A single review program touches all seven syllabus
+        topics, and we are going to run it line by line.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · The chain
+      title: What each topic rests on
+      headers: [Topic, Rests on, It enables]
+      rows:
+        - ["Types", "The algorithm on paper", "Any correct calculation"]
+        - ["Statements", "Types and expressions", "Reading, computing, formatting"]
+        - ["Selection", "Boolean comparisons", "Guards and interlocks"]
+        - ["Repetition", "Selection", "Walking a whole run"]
+        - ["Functions", "Repetition", "Code that can be tested"]
+        - ["Arrays", "Functions", "Strings and the run in memory"]
+        - ["Structures", "Arrays", "A type you designed yourself"]
+
+  - code:
+      eyebrow: Block 01 · Validate
+      title: The capture line, with one bad reading inside it
+      filename: Review.cs
+      lang: csharp
+      source: |
+        string capture = "1480,1502,1495,abc,1533,1471,1509,1488";
+        string[] fields = capture.Split(',');
+        int[] rpm = new int[fields.Length];
+        int n = 0, rejected = 0;
+        foreach (string field in fields)
+        {
+            bool ok = int.TryParse(field, out int value);
+            if (ok) { rpm[n] = value; n++; }
+            else { rejected++; }
+        }
+        Console.WriteLine($"read {n}, rejected {rejected}");
+      annotations:
+        - label: Split
+          text: Week 13 turns a line of text into pieces. Here it is eight fields, one of them garbage.
+        - label: TryParse
+          text: It returns a bool and writes the variable. The bool gets checked first, always.
+        - label: Two counters
+          text: n says how many got in, rejected how many did not. The array has eight slots and only seven are used.
+        - label: Risk
+          text: With Convert.ToInt32 instead of TryParse, the program dies on the fourth field.
+          accent: true
+
+  - code:
+      eyebrow: Block 01 · Classify
+      title: The band, the struct and the enum, in one loop
+      filename: Review.cs
+      lang: csharp
+      source: |
+        // struct Sample { int Channel; int Rpm; Status State; }
+        Sample[] bank = new Sample[n];
+        int sum = 0, outside = 0;
+        for (int i = 0; i < n; i++)
+        {
+            bool bad = rpm[i] < 1480 || rpm[i] > 1520;
+            bank[i].Channel = i;
+            bank[i].Rpm = rpm[i];
+            bank[i].State = bad ? Status.Fault : Status.Ok;
+            if (bad) outside++;
+            sum += rpm[i];
+        }
+      annotations:
+        - label: The band rule
+          text: r < 1480 || r > 1520, written on the slide. With the other convention the count changes.
+        - label: bank[i].Channel
+          text: The array element is the struct, so writing one of its fields writes into the bank.
+        - label: The enum
+          text: Status.Ok and Status.Fault are names, and underneath they are still 0 and 2.
+        - label: One loop
+          text: It classifies, accumulates and counts in the same pass. Three accumulators, one walk.
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The most repeated mistake of the term, once more
+      filename: Review.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        Console.WriteLine($"out of band {outside} of {n}");
+        Console.WriteLine($"integer mean {sum / n}");
+        Console.WriteLine($"real mean {(double)sum / n}");
+        Console.WriteLine($"mean :F3 {(double)sum / n:F3}");
+      output: |
+        read 7, rejected 1
+        out of band 2 of 7
+        integer mean 1496
+        real mean 1496.857142857143
+        mean :F3 1496.857
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Sort first, then read the negative return
+      filename: Review.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        int[] sorted = new int[n];
+        Array.Copy(rpm, sorted, n);
+        Array.Sort(sorted);
+
+        Console.WriteLine("sorted:");
+        Console.WriteLine(string.Join(" ", sorted));
+        int i1495 = Array.BinarySearch(sorted, 1495);
+        int i1500 = Array.BinarySearch(sorted, 1500);
+        Console.WriteLine($"binary 1495 -> {i1495}");
+        Console.WriteLine($"binary 1500 -> {i1500}");
+      output: |
+        sorted:
+        1471 1480 1488 1495 1502 1509 1533
+        binary 1495 -> 3
+        binary 1500 -> -5
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The aligned report, which is where all of it lands
+      filename: Review.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        Console.WriteLine("chan    rpm  state");
+        foreach (Sample s in bank)
+            Console.WriteLine($"{s.Channel,-5}{s.Rpm,6}  {s.State}");
+      output: |
+        chan    rpm  state
+        0      1480  Ok
+        1      1502  Ok
+        2      1495  Ok
+        3      1533  Fault
+        4      1471  Fault
+        5      1509  Ok
+        6      1488  Ok
+
+  - concept:
+      eyebrow: Key concept
+      title: The chain that runs through the whole course
+      lead: >-
+        A type is a decision about what fits. A condition is a value. A loop is that
+        condition repeated until it stops being true. A function is a loop with a name and a
+        contract. An array is a whole run held in memory, and a struct is one row of that
+        run with the fields you chose.
+      panel:
+        label: What this means for the exam
+        title: There are not seven loose topics to memorise
+        note: >-
+          If you know what an accumulator inside a for does, you already know what the final
+          report of this program does. The syntax changes, the idea does not.
+      steps:
+        - text: A type decides what fits
+        - text: A condition decides which way
+        - text: A loop repeats until it holds
+          loop: ↺ and the function gives it a name
+
+  - table:
+      eyebrow: Block 01 · The other benches
+      title: Nobody closes the term without seeing their own
+      headers: [Bench, The number that defines it, Chosen for]
+      rows:
+        - ["Frames", "16.666666666666668 ms, 3 of 8", "Animation and Games"]
+        - ["Packets", "median 12.25, mean 21.15", "Data, Cybersecurity, IT"]
+        - ["Collision", "four comparisons joined by &&", "Animation and Games"]
+
+  - divider:
+      eyebrow: Block 02
+      title: What costs the most
+      lede: >-
+        Six mistakes. Not the hardest ones of the term, the ones that showed up in every
+        submission, and all six get run again here, live.
+      block: 2
+
+  - code_output:
+      eyebrow: Mistake 01 · Measured
+      title: Integer division truncates, and the cast goes first
+      filename: one.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        Console.WriteLine($"7 / 2           = {7 / 2}");
+        Console.WriteLine($"7 / 2.0         = {7 / 2.0}");
+        int sum = 10478, n = 7;
+        Console.WriteLine($"sum / n         = {sum / n}");
+        Console.WriteLine($"(double)sum / n = {(double)sum / n}");
+        Console.WriteLine($"... :F3         = {(double)sum / n:F3}");
+      output: |
+        7 / 2           = 3
+        7 / 2.0         = 3.5
+        sum / n         = 1496
+        (double)sum / n = 1496.857142857143
+        ... :F3         = 1496.857
+
+  - code_output:
+      eyebrow: Mistake 02 · Measured
+      title: Two readings are never compared with equals
+      filename: two.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        double reading = 0.1 + 0.2;
+        Console.WriteLine($"0.1 + 0.2    = {reading}");
+        Console.WriteLine($"== 0.3       = {reading == 0.3}");
+        double diff = Math.Abs(24.97 - 25.0);
+        Console.WriteLine($"|24.97-25.0| = {diff}");
+        Console.WriteLine($"<= 0.05      = {diff <= 0.05}");
+      output: |
+        0.1 + 0.2    = 0.30000000000000004
+        == 0.3       = False
+        |24.97-25.0| = 0.030000000000001137
+        <= 0.05      = True
+
+  - code_output:
+      eyebrow: Mistake 03 · Measured
+      title: Convert without asking, or ask before converting
+      filename: three.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        try
+        {
+            Console.WriteLine(Convert.ToInt32("abc"));
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine("Convert -> " + e.GetType().Name);
+        }
+        bool ok = int.TryParse("abc", out int v);
+        Console.WriteLine($"TryParse -> {ok}, v = {v}");
+        string? none = null;
+        Console.WriteLine($"Convert(null) -> {Convert.ToInt32(none)}");
+      output: |
+        Convert -> FormatException
+        TryParse -> False, v = 0
+        Convert(null) -> 0
+
+  - code_output:
+      eyebrow: Mistake 04 · Measured
+      title: A struct copies and an array does not
+      filename: four.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        Sample s1 = new Sample
+        {
+            SensorId = 1, Celsius = 20.0, State = Status.Ok
+        };
+        Sample s2 = s1;
+        s2.Celsius = 99.9;
+        Console.WriteLine($"struct: s1.Celsius = {s1.Celsius}");
+
+        int[] src = { 20, 21, 22 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine($"array: src[0] = {src[0]}");
+      output: |
+        struct: s1.Celsius = 20
+        array: src[0] = 99
+
+  - code_output:
+      eyebrow: Mistake 05 · Measured
+      title: Scope is one rule, not two
+      filename: five.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        for (int i = 0; i < 3; i++)
+        {
+            Console.WriteLine(i);
+        }
+        Console.WriteLine(i);
+
+        // separate program:
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(result);
+        static double Mean(double a, double b)
+        {
+            double result = (a + b) / 2;
+            return result;
+        }
+      output: |
+        error CS0103: The name 'i'
+        does not exist in the
+        current context
+
+        error CS0103: The name 'result'
+        does not exist in the
+        current context
+
+  - code_output:
+      eyebrow: Mistake 06 · Measured
+      title: The program that prints a confident wrong number
+      filename: six.cs
+      lang: csharp
+      output_label: The run
+      source: |
+        int cycles = int.MaxValue - 2;
+        for (int k = 0; k < 5; k++)
+        {
+            cycles++;
+            Console.WriteLine($"+1 cycle   {cycles}");
+        }
+        long cyclesL = int.MaxValue - 2;
+        for (int k = 0; k < 5; k++) cyclesL++;
+        Console.WriteLine($"in long    {cyclesL}");
+      output: |
+        +1 cycle   2147483646
+        +1 cycle   2147483647
+        +1 cycle   -2147483648
+        +1 cycle   -2147483647
+        +1 cycle   -2147483646
+        in long    2147483650
+
+  - compare:
+      eyebrow: Block 02 · The other half
+      title: The compiler protects you while it can see the value
+      before:
+        label: Written as a literal
+        file: lit.cs
+        lang: csharp
+        code: |
+          Console.WriteLine(int.MaxValue + 1);
+      after:
+        label: The same value through a variable
+        file: var.cs
+        lang: csharp
+        code: |
+          int cycles = int.MaxValue;
+          Console.WriteLine(cycles);
+          Console.WriteLine(cycles + 1);
+      note: >-
+        The left one does not even produce an executable. The compiler evaluates the
+        constant and refuses with error CS0220, The operation overflows at compile time in
+        checked mode. The right one builds with 0 warnings and 0 errors, and prints
+        2147483647 and −2147483648.
+
+  - quiz:
+      eyebrow: Quick check
+      question: A cycle counter reaches the top of int. What does the program do?
+      filename: ceiling.cs
+      lang: csharp
+      source: |
+        int cycles = int.MaxValue;
+        cycles++;
+        Console.WriteLine(cycles);
+      options:
+        - 'It throws OverflowException and stops there.'
+        - 'It prints -2147483648, with no error and no warning.'
+        - 'It stays at 2147483647, because it hit the ceiling.'
+        - 'It does not build, because the compiler sees the overflow.'
+
+  - trace:
+      eyebrow: Answer
+      title: The same addition, four different endings
+      headers: [The form, What happens, Where you see it]
+      rows:
+        - ["int.MaxValue + 1", "error CS0220", "at build time"]
+        - ["cycles++", "-2147483648", "at run time"]
+        - ["in a long", "2147483650", "at run time"]
+        - ["checked { }", "OverflowException", "at run time"]
+      verdict: >-
+        At 25 cycles per second, that ceiling arrives after 994.2 days of continuous
+        running. It is a maintenance report somebody would have believed.
+
+  - table:
+      eyebrow: Final exam
+      title: What it covers, and what it looks like
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "All units of the course"]
+        - ["Weight", "20 % of the final grade"]
+        - ["New", "for, nesting and break or continue are examined for the first time"]
+        - ["New", "Two-index arrays, sorting and searching are too"]
+        - ["Format", "On the classroom computer, uploaded to Blackboard"]
+        - ["You may bring", "Notes, assignments, books and your own code from the term"]
+        - ["You may not", "Phone, headphones, messaging or AI assistants"]
+
+  - method:
+      eyebrow: Final exam · Scope
+      title: Two topics have never been on an exam in this course
+      statement: >-
+        The syllabus says the final exam covers all units of the course, and that includes
+        two topics the midterms never reached. Here they are, said out loud.
+      points:
+        - label: From the first midterm
+          text: >-
+            Midterm 1 examined repetition at the week 8 level, with while, do-while and a
+            proven exit. for, nesting and break or continue land here.
+        - label: From the second midterm
+          text: >-
+            Midterm 2 covered unit 5 in full and unit 6 through 6.1.3. Two-index arrays and
+            sorting and searching land here.
+        - label: What does not change
+          text: >-
+            Nothing outside the syllabus. Saying it out loud is the difference between a
+            fair exam and a surprise on exam day.
+
+  - pitfalls:
+      eyebrow: Closing · Honesty
+      title: What this course did not teach you, said here and not in February
+      items:
+        - label: Not covered 01
+          title: Classes of your own with behaviour
+          desc: Classes appeared twice and only as a measured contrast. Writing one is the course that follows.
+        - label: Not covered 02
+          title: try / catch as a design tool
+          desc: Here exceptions were failures to prevent. The rule was guard the input, do not catch the crash.
+        - label: Not covered 03
+          title: Collections beyond the array
+          desc: List of T appeared once and only failing, with CS1612. Files and databases did not appear either.
+        - label: Not covered 04
+          title: Generics, LINQ and asynchronous work
+          desc: One rpm.Sum() on the week 2 paradigms slide, and nothing more. This is not an apology, it is the map.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas for the whole term
+      items:
+        - title: Run the program, then quote it
+          desc: What the program printed is data. What you think it prints is an untested hypothesis
+        - title: The compiler sees what it can see
+          desc: Once the value moves into a variable, the only defence left is the one you wrote
+        - title: Keep your project code
+          desc: It is your first portfolio piece, and it is proof that you can build something that runs
+
+  - closing:
+      title: Thank you
+      subtitle: >-
+        Any question about the grade or about what comes next, by email or on Google Chat.
+        Run the program, and then quote what it printed.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

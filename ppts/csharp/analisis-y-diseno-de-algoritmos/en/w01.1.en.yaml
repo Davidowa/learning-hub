@@ -1,0 +1,469 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 1.1
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 01 · Bridge · The toolchain
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Leave the room with a licensed C# environment that runs code, and with a second way
+        to run it for the day the IDE lets you down.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, Bridge · Week 1]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The chain
+          desc: Five links in a row, and the order in which they ask for each other
+        - title: The install
+          desc: Windows and macOS side by side, with the differences that cost an afternoon
+        - title: The first run
+          desc: One generated line, and the three invisible things that compile it
+        - title: Without an IDE
+          desc: The same binary launched in three different ways
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Chain the accounts in the right order
+          sub: Why the academic licence depends on the GitHub student verification
+        - head: Install the environment on your own system
+          sub: Windows and macOS, with the differences worth knowing before you download
+        - head: Read the project the tool generates
+          sub: One line of code, four properties and seven using nobody wrote
+        - head: Run the same program without opening the IDE
+          sub: >-
+            Three launchers: dotnet run, the executable itself, and dotnet on the dll
+        - head: Diagnose an environment that will not build
+          sub: What to look at first when the compiler says Console does not exist
+
+  - roadmap:
+      eyebrow: Course map
+      title: Four blocks, seventeen weeks
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: todo
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections and project
+          desc: Arrays, strings, sorting, searching and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The dependency chain
+      lede: >-
+        Each link unlocks the next one. Skip one and the following link asks you for
+        something you do not have yet.
+      block: 1
+
+  - steps:
+      eyebrow: Block 01 · The order
+      title: Five links, and they are asked for in this order
+      items:
+        - label: '01'
+          title: GitHub account
+          desc: >-
+            With your institutional email and a username you could put on a CV
+        - label: '02'
+          title: Student Developer Pack
+          desc: The student verification. It takes minutes to a couple of days.
+        - label: '03'
+          title: JetBrains account
+          desc: Created with that same, already verified GitHub account
+        - label: '04'
+          title: Toolbox and Rider
+          desc: Toolbox installs and updates. Rider is the IDE you will open.
+        - label: '05'
+          title: The .NET 10 SDK
+          desc: The compiler. It is the one thing that genuinely cannot be missing.
+
+  - method:
+      eyebrow: Block 01 · Accounts
+      title: The account you will sign your work with
+      statement: >-
+        Two-factor authentication is not optional and the username is not a private joke.
+        Both of them will stay with you rather longer than this subject will.
+      points:
+        - label: Second factor
+          text: >-
+            Turn it on today and keep the backup codes off the phone. Losing access to
+            GitHub means losing the licence.
+        - label: The name
+          text: >-
+            It will appear on every commit and every submission. Your real name or
+            something close to it, not a school nickname.
+        - label: The email
+          text: >-
+            The institutional one is what the student verification recognises. With a
+            personal address the pack is not approved.
+
+  - tiers:
+      eyebrow: Block 01 · What each link unlocks
+      title: What each account is actually for
+      items:
+        - key: '01'
+          title: GitHub
+          desc: >-
+            Identity and repository. It is also what the student verification checks
+            against.
+        - key: '02'
+          title: Student Pack
+          desc: >-
+            The academic licence for JetBrains and other tools, free for as long as you are
+            a student.
+        - key: '03'
+          title: Toolbox
+          desc: >-
+            Installs, updates and removes Rider without you hunting for version numbers by
+            hand.
+        - key: '04'
+          title: The .NET SDK
+          desc: >-
+            Compiles and runs. Everything you see in class runs on this and nothing else.
+
+  - divider:
+      eyebrow: Block 02
+      title: The install, on both systems
+      lede: >-
+        The same steps, two operating systems, and a handful of differences worth knowing
+        before you download anything.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · Concept
+      title: Two things get installed, and only one is required
+      lead: >-
+        Rider is an editor with a debugger inside it. The SDK is the compiler. The editor
+        helps you write, but the one that accepts or rejects your code is the SDK. In this
+        course Rider is a supported IDE, not the required verb, and everything you see in
+        class runs with dotnet run from a terminal.
+      panel:
+        label: Why it matters
+        title: If the IDE fails, the compiler is still there
+        note: >-
+          On submission day, when the licence expires or the IDE will not open, the
+          terminal keeps compiling exactly as before.
+      steps:
+        - text: The SDK compiles and runs
+        - text: The IDE edits, navigates and debugs
+        - text: The two are installed separately
+          loop: ↺ and the project can be demoed with the first one alone
+
+  - table:
+      eyebrow: Block 02 · Step by step
+      title: Windows and macOS, side by side
+      headers: [Step, Windows, macOS]
+      rows:
+        - ["Toolbox", "An .exe installer", "A .dmg image you drag"]
+        - ["First launch", "SmartScreen may warn", "Gatekeeper asks permission"]
+        - ["Architecture", "x64", "arm64 on Apple silicon"]
+        - ["The .NET SDK", "An .exe installer for 10.0", "A .pkg installer for 10.0"]
+        - ["The check", "dotnet --version", "dotnet --version"]
+        - ["Failure code", "-532462766", "Measured in the room"]
+
+  - pitfalls:
+      eyebrow: Block 02 · If something breaks
+      title: Four install stumbles, and what to do
+      items:
+        - label: Error 01
+          title: The verification is still pending
+          desc: >-
+            The Student Pack can take days. Install the SDK while you wait, because it
+            needs no licence at all.
+        - label: Error 02
+          title: dotnet is not recognised
+          desc: >-
+            You opened the terminal before the installer wrote the path. Close it and open
+            a new one.
+        - label: Error 03
+          title: Rider cannot find the SDK
+          desc: >-
+            Install it separately and reopen Rider. Toolbox carries no compiler, it only
+            installs the editor.
+        - label: Error 04
+          title: The installed version is not 10
+          desc: >-
+            This course is measured on 10.0. On another version the numbers on these slides
+            may not match.
+
+  - steps:
+      eyebrow: Block 02 · Checklist
+      title: The five boxes that are graded today
+      items:
+        - label: '01'
+          title: GitHub verified
+          desc: The account exists and the second factor is on
+        - label: '02'
+          title: Student Pack approved
+          desc: The approval email arrived or the status reads active
+        - label: '03'
+          title: Rider open
+          desc: With the academic licence recognised and no countdown showing
+        - label: '04'
+          title: SDK installed
+          desc: dotnet --version answers in a freshly opened terminal
+        - label: '05'
+          title: A program running
+          desc: A new project prints something and finishes cleanly
+
+  - divider:
+      eyebrow: Block 03
+      title: The first run
+      lede: >-
+        One line of code written by the tool, and three invisible things that make it
+        compile.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The scaffold
+      title: What dotnet new console writes, in full
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // dotnet new console -o scaffold
+        // The generated Program.cs, complete, nothing cut:
+
+        Console.WriteLine("Hello, World!");
+      annotations:
+        - label: One line
+          text: >-
+            Forty bytes, one line. Anything longer you saw in a tutorial was somebody's
+            edit.
+        - label: What is missing
+          text: >-
+            No using, no class, no Main. Nothing vanished, it is all generated, and today
+            we open it.
+        - label: It runs
+          text: >-
+            The untouched scaffold runs and exits with code 0. Everything this term starts
+            from there.
+        - label: Risk
+          text: >-
+            Edit it before running it once and you cannot tell if the environment broke or
+            your change did.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Forty bytes, one line, exit code 0
+      filename: Program.cs
+      lang: csharp
+      output_label: The probe
+      source: |
+        // The freshly generated scaffold, nothing edited:
+        Console.WriteLine("Hello, World!");
+      output: |
+        ===== BYTES =====
+        40
+        ===== LINES =====
+        1
+        ===== dotnet run =====
+        Hello, World!
+        ===== LASTEXITCODE =====
+        0
+
+  - code:
+      eyebrow: Block 03 · The project file
+      title: Four properties decide how that line behaves
+      filename: scaffold.csproj
+      lang: xml
+      source: |
+        <Project Sdk="Microsoft.NET.Sdk">
+
+          <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net10.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+          </PropertyGroup>
+
+        </Project>
+      annotations:
+        - label: TargetFramework
+          text: >-
+            net10.0. The platform version your code is compiled against.
+        - label: ImplicitUsings
+          text: >-
+            enable. This is where it is decided whether the using lines arrive ready made.
+        - label: Nullable
+          text: >-
+            enable. The compiler warns you when a reference could arrive empty.
+        - label: OutputType
+          text: >-
+            Exe. Produces a program you can launch, rather than a library.
+
+  - code:
+      eyebrow: Measured · what the compiler generates
+      title: The seven using lines you never wrote
+      filename: scaffold.GlobalUsings.g.cs
+      lang: csharp
+      source: |
+        // obj/Debug/net10.0/scaffold.GlobalUsings.g.cs
+        // <auto-generated/>
+        global using System;
+        global using System.Collections.Generic;
+        global using System.IO;
+        global using System.Linq;
+        global using System.Net.Http;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+      annotations:
+        - label: You can open it
+          text: >-
+            The file is on disk, inside obj. It is not language magic, it is a file
+            somebody generated.
+        - label: System first
+          text: >-
+            That is where Console comes from, and why the scaffold line compiles with
+            nothing written above it.
+        - label: With disable
+          text: >-
+            Turn the property off and the file is not even generated.
+        - label: Risk
+          text: >-
+            obj is wiped on clean and rebuilt on build. Do not edit it, because it gets
+            overwritten.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick check
+      question: You turn ImplicitUsings off and touch no code. What happens?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // p.csproj, one property changed:
+        //   <ImplicitUsings>disable</ImplicitUsings>
+
+        // Program.cs, not one letter different:
+        Console.WriteLine("Hello, World!");
+      options:
+        - 'It builds anyway, since the using lines live inside the SDK.'
+        - 'It builds with a warning and runs regardless.'
+        - 'It does not build, because the compiler no longer knows Console.'
+        - 'It builds, but prints an empty line.'
+
+  - code_output:
+      eyebrow: Measured
+      title: The same line, with ImplicitUsings off
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        // p.csproj:
+        //   <ImplicitUsings>disable</ImplicitUsings>
+
+        Console.WriteLine("Hello, World!");
+      output: |
+        Program.cs(1,1): error CS0103:
+        The name 'Console' does not
+        exist in the current context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - trace:
+      eyebrow: Measured
+      title: The same binary, three launchers
+      headers: ["Launcher", "What it prints", "Code"]
+      rows:
+        - ["dotnet run", "media 1496.857142857143", "0"]
+        - ["The .exe itself", "media 1496.857142857143", "0"]
+        - ["dotnet p.dll", "media 1496.857142857143", "0"]
+      verdict: >-
+        The window closing on its own after a double click is launcher behaviour, not
+        program behaviour. That gets taught with a recording labelled as a demonstration,
+        because there is no way to measure it from inside.
+
+  - stat:
+      eyebrow: Measured · as of the date on this slide
+      value: 25 of 25
+      text: >-
+        probes in the repository run on dotnet run alone, with no licensed IDE installed.
+      note: >-
+        The count moves as slides are added and stays checkable from a script in the
+        repository itself. Rider is a supported IDE, not the required verb.
+
+  - lab:
+      eyebrow: Lab
+      title: Your first edited program
+      brief: >-
+        Create a new project, change the scaffold line so it prints your name, your degree
+        and the machine or system you would like to build, and run it with dotnet run.
+      blocks:
+        - label: Deliverable
+          text: >-
+            A screenshot of the terminal with the code visible and the output below it.
+        - label: Without the IDE
+          text: >-
+            Do it once from the terminal even with Rider open. It is your fallback for the
+            whole term.
+        - label: Hint
+          text: >-
+            If the window closes on its own after a double click, add Console.ReadKey(); at
+            the end.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The scaffold is one line
+          desc: >-
+            Forty bytes and no using in sight. What looked like magic turned out to be a
+            generated file you can open
+        - title: The SDK compiles, the IDE helps
+          desc: >-
+            Rider is a supported IDE. The compiler is the one thing without which there is
+            no course, and it lives in the terminal
+        - title: The launcher does not change the program
+          desc: >-
+            dotnet run, the executable itself and dotnet on the dll print the same thing and
+            exit with the same code
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Upload one screenshot showing three things on the same screen: the output of
+        dotnet --version, the output of Environment.Version, and your edited program
+        running.
+      meta:
+        - [Due, Before week 2]
+        - [Format, Blackboard · .png image]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Environment", "40 %", "Both versions are visible and are not the same number"]
+        - ["Program", "40 %", "Your edited text runs and its output is visible"]
+        - ["Terminal", "20 %", "The run was done with dotnet run"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session runs without a keyboard. Bring a pen, because the problem gets thought
+        through before the code gets written.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

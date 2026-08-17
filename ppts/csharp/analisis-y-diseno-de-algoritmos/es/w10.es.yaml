@@ -1,0 +1,568 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 10
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 10 · Tema 5.1 · Funciones definidas por el usuario
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Las piezas que nombramos en papel en la semana 2 reciben hoy un nombre que el
+        compilador reconoce, y una de ellas ya se puede probar sola.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 10 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Anatomía
+          desc: Tipo de retorno, nombre, parámetros y qué hace ahí la palabra static
+        - title: Alcance y sobrecarga
+          desc: Lo que nace dentro del método se queda dentro, y un nombre puede servir a varias firmas
+        - title: Arreglos
+          desc: Cómo entran y salen de un método, y qué cambios sobreviven al regreso
+        - title: Tu turno
+          desc: Un Main de sesenta líneas partido en cuatro métodos, sin que cambie la salida
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar y llamar un método propio
+          sub: Y explicar por qué declararlo no ejecuta absolutamente nada
+        - head: Leer una firma completa
+          sub: Tipo de retorno, nombre y la lista de parámetros con sus tipos
+        - head: Justificar la palabra static
+          sub: Con el error que aparece al quitarla, no con lo que dice el tutorial
+        - head: Distinguir devolver de imprimir
+          sub: Y decidir cuándo un método debe ser void y cuándo debe entregar un valor
+        - head: Pasar y devolver arreglos
+          sub: Y predecir qué cambios llegan al llamador y cuáles se quedan adentro
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: now
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Anatomía de un método
+      lede: >-
+        Declarar, llamar, y la palabra que todos los tutoriales te hacen escribir sin
+        decirte nunca por qué.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un cálculo con nombre propio
+      lead: >-
+        Un método encierra un cálculo, declara qué necesita recibir y qué devuelve, y desde
+        ese momento quien lo llama ya no tiene que abrir el cuerpo para confiar en el
+        resultado. Es la misma descomposición de la semana 2, solo que ahora el compilador
+        la entiende y te la revisa.
+      panel:
+        label: El argumento de fondo
+        title: Una pieza con nombre se prueba sola
+        note: >-
+          El mismo cálculo repetido en cinco lugares no se puede probar. Solo se puede
+          revisar a mano, lugar por lugar, y nadie lo hace.
+      steps:
+        - text: Se declara una vez, con su firma
+        - text: Se llama tantas veces como haga falta
+        - text: Se corrige en un solo lugar
+          loop: ↺ y la corrección llega a todas las llamadas
+
+  - code:
+      eyebrow: Bloque 01 · Anatomía
+      title: La media de tres termopares, empaquetada
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double mean = Mean(21.0, 39.5, 22.4);
+        Console.WriteLine(mean);
+
+        static double Mean(double a, double b, double c)
+        {
+            double total = a + b + c;
+            return total / 3.0;
+        }
+      annotations:
+        - label: El tipo de retorno
+          text: >-
+            double va antes del nombre y dice qué entrega el método. Es medio contrato
+            para el llamador.
+        - label: Los parámetros
+          text: >-
+            Tres huecos con nombre y tipo. Se llenan en ese mismo orden y el compilador
+            revisa los tipos.
+        - label: return
+          text: >-
+            Entrega el valor y termina el método ahí mismo. Lo que venga después del return
+            no llega a correr.
+        - label: static
+          text: >-
+            Dice que el método trabaja solo con sus parámetros. Las tres láminas siguientes
+            lo miden en lugar de afirmarlo.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Declarar un método no ejecuta nada
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        static void PrintHeader()
+        {
+            Console.WriteLine("LOTE 07 - TELEMETRIA");
+        }
+      output: |
+        warning CS8321: The local
+        function 'PrintHeader' is
+        declared but never used
+
+        Build succeeded.
+            1 Warning(s)
+            0 Error(s)
+
+        dotnet run -> sin salida
+
+  - code_output:
+      eyebrow: Medido
+      title: Llamarlo sí lo ejecuta, y el orden de declaración no importa
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        PrintHeader();
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(Mean(Mean(21.0, 39.5), 22.4));
+
+        static void PrintHeader()
+        {
+            Console.WriteLine("LOTE 07 - TELEMETRIA");
+        }
+
+        static double Mean(double a, double b)
+        {
+            return (a + b) / 2;
+        }
+      output: |
+        LOTE 07 - TELEMETRIA
+        30.25
+        26.325
+
+  - code_output:
+      eyebrow: Medido
+      title: Quítale static al mismo método y ahora imprime 9
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int limitCelsius = 30;
+        Console.WriteLine(OverLimit(39));
+
+        static int OverLimit(int reading)
+        {
+            return reading - limitCelsius;
+        }
+      output: |
+        error CS8421: A static local
+        function cannot contain a
+        reference to 'limitCelsius'.
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Colocación
+      title: Cuatro errores al colocar un método
+      items:
+        - label: Error 01
+          title: Escribir public delante
+          desc: >-
+            Todos los tutoriales muestran public static. Sobre un método de nivel superior
+            el compilador contesta error CS0106, The modifier 'public' is not valid for
+            this item, y apunta a la columna 1.
+        - label: Error 02
+          title: Dejar código debajo de una clase
+          desc: >-
+            error CS8803, Top-level statements must precede namespace and type
+            declarations. Toda clase que escribas va al fondo del archivo, después de la
+            última línea ejecutable.
+        - label: Error 03
+          title: Olvidar static dentro de una clase
+          desc: >-
+            Ahí sí es obligatorio. Sin él es error CS0120, An object reference is required.
+            Y llamarlo por su nombre pelón es CS0103, el mismo de la semana 9.
+        - label: Error 04
+          title: Creerse que static la hace llamable
+          desc: >-
+            No es eso. Bajo instrucciones de nivel superior las dos formas compilan sin una
+            sola advertencia y las dos imprimen 7. Lo que static compra es el aislamiento.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Devolver, alcance y sobrecarga
+      lede: >-
+        Lo que nace dentro del método se queda dentro. Y un mismo nombre puede atender a
+        varias firmas, si cada llamada tiene un ganador obvio.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · La distinción
+      title: Devolver no es imprimir
+      before:
+        label: void
+        file: imprime.cs
+        code: |
+          static void ShowMean(double a,
+                               double b)
+          {
+              Console.WriteLine((a + b) / 2);
+          }
+
+          double m = ShowMean(21.0, 39.5);
+      after:
+        label: Con retorno
+        file: devuelve.cs
+        code: |
+          static double Mean(double a,
+                             double b)
+          {
+              return (a + b) / 2;
+          }
+
+          double m = Mean(21.0, 39.5);
+      note: >-
+        La de la izquierda muestra el número y no lo entrega, así que la última línea ni
+        siquiera compila. El compilador contesta error CS0029, Cannot implicitly convert
+        type 'void' to 'double'. Si el método calcula un valor, devuélvelo; si causa un
+        efecto, void.
+
+  - code_output:
+      eyebrow: Medido
+      title: El mismo CS0103 de la semana 9, ahora con otro nombre dentro
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(result);
+
+        static double Mean(double a, double b)
+        {
+            double result = (a + b) / 2;
+            return result;
+        }
+      output: |
+        error CS0103: The name 'result'
+        does not exist in the current
+        context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - compare:
+      eyebrow: Bloque 02 · Sobrecarga
+      title: Un nombre, dos métodos, la forma que compila
+      before:
+        label: No compila
+        file: local.cs
+        code: |
+          int Mean(int a, int b)
+          {
+              return (a + b) / 2;
+          }
+          double Mean(double a, double b)
+          {
+              return (a + b) / 2;
+          }
+      after:
+        label: Sí compila
+        file: partial.cs
+        code: |
+          partial class Program
+          {
+              static int Mean(int a, int b)
+                  => (a + b) / 2;
+              static double Mean(double a,
+                                 double b)
+                  => (a + b) / 2;
+          }
+      note: >-
+        La izquierda no son dos métodos, es un nombre usado dos veces: error CS0128, A
+        local variable or function named 'Mean' is already defined in this scope. El código
+        de nivel superior ya vive en una clase llamada Program; reábrela abajo y hay
+        métodos de verdad.
+
+  - code_output:
+      eyebrow: Medido
+      title: Tres métodos Mean, y el compilador elige por los tipos
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        Console.WriteLine(Mean(1480, 1502));
+        Console.WriteLine(Mean(21.0, 39.5));
+        Console.WriteLine(Mean(1480, 1502, 1495));
+
+        partial class Program
+        {
+            static int Mean(int a, int b) => (a + b) / 2;
+            static double Mean(double a, double b) => (a + b) / 2;
+            static int Mean(int a, int b, int c) => (a + b + c) / 3;
+        }
+      output: |
+        1491
+        30.25
+        1492
+
+  - code_output:
+      eyebrow: Medido
+      title: Un char se ensancha a int antes que a ninguna otra cosa
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        Console.WriteLine(Which(5));
+        Console.WriteLine(Which(5.0));
+        Console.WriteLine(Which(5L));
+        Console.WriteLine(Which('A'));
+
+        partial class Program
+        {
+            static string Which(int v) => "sobrecarga int";
+            static string Which(double v) => "sobrecarga double";
+            static string Which(long v) => "sobrecarga long";
+        }
+      output: |
+        sobrecarga int
+        sobrecarga double
+        sobrecarga long
+        sobrecarga int
+
+  - table:
+      eyebrow: Medido
+      title: Llevas usando sobrecarga desde la semana 1
+      headers: [Miembro, Sobrecargas, Lo que eso te ahorró]
+      rows:
+        - ["Console.WriteLine", "20", "Imprimir int, double o string"]
+        - ["Convert.ToString", "36", "Convertir casi cualquier cosa"]
+        - ["Convert.ToInt32", "19", "Leer entradas de varios tipos"]
+        - ["Math.Clamp", "13", "Recortar int, double o long"]
+        - ["Math.Round", "8", "Redondear con reglas distintas"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Arreglos que entran y salen
+      lede: >-
+        Un arreglo se pasa por valor como todo lo demás, y aun así el método puede
+        cambiarlo. Esa frase no es una contradicción y hoy se mide.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: Un parámetro arreglo nunca necesita un conteo al lado
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        Console.WriteLine(Sum(rpm));
+        Console.WriteLine(Count(rpm));
+
+        static int Sum(int[] v)
+        {
+            int total = 0;
+            foreach (int x in v) total += x;
+            return total;
+        }
+
+        static int Count(int[] v) => v.Length;
+      output: |
+        10478
+        7
+
+  - code_output:
+      eyebrow: Medido
+      title: El elemento se queda escrito; el reemplazo no
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        ZeroFirst(src);
+        Console.WriteLine(src[0]);
+        Replace(src);
+        Console.WriteLine(src[0]);
+        ReplaceRef(ref src);
+        Console.WriteLine(src[0]);
+
+        static void ZeroFirst(int[] v) { v[0] = 0; }
+        static void Replace(int[] v) { v = new int[] { -1, -1, -1 }; }
+        static void ReplaceRef(ref int[] v)
+        {
+            v = new int[] { -1, -1, -1 };
+        }
+      output: |
+        0
+        0
+        -1
+
+  - code_output:
+      eyebrow: Medido
+      title: El tipo de retorno no dice si te tocó una copia o el original
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int[] w = Window(rpm, 2, 3);
+        w[0] = 0;   Console.WriteLine(rpm[2]);
+        int[] s = Same(rpm);
+        s[0] = 0;   Console.WriteLine(rpm[0]);
+
+        static int[] Window(int[] v, int start, int count)
+        {
+            int[] w = new int[count];
+            for (int i = 0; i < count; i++) w[i] = v[start + i];
+            return w;
+        }
+        static int[] Same(int[] v) { return v; }
+      output: |
+        1495
+        0
+
+  - code_output:
+      eyebrow: Medido
+      title: Un método para dos muestras, para siete o para ninguna
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        Console.WriteLine(Mean(1480, 1502));
+        int[] run = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        Console.WriteLine(Mean(run));
+        Console.WriteLine(Mean());
+
+        static double Mean(params int[] samples)
+        {
+            if (samples.Length == 0) return double.NaN;
+            int total = 0;
+            foreach (int s in samples) total += s;
+            return (double)total / samples.Length;
+        }
+      output: |
+        1491
+        1496.857142857143
+        NaN
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: >-
+        Las dos primeras líneas imprimen 98 y 98.6. ¿Qué imprimen las dos últimas?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        Console.WriteLine(C2F(37));
+        Console.WriteLine(C2F(37.0));
+        Console.WriteLine(C2F(25));
+        Console.WriteLine(C2F(25.0));
+
+        partial class Program
+        {
+            static int C2F(int c) => c * 9 / 5 + 32;
+            static double C2F(double c)
+                => c * 9.0 / 5.0 + 32.0;
+        }
+      options:
+        - '77 las dos, y por eso probar a 25 grados esconde el defecto'
+        - '77 y 77.0, porque la segunda conserva el punto decimal'
+        - '77 y 78.6, porque la división real sube el resultado'
+        - 'Un error, C2F ya está definido con ese nombre'
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Parte el Main de sesenta líneas
+      brief: >-
+        Toma un programa tuyo de la semana 8 o de la semana 9 que ya funcione y pártelo en
+        cuatro métodos con nombre. El comportamiento no puede cambiar. Córrelo antes y
+        después con las mismas entradas y guarda las dos salidas.
+      blocks:
+        - label: Entrega
+          text: >-
+            El archivo Program.cs con los cuatro métodos y las dos corridas pegadas en un
+            .txt, la de antes y la de después
+        - label: Restricción
+          text: >-
+            Marca los cuatro con static. Si alguno lee una variable que no recibió como
+            parámetro, el compilador te lo dirá con CS8421
+        - label: La prueba
+          text: >-
+            Si las dos salidas no son idénticas línea por línea, el refactor cambió algo y
+            todavía no está terminado
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Declarar no ejecuta nada
+          desc: El archivo compila, corre, no imprime y sale con 0, y el compilador te avisa con CS8321
+        - title: static es una pared, no un adorno
+          desc: Marca el método y el compilador te prohíbe leer lo de afuera. Ese es todo su trabajo
+        - title: El arreglo se comparte
+          desc: Escribir un elemento le llega al llamador; reemplazar el arreglo entero se queda adentro
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Entrega el refactor del laboratorio con las dos corridas, y agrega un método más
+        que reciba el arreglo de siete lecturas rpm y devuelva la lectura máxima junto con
+        su índice.
+      meta:
+        - [Entrega, Antes de la semana 11]
+        - [Formato, Blackboard · .cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Comportamiento", "40 %", "Las dos corridas son idénticas"]
+        - ["Aislamiento", "40 %", "Los métodos compilan con static"]
+        - ["Nombres", "20 %", "Cada nombre dice qué devuelve"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La semana que viene la pared que acabamos de levantar recibe dos agujeros con
+        etiqueta, ref y out, y encontramos el que ya estaba abierto desde antes.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

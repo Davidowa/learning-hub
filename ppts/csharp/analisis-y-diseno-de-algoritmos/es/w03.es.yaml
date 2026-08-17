@@ -1,0 +1,462 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 3
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 03 · Tema 2 · Introducción a la programación
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        El robot de la semana pasada se vuelve el compilador. Hoy averiguamos con qué
+        palabras exactas dice que no, y por qué eso es un regalo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 3 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Lenguajes y software
+          desc: Por qué existe la escalera y en qué peldaño trabajamos este semestre
+        - title: Anatomía de un programa
+          desc: Una línea, un archivo de proyecto y una clase que no se ve por ningún lado
+        - title: Sintaxis
+          desc: Comentarios, nombres, mayúsculas y los cinco errores que sí van a escribir
+        - title: Tu turno
+          desc: Romperlo a propósito y citar textual el primer mensaje de cada intento
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Ubicar C# en la escalera
+          sub: Y decir qué hace el compilador con lo que escribiste
+        - head: Distinguir compilar de interpretar
+          sub: Y por qué C# hace las dos cosas, con los archivos que deja medidos
+        - head: Leer la estructura de un programa
+          sub: Una línea, un csproj y una clase que el compilador escribió por ti
+        - head: Reconocer un error de compilación
+          sub: Archivo, línea, columna y clave, leídos en ese orden
+        - head: Aplicar las reglas de sintaxis
+          sub: Comentarios, identificadores, palabras reservadas y mayúsculas
+        - head: Separar convención de regla
+          sub: camelCase y PascalCase son un acuerdo, no algo que el compilador revise
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento y herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y lazos
+          state: todo
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones y proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Lenguajes de programación
+      lede: >-
+        Un idioma intermedio, preciso para la máquina y legible para ti. C# es el peldaño
+        de este curso, y también el que mueve Unity.
+      block: 1
+
+  - figure:
+      eyebrow: Bloque 01 · Niveles
+      title: Mientras más arriba, más se parece a cómo piensas
+      image: img/es/ct-09.png
+      caption: >-
+        C# vive en el peldaño alto. Escribes cerca de tu propio idioma y otra cosa se
+        encarga de bajarlo a lo que el procesador entiende.
+      alt: Una escalera de niveles de abstracción, del lenguaje de alto nivel al código máquina
+
+  - table:
+      eyebrow: Bloque 01 · Tema 2.1
+      title: Los peldaños de la escalera, y dónde cae C#
+      headers: [Nivel, Qué se escribe ahí, Ejemplo]
+      rows:
+        - ["Máquina", "Unos y ceros que el procesador corre", "Nadie lo escribe a mano"]
+        - ["Ensamblador", "Una instrucción del procesador por línea", "Donde importa cada ciclo"]
+        - ["Alto nivel", "Instrucciones cerca de tu idioma", "Console.WriteLine(rpm);"]
+        - ["Muy alto nivel", "Se dice el qué y no el cómo", "rpm.Sum() da 10478"]
+
+  - concept:
+      eyebrow: Bloque 01 · Tema 2.3
+      title: C# no es compilado ni interpretado, es las dos cosas
+      lead: >-
+        El compilador lee el archivo entero antes de que corra una sola línea, pero no
+        produce instrucciones del procesador. Produce un formato intermedio que el motor
+        de .NET traduce en el último momento. Por eso un error de tipo aparece antes de
+        arrancar, y el mismo archivo compilado corre en Windows y en macOS.
+      panel:
+        label: Medido en esta máquina
+        title: dotnet build deja cinco archivos, dos ejecutables
+        note: >-
+          La carpeta bin/Debug/net10.0 queda con banco.dll, banco.exe, banco.pdb,
+          banco.deps.json y banco.runtimeconfig.json. El .dll trae el programa; el .exe
+          solo sabe arrancar el motor y entregárselo.
+      steps:
+        - text: Escribes Program.cs
+        - text: El compilador revisa todo y produce un .dll
+        - text: El motor traduce y ejecuta
+          loop: ↺ y si algo no cuadra, se detiene en el paso 2
+
+  - compare:
+      eyebrow: Bloque 01 · Medido
+      title: La misma línea en dos lenguajes, dos destinos
+      before:
+        label: C# · se niega antes de arrancar
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm = "3000";
+          Console.WriteLine(rpm);
+      after:
+        label: Python 3.14.7 · ni se entera
+        file: sonda.py
+        lang: python
+        code: |
+          rpm: int = "3000"
+          print(repr(rpm), type(rpm).__name__)
+          print("programa terminado normalmente")
+      note: >-
+        C# se detiene con error CS0029: Cannot implicitly convert type 'string' to 'int',
+        marca Build FAILED y deja la carpeta de salida con cero archivos. Python imprime
+        '3000' str, sigue con la línea siguiente y termina con código 0: la anotación int
+        no se hace cumplir. Avisar tarde es malo; no avisar nunca es peor.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Anatomía de un programa
+      lede: >-
+        Una línea de código, cuatro propiedades en el archivo de proyecto y una clase que
+        el compilador escribió sin preguntarte.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Todo el andamio de un proyecto nuevo es una línea
+      filename: Program.cs
+      lang: csharp
+      output_label: Medido aquí
+      source: |
+        // dotnet new console -o banco
+        // esto es TODO el Program.cs generado:
+        Console.WriteLine("Hello, World!");
+      output: |
+        Program.cs BYTES
+        40
+        Program.cs LINEAS
+        1
+
+        dotnet run
+        Hello, World!
+
+        codigo de salida
+        0
+
+  - code:
+      eyebrow: Bloque 02 · Tema 2.2
+      title: El archivo que decide cómo se comporta esa línea
+      filename: banco.csproj
+      lang: text
+      source: |
+        <Project Sdk="Microsoft.NET.Sdk">
+
+          <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net10.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+          </PropertyGroup>
+
+        </Project>
+      annotations:
+        - label: OutputType
+          text: Exe pide un programa que arranca solo. Library produciría una biblioteca sin punto de entrada.
+        - label: TargetFramework
+          text: net10.0 es la versión de la plataforma contra la que se compila, no la del SDK que compila.
+        - label: ImplicitUsings
+          text: >-
+            enable te entrega hechos siete using. Con disable esa misma única línea deja
+            de compilar.
+        - label: Nullable
+          text: enable hace que el compilador avise cuando un valor puede venir vacío. Se cobra en la semana 5.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: ImplicitUsings no es magia, escribe un archivo
+      filename: banco.GlobalUsings.g.cs
+      lang: csharp
+      output_label: Con disable
+      source: |
+        // obj/Debug/net10.0/banco.GlobalUsings.g.cs
+        // <auto-generated/>
+        global using System;
+        global using System.Collections.Generic;
+        global using System.IO;
+        global using System.Linq;
+        global using System.Net.Http;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+      output: |
+        el archivo no se genera
+
+        Program.cs(1,1): error CS0103:
+        The name 'Console' does not
+        exist in the current context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El archivo sí es una clase, y el método tiene nombre feo
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.WriteLine(typeof(Program).FullName);
+        Console.WriteLine(args.Length);
+
+        var flags = System.Reflection.BindingFlags.Static
+            | System.Reflection.BindingFlags.NonPublic
+            | System.Reflection.BindingFlags.Public
+            | System.Reflection.BindingFlags.DeclaredOnly;
+
+        foreach (var m in typeof(Program).GetMethods(flags))
+            Console.WriteLine(m.Name);
+      output: |
+        Program
+        0
+        <Main>$
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Sintaxis, y lo que no perdona
+      lede: >-
+        Las reglas de escritura del lenguaje. No se negocian, y el mensaje casi siempre
+        dice el archivo, la línea y la columna donde te resbalaste.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Un punto y coma de menos, y no queda nada que correr
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        // la linea mide 34 caracteres
+        Console.WriteLine("Hello, World!")
+        //                                ^ columna 35
+      output: |
+        Program.cs(2,35): error CS1002:
+        ; expected
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+        bin\Debug\net10.0
+        (0 archivos)
+
+  - code_output:
+      eyebrow: Bloque 03 · Tema 2.4
+      title: Comentarios, mayúsculas y tres variables que suenan igual
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int rpm = 1500;      // rpm nominal del transportador
+        /* un bloque
+           de varias lineas */
+        int Rpm = 1502;      // OTRA variable: distingue el caso
+        int RPM = 1495;
+
+        Console.WriteLine($"rpm={rpm} Rpm={Rpm} RPM={RPM}");
+        Console.WriteLine("distintas: " + (rpm != Rpm));
+
+        string texto = "esto // no es un comentario";
+        Console.WriteLine(texto);
+
+        bool igual = "Console" == "console";
+        Console.WriteLine("Console vs console: " + igual);
+      output: |
+        rpm=1500 Rpm=1502 RPM=1495
+        distintas: True
+        esto // no es un comentario
+        Console vs console: False
+
+  - table:
+      eyebrow: Bloque 03 · Tema 2.4
+      title: Qué puede llamarse identificador y qué no
+      headers: [Nombre, Legal, Qué contesta el compilador]
+      rows:
+        - ["rpm", "sí", "Empieza con letra"]
+        - ["_tempC", "sí", "El guion bajo también abre"]
+        - ["sensor2", "sí", "El dígito va después del primero"]
+        - ["2sensor", "no", "CS1001: Identifier expected"]
+        - ["class", "no", "CS1001, y seis errores más"]
+        - ["@class", "sí", "Existe, pero aquí no se usa"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Un solo descuido produce siete errores
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int class = 7;
+      output: |
+        Program.cs(1,5): error CS1001:
+        Identifier expected
+
+        ...y seis errores mas, todos
+        de la misma linea
+
+        Build FAILED.
+            0 Warning(s)
+            7 Error(s)
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Los otros cuatro
+      title: Cuatro descuidos más, con lo que devuelve cada uno
+      items:
+        - label: int 2sensor = 7;
+          title: Un identificador que abre con dígito
+          desc: >-
+            Program.cs(1,5): error CS1001: Identifier expected. El compilador leyó int,
+            esperaba un nombre y se encontró un número.
+        - label: Console.writeline(rpm);
+          title: Mayúscula mal puesta en un nombre ajeno
+          desc: >-
+            Program.cs(2,9): error CS0117: 'Console' does not contain a definition for
+            'writeline'. El tipo existe; el miembro con ese nombre no.
+        - label: Console.WriteLine(Rpm);
+          title: Mayúscula mal puesta en un nombre tuyo
+          desc: >-
+            Program.cs(2,19): error CS0103: The name 'Rpm' does not exist in the current
+            context. El mismo descuido, otro mensaje, porque el nombre es tuyo.
+        - label: /* un /* anidado */ */
+          title: Comentarios de bloque, que no se anidan
+          desc: >-
+            Program.cs(1,36): error CS1003: Syntax error, ',' expected. El primer cierre
+            cierra, y lo que sigue vuelve a ser código.
+
+  - table:
+      eyebrow: Bloque 03 · Acuerdo, no regla
+      title: Cómo se nombran las cosas en este curso
+      headers: [Cosa, Convención, Ejemplo del curso]
+      rows:
+        - ["Variable local", "camelCase", "rpm, sumaMuestras, limiteC"]
+        - ["Constante", "PascalCase", "Nominal, Setpoint"]
+        - ["Método", "PascalCase, y un verbo", "LeerMuestra, MediaDeBanda"]
+        - ["Tipo", "PascalCase", "Corrida, Muestra, Estado"]
+        - ["Valor de enumeración", "PascalCase", "Ok, Alerta, Falla"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Los dos programas traen el mismo descuido. ¿Dan el mismo error?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // A
+        int rpm = 1500;
+        Console.writeline(rpm);
+
+        // B
+        int rpm = 1500;
+        Console.WriteLine(Rpm);
+      options:
+        - 'Sí, los dos dicen que ese nombre no existe'
+        - 'No, A devuelve CS0117 y B devuelve CS0103'
+        - 'Sí, los dos son CS1001 por identificador'
+        - 'Ninguno falla, C# no distingue mayúsculas'
+
+  - trace:
+      eyebrow: Respuesta
+      title: El mismo descuido, dos mensajes distintos
+      headers: [Escrito, De quién es el nombre, Qué contesta]
+      rows:
+        - ["Console.writeline", "del framework", "CS0117: 'Console' does not contain a definition for 'writeline'"]
+        - ["Rpm en vez de rpm", "tuyo", "CS0103: The name 'Rpm' does not exist in the current context"]
+      verdict: >-
+        El tipo Console sí existe, así que el compilador puede decir exactamente qué
+        miembro le falta. Rpm no existe en ningún lado, y lo único que puede decir es que
+        no lo conoce. Misma causa, dos mensajes, y por eso se lee el mensaje completo en
+        lugar de adivinar.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Rómpelo a propósito, cinco veces
+      brief: >-
+        Toma el andamio de un proyecto nuevo, hazlo correr, y después provoca los cinco
+        errores de la sesión uno por uno. De cada intento copia el primer mensaje
+        completo, con archivo, línea, columna y clave.
+      blocks:
+        - label: Entrega
+          text: Una tabla con los cinco intentos y su primer mensaje, copiado textual
+        - label: La regla
+          text: >-
+            Se arregla el primero, se recompila, y hasta entonces se mira el siguiente.
+            Arreglar de abajo hacia arriba es como se pierde una tarde entera.
+        - label: La trampa
+          text: >-
+            int class = 7; devuelve siete errores de un solo descuido. Si los cuentas y te
+            asustas, ya caíste en ella.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El compilador lee todo antes de correr
+          desc: Por eso un error de tipo aparece antes de que el motor gire, y no a media corrida
+        - title: Un error es una compuerta, no un aviso
+          desc: Después de Build FAILED la carpeta de salida tiene cero archivos y no hay nada que ejecutar
+        - title: Se lee el primer mensaje, no el último
+          desc: Un descuido puede dar siete errores, y los otros seis se van al arreglar el primero
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Reproduce en tu máquina los cinco errores de sintaxis de la sesión y entrega una
+        tabla con el primer mensaje de cada uno, copiado sin editar, más una línea que
+        diga qué fue lo que el compilador leyó mal.
+      meta:
+        - [Entrega, Antes de la semana 4]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Los cinco casos", "40 %", "Los cinco fallan al compilar y cada uno por su propia razón"]
+        - ["Mensaje textual", "40 %", "Archivo, línea, columna y clave, copiados sin retocar"]
+        - ["La causa", "20 %", "Una línea por caso que explique qué leyó mal el compilador"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La semana que entra, ya que la máquina se niega a aceptar tipos mal puestos,
+        conviene saber cuáles son los tipos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

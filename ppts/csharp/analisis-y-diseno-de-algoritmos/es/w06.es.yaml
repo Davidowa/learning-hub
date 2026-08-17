@@ -1,0 +1,484 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 6
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 06 · Tema 4.4 · Estructuras de selección
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        El rombo que dibujaste en la semana 2 por fin compila. Hoy el programa deja de
+        contestar siempre lo mismo y empieza a decidir.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 6 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La decisión
+          desc: El if, sus llaves, y la línea que corre pase lo que pase
+        - title: Comparar
+          desc: Seis operadores, un bool que se guarda, y el valor que cae justo en el límite
+        - title: La escalera
+          desc: else if encadenado, donde gana la primera condición que se cumple
+        - title: Tu turno
+          desc: El enclavamiento de refrigerante del banco, primero en papel
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un if con su bloque
+          sub: Y distinguir qué líneas dependen de la condición y cuáles corren de todos modos
+        - head: Explicar por qué un igual no es dos iguales
+          sub: En C# el primero ni siquiera compila, salvo en el caso que abre la válvula
+        - head: Guardar una comparación en un bool
+          sub: Una condición es un valor con nombre, no algo que solo viva dentro del paréntesis
+        - head: Elegir entre mayor que y mayor o igual
+          sub: La primera muestra del banco vale 1480, exactamente el límite inferior
+        - head: Ordenar una escalera de else if
+          sub: Gana la primera rama que se cumple, y el compilador no dice nada si la ordenaste mal
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar, y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea de código
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: now
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y el proyecto integrador
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La decisión que compila
+      lede: >-
+        El rombo de la semana 2 salía con dos flechas. Las llaves son la flecha del SÍ, y
+        todo lo que quede fuera de ellas corre de las dos maneras.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Las llaves son la flecha del SÍ del rombo
+      lead: >-
+        En el diagrama de flujo el rombo tenía una salida por arriba y otra por abajo. En
+        C# la de arriba son las llaves que siguen al if, y la de abajo es todo lo que
+        viene después de la llave que cierra. El compilador no lee tu sangría para
+        decidirlo. Lee las llaves, y solo las llaves.
+      panel:
+        label: La prueba del dedo
+        title: Lo que queda fuera de las llaves corre siempre
+        note: >-
+          Es la misma traza de la semana 2, con la misma regla. Pon el dedo en la línea de
+          abajo y pregúntate si el rombo puede evitarla. Si la respuesta es no, esa línea
+          no pertenece a la decisión.
+      steps:
+        - text: Se evalúa la condición y contesta verdadero o falso
+        - text: Si contestó verdadero, corre el bloque entre llaves
+        - text: Si contestó falso, el bloque se salta entero
+          loop: ↺ y la línea de abajo corre en los dos casos
+
+  - code:
+      eyebrow: Bloque 01 · El if
+      title: El enclavamiento de refrigerante del reductor
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double refrig = 31.4;
+
+        if (refrig > 28.0)
+        {
+            Console.WriteLine("alarma: refrigerante caliente");
+            Console.WriteLine("válvula de derivación abierta");
+        }
+
+        Console.WriteLine($"lectura {refrig} C registrada");
+      annotations:
+        - label: La condición
+          text: >-
+            Entre paréntesis va algo que solo vale verdadero o falso. Aquí, el termopar
+            contra los 28 grados.
+        - label: Las llaves
+          text: >-
+            Marcan el bloque. Las dos líneas de adentro corren únicamente cuando la
+            condición se cumple.
+        - label: Fuera del bloque
+          text: >-
+            Fuera de las llaves, la última línea se registra con alarma y sin ella. Es la
+            otra salida del rombo.
+        - label: Riesgo
+          text: >-
+            Sin llaves solo la primera línea es del if. La segunda abre la derivación
+            siempre y nadie avisa.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: El mismo programa con la lectura por debajo del límite
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        double refrig = 26.8;
+
+        if (refrig > 28.0)
+        {
+            Console.WriteLine("alarma: refrigerante caliente");
+            Console.WriteLine("válvula de derivación abierta");
+        }
+
+        Console.WriteLine($"lectura {refrig} C registrada");
+      output: |
+        lectura 26.8 C registrada
+
+  - code_output:
+      eyebrow: Medido · al compilar
+      title: Un igual guarda y dos iguales preguntan
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int rpm = 3000;
+
+        if (rpm = 3000)
+        {
+            Console.WriteLine("nunca llega aquí");
+        }
+      output: |
+        Program.cs(3,5): error CS0029
+        Cannot implicitly convert
+        type 'int' to 'bool'
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Medido · el caso que sí compila
+      title: El único descuido que el compilador deja pasar abre la válvula
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y al correr
+      source: |
+        bool valvulaAbierta = false;
+
+        if (valvulaAbierta = true)
+        {
+            Console.WriteLine("el bloque sí se ejecuta");
+        }
+
+        Console.WriteLine($"valvulaAbierta -> {valvulaAbierta}");
+      output: |
+        warning CS0665
+        Assignment in conditional
+        expression is always
+        constant; did you mean to
+        use == instead of = ?
+
+        el bloque sí se ejecuta
+        valvulaAbierta -> True
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Comparar, y el límite
+      lede: >-
+        Seis operadores producen toda la materia prima de una decisión, y dos de ellos se
+        distinguen solamente en el valor que cae exactamente sobre la raya.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Comparación
+      title: Los seis operadores con rpm = 1480 y canal = 'A'
+      headers: [Operador, Pregunta, Ejemplo, Resultado]
+      rows:
+        - ["==", "¿Son iguales?", "rpm == 1500", "False"]
+        - ["!=", "¿Son distintos?", "canal != 'B'", "True"]
+        - [">", "¿Es mayor?", "rpm > 1520", "False"]
+        - ["<", "¿Es menor?", "rpm < 1480", "False"]
+        - [">=", "¿Es mayor o igual?", "rpm >= 1480", "True"]
+        - ["<=", "¿Es menor o igual?", "rpm <= 1520", "True"]
+
+  - code_output:
+      eyebrow: Medido
+      title: Una condición es un valor que puedes guardar
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        int rpm = 3200;
+        bool sobre = rpm > 3000;
+
+        Console.WriteLine($"sobrevelocidad a {rpm} rpm -> {sobre}");
+        Console.WriteLine($"3000 >  3000 -> {3000 > 3000}");
+        Console.WriteLine($"3000 >= 3000 -> {3000 >= 3000}");
+        Console.WriteLine($"1480 <  1480 -> {1480 < 1480}");
+        Console.WriteLine($"1480 <= 1480 -> {1480 <= 1480}");
+      output: |
+        sobrevelocidad a 3200 rpm -> True
+        3000 >  3000 -> False
+        3000 >= 3000 -> True
+        1480 <  1480 -> False
+        1480 <= 1480 -> True
+
+  - stat:
+      eyebrow: La regla de banda del curso
+      value: 2 de 7
+      text: >-
+        muestras fuera de banda en la corrida rpm, bajo la regla r < 1480 || r > 1520
+      note: >-
+        Con la otra convención, r <= 1480 || r >= 1520, son 3 de 7. La primera muestra vale
+        exactamente 1480 y lo único que decide de qué lado cae es el operador que elegiste.
+
+  - code_output:
+      eyebrow: Bloque 02 · Caso de videojuegos
+      title: La caja envolvente son cuatro comparaciones unidas por &&
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        static bool Solapan(
+            double ax, double ay, double aw, double ah,
+            double bx, double by, double bw, double bh)
+            => ax < bx + bw && ax + aw > bx
+            && ay < by + bh && ay + ah > by;
+
+        bool lejos = Solapan(0, 0, 10, 10, 20, 0, 10, 10);
+        bool cruce = Solapan(0, 0, 10, 10, 5, 5, 10, 10);
+        bool canto = Solapan(0, 0, 10, 10, 10, 0, 10, 10);
+
+        Console.WriteLine($"separadas -> {lejos}");
+        Console.WriteLine($"solapadas -> {cruce}");
+        Console.WriteLine($"de canto  -> {canto}");
+      output: |
+        separadas -> False
+        solapadas -> True
+        de canto  -> False
+
+  - code_output:
+      eyebrow: Bloque 02 · Cadenas
+      title: Sobre string el doble igual siempre compara el valor
+      filename: Program.cs
+      lang: csharp
+      output_label: Salida
+      source: |
+        string a = "SENSOR-07";
+        string c = "SENSOR-" + "07";
+        string d = "SENSOR-" + 07.ToString("00");
+        bool caso = "Sensor-07" == a;
+
+        Console.WriteLine($"a == c    {a == c}");
+        Console.WriteLine($"ref a c   {ReferenceEquals(a, c)}");
+        Console.WriteLine($"a == d    {a == d}");
+        Console.WriteLine($"ref a d   {ReferenceEquals(a, d)}");
+        Console.WriteLine($"minúsculas {caso}");
+      output: |
+        a == c    True
+        ref a c   True
+        a == d    True
+        ref a d   False
+        minúsculas False
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La escalera
+      lede: >-
+        Tres o más categorías excluyentes, revisadas de arriba abajo. Gana la primera que
+        se cumple y las de abajo ni se leen.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · else if
+      title: La tabla de bandas del tacómetro, como escalera
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static string Banda(int rpm)
+        {
+            if (rpm < 0) return "inválida";
+            else if (rpm < 800) return "en reposo";
+            else if (rpm < 3000) return "nominal";
+            else return "sobrevelocidad";
+        }
+
+        foreach (int r in new[] { -5, 500, 799, 800, 3000 })
+            Console.WriteLine($"Banda({r,5}) = {Banda(r)}");
+      annotations:
+        - label: De arriba abajo
+          text: >-
+            Se revisa el primer peldaño. Si falla, el segundo. En cuanto uno se cumple, el
+            resto ni se evalúa.
+        - label: El peldaño imposible
+          text: >-
+            El primero atrapa la lectura negativa, que ningún tacómetro sano da y que
+            delata un cable suelto.
+        - label: El else final
+          text: >-
+            Recoge todo lo que no cayó en ningún peldaño. Sin él quedarían lecturas sin
+            clasificar.
+        - label: Riesgo
+          text: >-
+            El orden es parte de la lógica. Sube un peldaño de lugar y la escalera contesta
+            otra cosa sin avisar.
+          accent: true
+
+  - trace:
+      eyebrow: Medido
+      title: Lo que contesta la escalera en cinco lecturas
+      headers: [Lectura, Peldaño que gana, Lo que devuelve]
+      rows:
+        - ["-5", "rpm < 0", "inválida"]
+        - ["500", "rpm < 800", "en reposo"]
+        - ["799", "rpm < 800", "en reposo"]
+        - ["800", "rpm < 3000", "nominal"]
+        - ["3000", "else", "sobrevelocidad"]
+      verdict: >-
+        799 sigue en reposo y 800 ya es nominal. El peldaño dice estrictamente menor, así
+        que el valor del límite pertenece siempre a la banda de arriba.
+
+  - code_output:
+      eyebrow: Medido · el reordenamiento
+      title: Sube un peldaño y el tacómetro desconectado pasa por reposo
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y al correr
+      source: |
+        static string Banda(int rpm)
+        {
+            if (rpm < 800) return "en reposo";
+            else if (rpm < 0) return "inválida";
+            else if (rpm < 3000) return "nominal";
+            else return "sobrevelocidad";
+        }
+
+        Console.WriteLine($"Banda(-5) = {Banda(-5)}");
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        Banda(-5) = en reposo
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder la decisión
+      items:
+        - label: Error 01
+          title: Un igual en lugar de dos
+          desc: >-
+            Sobre un int es CS0029 y ni compila. Sobre un bool es la advertencia CS0665,
+            compila, y deja la válvula abierta.
+        - label: Error 02
+          title: Escribir el bloque sin llaves
+          desc: >-
+            Sin llaves, solo la línea que sigue al if pertenece a la decisión. La siguiente
+            corre siempre, aunque la sangría diga otra cosa.
+        - label: Error 03
+          title: Equivocar el operador del límite
+          desc: >-
+            Mayor que deja fuera al valor que cae justo sobre la raya. Mayor o igual lo
+            mete. Sobre la muestra de 1480 eso cambia el conteo del término.
+        - label: Error 04
+          title: Ordenar mal la escalera
+          desc: >-
+            Gana el primer peldaño que se cumple. Si el más amplio quedó arriba, los de
+            abajo son código muerto y nada te lo advierte.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Con la regla exclusiva, ¿cuántas de las siete lecturas quedan fuera de banda?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495,
+                      1533, 1471, 1509, 1488 };
+
+        int fuera = 0;
+        foreach (int r in rpm)
+            if (r <= 1480 || r >= 1520) fuera++;
+
+        Console.WriteLine(fuera);
+      options:
+        - "2, las mismas que con la regla del curso"
+        - "3, porque la muestra de 1480 ahora cae fuera"
+        - "0, porque ninguna lectura toca los límites"
+        - "7, porque el operador atrapa todo el arreglo"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El enclavamiento de refrigerante, de la hoja al código
+      brief: >-
+        Escribe la escalera que clasifica la temperatura del reductor en cuatro bandas y
+        que además decide si abre la derivación. Toma la lectura por teclado y prueba las
+        tres bandas más el valor exacto de cada frontera.
+      blocks:
+        - label: Entrega
+          text: El Program.cs y las corridas que caen en cada banda, con su salida pegada
+        - label: Restricción
+          text: >-
+            Las bandas tienen que ser excluyentes. Ninguna lectura puede clasificarse de
+            dos maneras.
+        - label: La prueba
+          text: >-
+            Corre el valor exacto de cada frontera. Ahí se descubre si querías mayor que o
+            mayor o igual que.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Las llaves son la estructura
+          desc: >-
+            La sangría es para tus ojos. El compilador lee las llaves, y lo que queda fuera
+            de ellas corre pase lo que pase
+        - title: El límite lo decide el operador
+          desc: >-
+            La muestra de 1480 está dentro con menor que y fuera con menor o igual que. Por
+            eso la regla se escribe completa en cada lámina donde aparece el conteo
+        - title: La escalera va de lo estrecho a lo amplio
+          desc: >-
+            Gana el primer peldaño que se cumple, y ordenarla al revés compila sin una sola
+            advertencia
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Dibuja el diagrama de flujo de la escalera del enclavamiento, marca en él dónde cae
+        la muestra de 1480, y escribe a mano la rama que predices para cinco lecturas.
+        Después corre el programa y compara renglón por renglón.
+      meta:
+        - [Entrega, Antes de la semana 7]
+        - [Formato, Blackboard · PDF del diagrama y Program.cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Diagrama", "40 %", "Los rombos y sus dos salidas están completos y en orden"]
+        - ["Predicción", "40 %", "Las cinco ramas predichas coinciden con la corrida"]
+        - ["El límite", "20 %", "La muestra de 1480 aparece marcada y justificada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, condiciones que se combinan, decisiones que viven dentro de otras
+        y el switch que se niega a compilar cuando el orden está mal.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

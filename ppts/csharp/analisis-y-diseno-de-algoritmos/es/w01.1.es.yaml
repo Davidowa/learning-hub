@@ -1,0 +1,471 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 1.1
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Puente · Herramientas de apoyo
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Salir del salón con un entorno de C# instalado y con licencia, y con una segunda
+        forma de correr el código para cuando el IDE falle.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, Puente · Semana 1]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La cadena
+          desc: Cinco eslabones encadenados, y el orden en que se piden
+        - title: La instalación
+          desc: Windows y macOS en paralelo, con las diferencias que cuestan una tarde
+        - title: La primera corrida
+          desc: Una línea generada, y las tres cosas invisibles que la hacen compilar
+        - title: Sin IDE
+          desc: El mismo binario lanzado de tres maneras distintas
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Encadenar las cuentas en el orden correcto
+          sub: Por qué la licencia académica depende de la verificación de GitHub
+        - head: Instalar el entorno en su sistema operativo
+          sub: Windows y macOS, con las diferencias que conviene saber antes de descargar
+        - head: Leer el proyecto que genera la herramienta
+          sub: Una línea de código, cuatro propiedades y siete using que nadie escribió
+        - head: Correr el mismo programa sin abrir el IDE
+          sub: >-
+            Tres lanzadores: dotnet run, el ejecutable directo y dotnet sobre el dll
+        - head: Diagnosticar un entorno que no compila
+          sub: Qué mirar primero cuando el compilador dice que Console no existe
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cuatro bloques, diecisiete semanas
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento y herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones y repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: todo
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones y proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La cadena de dependencias
+      lede: >-
+        Cada eslabón desbloquea el siguiente. Si te saltas uno, el que sigue te pide algo
+        que todavía no tienes.
+      block: 1
+
+  - steps:
+      eyebrow: Bloque 01 · El orden
+      title: Cinco eslabones, y se piden en este orden
+      items:
+        - label: '01'
+          title: Cuenta de GitHub
+          desc: >-
+            Con tu correo institucional y un usuario que puedas poner en un currículum
+        - label: '02'
+          title: Student Developer Pack
+          desc: La verificación de estudiante. Tarda de minutos a un par de días.
+        - label: '03'
+          title: Cuenta de JetBrains
+          desc: Se crea con la misma cuenta de GitHub ya verificada
+        - label: '04'
+          title: Toolbox y Rider
+          desc: Toolbox instala y actualiza. Rider es el IDE que vas a abrir.
+        - label: '05'
+          title: SDK de .NET 10
+          desc: El compilador. Es lo único que de verdad no puede faltar.
+
+  - method:
+      eyebrow: Bloque 01 · Cuentas
+      title: La cuenta con la que vas a firmar tu trabajo
+      statement: >-
+        El segundo factor no es opcional y el nombre de usuario no es un chiste privado.
+        Las dos cosas te van a acompañar bastantes más años que esta materia.
+      points:
+        - label: Segundo factor
+          text: >-
+            Actívalo hoy y guarda los códigos de respaldo fuera del teléfono. Perder el
+            acceso a GitHub es perder la licencia.
+        - label: El nombre
+          text: >-
+            Va a aparecer en cada commit y en cada entrega. Tu nombre real o algo cercano,
+            no un apodo de secundaria.
+        - label: El correo
+          text: >-
+            El institucional es el que la verificación de estudiante reconoce. Con el
+            personal el paquete no se aprueba.
+
+  - tiers:
+      eyebrow: Bloque 01 · Qué desbloquea cada eslabón
+      title: Para qué sirve cada cuenta
+      items:
+        - key: '01'
+          title: GitHub
+          desc: >-
+            Identidad y repositorio. Es también lo que la verificación de estudiante
+            consulta.
+        - key: '02'
+          title: Student Pack
+          desc: >-
+            La licencia académica de JetBrains y de otras herramientas, gratis mientras
+            seas estudiante.
+        - key: '03'
+          title: Toolbox
+          desc: >-
+            Instala, actualiza y desinstala Rider sin que tengas que ir a buscar versiones
+            a mano.
+        - key: '04'
+          title: SDK de .NET
+          desc: >-
+            Compila y ejecuta. Todo lo que veas en clase corre con esto y con nada más.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La instalación, en los dos sistemas
+      lede: >-
+        Los mismos pasos, dos sistemas operativos, y unas cuantas diferencias que conviene
+        conocer antes de descargar nada.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Concepto
+      title: Se instalan dos cosas, y solo una es obligatoria
+      lead: >-
+        Rider es un editor con un depurador adentro. El SDK es el compilador. El editor te
+        ayuda a escribir, pero quien acepta o rechaza tu código es el SDK. En este curso
+        Rider es un IDE compatible, no el verbo obligatorio, y todo lo que veas en clase
+        corre con dotnet run desde una terminal.
+      panel:
+        label: Por qué importa
+        title: Si el IDE falla, el compilador sigue ahí
+        note: >-
+          El día de la entrega, cuando la licencia caduque o el IDE no abra, la terminal
+          sigue compilando igual.
+      steps:
+        - text: El SDK compila y ejecuta
+        - text: El IDE edita, navega y depura
+        - text: Los dos se instalan por separado
+          loop: ↺ y el proyecto se puede presentar solo con el primero
+
+  - table:
+      eyebrow: Bloque 02 · Paso a paso
+      title: Windows y macOS, lado a lado
+      headers: [Paso, Windows, macOS]
+      rows:
+        - ["Toolbox", "Instalador .exe", "Imagen .dmg y arrastrar"]
+        - ["Primer arranque", "SmartScreen puede avisar", "Gatekeeper pide permiso"]
+        - ["Arquitectura", "x64", "arm64 en Apple silicon"]
+        - ["SDK de .NET", "Instalador .exe de 10.0", "Instalador .pkg de 10.0"]
+        - ["Comprobación", "dotnet --version", "dotnet --version"]
+        - ["Código de fallo", "-532462766", "Se mide en el salón"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Si algo falla
+      title: Cuatro tropiezos de instalación, y qué hacer
+      items:
+        - label: Error 01
+          title: La verificación sigue pendiente
+          desc: >-
+            El Student Pack puede tardar días. Instala el SDK mientras esperas, porque no
+            necesita licencia de nada.
+        - label: Error 02
+          title: dotnet no se reconoce
+          desc: >-
+            Abriste la terminal antes de que el instalador escribiera la ruta. Ciérrala y
+            vuelve a abrirla.
+        - label: Error 03
+          title: Rider no encuentra el SDK
+          desc: >-
+            Instálalo aparte y vuelve a abrir Rider. Toolbox no trae compilador, solo
+            instala el editor.
+        - label: Error 04
+          title: La versión instalada no es la 10
+          desc: >-
+            El curso está medido sobre 10.0. Con otra versión los números de las láminas
+            pueden no coincidir.
+
+  - steps:
+      eyebrow: Bloque 02 · Lista de verificación
+      title: Las cinco casillas que se califican hoy
+      items:
+        - label: '01'
+          title: GitHub verificado
+          desc: La cuenta existe y el segundo factor está activo
+        - label: '02'
+          title: Student Pack aprobado
+          desc: Llegó el correo de aprobación o el estado dice activo
+        - label: '03'
+          title: Rider abierto
+          desc: Con la licencia académica reconocida y sin cuenta atrás
+        - label: '04'
+          title: SDK instalado
+          desc: dotnet --version contesta en una terminal recién abierta
+        - label: '05'
+          title: Programa corriendo
+          desc: Un proyecto nuevo imprime algo y termina bien
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La primera corrida
+      lede: >-
+        Una línea de código escrita por la herramienta, y tres cosas invisibles que la
+        hacen compilar.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · El andamio
+      title: Lo que escribe dotnet new console, íntegro
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // dotnet new console -o andamio
+        // El Program.cs generado, completo, sin recortes:
+
+        Console.WriteLine("Hello, World!");
+      annotations:
+        - label: Una línea
+          text: >-
+            Cuarenta bytes y una sola línea. Todo lo más largo que hayas visto en un
+            tutorial fue la edición de alguien.
+        - label: Lo que no está
+          text: >-
+            No hay using, no hay clase y no hay Main. Nada de eso desapareció, está
+            generado, y hoy lo vamos a abrir.
+        - label: Corre
+          text: >-
+            El andamio intacto se ejecuta y termina con código 0. De ahí parte todo lo
+            demás del semestre.
+        - label: Riesgo
+          text: >-
+            Editarlo antes de correrlo una vez te deja sin saber si falló el entorno o
+            falló tu cambio.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: Cuarenta bytes, una línea, código 0
+      filename: Program.cs
+      lang: csharp
+      output_label: La sonda
+      source: |
+        // El andamio recién generado, sin editar nada:
+        Console.WriteLine("Hello, World!");
+      output: |
+        ===== BYTES =====
+        40
+        ===== LINES =====
+        1
+        ===== dotnet run =====
+        Hello, World!
+        ===== LASTEXITCODE =====
+        0
+
+  - code:
+      eyebrow: Bloque 03 · El proyecto
+      title: Cuatro propiedades deciden cómo se comporta esa línea
+      filename: andamio.csproj
+      lang: xml
+      source: |
+        <Project Sdk="Microsoft.NET.Sdk">
+
+          <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net10.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+          </PropertyGroup>
+
+        </Project>
+      annotations:
+        - label: TargetFramework
+          text: >-
+            net10.0. Es la versión de la plataforma contra la que se compila tu código.
+        - label: ImplicitUsings
+          text: >-
+            enable. Aquí se decide si los using te llegan hechos o los escribes tú.
+        - label: Nullable
+          text: >-
+            enable. El compilador avisa cuando una referencia puede venir vacía.
+        - label: OutputType
+          text: >-
+            Exe. Produce un programa que se puede lanzar, no una biblioteca.
+
+  - code:
+      eyebrow: Medido · lo que genera el compilador
+      title: Los siete using que nunca escribiste
+      filename: andamio.GlobalUsings.g.cs
+      lang: csharp
+      source: |
+        // obj/Debug/net10.0/andamio.GlobalUsings.g.cs
+        // <auto-generated/>
+        global using System;
+        global using System.Collections.Generic;
+        global using System.IO;
+        global using System.Linq;
+        global using System.Net.Http;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+      annotations:
+        - label: Se puede abrir
+          text: >-
+            El archivo está en el disco, dentro de obj. No es magia del lenguaje, es un
+            archivo que alguien generó.
+        - label: System primero
+          text: >-
+            De ahí sale Console, y por eso la línea del andamio compila sin que escribas
+            nada arriba.
+        - label: Con disable
+          text: >-
+            Con la propiedad apagada el archivo ni siquiera se genera.
+        - label: Riesgo
+          text: >-
+            obj se borra al limpiar y se rehace al compilar. No lo edites, porque se
+            sobrescribe.
+          accent: true
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Apagas ImplicitUsings y no tocas el código. ¿Qué pasa?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // p.csproj, una sola propiedad cambiada:
+        //   <ImplicitUsings>disable</ImplicitUsings>
+
+        // Program.cs, sin una letra de diferencia:
+        Console.WriteLine("Hello, World!");
+      options:
+        - 'Compila igual, porque los using viven dentro del SDK.'
+        - 'Compila con una advertencia y de todos modos corre.'
+        - 'No compila, porque el compilador ya no reconoce Console.'
+        - 'Compila, pero imprime una línea vacía.'
+
+  - code_output:
+      eyebrow: Medido
+      title: La misma línea, con ImplicitUsings apagado
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        // p.csproj:
+        //   <ImplicitUsings>disable</ImplicitUsings>
+
+        Console.WriteLine("Hello, World!");
+      output: |
+        Program.cs(1,1): error CS0103:
+        The name 'Console' does not
+        exist in the current context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - trace:
+      eyebrow: Medido
+      title: El mismo binario, tres lanzadores
+      headers: ["Lanzador", "Lo que imprime", "Código"]
+      rows:
+        - ["dotnet run", "media 1496.857142857143", "0"]
+        - ["El .exe directo", "media 1496.857142857143", "0"]
+        - ["dotnet p.dll", "media 1496.857142857143", "0"]
+      verdict: >-
+        Que la ventana se cierre sola al hacer doble clic es comportamiento del lanzador,
+        no del programa. Eso se enseña con una grabación rotulada como demostración,
+        porque no hay forma de medirlo desde adentro.
+
+  - stat:
+      eyebrow: Medido · a la fecha de esta lámina
+      value: 25 de 25
+      text: >-
+        sondas del repositorio corren solo con dotnet run, sin ningún IDE con licencia
+        instalado.
+      note: >-
+        El número se actualiza conforme se agregan láminas y sigue siendo verificable con
+        un script del propio repositorio. Rider es un IDE compatible, no el verbo
+        obligatorio.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tu primer programa editado
+      brief: >-
+        Crea un proyecto nuevo, cambia la línea del andamio para que imprima tu nombre, tu
+        carrera y la máquina o el sistema que te gustaría construir, y córrelo con
+        dotnet run.
+      blocks:
+        - label: Entrega
+          text: >-
+            Captura de la terminal con el código a la vista y la salida debajo.
+        - label: Sin IDE
+          text: >-
+            Hazlo una vez desde la terminal aunque tengas Rider abierto. Es tu plan B del
+            semestre.
+        - label: Pista
+          text: >-
+            Si la ventana se cierra sola al hacer doble clic, agrega Console.ReadKey(); al
+            final.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El andamio es una línea
+          desc: >-
+            Cuarenta bytes y ningún using a la vista. Lo que parecía magia resultó ser un
+            archivo generado que se puede abrir
+        - title: El SDK compila, el IDE ayuda
+          desc: >-
+            Rider es un IDE compatible. El compilador es lo único sin lo cual no hay curso,
+            y vive en la terminal
+        - title: El lanzador no cambia el programa
+          desc: >-
+            dotnet run, el ejecutable directo y dotnet sobre el dll imprimen lo mismo y
+            terminan con el mismo código
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Sube una captura donde se vean tres cosas en la misma pantalla: la salida de
+        dotnet --version, la de Environment.Version y tu programa editado corriendo.
+      meta:
+        - [Entrega, Antes de la semana 2]
+        - [Formato, Blackboard · imagen .png]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Entorno", "40 %", "Se ven las dos versiones y no son el mismo número"]
+        - ["Programa", "40 %", "Tu texto editado corre y su salida se ve"]
+        - ["Terminal", "20 %", "La corrida se hizo con dotnet run"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión se trabaja sin teclado. Trae pluma, porque primero se piensa el
+        problema y después se escribe el código.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

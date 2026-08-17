@@ -1,0 +1,538 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 8
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 08 · Unit 4.5 · Repetition · First midterm
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Every loop you write today has an exit you can point at. Today you also learn the
+        two keywords that point at it from inside the body.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 8 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The four beats
+          desc: Initialise, check, body and change. Without the fourth it never ends.
+        - title: Input that cannot kill
+          desc: A do-while that turns down what does not work and keeps the console
+        - title: break and continue
+          desc: Cut the loop or skip one pass, with the exact counts for each one
+        - title: The first midterm
+          desc: What it covers, how it is taken, and what you may bring to the room
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Name the four beats of a loop
+          sub: And point at the line that eventually makes the condition false
+        - head: Choose between while and do-while
+          sub: By whether the body may run zero times or has to run at least once
+        - head: Read a sample without killing the program
+          sub: With int.TryParse inside a do-while that guards the format and then the range
+        - head: Use break and continue with counts
+          sub: And say how many passes each one ends across the seven bench readings
+        - head: Measure the price of convergence
+          sub: By counting the iterations a bisection spends for every tolerance you ask for
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line of code is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: while, and the four beats
+      lede: Initialise, check, body, change. If you cannot point at the change, do not run the program.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The line that makes the condition false has a line number
+      lead: >-
+        A loop is not a vague idea about repeating. It is four beats that happen in order
+        and that you can point at in the code. The first prepares the control variable, the
+        second judges it, the third does the work and the fourth moves the variable towards
+        the end. When someone shows you a loop, ask about the fourth.
+      panel:
+        label: The question to answer before running anything
+        title: Which line makes the condition false?
+        note: >-
+          If nobody in the room can point at it, the program does not get run. This is not
+          style advice. It is the difference between a run and a hijacked terminal.
+      steps:
+        - text: Before the loop, the control variable is born with a value
+        - text: In the header, the whole condition is judged
+        - text: Inside, the body does the work of the pass
+        - text: Also inside, something moves the control variable
+          loop: ↺ and the fourth beat is the one that gets forgotten
+
+  - code:
+      eyebrow: Block 01 · while
+      title: The bench accumulator, with the four beats marked
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int i = 0;                  // 1 · initialise
+        int sum = 0;
+
+        while (i < rpm.Length)      // 2 · check
+        {
+            sum += rpm[i];          // 3 · body
+            i++;                    // 4 · change
+        }
+
+        Console.WriteLine(sum);
+      annotations:
+        - label: The rpm run
+          text: >-
+            Seven tachometer readings from the belt drive bench. The same seven return in
+            weeks 9 and 14.
+        - label: The accumulator
+          text: >-
+            sum lives outside the loop. Declared inside, it resets each pass and holds one
+            reading.
+        - label: rpm.Length
+          text: >-
+            The array knows how many elements it has, so the loop does not depend on a 7
+            typed by hand.
+        - label: Risk
+          text: >-
+            Delete i++ and the condition never changes. The terminal runs until Control C
+            stops it.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The loop that terminates on paper and never terminates in practice
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double x = 0; int steps = 0;
+        while (x != 1.0 && steps < 1000) { x += 0.1; steps++; }
+        Console.WriteLine($"!=  after {steps} passes");
+        Console.WriteLine($"x = {x}");
+        Console.WriteLine($"x == 1.0 -> {x == 1.0}");
+
+        double y = 0; int steps2 = 0;
+        while (y < 1.0) { y += 0.1; steps2++; }
+        Console.WriteLine($"<   stops after {steps2} passes");
+        Console.WriteLine($"y = {y}");
+      output: |
+        !=  after 1000 passes
+        x = 99.9999999999986
+        x == 1.0 -> False
+        <   stops after 11 passes
+        y = 1.0999999999999999
+
+  - table:
+      eyebrow: Block 01 · The four words
+      title: What each one decides, and how many passes it guarantees
+      headers: [Word, What it decides, Minimum passes]
+      rows:
+        - ["while", "Judges before the first pass, so it may never run at all", "0"]
+        - ["do-while", "Runs the body and judges what came back afterwards", "1"]
+        - ["break", "Ends the loop exactly where it is standing", "—"]
+        - ["continue", "Abandons the pass and jumps to the change beat", "—"]
+
+  - divider:
+      eyebrow: Block 02
+      title: do-while, break and continue
+      lede: Three ways to keep the wrong operator from taking the program down, and all three are counted.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: One runs once, the other never, and the compiler says so first
+      filename: Program.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        int guard = 0;
+        do { guard++; } while (false);
+
+        int guard2 = 0;
+        while (false) { guard2++; }
+
+        Console.WriteLine($"do-while (false) -> guard  = {guard}");
+        Console.WriteLine($"while (false)    -> guard2 = {guard2}");
+      output: |
+        Program.cs(5,17): warning CS0162:
+        Unreachable code detected
+
+        do-while (false) -> guard  = 1
+        while (false)    -> guard2 = 0
+
+  - code:
+      eyebrow: Block 02 · do-while
+      title: Reading a sample the operator is allowed to get wrong
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int attempts = 0;
+        int rpm;
+        bool ok;
+        do
+        {
+            attempts++;
+            Console.WriteLine("rpm (1400-1600):");
+            string? line = Console.ReadLine();
+            bool parsed = int.TryParse(line, out rpm);
+            ok = parsed && rpm >= 1400 && rpm <= 1600;
+            if (!ok) Console.WriteLine($"  rejected '{line}'");
+        } while (!ok);
+
+        Console.WriteLine($"accepted {rpm} on attempt {attempts}");
+      annotations:
+        - label: Why do-while
+          text: >-
+            You have to ask for the sample before you can judge it, so the body runs at
+            least once.
+        - label: Two guards
+          text: >-
+            First that the text is an integer, then that it falls inside the bench band.
+            In that order.
+        - label: Short circuit
+          text: >-
+            The second && never gets evaluated if TryParse failed. Week 7 doing real work
+            here.
+        - label: Risk
+          text: >-
+            If the while condition ignores ok, the loop keeps asking even when the first
+            sample was fine.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Three keystrokes, two refusals, and a program still alive
+      filename: Program.cs
+      lang: csharp
+      output_label: abc · 999 · 1502
+      source: |
+        bool parsed = int.TryParse(line, out rpm);
+        ok = parsed && rpm >= 1400 && rpm <= 1600;
+        if (!ok) Console.WriteLine($"  rejected '{line}'");
+      output: |
+        rpm (1400-1600):
+          rejected 'abc'
+        rpm (1400-1600):
+          rejected '999'
+        rpm (1400-1600):
+        accepted 1502 on attempt 3
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The same menu with Convert, and the first key kills it
+      filename: Program.cs
+      lang: csharp
+      output_label: abc
+      source: |
+        Console.WriteLine("rpm (1400-1600):");
+        string? line = Console.ReadLine();
+        int rpm = Convert.ToInt32(line);
+        Console.WriteLine($"accepted {rpm}");
+      output: |
+        rpm (1400-1600):
+        Unhandled exception.
+        System.FormatException: The
+        input string 'abc' was not
+        in a correct format.
+
+  - code:
+      eyebrow: Block 02 · The bench case
+      title: The arming sequence for the conveyor, with its interlock
+      filename: Program.cs
+      lang: csharp
+      source: |
+        bool door = false, estop = true, armed = false;
+        int rpm = 120, attempts = 0;
+        do
+        {
+            attempts++;
+            bool ready = door && estop && rpm < 50;
+            Console.WriteLine($"attempt {attempts}: ready={ready}");
+            if (ready) { armed = true; break; }
+            if (attempts == 1) door = true;
+            if (attempts == 2) rpm = 20;
+        } while (attempts < 3);
+        if (armed) Console.WriteLine($"ARMED on {attempts}");
+        else Console.WriteLine("LATCHED: manual reset needed");
+      annotations:
+        - label: Three physical reasons
+          text: >-
+            Guard door closed, emergency stop released, shaft below 50 rpm. Not one is a
+            password.
+        - label: The first break of the term
+          text: >-
+            It ends the do-while as soon as all three conditions hold, without spending
+            the third attempt.
+        - label: The interlock
+          text: >-
+            Three failed attempts and the machine latches. Clearing it means the panel,
+            not typing again.
+        - label: Risk
+          text: >-
+            If the attempt counter never rises inside the body, the sequence asks for
+            permission forever.
+          accent: true
+
+  - trace:
+      eyebrow: Block 02 · Measured trace
+      title: The three attempts, with the state of every sensor
+      headers: [Attempt, door, estop, rpm, ready]
+      rows:
+        - ["1", "False", "True", "120", "False"]
+        - ["2", "True", "True", "120", "False"]
+        - ["3", "True", "True", "20", "True"]
+      verdict: >-
+        The operator closes the door between the first and the second, and the shaft
+        finishes braking between the second and the third. The run prints ARMED on 3. With
+        the same code and the door open all three times, the last line would be the latch.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: How many iterations a break ends, exactly
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int bodies = 0, tests = 0, stop = -1;
+        for (int i = 0; i < 10; i++)
+        {
+            tests++;
+            if (i == 4) { stop = i; break; }
+            bodies++;
+        }
+        Console.WriteLine($"condition tests reached  {tests}");
+        Console.WriteLine($"bodies completed         {bodies}");
+        Console.WriteLine($"index at the break       {stop}");
+        Console.WriteLine($"never started            {10 - tests}");
+      output: |
+        condition tests reached  5
+        bodies completed         4
+        index at the break       4
+        never started            5
+
+  - stat:
+      eyebrow: Measured on the rpm run
+      value: 4 of 7
+      text: Comparisons before the first reading above 1520 turns up
+      note: >-
+        The value is 1533 and it lives at index 3. The three readings after it were never
+        read, because the break ended the loop where it was standing. That is a search, and
+        in week 14 it comes back with its name on.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: How many a continue skips, and what is left in the accumulator
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int counted = 0, skipped = 0, sum = 0;
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            bool outOfBand = rpm[i] < 1480 || rpm[i] > 1520;
+            if (outOfBand) { skipped++; continue; }
+            counted++;
+            sum += rpm[i];
+        }
+        Console.WriteLine($"passes started      {rpm.Length}");
+        Console.WriteLine($"skipped by continue {skipped}");
+        Console.WriteLine($"bodies completed    {counted}");
+        Console.WriteLine($"in-band sum      {sum}");
+      output: |
+        passes started      7
+        skipped by continue 2
+        bodies completed    5
+        in-band sum      7474
+
+  - quiz:
+      eyebrow: Quick check
+      question: What is j worth when this program reaches its last line?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int j = 0;
+        while (j < 6)
+        {
+            if (j % 2 == 0) continue;
+            j++;
+        }
+        Console.WriteLine(j);
+      options:
+        - It reaches 6, because continue only skips one pass
+        - It stays at 0 and the program never gets to that line
+        - It is 5, because the last pass skips the increment
+        - It does not compile, continue needs a for and not a while
+
+  - code_output:
+      eyebrow: Answer · Measured
+      title: In a for the change slot runs; in a while nothing runs at all
+      filename: Program.cs
+      lang: csharp
+      output_label: With a safety cap
+      source: |
+        int j = 0, spins = 0;
+        while (j < 6)
+        {
+            spins++;
+            if (spins > 1000) break;   // safety cap
+            if (j % 2 == 0) continue;  // j never rises here
+            j++;
+        }
+        Console.WriteLine("while + continue before j++");
+        Console.WriteLine($"j = {j} after {spins} spins");
+        Console.WriteLine("safety cap at 1000");
+      output: |
+        while + continue before j++
+        j = 0 after 1001 spins
+        safety cap at 1000
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Convergence has a price, and it is counted in iterations
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double[] tols = { 1e-3, 1e-6, 1e-12 };
+        for (int t = 0; t < tols.Length; t++)
+        {
+            double lo = 1.0, hi = 2.0; int steps = 0;
+            while (hi - lo > tols[t])
+            {
+                double mid = (lo + hi) / 2;
+                if (mid * mid > 2.0) hi = mid; else lo = mid;
+                steps++;
+            }
+            Console.WriteLine($"tol {tols[t],-6} -> {steps} steps");
+        }
+        Console.WriteLine($"Math.Sqrt(2) = {Math.Sqrt(2)}");
+      output: |
+        tol 0.001  -> 10 steps
+        tol 1E-06  -> 20 steps
+        tol 1E-12  -> 40 steps
+        Math.Sqrt(2) = 1.4142135623730951
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a loop goes wrong on you
+      items:
+        - label: Error 01
+          title: The loop that never ends
+          desc: >-
+            Nothing inside the body moves the control variable. The condition stays true
+            and the terminal keeps running until you interrupt it yourself.
+        - label: Error 02
+          title: continue over your own increment
+          desc: >-
+            In a for the change slot runs after the continue. In a while nothing runs, and
+            j is still 0 after a thousand and one trips through the body.
+        - label: Error 03
+          title: break where there is no loop
+          desc: >-
+            The compiler names what is missing, not the word that is spare. error CS0139
+            reads No enclosing loop out of which to break or continue, and an if is no loop.
+        - label: Error 04
+          title: Logging after the break
+          desc: >-
+            The message you put under the break never prints. The build still succeeds,
+            with warning CS0162 Unreachable code detected. Log first, break second.
+
+  - divider:
+      eyebrow: Block 03
+      title: The first midterm
+      lede: Units 1 to 4, twenty per cent, and one honest line about how far repetition is examined.
+      block: 3
+
+  - table:
+      eyebrow: First midterm
+      title: What it covers, how it is taken and what you may bring
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "Units 1 to 4: problem solving, paradigms, types, expressions, selection and repetition"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Format", "Taken on the classroom computer and uploaded compressed to Blackboard"]
+        - ["You may bring", "Your notes, your assignments, the books, and anything you generated with AI beforehand"]
+        - ["You may not", "Phone, headphones, AI glasses, or any messaging channel"]
+
+  - concept:
+      eyebrow: Scope of the exam
+      title: How far repetition is examined this week
+      lead: >-
+        Unit 4.5 opens today and is examined today, so it is worth saying exactly how far.
+        What is in scope is what this session taught: while, do-while, the four beats, an
+        exit you can point at, and break and continue with their counts. The deepening that
+        week 9 brings is not on this midterm.
+      panel:
+        label: What week 9 adds and today does not ask about
+        title: for, nesting and the counted cost
+        note: >-
+          Those three are examined in the final only. If a midterm item asks you for a for
+          loop, answer it with the equivalent while and you are inside the scope.
+      steps:
+        - text: Name the line that makes the condition false
+        - text: Say whether the body may run zero times
+        - text: Count the passes a break ends
+        - text: Count the ones a continue skips
+          loop: ↺ and the Smart Center opens tutoring on midterm week
+
+  - homework:
+      eyebrow: Homework
+      title: Paper deliverable and written justification
+      brief: >-
+        Draw the flowchart of the arming sequence with the four beats labelled and the line
+        that makes the condition false circled. Hand it in with one paragraph justifying
+        which of the two loops you chose and why.
+      meta:
+        - [Due, Before week 9]
+        - [Format, Blackboard · PDF and .cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Flowchart", "40 %", "All four beats are labelled and the change is circled"]
+        - ["Justification", "40 %", "One paragraph saying why do-while and not while"]
+        - ["Program", "20 %", "It runs on the three class inputs without an exception"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the same three beats written on one line, the loop that walks with no
+        counter, and what it costs to put one loop inside another.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

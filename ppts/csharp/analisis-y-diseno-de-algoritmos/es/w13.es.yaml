@@ -1,0 +1,535 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 13
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 13 · Tema 6.1 · Arreglos y cadenas · Segundo parcial
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Un nombre para muchas lecturas, y una cadena que resulta ser un arreglo que no te
+        dejan editar. Más la logística del segundo parcial.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 13 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El arreglo
+          desc: Largo fijo, índice desde cero y prellenado con el cero del tipo
+        - title: Las cadenas
+          desc: Un arreglo de caracteres que ni tú ni la biblioteca pueden editar
+        - title: La biblioteca
+          desc: El subtema 6.1.3 completo, medido renglón por renglón
+        - title: El parcial
+          desc: Qué entra, qué no entra, cómo es y qué puedes llevar
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar y recorrer un arreglo
+          sub: Largo fijo, índice desde cero, y el último índice es Length menos uno
+        - head: Distinguir un alias de una copia
+          sub: Asignar un arreglo no lo copia; Clone sí, y la diferencia se mide
+        - head: Partir una línea del registrador
+          sub: Trim, Split y una cultura fijada antes de convertir a número
+        - head: Usar la biblioteca de cadenas
+          sub: Prefijo, sufijo, subcadena, relleno y comparación sin distinguir mayúsculas
+        - head: Validar un identificador de parte
+          sub: Por largo, por prefijo y por dígitos, con una sola política de comparación
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Un nombre para muchas lecturas
+      lede: >-
+        El tema se llama colecciones y este curso se queda en arreglos, a propósito. Un
+        arreglo de estructuras se edita en su lugar y por eso es el que sirve en semana 15.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · Por fin
+      title: Las siete lecturas de rpm bajo un solo nombre
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int suma = 0;
+        int fuera = 0;
+
+        foreach (int r in rpm)
+        {
+            suma += r;
+            if (r < 1480 || r > 1520) fuera++;
+        }
+
+        Console.WriteLine($"rpm.Length = {rpm.Length}");
+        Console.WriteLine($"suma       = {suma}");
+      annotations:
+        - label: Un nombre
+          text: Siete variables sueltas se volvieron una. El ciclo ya no cambia cuando llegue la octava muestra.
+        - label: La regla de banda
+          text: r menor que 1480 o mayor que 1520. Es la convención inclusiva y va escrita cada vez que aparece el conteo.
+        - label: Length
+          text: Lo cuenta el arreglo, no tú. Cambia el literal de arriba y el conteo se ajusta solo.
+        - label: Riesgo
+          text: La primera muestra vale 1480, exactamente el límite. Con la otra convención el conteo sería 3 de 7.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Los mismos números de la semana 9, con un solo ciclo
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double promedio = (double)suma / rpm.Length;
+
+        Console.WriteLine($"rpm.Length = {rpm.Length}");
+        Console.WriteLine($"suma       = {suma}");
+        Console.WriteLine($"promedio   = {promedio:F3}");
+        Console.WriteLine($"fuera      = {fuera} de {rpm.Length}");
+        Console.WriteLine($"rpm[0]     = {rpm[0]}");
+        Console.WriteLine($"rpm[6]     = {rpm[6]}");
+      output: |
+        rpm.Length = 7
+        suma       = 10478
+        promedio   = 1496.857
+        fuera      = 2 de 7
+        rpm[0]     = 1480
+        rpm[6]     = 1488
+
+  - code_output:
+      eyebrow: Bloque 01 · Nunca recibes basura
+      title: Declararlo ya lo llenó con el cero de su tipo
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] readings = new int[5];
+        string[] tags = new string[3];
+
+        Console.WriteLine(string.Join(", ", readings));
+        Console.WriteLine(string.Join(", ", new double[3]));
+        Console.WriteLine(string.Join(", ", new bool[2]));
+        Console.WriteLine("tags[0] es null " + (tags[0] == null));
+        Console.WriteLine("Length         " + readings.Length);
+        Console.WriteLine("último legal   " + (readings.Length - 1));
+      output: |
+        0, 0, 0, 0, 0
+        0, 0, 0
+        False, False
+        tags[0] es null True
+        Length         5
+        último legal   4
+
+  - code_output:
+      eyebrow: Bloque 01 · Largo fijo
+      title: Dos errores distintos y un solo hecho
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int[] rpm = { 1480, 1502, 1495 };
+
+        Console.WriteLine(rpm.Length());
+        rpm.Length = 10;
+      output: |
+        Program.cs(3,23): error CS1955
+        Non-invocable member
+        'Array.Length' cannot be used
+        like a method.
+
+        Program.cs(4,1): error CS0200
+        Property or indexer
+        'Array.Length' cannot be
+        assigned to -- it is read only
+
+  - code_output:
+      eyebrow: Bloque 01 · Salirse
+      title: Fuera del final revienta y el compilador no dijo nada
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] fijo = { 1480, 1502, 1495 };
+
+        Console.WriteLine(fijo[2]);
+        Console.WriteLine(fijo.Length - 1);
+        Console.WriteLine(fijo[3]);
+        Console.WriteLine("esta línea nunca corre");
+      output: |
+        1495
+        2
+        Unhandled exception.
+        System.IndexOutOfRangeException:
+        Index was outside the bounds of
+        the array.
+
+        PowerShell  -532462766
+        Git Bash    127
+
+  - code_output:
+      eyebrow: Bloque 01 · Alias y copia
+      title: Un arreglo es una referencia y Clone no lo es
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine("src[0]  " + src[0]);
+
+        int[] src2 = { 1480, 1502, 1495 };
+        int[] copia = (int[])src2.Clone();
+        copia[0] = 99;
+        Console.WriteLine("src2[0] " + src2[0]);
+
+        Console.WriteLine(ReferenceEquals(src, alias));
+        Console.WriteLine(ReferenceEquals(src2, copia));
+      output: |
+        src[0]  99
+        src2[0] 1480
+        True
+        False
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Una cadena es un arreglo que no te dejan editar
+      lede: >-
+        Se indiza igual, se recorre igual y revienta igual en la frontera. Lo único que
+        cambia es que nadie, ni tú ni la biblioteca, puede escribirle encima.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Inmutable
+      title: ToUpper devuelve otra cadena y deja la tuya quieta
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        string tag = "sensor-07";
+        tag.ToUpper();
+        Console.WriteLine("tag        " + tag);
+        Console.WriteLine("ToUpper()  " + tag.ToUpper());
+
+        string bruto = "  SENSOR-07  ";
+        bruto.Trim();
+        Console.WriteLine("bruto     [" + bruto + "]");
+        Console.WriteLine("Trim()    [" + bruto.Trim() + "]");
+      output: |
+        tag        sensor-07
+        ToUpper()  SENSOR-07
+        bruto     [  SENSOR-07  ]
+        Trim()    [SENSOR-07]
+
+  - code:
+      eyebrow: Bloque 02 · La línea real
+      title: Una línea del registrador, de punta a punta
+      filename: Program.cs
+      lang: csharp
+      source: |
+        using System.Globalization;
+
+        string linea = "  SENSOR-07:20.1,21.5,22.9  ";
+        string[] partes = linea.Trim().Split(':');
+        string tag = partes[0];
+        string[] nums = partes[1].Split(',');
+
+        double suma = 0;
+        foreach (string s in nums)
+        {
+            suma += double.Parse(s, CultureInfo.InvariantCulture);
+        }
+
+        double media = suma / nums.Length;
+        Console.WriteLine($"{tag} media {media:F3}");
+      annotations:
+        - label: Trim antes de Split
+          text: El registrador deja espacios a los lados. Trim los quita una vez y ya no vuelven a estorbar.
+        - label: Dos cortes
+          text: Primero por dos puntos para separar etiqueta de lecturas, luego por comas para separar lecturas.
+        - label: La cultura fijada
+          text: Sin InvariantCulture el 20.1 se lee 201 en una máquina alemana, y TryParse devuelve True igual.
+        - label: Lo que imprime
+          text: SENSOR-07 media 21.500, con el especificador F3 haciendo el trabajo de presentación.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · La etiqueta
+      title: La etiqueta se indiza carácter por carácter
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.WriteLine("tag.Length       " + tag.Length);
+        Console.WriteLine("tag[0]           " + tag[0]);
+        Console.WriteLine("tag[0] == 's'    " + (tag[0] == 's'));
+        Console.WriteLine("tag[0] == 'S'    " + (tag[0] == 'S'));
+        Console.WriteLine("tag.IndexOf('-') " + tag.IndexOf('-'));
+        Console.WriteLine("tag.Substring(7) " + tag.Substring(7));
+      output: |
+        tag.Length       9
+        tag[0]           S
+        tag[0] == 's'    False
+        tag[0] == 'S'    True
+        tag.IndexOf('-') 6
+        tag.Substring(7) 07
+
+  - trace:
+      eyebrow: Bloque 02 · Subtema 6.1.3
+      title: La biblioteca de cadenas, medida
+      headers: [Llamada, Devuelve, Qué enseña]
+      rows:
+        - ["id.StartsWith(\"SNS-\")", "True", "el prefijo exacto"]
+        - ["id.StartsWith(\"sns-\")", "False", "sí distingue mayúsculas"]
+        - ["id.Contains(\"\")", "True", "lo vacío está en todo"]
+        - ["raw.Replace(';', ',')", "20.1,21.5,22.9", "devuelve otra cadena"]
+        - ["\"\".Split(';').Length", "1", "una línea vacía da un campo"]
+      verdict: >-
+        La cadena vacía es prefijo, sufijo y subcadena de todo, así que una entrada vacía
+        pasa cualquier revisión ingenua. Por eso IsNullOrWhiteSpace va antes de convertir.
+
+  - code:
+      eyebrow: Bloque 02 · El validador
+      title: Un identificador de parte, revisado por partes
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static bool ValidPartId(string raw)
+        {
+            string id = raw.Trim();
+            if (id.Length != 10) return false;
+
+            var ci = StringComparison.OrdinalIgnoreCase;
+            if (!id.StartsWith("SNS-", ci)) return false;
+            if (!id.EndsWith("-A") && !id.EndsWith("-B"))
+                return false;
+
+            for (int i = 4; i < 8; i++)
+                if (!char.IsDigit(id[i])) return false;
+            return true;
+        }
+      annotations:
+        - label: Largo primero
+          text: La revisión más barata va arriba. Si el largo no es 10 no hace falta mirar nada más.
+        - label: Trim del que llama
+          text: El validador recorta lo que recibe, así que quien lo llama no tiene que acordarse.
+        - label: Los dígitos
+          text: char.IsDigit sobre las posiciones 4 a 7. Cuatro dígitos en SNS-4471-A, contados por el ciclo.
+        - label: Riesgo
+          text: El prefijo se comparó sin distinguir mayúsculas y el sufijo dos líneas abajo no. Ese es el defecto.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 02 · Cinco entradas
+      title: El validador contra cinco entradas
+      headers: [Entrada, Devuelve, Por qué]
+      rows:
+        - ["SNS-4471-A", "True", "el patrón completo"]
+        - ["  SNS-4471-A  ", "True", "Trim() se encargó"]
+        - ["sns-4471-b", "False", "el sufijo sí distingue"]
+        - ["SNS-44X1-A", "False", "la X no es dígito"]
+        - ["(vacía)", "False", "largo cero, como SNS-447-A"]
+      verdict: >-
+        El tercer renglón falla a propósito. Misma cadena, dos políticas de comparación a
+        dos líneas de distancia, un solo defecto.
+
+  - code_output:
+      eyebrow: Bloque 02 · Comparar de verdad
+      title: El operador que ya conoces falla con entrada tecleada
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        string typed = "SORT";
+        var ci = StringComparison.OrdinalIgnoreCase;
+
+        bool op = typed == "sort";
+        bool eq = typed.Equals("sort");
+        bool eqCi = typed.Equals("sort", ci);
+        bool upper = typed.ToUpper() == "SORT";
+        bool trim = " sort ".Trim() == "sort";
+        bool corta = "s".Equals("sort", ci);
+
+        Console.WriteLine($"==   {op}   Equals  {eq}");
+        Console.WriteLine($"+ci  {eqCi}    ToUpper {upper}");
+        Console.WriteLine($"Trim {trim}    corta   {corta}");
+      output: |
+        ==   False   Equals  False
+        +ci  True    ToUpper True
+        Trim True    corta   False
+
+  - code_output:
+      eyebrow: Bloque 02 · La frontera
+      title: Dos llamadas de biblioteca y dos fronteras distintas
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        string id = "SNS-4471-A";
+        Console.WriteLine(id.Length);
+        Console.WriteLine(id[9]);
+        Console.WriteLine("[" + id.Substring(10) + "]");
+
+        try { Console.WriteLine(id.Substring(11)); }
+        catch (Exception e) { Console.WriteLine(e.GetType().Name); }
+
+        try { Console.WriteLine(id[10]); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+      output: |
+        10
+        A
+        []
+        ArgumentOutOfRangeException
+        Index was outside the bounds
+        of the array.
+
+  - trace:
+      eyebrow: Bloque 02 · Costo
+      title: Armar el reporte con += cuesta al cuadrado
+      headers: [Configuración, n, Mediana de cinco]
+      rows:
+        - ["Release", "10 000", "42 ms"]
+        - ["Release", "40 000", "658 ms"]
+        - ["Debug", "10 000", "63 ms"]
+        - ["Debug", "40 000", "626 ms"]
+      verdict: >-
+        La razón medida es 15.7 en Release contra el 16 que predice la ley cuadrática, y
+        9.9 en Debug. La razón misma se movió con la configuración, así que la
+        configuración y el tamaño de la pieza van escritos junto al número.
+
+  - code_output:
+      eyebrow: Bloque 02 · Caso de redes
+      title: La media dice 21.15 y la mediana dice 12.25
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        using System.Globalization;
+
+        string linea = "  SEQ-0042:12.4,11.9,48.2,12.1  ";
+        string[] ms = linea.Trim().Split(':')[1].Split(',');
+
+        double[] lat = new double[ms.Length];
+        for (int i = 0; i < ms.Length; i++)
+            lat[i] = double.Parse(ms[i], CultureInfo.InvariantCulture);
+
+        double s = 0;
+        foreach (double x in lat) s += x;
+        Array.Sort(lat);
+        Console.WriteLine($"media   = {s / lat.Length}");
+        Console.WriteLine($"orden   = [{string.Join(", ", lat)}]");
+        Console.WriteLine($"mediana = {(lat[1] + lat[2]) / 2}");
+      output: |
+        media   = 21.15
+        orden   = [11.9, 12.1, 12.4, 48.2]
+        mediana = 12.25
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El segundo parcial
+      lede: >-
+        Unidad 5 completa y unidad 6 hasta el subtema 6.1.3. Lo que se enseña la semana que
+        entra se examina en el final, no aquí.
+      block: 3
+
+  - table:
+      eyebrow: Segundo parcial
+      title: Qué entra, qué no entra y cómo es
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Unidad 5 completa y unidad 6 hasta 6.1.3"]
+        - ["Fuera", "6.2 y 6.3 se enseñan en la semana 14 y entran solo en el final"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Formato", "En la computadora del salón y se sube a Blackboard"]
+        - ["Puedes llevar", "Apuntes, tareas, libros y lo que hayas generado con IA antes"]
+        - ["No puedes", "Teléfono, audífonos, lentes con IA ni mensajería"]
+        - ["Asesoría", "Smart Center, con horarios publicados en Blackboard"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué imprime la última línea?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] a = { 1480, 1502, 1495 };
+        int[] b = a;
+
+        b[0] = 99;
+
+        Console.WriteLine(a[0]);
+      options:
+        - "1480, porque b se llevó una copia del arreglo"
+        - "99, porque los dos nombres señalan el mismo arreglo"
+        - "Un error, porque a quedó de solo lectura"
+        - "0, porque asignar un arreglo lo vacía primero"
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un arreglo es una referencia
+          desc: Asignarlo crea un segundo nombre para el mismo arreglo, y Clone es la copia de verdad
+        - title: Una cadena no se edita
+          desc: ToUpper devuelve otra cadena, y por eso s.Trim(); en su propia línea no hace nada
+        - title: El += cuadrático tiene remedio
+          desc: StringBuilder hace 160 000 append en 9 ms, medido en Release y en proceso limpio
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Parte una línea del registrador en etiqueta y tres lecturas, y valida un
+        identificador de parte con las mismas reglas de la clase. Entrega los siete casos
+        de prueba con su resultado real pegado.
+      meta:
+        - [Entrega, Antes de la semana 14]
+        - [Formato, Blackboard · .cs y .pdf]
+        - [Lectura, Deitel & Deitel · arreglos y cadenas]
+      rubric:
+        - ["Parseo", "40 %", "Trim, Split y la cultura fijada antes de convertir"]
+        - ["Validador", "40 %", "Una sola política de comparación en las tres revisiones"]
+        - ["Evidencia", "20 %", "Los siete casos con la salida real pegada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, dos índices en lugar de uno, y la primera semana en que dos
+        programas correctos no valen lo mismo.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

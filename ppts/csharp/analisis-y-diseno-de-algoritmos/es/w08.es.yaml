@@ -1,0 +1,515 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 8
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 08 · Tema 4.5 · Repetición · Primer parcial
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Todo ciclo que escribas hoy tiene una salida que puedes señalar con el dedo. Hoy
+        además aprendes las dos palabras que la señalan desde adentro del cuerpo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 8 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los cuatro tiempos
+          desc: Inicializa, revisa, cuerpo y cambia. Sin el cuarto el programa no termina.
+        - title: Entrada que no mata
+          desc: Un do-while que rechaza lo que no sirve y sigue al mando de la consola
+        - title: break y continue
+          desc: Cortar el lazo o saltarse una pasada, con las cuentas exactas de cada uno
+        - title: El primer parcial
+          desc: Qué entra, cómo se resuelve y qué puedes llevar al salón
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Nombrar los cuatro tiempos de un ciclo
+          sub: Y señalar con el dedo la línea que eventualmente vuelve falsa la condición
+        - head: Elegir entre while y do-while
+          sub: Según si el cuerpo puede correr cero veces o tiene que correr al menos una
+        - head: Leer una muestra sin tirar el programa
+          sub: Con int.TryParse dentro de un do-while que guarda el formato y luego el rango
+        - head: Usar break y continue con cuentas
+          sub: Y decir cuántas pasadas termina cada uno sobre las siete lecturas del banco
+        - head: Medir el precio de la convergencia
+          sub: Contando las iteraciones que gasta una bisección para cada tolerancia pedida
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar, y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea de código
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: now
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y el proyecto integrador
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: while, y los cuatro tiempos
+      lede: Inicializa, revisa, cuerpo, cambia. Si no puedes señalar el cambio, no corras el programa.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La línea que vuelve falsa la condición tiene número de renglón
+      lead: >-
+        Un ciclo no es una idea vaga de repetir. Son cuatro tiempos que ocurren en orden y
+        que puedes señalar en el código con el dedo. El primero prepara la variable de
+        control, el segundo la juzga, el tercero hace el trabajo y el cuarto mueve la
+        variable hacia el final. Cuando alguien te enseñe un ciclo, pregunta por el cuarto.
+      panel:
+        label: La pregunta que hay que contestar antes de correr
+        title: ¿Qué línea vuelve falsa la condición?
+        note: >-
+          Si nadie en el salón puede señalarla, el programa no se ejecuta. No es un consejo
+          de estilo. Es la diferencia entre una corrida y una terminal secuestrada.
+      steps:
+        - text: Antes del lazo, la variable de control nace con un valor
+        - text: En el encabezado, la condición se juzga entera
+        - text: Dentro, el cuerpo hace el trabajo de la pasada
+        - text: También dentro, algo mueve la variable de control
+          loop: ↺ y el cuarto tiempo es el que casi siempre se olvida
+
+  - code:
+      eyebrow: Bloque 01 · while
+      title: El acumulador del banco, con los cuatro tiempos marcados
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int i = 0;                  // 1 · inicializa
+        int suma = 0;
+
+        while (i < rpm.Length)      // 2 · revisa
+        {
+            suma += rpm[i];         // 3 · cuerpo
+            i++;                    // 4 · cambia
+        }
+
+        Console.WriteLine(suma);
+      annotations:
+        - label: La corrida rpm
+          text: Siete lecturas del tacómetro del banco de bandas. Las mismas vuelven en la semana 9 y en la 14.
+        - label: El acumulador
+          text: suma vive fuera del lazo. Adentro se reiniciaría cada pasada y el total sería la última lectura.
+        - label: rpm.Length
+          text: El arreglo sabe cuántos elementos tiene, así que el lazo no depende de un 7 escrito a mano.
+        - label: Riesgo
+          text: Si borras i++ la condición nunca cambia y la terminal corre hasta que la cortes con Control C.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El lazo que termina en papel y no termina en la máquina
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double x = 0; int pasos = 0;
+        while (x != 1.0 && pasos < 1000) { x += 0.1; pasos++; }
+        Console.WriteLine($"!=  tras {pasos} pasadas");
+        Console.WriteLine($"x = {x}");
+        Console.WriteLine($"x == 1.0 -> {x == 1.0}");
+
+        double y = 0; int pasos2 = 0;
+        while (y < 1.0) { y += 0.1; pasos2++; }
+        Console.WriteLine($"<   termina en {pasos2} pasadas");
+        Console.WriteLine($"y = {y}");
+      output: |
+        !=  tras 1000 pasadas
+        x = 99.9999999999986
+        x == 1.0 -> False
+        <   termina en 11 pasadas
+        y = 1.0999999999999999
+
+  - table:
+      eyebrow: Bloque 01 · Las cuatro palabras
+      title: Qué hace cada una, y cuántas pasadas garantiza
+      headers: [Palabra, Qué decide, Pasadas mínimas]
+      rows:
+        - ["while", "Juzga antes de la primera pasada, así que puede no correr nunca", "0"]
+        - ["do-while", "Corre el cuerpo y después juzga lo que quedó", "1"]
+        - ["break", "Termina el lazo justo donde está parado", "—"]
+        - ["continue", "Abandona la pasada y salta al tiempo de cambio", "—"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: do-while, break y continue
+      lede: Tres formas de que el operador equivocado no tire el programa, y las tres se cuentan.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Uno corre una vez, el otro ninguna, y el compilador lo dice antes
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y correr
+      source: |
+        int guard = 0;
+        do { guard++; } while (false);
+
+        int guard2 = 0;
+        while (false) { guard2++; }
+
+        Console.WriteLine($"do-while (false) -> guard  = {guard}");
+        Console.WriteLine($"while (false)    -> guard2 = {guard2}");
+      output: |
+        Program.cs(5,17): warning CS0162:
+        Unreachable code detected
+
+        do-while (false) -> guard  = 1
+        while (false)    -> guard2 = 0
+
+  - code:
+      eyebrow: Bloque 02 · do-while
+      title: La lectura de una muestra que el operador puede equivocar
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int intentos = 0;
+        int rpm;
+        bool ok;
+        do
+        {
+            intentos++;
+            Console.WriteLine("rpm (1400-1600):");
+            string? linea = Console.ReadLine();
+            bool leido = int.TryParse(linea, out rpm);
+            ok = leido && rpm >= 1400 && rpm <= 1600;
+            if (!ok) Console.WriteLine($"  rechazada '{linea}'");
+        } while (!ok);
+
+        Console.WriteLine($"aceptada {rpm} en {intentos} intentos");
+      annotations:
+        - label: Por qué do-while
+          text: Hay que pedir la muestra antes de juzgarla, así que el cuerpo corre al menos una vez.
+        - label: Dos guardias
+          text: Primero que la cadena sea un entero, después que caiga en la banda del banco. En ese orden.
+        - label: El corto circuito
+          text: El segundo && no llega a evaluarse si TryParse falló. Es la semana 7 haciendo trabajo real aquí.
+        - label: Riesgo
+          text: Si el while no depende de ok, el lazo pide muestras para siempre aunque la primera sirva.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Tres pulsaciones, dos rechazos y un programa que sigue vivo
+      filename: Program.cs
+      lang: csharp
+      output_label: abc · 999 · 1502
+      source: |
+        bool leido = int.TryParse(linea, out rpm);
+        ok = leido && rpm >= 1400 && rpm <= 1600;
+        if (!ok) Console.WriteLine($"  rechazada '{linea}'");
+      output: |
+        rpm (1400-1600):
+          rechazada 'abc'
+        rpm (1400-1600):
+          rechazada '999'
+        rpm (1400-1600):
+        aceptada 1502 en 3 intentos
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El mismo menú con Convert, y la primera tecla lo mata
+      filename: Program.cs
+      lang: csharp
+      output_label: abc
+      source: |
+        Console.WriteLine("rpm (1400-1600):");
+        string? linea = Console.ReadLine();
+        int rpm = Convert.ToInt32(linea);
+        Console.WriteLine($"aceptada {rpm}");
+      output: |
+        rpm (1400-1600):
+        Unhandled exception.
+        System.FormatException: The
+        input string 'abc' was not
+        in a correct format.
+
+  - code:
+      eyebrow: Bloque 02 · El caso del banco
+      title: La secuencia de armado del transportador, con enclavamiento
+      filename: Program.cs
+      lang: csharp
+      source: |
+        bool puerta = false, paro = true, armado = false;
+        int rpm = 120, intentos = 0;
+        do
+        {
+            intentos++;
+            bool listo = puerta && paro && rpm < 50;
+            Console.WriteLine($"intento {intentos}: listo={listo}");
+            if (listo) { armado = true; break; }
+            if (intentos == 1) puerta = true;
+            if (intentos == 2) rpm = 20;
+        } while (intentos < 3);
+        if (armado) Console.WriteLine($"ARMADO en {intentos}");
+        else Console.WriteLine("ENCLAVADO: reposición manual");
+      annotations:
+        - label: Tres razones físicas
+          text: Puerta cerrada, paro de emergencia liberado y el eje bajo 50 rpm. Ninguna es una contraseña.
+        - label: El primer break del curso
+          text: Termina el do-while en cuanto las tres condiciones se cumplen, sin gastar el tercer intento.
+        - label: El enclavamiento
+          text: Tres intentos fallidos y queda enclavada. Reponerla exige ir al tablero, no teclear otra vez.
+        - label: Riesgo
+          text: Si el contador de intentos no sube en el cuerpo, la secuencia pide permiso para siempre.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 02 · Traza medida
+      title: Los tres intentos, con el estado de cada sensor
+      headers: [Intento, puerta, paro, rpm, listo]
+      rows:
+        - ["1", "False", "True", "120", "False"]
+        - ["2", "True", "True", "120", "False"]
+        - ["3", "True", "True", "20", "True"]
+      verdict: >-
+        El operador cierra la puerta entre el primero y el segundo, y el eje termina de
+        frenar entre el segundo y el tercero. La corrida imprime ARMADO en 3. Con el mismo
+        código y la puerta abierta los tres intentos, la última línea sería la del
+        enclavamiento.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Cuántas iteraciones termina un break, exactamente
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int cuerpos = 0, pruebas = 0, corte = -1;
+        for (int i = 0; i < 10; i++)
+        {
+            pruebas++;
+            if (i == 4) { corte = i; break; }
+            cuerpos++;
+        }
+        Console.WriteLine($"pruebas de condición   {pruebas}");
+        Console.WriteLine($"cuerpos completados    {cuerpos}");
+        Console.WriteLine($"índice del break       {corte}");
+        Console.WriteLine($"nunca empezaron        {10 - pruebas}");
+      output: |
+        pruebas de condición   5
+        cuerpos completados    4
+        índice del break       4
+        nunca empezaron        5
+
+  - stat:
+      eyebrow: Medido sobre la corrida rpm
+      value: 4 de 7
+      text: Comparaciones hasta encontrar la primera lectura por encima de 1520
+      note: >-
+        El valor es 1533 y vive en el índice 3. Las tres lecturas que siguen nunca se
+        leyeron, porque el break terminó el lazo donde estaba parado. Eso es una búsqueda,
+        y en la semana 14 vuelve con el nombre puesto.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Cuántas se salta un continue, y qué queda en el acumulador
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int contadas = 0, saltadas = 0, suma = 0;
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            bool fuera = rpm[i] < 1480 || rpm[i] > 1520;
+            if (fuera) { saltadas++; continue; }
+            contadas++;
+            suma += rpm[i];
+        }
+        Console.WriteLine($"pasadas iniciadas   {rpm.Length}");
+        Console.WriteLine($"saltadas por continue  {saltadas}");
+        Console.WriteLine($"completadas         {contadas}");
+        Console.WriteLine($"suma en banda    {suma}");
+      output: |
+        pasadas iniciadas   7
+        saltadas por continue  2
+        completadas         5
+        suma en banda    7474
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Cuánto vale j cuando este programa llega a la última línea?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int j = 0;
+        while (j < 6)
+        {
+            if (j % 2 == 0) continue;
+            j++;
+        }
+        Console.WriteLine(j);
+      options:
+        - Llega a 6, porque continue sólo se salta una pasada
+        - Se queda en 0 y el programa nunca llega a esa línea
+        - Vale 5, porque la última pasada se salta el incremento
+        - No compila, porque continue exige un for y no un while
+
+  - code_output:
+      eyebrow: Respuesta · Medido
+      title: En un for la ranura de cambio corre; en un while no corre nada
+      filename: Program.cs
+      lang: csharp
+      output_label: Con tope de seguridad
+      source: |
+        int j = 0, vueltas = 0;
+        while (j < 6)
+        {
+            vueltas++;
+            if (vueltas > 1000) break;   // tope de seguridad
+            if (j % 2 == 0) continue;    // aquí j nunca sube
+            j++;
+        }
+        Console.WriteLine("while + continue antes de j++");
+        Console.WriteLine($"j = {j} tras {vueltas} vueltas");
+        Console.WriteLine("tope de seguridad en 1000");
+      output: |
+        while + continue antes de j++
+        j = 0 tras 1001 vueltas
+        tope de seguridad en 1000
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: La convergencia tiene precio, y se cuenta en iteraciones
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double[] tols = { 1e-3, 1e-6, 1e-12 };
+        for (int t = 0; t < tols.Length; t++)
+        {
+            double lo = 1.0, hi = 2.0; int pasos = 0;
+            while (hi - lo > tols[t])
+            {
+                double mid = (lo + hi) / 2;
+                if (mid * mid > 2.0) hi = mid; else lo = mid;
+                pasos++;
+            }
+            Console.WriteLine($"tol {tols[t],-6} -> {pasos} pasos");
+        }
+        Console.WriteLine($"Math.Sqrt(2) = {Math.Sqrt(2)}");
+      output: |
+        tol 0.001  -> 10 pasos
+        tol 1E-06  -> 20 pasos
+        tol 1E-12  -> 40 pasos
+        Math.Sqrt(2) = 1.4142135623730951
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro maneras de que un ciclo te salga mal
+      items:
+        - label: Error 01
+          title: El ciclo que no termina
+          desc: >-
+            Nadie mueve la variable de control dentro del cuerpo. La condición sigue
+            siendo cierta y la terminal se queda corriendo hasta que la interrumpes.
+        - label: Error 02
+          title: continue sobre tu propio incremento
+          desc: >-
+            En un for la ranura de cambio corre después del continue. En un while no corre
+            nada, y j se queda en 0 después de mil una vueltas por el cuerpo.
+        - label: Error 03
+          title: break donde no hay lazo
+          desc: >-
+            El compilador nombra lo que falta, no la palabra que sobra. error CS0139 dice
+            No enclosing loop out of which to break or continue, y un if no es un lazo.
+        - label: Error 04
+          title: Registrar después del break
+          desc: >-
+            El mensaje que pusiste debajo del break nunca se imprime. La compilación sí
+            pasa, con warning CS0162 Unreachable code detected. Registra primero.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El primer parcial
+      lede: Unidades 1 a 4, veinte por ciento, y una línea honesta sobre hasta dónde se examina la repetición.
+      block: 3
+
+  - table:
+      eyebrow: Primer parcial
+      title: Qué entra, cómo se resuelve y qué puedes llevar
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Unidades 1 a 4: resolución de problemas, paradigmas, tipos, expresiones, selección y repetición"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Formato", "Se resuelve en la computadora del salón y se sube comprimido a Blackboard"]
+        - ["Puedes llevar", "Tus apuntes, tus tareas, los libros y lo que hayas generado con IA antes del examen"]
+        - ["No puedes", "Teléfono, audífonos, lentes con IA ni ningún medio de mensajería"]
+
+  - concept:
+      eyebrow: Alcance del examen
+      title: Hasta dónde se examina la repetición esta semana
+      lead: >-
+        El tema 4.5 se abre hoy y se examina hoy, así que conviene decir con precisión
+        hasta dónde. Entra lo que se enseñó en esta sesión: while, do-while, los cuatro
+        tiempos, una salida que puedas señalar, break y continue con sus cuentas. La
+        profundización de la semana 9 no entra en este parcial.
+      panel:
+        label: Lo que la semana 9 agrega y no se pregunta hoy
+        title: for, anidamiento y el costo contado
+        note: >-
+          Esas tres cosas se evalúan hasta el examen final. Si un reactivo del parcial te
+          pide un for, contéstalo con el while equivalente y estarás dentro del alcance.
+      steps:
+        - text: Nombra la línea que vuelve falsa la condición
+        - text: Di si el cuerpo puede correr cero veces
+        - text: Cuenta las pasadas que termina un break
+        - text: Cuenta las que se salta un continue
+          loop: ↺ y el Smart Center abre asesoría la semana del parcial
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega en papel y justificación escrita
+      brief: >-
+        Dibuja el diagrama de flujo de la secuencia de armado con los cuatro tiempos
+        rotulados y la línea que vuelve falsa la condición encerrada en un círculo.
+        Acompáñalo de un párrafo que justifique cuál de los dos ciclos elegiste y por qué.
+      meta:
+        - [Entrega, Antes de la semana 9]
+        - [Formato, Blackboard · PDF y .cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Diagrama", "40 %", "Los cuatro tiempos aparecen rotulados y el cambio está circulado"]
+        - ["Justificación", "40 %", "Un párrafo que diga por qué do-while y no while"]
+        - ["Programa", "20 %", "Corre con las tres entradas de clase y no lanza excepción"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, los mismos tres tiempos escritos en un renglón, el ciclo que
+        recorre sin contador, y lo que cuesta meter un ciclo dentro de otro.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

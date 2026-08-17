@@ -1,0 +1,462 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 3
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 03 · Unit 2 · Introduction to programming
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Last week's robot becomes the compiler. Today we find out the exact words it uses
+        to say no, and why that is a gift.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 3 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Languages and software
+          desc: Why the ladder exists and which rung we work on all term
+        - title: Anatomy of a program
+          desc: One line, one project file, and a class you cannot see anywhere
+        - title: Syntax
+          desc: Comments, names, capitals, and the five errors you will actually type
+        - title: Your turn
+          desc: Break it on purpose and quote the first message of each attempt verbatim
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Place C# on the ladder
+          sub: And say what the compiler does with what you wrote
+        - head: Tell compiling from interpreting
+          sub: And why C# does both, with the files it leaves behind measured
+        - head: Read the structure of a program
+          sub: One line, one csproj, and a class the compiler wrote for you
+        - head: Recognise a compile error
+          sub: File, line, column and code, read in that order
+        - head: Apply the rules of syntax
+          sub: Comments, identifiers, reserved words and capitalisation
+        - head: Separate convention from rule
+          sub: camelCase and PascalCase are an agreement, not something the compiler checks
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: todo
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections and project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Programming languages
+      lede: >-
+        An in-between tongue, precise for the machine and readable for you. C# is this
+        course's rung, and the one that drives Unity as well.
+      block: 1
+
+  - figure:
+      eyebrow: Block 01 · Levels
+      title: The higher up, the closer to how you think
+      image: img/en/ct-09.png
+      caption: >-
+        C# lives on the high rung. You write close to your own language and something else
+        takes it down to what the processor understands.
+      alt: A ladder of abstraction levels, high-level language at the top and machine code at the foot
+
+  - table:
+      eyebrow: Block 01 · Unit 2.1
+      title: The rungs of the ladder, and where C# falls
+      headers: [Level, What gets written there, Example]
+      rows:
+        - ["Machine", "Ones and zeros the processor runs", "Nobody writes it by hand"]
+        - ["Assembly", "One processor instruction per line", "Where every cycle counts"]
+        - ["High level", "Instructions close to your language", "Console.WriteLine(rpm);"]
+        - ["Very high level", "You say the what, not the how", "rpm.Sum() gives 10478"]
+
+  - concept:
+      eyebrow: Block 01 · Unit 2.3
+      title: C# is neither compiled nor interpreted, it is both
+      lead: >-
+        The compiler reads the whole file before a single line runs, but it does not
+        produce processor instructions. It produces an intermediate format that the .NET
+        engine translates at the last moment. That is why a type error shows up before
+        anything starts, and why the same compiled file runs on Windows and on macOS.
+      panel:
+        label: Measured on this machine
+        title: dotnet build leaves five files, two of them runnable
+        note: >-
+          The bin/Debug/net10.0 folder ends up with bench.dll, bench.exe, bench.pdb,
+          bench.deps.json and bench.runtimeconfig.json. The .dll carries the program; the
+          .exe only knows how to start the engine and hand it over.
+      steps:
+        - text: You write Program.cs
+        - text: The compiler checks it all and produces a .dll
+        - text: The engine translates and runs it
+          loop: ↺ and if anything does not add up, it stops at step 2
+
+  - compare:
+      eyebrow: Block 01 · Measured
+      title: The same line in two languages, two destinies
+      before:
+        label: C# · it refuses before starting
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm = "3000";
+          Console.WriteLine(rpm);
+      after:
+        label: Python 3.14.7 · it never notices
+        file: probe.py
+        lang: python
+        code: |
+          rpm: int = "3000"
+          print(repr(rpm), type(rpm).__name__)
+          print("program finished normally")
+      note: >-
+        C# stops with error CS0029: Cannot implicitly convert type 'string' to 'int', it
+        marks Build FAILED and leaves the output folder with zero files. Python prints
+        '3000' str, carries on to the next line and exits with code 0: the int annotation
+        is not enforced. Noticing late is bad; never noticing is worse.
+
+  - divider:
+      eyebrow: Block 02
+      title: Anatomy of a program
+      lede: >-
+        One line of code, four properties in the project file, and a class the compiler
+        wrote without asking you first.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The whole scaffold of a new project is one line
+      filename: Program.cs
+      lang: csharp
+      output_label: Measured here
+      source: |
+        // dotnet new console -o bench
+        // this is ALL of the generated Program.cs:
+        Console.WriteLine("Hello, World!");
+      output: |
+        Program.cs BYTES
+        40
+        Program.cs LINES
+        1
+
+        dotnet run
+        Hello, World!
+
+        exit code
+        0
+
+  - code:
+      eyebrow: Block 02 · Unit 2.2
+      title: The file that decides how that one line behaves
+      filename: bench.csproj
+      lang: text
+      source: |
+        <Project Sdk="Microsoft.NET.Sdk">
+
+          <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net10.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+          </PropertyGroup>
+
+        </Project>
+      annotations:
+        - label: OutputType
+          text: Exe asks for a program that starts on its own. Library would produce a library with no entry point.
+        - label: TargetFramework
+          text: net10.0 is the platform version it compiles against, not the version of the SDK doing the compiling.
+        - label: ImplicitUsings
+          text: >-
+            enable hands you seven using directives. With disable the same single line
+            stops compiling, and that is measured on the next slide.
+        - label: Nullable
+          text: enable makes the compiler warn you when a value may arrive empty. It is cashed in week 5.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: ImplicitUsings is not magic, it writes a file
+      filename: bench.GlobalUsings.g.cs
+      lang: csharp
+      output_label: With disable
+      source: |
+        // obj/Debug/net10.0/bench.GlobalUsings.g.cs
+        // <auto-generated/>
+        global using System;
+        global using System.Collections.Generic;
+        global using System.IO;
+        global using System.Linq;
+        global using System.Net.Http;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+      output: |
+        the file is not generated
+
+        Program.cs(1,1): error CS0103:
+        The name 'Console' does not
+        exist in the current context
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The file really is a class, and the method has an ugly name
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(typeof(Program).FullName);
+        Console.WriteLine(args.Length);
+
+        var flags = System.Reflection.BindingFlags.Static
+            | System.Reflection.BindingFlags.NonPublic
+            | System.Reflection.BindingFlags.Public
+            | System.Reflection.BindingFlags.DeclaredOnly;
+
+        foreach (var m in typeof(Program).GetMethods(flags))
+            Console.WriteLine(m.Name);
+      output: |
+        Program
+        0
+        <Main>$
+
+  - divider:
+      eyebrow: Block 03
+      title: Syntax, and what it does not forgive
+      lede: >-
+        The writing rules of the language. They are not negotiable, and the message almost
+        always names the file, the line and the column where you slipped.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: One semicolon short, and nothing is left to run
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        // the line is 34 characters long
+        Console.WriteLine("Hello, World!")
+        //                                ^ column 35
+      output: |
+        Program.cs(2,35): error CS1002:
+        ; expected
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+        bin\Debug\net10.0
+        (0 files)
+
+  - code_output:
+      eyebrow: Block 03 · Unit 2.4
+      title: Comments, capitals, and three names that sound alike
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int rpm = 1500;      // nominal rpm of the conveyor
+        /* a block
+           of several lines */
+        int Rpm = 1502;      // ANOTHER variable: case matters
+        int RPM = 1495;
+
+        Console.WriteLine($"rpm={rpm} Rpm={Rpm} RPM={RPM}");
+        Console.WriteLine("different: " + (rpm != Rpm));
+
+        string text = "this // is not a comment";
+        Console.WriteLine(text);
+
+        bool same = "Console" == "console";
+        Console.WriteLine("Console vs console: " + same);
+      output: |
+        rpm=1500 Rpm=1502 RPM=1495
+        different: True
+        this // is not a comment
+        Console vs console: False
+
+  - table:
+      eyebrow: Block 03 · Unit 2.4
+      title: What may be called an identifier and what may not
+      headers: [Name, Legal, What the compiler answers]
+      rows:
+        - ["rpm", "yes", "It opens with a letter"]
+        - ["_tempC", "yes", "An underscore opens too"]
+        - ["sensor2", "yes", "A digit goes after the first one"]
+        - ["2sensor", "no", "CS1001: Identifier expected"]
+        - ["class", "no", "CS1001, and six more errors"]
+        - ["@class", "yes", "It exists, but we never use it"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: One single slip produces seven errors
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int class = 7;
+      output: |
+        Program.cs(1,5): error CS1001:
+        Identifier expected
+
+        ...and six more errors, all
+        from the same line
+
+        Build FAILED.
+            0 Warning(s)
+            7 Error(s)
+
+  - pitfalls:
+      eyebrow: Block 03 · The other four
+      title: Four more slips, with what each one returns
+      items:
+        - label: int 2sensor = 7;
+          title: An identifier that opens with a digit
+          desc: >-
+            Program.cs(1,5): error CS1001: Identifier expected. The compiler read int,
+            expected a name and ran into a number.
+        - label: Console.writeline(rpm);
+          title: A capital slip on somebody else's name
+          desc: >-
+            Program.cs(2,9): error CS0117: 'Console' does not contain a definition for
+            'writeline'. The type exists; a member with that name does not.
+        - label: Console.WriteLine(Rpm);
+          title: A capital slip on a name of your own
+          desc: >-
+            Program.cs(2,19): error CS0103: The name 'Rpm' does not exist in the current
+            context. The same slip, a different message, because the name is yours.
+        - label: /* a /* nested */ */
+          title: Block comments, which do not nest
+          desc: >-
+            Program.cs(1,36): error CS1003: Syntax error, ',' expected. The first closer
+            closes, and whatever follows becomes code again.
+
+  - table:
+      eyebrow: Block 03 · Agreement, not rule
+      title: How things get named in this course
+      headers: [Thing, Convention, Example from the course]
+      rows:
+        - ["Local variable", "camelCase", "rpm, sampleSum, limitC"]
+        - ["Constant", "PascalCase", "Nominal, Setpoint"]
+        - ["Method", "PascalCase, and a verb", "ReadSample, BandMean"]
+        - ["Type", "PascalCase", "Run, Sample, Status"]
+        - ["Enum value", "PascalCase", "Ok, Warning, Fault"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: Both programs carry the same slip. Do they give the same error?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        // A
+        int rpm = 1500;
+        Console.writeline(rpm);
+
+        // B
+        int rpm = 1500;
+        Console.WriteLine(Rpm);
+      options:
+        - 'Yes, both say that the name does not exist'
+        - 'No, A returns CS0117 and B returns CS0103'
+        - 'Yes, both are CS1001 on the identifier'
+        - 'Neither fails, C# ignores capitalisation'
+
+  - trace:
+      eyebrow: Answer
+      title: The same slip, two different messages
+      headers: [Written, Whose name it is, What comes back]
+      rows:
+        - ["Console.writeline", "the framework's", "CS0117: 'Console' does not contain a definition for 'writeline'"]
+        - ["Rpm instead of rpm", "yours", "CS0103: The name 'Rpm' does not exist in the current context"]
+      verdict: >-
+        The Console type does exist, so the compiler can name exactly which member is
+        missing. Rpm exists nowhere at all, and the only thing it can say is that it does
+        not know the name. Same cause, two messages, and that is why you read the whole
+        message instead of guessing.
+
+  - lab:
+      eyebrow: Lab
+      title: Break it on purpose, five times
+      brief: >-
+        Take the scaffold of a new project, get it running, and then trigger the five
+        errors of this session one by one. From each attempt copy the first message in
+        full, with file, line, column and code.
+      blocks:
+        - label: Deliverable
+          text: A table with the five attempts and their first message, copied verbatim
+        - label: The rule
+          text: >-
+            Fix the first, rebuild, and only then look at the next one. Fixing from the
+            bottom up is how a whole afternoon disappears.
+        - label: The trap
+          text: >-
+            int class = 7; returns seven errors from a single slip. If you count them and
+            panic, you already fell for it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The compiler reads it all before running
+          desc: That is why a type error shows up before the motor turns, not halfway through the run
+        - title: An error is a gate, not a warning
+          desc: After Build FAILED the output folder holds zero files and there is nothing to execute
+        - title: You read the first message, not the last
+          desc: One slip can give seven errors, and the other six leave when you fix the first
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Reproduce the five syntax errors of this session on your own machine and hand in a
+        table with the first message of each, copied unedited, plus one line saying what
+        the compiler read wrong.
+      meta:
+        - [Due, Before week 4]
+        - [Format, Blackboard · .pdf]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The five cases", "40 %", "All five fail to compile and each one for its own reason"]
+        - ["Verbatim message", "40 %", "File, line, column and code, copied without touching them"]
+        - ["The cause", "20 %", "One line per case explaining what the compiler read wrong"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week, now that the machine refuses to accept badly placed types, it is worth
+        knowing what the types are.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

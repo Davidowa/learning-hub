@@ -1,0 +1,450 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 1
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Encuadre y criterios de evaluación
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Para qué sirve esta materia en una carrera de ingeniería, cómo se califica y qué
+        cuenta como trabajo tuyo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 1 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Por qué esta materia
+          desc: Qué contesta un programa que ninguna suposición contesta
+        - title: Cómo se evalúa
+          desc: Cinco componentes de veinte por ciento y el piso del proyecto
+        - title: Cómo trabajamos
+          desc: Entregas, normatividad, uso de IA y dónde pedir ayuda
+        - title: El diagnóstico
+          desc: Dos predicciones, dos corridas y una explicación por escrito
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar qué resuelve esta materia
+          sub: Por qué un ingeniero escribe programas aunque no vaya a ser programador
+        - head: Ubicar cada evaluación en el semestre
+          sub: Qué se evalúa, cuándo, cuánto pesa y qué hay que entregar
+        - head: Reconocer las reglas de operación
+          sub: Asistencia, dispositivos, canal de entrega y el uso permitido de la IA
+        - head: Leer un número medido en vez de suponerlo
+          sub: >-
+            La costumbre del semestre: correr el programa antes de afirmar nada
+        - head: Describir el proyecto integrador
+          sub: Qué se entrega en la semana 16 y con qué rúbrica se califica
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cuatro bloques, diecisiete semanas
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento y herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones y repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: todo
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones y proyecto
+          desc: Arreglos, cadenas, ordenamiento, búsqueda y proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Por qué existe esta materia
+      lede: >-
+        No para volverlos programadores. Para que ninguna decisión de ingeniería descanse
+        sobre un número que nadie verificó.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Aquí nada se afirma sin haberlo corrido
+      lead: >-
+        Un banco de pruebas no discute. Le entregas una lectura y te devuelve un número, y
+        ese número no cambia porque tú esperabas otro. El curso funciona igual. Cada
+        afirmación de estas láminas se compiló y se corrió en esta máquina antes de
+        escribirse, y cada vez que el resultado contradijo la intuición, se quedó el
+        resultado.
+      panel:
+        label: La costumbre del semestre
+        title: Predecir, correr, comparar, explicar
+        note: >-
+          Esa secuencia es la evidencia diagnóstica de hoy, y es también la forma de
+          trabajar de las dieciséis semanas que siguen.
+      steps:
+        - text: Escribes qué crees que va a imprimir
+        - text: Lo corres sin cambiarle una letra
+        - text: Comparas las dos cosas
+          loop: ↺ y la diferencia es lo que de verdad aprendiste
+
+  - quiz:
+      eyebrow: Diagnóstico
+      question: ¿Qué imprimen estas tres líneas de C#?
+      filename: Diagnostico.cs
+      lang: csharp
+      source: |
+        Console.WriteLine(7 / 2);
+        Console.WriteLine(0.1 + 0.2);
+        Console.WriteLine(0.1 + 0.2 == 0.3);
+      options:
+        - '3.5, luego 0.3, luego True'
+        - '3, luego 0.3, luego True'
+        - '3, luego 0.30000000000000004, luego False'
+        - '3.5, luego 0.30000000000000004, luego False'
+
+  - code_output:
+      eyebrow: Medido
+      title: Lo que de verdad imprime
+      filename: Diagnostico.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.WriteLine(7 / 2);
+        Console.WriteLine(0.1 + 0.2);
+        Console.WriteLine(0.1 + 0.2 == 0.3);
+      output: |
+        3
+        0.30000000000000004
+        False
+
+  - code:
+      eyebrow: Bloque 01 · Tu máquina
+      title: Dos números que no son el mismo número
+      filename: Version.cs
+      lang: csharp
+      source: |
+        // En la terminal, antes de compilar nada:
+        //   dotnet --version
+
+        // Y desde adentro del programa ya compilado:
+        Console.WriteLine(Environment.Version);
+      annotations:
+        - label: El kit
+          text: >-
+            dotnet --version reporta el SDK, que es lo que instalas y lo que compila tu
+            código.
+        - label: El motor
+          text: >-
+            Environment.Version reporta el runtime, que es lo que ejecuta tu programa ya
+            compilado. No tienen por qué coincidir.
+        - label: Sin resultado aquí
+          text: >-
+            Esta lámina no trae la salida a propósito. La imprime la máquina del salón, y
+            ese es el dato que te sirve.
+        - label: Riesgo
+          text: >-
+            Copiar el número de la captura de un compañero es reportar la máquina de otro.
+          accent: true
+
+  - stat:
+      eyebrow: Medido · PowerShell 7 · Windows 11
+      value: '-532462766'
+      text: >-
+        es el código con el que termina un programa de C# que leyó fuera de un arreglo.
+      note: >-
+        El mismo binario devuelve 0 cuando termina bien. Bajo Git Bash el mismo fallo se
+        reporta como 127, porque los shells POSIX recortan el estado a ocho bits. Por eso
+        el número nunca se cita solo: se nombra el shell junto a él.
+
+  - table:
+      eyebrow: Medido
+      title: El mismo programa, preguntado de cinco maneras
+      headers: [Cómo se pregunta, Fin limpio, Índice fuera de rango]
+      rows:
+        - ["PowerShell 7", "0", "-532462766"]
+        - ["cmd.exe", "0", "-532462766"]
+        - ["dotnet run", "0", "-532462766"]
+        - ["Git Bash", "0", "127"]
+        - ["Desde .NET", "0", "-532462766"]
+        - ["En hexadecimal", "0x00000000", "0xE0434352"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se evalúa
+      lede: >-
+        Cinco componentes de veinte por ciento cada uno. Ninguno pesa más que otro y no hay
+        puntos extra que compensen.
+      block: 2
+
+  - table:
+      eyebrow: Evaluación del curso
+      title: Cinco componentes, veinte por ciento cada uno
+      headers: [Componente, Contenido, Momento, Peso]
+      rows:
+        - ["Parcial 1", "Unidades 1 a 4", "Semana 8", "20 %"]
+        - ["Parcial 2", "Unidad 5 y 6 hasta 6.1.3", "Semana 13", "20 %"]
+        - ["Proyecto", "Proyecto integrador", "Semana 16", "20 %"]
+        - ["Examen final", "Todas las unidades", "Semana 17", "20 %"]
+        - ["Tareas", "Entregas fuera de clase", "Todo el curso", "20 %"]
+
+  - concept:
+      eyebrow: Bloque 02 · Alcance
+      title: Lo que cada parcial sí examina
+      lead: >-
+        Los dos parciales caen sobre temas que el curso sigue profundizando después, así
+        que conviene decirlo hoy y no la semana del examen. El parcial 1 llega el mismo día
+        en que se introduce la repetición, y el parcial 2 llega antes de que veamos
+        arreglos multidimensionales y ordenamiento.
+      panel:
+        label: La regla
+        title: Se examina al nivel en que se enseñó
+        note: >-
+          Lo que se profundiza después de un parcial entra en el examen final, no en ese
+          parcial.
+      steps:
+        - text: Parcial 1 · semana 8 · unidades 1 a 4
+        - text: Parcial 2 · semana 13 · unidad 5 y 6.1
+        - text: Final · semana 17 · todas las unidades
+          loop: ↺ y el proyecto de la semana 16 cierra el quinto veinte por ciento
+
+  - method:
+      eyebrow: Bloque 02 · Proyecto
+      title: Cómo se califica el proyecto integrador
+      statement: >-
+        El código vale setenta por ciento y el reporte treinta. Un proyecto que no se
+        ejecuta tiene treinta por ciento como calificación máxima, por buena que sea la
+        idea.
+      points:
+        - label: Código · 70 %
+          text: >-
+            Ejecución y funcionalidad 35 %, diseño algorítmico y lógica 25 %, buenas
+            prácticas y organización 10 %.
+        - label: Reporte · 30 %
+          text: >-
+            Narrativa y claridad 15 %, análisis y justificación 10 %, evidencias bien
+            integradas 5 %.
+        - label: El piso
+          text: >-
+            Si el proyecto no se ejecuta, su calificación máxima es 30 %. Está en el
+            syllabus y no se negocia.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro formas de perder puntos sin querer
+      items:
+        - label: Error 01
+          title: Entregar por correo
+          desc: >-
+            Blackboard es el único canal. Un archivo que llega al correo no se califica,
+            aunque llegue a tiempo.
+        - label: Error 02
+          title: Subir la carpeta bin comprimida
+          desc: >-
+            El antivirus bloquea el ejecutable y la entrega se pierde sin aviso. Borra bin
+            y obj antes de comprimir.
+        - label: Error 03
+          title: Entregar solo capturas de pantalla
+          desc: >-
+            El documento lleva texto y código. Las imágenes acompañan la evidencia, no la
+            sustituyen.
+        - label: Error 04
+          title: Entregar un proyecto que no compila
+          desc: >-
+            Su calificación máxima es treinta por ciento, aunque el diseño y el reporte
+            estén bien escritos.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cómo trabajamos
+      lede: >-
+        Reglas de operación, normatividad, uso de inteligencia artificial y dónde pedir
+        ayuda cuando algo no compila.
+      block: 3
+
+  - steps:
+      eyebrow: Reglas de operación
+      title: Lo que hay que saber desde hoy
+      items:
+        - label: '01'
+          title: Asistencia
+          desc: Se registra en los primeros cinco minutos de la sesión
+        - label: '02'
+          title: Retardo
+          desc: Del minuto cinco al quince. Dos retardos equivalen a una falta.
+        - label: '03'
+          title: Después del minuto dieciséis
+          desc: No hay acceso al aula y se registra falta
+        - label: '04'
+          title: Dispositivos
+          desc: Teléfono, audífonos y lentes con IA guardados durante toda la sesión
+        - label: '05'
+          title: Entregas
+          desc: En la fecha establecida. Las tareas y los quizzes no tienen reposición.
+
+  - concept:
+      eyebrow: Bloque 03 · Entregas
+      title: Blackboard es el único canal
+      lead: >-
+        Todas las evidencias del syllabus y el proyecto final se entregan por Blackboard.
+        No se aceptan entregas por correo electrónico, y eso incluye el correo del
+        profesor, el chat institucional y la memoria que traes en la mano el día de la
+        revisión.
+      panel:
+        label: Qué se sube
+        title: Código fuente y documento, sin la carpeta bin
+        note: >-
+          Comprime el proyecto sin bin ni obj. El antivirus institucional bloquea los
+          ejecutables y la entrega se pierde en silencio.
+      steps:
+        - text: Subes antes de la hora de cierre
+        - text: Vuelves a bajar el archivo y lo abres
+        - text: Guardas el acuse de la plataforma
+          loop: ↺ y ese acuse es tu única prueba si algo falla
+
+  - method:
+      eyebrow: Bloque 03 · Normatividad
+      title: Qué cuenta como trabajo tuyo
+      statement: >-
+        Puedes usar inteligencia artificial. No puedes entregar código que no puedas
+        explicar línea por línea cuando te lo pida.
+      points:
+        - label: La declaración
+          text: >-
+            Una entrega asistida por IA declara qué herramienta usaste, en qué parte, y qué
+            verificaste tú. Aquí verificar significa correr y citar la salida.
+        - label: Los documentos
+          text: >-
+            Código de Honor, Reglamento General UP de julio de 2025, Reglamento de la
+            Entidad Académica de Ingeniería y los Lineamientos de uso de IA del CIIE.
+        - label: Cómo se revisa
+          text: >-
+            En la revisión te pido que expliques una parte que yo elijo. Si no la
+            sostienes, la entrega vale cero.
+
+  - tiers:
+      eyebrow: Recursos de apoyo académico
+      title: Dónde buscar cuando te atores
+      items:
+        - key: '01'
+          title: Biblioteca UP
+          desc: >-
+            Colección digital, con los tres libros del curso. Se entra con la cuenta
+            institucional.
+        - key: '02'
+          title: DataCamp y W3Schools
+          desc: >-
+            Práctica guiada opcional, sin calificación en esta materia. Sirven para repasar
+            sintaxis entre sesiones.
+        - key: '03'
+          title: Smart Center
+          desc: >-
+            Asesoría académica. Se agenda antes de las semanas 8 y 13, no la noche anterior
+            al parcial.
+        - key: '04'
+          title: Asuntos Estudiantiles
+          desc: >-
+            Escribe a mx_ingeup@up.edu.mx. La Wiki de Ingeniería CDMX y el Portal CMC
+            resuelven los trámites.
+
+  - table:
+      eyebrow: Bloque 03 · Bibliografía
+      title: Tres fuentes, y las semanas donde cada una sirve
+      headers: [Fuente, Obra, Semanas]
+      rows:
+        - ["Joyanes, 2020", "Fundamentos generales de programación", "2 a 9"]
+        - ["Deitel, 2016", "C# 6 for Programmers", "3 a 5 y 10 a 13"]
+        - ["Karumanchi, 2017", "Data Structures and Algorithms", "14 y 16"]
+
+  - steps:
+      eyebrow: Metodologías de aprendizaje
+      title: Cinco formas de trabajar, y dónde vas a verlas
+      items:
+        - label: '01'
+          title: Basada en la práctica
+          desc: La sonda corre frente al salón en cada sesión
+        - label: '02'
+          title: Resolución guiada
+          desc: >-
+            Semanas 2, 8 y 14, con la traza a dedo y la comparación contada
+        - label: '03'
+          title: Trabajo autónomo
+          desc: La entrega semanal, siempre más pequeña que el ejercicio de aula
+        - label: '04'
+          title: Basada en la investigación
+          desc: Semanas 12 y 14, donde tú buscas la fuente y después la mides
+        - label: '05'
+          title: Basada en problemas
+          desc: El proyecto de tema libre de la semana 16
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Evidencia diagnóstica inicial
+      brief: >-
+        Escribe en la hoja qué crees que imprime 7 / 2 y qué crees que contesta
+        0.1 + 0.2 == 0.3. Corre las dos líneas, anota lo que salió de verdad y explica en
+        un renglón por qué tu predicción falló.
+      blocks:
+        - label: Entrega
+          text: >-
+            La hoja al final de la sesión. Se registra presente o ausente contra la
+            participación.
+        - label: Segunda parte
+          text: >-
+            Anota también qué imprimen dotnet --version y Environment.Version en tu equipo.
+        - label: Si no fallaste
+          text: >-
+            Escribe entonces por qué acertaste. Sostenerlo vale lo mismo que corregirlo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Nada se afirma sin correrlo
+          desc: >-
+            Cada número de estas láminas salió de un programa compilado en esta máquina, y
+            cuando la intuición perdió, se quedó el número
+        - title: Cinco componentes de veinte
+          desc: >-
+            Ninguno pesa más que otro, y el proyecto de la semana 16 es solo uno de los
+            cinco
+        - title: Puedes usar IA y tienes que sostenerla
+          desc: >-
+            La regla no es la herramienta. Es que expliques lo que entregas cuando te
+            pregunte por una parte a mi elección
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Sube la hoja del diagnóstico con las dos predicciones, las dos salidas reales y tu
+        explicación de la diferencia.
+      meta:
+        - [Entrega, Antes de la siguiente sesión]
+        - [Formato, Blackboard · PDF o imagen]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Predicción", "30 %", "Está escrita antes de correr el programa"]
+        - ["Salida real", "40 %", "Se ve la salida que produjo tu máquina"]
+        - ["Explicación", "30 %", "Un renglón que diga por qué salió distinto"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente parte de la sesión, el entorno que produce esos números y cómo dejarlo
+        corriendo en tu equipo.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

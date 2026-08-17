@@ -1,0 +1,499 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 5
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 05 · Tema 4 · Instrucciones, lectura y escritura
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Un programa que no puede leer un valor solo sabe contestar siempre lo mismo. Hoy
+        entran los datos, salen los resultados y aparece el primer guardia del curso.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 5 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Tipos de instrucción
+          desc: Qué cuenta como instrucción, según el compilador y no según la lámina
+        - title: Escribir
+          desc: Write contra WriteLine, interpolación, unidades y formato
+        - title: Leer
+          desc: ReadLine siempre devuelve texto, y tres convertidores que no coinciden
+        - title: Tu turno
+          desc: El front end de captura del banco, primero en papel y luego corrido
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Clasificar los tipos de instrucción
+          sub: Declaración, asignación, entrada y salida, selección, repetición y salto
+        - head: Escribir una salida legible
+          sub: Con etiqueta, unidad y un número fijo de decimales, no cifras desnudas
+        - head: Leer un valor desde el teclado
+          sub: Y recordar que lo que llega es texto aunque parezca un número
+        - head: Elegir un convertidor con criterio
+          sub: Convert.ToInt32, int.Parse e int.TryParse no fallan igual
+        - head: Revisar una lectura antes de usarla
+          sub: El bool primero, el valor después, y nunca al revés
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento y herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea, y el compilador que la revisa
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: now
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que el framework ya escribió
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto integrador
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué cuenta como una instrucción
+      lede: >-
+        El subtema pide una lista de tipos de instrucción. No hace falta creerle a la
+        lámina, porque el compilador la enumera solo.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una instrucción tiene que hacer algo
+      lead: >-
+        Calcular un valor y tirarlo no es una instrucción, es un desperdicio, y C# lo
+        trata como error. De ahí sale la forma de todo programa del semestre. Primero
+        entra el dato, luego se calcula lo que interesa, al final se presenta el
+        resultado. Cuando algo falla, la primera pregunta útil es cuál de las tres
+        partes se rompió.
+      panel:
+        label: Lo que hay que saber
+        title: Entrada, proceso y salida son tres cosas separadas
+        note: >-
+          Si el cálculo está enredado con los prints no puedes revisar un número sin
+          volver a correr todo y leer la pantalla completa.
+      steps:
+        - text: Entrada, consigues el dato
+        - text: Proceso, calculas lo que importa
+        - text: Salida, lo presentas legible
+          loop: ↺ y cada parte se revisa por su cuenta
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El compilador enumera él mismo las instrucciones legales
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        int rpm = 1500;
+
+        rpm == 1500;
+      output: |
+        error CS0201
+        Only assignment, call,
+        increment, decrement, await,
+        and new object expressions
+        can be used as a statement
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Bloque 01 · Taxonomía
+      title: Los siete tipos de instrucción del curso
+      headers: [Tipo, Ejemplo, Dónde se ve]
+      rows:
+        - ["declaración", "int rpm;", "Hoy, en este bloque"]
+        - ["asignación", "rpm = 1502;   rpm += 33;", "Semana 4"]
+        - ["entrada y salida", "ReadLine   WriteLine", "Hoy, bloques 02 y 03"]
+        - ["selección", "if   else if   switch", "Semanas 6 y 7"]
+        - ["repetición", "while   do-while   for", "Semanas 8 y 9"]
+        - ["invocación", "Media(a, b);", "Semana 10"]
+        - ["salto", "break   continue   return", "Semanas 8 y 9"]
+
+  - compare:
+      eyebrow: Bloque 01 · Medido
+      title: Declarar, asignar y leer son tres cosas distintas
+      before:
+        label: Compila, con dos advertencias
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm = 1500;
+          int cuenta;
+          Console.WriteLine("encabezado");
+
+          // CS0219 'rpm' is assigned but its
+          // value is never used
+          // CS0168 'cuenta' is declared but
+          // never used
+      after:
+        label: No compila
+        file: Program.cs
+        lang: csharp
+        code: |
+          int rpm;
+
+          Console.WriteLine(rpm);
+
+          // error CS0165
+          // Use of unassigned local
+          // variable 'rpm'
+          // Build FAILED.
+      note: >-
+        El compilador tiene un diagnóstico distinto para cada descuido. Reservar la caja
+        y no usarla es una advertencia y el programa corre. Leerla antes de llenarla es
+        un error, la compilación se detiene y no queda ejecutable.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo salen los resultados
+      lede: >-
+        El número correcto, mal presentado, es un número que nadie va a usar. Y pegar
+        texto con números tiene una trampa que se cobra sola.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · En contexto
+      title: El encabezado del banco, escrito a mano
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string tag = "EST-07";
+        char canal = 'A';
+        int muestras = 7;
+        double rpm = 1496.857142857143;
+
+        Console.Write("Estacion ");
+        Console.WriteLine(tag);
+
+        Console.WriteLine($"{tag} canal {canal}");
+        Console.WriteLine($"{muestras} muestras");
+        Console.WriteLine($"{rpm:F3} rpm");
+      annotations:
+        - label: Write
+          text: Escribe y se queda en el mismo renglón. Es lo que se usa para un aviso que espera respuesta al lado.
+        - label: WriteLine
+          text: Escribe y baja. Cada llamada empieza un renglón nuevo, y una llamada vacía deja una línea en blanco.
+        - label: La interpolación
+          text: El signo de pesos antes de la comilla y el valor entre llaves. Adentro cabe una expresión completa.
+        - label: Riesgo
+          text: Lo que va después de los dos puntos elige la forma, no el valor. La variable sigue guardando lo mismo.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Lo que sale, renglón por renglón
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.Write("Estacion ");
+        Console.WriteLine(tag);
+
+        Console.WriteLine($"{tag} canal {canal}");
+        Console.WriteLine($"{muestras} muestras");
+        Console.WriteLine($"{rpm:F3} rpm");
+      output: |
+        Estacion EST-07
+        EST-07 canal A
+        7 muestras
+        1496.857 rpm
+
+  - table:
+      eyebrow: Bloque 02 · Medido
+      title: El especificador elige la forma, la máquina la puntuación
+      headers: [Especificador, Qué hace, es-MX, de-DE]
+      rows:
+        - ["{3.14159:F2}", "Dos decimales fijos", "3.14", "3,14"]
+        - ["{3.14159,10:F3}", "Diez columnas, a la derecha", "[     3.142]", "[     3,142]"]
+        - ["{148230:N0}", "Ciclos hasta la inspección", "148,230", "148.230"]
+        - ["{0.0342:P1}", "Fracción fuera de banda", "3.4%", "3,4 %"]
+
+  - trace:
+      eyebrow: Bloque 02 · Traza
+      title: El más cambia de oficio en cuanto aparece texto
+      headers: [Expresión, Qué hace primero, Resultado]
+      rows:
+        - ['"5" + 3', 'Pega el 3 al texto', "53"]
+        - ['3 + "5"', 'Pega el texto al 3', "35"]
+        - ['"5" + 1 + 2', 'Pega el 1, luego pega el 2', "512"]
+        - ['"5" + (1 + 2)', 'El paréntesis suma primero', "53"]
+        - ['1 + 2 + "5" + 1 + 2', 'Suma, pega, pega, pega', "3512"]
+      verdict: >-
+        Lee de izquierda a derecha. Hasta el primer texto suma, y a partir de ahí pega.
+        Ninguna de las cinco líneas da un error, así que la única manera de notarlo es
+        leer el resultado.
+
+  - compare:
+      eyebrow: Bloque 02 · La misma trampa en el banco
+      title: Dos lecturas pegadas en un número que no existe
+      before:
+        label: Concatenando
+        file: Program.cs
+        lang: csharp
+        code: |
+          int lo = 1480, hi = 1520;
+
+          Console.WriteLine("rpm " + lo + hi);
+
+          // rpm 14801520
+      after:
+        label: Interpolando
+        file: Program.cs
+        lang: csharp
+        code: |
+          int lo = 1480, hi = 1520;
+
+          Console.WriteLine($"rpm {lo + hi}");
+          Console.WriteLine($"rpm {lo}{hi}");
+
+          // rpm 3000
+          // rpm 14801520
+      note: >-
+        La interpolación no abole la trampa, hace visible el límite. La segunda línea de
+        la derecha vuelve a pegar los dos números, y ahora se ve por qué. De la misma
+        corrida salen dos hechos más, concatenar un null da la cadena vacía en vez de
+        reventar, y una llave doble es como se escribe una llave literal.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El factor de seguridad, con la salida cruda al lado
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        const double Rated = 480.50;
+        const double FS = 1.10;
+
+        double permisible = Rated / FS;
+        Console.WriteLine(permisible);
+        Console.WriteLine($"{permisible:F2} kN");
+
+        double diseno = 400.0;
+        double requerida = diseno * FS;
+        Console.WriteLine(requerida);
+        Console.WriteLine($"{requerida:F2} kN");
+        Console.WriteLine(requerida <= Rated);
+      output: |
+        436.81818181818176
+        436.82 kN
+        440.00000000000006
+        440.00 kN
+        True
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cómo entran los datos
+      lede: >-
+        ReadLine siempre devuelve texto, incluso cuando el operador tecleó un número. La
+        conversión es tuya, y hay tres formas de hacerla que no fallan igual.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · En contexto
+      title: El front end de captura del banco
+      filename: Program.cs
+      lang: csharp
+      source: |
+        Console.Write("Etiqueta: ");
+        string tag = Console.ReadLine() ?? "";
+
+        Console.Write("Muestras: ");
+        string sMuestras = Console.ReadLine();
+        bool okN = int.TryParse(sMuestras, out int n);
+
+        Console.Write("Lectura en rpm: ");
+        string sLectura = Console.ReadLine();
+        bool okR = double.TryParse(sLectura, out double rpm);
+
+        Console.WriteLine($"{tag} | {n} muestras");
+      annotations:
+        - label: El aviso
+          text: Con Write, porque el operador escribe en el mismo renglón. Sin aviso el programa parece colgado.
+        - label: La variable intermedia
+          text: Guardar la línea antes de convertirla parte el renglón en dos y deja ver qué se está convirtiendo.
+        - label: El bool
+          text: TryParse devuelve si pudo. Ese valor es el que se revisa, y a partir de la semana 6 será una condición.
+        - label: Riesgo
+          text: Tal como está, esta versión compila con dos advertencias CS8600. La siguiente lámina explica por qué.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: ReadLine puede no traerte nada, y el compilador lo avisa
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        Console.Write("Etiqueta: ");
+        string tag = Console.ReadLine();
+
+        Console.Write("Muestras: ");
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine($"{tag} / {n}");
+      output: |
+        warning CS8600
+        Converting null literal or
+        possible null value to
+        non-nullable type.
+
+        Build succeeded.
+            1 Warning(s)
+            0 Error(s)
+
+  - table:
+      eyebrow: Bloque 03 · Medido
+      title: Una lectura mala, tres conductas distintas
+      headers: [Entrada, Convert.ToInt32, int.Parse, int.TryParse]
+      rows:
+        - ['"abc"', "FormatException", "FormatException", "False y 0"]
+        - ['"3.7"', "FormatException", "FormatException", "False y 0"]
+        - ["null", "0, en silencio", "ArgumentNullException", "False y 0"]
+        - ["Enter a secas", "FormatException", "FormatException", "False y 0"]
+
+  - trace:
+      eyebrow: Bloque 03 · Traza
+      title: Los espacios no son el problema, el tamaño sí
+      headers: [Lo que teclearon, Con qué convertidor, Qué pasó]
+      rows:
+        - ['"  42 "', "int.TryParse", "True y 42"]
+        - ['"  42 "', "int.Parse", "42"]
+        - ['"4 2"', "int.TryParse", "False y 0"]
+        - ['"2147483648"', "int.Parse", "OverflowException"]
+        - ['"2147483648"', "int.TryParse", "False y 0"]
+      verdict: >-
+        Los espacios de los extremos los recortan los tres. Un espacio en medio no, y
+        una lectura más grande que int.MaxValue es un tercer modo de falla. No escriban
+        código que recorta antes de convertir, escriban código que revisa después.
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: TryParse no deja en paz la variable cuando falla
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int guardado = 999;
+
+        bool ok = int.TryParse("abc", out guardado);
+
+        Console.WriteLine(ok);
+        Console.WriteLine(guardado);
+      output: |
+        False
+        0
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El separador decimal es una configuración de la máquina
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        using System.Globalization;
+
+        CultureInfo.CurrentCulture = new CultureInfo("es-MX");
+        bool okMx = double.TryParse("480.50", out double mx);
+        Console.WriteLine(okMx);
+        Console.WriteLine(mx);
+
+        CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+        bool okDe = double.TryParse("480.50", out double de);
+        Console.WriteLine(okDe);
+        Console.WriteLine(de);
+      output: |
+        True
+        480.5
+        True
+        48050
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Cuál de las tres deja el programa al mando?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string linea = Console.ReadLine();
+
+        int n1 = Convert.ToInt32(linea);
+        int n2 = int.Parse(linea);
+        bool ok = int.TryParse(linea, out int n3);
+      options:
+        - 'Convert.ToInt32, porque nunca lanza nada.'
+        - 'int.Parse, porque avisa del error de inmediato.'
+        - 'int.TryParse, porque devuelve un bool que puedes revisar.'
+        - 'Las tres, si el operador teclea bien.'
+
+  - lab:
+      eyebrow: Laboratorio · RAA05
+      title: El front end de captura, primero en papel
+      brief: >-
+        Escribe a mano el pseudocódigo del front end que lee etiqueta, canal, número de
+        muestras y una lectura cruda, y luego imprime el encabezado con unidad y
+        decimales fijos. Antes de correr nada, escribe en esperado.txt la salida que
+        predices para dos entradas, una válida y una que no.
+      blocks:
+        - label: Entrega
+          text: El pseudocódigo en papel, más esperado.txt y real.txt
+        - label: La prueba
+          text: diff --strip-trailing-cr esperado.txt real.txt tiene que devolver 0
+        - label: Restricción
+          text: Ninguna conversión sin revisar antes el bool que devuelve
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Lo que entra es texto
+          desc: ReadLine devuelve una cadena aunque el operador haya tecleado un número, y convertir es tu trabajo
+        - title: El guardia va antes del valor
+          desc: TryParse devuelve un bool y además sobrescribe la variable con 0 cuando falla, así que se revisa primero
+        - title: La cultura no se supone
+          desc: 480.50 se lee como 48050 bajo de-DE y TryParse devuelve True, así que el guardia pasa y el valor está mal
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Sube el front end de captura con los tres avisos, las tres conversiones
+        revisadas y el encabezado formateado, junto con esperado.txt, real.txt y la
+        salida del diff pegada tal cual.
+      meta:
+        - [Entrega, Antes de la semana 6]
+        - [Formato, Blackboard · Program.cs]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Lectura", "40 %", "Cada conversión revisa el bool antes de usar el valor"]
+        - ["Salida", "40 %", "Etiqueta, unidad y decimales fijos en cada renglón"]
+        - ["Predicción", "20 %", "esperado.txt escrito antes de correr, y el diff pegado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, el valor que acabas de leer por fin se compara contra algo
+        y el programa toma dos caminos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

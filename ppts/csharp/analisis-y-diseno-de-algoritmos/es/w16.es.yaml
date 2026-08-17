@@ -1,0 +1,448 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 16
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 16 · Tema 7 · Integración y proyecto final
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Tema libre, lista de verificación fija, un reporte que carga un tercio de la
+        calificación, y un programa que tiene que correr delante del salón.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 16 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El trato
+          desc: Tema libre, lista fija y la rúbrica que lleva en Blackboard desde la semana 1
+        - title: El esqueleto
+          desc: Un archivo que compila con cero advertencias antes de la primera funcionalidad
+        - title: La revisión
+          desc: Presentas tu problema y tu alternativa descartada, y te llevas dos hallazgos
+        - title: El día de la demo
+          desc: El camino feliz, una entrada rota a propósito y dos preguntas
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Formular un problema de ingeniería
+          sub: Y nombrar una alternativa que consideró y descartó, con su razón
+        - head: Auditar el código contra la lista
+          sub: Trece renglones, cada uno con la semana que lo enseñó
+        - head: Poner una guarda antes de cada escritura
+          sub: Un if convierte una excepción en un mensaje y una salida limpia
+        - head: Escribir el reporte
+          sub: Narrativa, justificación y las evidencias que ya produjo el semestre
+        - head: Sostener una revisión de diseño
+          sub: Devolverle a un par un riesgo por escrito y un punto de la lista
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El trato
+      lede: >-
+        Tú eliges el problema. La lista de verificación y la rúbrica no se negocian, y las
+        dos llevan en Blackboard desde la primera semana.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Rúbrica
+      title: Cómo se reparte el 20 % del proyecto
+      headers: [Rubro, Peso, Qué se revisa]
+      rows:
+        - ["Ejecución", "35 %", "Corre y hace lo que promete"]
+        - ["Diseño", "25 %", "La lógica y sus decisiones"]
+        - ["Prácticas", "10 %", "Orden, nombres, cero avisos"]
+        - ["Narrativa", "15 %", "Se lee sin que estés ahí"]
+        - ["Análisis", "10 %", "La alternativa descartada"]
+        - ["Evidencias", "5 %", "Trazas, corridas y formatos"]
+
+  - method:
+      eyebrow: Bloque 01 · El piso
+      title: El piso del 30 % son dos cosas distintas
+      statement: >-
+        Ningún programa de C# mide una rúbrica. Una parte de esta regla se puede correr, y
+        la otra es una cita del programa de la materia.
+      points:
+        - label: La mitad medible
+          text: >-
+            Que dotnet build tenga éxito y que dotnet run emita el prompt del menú en
+            stdout. Esa revisión corre sobre el esqueleto de referencia y pasa.
+        - label: La mitad de política
+          text: >-
+            «Si el proyecto no se ejecuta, su calificación máxima es 30 %». Es una cita, no
+            una medición, y aparece tal cual en el programa.
+        - label: Por qué van separadas
+          text: >-
+            Un programa puede imprimir su menú y aun así salir con −532462766, y otro puede
+            salir con 0 sin imprimir menú alguno.
+
+  - table:
+      eyebrow: Bloque 01 · La lista, 1 de 2
+      title: Lo que el código tiene que contener
+      headers: [Semana, Qué tiene que aparecer]
+      rows:
+        - ["w4", "Tres tipos de variable y un const"]
+        - ["w4", "Una expresión donde el paréntesis cambia el resultado"]
+        - ["w5", "Lectura y salida formateada, con la cultura fijada"]
+        - ["w6–w7", "if / else if / else, o un switch con brazo _ o default"]
+        - ["w8", "while o do-while con salida probada, y un break justificado"]
+        - ["w9", "for o foreach con un acumulador"]
+        - ["w10", "Cuatro funciones, una que devuelve y una que recibe arreglo"]
+
+  - table:
+      eyebrow: Bloque 01 · La lista, 2 de 2
+      title: Y los seis renglones que faltan
+      headers: [Semana, Qué tiene que aparecer]
+      rows:
+        - ["w11", "ref u out usado de verdad, y TryParse cuenta"]
+        - ["w12", "Una función de Math, Random o Convert"]
+        - ["w13", "Un arreglo de una dimensión y una operación de cadena"]
+        - ["w14", "Un arreglo 2-D, o un orden o búsqueda con su conteo"]
+        - ["w15", "Un struct con arreglo de él, y un enum con Ok, Warning y Fault"]
+        - ["w16", "dotnet build con cero advertencias"]
+
+  - tiers:
+      eyebrow: Bloque 01 · El reporte
+      title: Cuatro cosas que el PDF tiene que traer
+      items:
+        - key: "01"
+          title: El problema
+          desc: >-
+            El problema de ingeniería identificado, en tus palabras. Es la medida directa de
+            ABET SO 1 y es la primera página del reporte.
+        - key: "02"
+          title: La alternativa
+          desc: >-
+            Al menos una solución que consideraste y descartaste, con la razón por la que la
+            descartaste. Sin esto el reporte está incompleto.
+          accent: true
+        - key: "03"
+          title: La evidencia
+          desc: >-
+            La traza esperada, la corrida y el diff, incluyendo una entrada rota a propósito
+            que el programa aguanta sin morirse.
+        - key: "04"
+          title: Los anexos
+          desc: >-
+            Los dos formatos de la revisión de diseño, y las limitaciones que tú mismo le
+            encuentras al programa.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El esqueleto de referencia
+      lede: >-
+        Un archivo que ya compila y ya corre, sin una sola funcionalidad adentro. Llegar a
+        la sesión de trabajo con esto es media tarde ganada.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · El menú
+      title: El lazo de la semana 8, con las funciones de la semana 10
+      filename: Program.cs
+      lang: csharp
+      source: |
+        while (corriendo)
+        {
+            Console.Write("opcion: ");
+            switch (LeerOpcion())
+            {
+                case 1: Registrar(banco, ref cuenta); break;
+                case 2: Listar(banco, cuenta); break;
+                case 3: Estadisticas(banco, cuenta); break;
+                case 0: corriendo = false; break;
+                default: Console.WriteLine("opcion no valida"); break;
+            }
+        }
+        Console.WriteLine("fin");
+      annotations:
+        - label: Arriba del lazo
+          text: Sample[] banco = new Sample[3], int cuenta = 0 y bool corriendo = true.
+        - label: ref cuenta
+          text: Registrar tiene que mover el contador del llamador, así que lo recibe por referencia.
+        - label: El brazo default
+          text: Cualquier cosa que no sea 0, 1, 2 o 3 cae aquí y el menú sigue vivo.
+        - label: La salida probada
+          text: corriendo solo cambia en el brazo case 0, y por eso el lazo termina.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Compila con cero advertencias y sale con cero
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y correr
+      source: |
+        static int LeerOpcion()
+        {
+            string? linea = Console.ReadLine();
+            if (linea == null) return 0;
+            return int.TryParse(linea, out int v) ? v : -1;
+        }
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        opcion: fin
+        exit=0
+
+  - code:
+      eyebrow: Bloque 02 · La guarda
+      title: Un if antes de la escritura, y nada más
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static void Registrar(Sample[] b, ref int cuenta)
+        {
+            if (cuenta >= b.Length)
+            {
+                Console.WriteLine("banco lleno, rechazada");
+                return;
+            }
+            b[cuenta].SensorId = cuenta + 1;
+            b[cuenta].Celsius = 20.0 + cuenta;
+            b[cuenta].Estado = Status.Ok;
+            cuenta++;
+            Console.WriteLine($"registrada en el lugar {cuenta - 1}");
+        }
+      annotations:
+        - label: La condición
+          text: cuenta llega hasta b.Length y ese ya es un lugar que no existe. Por eso es >= y no >.
+        - label: El return temprano
+          text: Sale de la función sin escribir nada. El menú vuelve a preguntar y el banco sigue sano.
+        - label: b[cuenta]
+          text: El elemento del arreglo es el struct, así que escribirle un campo escribe en el banco.
+        - label: Riesgo
+          text: Sin este if la cuarta muestra escribe fuera del arreglo delante del salón.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: La división entre cero que nunca ocurre
+      filename: Program.cs
+      lang: csharp
+      output_label: Las dos corridas
+      source: |
+        static void Estadisticas(Sample[] b, int cuenta)
+        {
+            if (cuenta == 0)
+            {
+                Console.WriteLine("sin muestras, sin datos");
+                return;
+            }
+            double suma = 0;
+            for (int i = 0; i < cuenta; i++) suma += b[i].Celsius;
+            double media = suma / cuenta;
+            Console.WriteLine($"n = {cuenta}   media = {media:F2} C");
+        }
+      output: |
+        opcion: sin muestras, sin datos
+        opcion: n = 3   media = 21.00 C
+
+  - compare:
+      eyebrow: Bloque 02 · Una línea
+      title: El cuerpo del lazo, con y sin la guarda
+      before:
+        label: Sin la guarda
+        file: sin.cs
+        lang: csharp
+        code: |
+          banco[cuenta].SensorId = i + 1;
+          cuenta++;
+      after:
+        label: Con la guarda
+        file: con.cs
+        lang: csharp
+        code: |
+          if (cuenta >= banco.Length)
+          {
+              Console.WriteLine("banco lleno, rechazada");
+              continue;
+          }
+          banco[cuenta].SensorId = i + 1;
+          cuenta++;
+      note: >-
+        Las mismas cuatro muestras sobre el mismo Sample[3]. Sin el if, la cuarta escritura
+        lanza IndexOutOfRangeException. Con el if, imprime «banco lleno, rechazada», llega a
+        «fin» y sale con 0.
+
+  - trace:
+      eyebrow: Bloque 02 · Medido
+      title: Cuatro muestras en un banco de tres, las dos versiones
+      headers: [Muestra, Sin la guarda, Con la guarda]
+      rows:
+        - ["1", "registrada en el lugar 0", "registrada en el lugar 0"]
+        - ["2 y 3", "registradas en 1 y 2", "registradas en 1 y 2"]
+        - ["4", "IndexOutOfRangeException", "banco lleno, rechazada"]
+        - ["fin", "sin salida", "fin"]
+        - ["código", "-532462766 en PowerShell 7", "0"]
+      verdict: >-
+        El número de salida es del shell, no del universo. En PowerShell 7 y en cmd es
+        −532462766; el mismo binario bajo Git Bash reporta 127.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El operador teclea una letra en el prompt. ¿Qué hace esta versión?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static int LeerOpcion()
+        {
+            string linea = Console.ReadLine();
+            return Convert.ToInt32(linea);
+        }
+      options:
+        - 'Devuelve −1 y el menú sigue preguntando.'
+        - 'Lanza FormatException y ahí se acaba la demostración.'
+        - 'Devuelve 0 y el programa se cierra ordenado.'
+        - 'Devuelve el código del carácter tecleado.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Una lectura mala, tres conductas distintas
+      headers: [Entrada, Convert.ToInt32, int.TryParse]
+      rows:
+        - ["abc", "FormatException", "False, v=0"]
+        - ["3.7", "FormatException", "False, v=0"]
+        - ["cadena vacía", "FormatException", "False, v=0"]
+        - ["null", "0, en silencio", "False, v=0"]
+      verdict: >-
+        La peligrosa no es la que truena. Convert.ToInt32 sobre null devuelve 0 sin decir
+        nada, y ese 0 entra a tu banco como una lectura que nadie tomó.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La sesión de trabajo
+      lede: >-
+        Hoy se elige el tema, se arma el esqueleto y se sostiene una revisión de diseño con
+        un compañero. La demostración es el mismo trabajo, en voz alta.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Temas
+      title: Siete ideas del mismo tamaño
+      headers: [Idea, La pregunta de ingeniería, Para quién]
+      rows:
+        - ["Energía", "kWh por circuito, peor hora", "Industrial, Mecánica"]
+        - ["Línea", "Piezas, lote, merma, fin de turno", "Industrial"]
+        - ["Sensores", "Alta, calibración, fuera de banda", "Mecánica, Mecatrónica"]
+        - ["Banco", "Corridas, carga, ciclos, picos", "Mecánica"]
+        - ["Cuadros", "16.666666666666668 ms, caídos", "Animación y Videojuegos"]
+        - ["Control", "Asentamiento, sobrepaso, error", "Mecatrónica, Innovación"]
+        - ["Paquetes", "Latencia, mediana, pérdida", "Datos, Ciberseguridad, TI"]
+
+  - method:
+      eyebrow: Bloque 03 · RAA08
+      title: La revisión de diseño, en parejas y por escrito
+      statement: >-
+        Cada quien presenta su problema y la alternativa que descartó. El par devuelve dos
+        cosas por escrito, y ninguna de las dos es una calificación.
+      points:
+        - label: Lo que devuelve el par
+          text: >-
+            Un riesgo que el autor no había nombrado, y un renglón de la lista que su diseño
+            todavía no cumple. Nada más, y las dos cosas escritas.
+        - label: Cómo se califica
+          text: >-
+            Presente o ausente. Nunca con puntaje, para que la calificación de nadie dependa
+            de la opinión de un compañero.
+        - label: Ya lo ensayaron
+          text: >-
+            Es el mismo movimiento del intercambio por parejas de la semana 2, ahora con
+            formato fijo y con los dos formatos anexos al reporte.
+
+  - table:
+      eyebrow: Bloque 03 · Ensayo
+      title: Cinco maneras conocidas de reventar la demostración
+      headers: [Riesgo, Lo que imprime, Semana]
+      rows:
+        - ["CS8524", "SwitchExpressionException", "w15"]
+        - ["Convert", "FormatException, o 0 callado", "w5"]
+        - ["Sin guarda", "IndexOutOfRangeException", "w16"]
+        - ["Índice fijo", "rpm[3] compila y luego revienta", "w13"]
+        - ["Acumulador int", "-2147483648 sin aviso", "w9"]
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Construir en el orden de la lista
+      brief: >-
+        Elige el tema, renombra Sample al sustantivo de tu problema y ponle unidad al campo
+        de valor. Después construye una funcionalidad por sesión, en el orden de la lista, y
+        corre el programa completo cada vez que termines una.
+      blocks:
+        - label: Entrega
+          text: Código fuente completo y reporte en PDF por Blackboard. Por correo no se recibe.
+        - label: La regla de los 15
+          text: Si llevas quince minutos atorado en lo mismo, escribe la pregunta y pídela.
+        - label: La prueba
+          text: Teclea letras donde van números. El programa debe encogerse de hombros, no morirse.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Llega con algo que ya compila
+          desc: El esqueleto de referencia corre con cero advertencias y sin una sola funcionalidad adentro
+        - title: Una guarda vale más que una disculpa
+          desc: Un if antes de la escritura es la diferencia entre un mensaje y una excepción en público
+        - title: El reporte carga un tercio
+          desc: El problema identificado y la alternativa descartada son la mitad de lo que se califica ahí
+
+  - homework:
+      eyebrow: Tarea
+      title: Bitácora de la sesión de trabajo
+      brief: >-
+        Lleva una bitácora del proyecto con una funcionalidad por sesión, fechada, con el
+        atorón que más costó y qué lo destrabó. Se entrega junto con el proyecto, como parte
+        de las evidencias del reporte.
+      meta:
+        - [Entrega, Con el proyecto en la semana 16]
+        - [Formato, Blackboard · código y PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Una por sesión", "40 %", "Cada renglón trae fecha y una sola funcionalidad"]
+        - ["El atorón", "40 %", "Se nombra el problema y qué lo destrabó"]
+        - ["Los formatos", "20 %", "Los dos de la revisión de diseño van anexos"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión es el repaso y el examen final. Trae por escrito las tres dudas
+        que quieras resolver antes.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

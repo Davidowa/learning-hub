@@ -1,0 +1,449 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 1
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 01 · Course framing and grading
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        What this subject is for in an engineering degree, how it is graded, and what
+        counts as your own work.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 1 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Why this subject
+          desc: What a program answers that no assumption ever answers
+        - title: How it is graded
+          desc: Five components of twenty per cent, and the project floor
+        - title: How we work
+          desc: Submissions, regulations, use of AI and where to ask for help
+        - title: The diagnostic
+          desc: Two predictions, two runs and one written explanation
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain what this subject solves
+          sub: Why an engineer writes programs without becoming a programmer
+        - head: Place every assessment in the term
+          sub: What is examined, when, how much it weighs and what you hand in
+        - head: Recognise the operating rules
+          sub: Attendance, devices, the submission channel and the permitted use of AI
+        - head: Read a measured number instead of guessing it
+          sub: >-
+            The habit of the term: run the program before you assert anything
+        - head: Describe the integrative project
+          sub: What is delivered in week 16 and the rubric it is graded against
+
+  - roadmap:
+      eyebrow: Course map
+      title: Four blocks, seventeen weeks
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line is written
+          state: now
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: todo
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections and project
+          desc: Arrays, strings, sorting, searching and the project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Why this subject exists
+      lede: >-
+        Not to turn you into programmers. So that no engineering decision ever rests on a
+        number nobody checked.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Nothing here is asserted without running it
+      lead: >-
+        A test bench does not argue. You hand it a reading and it hands back a number, and
+        that number does not change because you expected a different one. This course
+        works the same way. Every claim on these slides was compiled and run on this
+        machine before it was written down, and every time the result contradicted the
+        intuition, the result stayed.
+      panel:
+        label: The habit of the term
+        title: Predict, run, compare, explain
+        note: >-
+          That sequence is today's diagnostic evidence, and it is also how the sixteen
+          weeks after this one are going to work.
+      steps:
+        - text: You write down what you think it prints
+        - text: You run it without changing a letter
+        - text: You compare the two
+          loop: ↺ and the difference is what you actually learned
+
+  - quiz:
+      eyebrow: Diagnostic
+      question: What do these three lines of C# print?
+      filename: Diagnostic.cs
+      lang: csharp
+      source: |
+        Console.WriteLine(7 / 2);
+        Console.WriteLine(0.1 + 0.2);
+        Console.WriteLine(0.1 + 0.2 == 0.3);
+      options:
+        - '3.5, then 0.3, then True'
+        - '3, then 0.3, then True'
+        - '3, then 0.30000000000000004, then False'
+        - '3.5, then 0.30000000000000004, then False'
+
+  - code_output:
+      eyebrow: Measured
+      title: What it actually prints
+      filename: Diagnostic.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(7 / 2);
+        Console.WriteLine(0.1 + 0.2);
+        Console.WriteLine(0.1 + 0.2 == 0.3);
+      output: |
+        3
+        0.30000000000000004
+        False
+
+  - code:
+      eyebrow: Block 01 · Your machine
+      title: Two numbers that are not the same number
+      filename: Version.cs
+      lang: csharp
+      source: |
+        // In the terminal, before compiling anything:
+        //   dotnet --version
+
+        // And from inside the compiled program:
+        Console.WriteLine(Environment.Version);
+      annotations:
+        - label: The kit
+          text: >-
+            dotnet --version reports the SDK, which is what you install and what compiles
+            your code.
+        - label: The engine
+          text: >-
+            Environment.Version reports the runtime, which is what executes the compiled
+            program. They have no reason to match.
+        - label: No result here
+          text: >-
+            This slide carries no output on purpose. The machine in the room prints it, and
+            that is the figure that matters to you.
+        - label: Risk
+          text: >-
+            Copying the number off a classmate's screenshot means reporting someone else's
+            machine.
+          accent: true
+
+  - stat:
+      eyebrow: Measured · PowerShell 7 · Windows 11
+      value: '-532462766'
+      text: >-
+        is the code a C# program ends with after reading past the end of an array.
+      note: >-
+        The same binary returns 0 when it finishes cleanly. Under Git Bash the same failure
+        reports as 127, because POSIX shells truncate the status to eight bits. That is why
+        the number is never quoted alone, and the shell is always named beside it.
+
+  - table:
+      eyebrow: Measured
+      title: The same program, asked in five different ways
+      headers: [How you ask, Clean end, Index out of bounds]
+      rows:
+        - ["PowerShell 7", "0", "-532462766"]
+        - ["cmd.exe", "0", "-532462766"]
+        - ["dotnet run", "0", "-532462766"]
+        - ["Git Bash", "0", "127"]
+        - ["From .NET", "0", "-532462766"]
+        - ["In hexadecimal", "0x00000000", "0xE0434352"]
+
+  - divider:
+      eyebrow: Block 02
+      title: How it is graded
+      lede: >-
+        Five components of twenty per cent each. None of them weighs more than another and
+        there are no extra points to make up a gap.
+      block: 2
+
+  - table:
+      eyebrow: Course assessment
+      title: Five components, twenty per cent each
+      headers: [Component, Content, When, Weight]
+      rows:
+        - ["Midterm 1", "Units 1 to 4", "Week 8", "20 %"]
+        - ["Midterm 2", "Unit 5 and 6 up to 6.1.3", "Week 13", "20 %"]
+        - ["Project", "Integrative project", "Week 16", "20 %"]
+        - ["Final exam", "Every unit", "Week 17", "20 %"]
+        - ["Assignments", "Work done out of class", "All term", "20 %"]
+
+  - concept:
+      eyebrow: Block 02 · Scope
+      title: What each midterm actually examines
+      lead: >-
+        Both midterms land on topics the course keeps deepening afterwards, so it is worth
+        saying today rather than the week of the exam. Midterm 1 falls on the same day
+        repetition is introduced, and midterm 2 falls before we ever see multidimensional
+        arrays and sorting.
+      panel:
+        label: The rule
+        title: You are examined at the level it was taught
+        note: >-
+          Whatever gets deepened after a midterm belongs to the final exam, not to that
+          midterm.
+      steps:
+        - text: Midterm 1 · week 8 · units 1 to 4
+        - text: Midterm 2 · week 13 · unit 5 and 6.1
+        - text: Final · week 17 · every unit
+          loop: ↺ and the week 16 project closes the fifth twenty per cent
+
+  - method:
+      eyebrow: Block 02 · Project
+      title: How the integrative project is graded
+      statement: >-
+        The code is worth seventy per cent and the report thirty. A project that does not
+        run is capped at thirty per cent, however good the idea behind it was.
+      points:
+        - label: Code · 70 %
+          text: >-
+            Execution and functionality 35 %, algorithm design and logic 25 %, good
+            practice and organisation 10 %.
+        - label: Report · 30 %
+          text: >-
+            Narrative and clarity 15 %, analysis and justification 10 %, evidence properly
+            integrated 5 %.
+        - label: The floor
+          text: >-
+            If the project does not run, its maximum grade is 30 %. It is in the syllabus
+            and it is not negotiable.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways to lose points by accident
+      items:
+        - label: Error 01
+          title: Submitting by email
+          desc: >-
+            Blackboard is the only channel. A file that arrives by email is not graded,
+            even if it arrives on time.
+        - label: Error 02
+          title: Zipping the bin folder
+          desc: >-
+            The antivirus blocks the executable and the submission is lost silently. Delete
+            bin and obj before compressing.
+        - label: Error 03
+          title: Handing in screenshots only
+          desc: >-
+            The document carries text and code. Images accompany the evidence, they do not
+            replace it.
+        - label: Error 04
+          title: Submitting a project that does not build
+          desc: >-
+            Its maximum grade is thirty per cent, however well the design and the report
+            are written.
+
+  - divider:
+      eyebrow: Block 03
+      title: How we work
+      lede: >-
+        Operating rules, regulations, the use of artificial intelligence, and where to ask
+        when something refuses to compile.
+      block: 3
+
+  - steps:
+      eyebrow: Operating rules
+      title: What you need to know from today
+      items:
+        - label: '01'
+          title: Attendance
+          desc: Taken in the first five minutes of the session
+        - label: '02'
+          title: Late arrival
+          desc: From minute five to fifteen. Two late arrivals count as one absence.
+        - label: '03'
+          title: After minute sixteen
+          desc: No access to the room, and an absence is recorded
+        - label: '04'
+          title: Devices
+          desc: Phone, headphones and AI glasses put away for the whole session
+        - label: '05'
+          title: Submissions
+          desc: On the stated date. Assignments and quizzes cannot be retaken.
+
+  - concept:
+      eyebrow: Block 03 · Submissions
+      title: Blackboard is the only channel
+      lead: >-
+        Every piece of evidence in the syllabus and the final project is submitted through
+        Blackboard. Submissions by email are not accepted, and that includes the
+        instructor's inbox, the institutional chat, and the memory stick you bring in your
+        hand on review day.
+      panel:
+        label: What goes up
+        title: Source code and document, without the bin folder
+        note: >-
+          Compress the project without bin or obj. The institutional antivirus blocks
+          executables and the submission disappears without a word.
+      steps:
+        - text: You upload before the closing time
+        - text: You download the file again and open it
+        - text: You keep the platform receipt
+          loop: ↺ and that receipt is your only proof if something goes wrong
+
+  - method:
+      eyebrow: Block 03 · Regulations
+      title: What counts as your own work
+      statement: >-
+        You may use artificial intelligence. You may not hand in code you cannot explain
+        line by line when I ask you to.
+      points:
+        - label: The disclosure
+          text: >-
+            An AI-assisted submission declares which tool, on which part, and what you
+            verified yourself. Here, verified means you ran it and quoted the output.
+        - label: The documents
+          text: >-
+            Código de Honor, Reglamento General UP of July 2025, Reglamento de la Entidad
+            Académica for Engineering, and the CIIE guidelines on the use of AI.
+        - label: How it is checked
+          text: >-
+            At review time I ask you to explain a part I choose. If you cannot hold it up,
+            the submission is worth zero.
+
+  - tiers:
+      eyebrow: Academic support
+      title: Where to look when you get stuck
+      items:
+        - key: '01'
+          title: UP Library
+          desc: >-
+            Digital collection, carrying the three books this course uses. You get in with
+            the institutional account.
+        - key: '02'
+          title: DataCamp and W3Schools
+          desc: >-
+            Optional guided practice, not graded in this subject. Useful for revising
+            syntax between sessions.
+        - key: '03'
+          title: Smart Center
+          desc: >-
+            Academic tutoring. Book it before weeks 8 and 13, not the night before the
+            midterm.
+        - key: '04'
+          title: Student Affairs
+          desc: >-
+            Write to mx_ingeup@up.edu.mx. The Wiki Ingeniería CDMX and the Portal CMC
+            handle the paperwork.
+
+  - table:
+      eyebrow: Block 03 · Bibliography
+      title: Three sources, and the weeks each one serves
+      headers: [Source, Work, Weeks]
+      rows:
+        - ["Joyanes, 2020", "Fundamentos generales de programación", "2 to 9"]
+        - ["Deitel, 2016", "C# 6 for Programmers", "3 to 5 and 10 to 13"]
+        - ["Karumanchi, 2017", "Data Structures and Algorithms", "14 and 16"]
+
+  - steps:
+      eyebrow: Learning methodologies
+      title: Five ways of working, and where you meet each
+      items:
+        - label: '01'
+          title: Practice based
+          desc: The probe runs in front of the room every single session
+        - label: '02'
+          title: Guided problem solving
+          desc: >-
+            Weeks 2, 8 and 14, with the finger trace and the counted comparison
+        - label: '03'
+          title: Supervised autonomy
+          desc: The weekly submission, always smaller than the classroom exercise
+        - label: '04'
+          title: Research based
+          desc: Weeks 12 and 14, where you find the source and then measure it
+        - label: '05'
+          title: Problem based
+          desc: The free-topic project of week 16
+
+  - lab:
+      eyebrow: Lab
+      title: Initial diagnostic evidence
+      brief: >-
+        Write on the sheet what you think 7 / 2 prints and what you think
+        0.1 + 0.2 == 0.3 answers. Run both lines, write down what actually came out, and
+        explain in one line why your prediction was wrong.
+      blocks:
+        - label: Deliverable
+          text: >-
+            The sheet at the end of the session. Recorded present or absent against
+            participation.
+        - label: Second part
+          text: >-
+            Write down what dotnet --version and Environment.Version print on your machine.
+        - label: If you were right
+          text: >-
+            Then write why you were right. Holding it up is worth as much as correcting it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Nothing is asserted unrun
+          desc: >-
+            Every number on these slides came out of a program compiled on this machine,
+            and when intuition lost, the number stayed
+        - title: Five components of twenty
+          desc: >-
+            None weighs more than another, and the week 16 project is only one of the five
+        - title: You may use AI and you must hold it up
+          desc: >-
+            The rule is not the tool. It is that you explain what you hand in when I ask
+            about a part of my choosing
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Upload the diagnostic sheet with both predictions, both real outputs, and your
+        explanation of the difference.
+      meta:
+        - [Due, Before the next session]
+        - [Format, Blackboard · PDF or image]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Prediction", "30 %", "It is written before the program is run"]
+        - ["Real output", "40 %", "The output your machine produced is visible"]
+        - ["Explanation", "30 %", "One line saying why it came out different"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next up in this session, the environment that produces those numbers and how to
+        leave it running on your own machine.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,493 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 15
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 15 · Tema 7.1 · Registros y enumeraciones
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Siete arreglos paralelos son un defecto esperando a ocurrir. Uno de un tipo que tú
+        inventaste no lo es, y ese tipo trae un valor por omisión que va a mentirte.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 15 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El registro
+          desc: Elegir los campos es el diseño, y el compilador va a revisar esa elección
+        - title: La enumeración
+          desc: Un conjunto con nombre que por dentro sigue sabiendo que es un número
+        - title: El banco de muestras
+          desc: Un arreglo de estructuras y los barridos que ya sabes escribir
+        - title: Tu turno
+          desc: La tabla de campos del registro de tu proyecto final
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar un registro y una enumeración
+          sub: Con cada campo nombrado, tipado y justificado en una línea
+        - head: Explicar por qué un struct copia
+          sub: Y por qué una clase en su lugar no copia, con la medición al lado
+        - head: Llenar y recorrer un arreglo de estructuras
+          sub: Con for cuando hay que escribir y con foreach cuando solo se lee
+        - head: Reconocer el valor por omisión que miente
+          sub: El primer nombre de la enumeración vale 0, y 0 es lo que trae un campo vacío
+        - head: Compilar sin una sola advertencia
+          sub: Las tres CS0649 del ejemplo del curso, y la línea que las baja a cero
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El registro
+      lede: Un nombre, varios campos, y una decisión de diseño en cada uno. Elegir los campos es el trabajo de hoy.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · El tipo
+      title: El banco de muestras, declarado y llenado
+      filename: Muestra.cs
+      lang: csharp
+      source: |
+        Sample s = new Sample
+        {
+            SensorId = 1, Celsius = 20.0, State = Status.Ok
+        };
+
+        Console.WriteLine(s.Celsius);
+
+        enum Status { Ok, Warning, Fault }
+
+        struct Sample
+        {
+            public int SensorId;
+            public double Celsius;
+            public Status State;
+        }
+      annotations:
+        - label: Los campos
+          text: Nombre, tipo y una justificación por renglón. Elegir estos tres campos es el diseño de la semana.
+        - label: El inicializador
+          text: Con llaves después de new, los campos se asignan por nombre dentro de la misma expresión.
+        - label: Dónde van los tipos
+          text: En un archivo con instrucciones de nivel superior, enum y struct se declaran hasta el final.
+        - label: Riesgo
+          text: Sin ese inicializador el programa compila con tres advertencias CS0649, una por cada campo.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Un struct se llena solo antes que tú
+      filename: Muestra.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Sample s = new Sample();
+
+        Console.WriteLine(s.SensorId);
+        Console.WriteLine(s.Celsius);
+        Console.WriteLine(s.State);
+      output: |
+        0
+        0
+        Ok
+
+  - code_output:
+      eyebrow: Bloque 01 · Al compilar
+      title: Tres campos que solo se leen son tres advertencias
+      filename: Muestra.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        struct Sample
+        {
+            public int SensorId;
+            public double Celsius;
+            public Status State;
+        }
+      output: |
+        warning CS0649: Field
+        'Sample.SensorId' is never
+        assigned to, and will always
+        have its default value 0
+
+        Build succeeded.
+            3 Warning(s)
+            0 Error(s)
+
+  - code_output:
+      eyebrow: Bloque 01 · Al compilar
+      title: Un struct sin new todavía no está listo
+      filename: SinNew.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        // programa 1
+        Sample s;
+        Console.WriteLine(s.Celsius);
+
+        // programa 2
+        Sample s;
+        Console.WriteLine(s);
+      output: |
+        error CS0170: Use of possibly
+        unassigned field 'Celsius'
+
+        error CS0165: Use of
+        unassigned local variable 's'
+
+  - compare:
+      eyebrow: Bloque 01 · La medición que carga el bloque
+      title: La misma secuencia de tres líneas, dos resultados
+      before:
+        label: struct
+        file: Struct.cs
+        lang: csharp
+        code: |
+          Sample s1 = new Sample
+          { SensorId = 7, Celsius = 20.0 };
+
+          Sample s2 = s1;
+          s2.Celsius = 99.9;
+
+          Console.WriteLine(s1.Celsius);
+      after:
+        label: class
+        file: Clase.cs
+        lang: csharp
+        code: |
+          BenchSample b1 = new BenchSample
+          { SensorId = 7, Celsius = 20.0 };
+
+          BenchSample b2 = b1;
+          b2.Celsius = 99.9;
+
+          Console.WriteLine(b1.Celsius);
+      note: >-
+        La izquierda imprime 20. La derecha imprime 99.9, y ReferenceEquals(b1, b2) vale
+        True. Asignar un struct copia campo por campo; asignar una clase entrega la misma
+        cosa con otro nombre.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La enumeración
+      lede: Un conjunto de nombres que el compilador revisa, y que por dentro sigue siendo un entero cualquiera.
+      block: 2
+
+  - trace:
+      eyebrow: Bloque 02 · Medido
+      title: Un nombre que sigue sabiendo que es un número
+      headers: [Expresión, Resultado]
+      rows:
+        - ["(int)Status.Fault, luego (Status)2", "2, luego Fault"]
+        - ["(Status)7", "7"]
+        - ["Enum.IsDefined((Status)7)", "False"]
+        - ['Enum.TryParse("Warning")', "True, entrega Warning"]
+        - ['Enum.TryParse("warning")', "False, deja Ok"]
+      verdict: >-
+        El cast a una enumeración no se revisa, y TryParse no es guardia. Bogus devuelve
+        False y deja Ok. La cadena de dígitos 7 devuelve True y entrega el valor sin nombre.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: La advertencia de hoy es la demostración caída de la semana 16
+      filename: Describir.cs
+      lang: csharp
+      output_label: Al compilar y correr
+      source: |
+        static string Describe(Status st) => st switch
+        {
+            Status.Ok => "ok",
+            Status.Warning => "warning",
+            Status.Fault => "fault"
+        };
+
+        Console.WriteLine(Describe((Status)7));
+      output: |
+        warning CS8524: The switch
+        expression does not handle
+        some values of its input type
+
+        Build succeeded.
+            1 Warning(s)
+
+        SwitchExpressionException
+        Unmatched value was 7.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El banco de muestras
+      lede: Un arreglo de un tipo que tú inventaste, y los barridos de siempre corriendo encima de él.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El lugar que nunca se llenó reporta que está sano
+      filename: Banco.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Sample[] bank = new Sample[3];
+        bank[0] = new Sample { SensorId = 1, Celsius = 20.0 };
+        bank[1] = new Sample { SensorId = 2, Celsius = 99.9 };
+
+        Console.WriteLine(bank[2].SensorId);
+        Console.WriteLine(bank[2].Celsius);
+        Console.WriteLine(bank[2].State);
+        Console.WriteLine(bank[2].State == Status.Ok);
+        Console.WriteLine(Enum.IsDefined(bank[2].State));
+      output: |
+        0
+        0
+        Ok
+        True
+        True
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El elemento del arreglo es el struct, el local es una copia
+      filename: Banco.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Sample[] bank = new Sample[3];
+        bank[1] = new Sample { SensorId = 2, Celsius = 20.0 };
+
+        bank[1].Celsius = 99.9;
+        Console.WriteLine(bank[1].Celsius);
+
+        Sample copia = bank[1];
+        copia.Celsius = 0.0;
+        Console.WriteLine(bank[1].Celsius);
+        Console.WriteLine(copia.Celsius);
+      output: |
+        99.9
+        99.9
+        0
+
+  - compare:
+      eyebrow: Bloque 03 · Los dos recorridos
+      title: foreach lee, for escribe
+      before:
+        label: foreach
+        file: Foreach.cs
+        lang: csharp
+        code: |
+          foreach (Sample s in bank)
+          {
+            s.Celsius = 99.9;
+          }
+      after:
+        label: for
+        file: For.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < bank.Length; i++)
+          {
+            bank[i].Celsius = 99.9;
+          }
+      note: >-
+        La izquierda no compila. El compilador contesta error CS1654, Cannot modify members
+        of 's' because it is a 'foreach iteration variable', y si en lugar del campo se
+        reasigna la variable entera el código es CS1656. La derecha sí escribe.
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: La versión del mismo error que sí compila
+      filename: Silencioso.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        foreach (Sample s in trio)
+        {
+            Sample local = s;
+            local.Celsius = 0.0;
+        }
+        Console.WriteLine(trio[1].Celsius);
+
+        for (int i = 0; i < trio.Length; i++)
+        {
+            trio[i].Celsius = trio[i].Celsius + 1.0;
+        }
+        Console.WriteLine(trio[1].Celsius);
+      output: |
+        99.9
+        100.9
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El barrido de máximo, sobre el tipo que inventaste
+      filename: Barrido.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        static Sample HottestSensor(Sample[] b)
+        {
+            int idx = 0;
+            for (int i = 1; i < b.Length; i++)
+            {
+                if (b[i].Celsius > b[idx].Celsius) idx = i;
+            }
+            return b[idx];
+        }
+
+        Sample hot = HottestSensor(bank);
+        Console.WriteLine(hot.SensorId);
+        Console.WriteLine(hot.Celsius);
+        Console.WriteLine(hot.State);
+      output: |
+        2
+        99.9
+        Fault
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: La media que esconde la falla
+      filename: Media.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double suma = 0;
+        foreach (Sample s in trio)
+        {
+            suma += s.Celsius;
+        }
+        double media = suma / trio.Length;
+
+        Console.WriteLine(suma);
+        Console.WriteLine(media);
+        Console.WriteLine($"{media:F2}");
+      output: |
+        141.9
+        47.300000000000004
+        47.30
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El struct se copió entero. ¿Qué imprimen las dos últimas líneas?
+      filename: Traza.cs
+      lang: csharp
+      source: |
+        Trace t1 = new Trace();
+        t1.Name = "RUN-A";
+        t1.Samples = new double[] { 20.0, 21.0 };
+
+        Trace t2 = t1;
+        t2.Name = "RUN-B";
+        t2.Samples[0] = 99.9;
+
+        Console.WriteLine(t1.Name);
+        Console.WriteLine(t1.Samples[0]);
+      options:
+        - 'RUN-A y 20, porque la copia se llevó los dos campos.'
+        - 'RUN-A y 99.9, porque los dos structs guardan el mismo arreglo.'
+        - 'RUN-B y 99.9, porque t2 y t1 son la misma cosa.'
+        - 'RUN-B y 20, porque el nombre se comparte y el arreglo no.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: La copia es campo por campo, referencias incluidas
+      headers: [Campo, t1, t2]
+      rows:
+        - ["Name", "RUN-A", "RUN-B"]
+        - ["Samples[0]", "99.9", "99.9"]
+      verdict: >-
+        El campo de texto no se movió, porque una cadena no se puede editar en su lugar. El
+        campo de arreglo sí, porque los dos structs guardan la misma referencia. Si el
+        registro de tu proyecto carga un arreglo, la copia no es la cosa independiente que
+        parece.
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de equivocarse esta semana
+      items:
+        - label: Error 01
+          title: Leer un struct sin new
+          desc: CS0170 al leer el campo y CS0165 al leer la variable entera. Ninguno de los dos programas se llega a producir.
+        - label: Error 02
+          title: Editar dentro de un foreach
+          desc: CS1654 sobre el campo y CS1656 sobre la variable. Copiar la variable del ciclo a un local sí compila, y no escribe nada.
+        - label: Error 03
+          title: Guardar el banco en una List
+          desc: Escribir en un elemento de una List de estructuras no compila. CS1612 dice que el indexador no devuelve una variable.
+        - label: Error 04
+          title: Un switch sin caso final
+          desc: CS8524 deja compilar, y el primer valor sin nombre mata el proceso con SwitchExpressionException.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un struct copia
+          desc: Asignarlo copia campo por campo. Una clase en su lugar entrega la misma cosa, y ReferenceEquals lo confirma con True
+        - title: El valor por omisión miente
+          desc: El primer nombre de la enumeración vale 0 y un campo vacío vale 0, así que el lugar sin llenar reporta Ok a 0 grados
+        - title: for escribe, foreach lee
+          desc: bank[i] es el struct y la escritura llega. La variable del foreach es una copia, y el compilador te detiene a tiempo
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La lista de materiales del ensamble
+      brief: Declara un registro con nombre, masa en kilogramos, cantidad y material, llena un arreglo de tres piezas, imprime la tabla alineada con los anchos de formato de la semana 13, suma la masa total del ensamble y marca como hueco de kit toda pieza con cantidad cero.
+      blocks:
+        - label: Entrega
+          text: El .cs y la salida, con la tabla alineada y la masa total en tres decimales
+        - label: Restricción
+          text: Ninguna columna de dinero. Masa, cantidad, material y clase de tolerancia
+        - label: La prueba
+          text: Con brida 1.250 kg por 4, buje 0.080 kg por 0 y cubierta 2.400 kg por 1, la masa total es 7.400 kg y hay un hueco
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Escribe la tabla de campos del registro de tu proyecto final. Cada campo con su nombre, su tipo y un renglón que justifique por qué existe. Después decláralo, compílalo y entrega la salida del compilador junto con la tabla.
+      meta:
+        - [Entrega, Antes de la semana 16]
+        - [Formato, Blackboard · .cs y .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["La tabla", "40 %", "Cada campo con nombre, tipo y justificación en un solo renglón"]
+        - ["Cero advertencias", "40 %", "El registro declarado compila sin una sola CS0649"]
+        - ["El estado", "20 %", "La enumeración no deja el valor de falla viviendo en el número cero"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, el proyecto final. Este registro es su modelo de datos y este
+        barrido de máximo es su pantalla de estadísticas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,535 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 13
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 13 · Unit 6.1 · Arrays and strings · Second midterm
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        One name for many readings, and a string that turns out to be an array you are not
+        allowed to edit. Plus the second midterm logistics.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 13 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The array
+          desc: Fixed length, zero-based, and pre-filled with its type's zero
+        - title: Strings
+          desc: An array of characters neither you nor the library can edit
+        - title: The library
+          desc: Subtopic 6.1.3 in full, measured one line at a time
+        - title: The midterm
+          desc: What it covers, what it does not, and what you may bring
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Declare and walk an array
+          sub: Fixed length, zero-based, and the last index is Length minus one
+        - head: Tell an alias from a copy
+          sub: Assigning an array does not copy it; Clone does, and the gap is measurable
+        - head: Split one logger line
+          sub: Trim, Split and a pinned culture before anything becomes a number
+        - head: Use the string library
+          sub: Prefix, suffix, substring, padding and case-insensitive comparison
+        - head: Validate a part identifier
+          sub: By length, by prefix and by digits, under one comparison policy
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: done
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones already written
+          state: done
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the project
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: One name for many readings
+      lede: >-
+        The unit is called collections and this course deliberately stops at arrays. An
+        array of structs is editable in place, which is what week 15 needs.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · At last
+      title: The seven rpm readings under a single name
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int sum = 0;
+        int outside = 0;
+
+        foreach (int r in rpm)
+        {
+            sum += r;
+            if (r < 1480 || r > 1520) outside++;
+        }
+
+        Console.WriteLine($"rpm.Length = {rpm.Length}");
+        Console.WriteLine($"sum        = {sum}");
+      annotations:
+        - label: One name
+          text: Seven loose variables became one. The loop no longer changes when an eighth sample arrives.
+        - label: The band rule
+          text: r below 1480 or above 1520. That is the inclusive convention and it is written out wherever the count appears.
+        - label: Length
+          text: The array counts itself, not you. Change the literal above and the count follows on its own.
+        - label: Risk
+          text: The first sample is 1480, exactly the lower limit. Under the other convention the count would be 3 of 7.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The same week 9 numbers, from one single loop
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double mean = (double)sum / rpm.Length;
+
+        Console.WriteLine($"rpm.Length = {rpm.Length}");
+        Console.WriteLine($"sum        = {sum}");
+        Console.WriteLine($"mean       = {mean:F3}");
+        Console.WriteLine($"outside    = {outside} of {rpm.Length}");
+        Console.WriteLine($"rpm[0]     = {rpm[0]}");
+        Console.WriteLine($"rpm[6]     = {rpm[6]}");
+      output: |
+        rpm.Length = 7
+        sum        = 10478
+        mean       = 1496.857
+        outside    = 2 of 7
+        rpm[0]     = 1480
+        rpm[6]     = 1488
+
+  - code_output:
+      eyebrow: Block 01 · You never get garbage
+      title: Declaring it already filled it with its type's zero
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] readings = new int[5];
+        string[] tags = new string[3];
+
+        Console.WriteLine(string.Join(", ", readings));
+        Console.WriteLine(string.Join(", ", new double[3]));
+        Console.WriteLine(string.Join(", ", new bool[2]));
+        Console.WriteLine("tags[0] is null " + (tags[0] == null));
+        Console.WriteLine("Length          " + readings.Length);
+        Console.WriteLine("last legal      " + (readings.Length - 1));
+      output: |
+        0, 0, 0, 0, 0
+        0, 0, 0
+        False, False
+        tags[0] is null True
+        Length          5
+        last legal      4
+
+  - code_output:
+      eyebrow: Block 01 · Fixed length
+      title: Two different errors and a single fact
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int[] rpm = { 1480, 1502, 1495 };
+
+        Console.WriteLine(rpm.Length());
+        rpm.Length = 10;
+      output: |
+        Program.cs(3,23): error CS1955
+        Non-invocable member
+        'Array.Length' cannot be used
+        like a method.
+
+        Program.cs(4,1): error CS0200
+        Property or indexer
+        'Array.Length' cannot be
+        assigned to -- it is read only
+
+  - code_output:
+      eyebrow: Block 01 · Off the end
+      title: Past the end it crashes and the compiler said nothing
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] fixedLen = { 1480, 1502, 1495 };
+
+        Console.WriteLine(fixedLen[2]);
+        Console.WriteLine(fixedLen.Length - 1);
+        Console.WriteLine(fixedLen[3]);
+        Console.WriteLine("this line never runs");
+      output: |
+        1495
+        2
+        Unhandled exception.
+        System.IndexOutOfRangeException:
+        Index was outside the bounds of
+        the array.
+
+        PowerShell  -532462766
+        Git Bash    127
+
+  - code_output:
+      eyebrow: Block 01 · Alias and copy
+      title: An array is a reference and Clone is not
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] src = { 1480, 1502, 1495 };
+        int[] alias = src;
+        alias[0] = 99;
+        Console.WriteLine("src[0]  " + src[0]);
+
+        int[] src2 = { 1480, 1502, 1495 };
+        int[] copy = (int[])src2.Clone();
+        copy[0] = 99;
+        Console.WriteLine("src2[0] " + src2[0]);
+
+        Console.WriteLine(ReferenceEquals(src, alias));
+        Console.WriteLine(ReferenceEquals(src2, copy));
+      output: |
+        src[0]  99
+        src2[0] 1480
+        True
+        False
+
+  - divider:
+      eyebrow: Block 02
+      title: A string is an array you cannot edit
+      lede: >-
+        It is indexed the same way, walked the same way and it breaks the same way at the
+        boundary. The one difference is that nobody gets to write into it.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Immutable
+      title: ToUpper hands back another string and leaves yours alone
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        string tag = "sensor-07";
+        tag.ToUpper();
+        Console.WriteLine("tag        " + tag);
+        Console.WriteLine("ToUpper()  " + tag.ToUpper());
+
+        string raw = "  SENSOR-07  ";
+        raw.Trim();
+        Console.WriteLine("raw       [" + raw + "]");
+        Console.WriteLine("Trim()    [" + raw.Trim() + "]");
+      output: |
+        tag        sensor-07
+        ToUpper()  SENSOR-07
+        raw       [  SENSOR-07  ]
+        Trim()    [SENSOR-07]
+
+  - code:
+      eyebrow: Block 02 · The real line
+      title: One logger line, end to end
+      filename: Program.cs
+      lang: csharp
+      source: |
+        using System.Globalization;
+
+        string line = "  SENSOR-07:20.1,21.5,22.9  ";
+        string[] parts = line.Trim().Split(':');
+        string tag = parts[0];
+        string[] nums = parts[1].Split(',');
+
+        double sum = 0;
+        foreach (string s in nums)
+        {
+            sum += double.Parse(s, CultureInfo.InvariantCulture);
+        }
+
+        double mean = sum / nums.Length;
+        Console.WriteLine($"{tag} mean {mean:F3}");
+      annotations:
+        - label: Trim before Split
+          text: The logger leaves spaces on both sides. Trim removes them once and they never come back.
+        - label: Two cuts
+          text: First on the colon to split tag from readings, then on the comma to split the readings apart.
+        - label: The pinned culture
+          text: Without InvariantCulture the 20.1 reads as 201 on a German machine, and TryParse still returns True.
+        - label: What it prints
+          text: SENSOR-07 mean 21.500, with the F3 specifier doing the presentation work.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · The tag
+      title: The tag is indexed one character at a time
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine("tag.Length       " + tag.Length);
+        Console.WriteLine("tag[0]           " + tag[0]);
+        Console.WriteLine("tag[0] == 's'    " + (tag[0] == 's'));
+        Console.WriteLine("tag[0] == 'S'    " + (tag[0] == 'S'));
+        Console.WriteLine("tag.IndexOf('-') " + tag.IndexOf('-'));
+        Console.WriteLine("tag.Substring(7) " + tag.Substring(7));
+      output: |
+        tag.Length       9
+        tag[0]           S
+        tag[0] == 's'    False
+        tag[0] == 'S'    True
+        tag.IndexOf('-') 6
+        tag.Substring(7) 07
+
+  - trace:
+      eyebrow: Block 02 · Subtopic 6.1.3
+      title: The string library, measured
+      headers: [Call, Returns, What it teaches]
+      rows:
+        - ["id.StartsWith(\"SNS-\")", "True", "the exact prefix"]
+        - ["id.StartsWith(\"sns-\")", "False", "case does matter"]
+        - ["id.Contains(\"\")", "True", "empty is inside everything"]
+        - ["raw.Replace(';', ',')", "20.1,21.5,22.9", "hands back another string"]
+        - ["\"\".Split(';').Length", "1", "an empty line gives one field"]
+      verdict: >-
+        The empty string is a prefix, a suffix and a substring of everything, so an empty
+        entry passes any naive check. That is why IsNullOrWhiteSpace comes before parsing.
+
+  - code:
+      eyebrow: Block 02 · The validator
+      title: A part identifier, checked one part at a time
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static bool ValidPartId(string raw)
+        {
+            string id = raw.Trim();
+            if (id.Length != 10) return false;
+
+            var ci = StringComparison.OrdinalIgnoreCase;
+            if (!id.StartsWith("SNS-", ci)) return false;
+            if (!id.EndsWith("-A") && !id.EndsWith("-B"))
+                return false;
+
+            for (int i = 4; i < 8; i++)
+                if (!char.IsDigit(id[i])) return false;
+            return true;
+        }
+      annotations:
+        - label: Length first
+          text: The cheapest check goes on top. If the length is not 10 there is nothing else worth looking at.
+        - label: The caller's Trim
+          text: The validator trims whatever it receives, so whoever calls it does not have to remember.
+        - label: The digits
+          text: char.IsDigit over positions 4 to 7. Four digits in SNS-4471-A, counted by the loop.
+        - label: Risk
+          text: The prefix was compared case-insensitively and the suffix two lines down was not. That is the bug.
+          accent: true
+
+  - trace:
+      eyebrow: Block 02 · Five inputs
+      title: The validator against five inputs
+      headers: [Input, Returns, Why]
+      rows:
+        - ["SNS-4471-A", "True", "the full pattern"]
+        - ["  SNS-4471-A  ", "True", "Trim() handled it"]
+        - ["sns-4471-b", "False", "the suffix is case-sensitive"]
+        - ["SNS-44X1-A", "False", "the X is not a digit"]
+        - ["(empty)", "False", "length zero, like SNS-447-A"]
+      verdict: >-
+        The third row fails on purpose. Same string, two comparison policies two lines
+        apart, one single bug.
+
+  - code_output:
+      eyebrow: Block 02 · Comparing for real
+      title: The operator you already know fails on typed input
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        string typed = "SORT";
+        var ci = StringComparison.OrdinalIgnoreCase;
+
+        bool op = typed == "sort";
+        bool eq = typed.Equals("sort");
+        bool eqCi = typed.Equals("sort", ci);
+        bool upper = typed.ToUpper() == "SORT";
+        bool trim = " sort ".Trim() == "sort";
+        bool one = "s".Equals("sort", ci);
+
+        Console.WriteLine($"==   {op}   Equals  {eq}");
+        Console.WriteLine($"+ci  {eqCi}    ToUpper {upper}");
+        Console.WriteLine($"Trim {trim}    short   {one}");
+      output: |
+        ==   False   Equals  False
+        +ci  True    ToUpper True
+        Trim True    short   False
+
+  - code_output:
+      eyebrow: Block 02 · The boundary
+      title: Two library calls and two different boundaries
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        string id = "SNS-4471-A";
+        Console.WriteLine(id.Length);
+        Console.WriteLine(id[9]);
+        Console.WriteLine("[" + id.Substring(10) + "]");
+
+        try { Console.WriteLine(id.Substring(11)); }
+        catch (Exception e) { Console.WriteLine(e.GetType().Name); }
+
+        try { Console.WriteLine(id[10]); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+      output: |
+        10
+        A
+        []
+        ArgumentOutOfRangeException
+        Index was outside the bounds
+        of the array.
+
+  - trace:
+      eyebrow: Block 02 · Cost
+      title: Building the report with += costs squared
+      headers: [Configuration, n, Median of five]
+      rows:
+        - ["Release", "10 000", "42 ms"]
+        - ["Release", "40 000", "658 ms"]
+        - ["Debug", "10 000", "63 ms"]
+        - ["Debug", "40 000", "626 ms"]
+      verdict: >-
+        The measured ratio is 15.7 in Release against the 16 a quadratic law predicts, and
+        9.9 in Debug. The ratio itself moved with the build configuration, so both the
+        configuration and the piece size go on the slide beside the number.
+
+  - code_output:
+      eyebrow: Block 02 · Networking case
+      title: The mean says 21.15 and the median says 12.25
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        using System.Globalization;
+
+        string line = "  SEQ-0042:12.4,11.9,48.2,12.1  ";
+        string[] ms = line.Trim().Split(':')[1].Split(',');
+
+        double[] lat = new double[ms.Length];
+        for (int i = 0; i < ms.Length; i++)
+            lat[i] = double.Parse(ms[i], CultureInfo.InvariantCulture);
+
+        double s = 0;
+        foreach (double x in lat) s += x;
+        Array.Sort(lat);
+        Console.WriteLine($"mean   = {s / lat.Length}");
+        Console.WriteLine($"sorted = [{string.Join(", ", lat)}]");
+        Console.WriteLine($"median = {(lat[1] + lat[2]) / 2}");
+      output: |
+        mean   = 21.15
+        sorted = [11.9, 12.1, 12.4, 48.2]
+        median = 12.25
+
+  - divider:
+      eyebrow: Block 03
+      title: The second midterm
+      lede: >-
+        Unit 5 in full and unit 6 through subtopic 6.1.3. Whatever is taught next week is
+        examined in the final, not here.
+      block: 3
+
+  - table:
+      eyebrow: Second midterm
+      title: What it covers, what it does not, and its shape
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "Unit 5 in full and unit 6 through 6.1.3"]
+        - ["Not included", "6.2 and 6.3 are taught in week 14 and examined in the final"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Format", "On the classroom computer, uploaded to Blackboard"]
+        - ["You may bring", "Notes, assignments, books and anything AI-generated beforehand"]
+        - ["You may not", "Phone, headphones, AI glasses or messaging"]
+        - ["Support", "Smart Center, with hours published on Blackboard"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does the last line print?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] a = { 1480, 1502, 1495 };
+        int[] b = a;
+
+        b[0] = 99;
+
+        Console.WriteLine(a[0]);
+      options:
+        - "1480, because b took a copy of the array"
+        - "99, because both names point at the same array"
+        - "An error, because a became read only"
+        - "0, because assigning an array clears it first"
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: An array is a reference
+          desc: Assigning it makes a second name for the same array, and Clone is the real copy
+        - title: A string cannot be edited
+          desc: ToUpper hands back another string, which is why s.Trim(); on its own line does nothing
+        - title: The quadratic += has a fix
+          desc: StringBuilder does 160 000 appends in 9 ms, measured in Release in a clean process
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Split a logger line into a tag and three readings, and validate a part identifier
+        under the same rules used in class. Hand in the seven test cases with their real
+        output pasted in.
+      meta:
+        - [Due, Before week 14]
+        - [Format, Blackboard · .cs and .pdf]
+        - [Reading, Deitel & Deitel · arrays and strings]
+      rubric:
+        - ["Parsing", "40 %", "Trim, Split and a pinned culture before converting"]
+        - ["Validator", "40 %", "One comparison policy across all three checks"]
+        - ["Evidence", "20 %", "The seven cases with the real output pasted in"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, two indices instead of one, and the first week where two correct
+        programs are not equally good.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,482 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 4
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 04 · Unit 3 · Data, types and primitive operations
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        Five types, one box each, const for the values that must not move, and an
+        operator table where every row was run before it was written down.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 4 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The five types
+          desc: What each one holds and which one each reading off the bench belongs in
+        - title: The box
+          desc: Declaring, assigning and reassigning, and the lock that const puts on
+        - title: The operators
+          desc: Precedence, associativity, shortcuts and where the arithmetic lies to you
+        - title: Your turn
+          desc: The sensor identity card, with all five types in their right place
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Pick the type each piece of data needs
+          sub: string, char, int, double and bool, with the rule for deciding
+        - head: Declare and reassign variables
+          sub: And tell what a reassignment changes from what was fixed at the start
+        - head: Protect a value with const
+          sub: A setpoint that must not move is guarded by the compiler, not by a comment
+        - head: Apply precedence and associativity
+          sub: And put the bracket in before the machine answers a different question
+        - head: Recognise where arithmetic lies
+          sub: Integer division, floating point, overflow and rounding
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a line is written, and the compiler that checks it
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching, records and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The five types and the constant
+      lede: >-
+        Every reading off the test bench fits one of five types, and the compiler holds
+        you to that decision until the end of the program.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Types
+      title: The five types you will use all term
+      headers: [Type, What it holds, Example off the bench]
+      rows:
+        - ["string", "Text between double quotes", 'station = "EST-07"']
+        - ["char", "A single character, single quotes", "channel = 'A'"]
+        - ["int", "32-bit whole numbers, no decimals", "samples = 7"]
+        - ["double", "Decimals, double precision", "reading = 1496.857"]
+        - ["bool", "true or false, nothing in between", "online = true"]
+
+  - code:
+      eyebrow: Block 01 · In context
+      title: A sensor identity card
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string station = "EST-07";
+        char channel = 'A';
+        int samples = 7;
+        double reading = 1496.857142857143;
+        bool online = true;
+
+        Console.WriteLine(station.GetType());
+        Console.WriteLine(channel.GetType());
+        Console.WriteLine(reading.GetType());
+      annotations:
+        - label: The type comes first
+          text: In C# the type is written before the name, and from that line on the box only accepts that type.
+        - label: GetType
+          text: It returns the real type of a value. Use it to check what the compiler understood, not in the finished program.
+        - label: Quotes
+          text: Single quotes for one character, double quotes for text. They are not interchangeable.
+        - label: Risk
+          text: Writing 1496 with no decimal point makes it an int, and every division after that truncates without a word.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: What the compiler gave each piece of data
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(station.GetType());
+        Console.WriteLine(channel.GetType());
+        Console.WriteLine(samples.GetType());
+        Console.WriteLine(reading.GetType());
+        Console.WriteLine(online.GetType());
+      output: |
+        System.String
+        System.Char
+        System.Int32
+        System.Double
+        System.Boolean
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: A setpoint that must not move is guarded by the compiler
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        const double Nominal = 25.0;
+
+        Nominal = 26.0;
+        Console.WriteLine(Nominal);
+      output: |
+        error CS0131
+        The left-hand side of an
+        assignment must be a variable,
+        property or indexer
+
+        Build FAILED.
+            0 Warning(s)
+            1 Error(s)
+
+  - divider:
+      eyebrow: Block 02
+      title: Declaring, assigning, reassigning
+      lede: >-
+        Three different statements about the same box, and two writing shortcuts that
+        are not as innocent as they look.
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: The box, the type and the lock
+      lead: >-
+        Declaring reserves the box and fixes its type. Assigning puts a value in it.
+        Reassigning changes the value and never the type, because the type was settled
+        at the declaration and stayed there. When a value must not move for the whole
+        run, const puts the lock on and the compiler is what guards it.
+      panel:
+        label: What to know
+        title: The type is settled once and is not negotiable
+        note: >-
+          A box declared int will not take 1500.5 even though the number fits. The build
+          stops instead of throwing the decimals away behind your back.
+      steps:
+        - text: You declare and the type is fixed
+        - text: You assign a compatible value
+        - text: You reassign as often as you like
+          loop: ↺ unless the box is const
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: A beam cross-section, with the nominal dimension under const
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        const double BaseNom = 120.0;
+        double height = 45.0;
+
+        double area = BaseNom * height;
+        Console.WriteLine(area);
+
+        height = 60.0;
+        area = BaseNom * height;
+        Console.WriteLine(area);
+        Console.WriteLine(2 * (BaseNom + height));
+      output: |
+        5400
+        7200
+        360
+
+  - table:
+      eyebrow: Block 02 · Shortcuts
+      title: The five shortcuts, and the division is still integer
+      headers: [Shortcut, Same as, What happens to rpm]
+      rows:
+        - ["+=", "rpm = rpm + 33", "1500 becomes 1533"]
+        - ["-=", "rpm = rpm - 8", "1533 becomes 1525"]
+        - ["*=", "rpm = rpm * 2", "1525 becomes 3050"]
+        - ["/=", "rpm = rpm / 3", "3050 becomes 1016"]
+        - ["%=", "rpm = rpm % 100", "1016 becomes 16"]
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The shortcut inserts a cast the long form does not have
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        byte crc = 200;
+        crc += 100;
+        Console.WriteLine(crc);
+
+        short window = 32000;
+        window += 1000;
+        Console.WriteLine(window);
+      output: |
+        44
+        -32536
+
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+  - compare:
+      eyebrow: Block 02 · Channel A to B
+      title: Three ways to say the same thing, one of them legal
+      before:
+        label: The two that do not compile
+        file: Program.cs
+        lang: csharp
+        code: |
+          char channel = 'A';
+
+          channel = channel + 1;   // CS0266
+          channel += 1;            // CS0266
+
+          // Cannot implicitly convert
+          // type 'int' to 'char'
+      after:
+        label: The two that do
+        file: Program.cs
+        lang: csharp
+        code: |
+          char channel = 'A';
+          channel++;
+          Console.WriteLine(channel);      // B
+
+          Console.WriteLine('A' + 1);           // 66
+          Console.WriteLine((char)('A' + 1));   // B
+      note: >-
+        The addition does not give back a char. GetType on 'A' + 1 prints System.Int32,
+        so the 66 has to be cast back to char. That is why channel++ is the only one of
+        the three the compiler takes without help.
+
+  - divider:
+      eyebrow: Block 03
+      title: Precedence, shortcuts and where arithmetic lies
+      lede: >-
+        Every line in this block compiles with zero warnings. That is exactly the
+        problem.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Measured
+      title: Precedence and associativity
+      headers: [Expression, What wins, Result]
+      rows:
+        - ["2 + 3 * 4", "The product before the sum", "14"]
+        - ["(2 + 3) * 4", "The bracket goes first", "20"]
+        - ["10 + 7 % 3", "Remainder binds like the product", "11"]
+        - ["true || false && false", "&& binds tighter than ||", "True"]
+        - ["100 - 20 - 5", "Grouped from left to right", "75"]
+        - ["x = y = z = 5", "Assignment groups the other way", "5 5 5"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The midpoint of the band, with and without brackets
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int a = 1480, b = 1520;
+
+        Console.WriteLine(a + b / 2);
+        Console.WriteLine((a + b) / 2);
+        Console.WriteLine((a + b) / 2.0);
+        Console.WriteLine((a + b) / 2 == 1500);
+      output: |
+        2240
+        1500
+        1500
+        True
+
+  - trace:
+      eyebrow: Block 03 · Trace
+      title: The suffix answers with the old value
+      headers: [With i at 5, What it prints, Where i ends]
+      rows:
+        - ["Console.WriteLine(i++)", "5", "i is now 6"]
+        - ["Console.WriteLine(++i)", "7", "i is now 7"]
+        - ["Console.WriteLine(j--)", "5", "j is now 4"]
+        - ["i++; on its own line", "nothing", "i goes up by one"]
+      verdict: >-
+        Both add one, and they differ in what the expression hands back. As a counter
+        step, alone on its line, they are identical, which is why the for header does
+        not care which one you write.
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The slash between two ints truncates, and the cast goes first
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(7 / 2);
+        Console.WriteLine(7 % 2);
+        Console.WriteLine(7.0 / 2);
+        Console.WriteLine((double)7 / 2);
+        Console.WriteLine((double)(7 / 2));
+        Console.WriteLine(-7 / 2);
+        Console.WriteLine(Math.Floor(-7 / 2.0));
+      output: |
+        3
+        1
+        3.5
+        3.5
+        3
+        -3
+        -4
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: No tolerance is ever checked with an equals sign
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine(0.1 + 0.2);
+        Console.WriteLine(0.1 + 0.2 == 0.3);
+
+        const double Nominal = 25.0;
+        double measured = 25.4;
+        double dev = measured - Nominal;
+
+        Console.WriteLine(dev);
+        Console.WriteLine(Math.Abs(dev) <= 0.5);
+      output: |
+        0.30000000000000004
+        False
+        0.3999999999999986
+        True
+
+  - compare:
+      eyebrow: Block 03 · Overflow
+      title: The same addition, two outcomes
+      before:
+        label: Written as a literal
+        file: Program.cs
+        lang: csharp
+        code: |
+          Console.WriteLine(int.MaxValue + 1);
+
+          // error CS0220
+          // The operation overflows at
+          // compile time in checked mode
+          // Build FAILED.
+      after:
+        label: Through a variable
+        file: Program.cs
+        lang: csharp
+        code: |
+          int cycles = int.MaxValue;
+          Console.WriteLine(cycles);
+          Console.WriteLine(cycles + 1);
+
+          // 2147483647
+          // -2147483648
+          // 0 Warning(s), 0 Error(s)
+      note: >-
+        What decides it is whether the compiler could see the value. Real code keeps the
+        count in a variable, which is exactly the case the compiler cannot protect, and
+        week 9 cashes this slide with an endurance-rig counter.
+
+  - table:
+      eyebrow: Block 03 · Measured
+      title: Four values, four ways to drop the decimals
+      headers: [Value, "(int)", Math.Round, Convert.ToInt32, Math.Floor]
+      rows:
+        - ["2.5", "2", "2", "2", "2"]
+        - ["3.5", "3", "4", "4", "3"]
+        - ["-2.5", "-2", "-2", "-2", "-3"]
+        - ["3.9", "3", "4", "4", "3"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: Every midpoint goes to the even neighbour
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double a = Math.Round(0.5);
+        double b = Math.Round(1.5);
+        double c = Math.Round(2.5);
+        double d = Math.Round(3.5);
+        double e = Math.Round(4.5);
+
+        Console.WriteLine($"{a} {b} {c} {d} {e}");
+        Console.WriteLine(Math.Round(2.5,
+            MidpointRounding.AwayFromZero));
+      output: |
+        0 2 2 4 4
+        3
+
+  - quiz:
+      eyebrow: Quick check
+      question: Where does this line leave n?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int n = 0;
+
+        n = n++;
+
+        Console.WriteLine(n);
+      options:
+        - 'At 1, because n++ adds one.'
+        - 'At 0, the old value covers the increment.'
+        - 'It does not compile, n++ cannot go on the right.'
+        - 'At 1, and it warns you at build time.'
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The type is settled once
+          desc: Reassigning changes the value and never the type, and const blocks even the change of value
+        - title: A bracket costs nothing
+          desc: a + b / 2 over the 1480–1520 band prints 2240, a number no tachometer will ever read
+        - title: Rounding is a decision
+          desc: A hundred readings landing on an exact half total 5000 half-to-even and 5050 half-away-from-zero
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Write the identity card for one sensor on the bench using all five types and one
+        constant, and add the precedence trap written twice, with brackets and without,
+        quoting both outputs exactly as they came out.
+      meta:
+        - [Due, Before week 5]
+        - [Format, Blackboard · Program.cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Types", "40 %", "All five types and the const, each holding the data it should"]
+        - ["Precedence", "40 %", "Both versions run and both outputs quoted"]
+        - ["Names", "20 %", "Every variable is named after the data it holds"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, how these values get in from the keyboard and why every one of
+        them arrives as text.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

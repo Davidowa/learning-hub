@@ -1,0 +1,485 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 6
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 06 · Unit 4.4 · Selection structures
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        The diamond you drew back in week 2 finally compiles. Today the program stops
+        answering the same thing every time and starts deciding.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 6 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The decision
+          desc: The if, its braces, and the line that runs whatever happens
+        - title: Comparing
+          desc: Six operators, a bool you can store, and the value that lands on the limit
+        - title: The ladder
+          desc: Chained else if, where the first condition that holds wins
+        - title: Your turn
+          desc: The bench coolant interlock, on paper before it is on screen
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write an if with its block
+          sub: And tell which lines depend on the condition and which ones run either way
+        - head: Explain why one equals is not two
+          sub: In C# the first one does not even compile, except in the case that opens the valve
+        - head: Store a comparison in a bool
+          sub: A condition is a value with a name, not something that only lives inside the brackets
+        - head: Choose between greater than and greater or equal
+          sub: The first bench sample reads 1480, exactly the lower limit of the band
+        - head: Order a ladder of else if
+          sub: The first branch that holds wins, and nothing warns you if you ordered it wrong
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line of code is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The decision that compiles
+      lede: >-
+        The diamond in week 2 left with two arrows. The braces are the YES arrow, and
+        everything outside them runs both ways.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The braces are the diamond's YES arrow
+      lead: >-
+        On the flowchart the diamond had one exit across the top and another down the
+        side. In C# the top one is the braces that follow the if, and the other one is
+        everything after the closing brace. The compiler does not read your indentation to
+        work that out. It reads the braces, and only the braces.
+      panel:
+        label: The finger trace
+        title: Whatever sits outside the braces always runs
+        note: >-
+          It is the same trace as week 2, with the same rule. Put your finger on the line
+          below and ask whether the diamond can avoid it. If the answer is no, that line
+          does not belong to the decision.
+      steps:
+        - text: The condition is evaluated and answers true or false
+        - text: If it answered true, the block inside the braces runs
+        - text: If it answered false, the whole block is skipped
+          loop: ↺ and the line below runs in both cases
+
+  - code:
+      eyebrow: Block 01 · The if
+      title: The gearbox coolant interlock
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double coolantC = 31.4;
+
+        if (coolantC > 28.0)
+        {
+            Console.WriteLine("alarm: coolant over limit");
+            Console.WriteLine("bypass valve opened");
+        }
+
+        Console.WriteLine($"reading {coolantC} C logged");
+      annotations:
+        - label: The condition
+          text: >-
+            In the brackets goes something only true or false. Here, the thermocouple
+            against 28 degrees.
+        - label: The braces
+          text: >-
+            They mark the block. The two lines inside it run only when the condition
+            holds.
+        - label: Outside the block
+          text: >-
+            Outside the braces, so the reading is logged with alarm and without. The
+            diamond's other exit.
+        - label: Risk
+          text: >-
+            Drop the braces and only the first line belongs to the if. The second opens
+            the bypass every time, and the compiler says nothing.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: The same program with the reading under the limit
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        double coolantC = 26.8;
+
+        if (coolantC > 28.0)
+        {
+            Console.WriteLine("alarm: coolant over limit");
+            Console.WriteLine("bypass valve opened");
+        }
+
+        Console.WriteLine($"reading {coolantC} C logged");
+      output: |
+        reading 26.8 C logged
+
+  - code_output:
+      eyebrow: Measured · at build time
+      title: One equals stores and two equals ask
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int rpm = 3000;
+
+        if (rpm = 3000)
+        {
+            Console.WriteLine("never gets here");
+        }
+      output: |
+        Program.cs(3,5): error CS0029
+        Cannot implicitly convert
+        type 'int' to 'bool'
+
+        Build FAILED.
+
+  - code_output:
+      eyebrow: Measured · the case that does compile
+      title: The one slip the compiler lets through opens the valve
+      filename: Program.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        bool valveOpen = false;
+
+        if (valveOpen = true)
+        {
+            Console.WriteLine("the block does run");
+        }
+
+        Console.WriteLine($"valveOpen -> {valveOpen}");
+      output: |
+        warning CS0665
+        Assignment in conditional
+        expression is always
+        constant; did you mean to
+        use == instead of = ?
+
+        the block does run
+        valveOpen -> True
+
+  - divider:
+      eyebrow: Block 02
+      title: Comparing, and the limit
+      lede: >-
+        Six operators produce every bit of raw material a decision needs, and two of them
+        differ only on the value that lands exactly on the line.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Comparison
+      title: The six operators with rpm = 1480 and channel = 'A'
+      headers: [Operator, Question, Example, Result]
+      rows:
+        - ["==", "Are they equal?", "rpm == 1500", "False"]
+        - ["!=", "Are they different?", "channel != 'B'", "True"]
+        - [">", "Is it greater?", "rpm > 1520", "False"]
+        - ["<", "Is it smaller?", "rpm < 1480", "False"]
+        - [">=", "Greater or equal?", "rpm >= 1480", "True"]
+        - ["<=", "Smaller or equal?", "rpm <= 1520", "True"]
+
+  - code_output:
+      eyebrow: Measured
+      title: A condition is a value you can keep
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        int rpm = 3200;
+        bool over = rpm > 3000;
+
+        Console.WriteLine($"overspeed at {rpm} rpm -> {over}");
+        Console.WriteLine($"3000 >  3000 -> {3000 > 3000}");
+        Console.WriteLine($"3000 >= 3000 -> {3000 >= 3000}");
+        Console.WriteLine($"1480 <  1480 -> {1480 < 1480}");
+        Console.WriteLine($"1480 <= 1480 -> {1480 <= 1480}");
+      output: |
+        overspeed at 3200 rpm -> True
+        3000 >  3000 -> False
+        3000 >= 3000 -> True
+        1480 <  1480 -> False
+        1480 <= 1480 -> True
+
+  - stat:
+      eyebrow: The band rule this course uses
+      value: 2 of 7
+      text: >-
+        samples out of band across the rpm run, under the rule r < 1480 || r > 1520
+      note: >-
+        Under the other convention, r <= 1480 || r >= 1520, it is 3 of 7. The first sample
+        reads exactly 1480, and the only thing deciding which side it falls on is the
+        operator you picked.
+
+  - code_output:
+      eyebrow: Block 02 · Games case
+      title: The bounding box is four comparisons joined by &&
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        static bool Overlap(
+            double ax, double ay, double aw, double ah,
+            double bx, double by, double bw, double bh)
+            => ax < bx + bw && ax + aw > bx
+            && ay < by + bh && ay + ah > by;
+
+        bool apart = Overlap(0, 0, 10, 10, 20, 0, 10, 10);
+        bool cross = Overlap(0, 0, 10, 10, 5, 5, 10, 10);
+        bool edge = Overlap(0, 0, 10, 10, 10, 0, 10, 10);
+
+        Console.WriteLine($"apart     -> {apart}");
+        Console.WriteLine($"overlap   -> {cross}");
+        Console.WriteLine($"edge only -> {edge}");
+      output: |
+        apart     -> False
+        overlap   -> True
+        edge only -> False
+
+  - code_output:
+      eyebrow: Block 02 · Strings
+      title: On a string the double equals always compares the value
+      filename: Program.cs
+      lang: csharp
+      output_label: Output
+      source: |
+        string a = "SENSOR-07";
+        string c = "SENSOR-" + "07";
+        string d = "SENSOR-" + 07.ToString("00");
+        bool casing = "Sensor-07" == a;
+
+        Console.WriteLine($"a == c    {a == c}");
+        Console.WriteLine($"ref a c   {ReferenceEquals(a, c)}");
+        Console.WriteLine($"a == d    {a == d}");
+        Console.WriteLine($"ref a d   {ReferenceEquals(a, d)}");
+        Console.WriteLine($"lower case {casing}");
+      output: |
+        a == c    True
+        ref a c   True
+        a == d    True
+        ref a d   False
+        lower case False
+
+  - divider:
+      eyebrow: Block 03
+      title: The ladder
+      lede: >-
+        Three or more mutually exclusive categories, checked from the top down. The first
+        one that holds wins and the ones below are never read.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · else if
+      title: The tachometer band table, written as a ladder
+      filename: Program.cs
+      lang: csharp
+      source: |
+        static string Band(int rpm)
+        {
+            if (rpm < 0) return "invalid";
+            else if (rpm < 800) return "idle";
+            else if (rpm < 3000) return "nominal";
+            else return "overspeed";
+        }
+
+        foreach (int r in new[] { -5, 500, 799, 800, 3000 })
+            Console.WriteLine($"Band({r,5}) = {Band(r)}");
+      annotations:
+        - label: Top down
+          text: >-
+            The first rung is checked, then the second. The moment one holds, the rest are
+            never evaluated.
+        - label: The impossible rung
+          text: >-
+            The first catches the negative reading. No healthy tachometer makes one, so a
+            cable is loose.
+        - label: The final else
+          text: >-
+            It picks up whatever fell through every rung. Without it some readings stay
+            unclassified.
+        - label: Risk
+          text: >-
+            Order is part of the logic. Move one rung up and the ladder answers something
+            else, with no warning.
+          accent: true
+
+  - trace:
+      eyebrow: Measured
+      title: What the ladder answers on five readings
+      headers: [Reading, Rung that wins, What it returns]
+      rows:
+        - ["-5", "rpm < 0", "invalid"]
+        - ["500", "rpm < 800", "idle"]
+        - ["799", "rpm < 800", "idle"]
+        - ["800", "rpm < 3000", "nominal"]
+        - ["3000", "else", "overspeed"]
+      verdict: >-
+        799 is still idle and 800 is already nominal. The rung says strictly less than, so
+        the value on the limit always belongs to the band above it.
+
+  - code_output:
+      eyebrow: Measured · the reorder
+      title: Move one rung and a disconnected tachometer reads as idle
+      filename: Program.cs
+      lang: csharp
+      output_label: Build and run
+      source: |
+        static string Band(int rpm)
+        {
+            if (rpm < 800) return "idle";
+            else if (rpm < 0) return "invalid";
+            else if (rpm < 3000) return "nominal";
+            else return "overspeed";
+        }
+
+        Console.WriteLine($"Band(-5) = {Band(-5)}");
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        Band(-5) = idle
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to lose the decision
+      items:
+        - label: Error 01
+          title: One equals instead of two
+          desc: >-
+            On an int it is CS0029 and it never builds. On a bool it is warning CS0665, it
+            builds, and it leaves the valve open.
+        - label: Error 02
+          title: Writing the block without braces
+          desc: >-
+            With no braces only the line right after the if belongs to the decision. The
+            next one runs every time, whatever the indentation suggests.
+        - label: Error 03
+          title: Getting the limit operator wrong
+          desc: >-
+            Greater than leaves out the value sitting on the line. Greater or equal takes
+            it in. On the 1480 sample that changes the count for the whole term.
+        - label: Error 04
+          title: Ordering the ladder badly
+          desc: >-
+            The first rung that holds wins. If the widest one ended up on top, the ones
+            below are dead code and nothing warns you.
+
+  - quiz:
+      eyebrow: Quick check
+      question: Under the exclusive rule, how many of the seven readings fall out of band?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495,
+                      1533, 1471, 1509, 1488 };
+
+        int outOfBand = 0;
+        foreach (int r in rpm)
+            if (r <= 1480 || r >= 1520) outOfBand++;
+
+        Console.WriteLine(outOfBand);
+      options:
+        - "2, the same as under the rule this course uses"
+        - "3, because the 1480 sample now falls outside"
+        - "0, because no reading touches either limit"
+        - "7, because the operator catches the whole array"
+
+  - lab:
+      eyebrow: Lab
+      title: The coolant interlock, from the sheet to the code
+      brief: >-
+        Write the ladder that sorts the gearbox temperature into four bands and also
+        decides whether the bypass opens. Read the value from the keyboard and test all
+        three bands plus the exact value of every boundary.
+      blocks:
+        - label: Deliverable
+          text: The Program.cs and one run per band, each with its output pasted in
+        - label: Constraint
+          text: >-
+            The bands have to be mutually exclusive. No reading may be classified two
+            ways.
+        - label: The test
+          text: >-
+            Run the exact value of each boundary. That is where you find out whether you
+            wanted greater than or greater or equal.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The braces are the structure
+          desc: >-
+            Indentation is for your eyes. The compiler reads the braces, and whatever sits
+            outside them runs whatever happens
+        - title: The operator decides the limit
+          desc: >-
+            The 1480 sample is inside under less than and outside under less or equal. That
+            is why the rule is written out on every slide where the count appears
+        - title: The ladder runs narrow to wide
+          desc: >-
+            The first rung that holds wins, and ordering it the other way round compiles
+            without a single warning
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Draw the flowchart for the interlock ladder, mark on it where the 1480 sample
+        lands, and write out by hand the branch you predict for five readings. Then run
+        the program and compare line by line.
+      meta:
+        - [Due, Before week 7]
+        - [Format, Blackboard · flowchart PDF and Program.cs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Flowchart", "40 %", "Every diamond and both of its exits are complete and in order"]
+        - ["Prediction", "40 %", "The five predicted branches match the run"]
+        - ["The limit", "20 %", "The 1480 sample is marked and the choice justified"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, conditions that combine, decisions that live inside other decisions,
+        and the switch that refuses to build when the order is wrong.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

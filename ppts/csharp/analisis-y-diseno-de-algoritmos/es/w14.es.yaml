@@ -1,0 +1,484 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 14
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 14 · Tema 6.2–6.3 · Rejillas, ordenación y búsqueda
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Dos índices en lugar de uno, y la primera sesión del semestre en la que dos
+        programas correctos no valen lo mismo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 14 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La rejilla
+          desc: Dos índices, dos formas de escribirla, y lo que la biblioteca no hará con ellas
+        - title: Cuatro ordenamientos
+          desc: Los mismos siete números, y un contador dentro de cada algoritmo
+        - title: Dos búsquedas
+          desc: Lo que cuesta cada una, y lo que pasa cuando el arreglo crece
+        - title: Tu turno
+          desc: Instrumentar dos algoritmos y reportar los conteos que salgan
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Declarar un arreglo de dos índices
+          sub: Y distinguir la forma rectangular de la dentada, que no son el mismo tipo
+        - head: Recorrer una rejilla por renglón y por columna
+          sub: Con GetLength(0) y GetLength(1) en lugar de un número escrito a mano
+        - head: Escribir los cuatro ordenamientos del temario
+          sub: Burbuja, selección, inserción y Shell, cada uno con su contador dentro
+        - head: Comparar algoritmos con números medidos
+          sub: Comparaciones y movimientos, sobre tres entradas distintas
+        - head: Elegir entre búsqueda secuencial y binaria
+          sub: Y decir en voz alta la precondición que la binaria necesita para servir
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensar y la cadena de herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: done
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y ciclos
+          state: done
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: done
+        - label: 04 · Semanas 13–17
+          title: Colecciones, estructuras, proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La rejilla
+      lede: Un renglón por posición de la pieza, una columna por punto de medición. Un solo nombre y dos índices.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · Las dos formas
+      title: El mapa del dispositivo de inspección
+      filename: Rejilla.cs
+      lang: csharp
+      source: |
+        int[,] rejilla = new int[3, 4];
+        int[][] dentado = new int[3][];
+
+        rejilla[0, 0] = -12;
+        rejilla[2, 3] = 47;
+
+        dentado[0] = new int[2];
+        dentado[1] = new int[5];
+        dentado[2] = new int[1];
+
+        int celdas = 0;
+        foreach (int[] fila in dentado)
+        {
+            celdas += fila.Length;
+        }
+      annotations:
+        - label: Dos índices
+          text: El primero elige el renglón y el segundo la columna. La coma va dentro de los mismos corchetes.
+        - label: Dentado
+          text: Cada renglón es su propio arreglo y puede medir otra cosa. Los tres empiezan valiendo null.
+        - label: Las celdas
+          text: El rectángulo tiene 12 celdas. El dentado tiene 8, y ese número lo cuentas tú renglón por renglón.
+        - label: Riesgo
+          text: dentado[0][0] antes de asignar el renglón lanza NullReferenceException, no IndexOutOfRangeException.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Length y Rank no dicen lo mismo en las dos formas
+      filename: Rejilla.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        Console.WriteLine(rejilla.GetLength(0));
+        Console.WriteLine(rejilla.GetLength(1));
+        Console.WriteLine(rejilla.Length);
+        Console.WriteLine(rejilla.Rank);
+        Console.WriteLine(dentado.Length);
+        Console.WriteLine(dentado.Rank);
+        Console.WriteLine(celdas);
+      output: |
+        3
+        4
+        12
+        2
+        3
+        1
+        8
+
+  - code_output:
+      eyebrow: Bloque 01 · Al compilar
+      title: Son dos tipos distintos y no se dejan mezclar
+      filename: Mezcla.cs
+      lang: csharp
+      output_label: Al compilar
+      source: |
+        Console.WriteLine(rejilla[1][2]);
+        Console.WriteLine(dentado[1, 2]);
+
+        int[][] mal = new int[3, 4];
+      output: |
+        error CS0022: Wrong number of
+        indices inside []; expected 2
+
+        error CS0022: Wrong number of
+        indices inside []; expected 1
+
+        error CS0029: Cannot implicitly
+        convert type 'int[*,*]'
+        to 'int[][]'
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Compila sin error y sin advertencia, y luego lanza
+      filename: Ordenar.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[,] rejilla = new int[3, 4];
+
+        Array.Sort(rejilla);
+        Array.BinarySearch(rejilla, 0);
+      output: |
+        RankException: Only single
+        dimension arrays are
+        supported here.
+
+        RankException: Only single
+        dimension arrays are
+        supported here.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cuatro maneras de ordenar los mismos siete números
+      lede: El temario nombra cuatro algoritmos. Hoy corren los cuatro sobre la misma corrida y cada uno lleva su contador.
+      block: 2
+
+  - compare:
+      eyebrow: Bloque 02 · Los dos primeros
+      title: Burbuja y selección, con el contador dentro
+      before:
+        label: Burbuja
+        file: Burbuja.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - 1 - i; j++)
+            {
+              cmp++;
+              if (a[j] > a[j + 1])
+              { Swap(a, j, j + 1); mov++; }
+            }
+      after:
+        label: Selección
+        file: Seleccion.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < n - 1; i++)
+          {
+            int min = i;
+            for (int j = i + 1; j < n; j++)
+            { cmp++; if (a[j] < a[min]) min = j; }
+            if (min != i) { Swap(a, i, min); mov++; }
+          }
+      note: >-
+        Las dos hacen 21 comparaciones sobre la misma corrida. Burbuja intercambia 10 veces
+        y selección 4, porque selección intercambia una sola vez por vuelta y solo cuando el
+        mínimo no estaba ya en su lugar.
+
+  - compare:
+      eyebrow: Bloque 02 · Los otros dos
+      title: Shell es inserción con un salto
+      before:
+        label: Inserción
+        file: Insercion.cs
+        lang: csharp
+        code: |
+          int gap = 1;
+          for (int i = gap; i < n; i++)
+          {
+            int key = a[i], j = i;
+            while (j >= gap && a[j - gap] > key)
+            { a[j] = a[j - gap]; j -= gap; }
+            a[j] = key;
+          }
+      after:
+        label: Shell
+        file: Shell.cs
+        lang: csharp
+        code: |
+          for (int gap = n / 2; gap > 0; gap /= 2)
+          for (int i = gap; i < n; i++)
+          {
+            int key = a[i], j = i;
+            while (j >= gap && a[j - gap] > key)
+            { a[j] = a[j - gap]; j -= gap; }
+            a[j] = key;
+          }
+      note: >-
+        Inserción es Shell con un solo salto de 1. La comparación que se cuenta es cada
+        evaluación de a[j - gap] > key, y con esa cuenta inserción hace 15 y Shell 12 sobre
+        las mismas siete lecturas.
+
+  - table:
+      eyebrow: Bloque 02 · Medido
+      title: Los cuatro, sobre las mismas siete lecturas
+      headers: [Algoritmo, Comparaciones, Movimientos]
+      rows:
+        - ["Burbuja", "21", "10 intercambios"]
+        - ["Selección", "21", "4 intercambios"]
+        - ["Inserción", "15", "10 desplazamientos"]
+        - ["Shell 3-1", "12", "4 desplazamientos"]
+
+  - trace:
+      eyebrow: Bloque 02 · Medido
+      title: Los conteos se mueven cuando se mueve la implementación
+      headers: [Algoritmo, Variante, Comparaciones, Movimientos]
+      rows:
+        - ["burbuja", "sin bandera", "21", "10"]
+        - ["burbuja", "con bandera", "20", "10"]
+        - ["seleccion", "con / sin guardia", "21", "4 / 6"]
+        - ["Shell", "saltos 3, 1", "12", "4"]
+        - ["Shell", "saltos 4, 1", "17", "10"]
+      verdict: >-
+        Shell casi duplica su número de comparaciones nada más por la secuencia de saltos.
+        Comparar alternativas incluye las alternativas que viven dentro de un mismo
+        algoritmo.
+
+  - trace:
+      eyebrow: Bloque 02 · Medido
+      title: Una sola entrada no es una comparación
+      headers: [Algoritmo, La corrida, Ya ordenada, Invertida]
+      rows:
+        - ["burbuja sin bandera", "21", "21", "21"]
+        - ["burbuja con bandera", "20", "6", "21"]
+        - ["seleccion", "21", "21", "21"]
+        - ["insercion", "15", "6", "21"]
+        - ["Shell 3-1", "12", "10", "13"]
+      verdict: >-
+        El que ganaba con 12 queda tercero en cuanto la entrada ya viene ordenada, y ahí la
+        bandera de salida temprana compra 15 comparaciones de 21. Selección nunca cambia su
+        cuenta, porque mira todo pase lo que pase.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Encontrar uno
+      lede: Dos algoritmos que contestan la misma pregunta, y una diferencia que solo se ve cuando el arreglo crece.
+      block: 3
+
+  - compare:
+      eyebrow: Bloque 03 · Las dos búsquedas
+      title: Recorrer todo, o partir el arreglo a la mitad
+      before:
+        label: Secuencial
+        file: Secuencial.cs
+        lang: csharp
+        code: |
+          int c = 0;
+          for (int i = 0; i < a.Length; i++)
+          {
+            c++;
+            if (a[i] == k) return c;
+          }
+      after:
+        label: Binaria
+        file: Binaria.cs
+        lang: csharp
+        code: |
+          int lo = 0, hi = a.Length - 1, c = 0;
+          while (lo <= hi)
+          {
+            c++;
+            int mid = lo + (hi - lo) / 2;
+            if (a[mid] == k) return c;
+            if (a[mid] < k) lo = mid+1; else hi = mid-1;
+          }
+      note: >-
+        Los dos cuerpos viven dentro de la misma firma, static int Buscar(int[] a, int k), y
+        los dos devuelven cuántas comparaciones costó llegar a la clave. Una comparación es
+        una prueba a[i] == k en la secuencial y una visita a a[mid] en la binaria.
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Mil identificadores de muestra, y el último de todos
+      filename: Buscar.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] ids = new int[1000];
+        for (int i = 0; i < 1000; i++) ids[i] = 2 * i;
+
+        Console.WriteLine(Seq(ids, 1998));
+        Console.WriteLine(Bin(ids, 1998));
+      output: |
+        1000
+        10
+
+  - trace:
+      eyebrow: Bloque 03 · Medido
+      title: Qué le pasa a cada una cuando el arreglo se duplica
+      headers: [n, Secuencial, Binaria]
+      rows:
+        - ["500", "500", "9"]
+        - ["1000", "1000", "10"]
+        - ["2000", "2000", "11"]
+        - ["4000", "4000", "12"]
+        - ["8000", "8000", "13"]
+      verdict: >-
+        Cada duplicación duplica el costo de la secuencial y le añade una comparación a la
+        binaria. Lean las columnas hacia abajo. Una gana un dígito, la otra una unidad.
+
+  - quiz:
+      eyebrow: Pregunta rápida
+      question: El arreglo no está ordenado y el 7 sí está. ¿Qué devuelve la binaria?
+      filename: Busqueda.cs
+      lang: csharp
+      source: |
+        int[] datos = { 5, 1, 9, 3, 7 };
+
+        Console.WriteLine(
+            Array.BinarySearch(datos, 7));
+      options:
+        - 'Devuelve 4, que es donde el 7 vive de verdad.'
+        - 'Devuelve -3, un negativo que además apunta al lugar equivocado.'
+        - 'Lanza una excepción por recibir un arreglo sin ordenar.'
+        - 'Devuelve -1, el centinela de no encontrado de toda la vida.'
+
+  - trace:
+      eyebrow: Respuesta
+      title: Sobre entrada sin ordenar la binaria no falla — miente
+      headers: [Valor, Índice real, BinarySearch]
+      rows:
+        - ["5", "0", "0"]
+        - ["1", "1", "-1"]
+        - ["9", "2", "2"]
+        - ["7", "4", "-3"]
+      verdict: >-
+        Los cinco valores están en el arreglo, y el 3 se porta como el 1. Solo dos vuelven
+        bien, y por suerte. El 7 vuelve como -3, que decodifica al punto de inserción 2,
+        equivocado dos veces. No se lanzó ninguna excepción para ninguno de los cinco.
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El complemento a bits, y el choque con el -1 casero
+      filename: Complemento.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int[] log = new int[1000];
+        for (int i = 0; i < 1000; i++) log[i] = 2 * i;
+
+        Console.WriteLine(Array.BinarySearch(log, 1999));
+        Console.WriteLine(Array.BinarySearch(log, 2000));
+        Console.WriteLine(Array.BinarySearch(log, -1));
+        Console.WriteLine(~(-1001));
+        Console.WriteLine(~(-1));
+      output: |
+        -1001
+        -1001
+        -1
+        1000
+        0
+
+  - code_output:
+      eyebrow: Bloque 03 · Caso de redes
+      title: El retorno negativo es la detección de pérdida
+      filename: Latencia.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double[] lat = { 12.4, 11.9, 48.2, 12.1 };
+        double suma = 0;
+        foreach (double v in lat) suma += v;
+        Array.Sort(lat);
+
+        Console.WriteLine(suma / lat.Length);
+        Console.WriteLine((lat[1] + lat[2]) / 2);
+
+        int[] seqs = { 40, 41, 42, 44, 45 };
+        Console.WriteLine(Array.BinarySearch(seqs, 43));
+        Console.WriteLine(~Array.BinarySearch(seqs, 43));
+      output: |
+        21.15
+        12.25
+        -4
+        3
+
+  - table:
+      eyebrow: Bloque 03 · Medido
+      title: Cuatro veces los datos, dieciséis veces el trabajo
+      headers: [n, Comparaciones de burbuja, "n(n-1)/2"]
+      rows:
+        - ["1000", "499500", "499500"]
+        - ["2000", "1999000", "1999000"]
+        - ["4000", "7998000", "7998000"]
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Dos formas, dos tipos
+          desc: La rectangular tiene Rank 2 y la dentada Rank 1, y el compilador no deja pasar ni una asignación entre ellas
+        - title: Shell gana, y no siempre
+          desc: 12 comparaciones sobre la corrida registrada, 10 sobre una ya ordenada donde inserción hace 6. La entrada decide
+        - title: La binaria pide orden
+          desc: Sin arreglo ordenado no falla, contesta mal y sigue corriendo. La precondición es parte del algoritmo
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El mapa de desviaciones del dispositivo
+      brief: Carga un arreglo de tres renglones por cuatro columnas con la desviación medida de cada posición de pieza, imprime el promedio de cada renglón y el de cada columna, y reporta la posición de la peor celda con sus dos índices.
+      blocks:
+        - label: Entrega
+          text: El .cs y la salida, con los promedios y el par de índices de la peor celda
+        - label: Restricción
+          text: Los límites de los ciclos salen de GetLength, no de un 3 ni de un 4 escritos a mano
+        - label: La prueba
+          text: Agrega una columna al arreglo. El programa tiene que seguir corriendo sin tocar ni un ciclo
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: Instrumenta dos de los cuatro ordenamientos con contadores de comparaciones y de movimientos, elige una secuencia de saltos para Shell y cita de dónde la sacaste, y reporta los conteos sobre las tres entradas de hoy.
+      meta:
+        - [Entrega, Antes de la semana 15]
+        - [Formato, Blackboard · .cs y .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Instrumentación", "40 %", "Los contadores viven dentro del algoritmo y no se estiman por fuera"]
+        - ["La cita", "30 %", "Se nombra la fuente de la secuencia de saltos elegida para Shell"]
+        - ["Los conteos", "30 %", "Se reportan sobre las tres entradas y se comenta qué cambió entre ellas"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La siguiente sesión, estructuras. Siete arreglos paralelos se vuelven un arreglo de
+        un tipo que tú inventaste.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,567 @@
+meta:
+  course: Analysis and Design of Algorithms
+  code: COM101
+  lang: en
+  language: csharp
+  week: 9
+  footer: ANALYSIS AND DESIGN OF ALGORITHMS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 09 · Unit 4.5 · Repetition in depth
+      title: Analysis and Design of Algorithms
+      subtitle: >-
+        for is while wearing a uniform, foreach is for with the counter taken away, and the
+        accumulator is the pattern the whole second half of the term is built on.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM101 · Term 1]
+        - [Session, 9 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: for and foreach
+          desc: Three beats on one line, a programmable step, and the loop with no index
+        - title: Nesting and its price
+          desc: A loop inside a loop, counted in passes and timed with the label on
+        - title: Accumulators
+          desc: Sum, count, maximum with its index, and how many readings fell out of band
+        - title: Your turn
+          desc: Rewrite the accumulators with foreach and say which one still needs for
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a for with its three beats
+          sub: And programme the step to walk two at a time or to walk backwards
+        - head: Walk an array with foreach
+          sub: No counter, no bound, and no chance of running off the end of it
+        - head: Decide when foreach will not do
+          sub: Because the question moved from what the maximum is to where the maximum sits
+        - head: Count what nesting costs
+          sub: Four times the input is sixteen times the work, and it counts without a clock
+        - head: Recognise a silent overflow
+          sub: A cycle counter in an int passes 2147483647 and reports a negative total
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: 01 · Weeks 1–3
+          title: Thinking and the toolchain
+          desc: How a problem is solved before a single line of code is written
+          state: done
+        - label: 02 · Weeks 4–9
+          title: Data, decisions, repetition
+          desc: Types, expressions, selection and loops
+          state: now
+        - label: 03 · Weeks 10–12
+          title: Functions
+          desc: Your own, by value and by reference, and the ones the framework already wrote
+          state: todo
+        - label: 04 · Weeks 13–17
+          title: Collections, structures, project
+          desc: Arrays, strings, sorting, searching and the integrative project
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: for, and the loop with no counter
+      lede: Last week's four beats, three of them gathered onto a single line.
+      block: 1
+
+  - compare:
+      eyebrow: Block 01 · Translation
+      title: The same walk, written both ways
+      before:
+        label: Last week
+        file: Program.cs
+        lang: csharp
+        code: |
+          int i = 0;
+          while (i < rpm.Length)
+          {
+              sum += rpm[i];
+              i++;
+          }
+      after:
+        label: This week
+        file: Program.cs
+        lang: csharp
+        code: |
+          for (int i = 0; i < rpm.Length; i++)
+          {
+              sum += rpm[i];
+          }
+      note: >-
+        Initialise, check and change all fit in the header, separated by semicolons. The
+        body keeps the work and nothing else. There is no new loop here, only a way of
+        writing the same one that makes the fourth beat hard to forget.
+
+  - code:
+      eyebrow: Block 01 · for
+      title: Walking the rpm run, with the index in plain sight
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int sum = 0;
+
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            sum += rpm[i];
+        }
+
+        Console.WriteLine(sum);
+      annotations:
+        - label: The three beats
+          text: Declaration, condition and change, in that order and separated by semicolons inside the header.
+        - label: The scope of i
+          text: i is born and dies in the header. Outside the loop the compiler does not know it, and says so with CS0103.
+        - label: The index earns its keep
+          text: With i you can ask where, not only what. That is the reason not to reach for foreach on some walks.
+        - label: Risk
+          text: Writing i <= rpm.Length instead of strictly less asks for element 7 of an array that stops at 6.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The change slot is yours, it does not have to say i++
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        Console.WriteLine("i = 10; i >= 0; i -= 2");
+        for (int i = 10; i >= 0; i -= 2) Console.Write(i + " ");
+        Console.WriteLine();
+
+        Console.WriteLine("i = 0; i < 20; i += 5");
+        for (int i = 0; i < 20; i += 5) Console.Write(i + " ");
+        Console.WriteLine();
+
+        Console.WriteLine("i = 0; i < 3; i++");
+        for (int i = 0; i < 3; i++) Console.Write(i + " ");
+        Console.WriteLine();
+      output: |
+        i = 10; i >= 0; i -= 2
+        10 8 6 4 2 0
+        i = 0; i < 20; i += 5
+        0 5 10 15
+        i = 0; i < 3; i++
+        0 1 2
+
+  - code:
+      eyebrow: Block 01 · foreach
+      title: The loop that walks with no counter and no bound to get wrong
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int sum = 0, count = 0;
+        foreach (int reading in rpm)
+        {
+            sum += reading;
+            count++;
+        }
+        int maxIdx = 0;
+        for (int i = 1; i < rpm.Length; i++)
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+        Console.WriteLine($"foreach: {count} readings, sum {sum}");
+        Console.WriteLine($"for: max {rpm[maxIdx]}, index {maxIdx}");
+      annotations:
+        - label: No bound
+          text: >-
+            A foreach has no condition to get wrong, so it cannot walk off the end of the
+            array.
+        - label: And no index
+          text: >-
+            It does not hand you one either. Ask where the maximum sits and you are back
+            to for.
+        - label: Why it matters
+          text: >-
+            1533 at index 3 is what tells the technician which sample to go and look at on
+            the bench.
+        - label: Risk
+          text: >-
+            Assigning the foreach variable does not compile. It is a copy, and the
+            compiler blocks it.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Seven readings walked, and an index only the for hands over
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        foreach (int reading in rpm)
+        {
+            sum += reading;
+            count++;
+        }
+        int maxIdx = 0;
+        for (int i = 1; i < rpm.Length; i++)
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+      output: |
+        foreach: 7 readings, sum 10478
+        for: max 1533, index 3
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The foreach variable is a copy, and it will not be written
+      filename: Program.cs
+      lang: csharp
+      output_label: On build
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        foreach (int reading in rpm)
+        {
+            reading = 1500;
+            Console.WriteLine(reading);
+        }
+      output: |
+        Program.cs(4,5): error CS1656:
+        Cannot assign to 'reading'
+        because it is a 'foreach
+        iteration variable'
+
+        Build FAILED.
+
+  - table:
+      eyebrow: Block 01 · Measured
+      title: Three element types, three answers, one single rule
+      headers: [What you walk, What you try to write, What comes back]
+      rows:
+        - ["int[]", "The foreach variable", "error CS1656"]
+        - ["struct[]", "A field of the variable", "error CS1654"]
+        - ["class[]", "A field of the object", "Builds, and it changes"]
+        - ["int[]", "The array by index", "1481, 1503, 1496"]
+        - ["List<int>", "Adding during the walk", "InvalidOperationException"]
+
+  - divider:
+      eyebrow: Block 02
+      title: A loop inside a loop
+      lede: The inner one runs all of its passes for every pass of the outer one, and that has a price you can count.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The full grid, the triangular bound and what each one costs
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] sizes = { 7, 1000, 4000 };
+        for (int t = 0; t < sizes.Length; t++)
+        {
+            int n = sizes[t];
+            long grid = 0, pairs = 0;
+            for (int a = 0; a < n; a++)
+                for (int b = 0; b < n; b++) grid++;
+            for (int a = 0; a < n; a++)
+                for (int b = a + 1; b < n; b++) pairs++;
+            Console.WriteLine($"n = {n,-5} grid  {grid}");
+            Console.WriteLine($"n = {n,-5} pairs {pairs}");
+        }
+      output: |
+        n = 7     grid  49
+        n = 7     pairs 21
+        n = 1000  grid  1000000
+        n = 1000  pairs 499500
+        n = 4000  grid  16000000
+        n = 4000  pairs 7998000
+
+  - table:
+      eyebrow: Block 02 · Measured, and it moves with the environment
+      title: Same code, two configurations, one ratio near sixteen
+      headers: [Configuration, The two endpoints, Measured ratio]
+      rows:
+        - ["Debug", "n = 2000 is 9 ms, n = 8000 is 150 ms", "16.7"]
+        - ["Release", "n = 8000 is 23 ms, n = 32000 is 359 ms", "15.6"]
+        - ["Counting", "1000000 inner passes against 16000000", "16.0"]
+        - ["The claim", "The ratio, not the milliseconds", "Measure it again"]
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Which of the two loops does a break actually leave
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int inner = 0, outer = 0;
+        for (int a = 0; a < 3; a++)
+        {
+            outer++;
+            for (int b = 0; b < 4; b++)
+            {
+                inner++;
+                if (b == 1) break;
+            }
+        }
+        Console.WriteLine($"outer passes {outer}");
+        Console.WriteLine($"inner passes {inner}");
+        Console.WriteLine("not 12, not 3");
+      output: |
+        outer passes 3
+        inner passes 6
+        not 12, not 3
+
+  - divider:
+      eyebrow: Block 03
+      title: Accumulators
+      lede: Sum, count, maximum with its index, and how many fell out of band. One walk, four answers.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The pattern
+      title: The four variables that live outside the loop
+      filename: Program.cs
+      lang: csharp
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int sum = 0;
+        int outOfBand = 0;
+        int maxIdx = 0, minIdx = 0;
+
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            sum += rpm[i];
+            if (rpm[i] < 1480 || rpm[i] > 1520) outOfBand++;
+            if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+            if (rpm[i] < rpm[minIdx]) minIdx = i;
+        }
+      annotations:
+        - label: Outside the loop
+          text: >-
+            All four are declared before the for. Inside, they reset every pass and nobody
+            warns you.
+        - label: The band rule
+          text: >-
+            Written in full because 1480 sits exactly on the lower limit. One character
+            decides the count.
+        - label: Maximum and minimum
+          text: >-
+            On these seven readings, max 1533 at index 3, min 1471 at index 4, span 62.
+        - label: Risk
+          text: >-
+            Starting maxIdx at 0 works because the array has elements. On an empty array
+            you ask first.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: A cast changes the value, a format specifier changes the reading
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int sum = 0;
+        for (int i = 0; i < rpm.Length; i++) sum += rpm[i];
+        int whole = sum / rpm.Length;
+        double real = (double)sum / rpm.Length;
+        Console.WriteLine($"sum         {sum}");
+        Console.WriteLine($"mean int    {whole}");
+        Console.WriteLine($"mean real   {real}");
+        Console.WriteLine($"mean to F3  {real:F3}");
+      output: |
+        sum         10478
+        mean int    1496
+        mean real   1496.857142857143
+        mean to F3  1496.857
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The same one character of difference, now in a percentage
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+        int inc = 0, exc = 0;
+        for (int i = 0; i < rpm.Length; i++)
+        {
+            if (rpm[i] < 1480 || rpm[i] > 1520) inc++;
+            if (rpm[i] <= 1480 || rpm[i] >= 1520) exc++;
+        }
+        int pctWhole = inc * 100 / 7; double pct = inc * 100.0 / 7;
+        Console.WriteLine($"<  and >   out {inc} of 7");
+        Console.WriteLine($"<= and >=  out {exc} of 7");
+        Console.WriteLine($"{inc} * 100 / 7   = {pctWhole}");
+        Console.WriteLine($"{inc} * 100.0 / 7 = {pct}");
+        Console.WriteLine($"to F1         = {pct:F1}");
+      output: |
+        <  and >   out 2 of 7
+        <= and >=  out 3 of 7
+        2 * 100 / 7   = 28
+        2 * 100.0 / 7 = 28.571428571428573
+        to F1         = 28.6
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The endurance rig counter passes the ceiling and reports negative
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int cycles = int.MaxValue - 2;
+        Console.WriteLine($"start      {cycles}");
+        for (int k = 0; k < 3; k++)
+        {
+            cycles++;
+            Console.WriteLine($"+1 cycle   {cycles}");
+        }
+        long wide = int.MaxValue - 2;
+        for (int k = 0; k < 3; k++) wide++;
+        Console.WriteLine($"in long    {wide}");
+        double hours = int.MaxValue / 25.0 / 3600.0;
+        Console.WriteLine($"at 25/s -> {hours / 24:F1} days");
+      output: |
+        start      2147483645
+        +1 cycle   2147483646
+        +1 cycle   2147483647
+        +1 cycle   -2147483648
+        in long    2147483648
+        at 25/s -> 994.2 days
+
+  - quiz:
+      eyebrow: Quick check
+      question: The sampling cadence with the ladder in this order. What happens to sample 15?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        for (int i = 1; i <= 15; i++)
+        {
+            if (i % 3 == 0) Console.Write("[LOG] ");
+            else if (i % 5 == 0) Console.Write("[CAL] ");
+            else if (i % 15 == 0)
+                Console.Write("[LOG+CAL] ");
+            else Console.Write($"{i} ");
+        }
+      options:
+        - It is logged and calibrated, since 15 satisfies all three
+        - It is logged but never calibrated, and it builds with no warning
+        - It is calibrated but not logged, because 5 beats 3 here
+        - The compiler flags the third arm as unreachable code
+
+  - code_output:
+      eyebrow: Answer · Measured
+      title: The combined case has to go first, and only the run shows it
+      filename: Program.cs
+      lang: csharp
+      output_label: Both ladders
+      source: |
+        for (int p = 0; p < 2; p++)
+        {
+            for (int i = 1; i <= 15; i++)
+            {
+                if (p == 0 && i % 15 == 0) Console.Write("[LOG+CAL] ");
+                else if (i % 3 == 0) Console.Write("[LOG] ");
+                else if (i % 5 == 0) Console.Write("[CAL] ");
+                else Console.Write($"{i} ");
+                if (i == 8 || i == 13) Console.WriteLine();
+            }
+            Console.WriteLine(p == 0 ? "\ncombined case last:" : "");
+        }
+      output: |
+        1 2 [LOG] 4 [CAL] [LOG] 7 8
+        [LOG] [CAL] 11 [LOG] 13
+        14 [LOG+CAL]
+        combined case last:
+        1 2 [LOG] 4 [CAL] [LOG] 7 8
+        [LOG] [CAL] 11 [LOG] 13
+        14 [LOG]
+
+  - code_output:
+      eyebrow: Block 03 · Secondary case
+      title: The frame budget at 60 Hz, which is not 16.67
+      filename: Program.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        double[] ms = { 15.2, 16.9, 14.8, 22.4,
+                        15.9, 16.61, 33.1, 15.0 };
+        double budget = 1000.0 / 60.0;
+        int over = 0, worstIdx = -1; double worst = 0;
+        for (int i = 0; i < ms.Length; i++)
+        {
+            if (ms[i] <= budget) continue;
+            over++;
+            if (ms[i] > worst) { worst = ms[i]; worstIdx = i; }
+        }
+        Console.WriteLine($"budget {budget}");
+        Console.WriteLine($"to F2 {budget:F2} ms");
+        Console.WriteLine($"over {over}, worst {worst} at {worstIdx}");
+      output: |
+        budget 16.666666666666668
+        to F2 16.67 ms
+        over 3, worst 33.1 at 6
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four traps in repetition done properly
+      items:
+        - label: Error 01
+          title: Reaching for i after the loop
+          desc: >-
+            The counter is born and dies in the for header. Using it afterwards is error
+            CS0103 The name 'i' does not exist in the current context. No exception, no run.
+        - label: Error 02
+          title: break inside a switch
+          desc: >-
+            It ends the switch and not the loop. Measured, all four passes of the for ran
+            anyway. A continue in that same spot does go to the next pass.
+        - label: Error 03
+          title: Trusting an int to hold
+          desc: >-
+            The same loop inside checked forces it to admit the truth, with OverflowException
+            Arithmetic operation resulted in an overflow. Without checked it says nothing.
+        - label: Error 04
+          title: Writing a List during a foreach
+          desc: >-
+            On an array you may write by index while you walk. On a List it falls over at
+            run time with Collection was modified.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: for is while, tidied up
+          desc: The three beats sit in the header, and the body keeps only the work of the pass
+        - title: foreach walks, for knows where
+          desc: The moment the question is where and not what, the loop with no index stops helping
+        - title: Passes are counted, not guessed
+          desc: Four times the input is sixteen times the work, and starting the inner loop at i plus one leaves 21 pairs over seven sensors
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Rewrite the four accumulators from class using foreach wherever it fits, and write
+        one line for each saying whether it survived the change. At least one of them has
+        to keep needing a for, and your text has to explain why.
+      meta:
+        - [Due, Before week 10]
+        - [Format, Blackboard · Program.cs and PDF]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The rewrite", "40 %", "The ones that can move to foreach lose the index"]
+        - ["The one that cannot", "40 %", "It is identified and explained in one line"]
+        - ["Output", "20 %", "All four answers match the ones from class"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, how to package one of these walks under a name so you never write it
+        again, and what happens to a variable when it crosses that border.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,530 @@
+meta:
+  course: Análisis y Diseño de Algoritmos
+  code: COM101
+  lang: es
+  language: csharp
+  week: 2
+  footer: ANÁLISIS Y DISEÑO DE ALGORITMOS · COM101 · C#
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 02 · Tema 1 · Diseño de algoritmos
+      title: Análisis y Diseño de Algoritmos
+      subtitle: >-
+        Hoy no compilamos nada. Todo lo que aparece en estas láminas se corrió primero, y
+        el diff contra la traza escrita a mano es la prueba.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM101 · Semestre 1]
+        - [Sesión, 2 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué es un algoritmo
+          desc: Y las cinco fases que van del enunciado al mantenimiento
+        - title: Cómo se escribe
+          desc: Siete palabras, cuatro figuras y una traza que se predice antes de correr
+        - title: Los paradigmas
+          desc: Cuatro nombres, las mismas siete lecturas y el mismo 10478
+        - title: Tu turno
+          desc: Una secuencia de tu área, ejecutada al pie de la letra por alguien más
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Definir qué es un algoritmo
+          sub: Y aplicarle la prueba de las dos personas
+        - head: Nombrar las cinco fases
+          sub: Análisis, diseño, codificación, prueba y mantenimiento
+        - head: Escribir pseudocódigo y diagramas
+          sub: Las siete palabras y las cuatro figuras, sin sintaxis de ningún lenguaje
+        - head: Predecir una traza y comprobarla
+          sub: Escribir la salida esperada antes de correr, y medir la diferencia
+        - head: Distinguir los cuatro paradigmas
+          sub: Imperativo, estructurado, declarativo y orientado a objetos
+        - head: Justificar las tres formas
+          sub: Secuencia, selección y repetición, y por qué la restricción es humana
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: 01 · Semanas 1–3
+          title: Pensamiento y herramientas
+          desc: Cómo se resuelve un problema antes de escribir una línea
+          state: now
+        - label: 02 · Semanas 4–9
+          title: Datos, decisiones, repetición
+          desc: Tipos, expresiones, selección y lazos
+          state: todo
+        - label: 03 · Semanas 10–12
+          title: Funciones
+          desc: Las tuyas, por valor y por referencia, y las que ya venían escritas
+          state: todo
+        - label: 04 · Semanas 13–17
+          title: Colecciones y proyecto
+          desc: Arreglos, cadenas, ordenación, búsqueda, registros y el proyecto
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué es un algoritmo
+      lede: >-
+        Una secuencia finita de pasos, escrita con tanta precisión que quien la sigue no
+        tiene que decidir nada por su cuenta.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La precisión es el requisito, no el adorno
+      lead: >-
+        Un algoritmo es una secuencia finita de pasos que resuelve un problema y que no
+        deja nada al criterio de quien lo ejecuta. La prueba práctica es incómoda y
+        rápida. Si dos personas siguen tus pasos con los mismos datos y llegan a
+        resultados distintos, todavía no era un algoritmo.
+      panel:
+        label: La prueba
+        title: Mismos pasos, mismos datos, mismo resultado
+        note: >-
+          Sirve igual para arrancar una impresora 3D que para apretar una brida en cruz.
+          Si alguien tiene que adivinar en algún punto, ahí falta un paso.
+      steps:
+        - text: Recibe datos de entrada
+        - text: Ejecuta pasos sin ambigüedad
+        - text: Entrega un resultado y termina
+          loop: ↺ y con los mismos datos entrega siempre lo mismo
+
+  - table:
+      eyebrow: Bloque 01 · Tema 1.1
+      title: Las cinco propiedades que tiene que cumplir
+      headers: [Propiedad, Qué exige, Cómo se rompe]
+      rows:
+        - ["Finito", "Termina en pasos contables", "«Calienta hasta que se vea bien»"]
+        - ["Preciso", "Ningún paso admite dos lecturas", "«Aprieta el tornillo lo normal»"]
+        - ["Definido", "Mismos datos, mismo resultado", "Un paso que depende de quién lee"]
+        - ["Con entrada", "Recibe cero o más datos", "Un cálculo sin origen del dato"]
+        - ["Con salida", "Produce al menos un resultado", "Termina sin decir qué obtuvo"]
+
+  - compare:
+      eyebrow: Bloque 01 · La diferencia
+      title: La misma orden, dicha dos veces
+      before:
+        label: Una instrucción
+        file: orden.txt
+        lang: text
+        code: |
+          Arranca la impresora y deja
+          la cama lista antes de
+          empezar a imprimir.
+      after:
+        label: Un algoritmo
+        file: arranque.txt
+        lang: text
+        code: |
+          HOME de ejes X Y Z
+          MIENTRAS cama < 60.0
+              cama = cama + 12.0
+              ESCRIBIR cama
+          SI cama >= 60.0 ENTONCES
+              purgar boquilla
+          SI NO
+              abortar
+      note: >-
+        La de la izquierda suena clara y no lo es. Cuánto es «lista» lo decide quien la
+        lea, y dos operadores van a decidir distinto. La de la derecha dice el setpoint,
+        dice el paso y dice qué hacer si no se alcanza.
+
+  - steps:
+      eyebrow: Bloque 01 · Tema 1.3
+      title: Las cinco fases de la resolución de un problema
+      items:
+        - label: '01'
+          title: Análisis
+          desc: Produce el enunciado, las entradas, las salidas y la restricción. Vuelve en la semana 16.
+        - label: '02'
+          title: Diseño
+          desc: Produce el pseudocódigo o el diagrama, más la traza esperada. Vuelve en las semanas 5, 6 y 8.
+        - label: '03'
+          title: Codificación
+          desc: Produce fuente que compila. Empieza la semana que entra y ya no para.
+        - label: '04'
+          title: Prueba
+          desc: Produce la comparación contra la traza esperada, y una entrada rota a propósito.
+        - label: '05'
+          title: Mantenimiento
+          desc: Produce el código que otra persona lee en enero. Vuelve en las semanas 10 y 15.
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El orden es corrección, y el compilador no opina
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double camaA = 22.0;
+        Console.WriteLine($"A: purgar boquilla a {camaA:F1} C");
+        camaA = 60.0;
+        Console.WriteLine($"A: cama a {camaA:F1} C");
+
+        double camaB = 22.0;
+        camaB = 60.0;
+        Console.WriteLine($"B: cama a {camaB:F1} C");
+        Console.WriteLine($"B: purgar boquilla a {camaB:F1} C");
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        A: purgar boquilla a 22.0 C
+        A: cama a 60.0 C
+        B: cama a 60.0 C
+        B: purgar boquilla a 60.0 C
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cómo se escribe un algoritmo
+      lede: >-
+        Siete palabras y cuatro figuras. Ninguna de las dos es un lenguaje, y las dos
+        sirven para lo mismo, dejarlo claro antes de traducirlo.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Tema 1.2
+      title: Las siete palabras del pseudocódigo
+      headers: [Palabra, Qué hace, Ejemplo del banco]
+      rows:
+        - ["INICIO · FIN", "Abren y cierran el algoritmo", "INICIO … FIN"]
+        - ["LEER", "Toma un dato de afuera", "LEER rpm"]
+        - ["ESCRIBIR", "Entrega un resultado", "ESCRIBIR cama"]
+        - ["=", "Guarda un valor en un nombre", "cama = cama + 12.0"]
+        - ["SI · SI NO", "Elige uno de dos caminos", "SI cama >= 60.0 ENTONCES"]
+        - ["MIENTRAS", "Repite mientras la condición valga", "MIENTRAS cama < 60.0"]
+        - ["PARA", "Repite un número contado de veces", "PARA i = 1 HASTA 7"]
+
+  - code:
+      eyebrow: Bloque 02 · Pseudocódigo
+      title: La secuencia de arranque, escrita para leerse
+      filename: arranque_impresora.txt
+      lang: text
+      source: |
+        INICIO
+            cama = 22.0
+            ESCRIBIR "HOME de ejes X Y Z"
+
+            MIENTRAS cama < 60.0
+                cama = cama + 12.0
+                ESCRIBIR "calentando cama", cama
+
+            SI cama >= 60.0 ENTONCES
+                ESCRIBIR "purgando boquilla"
+            SI NO
+                ESCRIBIR "ABORTAR"
+
+            ESCRIBIR "iniciando impresion"
+        FIN
+      annotations:
+        - label: Sin lenguaje
+          text: No es C# ni ningún otro lenguaje. Es el plan, y por eso lo lee quien no programa.
+        - label: La sangría
+          text: Marca qué instrucciones caen dentro del lazo y cuáles dentro de cada rama.
+        - label: Las tres formas
+          text: Secuencia, selección y repetición. No aparece una cuarta en toda la sesión.
+        - label: Riesgo
+          text: Si el paso del calentado no mueve la condición, el MIENTRAS no termina nunca.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El mismo plan, ya en C#, con las tres formas
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        double cama = 22.0;
+        string aborto = "ABORTAR: la cama no alcanzo el setpoint";
+
+        Console.WriteLine("HOME de ejes X Y Z");
+        while (cama < 60.0)
+        {
+            cama += 12.0;
+            Console.WriteLine($"calentando cama: {cama:F1} C");
+        }
+        if (cama >= 60.0)
+            Console.WriteLine("cama en setpoint, purgando boquilla");
+        else
+            Console.WriteLine(aborto);
+        Console.WriteLine("iniciando impresion");
+      output: |
+        HOME de ejes X Y Z
+        calentando cama: 34.0 C
+        calentando cama: 46.0 C
+        calentando cama: 58.0 C
+        calentando cama: 70.0 C
+        cama en setpoint, purgando boquilla
+        iniciando impresion
+
+  - compare:
+      eyebrow: Bloque 02 · Tema 1.5
+      title: La traza esperada se escribe antes de correr
+      before:
+        label: esperado.txt · lo que predijo el equipo
+        file: esperado.txt
+        lang: text
+        code: |
+          HOME de ejes X Y Z
+          calentando cama: 34.0 C
+          calentando cama: 46.0 C
+          calentando cama: 58.0 C
+          calentando cama: 70.0 C
+          cama en setpoint, purgando boquilla
+          iniciando impresion
+      after:
+        label: mal.txt · una vuelta de calentado de menos
+        file: mal.txt
+        lang: text
+        code: |
+          HOME de ejes X Y Z
+          calentando cama: 34.0 C
+          calentando cama: 46.0 C
+          calentando cama: 58.0 C
+          cama en setpoint, purgando boquilla
+          iniciando impresion
+      note: >-
+        Contra la salida real, diff --strip-trailing-cr esperado.txt real.txt no imprime
+        nada y devuelve 0. Con mal.txt imprime 4a5 seguido de la línea que faltaba, y
+        devuelve 1. Ese cero es lo único que cuenta como «lo diseñé bien», y es el mismo
+        ritual en las semanas 5, 6 y 8.
+
+  - trace:
+      eyebrow: Bloque 02 · La traza con el dedo
+      title: Una ventana de diez muestras, seguida a mano
+      headers: [Paso, Instrucción, suma, i]
+      rows:
+        - ['1', "suma = 0   i = 1", '0', '1']
+        - ['2', "¿i <= 10?   sí", '0', '1']
+        - ['3–4', "suma = suma+i, i = i+1", '1', '2']
+        - ['…', "ocho vueltas más", '…', '…']
+        - ['22–23', "i = i + 1, ¿i<=10? no", '55', '11']
+      verdict: >-
+        Medio salón escribe 10 en el último renglón. El contador tiene que pasarse del
+        límite para que la condición sea falsa, y ese paso de más es justo lo que hace
+        terminar al lazo. La máquina lo zanja en la lámina siguiente.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El contador queda en 11, y PARA no cuenta como for
+      filename: Program.cs
+      lang: csharp
+      output_label: Al correr
+      source: |
+        int suma = 0, i = 1;
+        while (i <= 10) { suma += i; i++; }
+        Console.WriteLine($"suma = {suma}   i = {i}");
+
+        int n = 4;
+        Console.Write("PARA i = 1 HASTA n -> ");
+        for (int k = 1; k <= n; k++) Console.Write(k + " ");
+        Console.WriteLine();
+        Console.Write("for (k=0; k<n)     -> ");
+        for (int k = 0; k < n; k++) Console.Write(k + " ");
+        Console.WriteLine();
+      output: |
+        suma = 55   i = 11
+        PARA i = 1 HASTA n -> 1 2 3 4
+        for (k=0; k<n)     -> 0 1 2 3
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Cuándo termina este lazo de control?
+      filename: Program.cs
+      lang: csharp
+      source: |
+        double x = 0;
+        int pasos = 0;
+
+        while (x != 1.0 && pasos < 1000)
+        {
+            x += 0.1;
+            pasos++;
+        }
+
+        Console.WriteLine($"pasos = {pasos}");
+        Console.WriteLine($"x = {x}");
+      options:
+        - 'A las diez pasadas, con x valiendo exactamente 1.0'
+        - 'Nunca por su cuenta, lo detiene el tope de 1000'
+        - 'A las once pasadas, cuando x se pasa de 1.0'
+        - 'No compila, un double no se compara con !='
+
+  - trace:
+      eyebrow: Respuesta
+      title: El 1.0 nunca llega, y con menor que llega tarde
+      headers: [Versión, Pasadas, Valor final, "¿Termina?"]
+      rows:
+        - ["x != 1.0", "1000 y seguía", "99.9999999999986", "no, la corta el tope"]
+        - ["x == 1.0", "—", "False", "la igualdad no se da"]
+        - ["y < 1.0", "11", "1.0999999999999999", "sí, pero no en 1.0"]
+      verdict: >-
+        Sumar 0.1 diez veces no da 1.0 en binario. Con != el lazo se pasa de largo y ya no
+        vuelve; con < sí termina, pero en once pasadas y en 1.0999999999999999. «Todo lazo
+        necesita una salida» deja de ser consigna cuando se ve el número.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Paradigmas, y por qué vivimos en tres formas
+      lede: >-
+        Cuatro maneras de organizar la misma solución. Tres de ellas dan exactamente el
+        mismo número sobre las mismas siete lecturas.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Tema 1.4
+      title: Los cuatro paradigmas sobre las mismas siete lecturas
+      headers: [Paradigma, Cómo organiza la solución, Lo que da]
+      rows:
+        - ["Imperativo", "Digo el cómo, paso por paso", "suma = 10478"]
+        - ["Estructurado", "Imperativo con solo tres formas", "suma = 10478"]
+        - ["Declarativo", "Digo el qué y no escribo el recorrido", "rpm.Sum() = 10478"]
+        - ["No estructurado", "Salta a una etiqueta con goto", "suma = 10478"]
+        - ["Orientado a objetos", "El objeto guarda los datos", "media = 1496.857"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Tres caminos distintos, el mismo 10478
+      filename: Program.cs
+      lang: csharp
+      output_label: Al compilar y correr
+      source: |
+        int[] rpm = { 1480, 1502, 1495, 1533, 1471, 1509, 1488 };
+
+        int suma = 0;
+        for (int i = 0; i < rpm.Length; i++) suma += rpm[i];
+        Console.WriteLine("imperativo   suma = " + suma);
+
+        Console.WriteLine("declarativo  suma = " + rpm.Sum());
+
+        int j = 0, total = 0;
+        inicio:
+        total += rpm[j];
+        j++;
+        if (j < rpm.Length) goto inicio;
+        Console.WriteLine("con goto     suma = " + total);
+      output: |
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+
+        imperativo   suma = 10478
+        declarativo  suma = 10478
+        con goto     suma = 10478
+
+  - compare:
+      eyebrow: Bloque 03 · El cuarto paradigma
+      title: La función recibe los datos, el objeto los tiene
+      before:
+        label: Estructurado
+        file: Program.cs
+        lang: csharp
+        code: |
+          double a = Media(rpm);
+
+          static double Media(int[] v)
+          {
+              int s = 0;
+              foreach (int x in v) s += x;
+              return (double)s / v.Length;
+          }
+      after:
+        label: Orientado a objetos
+        file: Program.cs
+        lang: csharp
+        code: |
+          Corrida c = new Corrida(rpm);
+          double b = c.Media();
+
+          class Corrida(int[] m)
+          {
+              public double Media() =>
+                  (double)m.Sum() / m.Length;
+          }
+      note: >-
+        Las dos imprimen 1496.857 sobre las mismas siete lecturas y la comparación de las
+        dos medias devuelve True. La diferencia no está en el número, está en quién
+        guarda los datos. La semana 15 construye la mitad de ese camino con struct.
+
+  - method:
+      eyebrow: Bloque 03 · Tema 1.5
+      title: Programación estructurada
+      statement: >-
+        Tres formas bastan para escribir cualquier programa, y quedarse dentro de esas
+        tres es una decisión humana, no un límite del lenguaje.
+      points:
+        - label: Secuencia
+          text: Una instrucción después de otra, en el orden en que están escritas.
+        - label: Selección
+          text: Uno de dos caminos, según una condición que se evalúa antes de entrar.
+        - label: Repetición
+          text: El mismo bloque varias veces, mientras la condición siga siendo cierta.
+        - label: Lo único argumentado
+          text: >-
+            Que esas tres basten es el teorema de Böhm y Jacopini, de 1966. Ningún número
+            de ejemplos lo demuestra. Se cita, y se marca como lo que es.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tomar y colocar, con la pinza vacía incluida
+      brief: >-
+        Escribe en papel el algoritmo del robot que toma una pieza de la banda y la deja
+        en el pallet, y cubre el caso en que la pinza se cierra sin nada dentro.
+      blocks:
+        - label: Entrega
+          text: Media cuartilla, pseudocódigo y diagrama, sin computadora de por medio
+        - label: La prueba
+          text: >-
+            Intercambia la hoja y ejecuta la del compañero al pie de la letra, sin suponer
+            nada. Cada vez que tengas que adivinar, anótalo como falla.
+        - label: El puntaje
+          text: >-
+            Menos fallas, mejor algoritmo. Esa cuenta es el primer ensayo de la revisión
+            por pares que la semana 16 pide por escrito.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un algoritmo no deja nada a criterio
+          desc: Si dos personas siguiendo tus pasos obtienen resultados distintos, todavía no lo es
+        - title: El orden es corrección, no estilo
+          desc: Las mismas dos instrucciones intercambiadas purgan a 22 °C o a 60 °C, y compilan igual
+        - title: El diseño se prueba, no se confía
+          desc: La traza esperada se escribe antes de correr, y la diferencia contra la real se cuenta
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Dibuja el diagrama de flujo de la lista de verificación previa al vuelo de un dron
+        y escribe su salida esperada, línea por línea, antes de que nadie corra nada.
+      meta:
+        - [Entrega, Antes de la semana 3]
+        - [Formato, Blackboard · .pdf]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Diagrama", "40 %", "Cada figura se usa para lo que le toca y el flujo se sigue sin saltos"]
+        - ["Traza esperada", "40 %", "Escrita antes de correr, línea por línea y sin retoques"]
+        - ["Caso límite", "20 %", "Una verificación falla y el diagrama dice qué pasa entonces"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La semana que entra el robot de hoy se vuelve el compilador. Las mismas reglas y
+        mucha menos paciencia.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]
