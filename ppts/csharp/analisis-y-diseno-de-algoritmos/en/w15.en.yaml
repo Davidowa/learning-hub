@@ -217,8 +217,9 @@ slides:
         - ['Enum.TryParse("Warning")', "True, hands back Warning"]
         - ['Enum.TryParse("warning")', "False, leaves Ok"]
       verdict: >-
-        The cast into an enumeration is not checked, and TryParse is no guard. Bogus returns
-        False and leaves Ok. The digit 7 returns True and hands back the nameless value.
+        The cast is not checked. (Status)7 hands back a 7 with no name and only
+        Enum.IsDefined gives it away. TryParse is case sensitive and on failure it
+        leaves the Ok you already had.
 
   - code_output:
       eyebrow: Block 02 · Measured
