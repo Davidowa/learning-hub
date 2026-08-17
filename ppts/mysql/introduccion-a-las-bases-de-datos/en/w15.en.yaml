@@ -1,0 +1,518 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 15
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Universidad Panamericana · 2026
+      unit: Week 15 · Block E · Indexes and performance
+      title: Introduction to Databases
+      subtitle: >-
+        Four weeks ago a JOIN was visibly slow. Today you find out why, what the repair
+        costs on every write, and why the search box on the next screen is a different
+        problem that the same index does not touch.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM112 · Term 1]
+        - [Session, 15 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: From scan to index
+          desc: The slow JOIN, the plan that explains it, and the leftmost prefix rule
+        - title: The taxonomy
+          desc: Seven kinds of index, and the FULLTEXT no source in this course teaches
+        - title: What it costs
+          desc: The price on every write, and the inherited advice about LIKE, settled
+        - title: Your turn
+          desc: Measure, index and measure again on the large tables in the lab
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Read the plan of a query
+          sub: In 9.7.2 the default EXPLAIN answers a tree, and the classic grid has to be asked for by name
+        - head: Apply the leftmost prefix rule
+          sub: And recognise its exception, the skip scan, which the source written for 5.7 does not know
+        - head: Choose the index the question needs
+          sub: A B-tree for an anchored pattern, FULLTEXT for words inside a long text
+        - head: Put a price on every index
+          sub: Eight extra indexes cost 4.6 times the load and weigh 3.71 times the data
+        - head: Audit an inherited piece of advice
+          sub: Four claims about LIKE in twenty words, and a different verdict for each one
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origin, kinds and elements, the engine and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: done
+        - label: D · Weeks 12–14
+          title: SQL the server stores
+          desc: Views, procedures, triggers and events
+          state: done
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: From the full scan to the index
+      lede: >-
+        The JOIN from week 11 was slow and nobody could say why. The execution plan says it
+        in one line, and the repair fits in a single statement.
+      block: 1
+
+  - code_output:
+      eyebrow: Measured · the motivating case
+      title: The JOIN from week 11, and the index that repairs it
+      filename: plan_join.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 100 000 enrolments against 50 000 students
+        EXPLAIN SELECT i.id, a.apellido
+        FROM inscripciones_big i
+        JOIN alumnos_big a ON a.matricula = i.matricula
+        WHERE a.apellido = 'Ramirez-7';
+
+        CREATE INDEX idx_apellido ON alumnos_big (apellido);
+
+        -- and the same plan is asked for again
+      output: |
+        no index on the join column
+          type=ALL    rows=199343
+
+        with the index
+          type=ref    rows=25
+
+        with no index on either
+        table, 9.7.2 picks a
+        hash join
+
+  - code_output:
+      eyebrow: Measured · how a plan is read
+      title: The default EXPLAIN is a tree, and the grid is asked for by name
+      filename: explain.sql
+      lang: sql
+      output_label: Output
+      source: |
+        EXPLAIN
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+      output: |
+        -> Covering index lookup on
+           inscripciones_big using
+           idx_mat_fecha
+           (matricula = 100042)
+           (cost=2.32 rows=13)
+
+        FORMAT=TRADITIONAL
+          type=ref  key=idx_mat_fecha
+          rows=13  Extra=Using index
+
+  - code:
+      eyebrow: Block 01 · Creating it
+      title: Two ways to write an index, and one you did not
+      filename: indices.sql
+      lang: sql
+      source: |
+        CREATE TABLE alumnos (
+          matricula INT PRIMARY KEY,
+          apellido  VARCHAR(60),
+          correo    VARCHAR(120),
+          INDEX idx_apellido (apellido)
+        );
+
+        CREATE INDEX idx_apellido ON alumnos (apellido);
+        CREATE UNIQUE INDEX idx_correo ON alumnos (correo);
+
+        SHOW INDEX FROM inscripciones;
+        DROP INDEX idx_apellido ON alumnos;
+      annotations:
+        - label: The same thing
+          text: >-
+            Declaring it inside CREATE TABLE and afterwards with CREATE INDEX produce the
+            same object.
+        - label: The one you did not write
+          text: >-
+            SHOW INDEX FROM inscripciones returns three indexes where only the primary key
+            and two foreign keys were declared. The name is the constraint's.
+        - label: And they get dropped
+          text: >-
+            DROP INDEX appears in no source in this course, the missing half of any
+            performance test.
+        - label: Risk
+          text: >-
+            Every index is paid for on every INSERT and on every UPDATE of the column.
+            Eight just in case is a decision, not a precaution.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · leftmost prefix
+      title: The same composite index, with the three queries that test it
+      filename: prefijo.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE INDEX idx_mat_fecha
+          ON inscripciones_big (matricula, fecha_alta);
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+
+        -- ... AND fecha_alta = '2025-03-01';
+
+        -- ... WHERE fecha_alta = '2025-03-01';
+      output: |
+        left column alone
+          type=ref    rows=13
+        both columns
+          type=ref    rows=1
+        right column alone
+          type=index  rows=99847
+          possible_keys=NULL
+          key=idx_mat_fecha
+
+  - code_output:
+      eyebrow: Measured · the exception
+      title: The skip scan, which the source written for 5.7 does not know
+      filename: skip_scan.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE INDEX idx_periodo_calif
+          ON inscripciones_big (periodo, calificacion);
+
+        -- periodo holds four distinct values, and
+        -- the query filters on the second column
+
+        EXPLAIN SELECT periodo, calificacion
+        FROM inscripciones_big
+        WHERE calificacion = 9.5;
+      output: |
+        -> Filter: (inscripciones_big.
+           calificacion = 9.5)
+           (cost=2543 rows=9984)
+          -> Covering index skip scan
+             on inscripciones_big
+             using idx_periodo_calif
+             over calificacion = 9.5
+             (cost=2543 rows=9984)
+
+  - divider:
+      eyebrow: Block 02
+      title: The full taxonomy
+      lede: >-
+        The source describes MySQL 5.7 and its list has a hole. Six kinds are missing, and
+        the one missing entirely is the only one that finds words inside a long text.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Taxonomy
+      title: Seven indexes, not two
+      headers: [Kind, What it solves, How it is asked for]
+      rows:
+        - ["B-tree", "Equality and range", "CREATE INDEX ... (col)"]
+        - ["Composite", "Leftmost prefix", "... (matricula, fecha_alta)"]
+        - ["UNIQUE", "Duplicates, and N nulls", "CREATE UNIQUE INDEX ..."]
+        - ["Invisible", "Test before dropping", "ALTER INDEX ... INVISIBLE"]
+        - ["Functional", "WHERE with a function", "... ((DATE(fecha_alta)))"]
+        - ["Prefix", "Long columns", "... (correo(10))"]
+        - ["FULLTEXT", "Words inside a text", "ADD FULLTEXT ft_cuerpo (...)"]
+
+  - code_output:
+      eyebrow: Measured · FULLTEXT
+      title: No index means no query, and it does not take any column
+      filename: fulltext_no.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 60 000 posts on the tutoring board
+        SELECT id FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('normalizacion');
+
+        ALTER TABLE mensajes ADD FULLTEXT (matricula);
+
+        ALTER TABLE mensajes ADD FULLTEXT (fecha_alta);
+      output: |
+        ERROR 1191 (HY000): Can't find
+        FULLTEXT index matching the
+        column list
+
+        ERROR 1283 (HY000): Column
+        'matricula' cannot be part of
+        FULLTEXT index
+
+        the same 1283 on the DATETIME
+
+  - code_output:
+      eyebrow: Measured · what it costs to build
+      title: Adding the FULLTEXT rebuilds the table and leaves a hidden column behind
+      filename: fulltext_alta.sql
+      lang: sql
+      output_label: Output
+      source: |
+        ALTER TABLE mensajes
+          ADD FULLTEXT ft_cuerpo (cuerpo);
+
+        SHOW WARNINGS;
+
+        SELECT FTS_DOC_ID FROM mensajes LIMIT 1;
+      output: |
+        Warning 124 InnoDB rebuilding
+        table to add column FTS_DOC_ID
+
+        60 000 rows -> 4231.8 ms
+
+        SELECT FTS_DOC_ID -> ERROR 1054
+
+  - code_output:
+      eyebrow: Measured · what it buys
+      title: 7500 against 3750, and the difference is called «desnormalizacion»
+      filename: fulltext_vs_like.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT COUNT(*) FROM mensajes
+        WHERE cuerpo LIKE '%normalizacion%';
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('normalizacion');
+
+        -- and the server counters,
+        -- after a FLUSH STATUS
+      output: |
+        LIKE '%normalizacion%'
+          examined         60000
+          returned          7500
+        MATCH ... AGAINST
+          examined          3750
+          returned          3750
+
+        Handler_read_rnd_next
+          LIKE  60001    MATCH  0
+
+  - code_output:
+      eyebrow: Measured · what gets filtered out
+      title: Thirty-six stopwords, and they arrive in English
+      filename: stopwords.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT @@innodb_ft_min_token_size;
+
+        SELECT COUNT(*) FROM information_schema
+          .INNODB_FT_DEFAULT_STOPWORD;
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('la');
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE cuerpo LIKE '% la %';
+      output: |
+        innodb_ft_min_token_size   3
+        stopwords                 36
+        de, en and la are in there
+
+        MATCH ... AGAINST('la')    0
+        LIKE '% la %'          60000
+
+        INNODB_FT_INDEX_TABLE
+          72 distinct tokens
+
+  - divider:
+      eyebrow: Block 03
+      title: What it costs, and LIKE settled
+      lede: >-
+        Every index is a bet paid on every write and collected on every read that uses it.
+        And the inherited advice about LIKE is four claims with four different verdicts.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · the other side of the bet
+      title: Eight extra indexes cost 4.6 times the load and weigh 3.71 times the data
+      filename: costo_escritura.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- two identical 200 000-row tables, one with
+        -- no secondary indexes and one with eight
+        INSERT INTO carga_sin SELECT * FROM origen;
+        INSERT INTO carga_con SELECT * FROM origen;
+
+        SELECT TABLE_NAME, DATA_LENGTH, INDEX_LENGTH
+        FROM information_schema.TABLES
+        WHERE TABLE_NAME LIKE 'carga_%';
+      output: |
+        load    1.7668 s / 8.1967 s
+        DATA_LENGTH  14172160 both
+        INDEX_LENGTH 0 / 52592640
+
+        FULLTEXT, 10 000 rows
+          without ft    114-141 ms
+          with ft       248-390 ms
+
+  - code_output:
+      eyebrow: Measured · the inherited advice
+      title: The enemy was never LIKE, it was the wildcard on the left
+      filename: like_regexp.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- one single column, titulo, with its B-tree index
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo LIKE 'Duda sobre normalizacion%';
+
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo LIKE '%normalizacion%';
+
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo REGEXP '^Duda sobre normalizacion';
+      output: |
+        LIKE anchored at the start
+          type=range  rows=3750
+          2.0 ms
+        LIKE with a leading wildcard
+          type=index  rows=59136
+          16.6 ms
+        REGEXP anchored
+          type=index  rows=59136
+          possible_keys=NULL
+
+  - diagram:
+      eyebrow: The decision
+      title: The inherited sentence becomes three branches, not two
+      blocks:
+        - label: Branch 01
+          title: Anchored pattern
+          desc: >-
+            LIKE 'Ramirez%' on a B-tree is a range. type=range, 5000 rows.
+        - label: Branch 02
+          title: Word inside a text
+          desc: >-
+            FULLTEXT. 3750 rows against 60000, knowing it no longer answers exactly the
+            same question.
+          dark: true
+        - label: Branch 03
+          title: Inner substring
+          desc: >-
+            Neither one helps. «desnormalizacion» is a modelling problem, not an
+            index problem.
+      note: >-
+        And REGEXP falls outside all three. It never uses the index, anchor or not, so the
+        advice that recommended it instead of LIKE has it exactly backwards.
+
+  - pitfalls:
+      eyebrow: Auditing the inherited deck
+      title: Four pieces of 2015 advice against today's server
+      items:
+        - label: Advice 01
+          title: «Do not use ORDER BY»
+          desc: >-
+            The rule is to avoid the filesort, not the ORDER BY, and that is decided by the
+            index. On an indexed column the same sort costs 0.00894 against 10073.
+        - label: Advice 02
+          title: «Do not use nullable columns»
+          desc: >-
+            WHERE correo IS NULL does use the index, with type=ref, key=idx_correo and
+            rows=4. And a UNIQUE takes as many nulls as you feed it before the first
+            real duplicate.
+        - label: Advice 03
+          title: «Use LIMIT to take a sample»
+          desc: >-
+            A LIMIT with no ORDER BY is not a sample, and OFFSET does not skip rows, it
+            counts them. At OFFSET 90000 the plan examines 90010.
+        - label: Advice 04
+          title: «Index the columns you join on»
+          desc: >-
+            The foreign key already created its own. What does need checking is the types.
+            Comparing a text column against a number leaves 49985 rows examined.
+
+  - lab:
+      eyebrow: Lab
+      title: Measure, index and measure again
+      brief: >-
+        Take the slowest query in your own schema, save its plan before you touch anything,
+        build the index you think repairs it and save the plan again. What you hand in is
+        the comparison, not the opinion.
+      blocks:
+        - label: Deliverable
+          text: >-
+            The two plans side by side, the CREATE INDEX that goes between them, and the
+            number of rows examined in each case.
+        - label: Constraint
+          text: >-
+            One index per query. If it takes three to bring it down, the problem is in the
+            query or in the model.
+        - label: The test
+          text: >-
+            Measure the cost too. Load a thousand rows before and after the index and write
+            down both times, because the bet has two sides.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The plan answers the question
+          desc: >-
+            «It is slow» is not a diagnosis. type, key and rows are, and in 9.7.2 you ask
+            for them with EXPLAIN before and after every change
+        - title: An index is paid for in writes
+          desc: >-
+            Eight extra indexes are 4.6 times the load and 3.71 times the size of the data.
+            An index no query uses is pure cost
+        - title: Every search needs its own instrument
+          desc: >-
+            The B-tree solves the anchored pattern, FULLTEXT solves words inside the text,
+            and a substring in the middle of a word is solved by neither
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and grading criteria
+      brief: >-
+        Audit the four pieces of advice on the pitfalls slide against your own database.
+        For each one write the query, paste the plan you obtained and say whether the
+        advice holds, needs qualifying, or falls. One of the four falls entirely.
+      meta:
+        - [Due, Before week 16]
+        - [Format, Blackboard · PDF with the queries and their plans]
+        - [Weight, Part of the 20 % for homework]
+      rubric:
+        - ["Measurement", "40 %", "Every verdict comes with its EXPLAIN"]
+        - ["Verdict", "40 %", "Holds, qualified or falls, and why"]
+        - ["Cost", "20 %", "The price on the write side is reported too"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, two sessions open on the same row. Today's index comes back with a
+        second job that has nothing to do with speed.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

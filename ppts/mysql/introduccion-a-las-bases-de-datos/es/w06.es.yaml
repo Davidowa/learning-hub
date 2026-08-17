@@ -1,0 +1,454 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 6
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 06 · Bloque B · Del modelo a las tablas y las llaves
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Hoy el diagrama se ejecuta. Cada restricción que escribas es una regla de negocio
+        que le entregas al servidor, para que deje de depender de que alguien se acuerde.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 6 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Mapear
+          desc: Las cuatro reglas que convierten una línea del diagrama en una tabla
+        - title: Integridad
+          desc: Cuatro ramas, cuatro construcciones, y el número de error de cada una
+        - title: Los límites
+          desc: Lo que el diagrama promete y ninguna sentencia de MySQL puede exigir
+        - title: Tu turno
+          desc: El script del control escolar, corriendo desde una base vacía
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Convertir cada cardinalidad en DDL
+          sub: 1:N es una llave foránea, 1:1 es llave foránea más UNIQUE, N:M es una tabla
+        - head: Escribir el UNIQUE que sostiene un 1:1
+          sub: Sin él las dos filas entran y el uno a uno se degrada en silencio a uno a muchos
+        - head: Separar el dominio del NOT NULL
+          sub: Un CHECK acota los valores conocidos y deja pasar el desconocido sin decir nada
+        - head: Leer los rechazos de una llave foránea
+          sub: Unicidad del padre y tipo de la columna, cada uno con su propio número de error
+        - head: Explicar el índice que nadie pidió
+          sub: Declarar la llave foránea escribe el índice de la tabla hija, y SHOW INDEX lo enseña
+        - head: Nombrar lo que no se puede exigir
+          sub: La cardinalidad mínima no tiene construcción en MySQL, y decirlo sale más barato
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos, elementos y el manejador
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización y llaves
+          state: now
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agregados y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Las cuatro reglas de mapeo
+      lede: >-
+        Cada línea del diagrama de la semana 4 tiene exactamente una forma física. En
+        diecisiete presentaciones y dieciséis PDF no está escrita ni una sola vez.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · El mapeo
+      title: De la cardinalidad a la sentencia, sin ambigüedad
+      headers: ["Cardinalidad", "Qué se escribe", "Lo que revisa el servidor"]
+      rows:
+        - ["1:N", "Llave foránea del lado muchos", "Que el padre exista"]
+        - ["1:1", "Llave foránea más UNIQUE", "Un solo hijo por padre"]
+        - ["N:M", "Tercera tabla, llave del par", "Que el par no se repita"]
+        - ["Ternaria", "Una tabla con tres llaves", "Las tres, una por una"]
+        - ["Recursiva", "Llave foránea a la misma tabla", "El NULL de la raíz entra"]
+
+  - code:
+      eyebrow: Bloque 01 · El script
+      title: El diagrama de la semana 4, ejecutado línea por línea
+      filename: control_escolar.sql
+      lang: sql
+      source: |
+        CREATE TABLE departamento (
+            departamento_id INT PRIMARY KEY,
+            nombre    VARCHAR(60) NOT NULL UNIQUE,
+            ubicacion VARCHAR(40)
+        );
+
+        CREATE TABLE profesor (
+            profesor_id INT PRIMARY KEY,
+            nombre VARCHAR(80) NOT NULL,
+            departamento_id INT NOT NULL,
+            FOREIGN KEY (departamento_id)
+                REFERENCES departamento(departamento_id)
+        );
+      annotations:
+        - label: La regla 1:N
+          text: >-
+            El profesor pertenece a un departamento. La llave foránea vive del lado
+            muchos, que es donde el diagrama dibuja la pata de gallo.
+        - label: NOT NULL
+          text: >-
+            Participación obligatoria. Un profesor sin departamento no entra. Si la
+            quisieras opcional, la columna acepta NULL.
+        - label: UNIQUE sobre nombre
+          text: >-
+            La llave para unir es entera. El nombre es la llave natural y se protege
+            aparte, con su propio índice único.
+        - label: Riesgo
+          text: >-
+            El orden importa. La tabla padre se crea primero, o la llave foránea no tiene
+            a qué apuntar.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · la regla del 1:1
+      title: Sin UNIQUE el uno a uno se vuelve uno a muchos y nadie avisa
+      filename: jefatura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- jefatura(depto_id INT NOT NULL UNIQUE) con su FK
+        INSERT INTO jefatura VALUES (1, 7);
+        INSERT INTO jefatura VALUES (1, 9);
+
+        -- la misma prueba, quitando solo el UNIQUE
+      output: |
+        Con UNIQUE
+
+        ERROR 1062 (23000): Duplicate
+        entry '1' for key
+        'jefatura.depto_id'
+
+        Sin UNIQUE
+
+        Las dos filas entran
+
+  - code_output:
+      eyebrow: Medido · lo que el servidor escribe solo
+      title: Declarar la llave foránea te crea el índice de la tabla hija
+      filename: inscripcion.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE inscripcion (
+            inscripcion_id INT PRIMARY KEY,
+            alumno_id INT,
+            FOREIGN KEY (alumno_id) REFERENCES alumno(alumno_id)
+        );
+        SHOW INDEX FROM inscripcion;
+      output: |
+        Key_name     Non_unique
+
+        PRIMARY      0
+        alumno_id    1
+
+        El segundo no lo pidió nadie
+
+  - table:
+      eyebrow: Bloque 01 · Las dos llaves
+      title: Llave primaria contra llave foránea, con el renglón que faltaba
+      headers: ["Contraste", "PRIMARY KEY", "FOREIGN KEY"]
+      rows:
+        - ["Cuántas", "Una por tabla", "Varias por tabla"]
+        - ["Nulos", "Nunca, es automático", "Los acepta si la dejas"]
+        - ["Unicidad", "Obligatoria", "No, salvo en el 1:1"]
+        - ["Apunta a", "Nada, se identifica sola", "A la llave de otra tabla"]
+        - ["Su índice", "Lo crea el servidor", "También, y sin pedirlo"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Integridad, en sus cuatro ramas
+      lede: >-
+        Integridad es consistencia más validez, y cada rama de esa definición tiene una
+        construcción real en el motor. Cuatro ramas, cuatro sentencias, cuatro errores.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · La taxonomía
+      title: Cuatro ramas, y la construcción que le toca a cada una
+      items:
+        - label: Dominio
+          title: Qué valores admite la columna
+          desc: Tipo de dato más CHECK, o un ENUM si el conjunto es cerrado
+        - label: Intra-relación
+          title: Qué hace única a la fila
+          desc: PRIMARY KEY y UNIQUE. La primaria además prohíbe el NULL
+        - label: Semántica
+          title: Reglas entre columnas de la fila
+          desc: Un CHECK que nombra dos columnas de la misma tabla
+        - label: Referencial
+          title: Que la fila apuntada exista
+          desc: FOREIGN KEY, y el padre tiene que ser único de su lado
+
+  - code_output:
+      eyebrow: Medido · dominio y semántica
+      title: El CHECK detiene el valor imposible y deja pasar el desconocido
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- en persona, CHECK (edad BETWEEN 0 AND 150)
+        INSERT INTO persona (persona_id, edad) VALUES (1, 200);
+        INSERT INTO persona (persona_id, edad) VALUES (3, NULL);
+
+        -- en profesor, CHECK (edad > antiguedad + 22)
+        INSERT INTO profesor (edad, antiguedad) VALUES (30, 20);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint 'dom_edad' is
+        violated.
+
+        La fila (3, NULL) entra limpia
+
+        ERROR 3819 (HY000): Check
+        constraint 'chk_isir' is
+        violated.
+
+  - code_output:
+      eyebrow: Medido · el dominio con nombre
+      title: No existe CREATE DOMAIN, pero sí existe el conjunto cerrado
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE DOMAIN dom_edad AS INT
+            CHECK (VALUE BETWEEN 0 AND 150);
+
+        -- estado ENUM('inscrito','baja','aprobado')
+        INSERT INTO inscripcion (estado) VALUES ('egresado');
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL
+        syntax... near 'DOMAIN
+        dom_edad AS INT CHECK (VALUE
+        BETWEEN 0 AND 150)' at line 1
+
+        ERROR 1265 (01000): Data
+        truncated for column 'estado'
+        at row 1
+
+  - code_output:
+      eyebrow: Medido · las dos llaves de la fila
+      title: La primaria prohíbe el NULL sola, la natural necesita UNIQUE
+      filename: llaves.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- alumno_id INT PRIMARY KEY
+        INSERT INTO alumno (alumno_id) VALUES (NULL);
+
+        -- matricula CHAR(9) NOT NULL UNIQUE
+        INSERT INTO alumno_auto (matricula, nombre)
+        VALUES ('0245790', 'Beto Ruiz Mora');
+      output: |
+        ERROR 1048 (23000): Column
+        'alumno_id' cannot be null
+
+        ERROR 1062 (23000): Duplicate
+        entry '0245790' for key
+        'alumno_auto.matricula'
+
+  - code_output:
+      eyebrow: Medido · la rama referencial
+      title: El padre tiene que ser único, y del mismo tipo que la hija
+      filename: fk_rechazada.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- depto.id tiene indice normal, no UNIQUE
+        ALTER TABLE empleado_a
+            ADD FOREIGN KEY (depto_id) REFERENCES depto(id);
+
+        -- padre INT, hija VARCHAR(10)
+        ALTER TABLE mal_tipo
+            ADD FOREIGN KEY (materia_id)
+            REFERENCES materia(materia_id);
+      output: |
+        ERROR 6125 (HY000): Failed to
+        add the foreign key
+        constraint. Missing unique key
+        for constraint
+        'empleado_a_ibfk_1' in the
+        referenced table 'depto'.
+
+        ERROR 3780 (HY000): Referencing
+        column 'materia_id' ... are
+        incompatible.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Lo que el diagrama promete
+      lede: >-
+        Dos cosas que el modelo dice con toda claridad y que ninguna sentencia de MySQL
+        puede exigir. Decirlas en voz alta sale más barato que descubrirlas en producción.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · participación y cardinalidad mínima
+      title: El NULL de la llave foránea es la participación opcional
+      filename: participacion.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- alumno_id acepta NULL, con la FOREIGN KEY viva
+        INSERT INTO inscripcion (inscripcion_id, alumno_id)
+        VALUES (99, NULL);
+
+        SELECT m.materia_id, m.nombre,
+               COUNT(i.inscripcion_id) AS inscritos
+        FROM materia m
+        LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
+        GROUP BY m.materia_id, m.nombre;
+      output: |
+        La fila entra
+
+        materia_id nombre  inscritos
+        11         Calculo 0
+
+        Ninguna sentencia obliga a
+        que Calculo tenga alumnos
+
+  - code_output:
+      eyebrow: Medido · el dominio que el servidor no defiende
+      title: Comparar un nombre de alumno con uno de materia no da error
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT 'Ana Lopez' = 'Calculo Diferencial';
+        SELECT 'Ana Lopez' > 'Calculo Diferencial';
+
+        -- una tabla ai_ci contra una as_cs
+        SELECT * FROM t_ai JOIN t_cs ON t_ai.clave = t_cs.clave;
+      output: |
+        0
+        0
+
+        Sin error y sin advertencia
+
+        ERROR 1267 (HY000): Illegal
+        mix of collations
+        (utf8mb4_0900_ai_ci,IMPLICIT)
+        and (utf8mb4_0900_as_cs,
+        IMPLICIT) for operation '='
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder la regla de negocio
+      items:
+        - label: Error 01
+          title: Dibujar un 1:1 sin el UNIQUE
+          desc: >-
+            Las dos filas entran, el modelo se degrada a uno a muchos y no hay un solo
+            error que lo delate. Es la regla de mapeo entera en una pantalla.
+        - label: Error 02
+          title: Creer que el CHECK cubre el NULL
+          desc: >-
+            El desconocido pasa por en medio del rango. Si el dominio no admite
+            «no lo sé», eso se escribe NOT NULL y se escribe aparte.
+        - label: Error 03
+          title: Prometer la cardinalidad mínima
+          desc: >-
+            «Toda materia con al menos un alumno» no tiene construcción en MySQL. La
+            materia con cero inscritos se queda ahí y nadie protesta.
+        - label: Error 04
+          title: Indexar la foránea a mano
+          desc: >-
+            El servidor ya escribió ese índice al declarar la llave. La regla heredada de
+            buenas prácticas era tarea del programador en 2010, no hoy.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El script del control escolar, corriendo desde vacío
+      brief: >-
+        Escribe tu diagrama de la semana 4 como un script que crea las cinco tablas desde
+        una base vacía, con sus llaves y sus restricciones. Después atácalo cuatro veces:
+        una calificación de 11, una inscripción de un alumno que no existe, una segunda
+        jefatura del mismo departamento y una matrícula repetida.
+      blocks:
+        - label: Entrega
+          text: El script y los cuatro rechazos con su número de error, pegados tal cual
+        - label: Restricción
+          text: >-
+            El script corre dos veces seguidas sin editarlo. El orden de creación es parte
+            de la entrega.
+        - label: La prueba
+          text: >-
+            Si un ataque pasa, falta una restricción. Escríbela en el script, no en la
+            aplicación que todavía no existe.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Cada línea tiene una forma física
+          desc: >-
+            1:N es una llave foránea, 1:1 es llave foránea más UNIQUE y N:M es una tabla
+            cuya llave es el par. Ninguna fuente del curso lo dice, y hoy quedó escrito
+        - title: La restricción es la regla de negocio
+          desc: >-
+            Escrita en el servidor sobrevive al cambio de lenguaje, de aplicación y de
+            programador. Y es lo único del curso que aguanta a dos personas trabajando
+        - title: El diagrama promete de más
+          desc: >-
+            La cardinalidad mínima no tiene sentencia, y el argumento del dominio solo
+            tiene dientes en la colación y en el tipo de una llave foránea
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Entrega el script DDL completo de tu diagrama de la semana 4, con las cuatro
+        reglas de mapeo aplicadas y con al menos un CHECK, un UNIQUE y una llave foránea
+        propios. Adjunta los cuatro intentos rechazados con la salida del servidor.
+      meta:
+        - [Entrega, Antes de la semana 7]
+        - [Formato, Blackboard · script .sql y PDF de salidas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["El script", "40 %", "Corre desde vacío, dos veces seguidas"]
+        - ["Las restricciones", "40 %", "Cada una responde a una regla del diagrama"]
+        - ["Los rechazos", "20 %", "Cuatro errores, con número y SQLSTATE"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión abre el bloque C. Elegir el tipo de cada columna es la última
+        decisión barata que vas a tomar sobre una tabla, y ROLLBACK no te salva de un
+        CREATE.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

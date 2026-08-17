@@ -1,0 +1,526 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 16
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Universidad Panamericana · 2026
+      unit: Semana 16 · Bloque E · Concurrencia y bloqueos · Proyecto
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Todo lo que se ha escrito en este curso supuso que eras la única persona dentro de
+        la base. Hoy se abre una segunda sesión sobre la misma fila y la suposición cuesta
+        mil pesos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM112 · Semestre 1]
+        - [Sesión, 16 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La actualización perdida
+          desc: Dos sesiones leen lo mismo, cada una suma mil, y el saldo sube mil
+        - title: Candados
+          desc: Quién espera, quién no espera, y hasta dónde llega el candado
+        - title: Interbloqueo y aislamiento
+          desc: El 1213, el 1205 que no se le parece, y cómo se ve todo desde afuera
+        - title: Proyecto
+          desc: Revisión de diseño en pareja, con dos sesiones abiertas contra el esquema
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Reproducir una actualización perdida
+          sub: Dos sesiones, dieciséis milisegundos de diferencia, y mil pesos que no llegan
+        - head: Elegir el candado que hace falta
+          sub: FOR UPDATE, FOR SHARE, NOWAIT y SKIP LOCKED contestan cosas distintas
+        - head: Distinguir el 1205 del 1213
+          sub: Uno deshace la sentencia y te deja adentro, el otro deshace la transacción entera
+        - head: Explicar hasta dónde llega un candado
+          sub: El mismo FOR UPDATE bloquea cinco filas sin índice y dos registros con él
+        - head: Diagnosticar desde una tercera sesión
+          sub: Quién espera a quién, desde cuándo, y qué recibe el cliente al que le hicieron KILL
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: done
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Una transacción, dos sesiones y la actualización perdida
+      lede: >-
+        Nadie escribió mal. Cada sesión hizo lo correcto por su cuenta, y el hueco entre
+        preguntar y escribir es donde cupo la otra.
+      block: 1
+
+  - code_output:
+      eyebrow: Medido · la sesión doble
+      title: Dos ventanillas suman mil pesos cada una y el saldo sube mil
+      filename: perdida.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- las dos sesiones corren el mismo guion,
+        -- con dieciseis milisegundos de diferencia
+
+        START TRANSACTION;
+
+        SELECT credito_maximo INTO @c
+          FROM alumno WHERE alumno_id = 1;
+
+        -- ... y aqui piensa un momento ...
+
+        UPDATE alumno SET credito_maximo = @c + 1000
+          WHERE alumno_id = 1;
+
+        COMMIT;
+      output: |
+        A_leyo    15000.00
+          2026-08-16 23:14:49.984021
+        B_leyo    15000.00
+          2026-08-16 23:14:50.000252
+
+        resultado_final_esperado_17000
+                          16000.00
+
+        sin error, sin advertencia
+
+  - table:
+      eyebrow: Bloque 01 · Antes de tocar nada
+      title: Las seis variables de hoy
+      headers: [Gobierna, Variable, Valor de fábrica]
+      rows:
+        - ["Candado de fila", "innodb_lock_wait_timeout", "50 s"]
+        - ["Candado de metadatos", "lock_wait_timeout", "31536000 s"]
+        - ["Detección", "innodb_deadlock_detect", "1"]
+        - ["A la bitácora", "innodb_print_all_deadlocks", "0"]
+        - ["Al expirar", "innodb_rollback_on_timeout", "0"]
+        - ["Aislamiento", "transaction_isolation", "REPEATABLE-READ"]
+
+  - code_output:
+      eyebrow: Medido · las dos reparaciones
+      title: Leer con candado, o no leer en absoluto
+      filename: reparaciones.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- 1. leer con candado
+        START TRANSACTION;
+        SELECT credito_maximo INTO @c FROM alumno
+          WHERE alumno_id = 1 FOR UPDATE;
+        UPDATE alumno SET credito_maximo = @c + 1000
+          WHERE alumno_id = 1;
+        COMMIT;
+
+        -- 2. no leer, que lo sume el servidor
+        UPDATE alumno
+          SET credito_maximo = credito_maximo + 1000
+          WHERE alumno_id = 1;
+      output: |
+        con FOR UPDATE
+          A_leyo     15000.00
+          B_leyo     16000.00
+          final      17000.00
+
+        sin leer primero
+          final      17000.00
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Candados
+      lede: >-
+        Quién espera, quién no espera, y por cuánto tiempo. Y una pregunta que casi nadie
+        se hace en voz alta: hasta dónde llega el candado que acabas de pedir.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido · leer no espera
+      title: Cinco maneras de pedir la misma fila mientras A la tiene
+      filename: candados.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- A tiene la fila 1 y no ha confirmado
+        -- innodb_lock_wait_timeout = 3
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1;
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1 FOR UPDATE;
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1 FOR SHARE;
+
+        SELECT ... FOR UPDATE NOWAIT;
+        SELECT ... FOR UPDATE SKIP LOCKED;
+      output: |
+        ERROR 1205 (HY000): Lock wait
+        timeout exceeded; try
+        restarting transaction
+
+        1 SELECT simple  15000.00 ya
+        2 FOR UPDATE   1205  3.002 s
+        3 FOR SHARE    1205  3.003 s
+        4 NOWAIT       3572  al vuelo
+        5 SKIP LOCKED  4 filas de 5
+
+  - code_output:
+      eyebrow: Medido · el alcance del candado
+      title: Un FOR UPDATE sobre una columna sin índice bloquea a los vecinos
+      filename: sin_indice.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- sesion A, la columna carrera no tiene indice
+        START TRANSACTION;
+        SELECT alumno_id, nombre, carrera FROM alumno
+          WHERE carrera = 'Derecho' FOR UPDATE;
+
+        -- sesion B, sobre alumnos que A no devolvio
+        UPDATE alumno SET credito_maximo = 1
+          WHERE alumno_id = 5;
+
+        INSERT INTO alumno (matricula, carrera) VALUES
+          ('000000009', 'Arquitectura');
+      output: |
+        A devolvio 2 alumnos y bloqueo
+          PRIMARY  1
+          PRIMARY  2
+          PRIMARY  3
+          PRIMARY  4
+          PRIMARY  5
+          supremum pseudo-record
+
+        B, UPDATE de Medicina  1205
+        B, INSERT nuevo alumno 1205
+
+  - code_output:
+      eyebrow: Medido · el mismo enunciado, con índice
+      title: Un CREATE INDEX después, el candado se encoge a dos registros
+      filename: con_indice.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE INDEX idx_alumno_carrera
+          ON alumno (carrera);
+
+        -- sesion A, exactamente la misma sentencia
+        START TRANSACTION;
+        SELECT alumno_id, nombre, carrera FROM alumno
+          WHERE carrera = 'Derecho' FOR UPDATE;
+      output: |
+        idx_alumno_carrera
+          X        'Derecho', 3
+          X        'Derecho', 4
+          X,GAP    'Ingenieria', 1
+        PRIMARY
+          X,REC_NOT_GAP  3
+          X,REC_NOT_GAP  4
+
+        B, UPDATE de Medicina: pasa
+        B, INSERT: espera el hueco
+
+  - code_output:
+      eyebrow: Medido · el escenario de la semana
+      title: BD1001 tiene cupo 2, y se inscriben tres
+      filename: inscripcion.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- dentro de sp_inscribir, las dos ventanillas
+        START TRANSACTION;
+
+        SELECT COUNT(*) INTO v_ocupados FROM inscripcion
+          WHERE clave_materia = 'BD1001';
+
+        -- aqui cabe la otra sesion
+
+        IF v_ocupados < v_cupo THEN
+          INSERT INTO inscripcion (matricula, clave_materia)
+          VALUES (p_matricula, 'BD1001');
+        END IF;
+
+        COMMIT;
+      output: |
+        A vio_ocupados 1   cupo 2
+        B vio_ocupados 1   cupo 2
+
+        clave   cupo  inscritos
+        BD1001     2          3
+
+        con FOR UPDATE en el SELECT
+        B vio_ocupados 2   cupo 2
+        BD1001     2          2
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Interbloqueo, aislamiento, y cómo se ve desde afuera
+      lede: >-
+        Dos sesiones que se esperan la una a la otra no se destraban solas. El servidor
+        elige una víctima en cuatro milisegundos y la sacrifica entera.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · el interbloqueo
+      title: A pide lo que B tiene, B pide lo que A tiene
+      filename: interbloqueo.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- sesion A                -- sesion B
+        START TRANSACTION;         START TRANSACTION;
+
+        UPDATE alumno SET ...      UPDATE alumno SET ...
+          WHERE alumno_id = 1;       WHERE alumno_id = 2;
+
+        -- y ahora, a la vez     -- y ahora, a la vez
+
+        UPDATE alumno SET ...      UPDATE alumno SET ...
+          WHERE alumno_id = 2;       WHERE alumno_id = 1;
+      output: |
+        B pide la fila 1
+          23:08:29.501391
+        A llego al final
+          23:08:29.505215
+
+        ERROR 1213 (40001): Deadlock
+        found when trying to get
+        lock; try restarting
+        transaction
+
+  - code_output:
+      eyebrow: Medido · la distinción que parte la semana
+      title: El 1213 deshace la transacción entera, y el 1205 no
+      filename: 1213_vs_1205.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- caso 1, el interbloqueo
+        UPDATE alumno SET credito_maximo = credito_maximo + 500
+          WHERE alumno_id = 3;
+        -- y luego choca de frente:  ERROR 1213
+        COMMIT;
+
+        -- caso 2, la espera que expira
+        UPDATE alumno SET credito_maximo = 7777
+          WHERE alumno_id = 3;
+        -- y luego espera y expira:  ERROR 1205
+        COMMIT;
+      output: |
+        tras el 1213
+          fila 3     9000.00
+          la fila que nadie disputaba
+          volvio a su valor
+
+        tras el 1205
+          fila 3     7777.00
+          el COMMIT se llevo
+          el trabajo a medias
+
+  - code_output:
+      eyebrow: Medido · el aislamiento
+      title: La misma lectura dos veces, y una línea de configuración la cambia
+      filename: aislamiento.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- sesion B
+        SET SESSION TRANSACTION ISOLATION LEVEL
+          REPEATABLE READ;
+
+        START TRANSACTION;
+        SELECT credito_maximo FROM alumno WHERE alumno_id = 1;
+
+        -- entre las dos lecturas, A confirma 77777.00
+
+        SELECT credito_maximo FROM alumno WHERE alumno_id = 1;
+        COMMIT;
+
+        -- y el mismo guion con READ COMMITTED
+      output: |
+        REPEATABLE READ
+          lectura_1    15000.00
+          lectura_2    15000.00
+          ya fuera     77777.00
+
+        READ COMMITTED
+          lectura_1    15000.00
+          lectura_2    77777.00
+
+  - code_output:
+      eyebrow: Medido · desde afuera
+      title: Una tercera sesión mira a las otras dos, y una de ellas no sobrevive
+      filename: diagnostico.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT waiting_pid, blocking_pid, wait_age
+        FROM sys.innodb_lock_waits;
+
+        SELECT ID, COMMAND, TIME, STATE, LEFT(INFO,34)
+        FROM information_schema.PROCESSLIST;
+
+        KILL 1131;
+      output: |
+        waiting_pid    1124
+        blocking_pid   1123
+        wait_age       00:00:04
+        1124  updating
+        1123  User sleep
+
+        ERROR 2013 (HY000): Lost
+        connection to MySQL server
+        during query
+
+  - code_output:
+      eyebrow: Medido · el reintento
+      title: El handler de la semana 13, ahora atrapa el 1213
+      filename: reintento.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        DECLARE v_intentos INT DEFAULT 0;
+        DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
+        BEGIN
+          ROLLBACK;
+          SET v_intentos = v_intentos + 1;
+        END;
+
+        reintenta: LOOP
+          START TRANSACTION;
+          UPDATE alumno SET credito_maximo = credito_maximo + 100
+            WHERE alumno_id = 1;
+          COMMIT;
+          LEAVE reintenta;
+        END LOOP;
+      output: |
+        sesion A
+          intentos          1
+          quedo_fallando    0
+        sesion B
+          intentos          2
+          quedo_fallando    0
+
+        fila 1     15600.00
+        fila 2     12600.00
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de creerse solo en la base
+      items:
+        - label: Error 01
+          title: FOR UPDATE fuera de una transacción
+          desc: >-
+            Con autocommit encendido el candado se suelta al terminar la sentencia. Cinco
+            milisegundos después otra sesión escribió la fila, y quien creía tenerla
+            encontró 33333.00.
+        - label: Error 02
+          title: Validar con un trigger que cuenta
+          desc: >-
+            Un SELECT COUNT(*) dentro de un trigger no sabe esperar. El índice UNIQUE
+            esperó 4.997 s, hasta el COMMIT de la otra sesión, y contestó ERROR 1062
+            (23000) Duplicate entry '000000008'.
+        - label: Error 03
+          title: Creer que la transacción sigue abierta
+          desc: >-
+            El DDL confirma por su cuenta, LOCK TABLES también, y en MyISAM el ROLLBACK no
+            deshace nada. Tres maneras de perder el «todas o ninguna» sin un solo aviso.
+        - label: Error 04
+          title: Subir el aislamiento para no pensar
+          desc: >-
+            La sesión que paga el aislamiento no es la que sufre. A puso SERIALIZABLE y
+            solo leyó, y B, en el nivel de fábrica, recibió el 1205.
+
+  - lab:
+      eyebrow: Laboratorio · Proyecto
+      title: Revisión de diseño en pareja, con dos sesiones abiertas
+      brief: >-
+        Intercambia tu script con el de tu pareja, levanta su esquema en tu servidor y corre
+        contra él los experimentos de hoy. Regresas con tres observaciones escritas sobre su
+        diseño, no sobre su estilo.
+      blocks:
+        - label: Las tres observaciones
+          text: >-
+            Un candado que el diseño sostiene más de lo necesario, un SELECT que debería
+            llevar FOR UPDATE o que lo lleva sin necesitarlo, y un WHERE sin índice detrás.
+        - label: Entrega
+          text: >-
+            Un solo .sql que corre limpio desde vacío en un servidor 9.7.2, más el reporte
+            con un EXPLAIN junto a cada afirmación de desempeño.
+        - label: Evaluación
+          text: >-
+            La revisión se califica presente o ausente, así que ninguna calificación
+            depende de la opinión de un compañero. El proyecto vale 20 %.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El hueco está entre leer y escribir
+          desc: >-
+            Si la aplicación lee, decide y luego escribe, la fila pudo cambiar en medio.
+            Ahí cabe la otra sesión, y no hay error ni advertencia que lo diga
+        - title: El candado se pide, no se hereda
+          desc: >-
+            Una lectura simple nunca espera. FOR UPDATE y FOR SHARE sí, y hasta dónde
+            llegan lo decide el índice que hay detrás del WHERE
+        - title: 1205 y 1213 no son el mismo error
+          desc: >-
+            El 1213 deshace la transacción completa y el 1205 solo la sentencia. Reintentar
+            los dos igual confirma trabajo a medias
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe los dos guiones de la actualización perdida, predice a mano el valor final
+        antes de correrlos y después córrelos con NOW(6) en las dos sesiones. Repite el par
+        con la reparación que elijas y explica por qué esa y no la otra.
+      meta:
+        - [Entrega, Antes de la semana 17]
+        - [Formato, Blackboard · los dos .sql y las dos salidas pegadas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Predicción", "30 %", "El valor predicho aparece antes de la corrida"]
+        - ["Evidencia", "40 %", "Las marcas de tiempo de las dos sesiones"]
+        - ["Reparación", "30 %", "Por qué ese candado y no el otro"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, quién puede entrar y qué puede tocar, el respaldo que se abre en
+        cualquier editor, y el examen final de las diecisiete semanas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

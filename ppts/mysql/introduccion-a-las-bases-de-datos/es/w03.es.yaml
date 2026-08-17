@@ -1,0 +1,404 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 3
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 03 · Bloque A · El manejador y sus archivos
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        «Independencia lógica y física» deja de ser una frase el día que la ves en tres
+        consultas. Después bajamos al disco, a los archivos que la definición de la semana
+        pasada prometió y nadie mostró.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 3 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El manejador
+          desc: Qué es, qué hace, y las dos funciones que sí se sostienen
+        - title: Los tres niveles
+          desc: Externo, conceptual e interno, con una consulta por nivel
+        - title: El suelo
+          desc: Los archivos en disco, y por qué no están escritos para ti
+        - title: Los componentes
+          desc: Los cinco que puedes señalar en una pantalla esta misma sesión
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Definir un manejador sin recitar la lámina
+          sub: >-
+            Programas que sirven para describir, recuperar y manipular datos, cuidando su
+            integridad y su seguridad
+        - head: Separar los tres niveles de la arquitectura
+          sub: >-
+            Y decir cuál de los tres se entera cuando alguien agrega una columna
+        - head: Señalar dónde viven los bytes
+          sub: >-
+            El directorio de datos, la página de 16 KB y el pool de 128 MB, leídos del
+            servidor y no de un diagrama
+        - head: Leer un EXPLAIN de MySQL 9
+          sub: >-
+            El formato por omisión es TREE y la rejilla clásica ahora hay que pedirla
+        - head: Nombrar componentes que se puedan abrir
+          sub: >-
+            Parser, optimizador, ejecutor, gestor de archivos y gestor de buffers
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos, elementos y el manejador
+          state: now
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización y llaves
+          state: todo
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agrupación y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué es un manejador
+      lede: >-
+        La lámina heredada define el manejador con una lista que aparece dos veces y a la
+        que le faltan los tres verbos. Hoy se repara, y se pone a correr.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un conjunto de programas, y tres verbos
+      lead: >-
+        Un manejador es un conjunto de programas, procedimientos y lenguajes que brindan
+        los medios necesarios para describir, recuperar y manipular los datos almacenados
+        en la base, manteniendo su integridad, su confidencialidad y su seguridad. Los
+        tres verbos son la parte que hace trabajo. Sin ellos queda un inventario.
+      panel:
+        label: La lámina heredada
+        title: Los tres verbos se perdieron en la revisión
+        note: >-
+          La versión nueva imprime la lista de programas dos veces y se salta describir,
+          recuperar y manipular. Lo que sobrevive es un encabezado pegado a un
+          complemento, sin verbo que los una. La versión vieja trae la oración completa y
+          es la que usamos.
+      steps:
+        - text: Describir objetos, estructura e interrelaciones
+        - text: Manipular — buscar, añadir, suprimir, modificar
+        - text: Y nada más — «utilización» no es una tercera
+          loop: ↺ dos funciones, no tres
+
+  - table:
+      eyebrow: Bloque 01 · Operaciones
+      title: Lo que el manejador hace, y la semana que lo cobra
+      headers: [Operación, Qué resuelve, Se cobra en]
+      rows:
+        - ["Archivos", "Páginas de 16 KB en su propio pool", "Hoy · H-03-4"]
+        - ["Integridad", "INSERT, UPDATE y DELETE vigilados", "6 y 14"]
+        - ["Seguridad", "Autoriza cuentas, no personas", "17"]
+        - ["Respaldo", "Dos bitácoras, y la copia aparte", "17"]
+        - ["Concurrencia", "Coordina sesiones simultáneas", "16"]
+        - ["Transacciones", "Todas las operaciones o ninguna", "8 y 16"]
+
+  - code_output:
+      eyebrow: Medido
+      title: ¿El manejador traduce tu SQL a comandos del sistema de archivos?
+      filename: arquitectura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@innodb_buffer_pool_size AS gestor_de_buffers_bytes,
+               @@innodb_page_size        AS tamano_pagina;
+      output: |
+        gestor_de_buffers_bytes
+        134217728
+
+        tamano_pagina
+        16384
+
+  - code_output:
+      eyebrow: Medido
+      title: «La bitácora» de la fuente son en realidad dos bitácoras
+      filename: arquitectura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@log_bin AS bitacora_binaria_activa,
+               @@innodb_flush_log_at_trx_commit AS redo_log_en_commit;
+      output: |
+        bitacora_binaria_activa
+        1
+
+        redo_log_en_commit
+        1
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Los tres niveles, y el suelo debajo del tercero
+      lede: >-
+        La misma pregunta —¿qué hay ahí?— hecha desde cuatro alturas en una sola sesión.
+        La cuarta ya no es SQL. Es un listado de archivos y sesenta y cuatro bytes
+        ilegibles a propósito.
+      block: 2
+
+  - diagram:
+      eyebrow: Bloque 02 · Arquitectura
+      title: Tres niveles, tres consultas, una sola sesión
+      blocks:
+        - label: Nivel 01
+          title: Externo
+          desc: >-
+            Lo que ve la secretaria. La vista devuelve sus cuatro columnas y ni rastro de
+            la tabla que hay debajo.
+        - label: Nivel 02
+          title: Conceptual
+          desc: >-
+            Lo que ve el diseñador. El catálogo nombra la tabla, su motor y la vista, en
+            un solo renglón cada uno.
+        - label: Nivel 03
+          title: Interno
+          desc: >-
+            Lo que ve el motor. Páginas de 16 KB dentro de un pool de 128 MB, y un
+            directorio de datos.
+      note: >-
+        Agregar una columna cambia el nivel conceptual y no obliga a reescribir la vista.
+        Eso es independencia lógica, y la semana 12 la vuelve a cobrar.
+
+  - code_output:
+      eyebrow: Medido · nivel conceptual
+      title: El catálogo distingue la tabla de la vista, y le pone motor a una sola
+      filename: niveles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT TABLE_NAME, TABLE_TYPE, ENGINE
+        FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA = 'agente_intro01';
+      output: |
+        alumno           BASE TABLE  InnoDB
+        v_alumno_activo  VIEW        NULL
+
+  - code_output:
+      eyebrow: Medido · nivel interno
+      title: Tres variables y ya sabes dónde viven los bytes
+      filename: niveles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@datadir;
+        SELECT @@innodb_page_size;
+        SELECT @@innodb_buffer_pool_size;
+      output: |
+        @@datadir
+        ...\scratchpad\mydb\data\
+
+        @@innodb_page_size
+        16384
+
+        @@innodb_buffer_pool_size
+        134217728
+
+  - code_output:
+      eyebrow: Medido · el suelo
+      title: Cada tabla es un archivo, y la vista no aparece porque no tiene archivo
+      filename: archivos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT SPACE, NAME, FILE_SIZE
+        FROM information_schema.INNODB_TABLESPACES
+        WHERE NAME LIKE 'db_backup/%';
+      output: |
+        417  db_backup/alumno       131072
+        418  db_backup/inscripcion  131072
+        419  db_backup/materia      114688
+
+  - code_output:
+      eyebrow: Medido · [E] los tamaños se vuelven a medir en el aula
+      title: Los primeros bytes del archivo son un encabezado de página de InnoDB
+      filename: terminal
+      lang: sql
+      output_label: Fuera del cliente
+      source: |
+        -- ya no es SQL, es el disco
+        od -A n -t x1 -N 64 alumno.ibd
+      output: |
+        f8 6f be bf 00 00 00 00
+        00 01 62 4e 00 00 00 01
+        …
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Los componentes que sí puedes señalar
+      lede: >-
+        La fuente lista ocho. Cinco se abren en pantalla esta misma sesión, uno no existe
+        con ese nombre en MySQL, y los otros dos tienen semana propia.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Componentes
+      title: Cinco piezas, y cómo se ve cada una desde el cliente
+      headers: [Componente, Qué hace, Cómo se ve]
+      rows:
+        - ["Parser", "Lee tu SQL y lo rechaza si no cuadra", "ERROR 1064"]
+        - ["Optimizador", "Elige el plan, no mejora tu SQL", "EXPLAIN"]
+        - ["Ejecutor", "Corre el plan que se eligió", "La salida"]
+        - ["Gestor de archivos", "Lee y escribe los .ibd del disco", "@@datadir"]
+        - ["Gestor de buffers", "Guarda páginas de 16 KB en memoria", "134217728"]
+
+  - code_output:
+      eyebrow: Medido · el optimizador
+      title: Esto es lo que contesta un EXPLAIN en 9.7.2, y no se parece a la rejilla
+      filename: plan.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        EXPLAIN SELECT a.nombre, m.nombre
+        FROM alumno a
+        JOIN inscripcion i ON a.matricula = i.matricula
+        JOIN materia m ON m.clave = i.clave;
+      output: |
+        -> Nested loop inner join
+           (cost=1.05 rows=1)
+          -> Nested loop inner join
+             (cost=0.7 rows=1)
+            -> Covering index scan on i
+               using fk_ins_materia
+               (cost=0.35 rows=1)
+            -> Single-row index lookup
+               on a using PRIMARY …
+          -> Single-row index lookup …
+
+  - code_output:
+      eyebrow: Medido · el aviso del semestre
+      title: La rejilla de siempre sigue ahí, pero ahora hay que pedirla por su nombre
+      filename: plan.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@explain_format;
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT a.nombre, m.nombre
+        FROM alumno a
+        JOIN inscripcion i ON a.matricula = i.matricula
+        JOIN materia m ON m.clave = i.clave;
+      output: |
+        @@explain_format
+        TREE
+
+        id  select_type  table  type
+        possible_keys  key  key_len
+        ref  rows  filtered  Extra
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro frases heredadas que no sobreviven al servidor
+      items:
+        - label: Error 01
+          title: «Traduce el SQL al sistema de archivos»
+          desc: >-
+            InnoDB maneja páginas de 16 KB en su propio pool y su propio tablespace. El
+            sistema operativo solo ve lecturas y escrituras de bloques.
+        - label: Error 02
+          title: «La bitácora», en singular
+          desc: >-
+            Son dos. El redo log da durabilidad ante una caída; el binlog da recuperación
+            a un punto en el tiempo y replicación. La semana 17 usa los dos.
+        - label: Error 03
+          title: Copiar una captura de EXPLAIN de 8.0
+          desc: >-
+            Cualquier tutorial que encuentres fue escrito para 8.0 y su primera captura ya
+            no coincide con tu pantalla. Pide TRADITIONAL o lee el árbol.
+        - label: Error 04
+          title: Memorizar el «planificador»
+          desc: >-
+            MySQL no tiene nada con ese nombre. Lo que ordena el trabajo simultáneo es el
+            gestor de bloqueos de InnoDB, y se abre fila por fila en la semana 16.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La misma pregunta desde cuatro alturas
+      brief: >-
+        Conéctate al servidor y pregunta «qué hay ahí» cuatro veces, de arriba hacia
+        abajo. Primero la vista, luego el catálogo, luego las tres variables del nivel
+        interno, y al final sal del cliente y lista los archivos del directorio de datos.
+      blocks:
+        - label: Entrega
+          text: Las cuatro salidas pegadas en orden, con la sentencia que produjo cada una
+        - label: Restricción
+          text: >-
+            Una sola sesión y una sola base. Si cambias de base a media consulta, el
+            listado de archivos ya no corresponde al catálogo.
+        - label: La prueba
+          text: >-
+            Agrega una columna a la tabla y vuelve a correr la primera consulta. Si la
+            vista cambió, no era independencia lógica.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El manejador tiene dos funciones
+          desc: >-
+            Describir y manipular. «Utilización» no se distingue de manipular en ninguna
+            de las dos versiones del deck, y ninguna semana posterior la usa
+        - title: Cada nivel contesta otra cosa
+          desc: >-
+            La vista, el catálogo y el pool responden a la misma pregunta con tres
+            respuestas distintas, y la de abajo puede cambiar sin tocar la de arriba
+        - title: La brecha es el manejador
+          desc: >-
+            Los tres archivos ocupan 376 832 bytes en disco para quince renglones que como
+            texto SQL pesan 6 963. Esa diferencia es estructura, no desperdicio
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Los tres niveles sobre una base tuya, una consulta por nivel, con su salida
+        pegada. Explica en dos renglones qué parte de tu base cambiaría si alguien
+        renombrara una columna, y cuál de los tres niveles ni se enteraría.
+      meta:
+        - [Entrega, Antes de la semana 4]
+        - [Formato, Blackboard · PDF con las tres salidas]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Nivel externo", "30 %", "La consulta a la vista y su salida literal"]
+        - ["Nivel conceptual", "30 %", "El catálogo, con motor y tipo de objeto"]
+        - ["Nivel interno", "30 %", "Directorio de datos, página y pool"]
+        - ["La explicación", "10 %", "Qué nivel absorbe el cambio, y por qué"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión cerramos el bloque A y abrimos el B. Se dibuja el control
+        escolar entero, con atributos, y cada línea del dibujo se convierte en algo que
+        el servidor escribe de vuelta.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,454 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 6
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 06 · Block B · From the model to tables and keys
+      title: Introduction to Databases
+      subtitle: >-
+        Today the diagram gets executed. Every constraint you write is a business rule you
+        hand to the server, so that it stops depending on somebody remembering it.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 6 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Mapping
+          desc: The four rules that turn a line on the diagram into a table
+        - title: Integrity
+          desc: Four branches, four constructs, and the error number of each one
+        - title: The limits
+          desc: What the diagram promises and no MySQL statement can enforce
+        - title: Your turn
+          desc: The records script, running from an empty database
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Turn every cardinality into DDL
+          sub: 1:N is a foreign key, 1:1 is a foreign key plus UNIQUE, N:M is a third table
+        - head: Write the UNIQUE that holds a 1:1 up
+          sub: Without it both rows go in and the one to one silently becomes one to many
+        - head: Keep the domain apart from NOT NULL
+          sub: A CHECK bounds the known values and lets the unknown one through without a word
+        - head: Read a foreign key's refusals
+          sub: Uniqueness on the parent and the column's type, each with its own error number
+        - head: Explain the index nobody asked for
+          sub: Declaring the foreign key writes the child index, and SHOW INDEX puts it on screen
+        - head: Name what cannot be enforced
+          sub: Minimum cardinality has no construct in MySQL, and saying so is the cheap option
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types, elements and the DBMS
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, keys
+          state: now
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, aggregates, JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backup
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The four mapping rules
+      lede: >-
+        Every line on the week 4 diagram has exactly one physical form. Across seventeen
+        presentations and sixteen PDFs it is never written down once.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · The mapping
+      title: From the cardinality to the statement, with no ambiguity
+      headers: ["Cardinality", "What you write", "What the server checks"]
+      rows:
+        - ["1:N", "Foreign key on the many side", "That the parent exists"]
+        - ["1:1", "Foreign key plus UNIQUE", "One child per parent"]
+        - ["N:M", "Third table, keyed on the pair", "That the pair is unique"]
+        - ["Ternary", "One table with three keys", "All three, one by one"]
+        - ["Recursive", "Foreign key to the same table", "The root's NULL goes in"]
+
+  - code:
+      eyebrow: Block 01 · The script
+      title: The week 4 diagram, executed line by line
+      filename: control_escolar.sql
+      lang: sql
+      source: |
+        CREATE TABLE departamento (
+            departamento_id INT PRIMARY KEY,
+            nombre    VARCHAR(60) NOT NULL UNIQUE,
+            ubicacion VARCHAR(40)
+        );
+
+        CREATE TABLE profesor (
+            profesor_id INT PRIMARY KEY,
+            nombre VARCHAR(80) NOT NULL,
+            departamento_id INT NOT NULL,
+            FOREIGN KEY (departamento_id)
+                REFERENCES departamento(departamento_id)
+        );
+      annotations:
+        - label: The 1:N rule
+          text: >-
+            A lecturer belongs to one department. The foreign key lives on the many side,
+            which is where the diagram draws the crow's foot.
+        - label: NOT NULL
+          text: >-
+            Mandatory participation. A lecturer with no department does not go in. Make it
+            optional and the column accepts NULL.
+        - label: UNIQUE on nombre
+          text: >-
+            The key you join on is an integer. The name is the natural key, protected by
+            its own unique index.
+        - label: Risk
+          text: >-
+            Order matters. The parent table is created first, or the foreign key has
+            nothing to point at.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · the 1:1 rule
+      title: Without UNIQUE the one to one becomes one to many and nobody says so
+      filename: jefatura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- jefatura(depto_id INT NOT NULL UNIQUE) with its FK
+        INSERT INTO jefatura VALUES (1, 7);
+        INSERT INTO jefatura VALUES (1, 9);
+
+        -- the same test, dropping only the UNIQUE
+      output: |
+        With UNIQUE
+
+        ERROR 1062 (23000): Duplicate
+        entry '1' for key
+        'jefatura.depto_id'
+
+        Without UNIQUE
+
+        Both rows go in
+
+  - code_output:
+      eyebrow: Measured · what the server writes on its own
+      title: Declaring the foreign key creates the child table's index
+      filename: inscripcion.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE inscripcion (
+            inscripcion_id INT PRIMARY KEY,
+            alumno_id INT,
+            FOREIGN KEY (alumno_id) REFERENCES alumno(alumno_id)
+        );
+        SHOW INDEX FROM inscripcion;
+      output: |
+        Key_name     Non_unique
+
+        PRIMARY      0
+        alumno_id    1
+
+        Nobody asked for the second
+
+  - table:
+      eyebrow: Block 01 · The two keys
+      title: Primary key against foreign key, with the row that was missing
+      headers: ["Contrast", "PRIMARY KEY", "FOREIGN KEY"]
+      rows:
+        - ["How many", "One per table", "Several per table"]
+        - ["Nulls", "Never, automatically", "Accepted if you allow it"]
+        - ["Uniqueness", "Mandatory", "No, except in the 1:1"]
+        - ["Points at", "Nothing, it identifies", "Another table's key"]
+        - ["Its index", "The server creates it", "Also, and unrequested"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Integrity, in its four branches
+      lede: >-
+        Integrity is consistency plus validity, and every branch of that definition has a
+        real construct in the engine. Four branches, four statements, four errors.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The taxonomy
+      title: Four branches, and the construct that belongs to each
+      items:
+        - label: Domain
+          title: Which values the column takes
+          desc: A data type plus CHECK, or an ENUM when the set is closed
+        - label: Intra-relation
+          title: What makes the row unique
+          desc: PRIMARY KEY and UNIQUE. The primary also bans NULL
+        - label: Semantic
+          title: Rules between columns of a row
+          desc: A CHECK that names two columns of the same table
+        - label: Referential
+          title: That the row pointed at exists
+          desc: FOREIGN KEY, and the parent has to be unique on its side
+
+  - code_output:
+      eyebrow: Measured · domain and semantics
+      title: The CHECK stops the impossible value and lets the unknown one through
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- on persona, CHECK (edad BETWEEN 0 AND 150)
+        INSERT INTO persona (persona_id, edad) VALUES (1, 200);
+        INSERT INTO persona (persona_id, edad) VALUES (3, NULL);
+
+        -- on profesor, CHECK (edad > antiguedad + 22)
+        INSERT INTO profesor (edad, antiguedad) VALUES (30, 20);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint 'dom_edad' is
+        violated.
+
+        Row (3, NULL) goes in clean
+
+        ERROR 3819 (HY000): Check
+        constraint 'chk_isir' is
+        violated.
+
+  - code_output:
+      eyebrow: Measured · the named domain
+      title: There is no CREATE DOMAIN, but there is a closed set
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE DOMAIN dom_edad AS INT
+            CHECK (VALUE BETWEEN 0 AND 150);
+
+        -- estado ENUM('inscrito','baja','aprobado')
+        INSERT INTO inscripcion (estado) VALUES ('egresado');
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL
+        syntax... near 'DOMAIN
+        dom_edad AS INT CHECK (VALUE
+        BETWEEN 0 AND 150)' at line 1
+
+        ERROR 1265 (01000): Data
+        truncated for column 'estado'
+        at row 1
+
+  - code_output:
+      eyebrow: Measured · the row's two keys
+      title: The primary bans NULL on its own, the natural one needs UNIQUE
+      filename: llaves.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- alumno_id INT PRIMARY KEY
+        INSERT INTO alumno (alumno_id) VALUES (NULL);
+
+        -- matricula CHAR(9) NOT NULL UNIQUE
+        INSERT INTO alumno_auto (matricula, nombre)
+        VALUES ('0245790', 'Beto Ruiz Mora');
+      output: |
+        ERROR 1048 (23000): Column
+        'alumno_id' cannot be null
+
+        ERROR 1062 (23000): Duplicate
+        entry '0245790' for key
+        'alumno_auto.matricula'
+
+  - code_output:
+      eyebrow: Measured · the referential branch
+      title: The parent has to be unique, and the same type as the child
+      filename: fk_rechazada.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- depto.id has a plain index, not UNIQUE
+        ALTER TABLE empleado_a
+            ADD FOREIGN KEY (depto_id) REFERENCES depto(id);
+
+        -- parent INT, child VARCHAR(10)
+        ALTER TABLE mal_tipo
+            ADD FOREIGN KEY (materia_id)
+            REFERENCES materia(materia_id);
+      output: |
+        ERROR 6125 (HY000): Failed to
+        add the foreign key
+        constraint. Missing unique key
+        for constraint
+        'empleado_a_ibfk_1' in the
+        referenced table 'depto'.
+
+        ERROR 3780 (HY000): Referencing
+        column 'materia_id' ... are
+        incompatible.
+
+  - divider:
+      eyebrow: Block 03
+      title: What the diagram promises
+      lede: >-
+        Two things the model states perfectly clearly and no MySQL statement can enforce.
+        Saying them out loud is cheaper than finding them out in production.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · participation and minimum cardinality
+      title: The NULL in a foreign key is optional participation
+      filename: participacion.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- alumno_id accepts NULL, with the FOREIGN KEY live
+        INSERT INTO inscripcion (inscripcion_id, alumno_id)
+        VALUES (99, NULL);
+
+        SELECT m.materia_id, m.nombre,
+               COUNT(i.inscripcion_id) AS inscritos
+        FROM materia m
+        LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
+        GROUP BY m.materia_id, m.nombre;
+      output: |
+        The row goes in
+
+        materia_id nombre  inscritos
+        11         Calculo 0
+
+        No statement forces Calculo
+        to have any students
+
+  - code_output:
+      eyebrow: Measured · the domain the server will not defend
+      title: Comparing a student name with a subject name raises nothing
+      filename: dominios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT 'Ana Lopez' = 'Calculo Diferencial';
+        SELECT 'Ana Lopez' > 'Calculo Diferencial';
+
+        -- one ai_ci table against one as_cs
+        SELECT * FROM t_ai JOIN t_cs ON t_ai.clave = t_cs.clave;
+      output: |
+        0
+        0
+
+        No error and no warning
+
+        ERROR 1267 (HY000): Illegal
+        mix of collations
+        (utf8mb4_0900_ai_ci,IMPLICIT)
+        and (utf8mb4_0900_as_cs,
+        IMPLICIT) for operation '='
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to lose the business rule
+      items:
+        - label: Error 01
+          title: Drawing a 1:1 with no UNIQUE
+          desc: >-
+            Both rows go in, the model degrades to one to many, and not one error gives it
+            away. That pair of runs is the whole mapping rule on one screen.
+        - label: Error 02
+          title: Thinking the CHECK covers NULL
+          desc: >-
+            The unknown walks straight through the range. If the domain does not admit
+            «I do not know», that gets written NOT NULL, and written separately.
+        - label: Error 03
+          title: Promising minimum cardinality
+          desc: >-
+            «Every subject with at least one student» has no construct in MySQL. The
+            subject with zero enrolments sits there and nobody objects.
+        - label: Error 04
+          title: Indexing the foreign key by hand
+          desc: >-
+            The server wrote that index when the key was declared. The inherited
+            best-practice rule was the programmer's job in 2010, not today.
+
+  - lab:
+      eyebrow: Lab
+      title: The records script, running from empty
+      brief: >-
+        Write your week 4 diagram as a script that creates all five tables from an empty
+        database, keys and constraints included. Then attack it four times: a grade of 11,
+        an enrolment for a student who does not exist, a second head for the same
+        department, and a repeated student number.
+      blocks:
+        - label: Deliverable
+          text: The script and the four refusals with their error numbers, pasted as they came
+        - label: Constraint
+          text: >-
+            The script runs twice in a row without editing. The creation order is part of
+            what you hand in.
+        - label: The test
+          text: >-
+            If an attack goes through, a constraint is missing. Write it into the script,
+            not into the application that does not exist yet.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Every line has one physical form
+          desc: >-
+            1:N is a foreign key, 1:1 is a foreign key plus UNIQUE, N:M is a table keyed on
+            the pair. No source in this course says it, and now it is written down
+        - title: A constraint is the business rule
+          desc: >-
+            Written into the server it survives a change of language, of application and of
+            programmer. It is also the only integrity this course has that holds for two
+        - title: The diagram promises too much
+          desc: >-
+            Minimum cardinality has no statement, and the domain argument only has teeth in
+            the collation and in the type of a foreign key
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Hand in the complete DDL script for your week 4 diagram, with the four mapping
+        rules applied and with at least one CHECK, one UNIQUE and one foreign key of your
+        own. Attach the four refused attempts with the server's output.
+      meta:
+        - [Due, Before week 7]
+        - [Format, Blackboard · .sql script and a PDF of outputs]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The script", "40 %", "Runs from empty, twice in a row"]
+        - ["The constraints", "40 %", "Each one answers a rule on the diagram"]
+        - ["The refusals", "20 %", "Four errors, with number and SQLSTATE"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session opens block C. Choosing the type of each column is the last cheap
+        decision you get to make about a table, and ROLLBACK will not save you from a
+        CREATE.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

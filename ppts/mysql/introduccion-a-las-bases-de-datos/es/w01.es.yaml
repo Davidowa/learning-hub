@@ -1,0 +1,395 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 1
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 01 · Bloque A · Por qué existe una base de datos
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Los datos llevan cuatro mil años cambiando de soporte. Lo que cambió en 1970 no fue
+        el material sino cinco presiones que ningún archivo plano contesta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 1 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El archivo plano
+          desc: La hoja de cálculo de escolares y las cinco cosas que no sabe hacer
+        - title: La cronología
+          desc: De la tarjeta perforada al disco, con tres fechas corregidas
+        - title: El servidor
+          desc: Cuatro lecturas del motor que vamos a usar diecisiete semanas
+        - title: Tu turno
+          desc: Conectarte, correr las cuatro consultas y pegar lo que te contestó
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Nombrar las cinco presiones
+          sub: Y señalar en qué punto exacto falla una hoja de cálculo compartida
+        - head: Distinguir acceso secuencial de acceso aleatorio
+          sub: La cinta se lee en orden y el disco no, y esa diferencia tiene tema propio
+        - head: Ubicar 1970 y 1974 en la línea del tiempo
+          sub: Primero el modelo, cuatro años después el lenguaje, y ese es el orden del curso
+        - head: Conectarse al servidor y leer su configuración
+          sub: Versión, motor, juego de caracteres y el sql_mode que hace que haya errores
+        - head: Explicar qué significa deshacer una operación
+          sub: Dos conteos alrededor de un ROLLBACK, sin una sola palabra de teoría
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco bloques, diecisiete semanas
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: now
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: todo
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Del archivo plano a las cinco presiones
+      lede: >-
+        Antes de usar la palabra «base de datos» conviene ver qué se rompe sin ella. La
+        escena es una hoja de cálculo de la oficina de escolares y una tarde de inscripciones.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Dos personas guardan la misma hoja la misma tarde
+      lead: >-
+        La oficina de escolares lleva las inscripciones en una hoja de cálculo. A las cuatro
+        de la tarde dos personas la abren desde sus máquinas, cada una agrega renglones y
+        guarda. La segunda en guardar se lleva el archivo. Nadie mintió ni se equivocó de
+        tecla, y aun así media tarde de trabajo dejó de existir sin un solo aviso en pantalla.
+      panel:
+        label: La escena
+        title: La hoja no sabe quién escribió primero
+        note: >-
+          Un archivo plano guarda contenido y nada más. No sabe de dónde vino cada renglón,
+          no sabe si alguien más lo tiene abierto y no tiene manera de negarse a perder algo.
+      steps:
+        - text: Las dos personas abren la misma copia del archivo
+        - text: Las dos agregan renglones distintos y las dos guardan
+        - text: La última escritura se queda con todo el archivo
+          loop: ↺ y la primera pierde su trabajo sin recibir un aviso
+
+  - code:
+      eyebrow: Bloque 01 · El contraste
+      title: Lo mismo, guardado en un archivo y declarado en un servidor
+      filename: inscripciones.sql
+      lang: sql
+      source: |
+        -- inscripciones.csv, tal como lo guarda la hoja
+        A0000001,Ana Lopez,BD1001,26PRI,8.5
+        A0000002,Luis Mena,BD1001,26PRI,
+        A0000001,Ana Lpez,BD1001,26PRI,9.0
+
+        -- la misma informacion, declarada
+        CREATE TABLE inscripcion (
+          inscripcion_id INT PRIMARY KEY,
+          alumno_id      INT NOT NULL,
+          materia_id     INT NOT NULL,
+          periodo        CHAR(5) NOT NULL,
+          calificacion   DECIMAL(4,2) NULL
+        );
+      annotations:
+        - label: Arriba
+          text: >-
+            Tres renglones y ninguna regla. El tercero repite a la alumna con el apellido
+            mal escrito y el archivo lo acepta.
+        - label: Abajo
+          text: >-
+            Cada columna trae nombre, tipo y tamaño, y dos de ellas se niegan a quedarse
+            vacías. La declaración es la que decide.
+        - label: La celda vacía
+          text: >-
+            En el archivo, la calificación ausente es una coma seguida de nada. En la tabla
+            se llama NULL y tiene reglas propias.
+        - label: Riesgo
+          text: >-
+            Nada de lo de arriba está mal escrito. Ese es el problema. Un archivo plano no
+            tiene forma de decir que algo está mal.
+          accent: true
+
+  - steps:
+      eyebrow: Bloque 01 · La respuesta
+      title: Las cinco presiones que ningún archivo plano resuelve
+      items:
+        - label: '01'
+          title: Organizar
+          desc: Que los datos tengan una estructura declarada y no solo un orden accidental
+        - label: '02'
+          title: Relacionar
+          desc: Que un alumno y una materia se puedan unir sin copiar el nombre de nadie
+        - label: '03'
+          title: Proteger
+          desc: Que exista alguien que se niegue a aceptar un dato que rompe una regla
+        - label: '04'
+          title: Administrar
+          desc: Que dos personas trabajen a la vez sin que la última borre a la primera
+        - label: '05'
+          title: Manejar volumen
+          desc: Que buscar entre sesenta mil renglones cueste lo mismo que buscar entre diez
+
+  - method:
+      eyebrow: Bloque 01 · La tesis
+      title: Lo que cambió en 1970 no fue el soporte
+      statement: >-
+        La piedra, el papel, la cinta y el disco son cuatro maneras de guardar lo mismo. La
+        base de datos no es un quinto material, es un programa que se pone en medio y que
+        responde por los datos.
+      points:
+        - label: Antes
+          text: >-
+            El programa que escribía el archivo era el único que sabía qué significaba cada
+            columna. Si cambiaba el programa, cambiaba el archivo.
+        - label: Después
+          text: >-
+            La estructura vive en el servidor y todos los programas la consultan. Cambiar de
+            cliente ya no cambia la base, y la semana 2 lo demuestra en pantalla.
+        - label: El precio
+          text: >-
+            Hay que declarar las cosas antes de usarlas. Las semanas 4, 5 y 6 son exactamente
+            ese precio, pagado a plazos.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La cronología, con sus fechas corregidas
+      lede: >-
+        Las bibliotecas, las cosechas y los censos son el punto de partida. Tres de las
+        fechas que trae el material heredado están mal, y una de ellas es la que ordena el
+        temario de este curso.
+      block: 2
+
+  - diagram:
+      eyebrow: Bloque 02 · El soporte
+      title: De la cinta al disco, y del disco a la página
+      blocks:
+        - label: '1950'
+          title: Cinta magnética
+          desc: Acceso secuencial. Se lee en el orden en que se escribió, sin saltos.
+        - label: '1960'
+          title: Disco
+          desc: Acceso aleatorio. El dato se pide por su dirección y el brazo va directo.
+        - label: Hoy
+          title: Página de 16 KB
+          desc: InnoDB no lee bytes sueltos. Pide páginas enteras y las pide por número.
+          dark: true
+      note: >-
+        El acceso aleatorio no es una comodidad. Es la razón mecánica por la que un índice
+        sirve de algo, y la semana 15 vive de esa razón.
+
+  - table:
+      eyebrow: Bloque 02 · Fechas
+      title: Seis renglones de la cronología, con lo que hay que corregir
+      headers: [Cuándo, Qué pasó, Corrección o matiz]
+      rows:
+        - ["1884", "Hollerith patenta la tarjeta", "El censo fue en 1890"]
+        - ["1950", "Cinta magnética", "Acceso secuencial, sin saltos"]
+        - ["1960", "Disco, jerárquico, red y SABRE", "Acceso aleatorio"]
+        - ["1970", "Codd publica el modelo", "En IBM San José, no en Oracle"]
+        - ["1974", "SEQUEL, el primer SQL escrito", "Cuatro años después del modelo"]
+        - ["1980", "Se consolidan las transacciones", "Todas las operaciones o ninguna"]
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro afirmaciones heredadas que no sobreviven
+      items:
+        - label: Error 01
+          title: El censo de 1884
+          desc: >-
+            Hollerith patentó la máquina en 1884 y el censo que la usó fue el de 1890. La
+            patente y el censo no son el mismo año.
+        - label: Error 02
+          title: Codd inició Oracle
+          desc: >-
+            Codd propuso el modelo relacional trabajando en IBM, en San José, California.
+            Quien construyó el producto fue Larry Ellison.
+        - label: Error 03
+          title: Relational Software System
+          desc: >-
+            Nunca fue el nombre de una empresa. Software Development Laboratories, luego
+            Relational Software Inc., y hasta 1982 Oracle.
+        - label: Error 04
+          title: XQuery y OAI-PMH
+          desc: >-
+            MySQL 9.7.2 no trae XQuery, así que no se puede demostrar. OAI-PMH es cosecha de
+            metadatos de bibliotecas y no vuelve a aparecer.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El servidor que vamos a usar diecisiete semanas
+      lede: >-
+        Cuatro lecturas, cuatro minutos. A partir de aquí ninguna afirmación de este curso se
+        escribe sin haberla corrido antes contra este servidor.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: Con qué motor vamos a trabajar todo el semestre
+      filename: w01_servidor.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT VERSION() AS version,
+               @@default_storage_engine AS motor,
+               @@character_set_server   AS juego_caracteres;
+      output: |
+        version  motor   juego_caracteres
+        9.7.2    InnoDB  utf8mb4
+
+  - code_output:
+      eyebrow: Medido
+      title: La variable que hace que este curso tenga errores de verdad
+      filename: w01_servidor.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT @@sql_mode;
+      output: |
+        ONLY_FULL_GROUP_BY,
+        STRICT_TRANS_TABLES,
+        NO_ZERO_IN_DATE,
+        NO_ZERO_DATE,
+        ERROR_FOR_DIVISION_BY_ZERO,
+        NO_ENGINE_SUBSTITUTION
+
+  - code_output:
+      eyebrow: Medido · predice antes de correr
+      title: Después del ROLLBACK, ¿cuántas materias quedan?
+      filename: w01_transaccion.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        START TRANSACTION;
+        INSERT INTO materia VALUES ('FI1010','Fisica I');
+        INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI');
+        SELECT COUNT(*) AS materias_dentro_de_la_transaccion
+          FROM materia;
+        ROLLBACK;
+        SELECT COUNT(*) AS materias_despues_del_rollback
+          FROM materia;
+      output: |
+        materias_dentro_de_la_transaccion
+        3
+
+        materias_despues_del_rollback
+        2
+
+  - code_output:
+      eyebrow: Medido · la ruta depende de la instalación
+      title: En qué unidad le pide el motor los datos al disco
+      filename: w01_servidor.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT @@datadir AS donde_viven_los_bytes,
+               @@innodb_page_size AS tamano_pagina;
+      output: |
+        donde_viven_los_bytes
+        ...\scratchpad\mydb\data\
+
+        tamano_pagina
+        16384
+
+  - table:
+      eyebrow: Bloque 03 · Encuadre
+      title: Cinco componentes de veinte por ciento cada uno
+      headers: [Componente, Qué evalúa, Cuándo y cuánto]
+      rows:
+        - ["Parcial 1", "Bloques A y B, más la semana 7", "Semana 8 · 20 %"]
+        - ["Parcial 2", "Bloques C y D hasta la semana 12", "Semana 13 · 20 %"]
+        - ["Proyecto", "El sistema de registros propio", "Semana 16 · 20 %"]
+        - ["Examen final", "Todo el curso", "Semana 17 · 20 %"]
+        - ["Tareas", "Una entrega por semana", "Todo el curso · 20 %"]
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Cuatro consultas y la primera salida pegada del semestre
+      brief: >-
+        Conéctate al servidor del curso desde tu máquina y corre las cuatro consultas de este
+        bloque en el orden en que aparecieron. Antes de correr cada una, escribe en tu
+        cuaderno qué esperas que conteste.
+      blocks:
+        - label: Entrega
+          text: Un archivo de texto con las cuatro consultas y la salida literal de cada una
+        - label: Restricción
+          text: >-
+            La salida se pega tal como la devolvió el servidor. Ni recortada, ni acomodada, ni
+            traducida.
+        - label: La prueba
+          text: >-
+            Marca las líneas donde tu predicción y la salida no coincidieron. Ese es el
+            material de la próxima sesión.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El archivo plano no falla por simple
+          desc: >-
+            Falla porque nadie responde por él. Las cinco presiones no son cinco funciones que
+            faltan, son cinco preguntas que el archivo no puede contestar
+        - title: El modelo llegó antes que el lenguaje
+          desc: >-
+            Codd publica en 1970 y SEQUEL aparece en 1974. Ese hueco de cuatro años es el
+            orden de este curso, donde se modela en las semanas 4 a 6 y se escribe SQL desde la 7
+        - title: Aquí nada se afirma sin haberlo corrido
+          desc: >-
+            El motor por omisión es InnoDB y es transaccional, y eso no se afirma porque lo diga
+            una lámina de 1980, sino porque el ROLLBACK dejó dos materias donde había tres
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Conéctate al servidor con tu propia cuenta y pega la salida completa de las cuatro
+        lecturas de hoy. Después escribe un párrafo sobre la hoja de cálculo de escolares y
+        cuál de las cinco presiones la rompió primero.
+      meta:
+        - [Entrega, Antes de la semana 2]
+        - [Formato, Blackboard · un archivo de texto]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Salida", "50 %", "Las cuatro lecturas están completas y sin editar"]
+        - ["Predicción", "30 %", "Se anotó qué esperabas antes de correr cada una"]
+        - ["El párrafo", "20 %", "La presión elegida se justifica con la escena"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión abrimos el servidor por dentro. Tres piezas de software que se
+        pueden señalar, once etiquetas heredadas que reciben veredicto y cuatro definiciones
+        que el propio motor desmiente.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

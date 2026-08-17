@@ -1,0 +1,433 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 4
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 04 · Bloque B · Modelo entidad-relación
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Cada línea que dibujes hoy tiene exactamente una forma física, y antes de que
+        termine la sesión las cuatro salen de vuelta por un SHOW CREATE TABLE.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 4 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Entidades y atributos
+          desc: Qué guarda una entidad, qué cuelga de ella, y por qué la línea lleva verbo
+        - title: Cuatro formas
+          desc: Binaria, ternaria, doble y recursiva, cada una construida en pantalla
+        - title: Cuatro cardinalidades
+          desc: En qué se convierte cada una cuando deja de ser dibujo y se vuelve tabla
+        - title: Tu turno
+          desc: El diagrama del control escolar, con atributos y con cardinalidades
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Distinguir conceptual, lógico y físico
+          sub: >-
+            E-R es el primer peldaño; el esquema relacional es el segundo y el DDL el
+            tercero, en las semanas 4, 5 y 6
+        - head: Dibujar entidades con sus atributos
+          sub: >-
+            Un diagrama sin un solo atributo no se puede convertir en tablas, y ninguno
+            de los dos decks heredados trae uno
+        - head: Nombrar la relación con un verbo
+          sub: >-
+            «Alumno se inscribe en Materia» se lee en voz alta y se construye; el guion
+            entre dos sustantivos no
+        - head: Convertir cada cardinalidad en su forma física
+          sub: >-
+            Llave foránea, llave foránea más UNIQUE, o una tercera tabla con la llave del
+            par
+        - head: Decir qué promesa del diagrama no se puede exigir
+          sub: >-
+            La cardinalidad mínima no tiene construcción en MySQL, y la materia con cero
+            inscritos se queda ahí
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos, elementos y el manejador
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización y llaves
+          state: now
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agrupación y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Entidades, atributos y el verbo
+      lede: >-
+        Peter Chen publicó el diagrama en 1976 y desde entonces se dibuja igual. Lo que
+        cambia hoy es que cada figura del dibujo trae encima los datos que va a guardar.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: E-R es el modelo conceptual, no el lógico
+      lead: >-
+        El modelo entidad-relación describe los datos en el nivel conceptual. Entidades,
+        atributos y relaciones, sin una sola decisión de motor. Del conceptual sale el
+        modelo lógico, que es el esquema relacional que la semana 5 normaliza, y del
+        lógico sale el físico, que es el DDL de la semana 6. Tres peldaños, tres semanas.
+      panel:
+        label: La lámina heredada
+        title: «El modelo lógico… permite describir a nivel conceptual»
+        note: >-
+          La primera oración de las dos versiones del deck se contradice sola, y es la
+          primera que el alumno lee. Equivocar el nombre del primer peldaño sale caro,
+          porque las tres semanas siguientes suben exactamente esa escalera.
+      steps:
+        - text: Entidad — algo de lo que quieres guardar datos
+        - text: Atributo — cada dato que cuelga de la entidad
+        - text: Relación — el verbo que une dos entidades
+          loop: ↺ y la cardinalidad dice cuántas veces
+
+  - table:
+      eyebrow: Bloque 01 · El dominio
+      title: Las seis entidades del control escolar, con sus atributos
+      headers: [Entidad, Atributos, Identificador]
+      rows:
+        - ["alumno", "matricula, nombre, correo, carrera", "matricula"]
+        - ["materia", "clave, nombre, creditos", "clave"]
+        - ["profesor", "nombre, departamento_id", "profesor_id"]
+        - ["departamento", "nombre, ubicacion", "departamento_id"]
+        - ["inscripcion", "periodo, calificacion", "alumno_id + materia_id"]
+        - ["credencial", "folio, vigencia", "alumno_id"]
+
+  - method:
+      eyebrow: Bloque 01 · Nombrar
+      title: La relación se nombra con un verbo
+      statement: >-
+        «Alumno se inscribe en Materia» se puede leer en voz alta y se puede construir.
+        «Alumno-Materia» no dice qué pasa entre las dos, y para cuando alguien escribe la
+        tabla ya nadie recuerda para qué existía.
+      points:
+        - label: Peter Chen · 1976
+          text: >-
+            El diagrama es suyo y no ha cambiado de forma. Vale diez segundos de crédito y
+            se sigue dibujando igual.
+        - label: Una palabra, dos sentidos
+          text: >-
+            Chen llama relación a la línea; Codd llama relación a la tabla. La fórmula «de
+            manera formal» define la de Codd, y se ve en la semana 6.
+        - label: Riesgo
+          text: >-
+            Un diagrama sin atributos no se puede convertir en tablas. Los dos decks
+            heredados dibujan cuatro relaciones y ni un atributo.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Las cuatro formas de relación
+      lede: >-
+        Binaria, ternaria, doble y recursiva. Las cuatro se dibujan en un minuto y las
+        cuatro se construyen hoy, porque tres de ellas esconden algo que el dibujo no
+        avisa.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · Formas
+      title: Cuatro maneras de unir entidades, y qué esconde cada una
+      items:
+        - label: Forma 01
+          title: Binaria
+          desc: >-
+            Dos entidades y un verbo. Es el caso normal y el único que no guarda ninguna
+            sorpresa al construirlo.
+        - label: Forma 02
+          title: Ternaria
+          desc: >-
+            Tres entidades en una sola relación. Curso, Aula y Día se vuelven una tabla
+            con la llave primaria compuesta.
+        - label: Forma 03
+          title: Doble
+          desc: >-
+            El mismo par unido dos veces. Ciudad y Estado, por «es capital de» y por
+            «pertenece a». Se ve simétrica y no lo es.
+        - label: Forma 04
+          title: Recursiva
+          desc: >-
+            Una entidad consigo misma. Empleado reporta a Empleado, y la raíz del árbol se
+            queda sin jefe.
+
+  - code:
+      eyebrow: Bloque 02 · Recursiva
+      title: La relación recursiva es llave foránea a sí misma
+      filename: empleado.sql
+      lang: sql
+      source: |
+        CREATE TABLE empleado (
+          empleado_id INT PRIMARY KEY,
+          nombre VARCHAR(60) NOT NULL,
+          jefe_id INT NULL,
+          FOREIGN KEY (jefe_id) REFERENCES empleado(empleado_id)
+        );
+      annotations:
+        - label: jefe_id
+          text: >-
+            Apunta a su propia tabla. No hace falta una segunda entidad, hace falta una
+            segunda columna.
+        - label: 'NULL'
+          text: >-
+            La raíz del árbol no tiene jefe. Ese NULL es el conector 0 del diagrama, hecho
+            columna.
+        - label: Participación opcional
+          text: >-
+            La regla vale para cualquier llave foránea. NULL es participación opcional y
+            NOT NULL es obligatoria.
+        - label: Riesgo
+          text: >-
+            Sin la columna nullable no hay por dónde empezar el árbol, y el primer INSERT
+            falla por la llave foránea.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: ¿Quién aparece como jefe de la Directora?
+      filename: empleado.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.nombre AS empleado, j.nombre AS jefe
+        FROM empleado e
+        LEFT JOIN empleado j ON e.jefe_id = j.empleado_id;
+      output: |
+        empleado      jefe
+        Directora     NULL
+        Coordinador   Directora
+        Analista      Coordinador
+
+  - code_output:
+      eyebrow: Medido · SHOW CREATE TABLE horario
+      title: Solo dia_id recibió índice propio, porque curso_id ya es la columna izquierda
+      filename: horario.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SHOW CREATE TABLE horario;
+      output: |
+        PRIMARY KEY (curso_id, aula_id,
+                     dia_id, hora)
+
+  - compare:
+      eyebrow: Bloque 02 · Doble
+      title: El par simétrico no se puede crear de un golpe
+      before:
+        label: Lo que dibujas
+        file: estado.sql
+        lang: sql
+        code: |
+          CREATE TABLE estado (
+            estado_id INT PRIMARY KEY,
+            nombre VARCHAR(60) NOT NULL,
+            capital_id INT NOT NULL,
+            FOREIGN KEY (capital_id)
+              REFERENCES ciudad(ciudad_id)
+          );
+      after:
+        label: Lo que se puede construir
+        file: estado.sql
+        lang: sql
+        code: |
+          CREATE TABLE estado (
+            estado_id INT PRIMARY KEY,
+            nombre VARCHAR(60) NOT NULL,
+            capital_id INT NULL
+          );
+          ALTER TABLE estado ADD CONSTRAINT
+            fk_estado_capital FOREIGN KEY (capital_id)
+            REFERENCES ciudad(ciudad_id);
+      note: >-
+        La tabla ciudad se crea primero, con estado_id NOT NULL. La segunda llave foránea
+        no cabe en el CREATE TABLE, necesita un ALTER, y una de las dos columnas tiene que
+        aceptar NULL para romper el ciclo. Eso convierte un dibujo bonito en un script que
+        falla a las once de la noche.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Las cuatro cardinalidades
+      lede: >-
+        No hay una sola regla de conversión en las diecisiete presentaciones ni en los
+        dieciséis PDF del acervo. Nadie dice nunca en qué se convierte un 1:N. Aquí están
+        las cuatro.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Reglas de conversión
+      title: En qué se convierte cada línea del diagrama
+      headers: [Cardinalidad, Ejemplo del control escolar, Forma física]
+      rows:
+        - ["0:1", "Alumno tiene Credencial", "FK nullable más UNIQUE"]
+        - ["1:1", "Profesor dirige Departamento", "FK NOT NULL más UNIQUE"]
+        - ["1:N", "Profesor imparte Materia", "FK del lado muchos"]
+        - ["N:M", "Alumno se inscribe en Materia", "Tabla con la PK del par"]
+        - ["Ternaria", "Curso, Aula y Dia", "Tabla con tres FK"]
+
+  - code_output:
+      eyebrow: Medido · cuerpo de SHOW CREATE TABLE
+      title: El N:M se vuelve una tabla, y el servidor termina el diseño por ti
+      filename: alumno_materia.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SHOW CREATE TABLE alumno_materia;
+      output: |
+        PRIMARY KEY (`alumno_id`,
+                     `materia_id`),
+        KEY `materia_id` (`materia_id`),
+        CONSTRAINT `alumno_materia_ibfk_1`
+          FOREIGN KEY (`alumno_id`)
+          REFERENCES `alumno` (`alumno_id`),
+        CONSTRAINT `alumno_materia_ibfk_2`
+          FOREIGN KEY (`materia_id`)
+          REFERENCES `materia`
+            (`materia_id`)
+
+  - code_output:
+      eyebrow: Medido
+      title: ¿Qué pasa si el mismo alumno se inscribe dos veces a la misma materia?
+      filename: alumno_materia.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO alumno_materia VALUES (1, 10);
+        INSERT INTO alumno_materia VALUES (1, 10);
+      output: |
+        ERROR 1062 (23000): Duplicate
+        entry '1-10' for key
+        'alumno_materia.PRIMARY'
+
+  - code_output:
+      eyebrow: Medido
+      title: ¿Puede MySQL exigir que toda materia tenga al menos un alumno?
+      filename: cardinalidad.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT m.materia_id, m.nombre,
+               COUNT(i.inscripcion_id) AS inscritos
+        FROM materia m
+        LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
+        GROUP BY m.materia_id, m.nombre;
+      output: |
+        materia_id  nombre    inscritos
+        11          Calculo   0
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder el modelo antes de escribirlo
+      items:
+        - label: Error 01
+          title: Decir «relación terciaria»
+          desc: >-
+            La palabra es ternaria. Terciaria es el sector de la economía. Las dos
+            versiones del deck heredado traen el término equivocado.
+        - label: Error 02
+          title: Un diagrama sin un solo atributo
+          desc: >-
+            Un dibujo de puras cajas y líneas no se puede convertir en tablas. Por eso la
+            semana 6 se quedaba sin material del que partir.
+        - label: Error 03
+          title: Creer que el mínimo es exigible
+          desc: >-
+            «Toda materia debe tener al menos un alumno» no tiene construcción en MySQL.
+            La materia con cero inscritos se queda ahí para siempre.
+        - label: Error 04
+          title: Soldar la opcionalidad a la N
+          desc: >-
+            La lámina de conectores define N como «no está obligada a participar y puede
+            hacerlo varias veces». Son dos cosas distintas y su propio 1:N lo contradice.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El control escolar, dibujado con atributos encima
+      brief: >-
+        Dibuja el diagrama completo del control escolar con las seis entidades de la
+        tabla, cada una con sus atributos y con su identificador subrayado. Marca las
+        cuatro cardinalidades del dominio y escribe al lado de cada línea en qué se
+        convierte.
+      blocks:
+        - label: Entrega
+          text: El diagrama, y una lista de las tablas que saldrían de él
+        - label: Restricción
+          text: >-
+            Toda relación se nombra con un verbo conjugado. Si no puedes leerla en voz
+            alta como oración, no está bien nombrada.
+        - label: La prueba
+          text: >-
+            Cuenta las tablas de tu lista. Si tienes un N:M y no tienes tres tablas, la
+            conversión está incompleta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El diagrama es el peldaño uno
+          desc: >-
+            E-R es conceptual, el esquema relacional es lógico y el DDL es físico. La
+            semana 5 repara el segundo y la semana 6 escribe el tercero
+        - title: Cada línea tiene una sola forma
+          desc: >-
+            1:N es una llave foránea del lado muchos, 1:1 es esa misma llave con UNIQUE y
+            N:M es una tercera tabla cuya llave primaria es el par
+        - title: El dibujo promete más que el motor
+          desc: >-
+            La cardinalidad máxima se hace cumplir con llaves; la mínima no. Decirlo en
+            voz alta es más honesto que prometer que el modelo se mantiene solo
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Diagrama entidad-relación del control escolar, con atributos en todas las
+        entidades y las cuatro cardinalidades marcadas. Debajo del dibujo, la lista de
+        tablas que produce, con la llave primaria de cada una.
+      meta:
+        - [Entrega, Antes de la semana 5]
+        - [Formato, Blackboard · PDF del diagrama]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Entidades", "25 %", "Las seis, con identificador marcado"]
+        - ["Atributos", "25 %", "Cada entidad trae los suyos encima"]
+        - ["Cardinalidades", "25 %", "Las cuatro del dominio, bien leídas"]
+        - ["Conversión", "25 %", "La lista de tablas coincide con el dibujo"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión tomamos este mismo diagrama, lo aplastamos en una sola tabla
+        ancha a propósito, y medimos qué se rompe. Eso es normalizar, y el servidor deja
+        romperlo todo sin decir una palabra.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

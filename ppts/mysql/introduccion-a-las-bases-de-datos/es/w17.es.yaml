@@ -1,0 +1,473 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 17
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 17 · Bloque E · Usuarios, respaldo y cierre · Examen final
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Las dos últimas promesas de la semana 2 se cobran hoy. La segunda resulta ser un
+        archivo de texto que se abre en cualquier editor y se lee de principio a fin.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 17 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques y el cierre del curso
+      cards:
+        - title: La cuenta
+          desc: Usuario más host, el GRANT, y el error que recibe quien no tiene el permiso
+        - title: El respaldo
+          desc: Qué se lleva mysqldump, qué deja fuera, y cuándo el archivo miente
+        - title: Restaurar
+          desc: La restauración que no imprime nada y la bitácora que cierra el hueco
+        - title: El examen
+          desc: Qué entra de las diecisiete semanas y a qué nivel se pregunta
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer una cuenta como par
+          sub: El usuario y el host son un solo identificador, y cambiar el host es otra cuenta
+        - head: Predecir el error de un permiso faltante
+          sub: Decir qué número y qué texto va a recibir la cuenta restringida antes de correrlo
+        - head: Leer un SHOW GRANTS
+          sub: Y decir qué sentencia le va a ser negada a esa cuenta, columna por columna
+        - head: Leer un comando de mysqldump
+          sub: Y decir qué objetos NO van a estar en el archivo que produce
+        - head: Verificar una restauración
+          sub: Porque una restauración exitosa no imprime una sola línea y una fallida tampoco avisa
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, agrupación y JOIN
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: done
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldo
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Quién eres y qué te dejan hacer
+      lede: >-
+        La semana 2 prometió «Seguridad de acceso y auditoría» y nunca volvió al tema. Hoy
+        se cobra, y se cobra del lado en que se siente, que es el de la cuenta restringida.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · La cuenta
+      title: Una cuenta de MySQL son dos datos, y el segundo es el host
+      lead: >-
+        No existe un usuario llamado tutor. Existe tutor arroba localhost, y existe tutor
+        arroba ciento noventa y dos punto ciento sesenta y ocho, y son dos cuentas
+        distintas con contraseñas distintas y permisos distintos. El host no es un dato de
+        la conexión, es la mitad derecha del nombre.
+      panel:
+        label: Los tres alcances
+        title: Tres alcances, tres cuentas distintas
+        note: >-
+          localhost es la misma máquina, el signo de porcentaje es desde cualquiera, y
+          192.168.1.% es una red. Con skip_name_resolve apagado, conectarse por TCP a
+          127.0.0.1 sí empata con localhost, así que la regla es un mecanismo y no un
+          decreto.
+      steps:
+        - text: CREATE USER crea la cuenta, sin nada adentro
+        - text: GRANT le dice qué va a poder hacer
+        - text: El usuario se conecta y el servidor decide
+          loop: ↺ y al revés el servidor contesta ERROR 1410
+
+  - code_output:
+      eyebrow: Medido · el orden importa
+      title: ¿Qué contesta el servidor si otorgas a una cuenta que no creaste?
+      filename: usuarios.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- la seccion 7 de la guia hace exactamente esto
+        GRANT SELECT, INSERT ON db_ops_wk141516.*
+          TO 'wk15_capturista'@'localhost';
+
+        -- el orden que el servidor exige
+        CREATE USER 'wk15_analista'@'localhost'
+          IDENTIFIED BY 'Password123!';
+        SHOW GRANTS FOR 'wk15_analista'@'localhost';
+      output: |
+        ERROR 1410 (42000): You are not
+        allowed to create a user with
+        GRANT
+
+        GRANT USAGE ON *.*
+        TO `wk15_analista`@`localhost`
+
+  - code_output:
+      eyebrow: Medido · del otro lado de la conexión
+      title: El privilegio no se siente al otorgarlo, se siente al usarlo
+      filename: analista.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- conectado como wk15_analista, cuya cuenta solo tiene
+        -- GRANT SELECT ON db_ops_wk141516.*
+
+        DELETE FROM db_ops_wk141516.alumnos
+        WHERE matricula = 100007;
+
+        SELECT user, host FROM mysql.user;
+      output: |
+        ERROR 1142 (42000): DELETE command
+        denied to user
+        'wk15_analista'@'localhost'
+        for table 'alumnos'
+
+        ERROR 1142 (42000): SELECT command
+        denied to user
+        'wk15_analista'@'localhost'
+        for table 'user'
+
+  - code_output:
+      eyebrow: Medido · privilegio por columna
+      title: Un tutor que lee dos columnas y escribe exactamente una
+      filename: tutor.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        GRANT SELECT (matricula, apellido)
+          ON db_ops_wk141516.alumnos
+          TO 'wk15_tutor'@'localhost';
+
+        GRANT UPDATE (calificacion)
+          ON db_ops_wk141516.inscripciones
+          TO 'wk15_tutor'@'localhost';
+
+        SHOW GRANTS FOR 'wk15_tutor'@'localhost';
+      output: |
+        GRANT SELECT (`apellido`,
+        `matricula`) ON
+        `db_ops_wk141516`.`alumnos`
+        TO `wk15_tutor`@`localhost`
+
+        GRANT UPDATE (`calificacion`) ON
+        `db_ops_wk141516`.`inscripciones`
+        TO `wk15_tutor`@`localhost`
+
+  - code_output:
+      eyebrow: Medido · el rol que se otorga y no se activa
+      title: ¿Por qué la cuenta con rol de lectura sigue recibiendo 1142?
+      filename: roles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE ROLE 'rol_lectura_escolar';
+        GRANT SELECT ON db_ops_wk141516.*
+          TO 'rol_lectura_escolar';
+        GRANT 'rol_lectura_escolar'
+          TO 'wk15_reportes'@'%';
+
+        -- ya conectado como wk15_reportes
+        SELECT CURRENT_ROLE();
+        SELECT COUNT(*) FROM db_ops_wk141516.alumnos;
+      output: |
+        NONE
+
+        ERROR 1142 (42000): SELECT command
+        denied to user
+        'wk15_reportes'@'localhost'
+        for table 'alumnos'
+
+        activate_all_roles_on_login = OFF
+
+  - table:
+      eyebrow: Bloque 01 · Tarjeta de referencia
+      title: Administración de cuentas en una lámina
+      headers: [Sentencia, Para qué sirve, Lo medido]
+      rows:
+        - ["CREATE USER", "Crear la cuenta antes del GRANT", "Sin ella, ERROR 1410"]
+        - ["GRANT", "Dar privilegios a la cuenta", "Se sienten del otro lado"]
+        - ["REVOKE", "Quitar privilegios", "La deja en USAGE, no la borra"]
+        - ["ALTER USER", "Bloquear, expirar, limitar", "Bloqueada da ERROR 3118"]
+        - ["SHOW GRANTS", "Auditar lo que tiene la cuenta", "mysql.user le da 1142"]
+        - ["DROP USER", "Borrar la cuenta de verdad", "REVOKE nunca la borra"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El respaldo es un archivo de texto
+      lede: >-
+        El respaldo del servidor completo pesa 52,125,881 bytes en 6,061 líneas, y una sola
+        de esas líneas trae 1,044,220 caracteres. Las herramientas de este bloque son grep,
+        head y tail, no un editor.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Un respaldo es texto plano que dice en la cabeza de qué servidor salió
+      filename: respaldo.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        mysqldump -u root -p db_backup > db_backup.sql
+
+        wc -l -c db_backup.sql
+        head -5 db_backup.sql
+      output: |
+        169  7249  db_backup.sql
+
+        -- MySQL dump 10.13  Distrib
+           9.7.2, for Win64 (x86_64)
+        --
+        -- Host: 127.0.0.1
+           Database: db_backup
+        -- -----------------------------
+        -- Server version   9.7.2
+
+  - code_output:
+      eyebrow: Medido · dos de las tres advertencias
+      title: La herramienta te dicta la receta completa mientras trabaja
+      filename: respaldo.sh
+      lang: sql
+      output_label: stderr
+      source: |
+        mysqldump -u root -p db_backup \
+          > db_backup.sql 2> dump_err.txt
+
+        cat dump_err.txt
+      output: |
+        To make a complete dump, pass
+        --all-databases --triggers
+        --routines --events.
+
+        In order to ensure a consistent
+        backup of the database, pass
+        --single-transaction or
+        --lock-all-tables or
+        --source-data.
+
+  - code_output:
+      eyebrow: Medido · lo que el archivo por omisión no trae
+      title: El respaldo se lleva el trigger y deja fuera el procedimiento y el evento
+      filename: respaldo.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- las dos corridas llevan --set-gtid-purged=OFF
+        mysqldump -u root -p --routines --events \
+          db_backup > completo.sql
+
+        grep -c PROCEDURE db_backup.sql completo.sql
+        grep -c EVENT db_backup.sql completo.sql
+        wc -c db_backup.sql completo.sql
+      output: |
+        db_backup.sql:0
+        completo.sql:2
+
+        db_backup.sql:0
+        completo.sql:2
+
+         6963 db_backup.sql
+         9542 completo.sql
+
+  - code_output:
+      eyebrow: Medido · el hecho más peligroso de la sesión
+      title: Salida cero, archivo de 7,019 bytes, y el procedimiento no está adentro
+      filename: operador.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- la cuenta 'operador' tiene SELECT, LOCK TABLES,
+        -- SHOW VIEW, EVENT y TRIGGER, pero no tiene PROCESS
+
+        mysqldump -u operador -p --routines \
+          db_backup > op_rout.sql 2> op_rout_err.txt
+        echo "exit=$?"
+
+        wc -c op_rout.sql
+        grep -c PROCEDURE op_rout.sql
+      output: |
+        mysqldump: Error:
+        'Access denied; you need (at
+        least one of) the PROCESS
+        privilege(s) for this operation'
+        when trying to dump tablespaces
+
+        exit=0
+        7019 op_rout.sql
+        0
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Restaurar, verificar y cerrar
+      lede: >-
+        La semana 3 midió que «la bitácora» son en realidad dos. Hoy se gastan las dos, y
+        después el curso se cierra sobre la contradicción que ha venido cargando a
+        propósito desde la semana 6.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: ¿Cómo sabes que la restauración funcionó, si no imprime nada?
+      filename: restaurar.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        mysql -u root -p bd_restaurada < db_backup.sql
+        echo "exit=$?"
+
+        -- la unica prueba es contar del otro lado
+        SELECT
+          (SELECT COUNT(*) FROM alumno)      AS a,
+          (SELECT COUNT(*) FROM materia)     AS m,
+          (SELECT COUNT(*) FROM inscripcion) AS i;
+      output: |
+        exit=0
+
+        a  m  i
+        5  3  7
+
+  - table:
+      eyebrow: Medido · restaurar sobre una base viva
+      title: Restaurar no te devuelve al día del respaldo, te sobrescribe el hoy
+      headers: [Objeto, Antes de restaurar, Después de restaurar]
+      rows:
+        - ["alumno", "6 filas", "5 filas, se fue el alumno nuevo"]
+        - ["inscripcion", "5 filas", "7 filas, vuelven las borradas"]
+        - ["bitacora_local", "1 tabla, creada después", "Intacta, el archivo no la nombra"]
+        - ["El cliente", "—", "Salida 0 y cero líneas impresas"]
+
+  - code_output:
+      eyebrow: Medido · los dos niveles que la semana 2 prometió
+      title: El respaldo devuelve el ayer y la bitácora cubre hasta el minuto anterior
+      filename: bitacora.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- el respaldo es de las 03:00 y la fila entro despues
+        grep -c A0000042 db_backup.sql
+
+        mysqlbinlog --start-position=65170533 -v \
+          --base64-output=DECODE-ROWS binlog.000012
+      output: |
+        0
+
+        ### INSERT INTO `db_backup`.`alumno`
+        ### SET
+        ###   @1='A0000042'
+        ###   ...
+        ###   @4=24
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de creer que ya tienes respaldo
+      items:
+        - label: Trampa 01
+          title: El GTID detiene la restauración
+          desc: >-
+            ERROR 3546 (HY000) en la línea 24 al restaurar en el mismo servidor que produjo
+            el archivo. Se cura con --set-gtid-purged=OFF, que además baja el archivo de
+            7,249 a 6,963 bytes y calla las tres advertencias.
+        - label: Trampa 02
+          title: El archivo existe y está truncado
+          desc: >-
+            mysqldump nombró una tabla que no existe, salió con código 6 y dejó 796 bytes
+            de cabecera creíble. La delación es que el archivo no termina en la línea
+            «Dump completed on».
+        - label: Trampa 03
+          title: Restaurar no es una transacción
+          desc: >-
+            Una restauración que falla a la mitad sale con código 1 y deja las tablas que
+            ya alcanzó a escribir y a cargar. El cliente no deshace nada, porque el cliente
+            no es una transacción.
+        - label: Trampa 04
+          title: SOURCE es una orden del cliente
+          desc: >-
+            Es lo que recomienda casi todo tutorial y dentro de un script contesta
+            ERROR 1064, porque el servidor nunca la recibe. Desde la terminal se restaura
+            con el operador de redirección.
+
+  - method:
+      eyebrow: Cierre del curso
+      title: Tres cosas que sobreviven al número de versión
+      statement: >-
+        El servidor no aplica reglas universales. Aplica las que trae encendidas, y la
+        única manera de saber cuáles son es preguntárselas antes de discutir con alguien.
+      points:
+        - label: sql_mode
+          text: >-
+            Cuatro errores de este curso, el 1264, el 1292, el 1265 y el 1406, son errores
+            porque STRICT_TRANS_TABLES está encendido. Con el modo apagado el mismo INSERT
+            pasa callado, y ahí nace el «en mi máquina sí sirve».
+        - label: EXPLAIN
+          text: >-
+            Ningún consejo de desempeño se acepta sin él. Es el instrumento que valida o
+            tumba una regla, y por eso el deck heredado de buenas prácticas pudo afirmar
+            catorce cosas sin una sola evidencia.
+        - label: La contradicción
+          text: >-
+            La semana 6 dice que el índice es «un detalle agregado». La semana 15 lo midió
+            en 3.71 veces el tamaño de los datos. Dos láminas del mismo curso, y se resuelve
+            con evidencia y no con autoridad.
+
+  - table:
+      eyebrow: Examen final
+      title: Qué entra, y a qué nivel se pregunta
+      headers: [Aspecto, Detalle]
+      rows:
+        - ["Contenido", "Las diecisiete semanas, de los bloques A al E"]
+        - ["Peso", "20 % de la calificación final"]
+        - ["Respaldo", "Leer un mysqldump y decir qué le va a faltar al archivo"]
+        - ["Privilegios", "Leer un SHOW GRANTS y decir qué sentencia le van a negar"]
+        - ["Formato", "En la computadora del salón, y se sube a Blackboard"]
+        - ["Puedes llevar", "Apuntes, tareas y tu propio código del semestre"]
+        - ["No puedes", "Teléfono, mensajería ni asistentes de IA"]
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse del semestre
+      items:
+        - title: El privilegio se mide del otro lado
+          desc: >-
+            Otorgar no produce salida. Lo que se ve es el 1142 que recibe la cuenta
+            restringida, y por eso siempre queda una ventana conectada como ella
+        - title: Un respaldo no vale por existir
+          desc: >-
+            Salida 0 puede mentir. Se verifica leyendo el archivo y contando filas después
+            de restaurar, y mysqldump --no-data devuelve el esquema solo en 5,643 bytes
+        - title: Corre la sentencia y cita la salida
+          desc: >-
+            Diecisiete semanas de este curso se sostienen sobre eso. Lo que el servidor
+            imprimió es un dato, y lo que crees que imprime es una hipótesis sin probar
+
+  - closing:
+      title: Gracias
+      subtitle: >-
+        Cualquier duda sobre la calificación, por correo o por Google Chat. Y cuando alguien
+        te diga que MySQL hace tal cosa, pídele la salida.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

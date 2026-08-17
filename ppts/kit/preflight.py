@@ -141,6 +141,32 @@ def _table_height(problems, n, kw):
                         f'footer rule at {K.FOOTER_RULE_Y}"{extra}')
 
 
+# YAML 1.1 resolves a bare NULL, yes, no, on, off, true, false or a bare number to a
+# non-string. Every one of these is a value the deck renders as text, so the coercion is
+# invisible in the source and wrong on the slide -- or fatal: deck._card calls .upper() on
+# a label, and a bare `label: NULL` becomes None and crashes the build. preflight used to
+# certify such a file clean, because the damage happens inside the parser.
+#
+# Fields that are legitimately not text, and are therefore exempt.
+NON_TEXT = {'week', 'blocks', 'block', 'dark', 'accent', 'cols', 'rows_'}
+
+
+def _coerced(problems, n, layout, node, trail=''):
+    """Report any value YAML turned from text into something else."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k in NON_TEXT:
+                continue
+            _coerced(problems, n, layout, v, f'{trail}.{k}' if trail else str(k))
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            _coerced(problems, n, layout, v, f'{trail}[{i}]')
+    elif node is None or isinstance(node, (bool, int, float)):
+        got = 'null' if node is None else repr(node)
+        problems.append(f'slide {n:02d} {layout}.{trail}: YAML read this as {got}, not text. '
+                        f'A bare NULL, yes, no, on, off or number is not a string -- quote it')
+
+
 def check(path: str) -> tuple[list[str], int]:
     problems: list[str] = []
     for i, raw in enumerate(open(path, encoding='utf-8'), 1):
@@ -177,6 +203,7 @@ def check(path: str) -> tuple[list[str], int]:
     for n, entry in enumerate(slides, 1):
         (layout, kw), = entry.items()
         kw = kw or {}
+        _coerced(problems, n, layout, kw)
         if 'source' in kw:
             _code(problems, n, layout, 'source', kw['source'],
                   CAPS['quiz'] if layout == 'quiz' else CAPS['code'])

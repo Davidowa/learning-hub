@@ -1,0 +1,454 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 8
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 08 · Block C · DML and transactions · First midterm
+      title: Introduction to Databases
+      subtitle: >-
+        Three verbs can corrupt a database. Today you write all three, watch the server
+        refuse the ones that would have broken it, and learn the two words that let you
+        take a verb back.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 8 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: INSERT
+          desc: One row, many rows, and rows that come out of another query
+        - title: UPDATE and DELETE
+          desc: The WHERE between a correction and a disaster, and the one that also divides by zero
+        - title: The transaction
+          desc: START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, and the three times they undo nothing
+        - title: First midterm
+          desc: Scope, format and weight, in writing and on the slide
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write INSERT in its three forms
+          sub: One row, several in a single statement, and the ones that come from a SELECT
+        - head: Read the error a constraint raises when it fires
+          sub: The same constraints from week 6, now seen from the side that crashes into them
+        - head: Open and close a transaction
+          sub: START TRANSACTION, then COMMIT or ROLLBACK, which are two endings and not one button
+        - head: Name the three conditions under which ROLLBACK undoes nothing
+          sub: Autocommit on, a DDL statement in the way, or a table that is not InnoDB
+        - head: Recognise that a statement is atomic without anyone asking
+          sub: Of two rows in one INSERT, a single bad one keeps both of them out
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the manager and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: now
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, stored procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The three operations that can corrupt the data
+      lede: >-
+        Week 3 left that sentence written on a slide. Today the whole session is writing
+        them and watching who stops them.
+      block: 1
+
+  - code:
+      eyebrow: Block 01 · INSERT
+      title: The three ways to put rows into a table
+      filename: insert.sql
+      lang: sql
+      source: |
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100001', 'Ana Lopez', '2026-01-15');
+
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100002', 'Bruno Ramirez', '2026-01-15'),
+               ('100003', 'Carla Mendez', '2026-01-15');
+
+        INSERT INTO inscripciones (matricula, clave_materia)
+        SELECT matricula, 'BD1001' FROM alumnos
+         WHERE fecha_ingreso = '2026-01-15';
+      annotations:
+        - label: The column list
+          text: >-
+            Always write it. Without it the INSERT depends on the physical order of the
+            table and a future ALTER breaks it.
+        - label: Several rows
+          text: >-
+            One trip to the server for three students. Also one fate if something goes
+            wrong, two slides from here.
+        - label: INSERT from SELECT
+          text: >-
+            The rows come out of a query. This is how a whole term's enrolments get loaded
+            without typing one.
+        - label: Risk
+          text: >-
+            The SELECT in the third form decides how many rows go in. Run it on its own
+            first, and count the result.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: The student number already exists, does the server warn or overwrite?
+      filename: duplicate.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- Student number 100001 is already in the table
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100001', 'Dup Licado', '2026-01-01');
+      output: |
+        ERROR 1062 (23000): Duplicate
+        entry '100001' for key
+        'alumnos.PRIMARY'
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: An enrolment for a student who does not exist
+      filename: child_no_parent.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- There is no student with number 999999
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo)
+        VALUES ('999999', 'BD1001', '2026-1');
+      output: |
+        ERROR 1452 (23000): Cannot add or
+        update a child row: a foreign key
+        constraint fails
+        (`db_ops_wk141516`.`inscripciones`,
+        CONSTRAINT `fk_ins_alumno` FOREIGN
+        KEY (`matricula`) REFERENCES
+        `alumnos` (`matricula`))
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Of two rows in one INSERT, one is bad, does the other get in?
+      filename: atomicity.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 6 enrolments before we start
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo, calificacion)
+        VALUES ('100003', 'MAT201', '2026-2', 7.0),
+               ('100003', 'FIS110', '2026-2', 12.0);
+
+        SELECT COUNT(*) FROM inscripciones;
+      output: |
+        ERROR 1644 (45000)
+
+        conteo = 6
+        la primera fila tampoco quedo
+
+  - divider:
+      eyebrow: Block 02
+      title: The WHERE that is missing
+      lede: >-
+        UPDATE and DELETE take two lines to write and two days to regret. The distance
+        between fixing one grade and erasing the term is a single clause.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · UPDATE and DELETE
+      title: The two verbs that have already found their row
+      filename: update_delete.sql
+      lang: sql
+      source: |
+        UPDATE inscripciones
+           SET calificacion = 9.5
+         WHERE matricula = '100003'
+           AND clave_materia = 'BD1001';
+
+        DELETE FROM inscripciones
+         WHERE matricula = '100003'
+           AND clave_materia = 'FIS110';
+
+        -- With no WHERE, both statements hit the whole table
+      annotations:
+        - label: SET
+          text: >-
+            Only the columns that change. What you do not name stays as it was, with
+            nothing to copy across.
+        - label: The UPDATE's WHERE
+          text: >-
+            Two conditions because the row is identified by two columns. One alone would
+            have graded the entire group.
+        - label: DELETE FROM
+          text: >-
+            It takes no column list. The whole row goes or none of it goes; there is no
+            such thing as a partial delete.
+        - label: Risk
+          text: >-
+            Write the SELECT with that same WHERE first. The rows it returns are exactly
+            the rows you are about to touch.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Deleting a student who has enrolments
+      filename: parent_with_children.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- Student 2001 appears in inscripciones
+        DELETE FROM alumnos WHERE matricula = '2001';
+      output: |
+        ERROR 1451 (23000): Cannot delete
+        or update a parent row: a foreign
+        key constraint fails
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: The same division by zero, in a SELECT and in an INSERT
+      filename: division.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT ROUND(
+            ((precio_lista - costo_interno)
+              / costo_interno) * 100, 2) AS margen
+          FROM materias;
+
+        -- The same division inside an INSERT
+
+        -- The repair, which is collected in week 10
+        --   / NULLIF(costo_interno, 0)
+      output: |
+        margen
+        NULL
+        Warning 1365 'Division by 0'
+
+        Inside an INSERT
+        ERROR 1365 (22012): Division by 0
+
+  - divider:
+      eyebrow: Block 03
+      title: The transaction
+      lede: >-
+        Every operation or none of them. The sentence has been sitting on a slide since
+        week 1 and today there is finally something to wrap in it.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: The week 1 run again, this time with the variable on screen
+      filename: transaction.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT @@autocommit;
+
+        START TRANSACTION;
+        INSERT INTO materia VALUES ('FI1010','Fisica I');
+        INSERT INTO inscripcion
+            VALUES ('A0000002','FI1010','26PRI');
+        SELECT COUNT(*) AS materias_dentro_de_la_transaccion
+          FROM materia;
+        ROLLBACK;
+        SELECT COUNT(*) AS materias_despues_del_rollback
+          FROM materia;
+      output: |
+        @@autocommit -> 1
+
+        materias_dentro_de_la_transaccion
+        3
+
+        materias_despues_del_rollback
+        2
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Two DELETEs and a single SAVEPOINT, how many rows come back?
+      filename: savepoint.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 6 rows to begin with
+        START TRANSACTION;
+        DELETE FROM t_prueba WHERE id = 6;
+        SAVEPOINT s1;
+        DELETE FROM t_prueba WHERE id = 5;
+        ROLLBACK TO SAVEPOINT s1;
+        ROLLBACK;
+        SELECT COUNT(*) FROM t_prueba;
+      output: |
+        at the start              6
+        after the first DELETE    5
+        after the second DELETE   4
+        after ROLLBACK TO s1      5
+        after the final ROLLBACK  6
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: A CREATE TABLE in the middle of your transaction, does anything happen?
+      filename: ddl_inside.sql
+      lang: sql
+      output_label: Output
+      source: |
+        START TRANSACTION;
+          INSERT INTO materias VALUES ('HIS100','Historia',6);
+          CREATE TABLE tmp_implicito (id INT);
+        ROLLBACK;
+        SELECT clave FROM materias WHERE clave = 'HIS100';
+      output: |
+        HIS100 sigue ahi
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: The same transaction on a table that is not InnoDB
+      filename: myisam.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE TABLE t_myisam (
+            id     INT PRIMARY KEY,
+            nombre VARCHAR(50)
+        ) ENGINE=MyISAM;
+
+        START TRANSACTION;
+        INSERT INTO t_myisam VALUES (1,'uno');
+        ROLLBACK;
+        SELECT * FROM t_myisam;
+      output: |
+        la fila sigue ahi
+        el ROLLBACK no hizo nada
+
+  - method:
+      eyebrow: The inherited sentence, completed
+      title: ROLLBACK returns the database to its previous state
+      statement: >-
+        The source slide says that and stops there. On this server the sentence is true
+        three times out of four, and the three conditions it is missing are exactly the
+        three you have just watched run.
+      points:
+        - label: Condition 1
+          text: >-
+            There has to be an open transaction. With autocommit at 1 every statement has
+            already committed itself and ROLLBACK reports that it changed nothing.
+        - label: Condition 2
+          text: >-
+            No DDL in the way. The CREATE you slipped between the INSERT and the ROLLBACK
+            committed your rows before you could withdraw them.
+        - label: Condition 3
+          text: >-
+            The table has to be transactional. On MyISAM the ROLLBACK does nothing and
+            says nothing either, which is the worse half of the two.
+
+  - pitfalls:
+      eyebrow: Common mistakes
+      title: Four ways to lose rows without noticing
+      items:
+        - label: Error 01
+          title: Running the UPDATE before the SELECT
+          desc: >-
+            The same WHERE in a SELECT tells you how many rows you are about to touch. It
+            costs five seconds and it is the only review that exists.
+        - label: Error 02
+          title: Treating ROLLBACK as an undo button
+          desc: >-
+            With no open transaction it answers Query OK and changes nothing. The student
+            concludes it worked, and it worked as well as doing nothing does.
+        - label: Error 03
+          title: Using REPLACE INTO as if it updated
+          desc: >-
+            REPLACE deletes the row and inserts it again, so it fires the DELETE triggers.
+            What you wanted was INSERT ... ON DUPLICATE KEY UPDATE.
+        - label: Error 04
+          title: Dividing without protecting the denominator
+          desc: >-
+            In a SELECT it comes out NULL with a warning nobody reads. In an INSERT it is
+            error 1365 and the whole load falls over.
+
+  - lab:
+      eyebrow: Lab
+      title: Enrolment day at the records office
+      brief: >-
+        Load fifty enrolments in a single multi-row INSERT, with one of them pointing at a
+        student who dropped out. Then fix the load, wrap it in a transaction and verify
+        with a SELECT before you commit.
+      blocks:
+        - label: Deliverable
+          text: The script and both runs, the one that bounced and the one that stayed
+        - label: Constraint
+          text: >-
+            The COMMIT goes after the verifying SELECT, never before. If the count does not
+            add up, it is a ROLLBACK and not a repair DELETE.
+        - label: The test
+          text: >-
+            Count the rows before and after the failed attempt. The two numbers have to be
+            the same.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The statement is already atomic
+          desc: >-
+            A multi-row INSERT goes in whole or not at all. That guarantee comes as
+            standard; the one that spans several statements you have to ask for
+        - title: ROLLBACK has three conditions
+          desc: >-
+            An open transaction, no DDL in the way, and an InnoDB table. Miss any of the
+            three and the undo does not happen, and the server does not complain
+        - title: All of this assumed you were alone
+          desc: >-
+            Every run today had the server to itself. What happens when two people write
+            the same row at once has a name, an error number and a week
+
+  - homework:
+      eyebrow: First midterm
+      title: Scope, format and weight
+      brief: >-
+        The first midterm covers blocks A and B in full, week 7, and today's DML. The
+        transaction block is examined at the level of what it undoes and what it does not.
+        Nothing from the SELECT weeks, which start on Thursday.
+      meta:
+        - [When, Week 08]
+        - [Format, Written · SQL by hand and reading errors]
+        - [Weight, 20 % of the final mark]
+      rubric:
+        - [Model and keys, 30 %, Weeks 4 to 6 · which constraint raises which error]
+        - [Types and DDL, 30 %, Week 7 · choosing the type and defending it]
+        - [DML and transaction, 40 %, Writing the three verbs and what ROLLBACK undoes]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session starts SELECT, the statement you will write more often than every
+        other one put together, and whose failures are almost always silent.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

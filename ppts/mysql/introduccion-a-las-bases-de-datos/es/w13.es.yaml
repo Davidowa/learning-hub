@@ -1,0 +1,499 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 13
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 13 · Bloque D · Procedimientos y errores · Segundo parcial
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Hoy la lógica se muda adentro de la base. Vas a escribir un procedimiento que
+        falla a la mitad, y en la misma sesión vas a aprender a atraparlo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 13 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El procedimiento
+          desc: CALL, DELIMITER, parámetros, y el prefijo que no es cuestión de estilo
+        - title: El que falla a la mitad
+          desc: Dos INSERT, una llave foránea rota, y media base escrita sin querer
+        - title: Atrapar el error
+          desc: CONDITION, HANDLER, GET DIAGNOSTICS y RESIGNAL sobre ese mismo procedimiento
+        - title: El parcial
+          desc: Semanas 9 a 12, veinte por ciento, y nada de lo que veas esta mañana
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un procedimiento y llamarlo
+          sub: Con DELIMITER, con DROP … IF EXISTS desde el primer ejemplo, y con parámetros que no chocan con las columnas
+        - head: Distinguir IN, OUT e INOUT
+          sub: Un argumento OUT tiene que ser una variable, y el servidor lo dice con el error 1414
+        - head: Levantar su propio error
+          sub: SIGNAL siempre sale con 1644; el SQLSTATE es una etiqueta y MYSQL_ERRNO es el número que sí distingue
+        - head: Leer los SQLSTATE que emite el servidor
+          sub: Cuatro clases 22 para los errores de dato y un solo 23000 para toda la integridad
+        - head: Atrapar, diagnosticar y deshacer
+          sub: DECLARE HANDLER, GET DIAGNOSTICS y RESIGNAL, aplicados al procedimiento que quedó a medias
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: now
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - method:
+      eyebrow: Segundo parcial
+      title: Lo que entra hoy y lo que no
+      statement: >-
+        El parcial cubre las semanas 9 a 12. Los procedimientos se enseñan hoy y se
+        preguntan hasta el examen final.
+      points:
+        - label: Qué entra
+          text: >-
+            SELECT con agrupación, JOIN, UNION y vistas. Cuatro semanas seguidas y un
+            solo tema continuo.
+        - label: Qué no entra
+          text: >-
+            Nada de lo que veas esta mañana. Procedimientos, SIGNAL y handlers quedan
+            para el examen final.
+        - label: Peso
+          text: >-
+            Veinte por ciento de la calificación, el mismo que el primer parcial de la
+            semana 8.
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La consulta que ahora tiene nombre
+      lede: >-
+        El JOIN de la semana 11 y la agrupación de la semana 10 se mudan adentro del
+        servidor sin cambiar una línea. La consulta no mejora: gana un nombre y un
+        argumento.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · El primer procedimiento
+      title: Créditos de un alumno, sumados en el servidor
+      filename: sp_creditos.sql
+      lang: sql
+      source: |
+        DROP PROCEDURE IF EXISTS sp_creditos;
+        DELIMITER $$
+        CREATE PROCEDURE sp_creditos(IN p_alumno_id INT)
+        BEGIN
+          SELECT a.nombre, SUM(m.creditos) AS creditos
+          FROM inscripciones i
+          JOIN alumnos  a ON a.alumno_id  = i.alumno_id
+          JOIN materias m ON m.materia_id = i.materia_id
+          WHERE i.alumno_id = p_alumno_id
+          GROUP BY a.alumno_id, a.nombre;
+        END$$
+        DELIMITER ;
+
+        CALL sp_creditos(1);
+      annotations:
+        - label: El delimitador
+          text: >-
+            Cambia el fin de sentencia mientras dura el cuerpo; el punto y coma de adentro
+            ya no lo corta.
+        - label: El prefijo p_
+          text: >-
+            No es estilo. Es lo único que impide que el parámetro tape a la columna que se
+            llama igual.
+        - label: Quién lo ejecuta
+          text: >-
+            Toda rutina nace con SQL SECURITY DEFINER, igual que las vistas de la semana
+            12. Ejecutar se concede aparte, con GRANT EXECUTE.
+        - label: Riesgo
+          text: >-
+            Sin IF EXISTS, la segunda corrida del script muere con ERROR 1305 (42000) y
+            el alumno corre su script veinte veces por tarde.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · el mejor ejemplo del acervo
+      title: ¿Qué contesta un procedimiento cuyo parámetro se llama como la columna?
+      filename: sp_malo.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        CREATE PROCEDURE sp_malo(IN alumno_id INT)
+        BEGIN
+          SELECT alumno_id, materia_id
+          FROM inscripciones
+          WHERE alumno_id = alumno_id;
+        END
+
+        CALL sp_malo(1);
+      output: |
+        CALL sp_malo(1);
+        las 5 filas de la tabla, con
+        alumno_id = 1 impreso en todas
+
+        el mismo, con p_alumno_id:
+        las 2 filas correctas
+
+        sin error, sin advertencia
+
+  - code_output:
+      eyebrow: Medido · el cliente contra el servidor
+      title: ¿Qué pasa si le mandas DELIMITER al servidor en lugar de al cliente?
+      filename: delimiter.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- DELIMITER lo entiende el cliente mysql.
+        -- El servidor nunca lo ha oido. Aqui se lo
+        -- mandamos a proposito, para verlo fallar:
+
+        PREPARE s FROM 'DELIMITER //';
+      output: |
+        ERROR 1064 (42000): You have an
+        error in your SQL syntax; check
+        the manual that corresponds to
+        your MySQL server version for
+        the right syntax to use near
+        'DELIMITER //' at line 1
+
+  - code_output:
+      eyebrow: Medido · parámetros de salida
+      title: Un OUT tiene que ser una variable, y el INOUT que la fuente nunca menciona
+      filename: sp_cuenta.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- p_total es OUT y p_acum es INOUT
+
+        CALL sp_cuenta(1, 5, @acum);
+
+        SET @acum = 100;
+        CALL sp_cuenta(1, @tot, @acum);
+        SELECT @tot, @acum;
+      output: |
+        ERROR 1414 (42000): OUT or INOUT
+        argument 2 for routine
+        agent_jvst.sp_cuenta is not a
+        variable or NEW pseudo-variable
+        in BEFORE trigger
+
+        con variables de sesion:
+        total = 2
+        acumulado = 102
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El procedimiento que falla a la mitad
+      lede: >-
+        Cuatro pasos, uno de ellos rompe una llave foránea, y el error llega con los
+        pasos anteriores ya escritos. Aquí empieza la mitad de la sesión que repara lo
+        que la primera mitad rompió.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido · el hueco de la sesión
+      title: El segundo INSERT falla, ¿qué pasó con el primero?
+      filename: sp_dos_pasos.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- sp_dos_pasos escribe dos renglones.
+        -- El segundo apunta a una materia que no
+        -- existe en el catalogo.
+
+        CALL sp_dos_pasos(...);
+        SELECT * FROM inscripciones;
+      output: |
+        ERROR 1452 (23000): Cannot add
+        or update a child row: a foreign
+        key constraint fails
+        (`agent_jvst`.`inscripciones`,
+        CONSTRAINT `fk_i_materia`
+        FOREIGN KEY (`materia_id`)
+        REFERENCES `materias`
+        (`materia_id`))
+
+        y la PRIMERA fila sigue ahi
+
+  - code_output:
+      eyebrow: Medido · cinco señales, cinco salidas
+      title: ¿Cambia algo el servidor según el SQLSTATE que tú elijas?
+      filename: signal.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        SIGNAL SQLSTATE '45000'
+          SET MESSAGE_TEXT = 'Operacion no permitida';
+        SIGNAL SQLSTATE '23000'
+          SET MESSAGE_TEXT = 'Integridad violada';
+        SIGNAL SQLSTATE '23505'
+          SET MESSAGE_TEXT = 'Cliente duplicado';
+        SIGNAL SQLSTATE '22012'
+          SET MESSAGE_TEXT = 'Division entre cero';
+        SIGNAL SQLSTATE 'HY000'
+          SET MESSAGE_TEXT = 'Error general';
+      output: |
+        ERROR 1644 (45000): Operacion
+          no permitida
+        ERROR 1644 (23000): Integridad
+          violada
+        ERROR 1644 (23505): Cliente
+          duplicado
+        ERROR 1644 (22012): Division
+          entre cero
+        ERROR 1644 (HY000): Error
+          general
+
+  - table:
+      eyebrow: Medido · lo que el servidor emite solo
+      title: Tres clases 22 para el dato y un solo 23000 para toda la integridad
+      headers: [Situación, SQLSTATE, Error]
+      rows:
+        - ["División entre cero", "22012", "ERROR 1365"]
+        - ["Valor fuera de rango", "22003", "ERROR 1264"]
+        - ["Texto muy largo", "22001", "ERROR 1406"]
+        - ["Duplicado", "23000", "ERROR 1062"]
+        - ["Llave foránea rota", "23000", "ERROR 1452"]
+        - ["NOT NULL violado", "23000", "ERROR 1048"]
+
+  - code_output:
+      eyebrow: Medido · corrección a la fuente
+      title: El 23505 que enseña sqlstate.pdf es de PostgreSQL, no de MySQL
+      filename: duplicado.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- sqlstate.pdf, seccion 7, propone esto
+        -- para el alumno duplicado:
+        SIGNAL SQLSTATE '23505'
+          SET MESSAGE_TEXT = 'Alumno duplicado';
+
+        -- y esto es lo que el servidor emite de
+        -- verdad cuando la matricula se repite:
+        INSERT INTO alumnos (matricula, nombre)
+        VALUES ('100001', 'Ana Rivera');
+      output: |
+        con SIGNAL SQLSTATE '23505':
+        ERROR 1644 (23505): Alumno
+        duplicado
+
+        el duplicado real de MySQL:
+        ERROR 1062 (23000): Duplicate
+        entry '100001' for key
+        'alumnos.PRIMARY'
+
+  - code_output:
+      eyebrow: Medido · el número que sí sirve
+      title: MYSQL_ERRNO cambia el número, y hay códigos que el servidor rechaza
+      filename: errno.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        SIGNAL SQLSTATE '45000'
+          SET MESSAGE_TEXT = 'Calificacion fuera de escala',
+              MYSQL_ERRNO  = 3001;
+
+        SIGNAL SQLSTATE '00000' SET MESSAGE_TEXT = 'x';
+        SIGNAL SQLSTATE '4500'  SET MESSAGE_TEXT = 'x';
+      output: |
+        ERROR 3001 (45000): Calificacion
+        fuera de escala
+
+        ERROR 1407 (42000): Bad
+        SQLSTATE: '00000'
+        ERROR 1407 (42000): Bad
+        SQLSTATE: '4500'
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Atrapar, diagnosticar y deshacer
+      lede: >-
+        El servidor lanza, tú atrapas, lees las tres piezas del error, decides si
+        deshaces y traduces el mensaje a algo que la oficina de escolares pueda leer.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · El arco completo
+      title: Un handler que diagnostica antes de deshacer
+      filename: sp_inscribir.sql
+      lang: sql
+      source: |
+        DECLARE v_sqlstate CHAR(5); DECLARE v_errno INT;
+        DECLARE v_texto VARCHAR(600);
+        DECLARE alumno_repetido CONDITION FOR SQLSTATE '23000';
+
+        DECLARE EXIT HANDLER FOR alumno_repetido
+        BEGIN
+          GET DIAGNOSTICS CONDITION 1
+            v_sqlstate = RETURNED_SQLSTATE,
+            v_errno    = MYSQL_ERRNO,
+            v_texto    = MESSAGE_TEXT;
+          ROLLBACK;
+          SET p_resultado = CONCAT('rechazado [',
+            v_sqlstate, '/', v_errno, '] ', v_texto);
+        END;
+      annotations:
+        - label: DECLARE CONDITION
+          text: >-
+            Le pone nombre a un SQLSTATE para que el handler se lea. El nombre es tuyo, el
+            código es del servidor.
+        - label: GET DIAGNOSTICS
+          text: >-
+            Las tres piezas del error, dentro del handler y no antes. Fuera de él ya se
+            perdieron.
+        - label: EXIT HANDLER
+          text: >-
+            Sale del bloque en lugar de seguir. El ROLLBACK no viene incluido, lo escribes
+            tú abajo.
+        - label: Riesgo
+          text: >-
+            23000 no es solo el duplicado. También la llave foránea y el NOT NULL. Este
+            handler atrapa más de lo que su nombre promete.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · el mismo 1452, ahora atrapado
+      title: El procedimiento ya no revienta, devuelve el diagnóstico como texto
+      filename: sp_inscribir.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- la matricula 999999 no existe en alumnos
+        CALL sp_inscribir(999999,'BD1001','2026-2',@r);
+        SELECT @r;
+      output: |
+        rechazado [23000/1452] Cannot
+        add or update a child row: a
+        foreign key constraint fails
+        (`db_ops_wk141516`.
+        `inscripciones`, CONSTRAINT
+        `fk_ins_alumno` FOREIGN KEY
+        (`matricula`) REFERENCES
+        `alumnos` (`matricula`))
+
+  - code_output:
+      eyebrow: Medido · traducir el error
+      title: RESIGNAL vuelve a lanzar el error con un mensaje que sí se puede leer
+      filename: sp_estricto.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        CREATE PROCEDURE sp_inscribir_estricto(
+          IN p_matricula INT, IN p_clave CHAR(6))
+        BEGIN
+          DECLARE EXIT HANDLER FOR SQLSTATE '23000'
+            RESIGNAL SET MYSQL_ERRNO = 3101,
+              MESSAGE_TEXT =
+                'El alumno o la materia no existen en el catalogo';
+          INSERT INTO inscripciones
+            (matricula, clave_materia, periodo)
+          VALUES (p_matricula, p_clave, '2026-2');
+        END
+
+        CALL sp_inscribir_estricto(999999, 'BD1001');
+      output: |
+        ERROR 3101 (23000): El alumno o
+        la materia no existen en el
+        catalogo
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder el manejo de errores
+      items:
+        - label: Error 01
+          title: Declarar una variable a media receta
+          desc: >-
+            Todos los DECLARE van pegados al BEGIN. Uno solo fuera de lugar y el
+            procedimiento ni se crea, con un ERROR 1064 (42000).
+        - label: Error 02
+          title: Señalar con una variable en lugar de un literal
+          desc: >-
+            SIGNAL SQLSTATE exige el código escrito a mano. Con un parámetro falla al
+            crear la rutina, no al llamarla, y otra vez con ERROR 1064 (42000).
+        - label: Error 03
+          title: Validar con un SQLSTATE de clase 01
+          desc: >-
+            La clase 01 es advertencia. Sale un Warning 1642, la operación continúa, y el
+            dato malo entra sin que nadie levante la mano.
+        - label: Error 04
+          title: Un mensaje que no cabe en su variable
+          desc: >-
+            MESSAGE_TEXT tope a 128 caracteres, ERROR 1648. Y el OUT VARCHAR(200) se
+            desbordó con un mensaje de llave foránea, ERROR 1406.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El número lo pones tú
+          desc: >-
+            SIGNAL siempre sale con 1644, elijas el SQLSTATE que elijas. El código es una
+            etiqueta que el servidor transporta, y MYSQL_ERRNO es lo único que tu
+            aplicación puede distinguir
+        - title: 23000 no quiere decir duplicado
+          desc: >-
+            Es el duplicado, la llave foránea y el NOT NULL a la vez, mientras que los
+            errores de dato se reparten en cuatro clases 22 distintas. El 23505 de la
+            fuente pertenece a otro manejador
+        - title: Atrapar no es deshacer
+          desc: >-
+            El handler te entrega el diagnóstico y detiene el bloque. El ROLLBACK lo
+            escribes tú, en la línea de abajo, o el procedimiento sigue dejando trabajo a
+            medias
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Toma el procedimiento de inscripción que hoy quedó a medias y ciérralo. Escribe el
+        handler, el GET DIAGNOSTICS y el ROLLBACK, y entrega la corrida que prueba que
+        después del error la tabla quedó exactamente como estaba antes de la llamada.
+      meta:
+        - [Entrega, Antes de la semana 14]
+        - [Formato, Blackboard · script .sql y salida pegada]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["El handler", "40 %", "Atrapa el error y el bloque termina sin reventar"]
+        - ["El diagnóstico", "30 %", "El SQLSTATE y el número salen del servidor"]
+        - ["La prueba", "30 %", "El conteo antes y después de la llamada coincide"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, dos maneras de que la base actúe sin ti: una que se dispara
+        cuando cambia una fila y otra que se dispara cuando el reloj lo dice. Las dos
+        fallan en silencio.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

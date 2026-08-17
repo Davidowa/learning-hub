@@ -1,0 +1,444 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 2
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 02 · Bloque A · Tipos, elementos y clasificaciones
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Una base de datos son tres piezas de software que puedes señalar y un inventario de
+        objetos que puedes contar. Hoy cada etiqueta heredada recibe un veredicto.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 2 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Las macro partes
+          desc: Tres piezas de software, dos sesiones abiertas y dónde nace la información
+        - title: Las etiquetas
+          desc: Las clasificaciones de la fuente, adjudicadas una por una
+        - title: El inventario
+          desc: Los objetos contados, y cuatro definiciones que el servidor desmiente
+        - title: Tu turno
+          desc: El inventario de tu propia base, contra el que se cuenta hoy en clase
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Separar base, manejador y administrador
+          sub: Y explicar por qué cambiar de programa cliente no cambia nada de la base
+        - head: Leer una lista de procesos del servidor
+          sub: Cada sesión tiene su propio identificador y el servidor las ve todas
+        - head: Distinguir dato de información
+          sub: El promedio 8.33 no está en el disco de nadie, y hay una consulta que lo prueba
+        - head: Dar veredicto a las clasificaciones heredadas
+          sub: Cuáles siguen vivas, cuáles son historia con fecha y cuál está simplemente mal
+        - head: Contar los objetos de una base
+          sub: Tabla, vista, trigger, evento y cuenta, cada uno con la semana en que se abre
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco bloques, diecisiete semanas
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: now
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: todo
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Tres piezas de software, no una
+      lede: >-
+        La fuente llama macro partes a la base, al manejador y al administrador. No son tres
+        capas de un dibujo. Son tres cosas distintas que hoy se van a ver por separado en la
+        pantalla.
+      block: 1
+
+  - diagram:
+      eyebrow: Bloque 01 · Las macro partes
+      title: Lo que se guarda, lo que responde y con qué te conectas
+      blocks:
+        - label: '01'
+          title: Base de datos
+          desc: Los archivos donde viven los datos. La semana 3 los va a listar en el disco.
+        - label: '02'
+          title: Manejador
+          desc: El proceso que atiende, guarda y protege. Es el que contesta tu consulta.
+        - label: '03'
+          title: Administrador
+          desc: El programa con el que te conectas. Es intercambiable y por eso va aparte.
+          dark: true
+      note: >-
+        Cambiar de administrador no cambia la base. El cliente mysql, mysqladmin y mysqlshow
+        salen del mismo directorio, le preguntan lo mismo al mismo servidor y reciben lo mismo.
+
+  - code_output:
+      eyebrow: Medido
+      title: El cliente y el servidor son dos programas distintos
+      filename: terminal
+      lang: sql
+      output_label: Salida
+      source: |
+        -- desde la linea de comandos, no desde el cliente SQL
+        mysqladmin -u root -h 127.0.0.1 -P 3399 version
+      output: |
+        mysqladmin.exe Ver 9.7.2
+        Server version 9.7.2
+        Protocol version 10
+        Connection 127.0.0.1 via TCP/IP
+        TCP port 3399
+        Uptime: 1 hour 58 min 23 sec
+
+  - code_output:
+      eyebrow: Medido · predice antes de correr
+      title: Si root cierra tu sesión, ¿qué error te toca leer a ti?
+      filename: w02_sesiones.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- root, con la sesion de operador abierta al lado
+        SELECT CONNECTION_ID();
+        SELECT id, user, command
+          FROM performance_schema.processlist
+         ORDER BY id;
+        SHOW STATUS LIKE 'Threads_connected';
+        -- en otra corrida, root cierra la sesion 1028
+        KILL CONNECTION 1028;
+      output: |
+        CONNECTION_ID()   1116
+        816   event_scheduler  Daemon
+        1118  operador
+        1119  root
+        Threads_connected  2
+
+        ERROR 2013 (HY000): Lost
+        connection to MySQL server
+        during query
+
+  - code_output:
+      eyebrow: Medido · dónde nace la información
+      title: Hay siete calificaciones en disco y ningún 8.33 guardado
+      filename: w02_informacion.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT COUNT(*) AS calificaciones_en_disco
+          FROM inscripcion;
+        SELECT ROUND(AVG(calificacion),2) AS promedio_general
+          FROM inscripcion;
+        SELECT clave, ROUND(AVG(calificacion),2) AS promedio
+          FROM inscripcion GROUP BY clave;
+        SELECT COUNT(*) AS filas_que_contienen_8_50
+          FROM inscripcion WHERE calificacion = 8.50;
+      output: |
+        calificaciones_en_disco   7
+        promedio_general       8.33
+        clave    promedio
+        BD1001       8.50
+        filas_que_contienen_8_50  0
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Las etiquetas de la fuente, adjudicadas
+      lede: >-
+        El material heredado ofrece once etiquetas repartidas en tres taxonomías. Seis reciben
+        veredicto medido y se quedan en la tabla. Las otras cinco se nombran una vez y salen
+        del temario.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · La adjudicación
+      title: Seis etiquetas con veredicto, y la semana que lo cobra
+      headers: [Etiqueta de la fuente, Veredicto, Dónde se cobra]
+      rows:
+        - ["Transaccionales", "Se refuta", "H-01-2 hoy · H-17-2 luego"]
+        - ["De red, leída en red", "Se mata en voz alta", "Hoy · el puerto TCP 3399"]
+        - ["Jerárquicas", "Historia, con fecha", "Semana 4 · H-04-3"]
+        - ["De red, CODASYL", "Historia, con fecha", "Semana 4 · H-04-1"]
+        - ["Estáticas/dinámicas", "Se queda, renombrada", "Semanas 15 y 17"]
+        - ["Relacionales", "Se queda, es el curso", "Las diecisiete semanas"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Transaccional no quiere decir rápido
+      lead: >-
+        La fuente define una base transaccional como la que envía y recibe datos a gran
+        velocidad y en la que la redundancia no sería un problema. Eso describe un historiador
+        de proceso industrial. Una base transaccional es la que puede deshacer, y la semana
+        pasada lo medimos con dos conteos alrededor de un ROLLBACK.
+      panel:
+        label: Fuera de alcance
+        title: Cinco etiquetas que no vuelven
+        note: >-
+          Referenciadas, fuente completa no textual, texto completo, multidimensionales y
+          orientadas a objetos se quedan fuera. Ninguna se puede demostrar en este servidor.
+      steps:
+        - text: Relacional, que es el motor de enfrente
+        - text: Documental y clave-valor, con JSON dentro del mismo motor
+        - text: Grafo, que resuelve caminos y no vive aquí
+          loop: ↺ orientación para leer el mercado, no temario de este curso
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El inventario, y cuatro definiciones que están mal
+      lede: >-
+        Cinco objetos creados en vivo y contados en una consulta. Cuatro de las siete
+        definiciones que trae el material se caen en pantalla, y la que las tira es el propio
+        servidor.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido
+      title: El inventario real de objetos de una base
+      filename: w02_inventario.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- contado sobre information_schema.TABLES, VIEWS,
+        -- TRIGGERS, EVENTS, ROUTINES, TABLE_CONSTRAINTS
+        -- y STATISTICS, para el esquema agente_intro01
+        SELECT 'TABLE' AS objeto, COUNT(*) AS n
+          FROM information_schema.TABLES
+         WHERE TABLE_SCHEMA = 'agente_intro01'
+           AND TABLE_TYPE = 'BASE TABLE';
+        -- y asi con cada catalogo
+      output: |
+        TABLE                4
+        VIEW                 2
+        TRIGGER              1
+        EVENT                1
+        PROCEDURE/FUNCTION   0
+        CONSTRAINT           8
+        INDEX                3
+
+  - code_output:
+      eyebrow: Medido · corrección
+      title: No existen los Jobs, el objeto se llama EVENT
+      filename: w02_evento.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SHOW VARIABLES LIKE 'event_scheduler';
+
+        CREATE EVENT ev_purga_inscripciones
+          ON SCHEDULE EVERY 1 DAY
+          DO DELETE FROM inscripcion WHERE periodo = '00000';
+
+        SELECT EVENT_NAME, EVENT_TYPE, INTERVAL_VALUE,
+               INTERVAL_FIELD, STATUS
+          FROM information_schema.EVENTS
+         WHERE EVENT_SCHEMA = 'agente_intro01';
+      output: |
+        Variable_name    Value
+        event_scheduler  ON
+
+        EVENT_NAME
+        ev_purga_inscripciones
+        EVENT_TYPE       RECURRING
+        INTERVAL_VALUE   1
+        INTERVAL_FIELD   DAY
+        STATUS           ENABLED
+
+  - code_output:
+      eyebrow: Medido · predice antes de correr
+      title: Un UPDATE sobre tres filas, ¿cuántos renglones de bitácora escribe?
+      filename: w02_trigger.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE TRIGGER trg_alumno_after_update
+        AFTER UPDATE ON alumno FOR EACH ROW
+        BEGIN
+          INSERT INTO bitacora_alumno
+            (matricula, creditos_antes, creditos_despues, cuando)
+          VALUES (OLD.matricula, OLD.creditos, NEW.creditos, NOW());
+        END
+
+        UPDATE alumno SET creditos = creditos + 5;
+        SELECT * FROM bitacora_alumno;
+      output: |
+        A0000001  135  140
+        A0000002   60   65
+        A0000003   30   35
+
+  - code_output:
+      eyebrow: Medido · corrección
+      title: Ningún objeto de MySQL se llama formulario
+      filename: w02_formulario.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE FORM f_alta_alumno;
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL syntax;
+        check the manual that
+        corresponds to your MySQL
+        server version for the right
+        syntax to use near 'FORM
+        f_alta_alumno' at line 1
+
+  - code_output:
+      eyebrow: Medido · corrección
+      title: La vista no es de solo lectura, y la agregada sí se niega
+      filename: w02_vista.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT TABLE_NAME, IS_UPDATABLE
+          FROM information_schema.VIEWS
+         WHERE TABLE_SCHEMA = 'agente_intro01';
+
+        UPDATE v_alumno_activo SET creditos = 135
+         WHERE matricula = 'A0000001';
+
+        UPDATE v_creditos_por_materia SET inscritos = 9
+         WHERE clave = 'BD1001';
+      output: |
+        v_alumno_activo         YES
+        v_creditos_por_materia  NO
+        ROW_COUNT() = 1
+        creditos = 135
+
+        ERROR 1288 (HY000): The
+        target table
+        v_creditos_por_materia of
+        the UPDATE is not updatable
+
+  - code_output:
+      eyebrow: Medido · corrección
+      title: Crear una cuenta no le da acceso a un solo dato
+      filename: w02_cuenta.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE USER 'ag01_lector'@'localhost'
+          IDENTIFIED BY '********';
+        SHOW GRANTS FOR 'ag01_lector'@'localhost';
+
+        GRANT SELECT ON agente_intro01.*
+          TO 'ag01_lector'@'localhost';
+        SHOW GRANTS FOR 'ag01_lector'@'localhost';
+      output: |
+        GRANT USAGE ON *.* TO
+        `ag01_lector`@`localhost`
+
+        GRANT USAGE ON *.* TO
+        `ag01_lector`@`localhost`
+        GRANT SELECT ON
+        `agente_intro01`.* TO
+        `ag01_lector`@`localhost`
+
+  - code_output:
+      eyebrow: Medido · sin un solo ORM conectado
+      title: Dos de los tres rechazos vienen del servidor y de nadie más
+      filename: w02_constraints.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        INSERT INTO alumno
+          VALUES ('A0000009','Mal Dato','mal@up.edu.mx',900);
+
+        INSERT INTO alumno
+          VALUES ('A0000010','Otro','ana@up.edu.mx',10);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint
+        'ck_alumno_creditos' is
+        violated.
+
+        ERROR 1062 (23000):
+        Duplicate entry
+        'ana@up.edu.mx' for key
+        'alumno.uq_alumno_correo'
+
+  - code_output:
+      eyebrow: Medido · sin un solo ORM conectado
+      title: Y el tercero lo levanta una llave foránea
+      filename: w02_constraints.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        INSERT INTO inscripcion
+          VALUES ('A9999999','BD1001','26PRI');
+      output: |
+        ERROR 1452 (23000): Cannot add
+        or update a child row: a
+        foreign key constraint fails
+        (`agente_intro01`.`inscripcion`,
+        CONSTRAINT `fk_ins_alumno`
+        FOREIGN KEY (`matricula`)
+        REFERENCES `alumno`
+        (`matricula`))
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El administrador es intercambiable
+          desc: >-
+            La base no. Por eso las macro partes se nombran por separado, y por eso una sesión
+            tiene identificador propio y el servidor puede cerrarla sin tocar un solo dato
+        - title: Cuatro definiciones heredadas están mal
+          desc: >-
+            El trigger corre por fila y no por condición, el evento no se llama Job, el
+            formulario no es objeto de MySQL y la cuenta se identifica por usuario y por host
+        - title: La integridad la pone el servidor
+          desc: >-
+            Los tres errores de hoy los levantó el motor sin un ORM conectado. USER() dice de
+            dónde vino la conexión y CURRENT_USER() qué cuenta la dejó entrar, y eso se cobra en la semana 17
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Crea una base propia con al menos una tabla, una vista y un trigger, y después cuenta
+        sus objetos con la misma consulta del inventario. Compara tu conteo renglón por renglón
+        con el de clase y explica cada diferencia.
+      meta:
+        - [Entrega, Antes de la semana 3]
+        - [Formato, Blackboard · script y salida]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["El script", "40 %", "Corre limpio desde una base vacía"]
+        - ["El inventario", "40 %", "Los siete renglones aparecen con su conteo"]
+        - ["Las diferencias", "20 %", "Cada renglón distinto tiene explicación"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión abrimos el manejador. Los tres niveles de la arquitectura, una
+        consulta por nivel, y una bajada al disco para ver los archivos que la definición de
+        hoy solamente prometió.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

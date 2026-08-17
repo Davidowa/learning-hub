@@ -1,0 +1,472 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 5
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 05 · Block B · Normalisation
+      title: Introduction to Databases
+      subtitle: >-
+        Normalising is repairing a model. The server will let you break every rule without
+        saying a word, so today's lesson is not the rule. It is what the rule costs.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 5 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The arrow
+          desc: What determines what, written down before any normal form is named
+        - title: The three forms
+          desc: First, second and third, each with the damage that gives it away
+        - title: The bill
+          desc: Three attacks on the wide table and three repairs on screen
+        - title: Your turn
+          desc: The week 4 model, broken on purpose and repaired by hand
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a functional dependency
+          sub: A → B reads «A determines B», and it decides which table every column lives in
+        - head: Tell 1NF apart from the primary key
+          sub: Uniqueness is not part of the first normal form, and the server proves it
+        - head: Measure the cost of a list inside one cell
+          sub: The value goes in, the row reads fine, and the WHERE that looks for it says zero
+        - head: Recognise a transitive dependency
+          sub: A column that depends on another one that is not the key splits your UPDATE in two
+        - head: Repair the wide table on screen
+          sub: Three tables where there was one, and the same three attacks running again
+        - head: Name the price of normalising
+          sub: More tables means more joins, and the bill arrives in full in week 11
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types, elements and the DBMS
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, keys
+          state: now
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, aggregates, JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backup
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Functional dependencies
+      lede: >-
+        Before a single normal form gets named, you have to be able to say which column
+        determines which. That arrow is all the theory today needs.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Normalising is not splitting tables
+      lead: >-
+        Splitting a table in two is the consequence. The rule is a question asked column
+        by column: what does this value depend on? If it depends on something that is not
+        the key, it is stored in the wrong place, and the server will accept it without
+        complaint as many times as you ask.
+      panel:
+        label: The notation
+        title: A → B reads «A determines B»
+        note: >-
+          Give me alumno_id and the student's name is already determined. Give me
+          materia_id and the subject's name and credits are determined. The grade needs
+          both columns, because it depends on the whole pair.
+      steps:
+        - text: Write down every dependency in the table
+        - text: Mark the ones that do not come off the whole key
+        - text: Each marked group moves to a table of its own
+          loop: ↺ and the group's key stays behind as a foreign key
+
+  - code:
+      eyebrow: Block 01 · The week 4 model, flattened
+      title: One wide table for every enrolment
+      filename: insc_desnorm.sql
+      lang: sql
+      source: |
+        CREATE TABLE insc_desnorm (
+            alumno_id      INT,
+            materia_id     INT,
+            alumno_nombre  VARCHAR(80),
+            materia_nombre VARCHAR(80),
+            calificacion   DECIMAL(4,2),
+            PRIMARY KEY (alumno_id, materia_id)
+        );
+      annotations:
+        - label: The key is the pair
+          text: >-
+            The pair identifies the row. Nobody enrols twice in the same subject, and that
+            part is solved correctly.
+        - label: alumno_nombre
+          text: >-
+            It depends only on alumno_id, which is half a key. That is where the second
+            normal form breaks.
+        - label: materia_nombre
+          text: >-
+            Same story on the other side. The subject's name is written out again on every
+            enrolment row.
+        - label: Risk
+          text: >-
+            The table is comfortable to read and there is no query anywhere that repairs
+            it once it contradicts itself.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Uniqueness is not part of the first normal form
+      filename: sin_llave.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE sin_llave (a INT, b INT);
+        SHOW CREATE TABLE sin_llave;
+
+        SET SESSION sql_require_primary_key = ON;
+        CREATE TABLE sin_llave2 (a INT, b INT);
+      output: |
+        The first table is created and
+        SHOW CREATE comes back with no
+        PRIMARY KEY line at all
+
+        ERROR 3750 (HY000): Unable to
+        create or change a table
+        without a primary key, when
+        the system variable
+        'sql_require_primary_key' is
+        set...
+
+  - divider:
+      eyebrow: Block 02
+      title: First, second and third
+      lede: >-
+        Three normal forms, three ways to break them, and a server that accepts all three
+        breakages without one warning. The form is learned through the damage.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The ladder
+      title: Five normal forms, and where almost everyone gets off
+      items:
+        - label: '1NF'
+          title: Atomic values
+          desc: One cell, one value. No lists tucked inside.
+        - label: '2NF'
+          title: The whole key
+          desc: No attribute depends on half a composite key.
+        - label: '3NF'
+          title: Nothing transitive
+          desc: No attribute depends on another that is not the key.
+        - label: 'BCNF'
+          title: Every determinant is a key
+          desc: A refinement of the third. Name it and move on.
+        - label: '4NF · 5NF'
+          title: The ladder goes on
+          desc: They exist. Stopping at the third is a decision.
+
+  - code_output:
+      eyebrow: Measured · breaking 1NF
+      title: You have the value stored and you cannot query it
+      filename: pedido_no1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO pedido_no1fn
+        VALUES (1, 'Ana', 'pantalon, camisa');
+
+        SELECT * FROM pedido_no1fn;
+
+        SELECT COUNT(*) FROM pedido_no1fn
+        WHERE producto = 'camisa';
+      output: |
+        The INSERT goes through
+
+        The SELECT returns the whole
+        row, list inside the cell
+        and all
+
+        COUNT(*)
+        0
+
+  - code_output:
+      eyebrow: Measured · the patch
+      title: The function finds the row and gives up the index
+      filename: pedido_no1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT * FROM pedido_no1fn
+        WHERE FIND_IN_SET('camisa',
+              REPLACE(producto, ', ', ',')) > 0;
+      output: |
+        It returns the row that the
+        WHERE with equals missed
+
+        No function wrapped around a
+        column can lean on an index,
+        so the whole table gets read
+
+  - code_output:
+      eyebrow: Measured · the source's own fix
+      title: The «How to do it right» table in the inherited deck cannot be built
+      filename: pedido_1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE pedido_1fn (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30),
+            producto  VARCHAR(30)
+        );
+        INSERT INTO pedido_1fn VALUES (1,'Ana','pantalon');
+        INSERT INTO pedido_1fn VALUES (1,'Ana','camisa');
+      output: |
+        The first row goes in
+
+        ERROR 1062 (23000): Duplicate
+        entry '1' for key
+        'pedido_1fn.PRIMARY'
+
+  - compare:
+      eyebrow: Block 02 · The repair
+      title: A table with a list inside becomes two tables
+      before:
+        label: Before · two products in one cell
+        file: pedido_no1fn.sql
+        lang: sql
+        code: |
+          CREATE TABLE pedido_no1fn (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30),
+            producto  VARCHAR(60)
+          );
+          -- 'pantalon, camisa' in one cell
+      after:
+        label: After · one row per product
+        file: pedido_1fn.sql
+        lang: sql
+        code: |
+          CREATE TABLE pedido (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30));
+
+          CREATE TABLE detalle_pedido (
+            pedido_id INT, linea INT,
+            producto  VARCHAR(60),
+            PRIMARY KEY (pedido_id, linea));
+      note: >-
+        The honest fix is not repeating pedido_id across two rows, which is what the
+        source draws and what MySQL has just refused. It is separating the order from its
+        detail, and that also writes the second normal form slide for you.
+
+  - code_output:
+      eyebrow: Measured · the update anomaly
+      title: One UPDATE leaves the department in two buildings at once
+      filename: empleado_desnorm.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- empleado_id -> departamento_nombre
+        --             -> departamento_ubicacion
+        UPDATE empleado_desnorm
+           SET departamento_ubicacion = 'Edificio C'
+         WHERE empleado_id = 1;
+
+        SELECT DISTINCT departamento_nombre,
+                        departamento_ubicacion
+        FROM empleado_desnorm;
+      output: |
+        departamento_nombre
+        departamento_ubicacion
+
+        Ingenieria   Edificio C
+        Ingenieria   Edificio A
+
+        No error and no warning
+
+  - divider:
+      eyebrow: Block 03
+      title: What it costs to skip it
+      lede: >-
+        The server accepts the contradiction, accepts the value you will not be able to
+        search for, and accepts the hand-written total. None of the three warns you.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · the contradiction
+      title: The same student under two names, and both rows go in
+      filename: insc_desnorm.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO insc_desnorm
+        VALUES (1, 10, 'Ana Lopez', 'Bases de Datos');
+
+        INSERT INTO insc_desnorm
+        VALUES (1, 11, 'Ana Lpez', 'Calculo');
+      output: |
+        Both rows go in
+
+        No error and no warning
+
+        Student 1 is called
+        Ana Lopez on one row and
+        Ana Lpez on the next
+
+  - code_output:
+      eyebrow: Measured · the derived attribute
+      title: The total computes itself, and by hand it will not be written
+      filename: detalle_pedido.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- total DECIMAL(12,2) AS (cantidad * precio) STORED
+        INSERT INTO detalle_pedido (cantidad, precio)
+        VALUES (3, 250.00);
+        SELECT total FROM detalle_pedido;
+
+        INSERT INTO detalle_pedido (cantidad, precio, total)
+        VALUES (3, 250.00, 1.00);
+      output: |
+        total
+        750.00
+
+        ERROR 3105 (HY000): The value
+        specified for generated
+        column 'total' in table
+        'detalle_pedido' is not
+        allowed.
+
+  - method:
+      eyebrow: Block 03 · The other side of the trade
+      title: Normalising costs something, and the source never says so
+      statement: >-
+        Every table you split off today is a join somebody writes later. That is not an
+        argument for keeping the wide table. It is the price, and it gets paid with your
+        eyes open.
+      points:
+        - label: What you buy
+          text: >-
+            One single place where each fact lives. The contradiction from a moment ago
+            stops being possible instead of staying unlikely.
+        - label: What you pay
+          text: >-
+            More tables means more joins. The bill arrives in full in week 11, the week
+            this course writes more queries than any other.
+        - label: The rule you take away
+          text: >-
+            A function wrapped around a column cannot use an index. It comes back in week
+            9 sorting a group and in week 15 searching with a leading wildcard.
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to keep the wide table
+      items:
+        - label: Error 01
+          title: Confusing 1NF with the key
+          desc: >-
+            Uniqueness is a separate rule. MySQL creates tables with no primary key and
+            only demands one when you ask for it with a session variable.
+        - label: Error 02
+          title: Storing a list in one cell
+          desc: >-
+            The value goes in and the WHERE with equals answers zero. The FIND_IN_SET
+            patch works and leaves the table without an index forever.
+        - label: Error 03
+          title: Storing a derived value by hand
+          desc: >-
+            The computed total has an answer in the engine. A generated column works it
+            out on its own and refuses any value you write over it.
+        - label: Error 04
+          title: Keying on the department name
+          desc: >-
+            Two departments sharing a name break the model. An integer key to join on,
+            and UNIQUE to protect the name, which gets built next week.
+
+  - lab:
+      eyebrow: Lab
+      title: Break the week 4 model, then repair it on screen
+      brief: >-
+        Flatten your week 4 diagram into a single wide table, load it with fifteen rows
+        and run today's three attacks against it: the list inside a cell, the name spelled
+        two ways and the UPDATE that leaves two locations. Then repair it and run all
+        three again.
+      blocks:
+        - label: Deliverable
+          text: Both scripts and the output of all six attempts, pasted exactly as it came
+        - label: Constraint
+          text: >-
+            The repaired version accepts exactly the same data. Repairing is not deleting
+            the awkward case.
+        - label: The test
+          text: >-
+            If an attack still goes through after the repair, the dependency behind it is
+            still written into the wrong table.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The arrow comes before the form
+          desc: >-
+            First you write down what determines what. The normal forms are the short way
+            to name the arrows that ended up in the wrong place
+        - title: The server will not warn you
+          desc: >-
+            It accepts the list in the cell, accepts both spellings of the same name and
+            accepts the department in two buildings. No error, no warning
+        - title: Normalising is paid for in joins
+          desc: >-
+            More tables is less redundancy and more work at query time. Better to know the
+            price today than to discover it in week 11
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Reproduce today's three anomalies on a database of your own: the COUNT that
+        returns zero, the two spellings of the same name and the department in two
+        buildings. Each one with its statement and the server's output underneath.
+      meta:
+        - [Due, Before week 6]
+        - [Format, Blackboard · one .sql script and a PDF]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The anomalies", "60 %", "All three, with statement and literal output"]
+        - ["The dependencies", "25 %", "Written as A → B before touching the table"]
+        - ["The repair", "15 %", "The corrected model runs from empty"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session the diagram gets executed. Four mapping rules, four branches of
+        integrity, and a foreign key that refuses to be born in four different ways.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

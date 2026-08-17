@@ -1,0 +1,404 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 3
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 03 · Block A · The DBMS and its files
+      title: Introduction to Databases
+      subtitle: >-
+        «Logical and physical independence» stops being a phrase the day you watch it in
+        three queries. Then we go down to the disc, to the files last week's definition
+        promised and nobody had shown.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 3 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The manager
+          desc: What it is, what it does, and the two functions that hold up
+        - title: The three levels
+          desc: External, conceptual and internal, one query per level
+        - title: The floor
+          desc: The files on disc, and why they are not written for you
+        - title: The components
+          desc: The five you can point at on a screen in this very session
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Define a DBMS without reciting the slide
+          sub: >-
+            Programs that exist to describe, retrieve and manipulate data while keeping
+            its integrity and its security
+        - head: Tell the three architecture levels apart
+          sub: >-
+            And say which of the three finds out when somebody adds a column
+        - head: Point at where the bytes live
+          sub: >-
+            The data directory, the 16 KB page and the 128 MB pool, read off the server
+            rather than off a diagram
+        - head: Read an EXPLAIN on MySQL 9
+          sub: >-
+            The default format is TREE and the classic grid now has to be asked for
+        - head: Name components you can actually open
+          sub: >-
+            Parser, optimizer, executor, file manager and buffer manager
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types, elements and the DBMS
+          state: now
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation and keys
+          state: todo
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, grouping and JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What a DBMS is
+      lede: >-
+        The inherited slide defines the manager with a list that appears twice and is
+        missing its three verbs. Today it gets repaired, and then it gets run.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A set of programs, and three verbs
+      lead: >-
+        A DBMS is a set of programs, procedures and languages that provide the means to
+        describe, retrieve and manipulate the data stored in the database, while keeping
+        its integrity, its confidentiality and its security. The three verbs are the part
+        that does work. Without them what is left is an inventory.
+      panel:
+        label: The inherited slide
+        title: The three verbs were lost in the revision
+        note: >-
+          The new version prints the list of programs twice and skips describe, retrieve
+          and manipulate. What survives is a heading glued to a complement, with no verb
+          between them. The old version carries the whole sentence and that is the one we
+          use.
+      steps:
+        - text: Describe objects, structure and interrelations
+        - text: Manipulate — search, add, remove, modify
+        - text: And nothing else — «use» is not a third one
+          loop: ↺ two functions, not three
+
+  - table:
+      eyebrow: Block 01 · Operations
+      title: What the manager does, and the week that pays it off
+      headers: [Operation, What it settles, Paid off in]
+      rows:
+        - ["Files", "16 KB pages in its own pool", "Today · H-03-4"]
+        - ["Integrity", "INSERT, UPDATE and DELETE watched", "6 and 14"]
+        - ["Security", "Authorises accounts, not people", "17"]
+        - ["Backup", "Two logs, and the copy aside", "17"]
+        - ["Concurrency", "Coordinates simultaneous sessions", "16"]
+        - ["Transactions", "Every operation or none of them", "8 and 16"]
+
+  - code_output:
+      eyebrow: Measured
+      title: Does the manager translate your SQL into file system commands?
+      filename: arquitectura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@innodb_buffer_pool_size AS gestor_de_buffers_bytes,
+               @@innodb_page_size        AS tamano_pagina;
+      output: |
+        gestor_de_buffers_bytes
+        134217728
+
+        tamano_pagina
+        16384
+
+  - code_output:
+      eyebrow: Measured
+      title: The source's «log», singular, is in fact two different logs
+      filename: arquitectura.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@log_bin AS bitacora_binaria_activa,
+               @@innodb_flush_log_at_trx_commit AS redo_log_en_commit;
+      output: |
+        bitacora_binaria_activa
+        1
+
+        redo_log_en_commit
+        1
+
+  - divider:
+      eyebrow: Block 02
+      title: The three levels, and the floor under the third
+      lede: >-
+        The same question —what is in there?— asked from four heights in one session. The
+        fourth one is no longer SQL. It is a file listing and sixty-four bytes that are
+        unreadable on purpose.
+      block: 2
+
+  - diagram:
+      eyebrow: Block 02 · Architecture
+      title: Three levels, three queries, one single session
+      blocks:
+        - label: Level 01
+          title: External
+          desc: >-
+            What the registrar sees. The view returns its four columns and no trace of
+            the table underneath.
+        - label: Level 02
+          title: Conceptual
+          desc: >-
+            What the designer sees. The catalogue names the table, its engine and the
+            view, one row each.
+        - label: Level 03
+          title: Internal
+          desc: >-
+            What the engine sees. 16 KB pages inside a 128 MB pool, and a data directory
+            on disc.
+      note: >-
+        Adding a column changes the conceptual level and does not force the view to be
+        rewritten. That is logical independence, and week 12 cashes it again.
+
+  - code_output:
+      eyebrow: Measured · conceptual level
+      title: The catalogue tells table from view, and gives an engine to only one
+      filename: niveles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT TABLE_NAME, TABLE_TYPE, ENGINE
+        FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA = 'agente_intro01';
+      output: |
+        alumno           BASE TABLE  InnoDB
+        v_alumno_activo  VIEW        NULL
+
+  - code_output:
+      eyebrow: Measured · internal level
+      title: Three variables and you know where the bytes live
+      filename: niveles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@datadir;
+        SELECT @@innodb_page_size;
+        SELECT @@innodb_buffer_pool_size;
+      output: |
+        @@datadir
+        ...\scratchpad\mydb\data\
+
+        @@innodb_page_size
+        16384
+
+        @@innodb_buffer_pool_size
+        134217728
+
+  - code_output:
+      eyebrow: Measured · the floor
+      title: Every table is one file, and the view is missing because it has none
+      filename: archivos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT SPACE, NAME, FILE_SIZE
+        FROM information_schema.INNODB_TABLESPACES
+        WHERE NAME LIKE 'db_backup/%';
+      output: |
+        417  db_backup/alumno       131072
+        418  db_backup/inscripcion  131072
+        419  db_backup/materia      114688
+
+  - code_output:
+      eyebrow: Measured · [E] the sizes get re-measured in the room
+      title: The first bytes of the file are an InnoDB page header
+      filename: terminal
+      lang: sql
+      output_label: Outside the client
+      source: |
+        -- not SQL any more, this is the disc
+        od -A n -t x1 -N 64 alumno.ibd
+      output: |
+        f8 6f be bf 00 00 00 00
+        00 01 62 4e 00 00 00 01
+        …
+
+  - divider:
+      eyebrow: Block 03
+      title: The components you can actually point at
+      lede: >-
+        The source lists eight. Five of them open on screen in this session, one does not
+        exist under that name in MySQL, and the other two have a week of their own.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Components
+      title: Five pieces, and how each one looks from the client
+      headers: [Component, What it does, How you see it]
+      rows:
+        - ["Parser", "Reads your SQL and rejects it", "ERROR 1064"]
+        - ["Optimizer", "Picks the plan, never edits your SQL", "EXPLAIN"]
+        - ["Executor", "Runs the plan that was picked", "The output"]
+        - ["File manager", "Reads and writes the .ibd files", "@@datadir"]
+        - ["Buffer manager", "Holds 16 KB pages in memory", "134217728"]
+
+  - code_output:
+      eyebrow: Measured · the optimizer
+      title: This is what an EXPLAIN answers on 9.7.2, and it is not the grid
+      filename: plan.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        EXPLAIN SELECT a.nombre, m.nombre
+        FROM alumno a
+        JOIN inscripcion i ON a.matricula = i.matricula
+        JOIN materia m ON m.clave = i.clave;
+      output: |
+        -> Nested loop inner join
+           (cost=1.05 rows=1)
+          -> Nested loop inner join
+             (cost=0.7 rows=1)
+            -> Covering index scan on i
+               using fk_ins_materia
+               (cost=0.35 rows=1)
+            -> Single-row index lookup
+               on a using PRIMARY …
+          -> Single-row index lookup …
+
+  - code_output:
+      eyebrow: Measured · the warning for the term
+      title: The old grid is still there, but now you have to ask for it by name
+      filename: plan.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@explain_format;
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT a.nombre, m.nombre
+        FROM alumno a
+        JOIN inscripcion i ON a.matricula = i.matricula
+        JOIN materia m ON m.clave = i.clave;
+      output: |
+        @@explain_format
+        TREE
+
+        id  select_type  table  type
+        possible_keys  key  key_len
+        ref  rows  filtered  Extra
+
+  - pitfalls:
+      eyebrow: Common mistakes
+      title: Four inherited sentences that do not survive the server
+      items:
+        - label: Mistake 01
+          title: «It translates SQL into file commands»
+          desc: >-
+            InnoDB handles 16 KB pages in its own pool and its own tablespace. The
+            operating system only ever sees block reads and block writes.
+        - label: Mistake 02
+          title: «The log», in the singular
+          desc: >-
+            There are two. The redo log gives durability after a crash; the binlog gives
+            point-in-time recovery and replication. Week 17 uses both.
+        - label: Mistake 03
+          title: Copying an EXPLAIN screenshot from 8.0
+          desc: >-
+            Any tutorial you find was written for 8.0 and its first screenshot no longer
+            matches your screen. Ask for TRADITIONAL, or read the tree.
+        - label: Mistake 04
+          title: Memorising the «scheduler»
+          desc: >-
+            MySQL has nothing under that name. What orders simultaneous work is the
+            InnoDB lock manager, and week 16 opens its queue row by row.
+
+  - lab:
+      eyebrow: Lab
+      title: The same question from four heights
+      brief: >-
+        Connect to the server and ask «what is in there» four times, top to bottom. The
+        view first, then the catalogue, then the three internal-level variables, and
+        finally leave the client and list the files in the data directory.
+      blocks:
+        - label: Deliverable
+          text: The four outputs pasted in order, each with the statement that produced it
+        - label: Constraint
+          text: >-
+            One session and one database. Change database halfway through and the file
+            listing no longer matches the catalogue.
+        - label: The test
+          text: >-
+            Add a column to the table and run the first query again. If the view changed,
+            it was not logical independence.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take with you
+      items:
+        - title: The manager has two functions
+          desc: >-
+            Describe and manipulate. «Use» is indistinguishable from manipulate in both
+            versions of the deck, and no later week ever calls on it
+        - title: Each level answers something else
+          desc: >-
+            The view, the catalogue and the pool answer the same question three different
+            ways, and the bottom one can change without touching the top one
+        - title: The gap is the manager
+          desc: >-
+            The three files take 376,832 bytes on disc to hold fifteen rows that weigh
+            6,963 bytes as SQL text. That difference is structure, not waste
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and marking criteria
+      brief: >-
+        The three levels against a database of your own, one query per level, with its
+        output pasted. Explain in two lines what part of your database would change if
+        somebody renamed a column, and which of the three levels would never notice.
+      meta:
+        - [Due, Before week 4]
+        - [Format, Blackboard · PDF with the three outputs]
+        - [Weight, Part of the 20 % homework]
+      rubric:
+        - ["External level", "30 %", "The query on the view and its literal output"]
+        - ["Conceptual level", "30 %", "The catalogue, with engine and object type"]
+        - ["Internal level", "30 %", "Data directory, page size and pool"]
+        - ["The explanation", "10 %", "Which level absorbs the change, and why"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session closes block A and opens block B. We draw the whole records system,
+        attributes included, and every line of the drawing turns into something the
+        server writes back at us.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

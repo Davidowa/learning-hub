@@ -1,0 +1,394 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 1
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 01 · Block A · Why a database exists
+      title: Introduction to Databases
+      subtitle: >-
+        Data has been changing medium for four thousand years. What changed in 1970 was not
+        the material but five pressures no flat file can answer.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 1 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The flat file
+          desc: The registrar's spreadsheet and the five things it cannot do
+        - title: The timeline
+          desc: From the punched card to the disc, with three dates corrected
+        - title: The server
+          desc: Four readings off the engine we will use for seventeen weeks
+        - title: Your turn
+          desc: Connect, run the four queries and paste what the server answered
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Name the five pressures
+          sub: And point at the exact place where a shared spreadsheet gives way
+        - head: Tell sequential access from random access
+          sub: Tape is read in order and disc is not, and that difference has a week of its own
+        - head: Place 1970 and 1974 on the timeline
+          sub: The model first, the language four years later, and that is this course's order
+        - head: Connect to the server and read its configuration
+          sub: Version, engine, character set and the sql_mode that makes errors be errors
+        - head: Explain what it means to undo an operation
+          sub: Two counts around a ROLLBACK, with no theory in between
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five blocks, seventeen weeks
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origin, types and elements, the DBMS and its architecture
+          state: now
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: todo
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping and JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, accounts and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: From the flat file to the five pressures
+      lede: >-
+        Before using the phrase «database» it helps to watch what breaks without one. The
+        scene is a registrar's spreadsheet on an afternoon of enrolments.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Two people save the same sheet on the same afternoon
+      lead: >-
+        The registrar's office keeps enrolments in a spreadsheet. At four in the afternoon two
+        people open it from their own machines, each adds rows and each one saves. Whoever
+        saves second takes the file. Nobody lied, nobody hit the wrong key, and half an
+        afternoon of work stopped existing without a single warning on screen.
+      panel:
+        label: The scene
+        title: The sheet cannot tell who wrote first
+        note: >-
+          A flat file stores content and nothing else. It does not know where each row came
+          from, it does not know somebody else has it open, and it has no way to refuse a loss.
+      steps:
+        - text: Both people open the same copy of the file
+        - text: Both add different rows and both of them save
+        - text: The last write ends up owning the whole file
+          loop: ↺ and the first one loses the work with no warning
+
+  - code:
+      eyebrow: Block 01 · The contrast
+      title: The same thing, stored in a file and declared on a server
+      filename: enrolments.sql
+      lang: sql
+      source: |
+        -- inscripciones.csv, exactly as the sheet saves it
+        A0000001,Ana Lopez,BD1001,26PRI,8.5
+        A0000002,Luis Mena,BD1001,26PRI,
+        A0000001,Ana Lpez,BD1001,26PRI,9.0
+
+        -- the same information, declared
+        CREATE TABLE inscripcion (
+          inscripcion_id INT PRIMARY KEY,
+          alumno_id      INT NOT NULL,
+          materia_id     INT NOT NULL,
+          periodo        CHAR(5) NOT NULL,
+          calificacion   DECIMAL(4,2) NULL
+        );
+      annotations:
+        - label: Above
+          text: >-
+            Three rows and not one rule. The third repeats the student with her surname
+            misspelled and the file takes it.
+        - label: Below
+          text: >-
+            Every column carries a name, a type and a size, and two of them refuse to be
+            left empty. The declaration is what decides.
+        - label: The empty cell
+          text: >-
+            In the file, the missing grade is a comma followed by nothing. In the table it
+            is called NULL and it has rules of its own.
+        - label: Risk
+          text: >-
+            Nothing above is written incorrectly. That is the problem. A flat file has no way
+            of saying that something is wrong.
+          accent: true
+
+  - steps:
+      eyebrow: Block 01 · The answer
+      title: The five pressures no flat file resolves
+      items:
+        - label: '01'
+          title: Organise
+          desc: That data carries a declared structure and not just an accidental order
+        - label: '02'
+          title: Relate
+          desc: That a student and a subject can be joined without copying anybody's name
+        - label: '03'
+          title: Protect
+          desc: That somebody is there to refuse a value that breaks a stated rule
+        - label: '04'
+          title: Administer
+          desc: That two people can work at once without the second erasing the first
+        - label: '05'
+          title: Handle volume
+          desc: That searching sixty thousand rows costs what searching ten rows costs
+
+  - method:
+      eyebrow: Block 01 · The claim
+      title: What changed in 1970 was not the medium
+      statement: >-
+        Stone, paper, tape and disc are four ways of holding the same thing. A database is not
+        a fifth material. It is a program that sits in the middle and answers for the data.
+      points:
+        - label: Before
+          text: >-
+            The program that wrote the file was the only one that knew what each column meant.
+            Change the program and you changed the file.
+        - label: After
+          text: >-
+            The structure lives on the server and every program asks it. Changing client no
+            longer changes the base, and week 2 shows that on screen.
+        - label: The price
+          text: >-
+            Things have to be declared before they are used. Weeks 4, 5 and 6 are exactly that
+            price, paid in instalments.
+
+  - divider:
+      eyebrow: Block 02
+      title: The timeline, with its dates corrected
+      lede: >-
+        Libraries, harvests and censuses are the starting point. Three of the dates the
+        inherited material carries are wrong, and one of them is the date that orders this
+        course.
+      block: 2
+
+  - diagram:
+      eyebrow: Block 02 · The medium
+      title: From tape to disc, and from disc to the page
+      blocks:
+        - label: '1950'
+          title: Magnetic tape
+          desc: Sequential access. It is read in the order it was written, with no jumps.
+        - label: '1960'
+          title: Disc
+          desc: Random access. The datum is asked for by address and the arm goes straight to it.
+        - label: Today
+          title: A 16 KB page
+          desc: InnoDB does not read loose bytes. It asks for whole pages, and by number.
+          dark: true
+      note: >-
+        Random access is not a convenience. It is the mechanical reason an index is worth
+        anything at all, and week 15 lives off that reason.
+
+  - table:
+      eyebrow: Block 02 · Dates
+      title: Six rows of the timeline, with what has to be corrected
+      headers: [When, What happened, Correction or nuance]
+      rows:
+        - ["1884", "Hollerith patents the punched card", "The census was in 1890"]
+        - ["1950", "Magnetic tape", "Sequential access, no jumps"]
+        - ["1960", "Disc, hierarchical, network, SABRE", "Random access"]
+        - ["1970", "Codd publishes the model", "At IBM San Jose, not Oracle"]
+        - ["1974", "SEQUEL, the first SQL written", "Four years after the model"]
+        - ["1980", "Transactions become standard", "All the operations or none"]
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four inherited claims that do not survive
+      items:
+        - label: Error 01
+          title: The 1884 census
+          desc: >-
+            Hollerith patented the machine in 1884 and the census that used it was the one of
+            1890. The patent and the census are not the same year.
+        - label: Error 02
+          title: Codd started Oracle
+          desc: >-
+            Codd proposed the relational model while working at IBM, in San Jose, California.
+            The one who built the product was Larry Ellison.
+        - label: Error 03
+          title: Relational Software System
+          desc: >-
+            It was never a company name. Software Development Laboratories, then Relational
+            Software Inc., and Oracle from 1982.
+        - label: Error 04
+          title: XQuery and OAI-PMH
+          desc: >-
+            MySQL 9.7.2 has no XQuery, so it can never be demonstrated. OAI-PMH is library
+            metadata harvesting and it never appears again.
+
+  - divider:
+      eyebrow: Block 03
+      title: The server we will use for seventeen weeks
+      lede: >-
+        Four readings, four minutes. From here on nothing in this course is written down
+        without having been run against this server first.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: Which engine we will be working with all term
+      filename: w01_server.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT VERSION() AS version,
+               @@default_storage_engine AS motor,
+               @@character_set_server   AS juego_caracteres;
+      output: |
+        version  motor   juego_caracteres
+        9.7.2    InnoDB  utf8mb4
+
+  - code_output:
+      eyebrow: Measured
+      title: The variable that makes this course have real errors
+      filename: w01_server.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT @@sql_mode;
+      output: |
+        ONLY_FULL_GROUP_BY,
+        STRICT_TRANS_TABLES,
+        NO_ZERO_IN_DATE,
+        NO_ZERO_DATE,
+        ERROR_FOR_DIVISION_BY_ZERO,
+        NO_ENGINE_SUBSTITUTION
+
+  - code_output:
+      eyebrow: Measured · predict before you run
+      title: After the ROLLBACK, how many subjects are left?
+      filename: w01_transaction.sql
+      lang: sql
+      output_label: Output
+      source: |
+        START TRANSACTION;
+        INSERT INTO materia VALUES ('FI1010','Fisica I');
+        INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI');
+        SELECT COUNT(*) AS materias_dentro_de_la_transaccion
+          FROM materia;
+        ROLLBACK;
+        SELECT COUNT(*) AS materias_despues_del_rollback
+          FROM materia;
+      output: |
+        materias_dentro_de_la_transaccion
+        3
+
+        materias_despues_del_rollback
+        2
+
+  - code_output:
+      eyebrow: Measured · the path depends on the install
+      title: In what unit the engine asks the disc for data
+      filename: w01_server.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT @@datadir AS donde_viven_los_bytes,
+               @@innodb_page_size AS tamano_pagina;
+      output: |
+        donde_viven_los_bytes
+        ...\scratchpad\mydb\data\
+
+        tamano_pagina
+        16384
+
+  - table:
+      eyebrow: Block 03 · Ground rules
+      title: Five components worth twenty per cent each
+      headers: [Component, What it covers, When and how much]
+      rows:
+        - ["Midterm 1", "Blocks A and B, plus week 7", "Week 8 · 20 %"]
+        - ["Midterm 2", "Blocks C and D up to week 12", "Week 13 · 20 %"]
+        - ["Project", "Your own records system", "Week 16 · 20 %"]
+        - ["Final exam", "The whole course", "Week 17 · 20 %"]
+        - ["Homework", "One deliverable per week", "All term · 20 %"]
+
+  - lab:
+      eyebrow: Lab
+      title: Four queries and the first pasted output of the term
+      brief: >-
+        Connect to the course server from your own machine and run the four queries of this
+        block in the order they appeared. Before running each one, write down in your notebook
+        what you expect it to answer.
+      blocks:
+        - label: Deliverable
+          text: A text file with the four queries and the literal output of each one
+        - label: Constraint
+          text: >-
+            Output is pasted exactly as the server returned it. Not trimmed, not tidied, not
+            translated.
+        - label: The test
+          text: >-
+            Mark the lines where your prediction and the output disagreed. That is the material
+            for the next session.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The flat file does not fail for being simple
+          desc: >-
+            It fails because nobody answers for it. The five pressures are not five missing
+            features, they are five questions the file cannot answer
+        - title: The model arrived before the language
+          desc: >-
+            Codd publishes in 1970 and SEQUEL appears in 1974. That four-year gap is this
+            course's order, where you model in weeks 4 to 6 and write SQL from week 7
+        - title: Nothing here is claimed without being run
+          desc: >-
+            The default engine is InnoDB and it is transactional, and that is not claimed
+            because a 1980 slide says so but because the ROLLBACK left two subjects where three had been
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and marking criteria
+      brief: >-
+        Connect to the server with your own account and paste the complete output of today's
+        four readings. Then write a paragraph about the registrar's spreadsheet and which of
+        the five pressures broke it first.
+      meta:
+        - [Due, Before week 2]
+        - [Format, Blackboard · one text file]
+        - [Weight, Part of the 20 % homework component]
+      rubric:
+        - ["Output", "50 %", "The four readings are complete and unedited"]
+        - ["Prediction", "30 %", "What you expected is written before each run"]
+        - ["The paragraph", "20 %", "The chosen pressure is argued from the scene"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session we open the server up. Three pieces of software you can point at, eleven
+        inherited labels that each get a verdict, and four definitions the engine itself
+        contradicts.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Messaging, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

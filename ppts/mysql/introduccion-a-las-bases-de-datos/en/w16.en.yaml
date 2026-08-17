@@ -1,0 +1,528 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 16
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Universidad Panamericana · 2026
+      unit: Week 16 · Block E · Concurrency and locking · Project
+      title: Introduction to Databases
+      subtitle: >-
+        Every statement written in this course so far assumed you were the only person in
+        the database. Today a second session opens on the same row and the assumption costs
+        a thousand pesos.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, COM112 · Term 1]
+        - [Session, 16 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The lost update
+          desc: Two sessions read the same thing, each adds a thousand, the balance rises a thousand
+        - title: Locks
+          desc: Who waits, who does not wait, and how far the lock actually reaches
+        - title: Deadlock and isolation
+          desc: The 1213, the 1205 that is nothing like it, and how it all looks from outside
+        - title: Project
+          desc: Design review in pairs, with two sessions open against the schema
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Reproduce a lost update
+          sub: Two sessions, sixteen milliseconds apart, and a thousand pesos that never arrive
+        - head: Choose the lock the case needs
+          sub: FOR UPDATE, FOR SHARE, NOWAIT and SKIP LOCKED answer different questions
+        - head: Tell 1205 from 1213
+          sub: One undoes the statement and leaves you inside, the other undoes the whole transaction
+        - head: Explain how far a lock reaches
+          sub: The same FOR UPDATE locks five rows with no index and two records with one
+        - head: Diagnose from a third session
+          sub: Who waits for whom, since when, and what the killed client receives
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origin, kinds and elements, the engine and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: done
+        - label: D · Weeks 12–14
+          title: SQL the server stores
+          desc: Views, procedures, triggers and events
+          state: done
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: One transaction, two sessions and the lost update
+      lede: >-
+        Nobody wrote bad code. Each session did the right thing on its own, and the gap
+        between asking and writing is where the other one fit.
+      block: 1
+
+  - code_output:
+      eyebrow: Measured · the double session
+      title: Two windows each add a thousand pesos and the balance rises a thousand
+      filename: perdida.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- both sessions run the same script,
+        -- sixteen milliseconds apart
+
+        START TRANSACTION;
+
+        SELECT credito_maximo INTO @c
+          FROM alumno WHERE alumno_id = 1;
+
+        -- ... and here it thinks for a moment ...
+
+        UPDATE alumno SET credito_maximo = @c + 1000
+          WHERE alumno_id = 1;
+
+        COMMIT;
+      output: |
+        A_leyo    15000.00
+          2026-08-16 23:14:49.984021
+        B_leyo    15000.00
+          2026-08-16 23:14:50.000252
+
+        resultado_final_esperado_17000
+                          16000.00
+
+        no error, no warning
+
+  - table:
+      eyebrow: Block 01 · Before touching anything
+      title: Today's six variables
+      headers: [Governs, Variable, Factory value]
+      rows:
+        - ["Row lock", "innodb_lock_wait_timeout", "50 s"]
+        - ["Metadata lock", "lock_wait_timeout", "31536000 s"]
+        - ["Detection", "innodb_deadlock_detect", "1"]
+        - ["To the log", "innodb_print_all_deadlocks", "0"]
+        - ["On timeout", "innodb_rollback_on_timeout", "0"]
+        - ["Isolation", "transaction_isolation", "REPEATABLE-READ"]
+
+  - code_output:
+      eyebrow: Measured · the two repairs
+      title: Read with a lock, or do not read at all
+      filename: reparaciones.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 1. read with a lock
+        START TRANSACTION;
+        SELECT credito_maximo INTO @c FROM alumno
+          WHERE alumno_id = 1 FOR UPDATE;
+        UPDATE alumno SET credito_maximo = @c + 1000
+          WHERE alumno_id = 1;
+        COMMIT;
+
+        -- 2. do not read, let the server add
+        UPDATE alumno
+          SET credito_maximo = credito_maximo + 1000
+          WHERE alumno_id = 1;
+      output: |
+        with FOR UPDATE
+          A_leyo     15000.00
+          B_leyo     16000.00
+          final      17000.00
+
+        without reading first
+          final      17000.00
+
+  - divider:
+      eyebrow: Block 02
+      title: Locks
+      lede: >-
+        Who waits, who does not, and for how long. And a question almost nobody asks out
+        loud: how far does the lock you just requested actually reach.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured · reading never waits
+      title: Five ways of asking for the same row while A holds it
+      filename: candados.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- A holds row 1 and has not committed
+        -- innodb_lock_wait_timeout = 3
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1;
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1 FOR UPDATE;
+
+        SELECT credito_maximo FROM alumno
+          WHERE alumno_id = 1 FOR SHARE;
+
+        SELECT ... FOR UPDATE NOWAIT;
+        SELECT ... FOR UPDATE SKIP LOCKED;
+      output: |
+        ERROR 1205 (HY000): Lock wait
+        timeout exceeded; try
+        restarting transaction
+
+        1 plain SELECT   15000.00 now
+        2 FOR UPDATE   1205  3.002 s
+        3 FOR SHARE    1205  3.003 s
+        4 NOWAIT       3572  at once
+        5 SKIP LOCKED  4 rows of 5
+
+  - code_output:
+      eyebrow: Measured · how far the lock reaches
+      title: A FOR UPDATE on an unindexed column locks the neighbours too
+      filename: sin_indice.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- session A, column carrera has no index
+        START TRANSACTION;
+        SELECT alumno_id, nombre, carrera FROM alumno
+          WHERE carrera = 'Derecho' FOR UPDATE;
+
+        -- session B, on students A never returned
+        UPDATE alumno SET credito_maximo = 1
+          WHERE alumno_id = 5;
+
+        INSERT INTO alumno (matricula, carrera) VALUES
+          ('000000009', 'Arquitectura');
+      output: |
+        A returned 2 students, locked
+          PRIMARY  1
+          PRIMARY  2
+          PRIMARY  3
+          PRIMARY  4
+          PRIMARY  5
+          supremum pseudo-record
+
+        B, UPDATE of Medicina  1205
+        B, INSERT a new student 1205
+
+  - code_output:
+      eyebrow: Measured · the same statement, with an index
+      title: One CREATE INDEX later the lock shrinks to two records
+      filename: con_indice.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE INDEX idx_alumno_carrera
+          ON alumno (carrera);
+
+        -- session A, exactly the same statement
+        START TRANSACTION;
+        SELECT alumno_id, nombre, carrera FROM alumno
+          WHERE carrera = 'Derecho' FOR UPDATE;
+      output: |
+        idx_alumno_carrera
+          X        'Derecho', 3
+          X        'Derecho', 4
+          X,GAP    'Ingenieria', 1
+        PRIMARY
+          X,REC_NOT_GAP  3
+          X,REC_NOT_GAP  4
+
+        B, UPDATE of Medicina: goes
+        B, INSERT: waits on the gap
+
+  - code_output:
+      eyebrow: Measured · the scenario of the week
+      title: BD1001 seats two, and three students enrol
+      filename: inscripcion.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- inside sp_inscribir, both service windows
+        START TRANSACTION;
+
+        SELECT COUNT(*) INTO v_ocupados FROM inscripcion
+          WHERE clave_materia = 'BD1001';
+
+        -- the other session fits right here
+
+        IF v_ocupados < v_cupo THEN
+          INSERT INTO inscripcion (matricula, clave_materia)
+          VALUES (p_matricula, 'BD1001');
+        END IF;
+
+        COMMIT;
+      output: |
+        A vio_ocupados 1   cupo 2
+        B vio_ocupados 1   cupo 2
+
+        clave   cupo  inscritos
+        BD1001     2          3
+
+        with FOR UPDATE on the SELECT
+        B vio_ocupados 2   cupo 2
+        BD1001     2          2
+
+  - divider:
+      eyebrow: Block 03
+      title: Deadlock, isolation, and how it looks from outside
+      lede: >-
+        Two sessions waiting for each other do not untangle themselves. The server picks a
+        victim four milliseconds later and sacrifices the whole of it.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · the deadlock
+      title: A asks for what B holds, B asks for what A holds
+      filename: interbloqueo.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- session A               -- session B
+        START TRANSACTION;         START TRANSACTION;
+
+        UPDATE alumno SET ...      UPDATE alumno SET ...
+          WHERE alumno_id = 1;       WHERE alumno_id = 2;
+
+        -- and now, together     -- and now, together
+
+        UPDATE alumno SET ...      UPDATE alumno SET ...
+          WHERE alumno_id = 2;       WHERE alumno_id = 1;
+      output: |
+        B pide la fila 1
+          23:08:29.501391
+        A llego al final
+          23:08:29.505215
+
+        ERROR 1213 (40001): Deadlock
+        found when trying to get
+        lock; try restarting
+        transaction
+
+  - code_output:
+      eyebrow: Measured · the distinction that splits the week
+      title: The 1213 undoes the whole transaction, and the 1205 does not
+      filename: 1213_vs_1205.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- case 1, the deadlock
+        UPDATE alumno SET credito_maximo = credito_maximo + 500
+          WHERE alumno_id = 3;
+        -- and then it collides head on:  ERROR 1213
+        COMMIT;
+
+        -- case 2, the wait that expires
+        UPDATE alumno SET credito_maximo = 7777
+          WHERE alumno_id = 3;
+        -- and then it waits and expires:  ERROR 1205
+        COMMIT;
+      output: |
+        after the 1213
+          row 3      9000.00
+          the row nobody contended
+          went back to its value
+
+        after the 1205
+          row 3      7777.00
+          the COMMIT took the
+          half-finished work with it
+
+  - code_output:
+      eyebrow: Measured · isolation
+      title: The same read twice, and one configuration line changes it
+      filename: aislamiento.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- session B
+        SET SESSION TRANSACTION ISOLATION LEVEL
+          REPEATABLE READ;
+
+        START TRANSACTION;
+        SELECT credito_maximo FROM alumno WHERE alumno_id = 1;
+
+        -- between the two reads, A commits 77777.00
+
+        SELECT credito_maximo FROM alumno WHERE alumno_id = 1;
+        COMMIT;
+
+        -- and the same script under READ COMMITTED
+      output: |
+        REPEATABLE READ
+          lectura_1    15000.00
+          lectura_2    15000.00
+          ya fuera     77777.00
+
+        READ COMMITTED
+          lectura_1    15000.00
+          lectura_2    77777.00
+
+  - code_output:
+      eyebrow: Measured · from outside
+      title: A third session watches the other two, and one of them does not survive
+      filename: diagnostico.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT waiting_pid, blocking_pid, wait_age
+        FROM sys.innodb_lock_waits;
+
+        SELECT ID, COMMAND, TIME, STATE, LEFT(INFO,34)
+        FROM information_schema.PROCESSLIST;
+
+        KILL 1131;
+      output: |
+        waiting_pid    1124
+        blocking_pid   1123
+        wait_age       00:00:04
+        1124  updating
+        1123  User sleep
+
+        ERROR 2013 (HY000): Lost
+        connection to MySQL server
+        during query
+
+  - code_output:
+      eyebrow: Measured · the retry
+      title: The handler from week 13, set to catch the 1213
+      filename: reintento.sql
+      lang: sql
+      output_label: Output
+      source: |
+        DECLARE v_intentos INT DEFAULT 0;
+        DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
+        BEGIN
+          ROLLBACK;
+          SET v_intentos = v_intentos + 1;
+        END;
+
+        reintenta: LOOP
+          START TRANSACTION;
+          UPDATE alumno SET credito_maximo = credito_maximo + 100
+            WHERE alumno_id = 1;
+          COMMIT;
+          LEAVE reintenta;
+        END LOOP;
+      output: |
+        session A
+          intentos          1
+          quedo_fallando    0
+        session B
+          intentos          2
+          quedo_fallando    0
+
+        row 1      15600.00
+        row 2      12600.00
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways of believing you are alone in the database
+      items:
+        - label: Error 01
+          title: FOR UPDATE outside a transaction
+          desc: >-
+            With autocommit on, the lock is released when the statement ends. Five
+            milliseconds later another session wrote the row, and whoever thought they
+            held it found 33333.00.
+        - label: Error 02
+          title: Validating with a trigger that counts
+          desc: >-
+            A SELECT COUNT(*) inside a trigger cannot wait. The UNIQUE index waited
+            4.997 s, exactly until the other session committed, and answered ERROR 1062
+            (23000) Duplicate entry '000000008'.
+        - label: Error 03
+          title: Assuming the transaction is still open
+          desc: >-
+            DDL commits on its own, LOCK TABLES commits too, and in MyISAM the ROLLBACK
+            undoes nothing. Three ways to lose «all or nothing» without a single warning.
+        - label: Error 04
+          title: Raising the isolation level instead of thinking
+          desc: >-
+            The session paying for the isolation is not the session that suffers. A set
+            SERIALIZABLE and only read, and B, sitting in the factory default, got the
+            1205.
+
+  - lab:
+      eyebrow: Lab · Project
+      title: Design review in pairs, with two sessions open
+      brief: >-
+        Swap scripts with your partner, bring their schema up on your server and run today's
+        experiments against it. You come back with three written observations about their
+        design, not about their style.
+      blocks:
+        - label: The three observations
+          text: >-
+            One row lock the design holds longer than it needs to, one SELECT that should
+            carry FOR UPDATE or one that carries it and should not, and one WHERE with no
+            index behind it.
+        - label: Deliverable
+          text: >-
+            One .sql that runs clean from empty on a 9.7.2 server, plus the report with an
+            EXPLAIN beside every performance claim.
+        - label: Grading
+          text: >-
+            The review is graded present or absent, so no grade depends on a peer's
+            opinion. The project is worth 20 %.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The gap is between reading and writing
+          desc: >-
+            If the application reads, decides and then writes, the row may have changed in
+            between. That is where the other session fits, with no error and no warning
+        - title: A lock is requested, not inherited
+          desc: >-
+            A plain read never waits. FOR UPDATE and FOR SHARE do, and how far they reach
+            is decided by the index behind the WHERE
+        - title: 1205 and 1213 are not the same error
+          desc: >-
+            The 1213 undoes the whole transaction and the 1205 only the statement. Retrying
+            both the same way commits half-finished work
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and grading criteria
+      brief: >-
+        Write the two scripts of the lost update, predict the final value by hand before
+        running them, then run them with NOW(6) on both sessions. Repeat the pair with the
+        repair you choose and explain why that one and not the other.
+      meta:
+        - [Due, Before week 17]
+        - [Format, Blackboard · both .sql files and both outputs pasted]
+        - [Weight, Part of the 20 % for homework]
+      rubric:
+        - ["Prediction", "30 %", "The predicted value appears before the run"]
+        - ["Evidence", "40 %", "The timestamps from both sessions"]
+        - ["Repair", "30 %", "Why that lock and not the other one"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, who may come in and what they may touch, the backup you can open in
+        any editor, and the final exam over all seventeen weeks.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

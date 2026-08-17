@@ -1,0 +1,433 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 4
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 04 · Block B · Entity-relationship model
+      title: Introduction to Databases
+      subtitle: >-
+        Every line you draw today has exactly one physical form, and before the session
+        ends all four of them come back out of a SHOW CREATE TABLE.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 4 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Entities and attributes
+          desc: What an entity holds, what hangs off it, and why the line carries a verb
+        - title: Four shapes
+          desc: Binary, ternary, double and recursive, every one of them built on screen
+        - title: Four cardinalities
+          desc: What each one turns into once it stops being a drawing and becomes a table
+        - title: Your turn
+          desc: The records-system diagram, with attributes and with cardinalities
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Tell conceptual, logical and physical apart
+          sub: >-
+            E-R is the first step; the relational schema is the second and the DDL the
+            third, in weeks 4, 5 and 6
+        - head: Draw entities with their attributes on them
+          sub: >-
+            A diagram with no attributes cannot be turned into tables, and neither
+            inherited deck carries a single one
+        - head: Name the relationship with a verb
+          sub: >-
+            «Student enrols in Course» can be read aloud and can be built; a hyphen
+            between two nouns cannot
+        - head: Turn each cardinality into its physical form
+          sub: >-
+            A foreign key, a foreign key plus UNIQUE, or a third table whose key is the
+            pair
+        - head: Say which promise the diagram cannot enforce
+          sub: >-
+            Minimum cardinality has no construct in MySQL, and the course with zero
+            enrolments just sits there
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types, elements and the DBMS
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation and keys
+          state: now
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, grouping and JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Entities, attributes and the verb
+      lede: >-
+        Peter Chen published the diagram in 1976 and it is still drawn the same way. What
+        changes today is that every figure carries the data it is going to hold.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: E-R is the conceptual model, not the logical one
+      lead: >-
+        The entity-relationship model describes data at the conceptual level. Entities,
+        attributes and relationships, with not one engine decision in sight. Out of the
+        conceptual comes the logical model, the relational schema week 5 normalises, and
+        out of the logical comes the physical, the DDL of week 6. Three steps, three
+        weeks.
+      panel:
+        label: The inherited slide
+        title: «The logical model… describes data at the conceptual level»
+        note: >-
+          The opening sentence of both versions of the deck contradicts itself, and it is
+          the first one the student reads. Getting the name of the first step wrong is
+          expensive, because the next three weeks climb exactly that staircase.
+      steps:
+        - text: Entity — something you want to keep data about
+        - text: Attribute — each datum hanging off the entity
+        - text: Relationship — the verb joining two entities
+          loop: ↺ and cardinality says how many times
+
+  - table:
+      eyebrow: Block 01 · The domain
+      title: The six entities of the records system, with their attributes
+      headers: [Entity, Attributes, Identifier]
+      rows:
+        - ["alumno", "matricula, nombre, correo, carrera", "matricula"]
+        - ["materia", "clave, nombre, creditos", "clave"]
+        - ["profesor", "nombre, departamento_id", "profesor_id"]
+        - ["departamento", "nombre, ubicacion", "departamento_id"]
+        - ["inscripcion", "periodo, calificacion", "alumno_id + materia_id"]
+        - ["credencial", "folio, vigencia", "alumno_id"]
+
+  - method:
+      eyebrow: Block 01 · Naming
+      title: A relationship is named with a verb
+      statement: >-
+        «Student enrols in Course» can be read out loud and can be built. «Student-Course»
+        does not say what happens between the two, and by the time somebody writes the
+        table nobody remembers what it was for.
+      points:
+        - label: Peter Chen · 1976
+          text: >-
+            The diagram is his and its shape has not changed. Worth ten seconds of credit,
+            and it is still drawn that way.
+        - label: One word, two meanings
+          text: >-
+            Chen calls the line a relation; Codd calls the table a relation. The «formally
+            speaking» slide defines Codd's, and week 6 uses it.
+        - label: Risk
+          text: >-
+            A diagram with no attributes cannot become tables. Both inherited decks draw
+            four relationships and not one attribute.
+
+  - divider:
+      eyebrow: Block 02
+      title: The four shapes of a relationship
+      lede: >-
+        Binary, ternary, double and recursive. All four are drawn in a minute and all four
+        get built today, because three of them hide something the drawing never warns you
+        about.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · Shapes
+      title: Four ways to join entities, and what each one hides
+      items:
+        - label: Shape 01
+          title: Binary
+          desc: >-
+            Two entities and a verb. The ordinary case, and the only one with no surprise
+            waiting at build time.
+        - label: Shape 02
+          title: Ternary
+          desc: >-
+            Three entities in a single relationship. Course, Room and Day become one table
+            with a composite primary key.
+        - label: Shape 03
+          title: Double
+          desc: >-
+            The same pair joined twice. City and State, by «is capital of» and by «belongs
+            to». It looks symmetric and it is not.
+        - label: Shape 04
+          title: Recursive
+          desc: >-
+            An entity with itself. Employee reports to Employee, and the root of the tree
+            is left with no boss.
+
+  - code:
+      eyebrow: Block 02 · Recursive
+      title: A recursive relationship is a foreign key to itself
+      filename: empleado.sql
+      lang: sql
+      source: |
+        CREATE TABLE empleado (
+          empleado_id INT PRIMARY KEY,
+          nombre VARCHAR(60) NOT NULL,
+          jefe_id INT NULL,
+          FOREIGN KEY (jefe_id) REFERENCES empleado(empleado_id)
+        );
+      annotations:
+        - label: jefe_id
+          text: >-
+            It points at its own table. You do not need a second entity, you need a second
+            column.
+        - label: 'NULL'
+          text: >-
+            The root of the tree has no boss. That NULL is the diagram's 0 connector, made
+            into a column.
+        - label: Optional participation
+          text: >-
+            The rule holds for any foreign key. NULL is optional participation and NOT
+            NULL is the mandatory kind.
+        - label: Risk
+          text: >-
+            Without the nullable column there is nowhere to start the tree, and the first
+            INSERT fails on the foreign key.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured
+      title: Who shows up as the Director's boss?
+      filename: empleado.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.nombre AS empleado, j.nombre AS jefe
+        FROM empleado e
+        LEFT JOIN empleado j ON e.jefe_id = j.empleado_id;
+      output: |
+        empleado      jefe
+        Directora     NULL
+        Coordinador   Directora
+        Analista      Coordinador
+
+  - code_output:
+      eyebrow: Measured · SHOW CREATE TABLE horario
+      title: Only dia_id got its own index, because curso_id is already the left column
+      filename: horario.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SHOW CREATE TABLE horario;
+      output: |
+        PRIMARY KEY (curso_id, aula_id,
+                     dia_id, hora)
+
+  - compare:
+      eyebrow: Block 02 · Double
+      title: The symmetric pair cannot be created in one go
+      before:
+        label: What you draw
+        file: estado.sql
+        lang: sql
+        code: |
+          CREATE TABLE estado (
+            estado_id INT PRIMARY KEY,
+            nombre VARCHAR(60) NOT NULL,
+            capital_id INT NOT NULL,
+            FOREIGN KEY (capital_id)
+              REFERENCES ciudad(ciudad_id)
+          );
+      after:
+        label: What can be built
+        file: estado.sql
+        lang: sql
+        code: |
+          CREATE TABLE estado (
+            estado_id INT PRIMARY KEY,
+            nombre VARCHAR(60) NOT NULL,
+            capital_id INT NULL
+          );
+          ALTER TABLE estado ADD CONSTRAINT
+            fk_estado_capital FOREIGN KEY (capital_id)
+            REFERENCES ciudad(ciudad_id);
+      note: >-
+        The ciudad table is created first, with estado_id NOT NULL. The second foreign key
+        will not fit in the CREATE TABLE; it needs an ALTER, and one of the two columns
+        has to accept NULL to break the cycle. That is what turns a pretty drawing into a
+        script that fails at night.
+
+  - divider:
+      eyebrow: Block 03
+      title: The four cardinalities
+      lede: >-
+        There is not one mapping rule in the seventeen presentations nor in the sixteen
+        PDFs of the archive. Nobody ever says what a 1:N turns into. Here are the four of
+        them.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Mapping rules
+      title: What each line of the diagram turns into
+      headers: [Cardinality, Example from the domain, Physical form]
+      rows:
+        - ["0:1", "Alumno has Credencial", "Nullable FK plus UNIQUE"]
+        - ["1:1", "Profesor heads Departamento", "FK NOT NULL plus UNIQUE"]
+        - ["1:N", "Profesor teaches Materia", "FK on the many side"]
+        - ["N:M", "Alumno enrols in Materia", "Table keyed on the pair"]
+        - ["Ternary", "Curso, Aula and Dia", "Table with three FKs"]
+
+  - code_output:
+      eyebrow: Measured · body of SHOW CREATE TABLE
+      title: An N:M becomes a table, and the server finishes the design for you
+      filename: alumno_materia.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SHOW CREATE TABLE alumno_materia;
+      output: |
+        PRIMARY KEY (`alumno_id`,
+                     `materia_id`),
+        KEY `materia_id` (`materia_id`),
+        CONSTRAINT `alumno_materia_ibfk_1`
+          FOREIGN KEY (`alumno_id`)
+          REFERENCES `alumno` (`alumno_id`),
+        CONSTRAINT `alumno_materia_ibfk_2`
+          FOREIGN KEY (`materia_id`)
+          REFERENCES `materia`
+            (`materia_id`)
+
+  - code_output:
+      eyebrow: Measured
+      title: What happens when the same student enrols twice in the same course?
+      filename: alumno_materia.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO alumno_materia VALUES (1, 10);
+        INSERT INTO alumno_materia VALUES (1, 10);
+      output: |
+        ERROR 1062 (23000): Duplicate
+        entry '1-10' for key
+        'alumno_materia.PRIMARY'
+
+  - code_output:
+      eyebrow: Measured
+      title: Can MySQL require every course to have at least one student?
+      filename: cardinalidad.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT m.materia_id, m.nombre,
+               COUNT(i.inscripcion_id) AS inscritos
+        FROM materia m
+        LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
+        GROUP BY m.materia_id, m.nombre;
+      output: |
+        materia_id  nombre    inscritos
+        11          Calculo   0
+
+  - pitfalls:
+      eyebrow: Common mistakes
+      title: Four ways to lose the model before you write it
+      items:
+        - label: Mistake 01
+          title: Saying «tertiary relationship»
+          desc: >-
+            The word is ternary. Tertiary is a sector of the economy. Both versions of the
+            inherited deck carry the wrong term.
+        - label: Mistake 02
+          title: A diagram with no attributes
+          desc: >-
+            A drawing of nothing but boxes and lines cannot be turned into tables. That is
+            why week 6 had nothing to work from.
+        - label: Mistake 03
+          title: Believing the minimum is enforceable
+          desc: >-
+            «Every course must have at least one student» has no construct in MySQL. The
+            course with zero enrolments sits there forever.
+        - label: Mistake 04
+          title: Welding optionality onto the N
+          desc: >-
+            The connectors slide defines N as «not required to participate and may do so
+            many times». Two different things, and its own 1:N contradicts it.
+
+  - lab:
+      eyebrow: Lab
+      title: The records system, drawn with attributes on it
+      brief: >-
+        Draw the full diagram of the records system with the six entities from the table,
+        each one carrying its attributes and its identifier underlined. Mark the four
+        cardinalities of the domain and write beside every line what it turns into.
+      blocks:
+        - label: Deliverable
+          text: The diagram, and a list of the tables it would produce
+        - label: Constraint
+          text: >-
+            Every relationship gets named with a conjugated verb. If you cannot read it
+            aloud as a sentence, it is not named yet.
+        - label: The test
+          text: >-
+            Count the tables on your list. If you have an N:M and fewer than three tables,
+            the mapping is incomplete.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take with you
+      items:
+        - title: The diagram is step one
+          desc: >-
+            E-R is conceptual, the relational schema is logical and the DDL is physical.
+            Week 5 repairs the second one and week 6 writes the third
+        - title: Every line has one form
+          desc: >-
+            1:N is a foreign key on the many side, 1:1 is that same key with UNIQUE, and
+            N:M is a third table whose primary key is the pair
+        - title: The drawing promises more than the engine
+          desc: >-
+            Maximum cardinality is enforced with keys; the minimum is not. Saying so out
+            loud beats promising that the model holds itself together
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and marking criteria
+      brief: >-
+        Entity-relationship diagram of the records system, with attributes on every entity
+        and the four cardinalities marked. Under the drawing, the list of tables it
+        produces, with the primary key of each one.
+      meta:
+        - [Due, Before week 5]
+        - [Format, Blackboard · PDF of the diagram]
+        - [Weight, Part of the 20 % homework]
+      rubric:
+        - ["Entities", "25 %", "All six, with the identifier marked"]
+        - ["Attributes", "25 %", "Every entity carries its own on the drawing"]
+        - ["Cardinalities", "25 %", "The four of the domain, read correctly"]
+        - ["Mapping", "25 %", "The table list matches the drawing"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session we take this same diagram, flatten it into one wide table on purpose,
+        and measure what breaks. That is normalisation, and the server will let you break
+        every rule without saying a word.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

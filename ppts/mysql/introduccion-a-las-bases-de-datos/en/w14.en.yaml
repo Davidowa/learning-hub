@@ -1,0 +1,500 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 14
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 14 · Block D · Triggers and events
+      title: Introduction to Databases
+      subtitle: >-
+        Two ways for the database to act without you. One fires when a row changes, the
+        other when the clock says so, and both of them fail without telling you.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 14 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: OLD and NEW
+          desc: The six moments, the validation that handles NULL, and the CHECK that sometimes wins
+        - title: Auditing, and the hole
+          desc: The audit log that works and the three ways it ends up seeing nothing at all
+        - title: Events
+          desc: The switch, the timestamp that already passed, and the failure nobody reports
+        - title: Your turn
+          desc: A grade audit log that survives a cascading delete without losing a row
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a trigger and name it
+          sub: With the trg_table_timing_event_purpose convention, which reads on its own in a SHOW TRIGGERS
+        - head: Say what is in OLD and what is in NEW
+          sub: It depends on the timing and the event, and asking for the one that is missing is error 1363
+        - head: Validate without letting NULL through
+          sub: A comparison against NULL is not false, it is unknown, and the IF simply does not run
+        - head: Choose between the trigger and the CHECK
+          sub: 1644 with a message of your own against a declarative 3819, and neither one always wins
+        - head: Schedule an event and distrust it
+          sub: The scheduler is a switch, a past timestamp vanishes, and ENABLED does not mean healthy
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the server and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, grouping, JOIN and UNION
+          state: done
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: now
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: OLD, NEW and the six moments
+      lede: >-
+        A trigger is a block of code the server runs for every row that changes. The only
+        thing to memorise is which row it can see, and that comes down to two words.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · The one thing to memorise
+      title: What exists in OLD and what exists in NEW, moment by moment
+      headers: [Moment, OLD, NEW]
+      rows:
+        - ["BEFORE INSERT", "not there", "readable and writable"]
+        - ["AFTER INSERT", "not there", "readable"]
+        - ["BEFORE UPDATE", "readable", "readable and writable"]
+        - ["AFTER UPDATE", "readable", "readable"]
+        - ["BEFORE DELETE", "readable", "not there"]
+        - ["AFTER DELETE", "readable", "not there"]
+
+  - code:
+      eyebrow: Block 01 · The validation trigger
+      title: A grade outside the scale never reaches the table
+      filename: trg_calificacion.sql
+      lang: sql
+      source: |
+        DELIMITER $$
+        CREATE TRIGGER trg_inscripciones_before_insert_calificacion
+        BEFORE INSERT ON inscripciones
+        FOR EACH ROW
+        BEGIN
+          IF NEW.calificacion IS NOT NULL
+             AND (NEW.calificacion < 0 OR NEW.calificacion > 10) THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =
+              'La calificacion debe estar entre 0 y 10';
+          END IF;
+        END$$
+        DELIMITER ;
+      annotations:
+        - label: The name
+          text: >-
+            Table, timing, event and purpose. It is long on purpose, so a SHOW TRIGGERS
+            reads without opening the body.
+        - label: The error
+          text: >-
+            SIGNAL and MESSAGE_TEXT are last week's. They are not taught again here, they
+            only move house.
+        - label: The guard
+          text: >-
+            Without the IS NOT NULL, an empty grade leaves the comparison at unknown and
+            the row lands with the trigger saying nothing.
+        - label: Risk
+          text: >-
+            A trigger watches the statements somebody writes. Whatever disappears by
+            another route never comes past here, and block 02 shows which route.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · the trigger at work
+      title: What does the server answer when the grade reads 11?
+      filename: insert_calif.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo, calificacion)
+        VALUES (100002, 'PRG101', '2026-2', 11.0);
+      output: |
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+
+  - compare:
+      eyebrow: Block 01 · The same rule, twice
+      title: A validation that does not handle NULL is a validation that does not validate
+      before:
+        label: No guard
+        file: sin_guarda.sql
+        lang: sql
+        code: |
+          IF NEW.calificacion < 0
+             OR NEW.calificacion > 10 THEN
+            SIGNAL SQLSTATE '45000' SET
+              MESSAGE_TEXT = 'fuera de escala';
+          END IF;
+      after:
+        label: With the guard
+        file: con_guarda.sql
+        lang: sql
+        code: |
+          IF NEW.calificacion IS NOT NULL
+             AND (NEW.calificacion < 0
+               OR NEW.calificacion > 10) THEN
+            SIGNAL SQLSTATE '45000' SET
+              MESSAGE_TEXT = 'fuera de escala';
+          END IF;
+      note: >-
+        With the grade at NULL the comparison on the left does not answer false. It
+        answers unknown, and unknown is not true, so the IF never runs and the row goes
+        through. It is week 9's three-valued logic landing in the one place where it
+        switches off a rule somebody wrote on purpose.
+
+  - code_output:
+      eyebrow: Measured · when the trigger is too much
+      title: The same rule, without one line of procedural code
+      filename: chk_creditos.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        -- the other way of saying the same thing,
+        -- declarative and with no body to maintain
+        ALTER TABLE materias
+          ADD CONSTRAINT chk_creditos
+          CHECK (creditos BETWEEN 1 AND 12);
+
+        INSERT INTO materias
+        VALUES ('XX1', 'Fuera de rango', 30);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint 'chk_creditos' is
+        violated.
+
+        and the trigger's, side by side:
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+
+  - divider:
+      eyebrow: Block 02
+      title: Auditing, and the hole in the log
+      lede: >-
+        The log with OLD and NEW in the same row works and it is useful. The problem is
+        what never appears in it, which the registrar's office will read as never having
+        happened.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured · the timestamp moves with the environment
+      title: OLD and NEW written into the same row of the audit log
+      filename: bitacora.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        -- trg_inscripciones_after_update_bitacora
+        -- keeps the old value and the new one together
+
+        UPDATE inscripciones
+           SET calificacion = 6.0
+         WHERE inscripcion_id = 1;
+
+        SELECT * FROM inscripciones_audit;
+      output: |
+        calif_anterior  9.5
+        calif_nueva     6.0
+        accion          UPDATE
+        cambiado_en     2026-08-16 21:21:12
+
+  - code_output:
+      eyebrow: Measured · the hole
+      title: How many rows does the audit log write when the delete cascades?
+      filename: cascada.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        -- inscripciones has a BEFORE DELETE trigger
+        -- that writes the audit log, and a foreign key
+        -- declared with ON DELETE CASCADE
+
+        DELETE FROM alumnos WHERE alumno_id = 3;
+        SELECT COUNT(*) FROM inscripciones_audit;
+
+        TRUNCATE TABLE inscripciones;
+        SELECT COUNT(*) FROM inscripciones_audit;
+      output: |
+        the child enrolment is gone:
+        count 1 -> 0
+        the audit log:
+        0 rows
+
+        after the TRUNCATE:
+        0 audit rows
+
+  - code_output:
+      eyebrow: Measured · where the trigger stops
+      title: The trigger stopped the statement, did it undo the transaction too?
+      filename: tx_trigger.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        START TRANSACTION;
+          INSERT INTO inscripciones
+          VALUES (100002, 'MAT201', '2026-2', 8.0);
+          INSERT INTO inscripciones
+          VALUES (100002, 'PRG101', '2026-2', 11.0);
+        ROLLBACK;
+      output: |
+        count 6 -> 7
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+        the count is still 7
+
+        after the ROLLBACK:
+        the count goes back to 6
+
+  - code_output:
+      eyebrow: Measured · a correction to the source
+      title: How many triggers of the same timing does one table take on 9.7.2?
+      filename: dos_triggers.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        -- two BEFORE INSERT on the same table
+        SHOW TRIGGERS;
+
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo)
+        VALUES (100002, 'PRG101', '2026-13');
+      output: |
+        trg_insc_bi_valida
+        trg_insc_bi_periodo
+        both BEFORE INSERT on the same
+        table
+
+        the second one raised:
+        ERROR 1644 (45000): Periodo con
+        formato invalido
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to break a trigger
+      items:
+        - label: Error 01
+          title: Asking for OLD in an INSERT trigger
+          desc: >-
+            There is no previous row to read, and the trigger is not even created. ERROR
+            1363 (HY000). Always declare the event before writing the body.
+        - label: Error 02
+          title: Modifying the table it is defined on
+          desc: >-
+            The server cuts it off with ERROR 1442 (HY000). To change the incoming row you
+            assign NEW inside a BEFORE, you do not run an UPDATE.
+        - label: Error 03
+          title: DROP TRIGGER without IF EXISTS
+          desc: >-
+            ERROR 1360 (HY000), and the script stops being re-runnable, which is exactly
+            what a student needs while debugging.
+        - label: Error 04
+          title: Forgetting that sql_mode is frozen
+          desc: >-
+            SHOW TRIGGERS keeps the Definer and the sql_mode of each trigger. The one you
+            created today keeps today's, whatever the server changes to later.
+
+  - divider:
+      eyebrow: Block 03
+      title: Events, and what neither of the two can see
+      lede: >-
+        A trigger waits for somebody to write a statement. An event waits for nobody: it
+        waits for the clock. And when it breaks, the catalogue goes on reporting that it
+        is perfectly fine.
+      block: 3
+
+  - compare:
+      eyebrow: Block 03 · The two templates
+      title: A row fires it, or the clock fires it
+      before:
+        label: Trigger · a row fires it
+        file: trigger.sql
+        lang: sql
+        code: |
+          CREATE TRIGGER trg_tabla_bi_regla
+          BEFORE INSERT ON tabla
+          FOR EACH ROW
+          BEGIN
+            -- NEW already exists, OLD does not
+          END
+      after:
+        label: Event · the clock fires it
+        file: evento.sql
+        lang: sql
+        code: |
+          CREATE EVENT ev_resumen_diario
+          ON SCHEDULE EVERY 1 DAY
+            STARTS NOW() + INTERVAL 1 MINUTE
+          DO
+            INSERT INTO resumen (dia, total)
+            VALUES (CURDATE(), 1)
+            ON DUPLICATE KEY UPDATE total = 1;
+      note: >-
+        The event closes with ON DUPLICATE KEY UPDATE and not with REPLACE INTO. REPLACE
+        deletes and inserts again, so it fires the DELETE triggers on the summary table,
+        and if that table is audited too the log fills up with deletions nobody performed.
+
+  - code_output:
+      eyebrow: Measured · the switch
+      title: Events really do run, if somebody turned the scheduler on
+      filename: ev_latido.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        SHOW VARIABLES LIKE 'event_scheduler';
+
+        CREATE EVENT ev_latido
+        ON SCHEDULE EVERY 1 SECOND
+        DO INSERT INTO latidos (cuando) VALUES (NOW());
+
+        -- three seconds later
+        SELECT COUNT(*) FROM latidos;
+      output: |
+        event_scheduler  ON
+
+        3 rows during a wait
+        of 3 seconds
+
+  - code_output:
+      eyebrow: Measured · the source's own example
+      title: The event was created with no error, so where did it go?
+      filename: ev_una_vez.sql
+      lang: sql
+      output_label: On execution
+      source: |
+        -- the source's example, with the timestamp
+        -- that has already passed
+        CREATE EVENT ev_una_vez
+        ON SCHEDULE AT '2026-03-20 08:00:00'
+        DO UPDATE periodos SET cerrado = 1;
+
+        SHOW WARNINGS;
+        SELECT * FROM information_schema.EVENTS;
+      output: |
+        the CREATE succeeds, no error
+
+        Note 1588: Event execution time
+        is in the past and ON COMPLETION
+        NOT PRESERVE is set. The event
+        was dropped immediately after
+        creation.
+
+        information_schema.EVENTS empty
+
+  - method:
+      eyebrow: Block 03 · The operational point of the week
+      title: A broken event goes on reporting that it is healthy
+      statement: >-
+        An event whose body violates a foreign key still says ENABLED, with LAST_EXECUTED
+        set to the exact moment it failed.
+      points:
+        - label: What you see
+          text: >-
+            SHOW EVENTS and information_schema.EVENTS answer the same thing for a healthy
+            event and for a dead one.
+        - label: Where the error went
+          text: >-
+            Into the server's error log, which nobody in the room has open and which
+            almost nobody reads in production.
+        - label: What to do
+          text: >-
+            The body of the event carries its own DECLARE HANDLER, last week's, and writes
+            the failure into a table of yours.
+
+  - lab:
+      eyebrow: Lab
+      title: A grade audit log that survives a cascading delete
+      brief: >-
+        Install the audit trigger on inscripciones, check that it records a normal UPDATE,
+        and then delete the parent student. Count the rows in the log before and after,
+        and explain in two lines why the number did not move.
+      blocks:
+        - label: Submission
+          text: The script and both counts, the one before and the one after the DELETE
+        - label: Constraint
+          text: >-
+            The log has to come out complete. Pick the mechanism that does see the child
+            row disappear.
+        - label: The test
+          text: >-
+            Repeat the exercise with TRUNCATE. If your solution survives both, it was the
+            right choice.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A trigger sees statements
+          desc: >-
+            It does not see every disappearance. A cascading delete and a TRUNCATE skip it
+            entirely, so an audit trail built only out of triggers has holes that nobody
+            reports
+        - title: You already know how to raise the error
+          desc: >-
+            SIGNAL, MESSAGE_TEXT and the handlers are week 13's and here they only move
+            house. A trigger can even call the procedure you wrote back then, and that is
+            verified
+        - title: ENABLED does not mean healthy
+          desc: >-
+            An event that breaks every night keeps its status and its LAST_EXECUTED, the
+            catalogue cannot tell a live one from a dead one, and the error goes to a file
+            nobody opens
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Write the validation trigger and the audit trigger on inscripciones, plus an event
+        that closes the enrolment period. Hand in the run where the bad INSERT is refused,
+        the good UPDATE leaves its row in the log, and the event shows up in the catalogue.
+      meta:
+        - [Due, Before week 15]
+        - [Format, Blackboard · .sql script and pasted output]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Validation", "40 %", "The trigger refuses and handles the NULL case"]
+        - ["Auditing", "40 %", "OLD and NEW end up in the same row"]
+        - ["The event", "20 %", "Created with a future timestamp and still in the catalogue"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session opens the last block with the question the class has been asking
+        under its breath for five weeks: why does this query take so long, and what
+        exactly changes when you put an index on it.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

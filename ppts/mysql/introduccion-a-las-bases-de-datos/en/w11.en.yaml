@@ -1,0 +1,479 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 11
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 11 · Block C · JOIN, UNION and UNION ALL
+      title: Introduction to Databases
+      subtitle: >-
+        A JOIN answers «and the ones with none?». A UNION answers «and the ones on the
+        other list?». Between UNION and UNION ALL there are three letters and, on the
+        payments table, 3,900 pesos.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 11 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Left and right
+          desc: Where each table sits, and the ON read out loud
+        - title: UNION and UNION ALL
+          desc: Twenty rows against seventeen, and the three that leave without a word
+        - title: The one that is missing
+          desc: FULL OUTER JOIN, error 1064, and the recipe that does work
+        - title: Your turn
+          desc: Ten enrolled against ten accounts, and nobody knows if they are the same ten
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Read an ON out loud
+          sub: And tell which table is the left one and which the right by looking at the FROM
+        - head: Choose between COUNT(*) and COUNT(column)
+          sub: The student with no enrolments returns 1 and 0 on the same row of the result
+        - head: Put the filter in the ON or the WHERE on purpose
+          sub: The same predicate gives 3 rows in one clause and 6 rows in the other
+        - head: Decide between UNION and UNION ALL with a rule
+          sub: On the payments table those three letters are worth 3,900 pesos and no warning
+        - head: Simulate the FULL OUTER JOIN that MySQL does not have
+          sub: Projecting the keys, so the recipe never merges two different people into one
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the engine and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: now
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, stored procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Left, right and the ON
+      lede: >-
+        Week 5 split one table into three so that no fact would live twice. Today it is
+        read whole again, and the price of having split it gets paid in one clause.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The left table is the FROM one and the right table is the JOIN one
+      lead: >-
+        Before the meaning lands there is exactly one thing worth memorising: the left
+        table is the one you wrote after FROM and the right table is the one you wrote
+        after JOIN. Every rule in this session is stated in those terms, including the one
+        everybody gets wrong.
+      panel:
+        label: The ON out loud
+        title: It reads as a sentence, not as a formula
+        note: >-
+          «The enrolment whose alumno_id is this student's.» If you cannot say the
+          sentence, the ON is written wrong. And it compares keys rather than names,
+          because week 6 already measured that ALUMNO.NOMBRE and MATERIA.NOMBRE are not
+          the same domain even though both hold text.
+      steps:
+        - text: INNER JOIN returns only the rows that match on both sides
+        - text: LEFT JOIN also returns the left-hand rows that matched nothing
+        - text: For those rows the right-hand columns arrive as NULL
+          loop: ↺ and that is where the rest of the session starts
+
+  - table:
+      eyebrow: Block 01 · Taxonomy
+      title: The six spellings, with what the server answered
+      headers: [Spelling, Which rows it returns, What was measured]
+      rows:
+        - ["INNER JOIN … ON", "the ones matching on both sides", "synonym of JOIN"]
+        - ["LEFT JOIN … ON", "every FROM row, match or not", "the student with none shows up"]
+        - ["CROSS JOIN … ON", "the same ones as INNER JOIN", "compiles and returns them"]
+        - ["INNER JOIN with no ON", "the cartesian product", "20 rows, from 5 x 4"]
+        - ["JOIN … USING (col)", "the INNER JOIN, in short", "when the column has one name"]
+        - ["FULL OUTER JOIN", "nothing, MySQL has no such thing", "ERROR 1064 (42000)"]
+
+  - code:
+      eyebrow: Block 01 · The model, reassembled
+      title: The table second normal form split apart, read whole again
+      filename: join.sql
+      lang: sql
+      source: |
+        SELECT a.nombre, m.nombre AS materia, i.periodo
+        FROM alumnos a
+        INNER JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        INNER JOIN materias m ON m.materia_id = i.materia_id
+        ORDER BY a.nombre;
+      annotations:
+        - label: Week 5, cashed in
+          text: >-
+            Here is the half that was missing. Normalising split one table into three and
+            this query puts it back together without storing anything twice.
+        - label: Two ONs, two sentences
+          text: >-
+            The enrolment whose student is this one, and the subject whose identifier that
+            enrolment carries. Every foreign key of week 6 is an ON today.
+        - label: A short alias
+          text: >-
+            With three tables the aliases stop being style. Without them the query cannot
+            be read and the ON stops sounding like a sentence.
+        - label: Risk
+          text: >-
+            With no ON the query is still legal. MySQL returns the cartesian product and
+            nobody raises a hand.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · the LEFT JOIN
+      title: How many enrolments does the student with none have?
+      filename: left.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.alumno_id, a.nombre
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        WHERE i.inscripcion_id IS NULL;
+
+        SELECT a.alumno_id,
+               COUNT(*) AS con_asterisco,
+               COUNT(i.inscripcion_id) AS con_columna
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        GROUP BY a.alumno_id;
+      output: |
+        the anti-join returns exactly
+        the student with no
+        enrolments
+
+        for that same student:
+        con_asterisco = 1
+        con_columna   = 0
+
+  - code_output:
+      eyebrow: Measured · the most common bug there is
+      title: The same predicate, in the WHERE and in the ON
+      filename: filtro.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.nombre, i.periodo
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        WHERE i.periodo = '2026-1';
+
+        SELECT a.nombre, i.periodo
+        FROM alumnos a
+        LEFT JOIN inscripciones i
+               ON a.alumno_id = i.alumno_id AND i.periodo = '2026-1';
+      output: |
+        the predicate in WHERE
+        -> 3 rows
+
+        the same predicate in ON
+        -> 6 rows, with the NULLs
+           preserved
+
+  - divider:
+      eyebrow: Block 02
+      title: UNION and the three rows that vanish
+      lede: >-
+        A JOIN glues tables side by side. A UNION stacks them. And stacking carries one
+        rule no document in this course teaches, because it does not show up in the
+        syntax: by default it drops duplicates.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured · twelve plus eight
+      title: How many addresses does each operator return over 12 and 8 rows?
+      filename: correos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS con_union_all FROM (
+          SELECT correo FROM alumnos
+          UNION ALL
+          SELECT correo FROM profesores) t;
+
+        SELECT COUNT(*) AS con_union FROM (
+          SELECT correo FROM alumnos
+          UNION
+          SELECT correo FROM profesores) t;
+      output: |
+        12 students and 8 lecturers
+
+        con_union_all = 20
+        con_union     = 17
+
+        the 3 that are gone are the
+        postgraduates who also teach
+        a course
+
+  - code_output:
+      eyebrow: Measured · the same query with money in it
+      title: On the two payment files, three letters cost 3,900 pesos
+      filename: pagos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS pagos_reales,
+               SUM(monto) AS total_correcto
+        FROM ( SELECT monto FROM pagos_norte
+               UNION ALL
+               SELECT monto FROM pagos_sur ) t;
+
+        SELECT COUNT(*) AS pagos_con_union,
+               SUM(monto) AS total_con_union
+        FROM ( SELECT monto FROM pagos_norte
+               UNION
+               SELECT monto FROM pagos_sur ) t;
+      output: |
+        pagos_reales    = 7
+        total_correcto  = 12700.00
+
+        pagos_con_union = 4
+        total_con_union = 8800.00
+
+        no error and no warning
+
+  - code_output:
+      eyebrow: Measured · the name of the column
+      title: The second branch's alias is discarded in silence
+      filename: orden.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT correo FROM alumnos
+        UNION
+        SELECT correo AS contacto FROM profesores
+        ORDER BY contacto;
+      output: |
+        the result column is called
+        correo, not contacto
+
+        ERROR 1054 (42S22): Unknown
+        column 'contacto' in 'order
+        clause'
+
+  - code_output:
+      eyebrow: Measured · the price of the word ALL
+      title: What the server does extra once you take ALL away
+      filename: costo.sql
+      lang: sql
+      output_label: EXPLAIN FORMAT=TREE
+      source: |
+        EXPLAIN FORMAT=TREE
+        SELECT correo FROM alumnos
+        UNION
+        SELECT correo FROM profesores;
+
+        EXPLAIN FORMAT=TREE
+        SELECT correo FROM alumnos
+        UNION ALL
+        SELECT correo FROM profesores;
+      output: |
+        UNION
+        -> Table scan on <union temporary>
+           -> Union materialize with
+              deduplication
+
+        UNION ALL
+        -> Append
+           -> Stream results
+           -> Stream results
+
+  - divider:
+      eyebrow: Block 03
+      title: The FULL OUTER JOIN MySQL does not have
+      lede: >-
+        Records says there are ten students enrolled. The platform says there are ten
+        accounts. Nobody in the meeting knows whether they are the same ten, and the query
+        that answers it in one go does not exist on this server.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · both spellings
+      title: Both ways of asking for it die in the parser
+      filename: full.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.matricula, l.usuario
+        FROM esc_inscritos e
+        FULL OUTER JOIN lms_cuentas l ON e.matricula = l.matricula;
+
+        SELECT e.matricula, l.usuario
+        FROM esc_inscritos e
+        FULL JOIN lms_cuentas l ON e.matricula = l.matricula;
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL syntax;
+        check the manual that
+        corresponds to your MySQL
+        server version for the right
+        syntax to use near 'FULL
+        OUTER JOIN lms_cuentas l ON
+        e.matricula = l.matricula'
+        at line 1
+
+  - code_output:
+      eyebrow: Measured · the recipe
+      title: LEFT unioned with RIGHT, and thirteen rows that read in three blocks
+      filename: receta.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.matricula AS esc, e.nombre, l.matricula AS lms
+        FROM esc_inscritos e
+        LEFT JOIN lms_cuentas l ON e.matricula = l.matricula
+        UNION
+        SELECT e.matricula, e.nombre, l.matricula
+        FROM esc_inscritos e
+        RIGHT JOIN lms_cuentas l ON e.matricula = l.matricula;
+      output: |
+        rows from the LEFT JOIN  = 10
+        rows from the RIGHT JOIN = 10
+        matched                  = 7
+        the union                = 13
+        with UNION ALL           = 20
+
+        13 = 7 matched
+           + 3 with no account
+           + 3 with no student
+
+  - code_output:
+      eyebrow: Measured · and the same recipe, badly projected
+      title: Five rows where the truth is six, and the server says nothing
+      filename: trampa.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.nombre, i.materia_id
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        UNION
+        SELECT a.nombre, i.materia_id
+        FROM alumnos a
+        RIGHT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
+      output: |
+        it returned 5 rows where the
+        true full outer has 6
+
+        two different students both
+        called 'Ana Rivera' collapsed
+        into a single row, because
+        UNION deduplicates the whole
+        row
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four laws of UNION no source writes down
+      items:
+        - label: Error 01
+          title: Branches with a different column count
+          desc: >-
+            ERROR 1222 (21000) The used SELECT statements have a different number of
+            columns. Rejected before a single row is read, and it is a cardinality error,
+            not a syntax one.
+        - label: Error 02
+          title: ORDER BY inside the first branch
+          desc: >-
+            With no parentheses it is ERROR 1064 (42000) … near 'UNION SELECT correo FROM
+            profesores' at line 1. The parser had already closed a complete SELECT.
+        - label: Error 03
+          title: Believing the parentheses order the branch
+          desc: >-
+            In parentheses ORDER BY correo DESC is legal, came back ascending and with
+            warnings = 0. It only rules when a LIMIT follows, because then it decides which
+            rows survive.
+        - label: Error 04
+          title: Assuming the type of the result column
+          desc: >-
+            An INT unioned with a VARCHAR(80) comes back varchar(80). The numeric column
+            turned into text and from that moment it sorts as text.
+
+  - lab:
+      eyebrow: Lab
+      title: Ten enrolled, ten accounts, and the question in the meeting
+      brief: >-
+        With both lists in hand, write the three queries that answer the whole question:
+        who is on both, who is only in the records office and who is only on the platform.
+        Then put them together into one.
+      blocks:
+        - label: Deliverable
+          text: The script with the three queries and the count each one returned
+        - label: Constraint
+          text: >-
+            The projection has to carry the student number. Come out with the name alone
+            and two different people will melt into one.
+        - label: The test
+          text: >-
+            Run the union with UNION and with UNION ALL. If both counts agree, your data
+            does not have the interesting case yet.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A LEFT JOIN fabricates rows of nulls
+          desc: >-
+            That is why COUNT(*) returns 1 and COUNT(column) returns 0 for the same
+            student. One counts rows and the other ignores NULLs
+        - title: The clause changes what the filter means
+          desc: >-
+            In the WHERE the predicate throws the fabricated rows away and the LEFT is an
+            INNER again: 3 rows against 6. In the ON it applies earlier and the NULLs stay
+        - title: UNION ALL stacks, UNION catalogues
+          desc: >-
+            If the rows stand for things that happened, stack them with UNION ALL. UNION is
+            for asking which distinct values exist, and it charges a temporary table for it
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Rewrite three of week 10's grouped queries with a JOIN and say which of the three
+        came out worse, and why. Add a UNION and UNION ALL pair over your own tables, with
+        both counts pasted in and the difference explained.
+      meta:
+        - [Due, Before week 12]
+        - [Format, Blackboard · one .sql file with the output pasted in]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The three queries", "40 %", "They run, and the ON joins on keys and not on names"]
+        - ["The judgement", "30 %", "It names the worst one with an argument, not a preference"]
+        - ["UNION", "30 %", "Both counts differ and the difference is explained"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, this same query stored under a name, the updatability list the source
+        has back to front, and the first prediction you can already make unaided: a view
+        with a UNION in it is not updatable.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

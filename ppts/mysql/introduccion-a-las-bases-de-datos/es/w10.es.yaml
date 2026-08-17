@@ -1,0 +1,486 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 10
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 10 · Bloque C · Agrupación y agregados
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Agrupar es donde SQL deja de ser un archivero y empieza a contestar preguntas cuya
+        respuesta nadie guardó. También es donde un solo NULL cambia la cifra del reporte.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 10 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Los cinco agregados
+          desc: COUNT, SUM, AVG, MIN y MAX, y qué hace cada uno con el dato que falta
+        - title: Agrupar
+          desc: GROUP BY, HAVING y el modo ONLY_FULL_GROUP_BY que ya viene encendido
+        - title: Expresiones
+          desc: CASE, el pivote con agregado condicional, subconsultas y la cláusula WITH
+        - title: Tu turno
+          desc: Los números de fin de semestre que la coordinación pide todos los años
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir entre COUNT de asterisco y COUNT de columna
+          sub: Y decir cuántas filas se saltó el promedio sin que nadie lo mencionara
+        - head: Escribir un GROUP BY que el servidor acepte
+          sub: Sin rellenarlo con todas las columnas, porque agrupar por la llave ya basta
+        - head: Distinguir WHERE de HAVING
+          sub: Uno filtra filas antes de agrupar y el otro filtra grupos ya formados
+        - head: Clasificar filas con CASE
+          sub: Y ver por qué la misma fila cae en otra categoría cuando se escribe con IF
+        - head: Usar NOT EXISTS donde NOT IN se rompe
+          sub: Un solo NULL adentro de la subconsulta devuelve el conjunto vacío sin avisar
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, elementos y el manejador
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agrupación y JOIN
+          state: now
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los cinco agregados
+      lede: >-
+        Cinco funciones convierten muchas filas en un renglón. Cuatro de ellas se saltan
+        los NULL en silencio y la quinta los cuenta todos.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Referencia
+      title: Qué contesta cada agregado y qué hace con el dato que falta
+      headers: [Agregado, Qué contesta, Qué hace con el NULL]
+      rows:
+        - ["COUNT(*)", "Cuántas filas hay", "Las cuenta todas"]
+        - ["COUNT(col)", "Cuántas traen dato", "Se salta los NULL"]
+        - ["SUM(col)", "La suma de la columna", "Los ignora al sumar"]
+        - ["AVG(col)", "El promedio", "Divide entre las que sí traen"]
+        - ["MIN / MAX", "El extremo de la columna", "Los ignora al comparar"]
+
+  - code_output:
+      eyebrow: Medido · los cinco en una sentencia
+      title: El promedio de las veinte inscripciones se sacó con catorce
+      filename: agregados.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*)            AS n,
+               COUNT(calificacion) AS c,
+               AVG(calificacion)   AS prom,
+               MIN(calificacion)   AS mn,
+               MAX(calificacion)   AS mx
+        FROM inscripcion;
+
+        SELECT SUM(calificacion) AS suma,
+               SUM(calificacion)/COUNT(*) AS entre20,
+               SUM(calificacion)/COUNT(calificacion) AS entre14
+        FROM inscripcion;
+      output: |
+        n   c    prom     mn   mx
+        20  14   8.25000  5.0  10.0
+        suma   entre20  entre14
+        115.5  5.77500  8.25000
+
+  - code_output:
+      eyebrow: Medido · el hueco antes de agruparlo
+      title: Un NULL adentro anula el CONCAT completo
+      filename: nulos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT IFNULL(estado,'Sin dato') AS a,
+               COALESCE(estado, ciudad, 'Sin dato') AS b
+        FROM alumno WHERE alumno_id IN (3,6,11);
+
+        SELECT CONCAT(ciudad, ', ', estado) AS c1
+        FROM alumno WHERE alumno_id = 3;
+        SELECT CONCAT_WS(', ', ciudad, estado) AS c2
+        FROM alumno WHERE alumno_id = 3;
+      output: |
+        a         b
+        Sin dato  Ciudad de Mexico
+        Sin dato  Sin dato
+        Queretaro Queretaro
+        c1
+        NULL
+        c2
+        Ciudad de Mexico
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Agrupar, y filtrar grupos
+      lede: >-
+        El mismo diagrama de la semana pasada, ahora con GROUP BY y HAVING encendidos. De
+        ahí sale el error que todo el salón va a ver hoy.
+      block: 2
+
+  - diagram:
+      eyebrow: Bloque 02 · El diagrama de la semana 9, redibujado
+      title: Dos filtros, y entre ellos el que arma los grupos
+      blocks:
+        - label: WHERE
+          title: Antes de agrupar
+          desc: Filtra fila por fila. Todavía no existen grupos ni agregados que consultar.
+        - label: GROUP BY
+          title: Arma los grupos
+          desc: Junta las filas que comparten valor. Desde aquí cada renglón resume varias.
+          dark: true
+        - label: HAVING
+          title: Después de agrupar
+          desc: Filtra grupos ya formados, y sí acepta el alias que nació en el SELECT.
+      note: >-
+        Si un renglón del resultado resume varias filas de la tabla, cada columna que usted
+        nombre tiene que valer lo mismo para todo el grupo. Esa frase es el error 1055.
+
+  - code_output:
+      eyebrow: Medido · el error de la semana
+      title: Una columna suelta al lado de un agregado
+      filename: error1055.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT carrera, nombre, COUNT(*)
+        FROM alumno
+        GROUP BY carrera;
+      output: |
+        ERROR 1055 (42000): Expression
+        #2 of SELECT list is not in
+        GROUP BY clause and contains
+        nonaggregated column
+        'escolares.alumno.nombre' which
+        is not functionally dependent
+        on columns in GROUP BY clause;
+        this is incompatible with
+        sql_mode=only_full_group_by
+
+  - code_output:
+      eyebrow: Medido · las dos maneras de arreglarlo
+      title: Agrupar por la llave primaria ya basta
+      filename: agrupar.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT carrera, COUNT(*) AS alumnos
+        FROM alumno
+        GROUP BY carrera;
+
+        SELECT alumno_id, nombre, COUNT(*) AS n
+        FROM alumno
+        GROUP BY alumno_id LIMIT 2;
+      output: |
+        carrera           alumnos
+        Ing. Industrial   4
+        Ing. Mecatronica  3
+        Ing. de Datos     4
+        NULL              1
+        alumno_id nombre             n
+        1         Ana Lopez Rivas    1
+        2         Bruno Ramírez Sosa 1
+
+  - code_output:
+      eyebrow: Medido · la regla del alias, completa
+      title: HAVING sí acepta el alias del SELECT y WHERE sigue sin aceptarlo
+      filename: having.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave, COUNT(*) AS inscritos
+        FROM inscripcion
+        WHERE inscritos > 4
+        GROUP BY clave;
+
+        SELECT clave, COUNT(*) AS inscritos
+        FROM inscripcion
+        GROUP BY clave
+        HAVING inscritos > 4;
+      output: |
+        ERROR 1054 (42S22): Unknown
+        column 'inscritos' in 'where
+        clause'
+
+        clave   inscritos
+        COM112  7
+        MAT101  6
+
+  - code_output:
+      eyebrow: Medido · el número que pide la coordinación
+      title: Seis inscripciones en Cálculo y un promedio sacado con cuatro
+      filename: por_materia.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave,
+               COUNT(*)            AS ins,
+               COUNT(calificacion) AS calif,
+               AVG(calificacion)   AS prom
+        FROM inscripcion
+        GROUP BY clave;
+      output: |
+        clave   ins  calif  prom
+        COM112  7    6      8.91667
+        MAT101  6    4      6.87500
+        FIS201  3    2      8.50000
+        COM103  4    2      8.75000
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Expresiones y subconsultas
+      lede: >-
+        Clasificar sin tabla de catálogo, contar por categoría en un solo renglón, y
+        preguntarle a la base algo que depende de otra pregunta.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · la misma fila, dos clasificaciones
+      title: CASE la manda a Sin limite e IF la manda a Sin linea
+      filename: caseif.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT credito_maximo,
+          CASE
+            WHEN credito_maximo >= 100000 THEN 'Alto'
+            WHEN credito_maximo >=  50000 THEN 'Medio'
+            WHEN credito_maximo IS NULL   THEN 'Sin limite'
+            ELSE 'Bajo'
+          END AS tramo
+        FROM alumno WHERE alumno_id IN (1,3,4);
+
+        SELECT credito_maximo,
+          IF(credito_maximo >= 100000,
+             'Con linea','Sin linea') AS tramo
+        FROM alumno WHERE alumno_id IN (1,3,4);
+      output: |
+        credito_maximo  tramo
+        120000.00       Alto
+        NULL            Sin limite
+        0.00            Bajo
+        credito_maximo  tramo
+        120000.00       Con linea
+        NULL            Sin linea
+        0.00            Sin linea
+
+  - code_output:
+      eyebrow: Medido · el pivote
+      title: Un agregado condicional convierte una columna en una matriz
+      filename: pivote.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave,
+          SUM(CASE WHEN estatus='Inscrito'  THEN 1 ELSE 0 END) AS ins,
+          SUM(CASE WHEN estatus='Aprobado'  THEN 1 ELSE 0 END) AS apr,
+          SUM(CASE WHEN estatus='Reprobado' THEN 1 ELSE 0 END) AS rep,
+          SUM(CASE WHEN estatus='Baja'      THEN 1 ELSE 0 END) AS baj
+        FROM inscripcion GROUP BY clave;
+
+        SELECT estatus, COUNT(*) AS n
+        FROM inscripcion GROUP BY estatus;
+      output: |
+        clave   ins  apr  rep  baj
+        COM112  1    6    0    0
+        MAT101  2    3    1    0
+        FIS201  1    2    0    0
+        COM103  2    2    0    0
+        estatus    n
+        Aprobado   13
+        Inscrito   6
+        Reprobado  1
+
+  - code_output:
+      eyebrow: Medido · la trampa más cara de SQL
+      title: La misma pregunta escrita dos veces contesta 0 y contesta 10
+      filename: notin.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS con_not_in FROM alumno a
+        WHERE a.alumno_id NOT IN (SELECT tutor_id FROM alumno);
+
+        SELECT COUNT(*) AS con_not_exists FROM alumno a
+        WHERE NOT EXISTS (SELECT 1 FROM alumno t
+                          WHERE t.tutor_id = a.alumno_id);
+
+        SELECT COUNT(*) AS tutores_nulos FROM alumno
+        WHERE tutor_id IS NULL;
+      output: |
+        con_not_in        0
+        con_not_exists   10
+        tutores_nulos     6
+
+  - code_output:
+      eyebrow: Medido · por qué el PDF escribe un t después del paréntesis
+      title: Toda tabla derivada necesita su alias, y la CTE ahorra la mitad del texto
+      filename: cte.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT * FROM (SELECT clave FROM inscripcion);
+
+        WITH carga AS (
+          SELECT clave, COUNT(*) AS ins
+          FROM inscripcion GROUP BY clave
+        )
+        SELECT clave, ins FROM carga
+        WHERE ins > (SELECT AVG(ins) FROM carga)
+        ORDER BY ins DESC;
+      output: |
+        ERROR 1248 (42000): Every derived
+        table must have its own alias
+
+        clave   ins
+        COM112  7
+        MAT101  6
+
+  - code_output:
+      eyebrow: Medido · un curso en español que imprime August
+      title: Agrupar por una expresión y ordenar por el alias del SELECT
+      filename: meses.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@lc_time_names AS idioma;
+
+        SELECT YEAR(fecha_pago) AS anio,
+               MONTHNAME(fecha_pago) AS mes,
+               COUNT(*) AS pagos, SUM(monto) AS total
+        FROM pago
+        GROUP BY YEAR(fecha_pago), MONTH(fecha_pago),
+                 MONTHNAME(fecha_pago)
+        ORDER BY anio, mes;
+
+        SET lc_time_names = 'es_MX';
+        SELECT MONTHNAME('2025-08-10') AS mes;
+      output: |
+        idioma
+        en_US
+        anio  mes        pagos  total
+        2025  August     4      74000.00
+        2025  September  3      57600.00
+        2026  January    5      100500.00
+        mes
+        agosto
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de agrupar mal
+      items:
+        - label: Error 01
+          title: Rellenar el GROUP BY con todo
+          desc: >-
+            Cuando se agrupa por la llave primaria, MySQL ya conoce la dependencia
+            funcional y no pide las demás columnas. La lista larga se aprende y no se olvida.
+        - label: Error 02
+          title: Tratar el cero como si fuera desconocido
+          desc: >-
+            Un crédito de 0.00 cae en Bajo y uno nulo cae en Sin limite. Son dos cosas
+            distintas, y la rama que las junta clasifica mal a un alumno de cada tres.
+        - label: Error 03
+          title: NOT IN sobre una subconsulta nula
+          desc: >-
+            Devuelve el conjunto vacío sin error y sin advertencia. La misma pregunta con
+            NOT EXISTS contesta diez. Cuando la lista pueda traer NULL, use NOT EXISTS.
+        - label: Error 04
+          title: Concatenar columnas que aceptan NULL
+          desc: >-
+            CONCAT devuelve NULL si uno solo de sus argumentos lo es, y el renglón del
+            reporte sale vacío. CONCAT_WS se salta el que falta y arma el texto igual.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Los números de fin de semestre, en una sola sesión
+      brief: >-
+        La coordinación pide cinco cifras. Cuántos alumnos hay por carrera, cuántas
+        inscripciones por materia, cuáles materias pasaron de su cupo, el promedio por
+        materia, y la matriz de estatus. Las cinco salen de dos tablas y ninguna necesita
+        JOIN todavía.
+      blocks:
+        - label: Entrega
+          text: Un archivo .sql con las cinco consultas y la salida que devolvió el servidor
+        - label: Restricción
+          text: >-
+            Ningún GROUP BY puede traer columnas que no hagan falta. Si la agrupación es
+            por la llave, la lista se queda en una sola columna.
+        - label: La prueba
+          text: >-
+            En la del promedio, escriba al lado cuántas filas se saltó el AVG. Si no lo
+            sabe, la cifra que va a mandar el reporte tampoco lo sabe.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Cuatro de cinco agregados ignoran el NULL
+          desc: >-
+            Solo COUNT de asterisco cuenta todo. El promedio de las veinte inscripciones
+            se calculó con catorce, y el reporte no trae ninguna nota que lo diga
+        - title: El diagrama de la semana 9 explica el 1055
+          desc: >-
+            Si un renglón resume varias filas, cada columna nombrada tiene que valer lo
+            mismo para todo el grupo. Agrupar por la llave primaria ya cumple esa condición
+        - title: NOT IN y NOT EXISTS no preguntan lo mismo
+          desc: >-
+            En cuanto la subconsulta puede devolver un NULL, NOT IN entrega el conjunto
+            vacío. Aquí son cero filas contra diez, sin error y sin advertencia
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Cinco consultas con agrupación sobre su propia base, todas con su salida pegada.
+        Una de ellas tiene que provocar el error 1055 a propósito y traer al lado la
+        versión corregida, con un renglón que explique por qué la corrección funciona.
+      meta:
+        - [Entrega, Antes de la semana 11]
+        - [Formato, Blackboard · un archivo .sql y su salida]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Consultas", "40 %", "Las cinco agrupan y ninguna rellena el GROUP BY"]
+        - ["El 1055", "25 %", "Provocado, corregido y explicado en un renglón"]
+        - ["Agregados", "20 %", "Aparecen los cinco al menos una vez"]
+        - ["El NULL", "15 %", "Se dice cuántas filas se saltó cada agregado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión ponemos JOIN debajo de todo esto, y dos cosas de hoy se rompen
+        de inmediato: el COUNT que devuelve uno y la agrupación que fusiona a dos personas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Chat, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -1,0 +1,469 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 12
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 12 · Bloque D · Vistas
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Una tabla almacena datos. Una vista almacena lógica. El JOIN de la semana pasada
+        recibe hoy un nombre, y es el primer objeto que escribes en este curso que
+        sobrevive a la sesión.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 12 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué guarda
+          desc: Lógica, no filas, y un asterisco que se congela en el momento de crearla
+        - title: Escribir a través
+          desc: Cuándo el UPDATE llega a la tabla base y cuándo choca con un 1288
+        - title: DEFINER y capas
+          desc: Con qué usuario corre, cómo se apilan, y por qué no acelera nada
+        - title: Tu turno
+          desc: La pantalla del coordinador, y la fila que se le desaparece de enfrente
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Guardar una consulta con un nombre
+          sub: Y explicar por qué dentro de una vista nunca se escribe un asterisco
+        - head: Predecir si una vista acepta un UPDATE
+          sub: Una vista con JOIN sí acepta, y la frontera real cae en el outer join
+        - head: Cerrar una vista filtrada con WITH CHECK OPTION
+          sub: Sin esa cláusula el usuario inserta filas que desaparecen de su propia pantalla
+        - head: Leer el DEFINER de una vista y saber qué implica
+          sub: Todas las que creaste hoy salieron con root, y nadie lo pidió
+        - head: Explicar por qué una vista no acelera nada
+          sub: EXPLAIN sobre la vista ni siquiera la nombra, y esa es la respuesta completa
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, y el modelo hecho tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos almacenados, triggers y eventos
+          state: now
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué guarda una vista y qué no
+      lede: >-
+        La semana 2 la llamó «Vista (RO)» y la semana 3 la puso en el nivel externo. Una
+        de las dos cosas está mal, y hoy se corrige con el servidor en pantalla.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una tabla almacena datos, una vista almacena lógica
+      lead: >-
+        Adentro de la vista no hay filas. Hay una consulta guardada con un nombre, que se
+        vuelve a correr cada vez que alguien la lee. Por eso una vista siempre está al día
+        y por eso nunca es más rápida que la consulta que tiene adentro. Es el nivel
+        externo de la semana 3, escrito en SQL.
+      panel:
+        label: Lo que sí cambia
+        title: Es el primer objeto del curso que sobrevive a la sesión
+        note: >-
+          Hasta la semana pasada, todo lo que escribías se iba con la conexión. Una vista
+          se queda en el esquema, la ve el que entre mañana, y por eso a partir de hoy
+          importa con qué usuario se creó y qué pasa cuando alguien la restaura en otro
+          servidor.
+      steps:
+        - text: Le das nombre a una consulta con CREATE VIEW
+        - text: El servidor guarda el texto, no el resultado
+        - text: Cada SELECT sobre la vista vuelve a ejecutar esa consulta
+          loop: ↺ y por eso los datos nunca se quedan viejos
+
+  - code:
+      eyebrow: Bloque 01 · El objeto
+      title: El JOIN de la semana pasada, con un nombre encima
+      filename: vista.sql
+      lang: sql
+      source: |
+        CREATE OR REPLACE VIEW v_insc_join AS
+        SELECT i.inscripcion_id, i.alumno_id,
+               a.nombre AS alumno, m.nombre AS materia,
+               i.calificacion
+        FROM inscripciones i
+        JOIN alumnos a ON a.alumno_id = i.alumno_id
+        JOIN materias m ON m.materia_id = i.materia_id;
+
+        SELECT * FROM v_insc_join WHERE alumno_id = 1;
+      annotations:
+        - label: OR REPLACE
+          text: >-
+            Permite volver a correr el script sin borrar nada a mano. En una sesión de
+            clase esa consulta se reescribe veinte veces.
+        - label: Cada columna con su nombre
+          text: >-
+            Los dos alias existen porque las dos tablas traen una columna llamada nombre.
+            Sin alias la vista devuelve dos columnas homónimas.
+        - label: La consulta de afuera
+          text: >-
+            El WHERE va aquí, no adentro. La vista describe qué se puede ver y quien la
+            consulta decide qué quiere hoy.
+        - label: Riesgo
+          text: >-
+            El DEFINER se escribió solo. Nadie lo pidió y es root, cosa que el bloque 03
+            mide y la semana 17 cobra.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · el asterisco
+      title: Agregas una columna a la tabla base, ¿la vista la ve?
+      filename: estrella.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_estrella AS SELECT * FROM materias;
+        ALTER TABLE materias ADD COLUMN departamento VARCHAR(30) NULL;
+        SELECT * FROM v_estrella;
+        SHOW CREATE VIEW v_estrella;
+      output: |
+        la vista sigue devolviendo
+        materia_id, clave, nombre,
+        creditos
+
+        SHOW CREATE VIEW v_estrella
+        AS select `materias`.
+        `materia_id` AS `materia_id`,
+        `materias`.`clave` AS
+        `clave`, ...
+
+  - code_output:
+      eyebrow: Medido · el orden
+      title: La misma vista, dos veces, en dos órdenes distintos
+      filename: orden.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_orden AS
+        SELECT alumno_id, nombre FROM alumnos
+        ORDER BY nombre DESC;
+
+        SELECT * FROM v_orden;
+
+        SELECT v.nombre, i.periodo
+        FROM v_orden v
+        JOIN inscripciones i USING (alumno_id);
+      output: |
+        SELECT directo sobre la vista
+        -> sale en orden descendente
+
+        la misma vista adentro de un
+        JOIN
+        -> sale en otro orden
+
+        el ORDER BY pertenece a la
+        consulta final
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cuándo se puede escribir a través de ella
+      lede: >-
+        «Una vista no es actualizable si contiene JOIN» es la frase más citada de la
+        fuente y es falsa. La regla verdadera es más corta y más útil, y sale de tres
+        mediciones seguidas.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido · la corrección de la semana
+      title: Una vista con JOIN sí acepta un UPDATE, y hasta dónde
+      filename: escribir.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_insc_join';
+
+        UPDATE v_insc_join SET calificacion = 9.9
+        WHERE inscripcion_id = 3;
+
+        UPDATE v_insc_join SET alumno = 'X', calificacion = 9.9
+        WHERE inscripcion_id = 3;
+
+        DELETE FROM v_insc_join WHERE inscripcion_id = 3;
+      output: |
+        IS_UPDATABLE = YES
+        el UPDATE movio la fila de la
+        tabla base
+
+        ERROR 1393 (HY000): Can not
+        modify more than one base
+        table through a join view
+
+        ERROR 1395 (HY000): Can not
+        delete from join view
+
+  - code_output:
+      eyebrow: Medido · dónde sí cae la frontera
+      title: La fuente prohíbe los joins que funcionan y permite el que no
+      filename: outer.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_insc_left AS
+        SELECT i.inscripcion_id, a.nombre, i.calificacion
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
+
+        UPDATE v_insc_left SET calificacion = 9.9
+        WHERE inscripcion_id = 3;
+      output: |
+        IS_UPDATABLE = NO
+
+        ERROR 1288 (HY000): The
+        target table v_insc_left of
+        the UPDATE is not updatable
+
+  - code_output:
+      eyebrow: Medido · el único desacuerdo del semestre
+      title: El catálogo dice que sí y el servidor dice que no
+      filename: escalar.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_escalar AS
+        SELECT a.alumno_id, a.nombre,
+               (SELECT COUNT(*) FROM inscripciones i
+                 WHERE i.alumno_id = a.alumno_id) AS inscritas
+        FROM alumnos a;
+
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_escalar';
+
+        UPDATE v_escalar SET nombre = 'x' WHERE alumno_id = 1;
+      output: |
+        IS_UPDATABLE = YES
+
+        ERROR 1288 (HY000): ... is
+        not updatable
+
+        y el UPDATE ni siquiera toca
+        la columna calculada
+
+  - table:
+      eyebrow: Bloque 02 · La lista, corregida
+      title: Qué acepta cada vista, medido una por una
+      headers: [La vista trae, Se puede escribir, Lo que contesta el servidor]
+      rows:
+        - ["JOIN interno", "si, una tabla base a la vez", "IS_UPDATABLE = YES"]
+        - ["Dos tablas base", "no", "ERROR 1393 (HY000)"]
+        - ["Un DELETE", "no", "ERROR 1395 (HY000)"]
+        - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
+        - ["Agregacion", "no", "ERROR 1288 (HY000)"]
+        - ["DISTINCT o UNION", "no", "IS_UPDATABLE = NO, error 1288"]
+        - ["Subconsulta", "no, aunque diga que si", "dice YES y falla con el 1288"]
+
+  - code_output:
+      eyebrow: Medido · cerrar la vista
+      title: La cláusula que convierte «controlar acceso» en algo real
+      filename: check.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_ing AS
+        SELECT alumno_id, nombre, carrera FROM alumnos
+        WHERE carrera = 'Ingenieria'
+        WITH CHECK OPTION;
+
+        INSERT INTO v_ing (alumno_id, nombre, carrera)
+        VALUES (99, 'Nuevo Alumno', 'Derecho');
+
+        SELECT CHECK_OPTION FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_ing';
+      output: |
+        ERROR 1369 (HY000): CHECK
+        OPTION failed
+        'escolares.v_ing'
+
+        CHECK_OPTION = CASCADED
+
+        sin la clausula la fila entra
+        y desaparece de la vista del
+        coordinador
+
+  - divider:
+      eyebrow: Bloque 03
+      title: DEFINER, capas, y por qué no acelera
+      lede: >-
+        Quedan tres preguntas que el alumno se hace solo. Con qué permisos corre una
+        vista, si se pueden apilar, y si guardarla hace que la consulta vaya más rápido.
+        Las tres tienen respuesta medida.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · con qué usuario corre
+      title: El valor por omisión es el peligroso y nadie lo pidió
+      filename: definer.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT TABLE_NAME, DEFINER, SECURITY_TYPE
+        FROM information_schema.VIEWS
+        WHERE TABLE_SCHEMA = DATABASE();
+      output: |
+        todas las vistas creadas sin
+        clausula salieron con
+
+        DEFINER=`root`@`localhost`
+        SQL SECURITY DEFINER
+        SECURITY_TYPE = DEFINER
+
+        y nadie lo pidio
+
+  - diagram:
+      eyebrow: Bloque 03 · Arquitectura
+      title: Tres capas, y la de arriba se apoya en la de abajo
+      blocks:
+        - label: Capa 1
+          title: Vistas base
+          desc: Limpian y renombran. Una tabla cada una, sin reglas adentro.
+        - label: Capa 2
+          title: Vistas de negocio
+          desc: Aplican la regla del negocio sobre las vistas base.
+          dark: true
+        - label: Capa 3
+          title: Vistas de reporte
+          desc: Agregan y aplanan. Aquí vuelve la forma ancha de la semana 5.
+      note: >-
+        Medido, y por eso las capas no son decorativas. Una vista construida sobre otra
+        vista de inner join sigue siendo actualizable. La capa 3, en cambio, agrega, y con
+        eso deja de aceptar escrituras: si la vista parece un reporte, es de solo lectura.
+
+  - code_output:
+      eyebrow: Medido · el mito de la velocidad
+      title: EXPLAIN sobre la vista ni siquiera nombra a la vista
+      filename: explain.sql
+      lang: sql
+      output_label: EXPLAIN FORMAT=TREE
+      source: |
+        EXPLAIN FORMAT=TREE
+        SELECT * FROM v_insc_join WHERE alumno_id = 1;
+      output: |
+        -> Nested loop inner join
+            -> Index lookup on i using
+               fk_i_alumno
+               (alumno_id = 1)
+            -> Single-row index lookup
+               on m using PRIMARY
+               (materia_id =
+                i.materia_id)
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder la vista
+      items:
+        - label: Error 01
+          title: Escribir un asterisco adentro
+          desc: >-
+            MySQL expande el asterisco y guarda la lista de columnas. Agregas una columna a
+            la tabla base y la vista no la ve nunca, sin decir nada.
+        - label: Error 02
+          title: Poner el ORDER BY dentro
+          desc: >-
+            La misma vista salió en dos órdenes distintos según cómo se la consultó. El
+            orden pertenece a la consulta final, no al objeto.
+        - label: Error 03
+          title: Creer que una vista guarda datos
+          desc: >-
+            MySQL no tiene vistas materializadas. ALGORITHM=TEMPTABLE materializa por
+            ejecución, tira el resultado, y encima deja la vista de solo lectura.
+        - label: Error 04
+          title: Confiar en IS_UPDATABLE
+          desc: >-
+            Con una subconsulta escalar el catálogo dice YES y el UPDATE falla con 1288.
+            Se prueba el UPDATE, no se le cree a la columna.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La pantalla del coordinador, y la fila que se le desaparece
+      brief: >-
+        Construye la vista que muestra los alumnos de una sola carrera. Después, desde esa
+        misma vista, inserta un alumno de otra carrera y busca la fila que acabas de
+        escribir. Cuando no la encuentres, ponle WITH CHECK OPTION y repite el intento.
+      blocks:
+        - label: Entrega
+          text: El script de la vista, el INSERT que se pierde y el error que lo detiene
+        - label: Restricción
+          text: >-
+            La vista tiene que salir del JOIN de la semana 11. No se vale una vista de una
+            sola tabla, porque ahí no aparece ninguna de las fronteras de hoy.
+        - label: La prueba
+          text: >-
+            Corre el UPDATE antes de creerle al catálogo. La columna IS_UPDATABLE es una
+            opinión y el servidor es el que manda.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Una vista guarda lógica, no filas
+          desc: >-
+            El texto de la consulta se guarda expandido y se vuelve a correr en cada
+            lectura. Por eso nunca está vieja y por eso el asterisco queda congelado
+        - title: Una tabla base a la vez, y nunca DELETE
+          desc: >-
+            Esa es la regla verdadera de actualizabilidad. La frontera real no está en el
+            JOIN, está en el outer join, en la agregación y en el UNION
+        - title: Guardar una consulta no la acelera
+          desc: >-
+            EXPLAIN sobre la vista devuelve el plan de las tablas base y ni siquiera la
+            nombra, porque el algoritmo es MERGE y no materialización
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe tres vistas en capas sobre tu propia base: una base que limpie, una de
+        negocio que aplique una regla y una de reporte que agregue. Intenta un UPDATE a
+        través de cada una y pega lo que contestó el servidor en los tres casos.
+      meta:
+        - [Entrega, Antes de la semana 13]
+        - [Formato, Blackboard · un solo archivo .sql con la salida pegada]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Las tres capas", "40 %", "Cada vista se apoya en la anterior y no en la tabla"]
+        - ["Los tres UPDATE", "40 %", "Se intentaron los tres y la salida está pegada"]
+        - ["El diagnóstico", "20 %", "Explica cuál falló y con qué número de error"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, lógica con parámetros adentro de la base, y el segundo parcial,
+        que cubre de la semana 9 a la 12. Los procedimientos se enseñan ese día y se
+        examinan hasta el final.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

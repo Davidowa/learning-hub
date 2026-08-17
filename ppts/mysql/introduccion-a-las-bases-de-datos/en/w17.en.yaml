@@ -1,0 +1,473 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 17
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 17 · Block E · Users, backup and closing · Final exam
+      title: Introduction to Databases
+      subtitle: >-
+        The last two promises of week 2 come due today. The second one turns out to be a
+        text file you can open in any editor and read from beginning to end.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 17 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks and the close of the course
+      cards:
+        - title: The account
+          desc: User plus host, the GRANT, and the error the account without the privilege gets
+        - title: The backup
+          desc: What mysqldump takes, what it leaves behind, and when the file lies to you
+        - title: Restoring
+          desc: The restore that prints nothing and the log that closes the gap
+        - title: The exam
+          desc: What the seventeen weeks are examined on, and at what level
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session the student will be able to…
+      items:
+        - head: Read an account as a pair
+          sub: User and host are one identifier, and changing the host gives you another account
+        - head: Predict the error of a missing privilege
+          sub: Name the number and the text the restricted account will get before running it
+        - head: Read a SHOW GRANTS
+          sub: And say which statement that account will be refused, column by column
+        - head: Read a mysqldump command
+          sub: And say which objects will NOT be in the file it produces
+        - head: Verify a restore
+          sub: Because a successful restore prints nothing at all, and a failed one says little
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the manager and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, grouping and JOIN
+          state: done
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: done
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backup
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Who you are and what you are allowed to do
+      lede: >-
+        Week 2 promised «access security and auditing» and never came back to it. Today it
+        comes due, and it comes due on the side where it is felt, which is the restricted
+        account.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · The account
+      title: A MySQL account is two things, and the second one is the host
+      lead: >-
+        There is no user called tutor. There is tutor at localhost, and there is tutor at
+        one nine two dot one six eight, and they are two different accounts with different
+        passwords and different privileges. The host is not a detail of the connection, it
+        is the right-hand half of the name.
+      panel:
+        label: The three scopes
+        title: Three scopes, three separate accounts
+        note: >-
+          localhost is the same machine, the per cent sign is from anywhere, and
+          192.168.1.% is a network. With skip_name_resolve off, connecting over TCP to
+          127.0.0.1 does match localhost, so the rule is a mechanism and not a decree.
+      steps:
+        - text: CREATE USER makes the account, with nothing in it
+        - text: GRANT tells it what it will be able to do
+        - text: The user connects and the server decides
+          loop: ↺ and in reverse the server answers ERROR 1410
+
+  - code_output:
+      eyebrow: Measured · order matters
+      title: What does the server answer if you grant to an account you never created?
+      filename: users.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- section 7 of the guide does exactly this
+        GRANT SELECT, INSERT ON db_ops_wk141516.*
+          TO 'wk15_capturista'@'localhost';
+
+        -- the order the server demands
+        CREATE USER 'wk15_analista'@'localhost'
+          IDENTIFIED BY 'Password123!';
+        SHOW GRANTS FOR 'wk15_analista'@'localhost';
+      output: |
+        ERROR 1410 (42000): You are not
+        allowed to create a user with
+        GRANT
+
+        GRANT USAGE ON *.*
+        TO `wk15_analista`@`localhost`
+
+  - code_output:
+      eyebrow: Measured · from the far side of the connection
+      title: A privilege is not felt when you grant it, it is felt when you use it
+      filename: analyst.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- connected as wk15_analista, whose account only has
+        -- GRANT SELECT ON db_ops_wk141516.*
+
+        DELETE FROM db_ops_wk141516.alumnos
+        WHERE matricula = 100007;
+
+        SELECT user, host FROM mysql.user;
+      output: |
+        ERROR 1142 (42000): DELETE command
+        denied to user
+        'wk15_analista'@'localhost'
+        for table 'alumnos'
+
+        ERROR 1142 (42000): SELECT command
+        denied to user
+        'wk15_analista'@'localhost'
+        for table 'user'
+
+  - code_output:
+      eyebrow: Measured · column-level privilege
+      title: A tutor who reads two columns and writes exactly one
+      filename: tutor.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        GRANT SELECT (matricula, apellido)
+          ON db_ops_wk141516.alumnos
+          TO 'wk15_tutor'@'localhost';
+
+        GRANT UPDATE (calificacion)
+          ON db_ops_wk141516.inscripciones
+          TO 'wk15_tutor'@'localhost';
+
+        SHOW GRANTS FOR 'wk15_tutor'@'localhost';
+      output: |
+        GRANT SELECT (`apellido`,
+        `matricula`) ON
+        `db_ops_wk141516`.`alumnos`
+        TO `wk15_tutor`@`localhost`
+
+        GRANT UPDATE (`calificacion`) ON
+        `db_ops_wk141516`.`inscripciones`
+        TO `wk15_tutor`@`localhost`
+
+  - code_output:
+      eyebrow: Measured · the role that is granted and not activated
+      title: Why does the account with the read role still get 1142?
+      filename: roles.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE ROLE 'rol_lectura_escolar';
+        GRANT SELECT ON db_ops_wk141516.*
+          TO 'rol_lectura_escolar';
+        GRANT 'rol_lectura_escolar'
+          TO 'wk15_reportes'@'%';
+
+        -- now connected as wk15_reportes
+        SELECT CURRENT_ROLE();
+        SELECT COUNT(*) FROM db_ops_wk141516.alumnos;
+      output: |
+        NONE
+
+        ERROR 1142 (42000): SELECT command
+        denied to user
+        'wk15_reportes'@'localhost'
+        for table 'alumnos'
+
+        activate_all_roles_on_login = OFF
+
+  - table:
+      eyebrow: Block 01 · Reference card
+      title: Account administration on one slide
+      headers: [Statement, What it is for, What was measured]
+      rows:
+        - ["CREATE USER", "Create the account before GRANT", "Without it, ERROR 1410"]
+        - ["GRANT", "Give the account privileges", "They are felt on the far side"]
+        - ["REVOKE", "Take privileges away", "Leaves it at USAGE, keeps it"]
+        - ["ALTER USER", "Lock, expire, limit attempts", "Locked gives ERROR 3118"]
+        - ["SHOW GRANTS", "Audit what the account has", "mysql.user gives it 1142"]
+        - ["DROP USER", "Actually delete the account", "REVOKE never deletes it"]
+
+  - divider:
+      eyebrow: Block 02
+      title: A backup is a text file
+      lede: >-
+        The whole-server backup is 52,125,881 bytes across 6,061 lines, and one single line
+        of it carries 1,044,220 characters. The tools of this block are grep, head and
+        tail, not an editor.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: A backup is plain text that names the server it came from in its head
+      filename: backup.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        mysqldump -u root -p db_backup > db_backup.sql
+
+        wc -l -c db_backup.sql
+        head -5 db_backup.sql
+      output: |
+        169  7249  db_backup.sql
+
+        -- MySQL dump 10.13  Distrib
+           9.7.2, for Win64 (x86_64)
+        --
+        -- Host: 127.0.0.1
+           Database: db_backup
+        -- -----------------------------
+        -- Server version   9.7.2
+
+  - code_output:
+      eyebrow: Measured · two of the three warnings
+      title: The tool dictates the complete recipe to you while it works
+      filename: backup.sh
+      lang: sql
+      output_label: stderr
+      source: |
+        mysqldump -u root -p db_backup \
+          > db_backup.sql 2> dump_err.txt
+
+        cat dump_err.txt
+      output: |
+        To make a complete dump, pass
+        --all-databases --triggers
+        --routines --events.
+
+        In order to ensure a consistent
+        backup of the database, pass
+        --single-transaction or
+        --lock-all-tables or
+        --source-data.
+
+  - code_output:
+      eyebrow: Measured · what the default file does not carry
+      title: The backup takes the trigger and leaves out the procedure and the event
+      filename: backup.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- both runs carry --set-gtid-purged=OFF
+        mysqldump -u root -p --routines --events \
+          db_backup > completo.sql
+
+        grep -c PROCEDURE db_backup.sql completo.sql
+        grep -c EVENT db_backup.sql completo.sql
+        wc -c db_backup.sql completo.sql
+      output: |
+        db_backup.sql:0
+        completo.sql:2
+
+        db_backup.sql:0
+        completo.sql:2
+
+         6963 db_backup.sql
+         9542 completo.sql
+
+  - code_output:
+      eyebrow: Measured · the most dangerous fact of the session
+      title: Exit code zero, a 7,019-byte file, and the procedure is not inside it
+      filename: operator.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- the 'operador' account has SELECT, LOCK TABLES,
+        -- SHOW VIEW, EVENT and TRIGGER, but not PROCESS
+
+        mysqldump -u operador -p --routines \
+          db_backup > op_rout.sql 2> op_rout_err.txt
+        echo "exit=$?"
+
+        wc -c op_rout.sql
+        grep -c PROCEDURE op_rout.sql
+      output: |
+        mysqldump: Error:
+        'Access denied; you need (at
+        least one of) the PROCESS
+        privilege(s) for this operation'
+        when trying to dump tablespaces
+
+        exit=0
+        7019 op_rout.sql
+        0
+
+  - divider:
+      eyebrow: Block 03
+      title: Restore, verify and close
+      lede: >-
+        Week 3 measured that «the log» is in fact two logs. Today both are spent, and then
+        the course closes on the contradiction it has been carrying on purpose since week
+        6.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: How do you know the restore worked, if it prints nothing at all?
+      filename: restore.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        mysql -u root -p bd_restaurada < db_backup.sql
+        echo "exit=$?"
+
+        -- the only proof is counting on the other side
+        SELECT
+          (SELECT COUNT(*) FROM alumno)      AS a,
+          (SELECT COUNT(*) FROM materia)     AS m,
+          (SELECT COUNT(*) FROM inscripcion) AS i;
+      output: |
+        exit=0
+
+        a  m  i
+        5  3  7
+
+  - table:
+      eyebrow: Measured · restoring over a live database
+      title: A restore does not return you to backup day, it overwrites today
+      headers: [Object, Before the restore, After the restore]
+      rows:
+        - ["alumno", "6 rows", "5 rows, the new student is gone"]
+        - ["inscripcion", "5 rows", "7 rows, the deleted ones return"]
+        - ["bitacora_local", "1 table, made afterwards", "Untouched, the file never names it"]
+        - ["The client", "—", "Exit 0 and zero lines printed"]
+
+  - code_output:
+      eyebrow: Measured · the two levels week 2 promised
+      title: The backup returns yesterday and the log covers up to the minute before
+      filename: binlog.sh
+      lang: sql
+      output_label: Terminal
+      source: |
+        -- the backup is from 03:00 and the row arrived later
+        grep -c A0000042 db_backup.sql
+
+        mysqlbinlog --start-position=65170533 -v \
+          --base64-output=DECODE-ROWS binlog.000012
+      output: |
+        0
+
+        ### INSERT INTO `db_backup`.`alumno`
+        ### SET
+        ###   @1='A0000042'
+        ###   ...
+        ###   @4=24
+
+  - pitfalls:
+      eyebrow: Common mistakes
+      title: Four ways to believe you already have a backup
+      items:
+        - label: Trap 01
+          title: GTIDs stop the restore
+          desc: >-
+            ERROR 3546 (HY000) at line 24 when restoring into the same server that produced
+            the file. Cured with --set-gtid-purged=OFF, which also takes the file from
+            7,249 down to 6,963 bytes and silences the three warnings.
+        - label: Trap 02
+          title: The file exists and is truncated
+          desc: >-
+            mysqldump named a table that does not exist, exited with code 6 and left 796
+            bytes of believable header. The giveaway is that the file does not end on the
+            «Dump completed on» line.
+        - label: Trap 03
+          title: A restore is not a transaction
+          desc: >-
+            A restore that fails halfway exits with code 1 and leaves behind the tables it
+            already managed to write and load. The client undoes nothing, because the
+            client is not a transaction.
+        - label: Trap 04
+          title: SOURCE is a client command
+          desc: >-
+            It is what nearly every tutorial recommends, and inside a script it answers
+            ERROR 1064, because the server never receives it. From the terminal you restore
+            with the redirection operator.
+
+  - method:
+      eyebrow: Closing the course
+      title: Three things that outlive the version number
+      statement: >-
+        The server does not apply universal rules. It applies the ones it has switched on,
+        and the only way to know which those are is to ask it before arguing with anyone.
+      points:
+        - label: sql_mode
+          text: >-
+            Four of this course's errors, 1264, 1292, 1265 and 1406, are errors because
+            STRICT_TRANS_TABLES is on. With the mode off the same INSERT passes quietly,
+            and that is where «it works on my machine» is born.
+        - label: EXPLAIN
+          text: >-
+            No performance advice is accepted without it. It is the instrument that upholds
+            or topples a rule, and it is why the inherited best-practices deck could assert
+            fourteen things without a single piece of evidence.
+        - label: The contradiction
+          text: >-
+            Week 6 says an index is «an added detail». Week 15 measured it at 3.71 times
+            the size of the data. Two slides of the same course, and it is settled with
+            evidence rather than with authority.
+
+  - table:
+      eyebrow: Final exam
+      title: What is on it, and at what level it is asked
+      headers: [Aspect, Detail]
+      rows:
+        - ["Content", "All seventeen weeks, blocks A through E"]
+        - ["Weight", "20 % of the final grade"]
+        - ["Backup", "Read a mysqldump and say what the file will be missing"]
+        - ["Privileges", "Read a SHOW GRANTS and say which statement is refused"]
+        - ["Format", "On the classroom computer, submitted to Blackboard"]
+        - ["You may bring", "Notes, homework and your own code from the term"]
+        - ["You may not", "Phone, messaging or AI assistants"]
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take from the whole term
+      items:
+        - title: A privilege is measured on the far side
+          desc: >-
+            Granting produces no output. What you see is the 1142 the restricted account
+            gets, and that is why one window stays connected as that account
+        - title: A backup is not worth anything for existing
+          desc: >-
+            Exit 0 can lie. You verify by reading the file and counting rows after the
+            restore, and mysqldump --no-data returns the schema alone in 5,643 bytes
+        - title: Run the statement and quote the output
+          desc: >-
+            Seventeen weeks of this course rest on that. What the server printed is data,
+            and what you think it prints is an untested hypothesis
+
+  - closing:
+      title: Thank you
+      subtitle: >-
+        Any question about your grade, by email or on Google Chat. And when somebody tells
+        you MySQL does such and such, ask them for the output.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Messaging, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

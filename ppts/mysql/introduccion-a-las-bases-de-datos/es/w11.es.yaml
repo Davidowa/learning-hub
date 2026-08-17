@@ -1,0 +1,479 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 11
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 11 · Bloque C · JOIN, UNION y UNION ALL
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Un JOIN contesta «¿y los que no tienen ninguno?». Un UNION contesta «¿y los que
+        están en la otra lista?». Entre UNION y UNION ALL hay tres letras y, sobre la
+        tabla de pagos, 3 900 pesos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 11 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Izquierda y derecha
+          desc: Dónde está cada tabla, y el ON leído en voz alta
+        - title: UNION y UNION ALL
+          desc: Veinte filas contra diecisiete, y las tres que desaparecen sin avisar
+        - title: El que no existe
+          desc: FULL OUTER JOIN, el error 1064, y la receta que sí funciona
+        - title: Tu turno
+          desc: Diez inscritos contra diez cuentas, y nadie sabe si son los mismos diez
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer un ON en voz alta
+          sub: Y saber cuál tabla es la izquierda y cuál la derecha con solo mirar el FROM
+        - head: Elegir entre COUNT(*) y COUNT(columna)
+          sub: El alumno sin inscripciones devuelve 1 y 0 en la misma fila del resultado
+        - head: Poner el filtro en el ON o en el WHERE a propósito
+          sub: El mismo predicado da 3 filas en una cláusula y 6 en la otra
+        - head: Decidir entre UNION y UNION ALL con un criterio
+          sub: Sobre la tabla de pagos las tres letras valen 3 900 pesos y ninguna advertencia
+        - head: Simular el FULL OUTER JOIN que MySQL no tiene
+          sub: Proyectando las llaves, para que la receta no fusione a dos personas distintas
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, y el modelo hecho tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: now
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos almacenados, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Izquierda, derecha y el ON
+      lede: >-
+        La semana 5 partió una tabla en tres para que ningún dato viviera dos veces. Hoy
+        se vuelve a leer entera, y el precio de haberla partido se paga en una cláusula.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: La izquierda es la del FROM y la derecha es la del JOIN
+      lead: >-
+        Antes de que el significado aterrice hay una sola cosa que sí se puede memorizar:
+        la tabla izquierda es la que escribiste después del FROM y la derecha es la que
+        escribiste después del JOIN. Todas las reglas de la sesión están dichas en esos
+        términos, incluida la que todo el mundo confunde.
+      panel:
+        label: El ON en voz alta
+        title: Se lee como una frase, no como una fórmula
+        note: >-
+          «La inscripción cuyo alumno_id es el de este alumno.» Si la frase no se puede
+          decir, el ON está mal escrito. Y se compara por llave y no por nombre, porque la
+          semana 6 ya midió que ALUMNO.NOMBRE y MATERIA.NOMBRE no son el mismo dominio
+          aunque los dos sean texto.
+      steps:
+        - text: INNER JOIN devuelve solo las filas que casan de los dos lados
+        - text: LEFT JOIN devuelve además las de la izquierda que no casaron
+        - text: Las columnas de la derecha llegan en NULL para esas filas
+          loop: ↺ y ahí empieza el resto de la sesión
+
+  - table:
+      eyebrow: Bloque 01 · Taxonomía
+      title: Las seis escrituras, con lo que el servidor contestó
+      headers: [Escritura, Qué filas devuelve, Lo medido]
+      rows:
+        - ["INNER JOIN … ON", "las que casan de los dos lados", "sinonimo de JOIN"]
+        - ["LEFT JOIN … ON", "todas las del FROM, casen o no", "el alumno sin inscripcion sale"]
+        - ["CROSS JOIN … ON", "las mismas que el INNER JOIN", "compila y las devuelve"]
+        - ["INNER JOIN sin ON", "el producto cartesiano", "20 filas, de 5 x 4"]
+        - ["JOIN … USING (col)", "el INNER JOIN, en corto", "cuando la columna se llama igual"]
+        - ["FULL OUTER JOIN", "nada, no existe en MySQL", "ERROR 1064 (42000)"]
+
+  - code:
+      eyebrow: Bloque 01 · El modelo, reensamblado
+      title: La tabla que la segunda forma normal partió, leída entera
+      filename: join.sql
+      lang: sql
+      source: |
+        SELECT a.nombre, m.nombre AS materia, i.periodo
+        FROM alumnos a
+        INNER JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        INNER JOIN materias m ON m.materia_id = i.materia_id
+        ORDER BY a.nombre;
+      annotations:
+        - label: La semana 5, cobrada
+          text: >-
+            Aquí está la mitad que faltaba. Normalizar partió una tabla en tres y esta
+            consulta la vuelve a armar sin guardar nada dos veces.
+        - label: Dos ON, dos frases
+          text: >-
+            La inscripción cuyo alumno es este, y la materia cuyo identificador trae esa
+            inscripción. Cada llave foránea de la semana 6 es un ON de hoy.
+        - label: Un alias corto
+          text: >-
+            Con tres tablas los alias dejan de ser estilo. Sin ellos la consulta no se
+            puede leer y el ON deja de sonar a frase.
+        - label: Riesgo
+          text: >-
+            Sin el ON la consulta sigue siendo legal. MySQL devuelve el producto
+            cartesiano y nadie levanta la mano.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · el LEFT JOIN
+      title: ¿Cuántas inscripciones tiene el alumno que no tiene ninguna?
+      filename: left.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.alumno_id, a.nombre
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        WHERE i.inscripcion_id IS NULL;
+
+        SELECT a.alumno_id,
+               COUNT(*) AS con_asterisco,
+               COUNT(i.inscripcion_id) AS con_columna
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        GROUP BY a.alumno_id;
+      output: |
+        la antiunion devuelve
+        exactamente al alumno sin
+        inscripciones
+
+        para ese mismo alumno:
+        con_asterisco = 1
+        con_columna   = 0
+
+  - code_output:
+      eyebrow: Medido · el bug más común que existe
+      title: El mismo predicado, en el WHERE y en el ON
+      filename: filtro.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.nombre, i.periodo
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        WHERE i.periodo = '2026-1';
+
+        SELECT a.nombre, i.periodo
+        FROM alumnos a
+        LEFT JOIN inscripciones i
+               ON a.alumno_id = i.alumno_id AND i.periodo = '2026-1';
+      output: |
+        el predicado en WHERE
+        -> 3 filas
+
+        el mismo predicado en ON
+        -> 6 filas, con los NULL
+           conservados
+
+  - divider:
+      eyebrow: Bloque 02
+      title: UNION y las tres filas que desaparecen
+      lede: >-
+        El JOIN pega tablas de lado. El UNION las apila. Y apilar tiene una regla que
+        ningún documento de la materia enseña, porque no cabe en la sintaxis: por omisión,
+        borra los duplicados.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido · doce más ocho
+      title: ¿Cuántos correos devuelve cada operador sobre 12 y 8 filas?
+      filename: correos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS con_union_all FROM (
+          SELECT correo FROM alumnos
+          UNION ALL
+          SELECT correo FROM profesores) t;
+
+        SELECT COUNT(*) AS con_union FROM (
+          SELECT correo FROM alumnos
+          UNION
+          SELECT correo FROM profesores) t;
+      output: |
+        12 alumnos y 8 profesores
+
+        con_union_all = 20
+        con_union     = 17
+
+        los 3 que faltan son los de
+        posgrado que ademas dan
+        clase de asignatura
+
+  - code_output:
+      eyebrow: Medido · la misma consulta con dinero adentro
+      title: Sobre los dos archivos de pagos, tres letras cuestan 3 900 pesos
+      filename: pagos.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS pagos_reales,
+               SUM(monto) AS total_correcto
+        FROM ( SELECT monto FROM pagos_norte
+               UNION ALL
+               SELECT monto FROM pagos_sur ) t;
+
+        SELECT COUNT(*) AS pagos_con_union,
+               SUM(monto) AS total_con_union
+        FROM ( SELECT monto FROM pagos_norte
+               UNION
+               SELECT monto FROM pagos_sur ) t;
+      output: |
+        pagos_reales    = 7
+        total_correcto  = 12700.00
+
+        pagos_con_union = 4
+        total_con_union = 8800.00
+
+        sin error y sin advertencia
+
+  - code_output:
+      eyebrow: Medido · el nombre de la columna
+      title: El alias de la segunda rama se descarta en silencio
+      filename: orden.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT correo FROM alumnos
+        UNION
+        SELECT correo AS contacto FROM profesores
+        ORDER BY contacto;
+      output: |
+        la columna del resultado se
+        llama correo, no contacto
+
+        ERROR 1054 (42S22): Unknown
+        column 'contacto' in 'order
+        clause'
+
+  - code_output:
+      eyebrow: Medido · el costo de la palabra ALL
+      title: Qué hace el servidor de más cuando le quitas ALL
+      filename: costo.sql
+      lang: sql
+      output_label: EXPLAIN FORMAT=TREE
+      source: |
+        EXPLAIN FORMAT=TREE
+        SELECT correo FROM alumnos
+        UNION
+        SELECT correo FROM profesores;
+
+        EXPLAIN FORMAT=TREE
+        SELECT correo FROM alumnos
+        UNION ALL
+        SELECT correo FROM profesores;
+      output: |
+        UNION
+        -> Table scan on <union temporary>
+           -> Union materialize with
+              deduplication
+
+        UNION ALL
+        -> Append
+           -> Stream results
+           -> Stream results
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El FULL OUTER JOIN que MySQL no tiene
+      lede: >-
+        Control escolar dice que hay diez inscritos. La plataforma dice que hay diez
+        cuentas. Nadie en la junta sabe si son los mismos diez, y la consulta que lo
+        contesta de un golpe no existe en este servidor.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · las dos escrituras
+      title: Las dos formas de pedirlo mueren en el analizador
+      filename: full.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.matricula, l.usuario
+        FROM esc_inscritos e
+        FULL OUTER JOIN lms_cuentas l ON e.matricula = l.matricula;
+
+        SELECT e.matricula, l.usuario
+        FROM esc_inscritos e
+        FULL JOIN lms_cuentas l ON e.matricula = l.matricula;
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL syntax;
+        check the manual that
+        corresponds to your MySQL
+        server version for the right
+        syntax to use near 'FULL
+        OUTER JOIN lms_cuentas l ON
+        e.matricula = l.matricula'
+        at line 1
+
+  - code_output:
+      eyebrow: Medido · la receta
+      title: LEFT unido con RIGHT, y las trece filas se leen en tres bloques
+      filename: receta.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT e.matricula AS esc, e.nombre, l.matricula AS lms
+        FROM esc_inscritos e
+        LEFT JOIN lms_cuentas l ON e.matricula = l.matricula
+        UNION
+        SELECT e.matricula, e.nombre, l.matricula
+        FROM esc_inscritos e
+        RIGHT JOIN lms_cuentas l ON e.matricula = l.matricula;
+      output: |
+        filas del LEFT JOIN  = 10
+        filas del RIGHT JOIN = 10
+        coinciden            = 7
+        la union             = 13
+        con UNION ALL        = 20
+
+        13 = 7 que casan
+           + 3 sin cuenta
+           + 3 sin alumno
+
+  - code_output:
+      eyebrow: Medido · y la misma receta, mal proyectada
+      title: Cinco filas donde la verdad son seis, y el servidor no se queja
+      filename: trampa.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT a.nombre, i.materia_id
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
+        UNION
+        SELECT a.nombre, i.materia_id
+        FROM alumnos a
+        RIGHT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
+      output: |
+        devolvio 5 filas donde el
+        full outer verdadero tiene 6
+
+        dos alumnas distintas
+        llamadas ambas 'Ana Rivera'
+        se colapsaron en una sola
+        fila, porque UNION deduplica
+        la fila completa
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro leyes de UNION que ninguna fuente escribe
+      items:
+        - label: Error 01
+          title: Ramas con distinto número de columnas
+          desc: >-
+            ERROR 1222 (21000) The used SELECT statements have a different number of
+            columns. Se rechaza antes de leer una sola fila, y es de cardinalidad, no de
+            sintaxis.
+        - label: Error 02
+          title: ORDER BY dentro de la primera rama
+          desc: >-
+            Sin paréntesis es ERROR 1064 (42000) … near 'UNION SELECT correo FROM
+            profesores' at line 1. El analizador ya había cerrado un SELECT completo.
+        - label: Error 03
+          title: Creer que el paréntesis ordena la rama
+          desc: >-
+            Con paréntesis el ORDER BY correo DESC es legal, regresó ascendente y con
+            warnings = 0. Solo manda si lleva LIMIT, porque entonces decide qué filas
+            sobreviven.
+        - label: Error 04
+          title: Suponer el tipo de la columna resultante
+          desc: >-
+            Un INT unido con un VARCHAR(80) vuelve varchar(80). La columna numérica se
+            volvió texto y desde ese momento ordena como texto.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Diez inscritos, diez cuentas, y la pregunta de la junta
+      brief: >-
+        Con las dos listas en la mano, escribe las tres consultas que contestan la
+        pregunta completa: quién está en las dos, quién está solo en control escolar y
+        quién solo en la plataforma. Después júntalas en una sola.
+      blocks:
+        - label: Entrega
+          text: El script con las tres consultas y el conteo que devolvió cada una
+        - label: Restricción
+          text: >-
+            La proyección tiene que traer la matrícula. Si sales solo con el nombre, dos
+            personas distintas se te van a fundir en una.
+        - label: La prueba
+          text: >-
+            Corre la unión con UNION y con UNION ALL. Si los dos conteos son iguales, tus
+            datos todavía no tienen el caso interesante.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El LEFT JOIN fabrica filas de nulos
+          desc: >-
+            Por eso COUNT(*) devuelve 1 y COUNT(columna) devuelve 0 para el mismo alumno.
+            Uno cuenta filas y el otro ignora los NULL
+        - title: La cláusula cambia el significado del filtro
+          desc: >-
+            En el WHERE el predicado descarta las filas fabricadas y el LEFT vuelve a ser
+            INNER: 3 filas contra 6. En el ON se aplica antes y los NULL se conservan
+        - title: UNION ALL apila, UNION cataloga
+          desc: >-
+            Si las filas representan cosas que pasaron, se apilan con UNION ALL. UNION es
+            para pedir la lista de valores distintos, y cobra una tabla temporal por ello
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Reescribe con JOIN tres de las consultas agrupadas de la semana 10 y di cuál de
+        las tres quedó peor y por qué. Agrega un par UNION y UNION ALL sobre tus propias
+        tablas, con los dos conteos pegados y la explicación de la diferencia.
+      meta:
+        - [Entrega, Antes de la semana 12]
+        - [Formato, Blackboard · un solo archivo .sql con la salida pegada]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Las tres consultas", "40 %", "Corren, y el ON une por llave y no por nombre"]
+        - ["El juicio", "30 %", "Dice cuál quedó peor con un argumento, no con un gusto"]
+        - ["UNION", "30 %", "Los dos conteos difieren y la diferencia está explicada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, esta misma consulta guardada con un nombre, la lista de
+        actualizabilidad que la fuente tiene al revés, y la primera predicción que ya
+        puedes hacer solo: una vista con UNION no es actualizable.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

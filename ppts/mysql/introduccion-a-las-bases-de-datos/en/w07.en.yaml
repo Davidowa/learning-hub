@@ -1,0 +1,451 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 7
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 07 · Block C · Data types and DDL
+      title: Introduction to Databases
+      subtitle: >-
+        Choosing a column type is the last cheap decision you get to make about a table.
+        After this there is data inside, and ROLLBACK will not save you from a CREATE.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 7 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The four families
+          desc: DDL, DML, DCL and TCL, and the one-line test that sorts any command into one
+        - title: Choosing the type
+          desc: Date, decimal, closed catalogue, and the four errors the wrong type lets through
+        - title: Create and destroy
+          desc: CREATE, ALTER, DROP, TRUNCATE, and the promise DDL does not keep
+        - title: Your turn
+          desc: The week 6 script, opened up and written again with the right type per column
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Sort a command into its family
+          sub: With a single question, whether it touches the whole object or the rows inside it
+        - head: Defend the type of every column
+          sub: Each choice stands on the error the alternative would have quietly allowed
+        - head: Write dates in the only format the server accepts
+          sub: And recognise error 1292 when somebody writes the date the way they say it out loud
+        - head: Tell DELETE and TRUNCATE apart
+          sub: They look alike in the result and alike in nothing else, not even in the error
+        - head: Explain why a ROLLBACK sometimes undoes nothing
+          sub: Because DDL commits on its own, and that comes back next week with rows in the way
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the manager and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: now
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, stored procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The four families of SQL
+      lede: >-
+        Fifteen commands and one question that sorts them. The answer decides, among other
+        things, whether ROLLBACK is going to be any use to you.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · The map
+      title: Four families, and what each one touches
+      headers: [Family, Full name, What it touches, Commands]
+      rows:
+        - [DDL, Data Definition, The whole object, CREATE · ALTER · DROP]
+        - [DML, Data Manipulation, The rows inside it, INSERT · UPDATE · DELETE]
+        - [DCL, Data Control, Who may do what, GRANT · REVOKE]
+        - [TCL, Transaction Control, The undo for DML, COMMIT · ROLLBACK]
+
+  - concept:
+      eyebrow: Key concept
+      title: Whole objects, not the data in particular
+      lead: >-
+        To sort any command you run into, even one you have never seen, one question is
+        enough. Does it touch the whole object or the rows that live inside it? TRUNCATE
+        deletes every row and is still DDL, because what it actually does is throw the
+        table away and build it again empty. That classification is not exam trivia. It
+        is what decides whether ROLLBACK will give you anything back.
+      panel:
+        label: What the inherited slide gets wrong
+        title: Three corrections to the command list
+        note: >-
+          COMMENT does not exist in MySQL and has to leave the list. RENAME TABLE does
+          exist and the new deck deleted it by mistake. LOCK TABLE, in the singular, is
+          also accepted by this server, and it arrives in full in week 16.
+      steps:
+        - text: Ask whether the command touches the definition or the contents
+        - text: If it touches the definition it is DDL and it commits on its own
+        - text: If it touches the contents it is DML and TCL can undo it
+          loop: ↺ and everything else is permissions
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Is COMMENT ON TABLE a MySQL statement?
+      filename: families.sql
+      lang: sql
+      output_label: Output
+      source: |
+        COMMENT ON TABLE alumnos IS 'catalogo de alumnos';
+
+        -- The only form this server accepts:
+        -- ALTER TABLE alumnos COMMENT = 'catalogo';
+      output: |
+        ERROR 1064 (42000): You have an
+        error in your SQL syntax; check
+        the manual that corresponds to
+        your MySQL server version for the
+        right syntax to use near 'COMMENT
+        ON TABLE alumnos IS 'catalogo de
+        alumnos'' at line 1
+
+  - divider:
+      eyebrow: Block 02
+      title: Choosing the type
+      lede: >-
+        Every column of the week 6 script gets a type that was chosen rather than
+        inherited, and every choice is defended with the error the other one would allow.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · The week 6 script, with types
+      title: The same tables, now with one decision per column
+      filename: types.sql
+      lang: sql
+      source: |
+        CREATE TABLE alumnos (
+            matricula     CHAR(9)      PRIMARY KEY,
+            nombre        VARCHAR(60)  NOT NULL,
+            fecha_ingreso DATE         NOT NULL,
+            grupo         VARCHAR(4),
+            estatus       ENUM('inscrito','baja',
+                               'aprobado','reprobado')
+        );
+
+        CREATE TABLE inscripciones (
+            matricula     CHAR(9),
+            clave_materia CHAR(6),
+            calificacion  DECIMAL(4,2)
+        );
+      annotations:
+        - label: CHAR(9)
+          text: >-
+            A student number is nine characters, always. That «always» is where CHAR can
+            be defended.
+        - label: DATE
+          text: >-
+            Stored as a date, not text. The server can compare it, sort it and subtract
+            from it; a string cannot.
+        - label: DECIMAL(4,2)
+          text: >-
+            Two digits, two decimals. That same average in FLOAT is
+            8.700000127156576.
+        - label: Risk
+          text: >-
+            VARCHAR(10) for a date accepts anything date-shaped, silently.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: What does the server do with a date written the way we say it?
+      filename: date.sql
+      lang: sql
+      output_label: Output
+      source: |
+        INSERT INTO alumnos
+          (matricula, nombre, fecha_ingreso)
+        VALUES ('100011', 'Ana Lopez', '12/03/2026');
+
+        -- '03-12-2026' returns exactly the same error
+      output: |
+        ERROR 1292 (22007): Incorrect
+        date value: '12/03/2026' for
+        column 'fecha_ingreso' at row 1
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Of these three INSERTs, how many reach the table?
+      filename: type_errors.sql
+      lang: sql
+      output_label: Output
+      source: |
+        INSERT INTO inscripciones
+          (matricula, clave_materia, calificacion)
+        VALUES ('100001', 'PRG101', 9999.9);
+
+        INSERT INTO materias VALUES ('DEMASIADOLARGO','x',1);
+
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100013', NULL, '2026-01-01');
+      output: |
+        ERROR 1264 (22003): Out of range
+        value for column 'calificacion'
+        at row 1
+
+        ERROR 1406 (22001): Data too long
+        for column 'clave' at row 1
+
+        ERROR 1048 (23000): Column
+        'nombre' cannot be null
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Which of the two columns saves memory, CHAR or VARCHAR?
+      filename: char_varchar.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- 100 000 identical rows in utf8mb4
+        SELECT TABLE_NAME, TABLE_ROWS, DATA_LENGTH
+          FROM information_schema.TABLES
+         WHERE TABLE_NAME IN ('t_char','t_varchar');
+
+        INSERT INTO t_char    VALUES ('AB  ');
+        INSERT INTO t_varchar VALUES ('AB  ');
+        SELECT CONCAT('[',v,']'), LENGTH(v) FROM t_char;
+        SELECT CONCAT('[',v,']'), LENGTH(v) FROM t_varchar;
+      output: |
+        TABLE_NAME  TABLE_ROWS  DATA_LENGTH
+        t_char      99651       9977856
+        t_varchar   95860       4734976
+
+        [AB]     2
+        [AB  ]   4
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: A sorted ENUM, does it come out alphabetical or in some other order?
+      filename: enum.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE TABLE t_enum (
+            id      INT PRIMARY KEY,
+            estatus ENUM('inscrito','baja',
+                         'aprobado','reprobado') NOT NULL
+        );
+
+        SELECT id, estatus, estatus + 0 AS valor_interno
+          FROM t_enum
+         ORDER BY estatus;
+      output: |
+        id  estatus    valor_interno
+        3   inscrito   1
+        2   baja       2
+        1   aprobado   3
+        4   reprobado  4
+
+  - steps:
+      eyebrow: Block 02 · The corrected rule
+      title: What ENUM does, and what the source never mentions
+      items:
+        - label: Order
+          title: It sorts by declared position
+          desc: >-
+            ORDER BY does not come out alphabetical. It comes out in the order you wrote
+            the catalogue, which is usually what you wanted, but nobody told you.
+        - label: Refusal
+          title: A value outside the catalogue is stopped
+          desc: >-
+            Inserting 'egresado' returns ERROR 1265 (01000) Data truncated. It is the
+            closed domain MySQL does have, because CREATE DOMAIN does not exist here.
+        - label: Growing
+          title: Adding a value calls for ALTER TABLE
+          desc: >-
+            If the new value goes at the end of the list, ALGORITHM=INSTANT takes it. If
+            it goes in the middle, the table is rewritten and that already costs.
+        - label: The rule
+          title: ENUM for short closed catalogues
+          desc: >-
+            For everything else, a catalogue table with a foreign key. If you are going to
+            run an ALTER every term, it was never an ENUM.
+
+  - divider:
+      eyebrow: Block 03
+      title: Create, alter and destroy
+      lede: >-
+        Four commands that change the shape of the database, and one promise from the TCL
+        slide that none of the four keeps.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Three ROLLBACKs, one after another, do all three undo?
+      filename: implicit_commit.sql
+      lang: sql
+      output_label: Output
+      source: |
+        START TRANSACTION;
+        TRUNCATE TABLE t_prueba;
+        ROLLBACK;
+        SELECT COUNT(*) FROM t_prueba;
+
+        START TRANSACTION;
+        CREATE TABLE t_ddl (id INT);
+        ROLLBACK;
+        SHOW TABLES LIKE 't_ddl';
+
+        START TRANSACTION;
+        DELETE FROM t_prueba WHERE id = 3;
+        ROLLBACK;
+      output: |
+        COUNT(*) after TRUNCATE+ROLLBACK
+        0
+
+        t_ddl is still in the list
+
+        6 -> 5 -> 6 with DELETE
+
+  - table:
+      eyebrow: Block 03 · The pair the source confuses
+      title: DELETE and TRUNCATE are not the same thing, faster
+      headers: [Aspect, DELETE, TRUNCATE]
+      rows:
+        - [Family, DML, DDL]
+        - [AUTO_INCREMENT, stays at 4, back to 1]
+        - [Against a foreign key, ERROR 1451 (23000), ERROR 1701 (42000)]
+        - [Against ROLLBACK, it is undone, it is not undone]
+        - [WHERE clause, "yes", "no"]
+
+  - code_output:
+      eyebrow: Measured · MySQL 9.7.2
+      title: Two ways to empty a table and two ways to refuse
+      filename: fk_delete.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- alumnos is the parent of inscripciones
+        TRUNCATE TABLE alumnos;
+
+        DELETE FROM alumnos WHERE matricula = '2001';
+      output: |
+        ERROR 1701 (42000): Cannot
+        truncate a table referenced in a
+        foreign key constraint
+        (`db_tipossql`.`inscripciones`,
+        CONSTRAINT `inscripciones_ibfk_1`)
+
+        ERROR 1451 (23000): Cannot delete
+        or update a parent row: a foreign
+        key constraint fails
+
+  - pitfalls:
+      eyebrow: Common mistakes
+      title: Four ways to lose an afternoon to DDL
+      items:
+        - label: Error 01
+          title: Keeping a date in a VARCHAR
+          desc: >-
+            Anything goes in, it sorts alphabetically and you cannot subtract from it. The
+            1292 you saw today is the error that would have stopped you.
+        - label: Error 02
+          title: Using FLOAT for a grade
+          desc: >-
+            FLOAT is approximate by design. For money and for grades it is DECIMAL, with
+            the digits counted by hand.
+        - label: Error 03
+          title: Treating TRUNCATE as a fast DELETE
+          desc: >-
+            It resets the counter, it takes no WHERE, it cannot be undone and it fails
+            with a different error number against the same foreign key.
+        - label: Error 04
+          title: Testing DDL inside a transaction
+          desc: >-
+            There is no net. CREATE, ALTER and TRUNCATE commit on their own and the
+            ROLLBACK you wrote afterwards has nothing left to undo.
+
+  - lab:
+      eyebrow: Lab
+      title: The week 6 script, opened up column by column
+      brief: >-
+        Take your DDL script from last week and write beside every column the type it
+        should carry and the reason. Then provoke two of today's four type errors on
+        purpose and paste the server's literal output.
+      blocks:
+        - label: Deliverable
+          text: The corrected script and the two failed runs, with their error number
+        - label: Constraint
+          text: >-
+            No date may stay in a VARCHAR and no quantity with decimals may stay in a
+            FLOAT.
+        - label: The test
+          text: >-
+            Run the whole script from an empty database. If it needs manual ordering, the
+            foreign keys are in the wrong place.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A type is a constraint
+          desc: >-
+            Every one of today's four errors was a type doing its job. A well chosen column
+            refuses on its own what your program would otherwise have to check
+        - title: CHAR does not save memory
+          desc: >-
+            It took 2.1 times more than VARCHAR over the same hundred thousand rows, and it
+            read back 'AB' where 'AB  ' had been stored
+        - title: DDL commits on its own
+          desc: >-
+            ROLLBACK undoes what you did to the data, not what you did to the objects. Next
+            week that same fact is collected on rows instead
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and marking criteria
+      brief: >-
+        Pick five tables from your project and write a three-column table with the name of
+        every field, the type you assign it and the reason in one line. At least one reason
+        has to cite an error measured in class.
+      meta:
+        - [Due, Before week 8]
+        - [Format, Blackboard · PDF plus the .sql script]
+        - [Weight, Part of the 20 % for homework]
+      rubric:
+        - [Coverage, 30 %, All five tables complete with every field]
+        - [Justification, 50 %, Each type defended against the obvious alternative]
+        - [Evidence, 20 %, At least one server error quoted literally]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session we fill these tables and watch every constraint we wrote in week 6
+        fire from the other side. And the first midterm arrives.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

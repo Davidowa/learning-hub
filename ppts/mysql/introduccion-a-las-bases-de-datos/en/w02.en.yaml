@@ -1,0 +1,443 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 2
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 02 · Block A · Types, elements and classifications
+      title: Introduction to Databases
+      subtitle: >-
+        A database is three pieces of software you can point at and an inventory of objects
+        you can count. Today every inherited label gets a verdict.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 2 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The macro parts
+          desc: Three pieces of software, two open sessions and where information is born
+        - title: The labels
+          desc: The classifications in the source material, ruled on one by one
+        - title: The inventory
+          desc: The objects counted, and four definitions the server contradicts
+        - title: Your turn
+          desc: The inventory of your own database, against the one counted in class
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Separate base, DBMS and administrator
+          sub: And explain why changing client program changes nothing about the base
+        - head: Read a server process list
+          sub: Every session carries its own identifier and the server sees all of them
+        - head: Tell data from information
+          sub: The 8.33 average is on nobody's disc, and one query proves it
+        - head: Rule on the inherited classifications
+          sub: Which are alive, which are history with a date, and which one is simply wrong
+        - head: Count the objects of a database
+          sub: Table, view, trigger, event and account, each with the week that opens it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five blocks, seventeen weeks
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origin, types and elements, the DBMS and its architecture
+          state: now
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, tables and keys
+          state: todo
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping and JOIN
+          state: todo
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, accounts and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Three pieces of software, not one
+      lede: >-
+        The source calls the base, the DBMS and the administrator its macro parts. They are not
+        three layers of a drawing. They are three separate things, and today each one shows up
+        on screen by itself.
+      block: 1
+
+  - diagram:
+      eyebrow: Block 01 · The macro parts
+      title: What is stored, what answers and what you connect with
+      blocks:
+        - label: '01'
+          title: The database
+          desc: The files the data lives in. Week 3 will list them on the disc itself.
+        - label: '02'
+          title: The DBMS
+          desc: The process that serves, stores and protects. It answers your query.
+        - label: '03'
+          title: The administrator
+          desc: The program you connect with. It is swappable, which is why it is named apart.
+          dark: true
+      note: >-
+        Changing administrator does not change the base. The mysql client, mysqladmin and
+        mysqlshow ship from one directory, ask one server the same thing and get the same rows.
+
+  - code_output:
+      eyebrow: Measured
+      title: The client and the server are two separate programs
+      filename: terminal
+      lang: sql
+      output_label: Output
+      source: |
+        -- from the command line, not from the SQL client
+        mysqladmin -u root -h 127.0.0.1 -P 3399 version
+      output: |
+        mysqladmin.exe Ver 9.7.2
+        Server version 9.7.2
+        Protocol version 10
+        Connection 127.0.0.1 via TCP/IP
+        TCP port 3399
+        Uptime: 1 hour 58 min 23 sec
+
+  - code_output:
+      eyebrow: Measured · predict before you run
+      title: If root closes your session, which error do you get to read?
+      filename: w02_sessions.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- root, with the operador session open alongside
+        SELECT CONNECTION_ID();
+        SELECT id, user, command
+          FROM performance_schema.processlist
+         ORDER BY id;
+        SHOW STATUS LIKE 'Threads_connected';
+        -- on a separate run, root closes session 1028
+        KILL CONNECTION 1028;
+      output: |
+        CONNECTION_ID()   1116
+        816   event_scheduler  Daemon
+        1118  operador
+        1119  root
+        Threads_connected  2
+
+        ERROR 2013 (HY000): Lost
+        connection to MySQL server
+        during query
+
+  - code_output:
+      eyebrow: Measured · where information is born
+      title: Seven grades sit on disc and no 8.33 is stored anywhere
+      filename: w02_information.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT COUNT(*) AS calificaciones_en_disco
+          FROM inscripcion;
+        SELECT ROUND(AVG(calificacion),2) AS promedio_general
+          FROM inscripcion;
+        SELECT clave, ROUND(AVG(calificacion),2) AS promedio
+          FROM inscripcion GROUP BY clave;
+        SELECT COUNT(*) AS filas_que_contienen_8_50
+          FROM inscripcion WHERE calificacion = 8.50;
+      output: |
+        calificaciones_en_disco   7
+        promedio_general       8.33
+        clave    promedio
+        BD1001       8.50
+        filas_que_contienen_8_50  0
+
+  - divider:
+      eyebrow: Block 02
+      title: The source's labels, ruled on
+      lede: >-
+        The inherited material offers eleven labels across three taxonomies. Six get a measured
+        verdict and stay in the table. The other five are named once and then leave the
+        syllabus.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · The ruling
+      title: Six labels with a verdict, and the week that cashes it
+      headers: [Label in the source, Verdict, Where it is cashed]
+      rows:
+        - ["Transactional", "Refuted", "H-01-2 today · H-17-2 later"]
+        - ["Network, the mix-up", "Killed out loud", "Today · TCP port 3399"]
+        - ["Hierarchical", "History, with a date", "Week 4 · H-04-3"]
+        - ["Network, CODASYL", "History, with a date", "Week 4 · H-04-1"]
+        - ["Static/dynamic", "Kept, renamed", "Weeks 15 and 17"]
+        - ["Relational", "Kept, it is the course", "All seventeen weeks"]
+
+  - concept:
+      eyebrow: Key concept
+      title: Transactional does not mean fast
+      lead: >-
+        The source defines a transactional database as one that sends and receives data at high
+        speed and where redundancy would not be a problem. That describes an industrial process
+        historian. A transactional database is one that can undo, and last week we measured it
+        with two counts around a ROLLBACK.
+      panel:
+        label: Out of scope
+        title: Five labels that never return
+        note: >-
+          Referenced, non-textual full-source, full-text, multidimensional and object-oriented
+          are left out. Not one of them can be demonstrated on this server.
+      steps:
+        - text: Relational, which is the engine in front of you
+        - text: Document and key-value, with JSON inside the same engine
+        - text: Graph, which solves paths and does not live here
+          loop: ↺ orientation for reading the market, not this course's syllabus
+
+  - divider:
+      eyebrow: Block 03
+      title: The inventory, and four definitions that are wrong
+      lede: >-
+        Five objects created live and counted in one query. Four of the seven definitions the
+        material carries fall down on screen, and the thing that knocks them over is the server
+        itself.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured
+      title: The real object inventory of a database
+      filename: w02_inventory.sql
+      lang: sql
+      output_label: Output
+      source: |
+        -- counted over information_schema.TABLES, VIEWS,
+        -- TRIGGERS, EVENTS, ROUTINES, TABLE_CONSTRAINTS
+        -- and STATISTICS, for schema agente_intro01
+        SELECT 'TABLE' AS objeto, COUNT(*) AS n
+          FROM information_schema.TABLES
+         WHERE TABLE_SCHEMA = 'agente_intro01'
+           AND TABLE_TYPE = 'BASE TABLE';
+        -- and so on for each catalogue
+      output: |
+        TABLE                4
+        VIEW                 2
+        TRIGGER              1
+        EVENT                1
+        PROCEDURE/FUNCTION   0
+        CONSTRAINT           8
+        INDEX                3
+
+  - code_output:
+      eyebrow: Measured · correction
+      title: There are no Jobs, the object is called an EVENT
+      filename: w02_event.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SHOW VARIABLES LIKE 'event_scheduler';
+
+        CREATE EVENT ev_purga_inscripciones
+          ON SCHEDULE EVERY 1 DAY
+          DO DELETE FROM inscripcion WHERE periodo = '00000';
+
+        SELECT EVENT_NAME, EVENT_TYPE, INTERVAL_VALUE,
+               INTERVAL_FIELD, STATUS
+          FROM information_schema.EVENTS
+         WHERE EVENT_SCHEMA = 'agente_intro01';
+      output: |
+        Variable_name    Value
+        event_scheduler  ON
+
+        EVENT_NAME
+        ev_purga_inscripciones
+        EVENT_TYPE       RECURRING
+        INTERVAL_VALUE   1
+        INTERVAL_FIELD   DAY
+        STATUS           ENABLED
+
+  - code_output:
+      eyebrow: Measured · predict before you run
+      title: One UPDATE over three rows, how many audit rows does it write?
+      filename: w02_trigger.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE TRIGGER trg_alumno_after_update
+        AFTER UPDATE ON alumno FOR EACH ROW
+        BEGIN
+          INSERT INTO bitacora_alumno
+            (matricula, creditos_antes, creditos_despues, cuando)
+          VALUES (OLD.matricula, OLD.creditos, NEW.creditos, NOW());
+        END
+
+        UPDATE alumno SET creditos = creditos + 5;
+        SELECT * FROM bitacora_alumno;
+      output: |
+        A0000001  135  140
+        A0000002   60   65
+        A0000003   30   35
+
+  - code_output:
+      eyebrow: Measured · correction
+      title: No MySQL object goes by the name of form
+      filename: w02_form.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE FORM f_alta_alumno;
+      output: |
+        ERROR 1064 (42000): You have
+        an error in your SQL syntax;
+        check the manual that
+        corresponds to your MySQL
+        server version for the right
+        syntax to use near 'FORM
+        f_alta_alumno' at line 1
+
+  - code_output:
+      eyebrow: Measured · correction
+      title: The view is not read-only, and the aggregated one does refuse
+      filename: w02_view.sql
+      lang: sql
+      output_label: Output
+      source: |
+        SELECT TABLE_NAME, IS_UPDATABLE
+          FROM information_schema.VIEWS
+         WHERE TABLE_SCHEMA = 'agente_intro01';
+
+        UPDATE v_alumno_activo SET creditos = 135
+         WHERE matricula = 'A0000001';
+
+        UPDATE v_creditos_por_materia SET inscritos = 9
+         WHERE clave = 'BD1001';
+      output: |
+        v_alumno_activo         YES
+        v_creditos_por_materia  NO
+        ROW_COUNT() = 1
+        creditos = 135
+
+        ERROR 1288 (HY000): The
+        target table
+        v_creditos_por_materia of
+        the UPDATE is not updatable
+
+  - code_output:
+      eyebrow: Measured · correction
+      title: Creating an account grants it access to nothing at all
+      filename: w02_account.sql
+      lang: sql
+      output_label: Output
+      source: |
+        CREATE USER 'ag01_lector'@'localhost'
+          IDENTIFIED BY '********';
+        SHOW GRANTS FOR 'ag01_lector'@'localhost';
+
+        GRANT SELECT ON agente_intro01.*
+          TO 'ag01_lector'@'localhost';
+        SHOW GRANTS FOR 'ag01_lector'@'localhost';
+      output: |
+        GRANT USAGE ON *.* TO
+        `ag01_lector`@`localhost`
+
+        GRANT USAGE ON *.* TO
+        `ag01_lector`@`localhost`
+        GRANT SELECT ON
+        `agente_intro01`.* TO
+        `ag01_lector`@`localhost`
+
+  - code_output:
+      eyebrow: Measured · with no ORM connected
+      title: Two of the three refusals come from the server and nobody else
+      filename: w02_constraints.sql
+      lang: sql
+      output_label: Output
+      source: |
+        INSERT INTO alumno
+          VALUES ('A0000009','Mal Dato','mal@up.edu.mx',900);
+
+        INSERT INTO alumno
+          VALUES ('A0000010','Otro','ana@up.edu.mx',10);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint
+        'ck_alumno_creditos' is
+        violated.
+
+        ERROR 1062 (23000):
+        Duplicate entry
+        'ana@up.edu.mx' for key
+        'alumno.uq_alumno_correo'
+
+  - code_output:
+      eyebrow: Measured · with no ORM connected
+      title: And the third one is raised by a foreign key
+      filename: w02_constraints.sql
+      lang: sql
+      output_label: Output
+      source: |
+        INSERT INTO inscripcion
+          VALUES ('A9999999','BD1001','26PRI');
+      output: |
+        ERROR 1452 (23000): Cannot add
+        or update a child row: a
+        foreign key constraint fails
+        (`agente_intro01`.`inscripcion`,
+        CONSTRAINT `fk_ins_alumno`
+        FOREIGN KEY (`matricula`)
+        REFERENCES `alumno`
+        (`matricula`))
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The administrator is swappable
+          desc: >-
+            The base is not. That is why the macro parts are named separately, and why a session
+            has its own identifier the server can close without touching a single row
+        - title: Four inherited definitions are wrong
+          desc: >-
+            A trigger fires per row and not per condition, an event is not a Job, a form is no
+            MySQL object, and an account is identified by user and by host
+        - title: Integrity is the server's job
+          desc: >-
+            Today's three errors were raised by the engine with no ORM connected. USER() says
+            where the connection came from and CURRENT_USER() which account let it in, and week 17 cashes that
+
+  - homework:
+      eyebrow: Homework
+      title: Deliverable and marking criteria
+      brief: >-
+        Create a database of your own with at least one table, one view and one trigger, then
+        count its objects with the same inventory query. Compare your count row by row against
+        the one from class and explain every difference.
+      meta:
+        - [Due, Before week 3]
+        - [Format, Blackboard · script and output]
+        - [Weight, Part of the 20 % homework component]
+      rubric:
+        - ["The script", "40 %", "It runs clean from an empty database"]
+        - ["The inventory", "40 %", "All seven rows appear with their counts"]
+        - ["The differences", "20 %", "Every differing row carries an explanation"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session we open the DBMS. The three levels of the architecture, one query per
+        level, and a trip down to the disc to see the files today's definition only promised.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Messaging, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

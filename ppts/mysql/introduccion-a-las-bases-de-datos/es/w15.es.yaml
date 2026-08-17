@@ -1,0 +1,518 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 15
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Universidad Panamericana · 2026
+      unit: Semana 15 · Bloque E · Índices y desempeño
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Hace cuatro semanas un JOIN tardaba a la vista. Hoy se sabe por qué, cuánto cuesta
+        repararlo en cada escritura, y por qué la búsqueda de la pantalla siguiente es
+        otro problema que el índice no toca.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, COM112 · Semestre 1]
+        - [Sesión, 15 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Del recorrido al índice
+          desc: El JOIN lento, el plan que lo explica y la regla del prefijo izquierdo
+        - title: La taxonomía
+          desc: Siete tipos de índice, y el FULLTEXT que ninguna fuente del curso enseña
+        - title: Lo que cuesta
+          desc: El precio en cada escritura y el consejo heredado del LIKE, resuelto
+        - title: Tu turno
+          desc: Medir, indexar y volver a medir sobre las tablas grandes del laboratorio
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer el plan de una consulta
+          sub: En 9.7.2 el EXPLAIN por omisión contesta un árbol, y la rejilla clásica se pide por nombre
+        - head: Aplicar la regla del prefijo izquierdo
+          sub: Y reconocer su excepción, el salto de grupo, que la fuente escrita para 5.7 no conoce
+        - head: Elegir el índice según la pregunta
+          sub: B-tree para un patrón anclado, FULLTEXT para palabras dentro de un texto largo
+        - head: Ponerle precio a cada índice
+          sub: Ocho índices de más cuestan 4.6 veces la carga y pesan 3.71 veces los datos
+        - head: Auditar un consejo heredado
+          sub: Cuatro afirmaciones sobre el LIKE en veinte palabras, y un veredicto distinto para cada una
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: done
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Del recorrido completo al índice
+      lede: >-
+        El JOIN de la semana 11 tardaba y nadie supo decir por qué. El plan de ejecución lo
+        dice en una línea, y la reparación cabe en una sentencia.
+      block: 1
+
+  - code_output:
+      eyebrow: Medido · el caso motivador
+      title: El JOIN de la semana 11, y el índice que lo repara
+      filename: plan_join.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- 100 000 inscripciones contra 50 000 alumnos
+        EXPLAIN SELECT i.id, a.apellido
+        FROM inscripciones_big i
+        JOIN alumnos_big a ON a.matricula = i.matricula
+        WHERE a.apellido = 'Ramirez-7';
+
+        CREATE INDEX idx_apellido ON alumnos_big (apellido);
+
+        -- y se vuelve a pedir el mismo plan
+      output: |
+        sin indice en la union
+          type=ALL    rows=199343
+
+        con el indice
+          type=ref    rows=25
+
+        sin indice en ninguna de las
+        dos tablas, 9.7.2 elige
+        hash join
+
+  - code_output:
+      eyebrow: Medido · cómo se lee un plan
+      title: El EXPLAIN por omisión es un árbol, y la rejilla se pide por nombre
+      filename: explain.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        EXPLAIN
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+      output: |
+        -> Covering index lookup on
+           inscripciones_big using
+           idx_mat_fecha
+           (matricula = 100042)
+           (cost=2.32 rows=13)
+
+        FORMAT=TRADITIONAL
+          type=ref  key=idx_mat_fecha
+          rows=13  Extra=Using index
+
+  - code:
+      eyebrow: Bloque 01 · Crearlo
+      title: Dos maneras de escribir lo mismo, y uno que ya estaba
+      filename: indices.sql
+      lang: sql
+      source: |
+        CREATE TABLE alumnos (
+          matricula INT PRIMARY KEY,
+          apellido  VARCHAR(60),
+          correo    VARCHAR(120),
+          INDEX idx_apellido (apellido)
+        );
+
+        CREATE INDEX idx_apellido ON alumnos (apellido);
+        CREATE UNIQUE INDEX idx_correo ON alumnos (correo);
+
+        SHOW INDEX FROM inscripciones;
+        DROP INDEX idx_apellido ON alumnos;
+      annotations:
+        - label: La misma cosa
+          text: >-
+            Declararlo dentro del CREATE TABLE y declararlo después con CREATE INDEX
+            producen exactamente el mismo objeto.
+        - label: El que no escribiste
+          text: >-
+            SHOW INDEX FROM inscripciones devuelve tres índices donde solo se declararon
+            la llave primaria y dos foráneas. El nombre viene de la restricción.
+        - label: Y se borran
+          text: >-
+            DROP INDEX no aparece en ninguna fuente del curso y es la mitad que falta de
+            cualquier prueba de desempeño.
+        - label: Riesgo
+          text: >-
+            Cada índice se paga en cada INSERT y en cada UPDATE de la columna. Crear ocho
+            por si acaso es una decisión, no una precaución.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · prefijo izquierdo
+      title: El mismo índice compuesto, con las tres consultas que lo prueban
+      filename: prefijo.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE INDEX idx_mat_fecha
+          ON inscripciones_big (matricula, fecha_alta);
+
+        EXPLAIN FORMAT=TRADITIONAL
+        SELECT id FROM inscripciones_big
+        WHERE matricula = 100042;
+
+        -- ... AND fecha_alta = '2025-03-01';
+
+        -- ... WHERE fecha_alta = '2025-03-01';
+      output: |
+        la izquierda sola
+          type=ref    rows=13
+        las dos columnas
+          type=ref    rows=1
+        la derecha sola
+          type=index  rows=99847
+          possible_keys=NULL
+          key=idx_mat_fecha
+
+  - code_output:
+      eyebrow: Medido · la excepción
+      title: El salto de grupo, que la fuente escrita para 5.7 no conoce
+      filename: skip_scan.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE INDEX idx_periodo_calif
+          ON inscripciones_big (periodo, calificacion);
+
+        -- periodo tiene cuatro valores distintos,
+        -- y la consulta filtra por la segunda columna
+
+        EXPLAIN SELECT periodo, calificacion
+        FROM inscripciones_big
+        WHERE calificacion = 9.5;
+      output: |
+        -> Filter: (inscripciones_big.
+           calificacion = 9.5)
+           (cost=2543 rows=9984)
+          -> Covering index skip scan
+             on inscripciones_big
+             using idx_periodo_calif
+             over calificacion = 9.5
+             (cost=2543 rows=9984)
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La taxonomía completa
+      lede: >-
+        La fuente describe MySQL 5.7 y su lista tiene un hueco. Faltan seis tipos, y falta
+        del todo el único que sirve para buscar palabras dentro de un texto largo.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Taxonomía
+      title: Siete índices, no dos
+      headers: [Tipo, Qué resuelve, Cómo se pide]
+      rows:
+        - ["B-tree", "Igualdad y rango", "CREATE INDEX ... (col)"]
+        - ["Compuesto", "Prefijo izquierdo", "... (matricula, fecha_alta)"]
+        - ["UNIQUE", "Duplicados, y N nulos", "CREATE UNIQUE INDEX ..."]
+        - ["Invisible", "Probar antes de borrar", "ALTER INDEX ... INVISIBLE"]
+        - ["Funcional", "WHERE con función", "... ((DATE(fecha_alta)))"]
+        - ["De prefijo", "Columnas largas", "... (correo(10))"]
+        - ["FULLTEXT", "Palabras en un texto", "ADD FULLTEXT ft_cuerpo (...)"]
+
+  - code_output:
+      eyebrow: Medido · FULLTEXT
+      title: Sin índice no hay consulta, y no acepta cualquier columna
+      filename: fulltext_no.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- 60 000 mensajes del tablon de asesorias
+        SELECT id FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('normalizacion');
+
+        ALTER TABLE mensajes ADD FULLTEXT (matricula);
+
+        ALTER TABLE mensajes ADD FULLTEXT (fecha_alta);
+      output: |
+        ERROR 1191 (HY000): Can't find
+        FULLTEXT index matching the
+        column list
+
+        ERROR 1283 (HY000): Column
+        'matricula' cannot be part of
+        FULLTEXT index
+
+        el mismo 1283 sobre DATETIME
+
+  - code_output:
+      eyebrow: Medido · lo que cuesta construirlo
+      title: Crear el FULLTEXT reconstruye la tabla y le deja una columna escondida
+      filename: fulltext_alta.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        ALTER TABLE mensajes
+          ADD FULLTEXT ft_cuerpo (cuerpo);
+
+        SHOW WARNINGS;
+
+        SELECT FTS_DOC_ID FROM mensajes LIMIT 1;
+      output: |
+        Warning 124 InnoDB rebuilding
+        table to add column FTS_DOC_ID
+
+        60 000 filas -> 4231.8 ms
+
+        SELECT FTS_DOC_ID -> ERROR 1054
+
+  - code_output:
+      eyebrow: Medido · lo que compra
+      title: 7500 contra 3750, y la diferencia se llama «desnormalizacion»
+      filename: fulltext_vs_like.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT COUNT(*) FROM mensajes
+        WHERE cuerpo LIKE '%normalizacion%';
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('normalizacion');
+
+        -- y los contadores del servidor,
+        -- despues de un FLUSH STATUS
+      output: |
+        LIKE '%normalizacion%'
+          examinadas       60000
+          devueltas         7500
+        MATCH ... AGAINST
+          examinadas        3750
+          devueltas         3750
+
+        Handler_read_rnd_next
+          LIKE  60001    MATCH  0
+
+  - code_output:
+      eyebrow: Medido · lo que se filtra
+      title: Treinta y seis palabras vacías, y llegan en inglés
+      filename: stopwords.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT @@innodb_ft_min_token_size;
+
+        SELECT COUNT(*) FROM information_schema
+          .INNODB_FT_DEFAULT_STOPWORD;
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE MATCH(cuerpo) AGAINST ('la');
+
+        SELECT COUNT(*) FROM mensajes
+        WHERE cuerpo LIKE '% la %';
+      output: |
+        innodb_ft_min_token_size   3
+        palabras vacias           36
+        de, en y la estan adentro
+
+        MATCH ... AGAINST('la')    0
+        LIKE '% la %'          60000
+
+        INNODB_FT_INDEX_TABLE
+          72 tokens distintos
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Lo que cuesta, y el LIKE resuelto
+      lede: >-
+        Cada índice es una apuesta que se paga en cada escritura y se cobra en cada lectura
+        que lo use. Y el consejo heredado sobre el LIKE son cuatro afirmaciones con cuatro
+        veredictos distintos.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · el otro lado de la apuesta
+      title: Ocho índices de más cuestan 4.6 veces la carga y pesan 3.71 veces los datos
+      filename: costo_escritura.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- dos tablas identicas de 200 000 filas,
+        -- una sin indices secundarios y otra con ocho
+        INSERT INTO carga_sin SELECT * FROM origen;
+        INSERT INTO carga_con SELECT * FROM origen;
+
+        SELECT TABLE_NAME, DATA_LENGTH, INDEX_LENGTH
+        FROM information_schema.TABLES
+        WHERE TABLE_NAME LIKE 'carga_%';
+      output: |
+        carga   1.7668 s / 8.1967 s
+        DATA_LENGTH  14172160 ambas
+        INDEX_LENGTH 0 / 52592640
+
+        FULLTEXT, 10 000 filas
+          sin ft        114-141 ms
+          con ft        248-390 ms
+
+  - code_output:
+      eyebrow: Medido · el consejo heredado
+      title: El enemigo nunca fue el LIKE, fue el comodín de la izquierda
+      filename: like_regexp.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- una sola columna, titulo, con su indice B-tree
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo LIKE 'Duda sobre normalizacion%';
+
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo LIKE '%normalizacion%';
+
+        EXPLAIN SELECT mensaje_id FROM mensajes
+        WHERE titulo REGEXP '^Duda sobre normalizacion';
+      output: |
+        LIKE anclado al inicio
+          type=range  rows=3750
+          2.0 ms
+        LIKE con comodin al inicio
+          type=index  rows=59136
+          16.6 ms
+        REGEXP anclado
+          type=index  rows=59136
+          possible_keys=NULL
+
+  - diagram:
+      eyebrow: La decisión
+      title: La frase heredada se cambia por tres ramas, no por dos
+      blocks:
+        - label: Rama 01
+          title: Patrón anclado
+          desc: >-
+            LIKE 'Ramirez%' sobre un B-tree es un rango. type=range, 5000 filas.
+        - label: Rama 02
+          title: Palabra en el texto
+          desc: >-
+            FULLTEXT. 3750 filas contra 60000, sabiendo que ya no contesta exactamente la
+            misma pregunta.
+          dark: true
+        - label: Rama 03
+          title: Subcadena interna
+          desc: >-
+            Ni el índice ni el FULLTEXT ayudan. «desnormalizacion» es un problema de
+            modelado, no de índices.
+      note: >-
+        Y el REGEXP queda fuera de las tres. Ni con ancla usa el índice, así que el consejo
+        que lo recomendaba en lugar del LIKE está exactamente al revés.
+
+  - pitfalls:
+      eyebrow: Auditoría del deck heredado
+      title: Cuatro consejos de 2015 contra el servidor de hoy
+      items:
+        - label: Consejo 01
+          title: «No use ORDER BY»
+          desc: >-
+            La regla es evitar el filesort, no el ORDER BY, y eso se decide con el índice.
+            Sobre columna indexada el mismo orden cuesta 0.00894 contra 10073.
+        - label: Consejo 02
+          title: «No use campos nulos»
+          desc: >-
+            WHERE correo IS NULL sí usa el índice, con type=ref, key=idx_correo y rows=4.
+            Y un UNIQUE admite cuantos NULL le des antes del primer duplicado real.
+        - label: Consejo 03
+          title: «Usar LIMIT para una muestra»
+          desc: >-
+            Un LIMIT sin ORDER BY no devuelve una muestra, y el OFFSET no salta filas, las
+            cuenta. En OFFSET 90000 el plan examina 90010.
+        - label: Consejo 04
+          title: «Use índices en las llaves»
+          desc: >-
+            La llave foránea ya creó el suyo. Lo que sí hay que verificar son los tipos.
+            Comparar una columna de texto contra un número deja 49985 filas examinadas.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Medir, indexar y volver a medir
+      brief: >-
+        Toma la consulta más lenta de tu propio esquema, guarda su plan antes de tocar
+        nada, construye el índice que creas que la arregla y guarda el plan de nuevo. Se
+        entrega la comparación, no la opinión.
+      blocks:
+        - label: Entrega
+          text: >-
+            Los dos planes pegados uno junto al otro, el CREATE INDEX que va en medio y el
+            número de filas examinadas en cada caso.
+        - label: Restricción
+          text: >-
+            Un solo índice por consulta. Si hacen falta tres para que baje, el problema
+            está en la consulta o en el modelo.
+        - label: La prueba
+          text: >-
+            Mide también el costo. Carga mil filas antes y después del índice y anota los
+            dos tiempos, porque la apuesta tiene dos lados.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El plan contesta la pregunta
+          desc: >-
+            «Tarda mucho» no es un diagnóstico. type, key y rows sí lo son, y en 9.7.2 se
+            piden con EXPLAIN antes y después de cada cambio
+        - title: El índice se paga escribiendo
+          desc: >-
+            Ocho índices de más son 4.6 veces la carga y 3.71 veces el tamaño de los datos.
+            Un índice que ninguna consulta usa es puro costo
+        - title: Cada búsqueda pide su instrumento
+          desc: >-
+            El B-tree resuelve el patrón anclado, el FULLTEXT las palabras dentro del
+            texto, y la subcadena en medio de una palabra no la resuelve ninguno
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Audita los cuatro consejos de la lámina de errores contra tu propia base. Para cada
+        uno escribe la consulta, pega el plan que obtuviste y di si el consejo se sostiene,
+        se matiza o se cae. Uno de los cuatro se cae entero.
+      meta:
+        - [Entrega, Antes de la semana 16]
+        - [Formato, Blackboard · PDF con las consultas y sus planes]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Medición", "40 %", "Cada veredicto trae su EXPLAIN pegado"]
+        - ["Veredicto", "40 %", "Se sostiene, se matiza o se cae, y por qué"]
+        - ["Costo", "20 %", "Se reporta también el precio en la escritura"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, dos sesiones abiertas sobre la misma fila. El índice de hoy
+        vuelve con un segundo oficio que no tiene nada que ver con la velocidad.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

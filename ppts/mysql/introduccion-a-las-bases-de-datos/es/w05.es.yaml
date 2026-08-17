@@ -1,0 +1,473 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 5
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 05 · Bloque B · Normalización
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Normalizar es reparar un modelo. El servidor te deja romper todas las reglas sin
+        decir una palabra, así que la lección de hoy no es la regla. Es lo que cuesta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 5 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La flecha
+          desc: Qué determina a qué, escrito antes de nombrar ninguna forma normal
+        - title: Las tres formas
+          desc: Primera, segunda y tercera, cada una con el daño que la delata
+        - title: La factura
+          desc: Tres ataques contra la tabla ancha y tres reparaciones en pantalla
+        - title: Tu turno
+          desc: El modelo de la semana 4, roto a propósito y reparado a mano
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir una dependencia funcional
+          sub: A → B se lee «A determina a B», y decide en qué tabla vive cada columna
+        - head: Separar la 1FN de la llave primaria
+          sub: La unicidad no es parte de la primera forma normal, y el servidor lo demuestra
+        - head: Medir el costo de una lista dentro de una celda
+          sub: El dato entra, la fila se ve completa, y el WHERE que la busca contesta cero
+        - head: Reconocer una dependencia transitiva
+          sub: Una columna que depende de otra que no es la llave parte el UPDATE en dos
+        - head: Reparar la tabla ancha en pantalla
+          sub: Tres tablas donde había una, y los mismos tres ataques corriendo otra vez
+        - head: Nombrar el precio de normalizar
+          sub: Más tablas significa más JOIN, y la factura llega completa en la semana 11
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos, elementos y el manejador
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización y llaves
+          state: now
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agregados y JOIN
+          state: todo
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Dependencias funcionales
+      lede: >-
+        Antes de nombrar una sola forma normal hay que poder decir qué columna determina a
+        cuál. Esa flecha es toda la teoría que hace falta hoy.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Normalizar no es partir tablas
+      lead: >-
+        Partir una tabla en dos es la consecuencia. La regla es una pregunta que se hace
+        columna por columna: ¿de qué depende este valor? Si depende de algo que no es la
+        llave, está guardado en el lugar equivocado, y el servidor va a aceptarlo sin
+        protestar todas las veces que se lo pidas.
+      panel:
+        label: La notación
+        title: A → B se lee «A determina a B»
+        note: >-
+          Con el alumno_id ya queda determinado el nombre del alumno. Con la materia_id
+          quedan determinados su nombre y sus créditos. La calificación necesita las dos
+          columnas, porque depende del par completo.
+      steps:
+        - text: Escribe todas las dependencias de la tabla
+        - text: Marca las que no salen de la llave completa
+        - text: Cada grupo marcado se muda a su propia tabla
+          loop: ↺ y la llave del grupo se queda como llave foránea
+
+  - code:
+      eyebrow: Bloque 01 · El modelo de la semana 4, aplanado
+      title: Una sola tabla ancha para cada inscripción
+      filename: insc_desnorm.sql
+      lang: sql
+      source: |
+        CREATE TABLE insc_desnorm (
+            alumno_id      INT,
+            materia_id     INT,
+            alumno_nombre  VARCHAR(80),
+            materia_nombre VARCHAR(80),
+            calificacion   DECIMAL(4,2),
+            PRIMARY KEY (alumno_id, materia_id)
+        );
+      annotations:
+        - label: La llave del par
+          text: >-
+            El par identifica la fila. Nadie se inscribe dos veces a la misma materia, y
+            eso está bien resuelto.
+        - label: alumno_nombre
+          text: >-
+            Depende solo de alumno_id, que es media llave. Ahí se rompe la segunda forma
+            normal.
+        - label: materia_nombre
+          text: >-
+            La misma historia del otro lado. El nombre de la materia se vuelve a escribir
+            en cada inscripción.
+        - label: Riesgo
+          text: >-
+            La tabla es cómoda de leer y no hay una sola consulta que la corrija cuando se
+            contradiga a sí misma.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido
+      title: La unicidad no es parte de la primera forma normal
+      filename: sin_llave.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE sin_llave (a INT, b INT);
+        SHOW CREATE TABLE sin_llave;
+
+        SET SESSION sql_require_primary_key = ON;
+        CREATE TABLE sin_llave2 (a INT, b INT);
+      output: |
+        La primera tabla se crea y
+        SHOW CREATE no trae ninguna
+        línea PRIMARY KEY
+
+        ERROR 3750 (HY000): Unable to
+        create or change a table
+        without a primary key, when
+        the system variable
+        'sql_require_primary_key' is
+        set...
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Primera, segunda y tercera
+      lede: >-
+        Tres formas normales, tres maneras de romperlas y un servidor que acepta las tres
+        roturas sin una advertencia. La forma se aprende por el daño.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · La escalera
+      title: Cinco formas normales, y dónde se baja casi todo el mundo
+      items:
+        - label: '1FN'
+          title: Valores atómicos
+          desc: Una celda, un valor. Nada de listas adentro.
+        - label: '2FN'
+          title: La llave completa
+          desc: Ningún atributo depende de media llave compuesta.
+        - label: '3FN'
+          title: Nada transitivo
+          desc: Ningún atributo depende de otro que no sea llave.
+        - label: 'BCNF'
+          title: Todo determinante es llave
+          desc: Refinamiento de la tercera. Se nombra y se sigue.
+        - label: '4FN · 5FN'
+          title: La escalera sigue
+          desc: Existen. Parar en la tercera es una decisión.
+
+  - code_output:
+      eyebrow: Medido · rompiendo la 1FN
+      title: Tienes el dato guardado y no lo puedes consultar
+      filename: pedido_no1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO pedido_no1fn
+        VALUES (1, 'Ana', 'pantalon, camisa');
+
+        SELECT * FROM pedido_no1fn;
+
+        SELECT COUNT(*) FROM pedido_no1fn
+        WHERE producto = 'camisa';
+      output: |
+        El INSERT entra sin problema
+
+        El SELECT devuelve la fila
+        completa, con la lista dentro
+        de la celda
+
+        COUNT(*)
+        0
+
+  - code_output:
+      eyebrow: Medido · el parche
+      title: La función encuentra la fila y renuncia al índice
+      filename: pedido_no1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT * FROM pedido_no1fn
+        WHERE FIND_IN_SET('camisa',
+              REPLACE(producto, ', ', ',')) > 0;
+      output: |
+        Devuelve la fila que el
+        WHERE con igual no encontró
+
+        Ninguna función encima de la
+        columna puede apoyarse en un
+        índice, así que se lee la
+        tabla entera
+
+  - code_output:
+      eyebrow: Medido · la corrección de la fuente
+      title: La tabla «Cómo SÍ hacerlo» del deck heredado no se puede crear
+      filename: pedido_1fn.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE TABLE pedido_1fn (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30),
+            producto  VARCHAR(30)
+        );
+        INSERT INTO pedido_1fn VALUES (1,'Ana','pantalon');
+        INSERT INTO pedido_1fn VALUES (1,'Ana','camisa');
+      output: |
+        La primera fila entra
+
+        ERROR 1062 (23000): Duplicate
+        entry '1' for key
+        'pedido_1fn.PRIMARY'
+
+  - compare:
+      eyebrow: Bloque 02 · La reparación
+      title: Una tabla con una lista adentro se vuelve dos tablas
+      before:
+        label: Antes · dos productos en una celda
+        file: pedido_no1fn.sql
+        lang: sql
+        code: |
+          CREATE TABLE pedido_no1fn (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30),
+            producto  VARCHAR(60)
+          );
+          -- 'pantalon, camisa' en una celda
+      after:
+        label: Después · una fila por producto
+        file: pedido_1fn.sql
+        lang: sql
+        code: |
+          CREATE TABLE pedido (
+            pedido_id INT PRIMARY KEY,
+            cliente   VARCHAR(30));
+
+          CREATE TABLE detalle_pedido (
+            pedido_id INT, linea INT,
+            producto  VARCHAR(60),
+            PRIMARY KEY (pedido_id, linea));
+      note: >-
+        La corrección honesta no es repetir el pedido_id en dos filas, que es lo que la
+        fuente dibuja y lo que MySQL acaba de rechazar. Es separar el pedido de su
+        detalle, y con eso ya está escrita también la lámina de la segunda forma normal.
+
+  - code_output:
+      eyebrow: Medido · la anomalía de actualización
+      title: Un UPDATE deja al departamento en dos edificios a la vez
+      filename: empleado_desnorm.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- empleado_id -> departamento_nombre
+        --             -> departamento_ubicacion
+        UPDATE empleado_desnorm
+           SET departamento_ubicacion = 'Edificio C'
+         WHERE empleado_id = 1;
+
+        SELECT DISTINCT departamento_nombre,
+                        departamento_ubicacion
+        FROM empleado_desnorm;
+      output: |
+        departamento_nombre
+        departamento_ubicacion
+
+        Ingenieria   Edificio C
+        Ingenieria   Edificio A
+
+        Sin error y sin advertencia
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Lo que cuesta no hacerlo
+      lede: >-
+        El servidor acepta la contradicción, acepta el dato que después no se puede buscar
+        y acepta el total escrito a mano. Ninguna de las tres cosas te avisa.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · la contradicción
+      title: El mismo alumno con dos nombres, y las dos filas entran
+      filename: insc_desnorm.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        INSERT INTO insc_desnorm
+        VALUES (1, 10, 'Ana Lopez', 'Bases de Datos');
+
+        INSERT INTO insc_desnorm
+        VALUES (1, 11, 'Ana Lpez', 'Calculo');
+      output: |
+        Las dos filas entran
+
+        Sin error y sin advertencia
+
+        El alumno 1 se llama
+        Ana Lopez en una fila y
+        Ana Lpez en la otra
+
+  - code_output:
+      eyebrow: Medido · el atributo derivado
+      title: El total se calcula solo, y a mano no se deja escribir
+      filename: detalle_pedido.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        -- total DECIMAL(12,2) AS (cantidad * precio) STORED
+        INSERT INTO detalle_pedido (cantidad, precio)
+        VALUES (3, 250.00);
+        SELECT total FROM detalle_pedido;
+
+        INSERT INTO detalle_pedido (cantidad, precio, total)
+        VALUES (3, 250.00, 1.00);
+      output: |
+        total
+        750.00
+
+        ERROR 3105 (HY000): The value
+        specified for generated
+        column 'total' in table
+        'detalle_pedido' is not
+        allowed.
+
+  - method:
+      eyebrow: Bloque 03 · El otro lado del trato
+      title: Normalizar cuesta, y la fuente nunca lo dice
+      statement: >-
+        Cada tabla que separas hoy es un JOIN que alguien va a escribir después. Eso no es
+        un argumento para dejar la tabla ancha. Es el precio, y se paga con los ojos
+        abiertos.
+      points:
+        - label: Lo que compras
+          text: >-
+            Un solo lugar donde vive cada hecho. La contradicción de hace un momento deja
+            de ser posible, en vez de quedarse en improbable.
+        - label: Lo que pagas
+          text: >-
+            Más tablas significa más JOIN. La factura llega completa en la semana 11, que
+            es la semana en la que más consultas escribe el curso.
+        - label: La regla que se lleva
+          text: >-
+            Una función encima de una columna no puede usar índice. Vuelve en la semana 9
+            al ordenar el grupo y en la 15 al buscar con comodín inicial.
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de quedarse con la tabla ancha
+      items:
+        - label: Error 01
+          title: Confundir la 1FN con la llave
+          desc: >-
+            La unicidad es otra regla. MySQL crea tablas sin llave primaria y solo la
+            exige cuando se lo pides con una variable de sesión.
+        - label: Error 02
+          title: Guardar una lista en una celda
+          desc: >-
+            El dato entra y el WHERE con igual contesta cero. El parche con FIND_IN_SET
+            funciona y deja la tabla sin índice para siempre.
+        - label: Error 03
+          title: Guardar un derivado a mano
+          desc: >-
+            El total calculado tiene respuesta en el motor. La columna generada lo calcula
+            sola y rechaza cualquier valor que le escribas encima.
+        - label: Error 04
+          title: Poner la llave sobre el nombre
+          desc: >-
+            Dos departamentos con el mismo nombre rompen el modelo. Llave entera para
+            unir, y UNIQUE para proteger el nombre, que se construye la semana que entra.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Romper el modelo de la semana 4, y repararlo en pantalla
+      brief: >-
+        Aplana tu diagrama de la semana 4 en una sola tabla ancha, cárgala con quince
+        filas y córrele los tres ataques de hoy: la lista dentro de la celda, el nombre
+        escrito de dos maneras y el UPDATE que deja dos ubicaciones. Después repárala y
+        vuelve a correr los tres.
+      blocks:
+        - label: Entrega
+          text: Los dos scripts y la salida de los seis intentos, pegada tal como salió
+        - label: Restricción
+          text: >-
+            La versión reparada acepta exactamente los mismos datos. Reparar no es borrar
+            el caso incómodo.
+        - label: La prueba
+          text: >-
+            Si un ataque sigue pasando después de reparar, la dependencia que lo causa
+            todavía está escrita en la tabla equivocada.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La flecha viene antes que la forma
+          desc: >-
+            Primero se escribe qué determina a qué. Las formas normales son la manera
+            corta de nombrar las flechas que quedaron mal puestas
+        - title: El servidor no te va a avisar
+          desc: >-
+            Acepta la lista en la celda, acepta las dos grafías del mismo nombre y acepta
+            el departamento en dos edificios. Ni un error, ni una advertencia
+        - title: Normalizar se paga con JOIN
+          desc: >-
+            Más tablas es menos redundancia y más trabajo al consultar. Conviene saber el
+            precio hoy y no descubrirlo en la semana 11
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Reproduce sobre una base tuya las tres anomalías medidas hoy: el COUNT que
+        devuelve cero, las dos grafías del mismo nombre y el departamento en dos
+        edificios. Cada una con su sentencia y con la salida del servidor debajo.
+      meta:
+        - [Entrega, Antes de la semana 6]
+        - [Formato, Blackboard · un script .sql y un PDF]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Las anomalías", "60 %", "Las tres, con su sentencia y su salida literal"]
+        - ["Las dependencias", "25 %", "Escritas como A → B antes de tocar la tabla"]
+        - ["La reparación", "15 %", "El modelo corregido corre desde vacío"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión el diagrama se ejecuta. Cuatro reglas de mapeo, cuatro ramas de
+        integridad, y una llave foránea que se niega a nacer de cuatro maneras distintas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

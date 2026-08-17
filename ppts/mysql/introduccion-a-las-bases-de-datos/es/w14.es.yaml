@@ -1,0 +1,501 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 14
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 14 · Bloque D · Triggers y eventos
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Dos maneras de que la base actúe sin ti. Una se dispara cuando cambia una fila,
+        la otra cuando el reloj lo dice, y las dos fallan sin avisarte.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 14 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: OLD y NEW
+          desc: Los seis momentos, la validación que sí maneja el NULL, y el CHECK que a veces gana
+        - title: Auditar, y el agujero
+          desc: La bitácora que funciona y las tres maneras de que no vea absolutamente nada
+        - title: Eventos
+          desc: El interruptor, la fecha que ya pasó, y el fallo que nadie te reporta
+        - title: Tu turno
+          desc: Una bitácora de calificaciones que sí resiste el borrado en cascada
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir un trigger y nombrarlo
+          sub: Con la convención trg_tabla_momento_evento_proposito, que se lee sola en un SHOW TRIGGERS
+        - head: Decir qué hay en OLD y qué hay en NEW
+          sub: Depende del momento y del evento, y pedir el que no existe es el error 1363
+        - head: Validar sin dejar pasar el NULL
+          sub: Una comparación contra NULL no da falso, da desconocido, y el IF simplemente no entra
+        - head: Elegir entre el trigger y el CHECK
+          sub: 1644 con mensaje propio contra 3819 declarativo, y ninguno de los dos es la respuesta siempre
+        - head: Programar un evento y desconfiar de él
+          sub: El planificador es un interruptor, la fecha pasada desaparece, y ENABLED no quiere decir sano
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos, DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: done
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos, triggers y eventos
+          state: now
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: OLD, NEW y los seis momentos
+      lede: >-
+        Un trigger es un bloque de código que el servidor ejecuta por cada fila que
+        cambia. Lo único que hay que memorizar es qué fila puede ver, y eso depende de
+        dos palabras.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Lo único que hay que memorizar
+      title: Qué existe en OLD y qué existe en NEW, momento por momento
+      headers: [Momento, OLD, NEW]
+      rows:
+        - ["BEFORE INSERT", "no existe", "se lee y se escribe"]
+        - ["AFTER INSERT", "no existe", "se lee"]
+        - ["BEFORE UPDATE", "se lee", "se lee y se escribe"]
+        - ["AFTER UPDATE", "se lee", "se lee"]
+        - ["BEFORE DELETE", "se lee", "no existe"]
+        - ["AFTER DELETE", "se lee", "no existe"]
+
+  - code:
+      eyebrow: Bloque 01 · El trigger de validación
+      title: La calificación fuera de escala nunca llega a la tabla
+      filename: trg_calificacion.sql
+      lang: sql
+      source: |
+        DELIMITER $$
+        CREATE TRIGGER trg_inscripciones_before_insert_calificacion
+        BEFORE INSERT ON inscripciones
+        FOR EACH ROW
+        BEGIN
+          IF NEW.calificacion IS NOT NULL
+             AND (NEW.calificacion < 0 OR NEW.calificacion > 10) THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =
+              'La calificacion debe estar entre 0 y 10';
+          END IF;
+        END$$
+        DELIMITER ;
+      annotations:
+        - label: El nombre
+          text: >-
+            Tabla, momento, evento y propósito. Es largo a propósito, para que un
+            SHOW TRIGGERS se lea sin abrir el cuerpo.
+        - label: El error
+          text: >-
+            SIGNAL y MESSAGE_TEXT son los de la semana pasada. Aquí no se enseñan otra
+            vez, solamente cambian de casa.
+        - label: La guarda
+          text: >-
+            Sin el IS NOT NULL, una calificación vacía deja la comparación en desconocido
+            y la fila entra sin que el trigger diga nada.
+        - label: Riesgo
+          text: >-
+            El trigger vigila las sentencias que alguien escribe. Lo que desaparece por
+            otro camino no pasa por aquí, y el bloque 02 enseña cuál.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · el trigger trabajando
+      title: ¿Qué contesta el servidor cuando la calificación vale 11?
+      filename: insert_calif.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo, calificacion)
+        VALUES (100002, 'PRG101', '2026-2', 11.0);
+      output: |
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+
+  - compare:
+      eyebrow: Bloque 01 · La misma regla, dos veces
+      title: La validación que no maneja el NULL es una validación que no valida
+      before:
+        label: Sin guarda
+        file: sin_guarda.sql
+        lang: sql
+        code: |
+          IF NEW.calificacion < 0
+             OR NEW.calificacion > 10 THEN
+            SIGNAL SQLSTATE '45000' SET
+              MESSAGE_TEXT = 'fuera de escala';
+          END IF;
+      after:
+        label: Con guarda
+        file: con_guarda.sql
+        lang: sql
+        code: |
+          IF NEW.calificacion IS NOT NULL
+             AND (NEW.calificacion < 0
+               OR NEW.calificacion > 10) THEN
+            SIGNAL SQLSTATE '45000' SET
+              MESSAGE_TEXT = 'fuera de escala';
+          END IF;
+      note: >-
+        Con la calificación en NULL, la comparación de la izquierda no contesta falso.
+        Contesta desconocido, y desconocido no es verdadero, así que el IF no entra y la
+        fila pasa. Es la misma lógica de tres valores de la semana 9, aterrizando en el
+        único lugar donde apaga una regla que alguien escribió a propósito.
+
+  - code_output:
+      eyebrow: Medido · cuándo el trigger es demasiado
+      title: La misma regla, sin una sola línea de código procedural
+      filename: chk_creditos.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- la otra manera de decir lo mismo,
+        -- declarativa y sin cuerpo que mantener
+        ALTER TABLE materias
+          ADD CONSTRAINT chk_creditos
+          CHECK (creditos BETWEEN 1 AND 12);
+
+        INSERT INTO materias
+        VALUES ('XX1', 'Fuera de rango', 30);
+      output: |
+        ERROR 3819 (HY000): Check
+        constraint 'chk_creditos' is
+        violated.
+
+        y el del trigger, para comparar:
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Auditar, y el agujero de la bitácora
+      lede: >-
+        La bitácora con OLD y NEW en el mismo renglón funciona y es útil. El problema es
+        lo que no aparece en ella, que la oficina de escolares va a creer que nunca pasó.
+      block: 2
+
+  - code_output:
+      eyebrow: Medido · la marca de tiempo se mueve con el entorno
+      title: OLD y NEW escritos en el mismo renglón de la bitácora
+      filename: bitacora.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- trg_inscripciones_after_update_bitacora
+        -- guarda el valor viejo y el nuevo juntos
+
+        UPDATE inscripciones
+           SET calificacion = 6.0
+         WHERE inscripcion_id = 1;
+
+        SELECT * FROM inscripciones_audit;
+      output: |
+        calif_anterior  9.5
+        calif_nueva     6.0
+        accion          UPDATE
+        cambiado_en     2026-08-16 21:21:12
+
+  - code_output:
+      eyebrow: Medido · el agujero
+      title: ¿Cuántos renglones escribe la bitácora cuando el borrado va en cascada?
+      filename: cascada.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- inscripciones tiene un trigger BEFORE DELETE
+        -- que escribe la bitacora, y una llave foranea
+        -- declarada con ON DELETE CASCADE
+
+        DELETE FROM alumnos WHERE alumno_id = 3;
+        SELECT COUNT(*) FROM inscripciones_audit;
+
+        TRUNCATE TABLE inscripciones;
+        SELECT COUNT(*) FROM inscripciones_audit;
+      output: |
+        la inscripcion hija desaparecio:
+        conteo 1 -> 0
+        la bitacora de auditoria:
+        0 renglones
+
+        despues del TRUNCATE:
+        0 renglones de bitacora
+
+  - code_output:
+      eyebrow: Medido · dónde termina el trigger
+      title: El trigger detuvo la sentencia, ¿también deshizo la transacción?
+      filename: tx_trigger.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        START TRANSACTION;
+          INSERT INTO inscripciones
+          VALUES (100002, 'MAT201', '2026-2', 8.0);
+          INSERT INTO inscripciones
+          VALUES (100002, 'PRG101', '2026-2', 11.0);
+        ROLLBACK;
+      output: |
+        conteo 6 -> 7
+        ERROR 1644 (45000): La
+        calificacion debe estar entre 0
+        y 10
+        el conteo sigue en 7
+
+        despues del ROLLBACK:
+        el conteo vuelve a 6
+
+  - code_output:
+      eyebrow: Medido · corrección a la fuente
+      title: ¿Cuántos triggers del mismo momento admite una tabla en 9.7.2?
+      filename: dos_triggers.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- dos BEFORE INSERT sobre la misma tabla
+        SHOW TRIGGERS;
+
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo)
+        VALUES (100002, 'PRG101', '2026-13');
+      output: |
+        trg_insc_bi_valida
+        trg_insc_bi_periodo
+        los dos BEFORE INSERT sobre la
+        misma tabla
+
+        el segundo levanto:
+        ERROR 1644 (45000): Periodo con
+        formato invalido
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de romper un trigger
+      items:
+        - label: Error 01
+          title: Pedir OLD en un trigger de INSERT
+          desc: >-
+            No hay fila anterior que leer, y el trigger ni siquiera se crea. ERROR 1363
+            (HY000). Declara siempre el evento antes de escribir el cuerpo.
+        - label: Error 02
+          title: Modificar la tabla sobre la que está definido
+          desc: >-
+            El servidor lo corta con ERROR 1442 (HY000). Para cambiar la fila que va
+            entrando se asigna NEW en un BEFORE, no se ejecuta un UPDATE.
+        - label: Error 03
+          title: DROP TRIGGER sin IF EXISTS
+          desc: >-
+            ERROR 1360 (HY000) y el script deja de ser re-ejecutable, que es justo lo que
+            un alumno necesita mientras depura.
+        - label: Error 04
+          title: Olvidar que el sql_mode se congela
+          desc: >-
+            SHOW TRIGGERS guarda el Definer y el sql_mode de cada trigger. El que creaste
+            hoy conserva el de hoy, cambie el servidor lo que cambie.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Eventos, y lo que ninguno de los dos ve
+      lede: >-
+        El trigger espera a que alguien escriba una sentencia. El evento no espera a
+        nadie: espera al reloj. Y cuando se rompe, el catálogo sigue diciendo que está
+        perfectamente.
+      block: 3
+
+  - compare:
+      eyebrow: Bloque 03 · Las dos plantillas
+      title: Lo dispara una fila, o lo dispara el reloj
+      before:
+        label: Trigger · lo dispara una fila
+        file: trigger.sql
+        lang: sql
+        code: |
+          CREATE TRIGGER trg_tabla_bi_regla
+          BEFORE INSERT ON tabla
+          FOR EACH ROW
+          BEGIN
+            -- NEW ya existe, OLD no
+          END
+      after:
+        label: Evento · lo dispara el reloj
+        file: evento.sql
+        lang: sql
+        code: |
+          CREATE EVENT ev_resumen_diario
+          ON SCHEDULE EVERY 1 DAY
+            STARTS NOW() + INTERVAL 1 MINUTE
+          DO
+            INSERT INTO resumen (dia, total)
+            VALUES (CURDATE(), 1)
+            ON DUPLICATE KEY UPDATE total = 1;
+      note: >-
+        El evento cierra con ON DUPLICATE KEY UPDATE y no con REPLACE INTO. REPLACE borra
+        y vuelve a insertar, así que dispara los triggers de DELETE de la tabla de
+        resumen, y si esa tabla también está auditada la bitácora se llena de borrados
+        que nadie hizo.
+
+  - code_output:
+      eyebrow: Medido · el interruptor
+      title: Los eventos corren de verdad, si alguien encendió el planificador
+      filename: ev_latido.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        SHOW VARIABLES LIKE 'event_scheduler';
+
+        CREATE EVENT ev_latido
+        ON SCHEDULE EVERY 1 SECOND
+        DO INSERT INTO latidos (cuando) VALUES (NOW());
+
+        -- tres segundos despues
+        SELECT COUNT(*) FROM latidos;
+      output: |
+        event_scheduler  ON
+
+        3 renglones durante una espera
+        de 3 segundos
+
+  - code_output:
+      eyebrow: Medido · el ejemplo de la fuente
+      title: El evento se creó sin error, ¿dónde quedó?
+      filename: ev_una_vez.sql
+      lang: sql
+      output_label: Al ejecutar
+      source: |
+        -- el ejemplo de la fuente, con la fecha
+        -- que ya paso
+        CREATE EVENT ev_una_vez
+        ON SCHEDULE AT '2026-03-20 08:00:00'
+        DO UPDATE periodos SET cerrado = 1;
+
+        SHOW WARNINGS;
+        SELECT * FROM information_schema.EVENTS;
+      output: |
+        el CREATE tiene exito, sin error
+
+        Note 1588: Event execution time
+        is in the past and ON COMPLETION
+        NOT PRESERVE is set. The event
+        was dropped immediately after
+        creation.
+
+        information_schema.EVENTS vacio
+
+  - method:
+      eyebrow: Bloque 03 · El punto operativo de la semana
+      title: Un evento roto sigue reportando que está sano
+      statement: >-
+        Un evento cuyo cuerpo viola una llave foránea sigue diciendo ENABLED, con
+        LAST_EXECUTED puesto en el instante exacto en que falló.
+      points:
+        - label: Lo que ves
+          text: >-
+            SHOW EVENTS e information_schema.EVENTS contestan lo mismo para un evento sano
+            y para uno muerto.
+        - label: Dónde quedó el error
+          text: >-
+            En el log de errores del servidor, que nadie del salón tiene abierto y que en
+            producción casi nadie lee.
+        - label: Qué se hace
+          text: >-
+            El cuerpo del evento lleva su propio DECLARE HANDLER, el de la semana pasada,
+            y escribe el fallo en una tabla tuya.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una bitácora de calificaciones que resista el borrado en cascada
+      brief: >-
+        Instala el trigger de auditoría sobre inscripciones, comprueba que registra un
+        UPDATE normal, y después borra al alumno padre. Cuenta los renglones de la
+        bitácora antes y después, y explica en dos líneas por qué el número no cambió.
+      blocks:
+        - label: Entrega
+          text: El script y las dos cuentas, la de antes y la de después del DELETE
+        - label: Restricción
+          text: >-
+            La bitácora tiene que quedar completa. Elige el mecanismo que sí ve la
+            desaparición de la fila hija.
+        - label: La prueba
+          text: >-
+            Repite el ejercicio con TRUNCATE. Si tu solución sobrevive a los dos, está
+            bien elegida.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: Un trigger ve sentencias
+          desc: >-
+            No ve todas las desapariciones. El borrado en cascada y el TRUNCATE se lo
+            saltan enteros, así que una bitácora hecha solo de triggers tiene agujeros que
+            nadie reporta
+        - title: El error ya lo sabes levantar
+          desc: >-
+            SIGNAL, MESSAGE_TEXT y los handlers son los de la semana 13 y aquí solo cambian
+            de casa. El trigger incluso puede llamar al procedimiento que escribiste
+            entonces, y está verificado
+        - title: ENABLED no quiere decir sano
+          desc: >-
+            Un evento que se rompe cada noche conserva su estado y su LAST_EXECUTED, el
+            catálogo no distingue uno vivo de uno muerto, y el error se va a un archivo que
+            nadie abre
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de evaluación
+      brief: >-
+        Escribe el trigger de validación y el de auditoría sobre inscripciones, más un
+        evento que cierre el periodo. Entrega la corrida donde el INSERT malo es rechazado,
+        el UPDATE bueno deja su renglón en la bitácora, y el evento aparece en el catálogo.
+      meta:
+        - [Entrega, Antes de la semana 15]
+        - [Formato, Blackboard · script .sql y salida pegada]
+        - [Peso, Parte del 20 % de tareas]
+      rubric:
+        - ["Validación", "40 %", "El trigger rechaza y maneja el caso NULL"]
+        - ["Auditoría", "40 %", "OLD y NEW quedan en el mismo renglón"]
+        - ["El evento", "20 %", "Se crea con fecha futura y sigue en el catálogo"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión abre el último bloque con la pregunta que la clase lleva cinco
+        semanas haciendo en voz baja: por qué esta consulta tarda tanto, y qué cambia
+        exactamente cuando le pones un índice.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

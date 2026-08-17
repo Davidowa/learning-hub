@@ -1,0 +1,467 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 12
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 12 · Block D · Views
+      title: Introduction to Databases
+      subtitle: >-
+        A table stores data. A view stores logic. Last week's JOIN gets a name today, and
+        it is the first object you write in this course that outlives the session.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 12 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What it stores
+          desc: Logic, not rows, and an asterisk frozen the moment you create it
+        - title: Writing through it
+          desc: When the UPDATE reaches the base table and when it hits a 1288
+        - title: DEFINER and layers
+          desc: Which user it runs as, how they stack, and why it speeds up nothing
+        - title: Your turn
+          desc: The coordinator's screen, and the row that vanishes in front of them
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Store a query under a name
+          sub: And explain why an asterisk is never written inside a view
+        - head: Predict whether a view accepts an UPDATE
+          sub: A view with a JOIN does accept one, and the real boundary is the outer join
+        - head: Close a filtered view with WITH CHECK OPTION
+          sub: Without it the user inserts rows that vanish from their own screen
+        - head: Read a view's DEFINER and know what it implies
+          sub: Every view you created today came back as root, and nobody asked for it
+        - head: Explain why a view speeds up nothing
+          sub: EXPLAIN over the view does not even name it, and that is the whole answer
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, types and elements, the engine and its architecture
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types and DDL, DML, SELECT, grouping, JOIN and UNION
+          state: done
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, stored procedures, triggers and events
+          state: now
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, users and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What a view stores and what it does not
+      lede: >-
+        Week 2 called it «Vista (RO)» and week 3 placed it at the external level. One of
+        those two is wrong, and today it gets corrected with the server on screen.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A table stores data, a view stores logic
+      lead: >-
+        There are no rows inside a view. There is a query kept under a name, run again
+        every time somebody reads it. That is why a view is never out of date and why it
+        is never faster than the query inside it. It is week 3's external level, written
+        in SQL.
+      panel:
+        label: What does change
+        title: It is the first object of the course that outlives the session
+        note: >-
+          Until last week everything you wrote left with the connection. A view stays in
+          the schema, whoever logs in tomorrow sees it, and from today on it matters which
+          user created it and what happens when somebody restores it on another server.
+      steps:
+        - text: You give a query a name with CREATE VIEW
+        - text: The server keeps the text, not the result
+        - text: Every SELECT on the view runs that query again
+          loop: ↺ and that is why the data never goes stale
+
+  - code:
+      eyebrow: Block 01 · The object
+      title: Last week's JOIN, with a name on top of it
+      filename: vista.sql
+      lang: sql
+      source: |
+        CREATE OR REPLACE VIEW v_insc_join AS
+        SELECT i.inscripcion_id, i.alumno_id,
+               a.nombre AS alumno, m.nombre AS materia,
+               i.calificacion
+        FROM inscripciones i
+        JOIN alumnos a ON a.alumno_id = i.alumno_id
+        JOIN materias m ON m.materia_id = i.materia_id;
+
+        SELECT * FROM v_insc_join WHERE alumno_id = 1;
+      annotations:
+        - label: OR REPLACE
+          text: >-
+            You re-run the script without dropping anything by hand. In one class it gets
+            rewritten twenty times.
+        - label: Every column named
+          text: >-
+            Both tables carry a column called nombre. Without aliases the view returns two
+            nombre columns.
+        - label: The outer query
+          text: >-
+            The WHERE belongs here, not inside. The view describes what may be seen and
+            whoever queries it decides what they want today.
+        - label: Risk
+          text: >-
+            The DEFINER wrote itself in. Nobody asked for it and it is root, which block
+            03 measures and week 17 charges for.
+          accent: true
+
+  - code_output:
+      eyebrow: Measured · the asterisk
+      title: You add a column to the base table. Does the view see it?
+      filename: estrella.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_estrella AS SELECT * FROM materias;
+        ALTER TABLE materias ADD COLUMN departamento VARCHAR(30) NULL;
+        SELECT * FROM v_estrella;
+        SHOW CREATE VIEW v_estrella;
+      output: |
+        the view still returns
+        materia_id, clave, nombre,
+        creditos
+
+        SHOW CREATE VIEW v_estrella
+        AS select `materias`.
+        `materia_id` AS `materia_id`,
+        `materias`.`clave` AS
+        `clave`, ...
+
+  - code_output:
+      eyebrow: Measured · the order
+      title: The same view, twice, coming back in two different orders
+      filename: orden.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_orden AS
+        SELECT alumno_id, nombre FROM alumnos
+        ORDER BY nombre DESC;
+
+        SELECT * FROM v_orden;
+
+        SELECT v.nombre, i.periodo
+        FROM v_orden v
+        JOIN inscripciones i USING (alumno_id);
+      output: |
+        a plain SELECT on the view
+        -> comes back descending
+
+        the same view inside a JOIN
+        -> comes back in another
+           order
+
+        the ORDER BY belongs to the
+        final query
+
+  - divider:
+      eyebrow: Block 02
+      title: When you can write through it
+      lede: >-
+        «A view is not updatable if it contains a JOIN» is the most quoted line in the
+        source and it is false. The true rule is shorter and more useful, and it comes out
+        of three measurements in a row.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured · the correction of the week
+      title: A view with a JOIN does accept an UPDATE, and here is how far
+      filename: escribir.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_insc_join';
+
+        UPDATE v_insc_join SET calificacion = 9.9
+        WHERE inscripcion_id = 3;
+
+        UPDATE v_insc_join SET alumno = 'X', calificacion = 9.9
+        WHERE inscripcion_id = 3;
+
+        DELETE FROM v_insc_join WHERE inscripcion_id = 3;
+      output: |
+        IS_UPDATABLE = YES
+        the UPDATE moved the row in
+        the base table
+
+        ERROR 1393 (HY000): Can not
+        modify more than one base
+        table through a join view
+
+        ERROR 1395 (HY000): Can not
+        delete from join view
+
+  - code_output:
+      eyebrow: Measured · where the boundary really falls
+      title: The source forbids the joins that work and allows the one that does not
+      filename: outer.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_insc_left AS
+        SELECT i.inscripcion_id, a.nombre, i.calificacion
+        FROM alumnos a
+        LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
+
+        UPDATE v_insc_left SET calificacion = 9.9
+        WHERE inscripcion_id = 3;
+      output: |
+        IS_UPDATABLE = NO
+
+        ERROR 1288 (HY000): The
+        target table v_insc_left of
+        the UPDATE is not updatable
+
+  - code_output:
+      eyebrow: Measured · the one disagreement all term
+      title: The catalogue says yes and the server says no
+      filename: escalar.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_escalar AS
+        SELECT a.alumno_id, a.nombre,
+               (SELECT COUNT(*) FROM inscripciones i
+                 WHERE i.alumno_id = a.alumno_id) AS inscritas
+        FROM alumnos a;
+
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_escalar';
+
+        UPDATE v_escalar SET nombre = 'x' WHERE alumno_id = 1;
+      output: |
+        IS_UPDATABLE = YES
+
+        ERROR 1288 (HY000): ... is
+        not updatable
+
+        and the UPDATE does not even
+        touch the computed column
+
+  - table:
+      eyebrow: Block 02 · The list, corrected
+      title: What each view accepts, measured one by one
+      headers: [The view has, Can you write, What the server answers]
+      rows:
+        - ["Inner JOIN", "yes, one base table at a time", "IS_UPDATABLE = YES"]
+        - ["Two base tables", "no", "ERROR 1393 (HY000)"]
+        - ["A DELETE", "no", "ERROR 1395 (HY000)"]
+        - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
+        - ["Aggregation", "no", "ERROR 1288 (HY000)"]
+        - ["DISTINCT, UNION", "no", "IS_UPDATABLE = NO, error 1288"]
+        - ["A subquery", "no, though it says yes", "says YES and fails with 1288"]
+
+  - code_output:
+      eyebrow: Measured · closing the view
+      title: The clause that turns «control access» into something real
+      filename: check.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        CREATE OR REPLACE VIEW v_ing AS
+        SELECT alumno_id, nombre, carrera FROM alumnos
+        WHERE carrera = 'Ingenieria'
+        WITH CHECK OPTION;
+
+        INSERT INTO v_ing (alumno_id, nombre, carrera)
+        VALUES (99, 'Nuevo Alumno', 'Derecho');
+
+        SELECT CHECK_OPTION FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_ing';
+      output: |
+        ERROR 1369 (HY000): CHECK
+        OPTION failed
+        'escolares.v_ing'
+
+        CHECK_OPTION = CASCADED
+
+        without the clause the row
+        goes in and disappears from
+        the coordinator's view
+
+  - divider:
+      eyebrow: Block 03
+      title: DEFINER, layers, and why it speeds up nothing
+      lede: >-
+        Three questions are left, and students ask all three unprompted. Which permissions
+        a view runs with, whether views stack, and whether storing a query makes it
+        faster. All three have a measured answer.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · which user it runs as
+      title: The default is the hazardous one and nobody asked for it
+      filename: definer.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT TABLE_NAME, DEFINER, SECURITY_TYPE
+        FROM information_schema.VIEWS
+        WHERE TABLE_SCHEMA = DATABASE();
+      output: |
+        every view created without a
+        clause came back with
+
+        DEFINER=`root`@`localhost`
+        SQL SECURITY DEFINER
+        SECURITY_TYPE = DEFINER
+
+        and nobody asked for it
+
+  - diagram:
+      eyebrow: Block 03 · Architecture
+      title: Three layers, and the top one leans on the one below
+      blocks:
+        - label: Layer 1
+          title: Base views
+          desc: They clean and rename. One table each, no rules inside.
+        - label: Layer 2
+          title: Business views
+          desc: They apply the business rule on top of the base views.
+          dark: true
+        - label: Layer 3
+          title: Report views
+          desc: They aggregate and flatten. Week 5's wide shape returns here.
+      note: >-
+        Measured, which is why the layers are not decorative. A view built on top of
+        another inner-join view is still updatable. Layer 3 aggregates, and with that it
+        stops accepting writes. If the view looks like a report, it is read-only.
+
+  - code_output:
+      eyebrow: Measured · the speed myth
+      title: EXPLAIN over the view does not even name the view
+      filename: explain.sql
+      lang: sql
+      output_label: EXPLAIN FORMAT=TREE
+      source: |
+        EXPLAIN FORMAT=TREE
+        SELECT * FROM v_insc_join WHERE alumno_id = 1;
+      output: |
+        -> Nested loop inner join
+            -> Index lookup on i using
+               fk_i_alumno
+               (alumno_id = 1)
+            -> Single-row index lookup
+               on m using PRIMARY
+               (materia_id =
+                i.materia_id)
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to lose the view
+      items:
+        - label: Error 01
+          title: Writing an asterisk inside it
+          desc: >-
+            MySQL expands the asterisk and stores the column list. Add a column to the base
+            table and the view never sees it, without a word.
+        - label: Error 02
+          title: Putting the ORDER BY inside
+          desc: >-
+            The same view came back in two different orders depending on how it was
+            queried. Order belongs to the final query, not to the object.
+        - label: Error 03
+          title: Believing a view stores data
+          desc: >-
+            MySQL has no materialized views. ALGORITHM=TEMPTABLE materialises per execution,
+            throws the result away, and leaves the view read-only on top of that.
+        - label: Error 04
+          title: Trusting IS_UPDATABLE
+          desc: >-
+            With a scalar subquery the catalogue says YES and the UPDATE fails with 1288.
+            You try the UPDATE; you do not take the column's word for it.
+
+  - lab:
+      eyebrow: Lab
+      title: The coordinator's screen, and the row that vanishes
+      brief: >-
+        Build the view that shows the students of a single degree programme. Then, through
+        that same view, insert a student from another programme and go looking for the row
+        you just wrote. When you cannot find it, add WITH CHECK OPTION and try again.
+      blocks:
+        - label: Deliverable
+          text: The view script, the INSERT that gets lost and the error that stops it
+        - label: Constraint
+          text: >-
+            The view has to come out of week 11's JOIN. A single-table view will not do,
+            because none of today's boundaries show up there.
+        - label: The test
+          text: >-
+            Run the UPDATE before you believe the catalogue. The IS_UPDATABLE column is an
+            opinion and the server is the one in charge.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A view stores logic, not rows
+          desc: >-
+            The query text is stored expanded and runs again on every read. That is why it
+            is never stale and why the asterisk stays frozen
+        - title: One base table at a time, and never DELETE
+          desc: >-
+            That is the true updatability rule. The real boundary is not the JOIN, it is
+            the outer join, the aggregation and the UNION
+        - title: Storing a query does not speed it up
+          desc: >-
+            EXPLAIN over the view returns the base tables' plan and never names the view,
+            because the algorithm is MERGE and not materialisation
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Write three layered views over your own database: a base one that cleans, a
+        business one that applies a rule and a report one that aggregates. Try an UPDATE
+        through each of them and paste what the server answered in all three cases.
+      meta:
+        - [Due, Before week 13]
+        - [Format, Blackboard · one .sql file with the output pasted in]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["The three layers", "40 %", "Each view leans on the previous one, not on the table"]
+        - ["The three UPDATEs", "40 %", "All three were attempted and the output is pasted in"]
+        - ["The diagnosis", "20 %", "It says which one failed and with which error number"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, logic with parameters living inside the database, and the second
+        midterm, which covers weeks 9 through 12. Stored procedures are taught that day and
+        examined only in the final.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,454 @@
+meta:
+  course: Introducción a las Bases de Datos
+  code: COM112
+  lang: es
+  language: mysql
+  week: 8
+  footer: INTRODUCCIÓN A LAS BASES DE DATOS · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Semana 08 · Bloque C · DML y transacciones · Primer parcial
+      title: Introducción a las Bases de Datos
+      subtitle: >-
+        Tres verbos pueden corromper una base de datos. Hoy escribes los tres, ves al
+        servidor negarse a los que la habrían roto, y aprendes las dos palabras que te
+        dejan retirar un verbo.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Motor, MySQL 9.7.2]
+        - [Sesión, 8 de 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: INSERT
+          desc: Una fila, muchas filas, y filas que salen de otra consulta
+        - title: UPDATE y DELETE
+          desc: El WHERE que separa una corrección de un desastre, y el que además divide entre cero
+        - title: La transacción
+          desc: START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, y las tres veces que no deshacen
+        - title: Primer parcial
+          desc: Alcance, formato y peso, por escrito y sobre la lámina
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Escribir INSERT en sus tres formas
+          sub: Una fila, varias en una sola sentencia, y las que vienen de un SELECT
+        - head: Leer el error que produce una restricción al dispararse
+          sub: Los mismos constraints de la semana 6, ahora vistos desde el lado que se estrella
+        - head: Abrir y cerrar una transacción
+          sub: START TRANSACTION, y después COMMIT o ROLLBACK, que son dos finales y no un botón
+        - head: Nombrar las tres condiciones en que ROLLBACK no deshace nada
+          sub: Autocommit encendido, un DDL de por medio, o una tabla que no es InnoDB
+        - head: Reconocer que una sentencia es atómica sin que nadie lo pida
+          sub: De dos filas en un INSERT, una mala deja fuera a las dos
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde estamos en el semestre
+      phases:
+        - label: A · Semanas 1–3
+          title: Por qué existe una base
+          desc: Origen, tipos y elementos, el manejador y su arquitectura
+          state: done
+        - label: B · Semanas 4–6
+          title: Modelar antes de escribir
+          desc: Entidad-relación, normalización, y el modelo hecho tablas y llaves
+          state: done
+        - label: C · Semanas 7–11
+          title: SQL que consulta
+          desc: Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION
+          state: now
+        - label: D · Semanas 12–14
+          title: SQL que el servidor guarda
+          desc: Vistas, procedimientos almacenados, triggers y eventos
+          state: todo
+        - label: E · Semanas 15–17
+          title: Operarlo
+          desc: Índices, concurrencia, usuarios y respaldos
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Las tres operaciones que pueden corromper los datos
+      lede: >-
+        La semana 3 dejó esa frase escrita en una lámina. Hoy la sesión entera consiste en
+        escribirlas y en mirar quién las detiene.
+      block: 1
+
+  - code:
+      eyebrow: Bloque 01 · INSERT
+      title: Las tres formas de meter filas a una tabla
+      filename: insert.sql
+      lang: sql
+      source: |
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100001', 'Ana Lopez', '2026-01-15');
+
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100002', 'Bruno Ramirez', '2026-01-15'),
+               ('100003', 'Carla Mendez', '2026-01-15');
+
+        INSERT INTO inscripciones (matricula, clave_materia)
+        SELECT matricula, 'BD1001' FROM alumnos
+         WHERE fecha_ingreso = '2026-01-15';
+      annotations:
+        - label: La lista de columnas
+          text: >-
+            Escribirla siempre. Sin ella el INSERT depende del orden físico de la tabla y
+            un ALTER futuro lo rompe.
+        - label: Varias filas
+          text: >-
+            Un solo viaje al servidor para tres alumnos. También un solo destino si algo
+            sale mal, como veremos en dos láminas.
+        - label: INSERT desde SELECT
+          text: >-
+            Las filas salen de una consulta. Así se cargan las inscripciones de un
+            semestre sin teclear ninguna.
+        - label: Riesgo
+          text: >-
+            El SELECT de la tercera forma decide cuántas filas entran. Córrelo solo antes,
+            y cuenta el resultado.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: La matrícula ya existe, ¿el servidor avisa o la sobrescribe?
+      filename: duplicado.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- La matricula 100001 ya esta en la tabla
+        INSERT INTO alumnos (matricula, nombre, fecha_ingreso)
+        VALUES ('100001', 'Dup Licado', '2026-01-01');
+      output: |
+        ERROR 1062 (23000): Duplicate
+        entry '100001' for key
+        'alumnos.PRIMARY'
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: Una inscripción para un alumno que no existe
+      filename: hija_sin_padre.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- No hay ningun alumno con matricula 999999
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo)
+        VALUES ('999999', 'BD1001', '2026-1');
+      output: |
+        ERROR 1452 (23000): Cannot add or
+        update a child row: a foreign key
+        constraint fails
+        (`db_ops_wk141516`.`inscripciones`,
+        CONSTRAINT `fk_ins_alumno` FOREIGN
+        KEY (`matricula`) REFERENCES
+        `alumnos` (`matricula`))
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: De dos filas en un INSERT, una es mala, ¿entra la otra?
+      filename: atomicidad.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- 6 inscripciones antes de empezar
+        INSERT INTO inscripciones
+          (matricula, clave_materia, periodo, calificacion)
+        VALUES ('100003', 'MAT201', '2026-2', 7.0),
+               ('100003', 'FIS110', '2026-2', 12.0);
+
+        SELECT COUNT(*) FROM inscripciones;
+      output: |
+        ERROR 1644 (45000)
+
+        conteo = 6
+        la primera fila tampoco quedo
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El WHERE que falta
+      lede: >-
+        UPDATE y DELETE se escriben en dos renglones y se arrepienten en dos días. La
+        diferencia entre corregir una calificación y borrar el semestre es una cláusula.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · UPDATE y DELETE
+      title: Los dos verbos que ya encontraron su fila
+      filename: update_delete.sql
+      lang: sql
+      source: |
+        UPDATE inscripciones
+           SET calificacion = 9.5
+         WHERE matricula = '100003'
+           AND clave_materia = 'BD1001';
+
+        DELETE FROM inscripciones
+         WHERE matricula = '100003'
+           AND clave_materia = 'FIS110';
+
+        -- Sin WHERE, las dos sentencias tocan la tabla entera
+      annotations:
+        - label: SET
+          text: >-
+            Solo las columnas que cambian. Lo que no nombras se queda como estaba, sin
+            copiar nada.
+        - label: El WHERE del UPDATE
+          text: >-
+            Dos condiciones porque la fila se identifica con dos columnas. Una sola habría
+            calificado a todo el grupo.
+        - label: DELETE FROM
+          text: >-
+            No lleva lista de columnas. Se va la fila completa o no se va nada; no existe
+            el borrado a medias.
+        - label: Riesgo
+          text: >-
+            Escribe primero el SELECT con ese mismo WHERE. Las filas que devuelve son
+            exactamente las que vas a tocar.
+          accent: true
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: Borrar a un alumno que tiene inscripciones
+      filename: padre_con_hijos.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- El alumno 2001 aparece en inscripciones
+        DELETE FROM alumnos WHERE matricula = '2001';
+      output: |
+        ERROR 1451 (23000): Cannot delete
+        or update a parent row: a foreign
+        key constraint fails
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: La misma división entre cero, en un SELECT y en un INSERT
+      filename: division.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT ROUND(
+            ((precio_lista - costo_interno)
+              / costo_interno) * 100, 2) AS margen
+          FROM materias;
+
+        -- La misma division adentro de un INSERT
+
+        -- La reparacion, que se cobra en la semana 10
+        --   / NULLIF(costo_interno, 0)
+      output: |
+        margen
+        NULL
+        Warning 1365 'Division by 0'
+
+        Dentro de un INSERT
+        ERROR 1365 (22012): Division by 0
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La transacción
+      lede: >-
+        Todas las operaciones o ninguna. La frase lleva en una lámina desde la semana 1 y
+        hoy por fin hay algo que envolver con ella.
+      block: 3
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: La corrida de la semana 1, otra vez y ahora con la variable a la vista
+      filename: transaccion.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        SELECT @@autocommit;
+
+        START TRANSACTION;
+        INSERT INTO materia VALUES ('FI1010','Fisica I');
+        INSERT INTO inscripcion
+            VALUES ('A0000002','FI1010','26PRI');
+        SELECT COUNT(*) AS materias_dentro_de_la_transaccion
+          FROM materia;
+        ROLLBACK;
+        SELECT COUNT(*) AS materias_despues_del_rollback
+          FROM materia;
+      output: |
+        @@autocommit -> 1
+
+        materias_dentro_de_la_transaccion
+        3
+
+        materias_despues_del_rollback
+        2
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: Dos DELETE y un solo SAVEPOINT, ¿cuántas filas vuelven?
+      filename: savepoint.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        -- 6 filas al empezar
+        START TRANSACTION;
+        DELETE FROM t_prueba WHERE id = 6;
+        SAVEPOINT s1;
+        DELETE FROM t_prueba WHERE id = 5;
+        ROLLBACK TO SAVEPOINT s1;
+        ROLLBACK;
+        SELECT COUNT(*) FROM t_prueba;
+      output: |
+        al empezar               6
+        tras el primer DELETE    5
+        tras el segundo DELETE   4
+        tras ROLLBACK TO s1      5
+        tras el ROLLBACK final   6
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: Un CREATE TABLE en medio de tu transacción, ¿pasa algo?
+      filename: ddl_adentro.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        START TRANSACTION;
+          INSERT INTO materias VALUES ('HIS100','Historia',6);
+          CREATE TABLE tmp_implicito (id INT);
+        ROLLBACK;
+        SELECT clave FROM materias WHERE clave = 'HIS100';
+      output: |
+        HIS100 sigue ahi
+
+  - code_output:
+      eyebrow: Medido · MySQL 9.7.2
+      title: La misma transacción sobre una tabla que no es InnoDB
+      filename: myisam.sql
+      lang: sql
+      output_label: Salida
+      source: |
+        CREATE TABLE t_myisam (
+            id     INT PRIMARY KEY,
+            nombre VARCHAR(50)
+        ) ENGINE=MyISAM;
+
+        START TRANSACTION;
+        INSERT INTO t_myisam VALUES (1,'uno');
+        ROLLBACK;
+        SELECT * FROM t_myisam;
+      output: |
+        la fila sigue ahi
+        el ROLLBACK no hizo nada
+
+  - method:
+      eyebrow: La frase heredada, completa
+      title: ROLLBACK regresa la base al estado anterior
+      statement: >-
+        La lámina de la fuente dice eso y se detiene ahí. En este servidor la frase es
+        cierta tres veces de cada cuatro, y las tres condiciones que le faltan son
+        exactamente las tres que ya viste correr.
+      points:
+        - label: Condición 1
+          text: >-
+            Tiene que haber una transacción abierta. Con autocommit en 1 cada sentencia ya
+            se confirmó sola y el ROLLBACK contesta que hizo cero cambios.
+        - label: Condición 2
+          text: >-
+            No puede haber un DDL de por medio. El CREATE que metiste entre el INSERT y el
+            ROLLBACK confirmó tus filas antes de que pudieras retirarlas.
+        - label: Condición 3
+          text: >-
+            La tabla tiene que ser transaccional. Sobre MyISAM el ROLLBACK no hace nada y
+            tampoco dice nada, que es la peor de las dos partes.
+
+  - pitfalls:
+      eyebrow: Errores comunes
+      title: Cuatro maneras de perder filas sin darse cuenta
+      items:
+        - label: Error 01
+          title: Correr el UPDATE antes que el SELECT
+          desc: >-
+            El mismo WHERE en un SELECT te dice cuántas filas vas a tocar. Cuesta cinco
+            segundos y es la única revisión previa que existe.
+        - label: Error 02
+          title: Creer que ROLLBACK es un botón de deshacer
+          desc: >-
+            Sin transacción abierta contesta Query OK y no cambia nada. El alumno concluye
+            que funcionó, y funcionó tan bien como no hacer nada.
+        - label: Error 03
+          title: Usar REPLACE INTO como si actualizara
+          desc: >-
+            REPLACE borra la fila y vuelve a insertarla, así que dispara los triggers de
+            DELETE. Lo que querías era INSERT ... ON DUPLICATE KEY UPDATE.
+        - label: Error 04
+          title: Dividir sin proteger el denominador
+          desc: >-
+            En un SELECT sale NULL con una advertencia que nadie lee. En un INSERT es el
+            error 1365 y la carga entera se cae.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Día de inscripciones en control escolar
+      brief: >-
+        Carga cincuenta inscripciones en un solo INSERT de varias filas, con una de ellas
+        apuntando a un alumno dado de baja. Después corrige la carga, envuélvela en una
+        transacción y verifica con un SELECT antes de confirmar.
+      blocks:
+        - label: Entrega
+          text: El script y las dos corridas, la que rebotó y la que sí quedó
+        - label: Restricción
+          text: >-
+            El COMMIT va después del SELECT de verificación, nunca antes. Si el conteo no
+            cuadra, va un ROLLBACK y no un DELETE de reparación.
+        - label: La prueba
+          text: >-
+            Cuenta las filas antes y después del intento fallido. Los dos números tienen
+            que ser el mismo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La sentencia ya es atómica
+          desc: >-
+            Un INSERT de varias filas entra completo o no entra. Esa garantía viene de
+            fábrica y no hay que pedirla; la de varias sentencias sí hay que pedirla
+        - title: ROLLBACK tiene tres condiciones
+          desc: >-
+            Transacción abierta, sin DDL de por medio y sobre una tabla InnoDB. Si falta
+            cualquiera de las tres, el deshacer no ocurre y el servidor no se queja
+        - title: Todo esto supuso que estabas solo
+          desc: >-
+            Cada corrida de hoy tuvo el servidor para ella sola. Lo que pasa cuando dos
+            personas escriben la misma fila a la vez tiene nombre, error y semana
+
+  - homework:
+      eyebrow: Primer parcial
+      title: Alcance, formato y peso
+      brief: >-
+        El primer parcial cubre los bloques A y B completos, la semana 7 y el DML de hoy.
+        El bloque de transacciones se examina al nivel de qué deshace y qué no. Nada de
+        las semanas de SELECT, que empiezan el jueves.
+      meta:
+        - [Momento, Semana 08]
+        - [Formato, Escrito · SQL a mano y lectura de errores]
+        - [Peso, 20 % de la calificación final]
+      rubric:
+        - [Modelo y llaves, 30 %, Semanas 4 a 6 · qué restricción produce qué error]
+        - [Tipos y DDL, 30 %, Semana 7 · elegir el tipo y defenderlo]
+        - [DML y transacción, 40 %, Escribir los tres verbos y decir qué deshace ROLLBACK]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión empieza el SELECT, que es la sentencia que van a escribir más
+        veces que todas las demás juntas, y cuyos errores casi siempre son silenciosos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

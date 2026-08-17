@@ -1,0 +1,486 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 10
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 10 · Block C · Grouping and aggregates
+      title: Introduction to Databases
+      subtitle: >-
+        Grouping is where SQL stops being a filing cabinet and starts answering questions
+        nobody stored the answer to. It is also where one NULL changes the reported figure.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 10 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The five aggregates
+          desc: COUNT, SUM, AVG, MIN and MAX, and what each one does with a missing value
+        - title: Grouping
+          desc: GROUP BY, HAVING and the ONLY_FULL_GROUP_BY mode that is already switched on
+        - title: Expressions
+          desc: CASE, the conditional-aggregate pivot, subqueries and the WITH clause
+        - title: Your turn
+          desc: The end-of-term figures the coordinator asks for every single year
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Choose between COUNT of star and COUNT of a column
+          sub: And say how many rows the average skipped without anybody mentioning it
+        - head: Write a GROUP BY the server accepts
+          sub: Without padding it with every column, because grouping by the key is enough
+        - head: Tell WHERE from HAVING
+          sub: One filters rows before grouping and the other filters groups already formed
+        - head: Classify rows with CASE
+          sub: And see why the same row lands elsewhere the moment it is written with IF
+        - head: Use NOT EXISTS where NOT IN breaks
+          sub: One NULL inside the subquery returns the empty set with no warning at all
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, elements and the engine
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normal forms and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, grouping and JOIN
+          state: now
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, accounts and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The five aggregates
+      lede: >-
+        Five functions turn many rows into one. Four of them skip the NULLs in silence and
+        the fifth counts every row there is.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Reference
+      title: What each aggregate answers and what it does with a missing value
+      headers: [Aggregate, What it answers, What it does with NULL]
+      rows:
+        - ["COUNT(*)", "How many rows there are", "Counts every one"]
+        - ["COUNT(col)", "How many carry a value", "Skips the NULLs"]
+        - ["SUM(col)", "The total of the column", "Leaves them out of the sum"]
+        - ["AVG(col)", "The average", "Divides by the ones that do carry"]
+        - ["MIN / MAX", "The end of the range", "Leaves them out of the compare"]
+
+  - code_output:
+      eyebrow: Measured · all five in one statement
+      title: The average of twenty enrolments was worked out from fourteen
+      filename: aggregates.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*)            AS n,
+               COUNT(calificacion) AS c,
+               AVG(calificacion)   AS prom,
+               MIN(calificacion)   AS mn,
+               MAX(calificacion)   AS mx
+        FROM inscripcion;
+
+        SELECT SUM(calificacion) AS suma,
+               SUM(calificacion)/COUNT(*) AS entre20,
+               SUM(calificacion)/COUNT(calificacion) AS entre14
+        FROM inscripcion;
+      output: |
+        n   c    prom     mn   mx
+        20  14   8.25000  5.0  10.0
+        suma   entre20  entre14
+        115.5  5.77500  8.25000
+
+  - code_output:
+      eyebrow: Measured · the hole, before we group on it
+      title: One NULL inside wipes out the whole CONCAT
+      filename: nulls.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT IFNULL(estado,'Sin dato') AS a,
+               COALESCE(estado, ciudad, 'Sin dato') AS b
+        FROM alumno WHERE alumno_id IN (3,6,11);
+
+        SELECT CONCAT(ciudad, ', ', estado) AS c1
+        FROM alumno WHERE alumno_id = 3;
+        SELECT CONCAT_WS(', ', ciudad, estado) AS c2
+        FROM alumno WHERE alumno_id = 3;
+      output: |
+        a         b
+        Sin dato  Ciudad de Mexico
+        Sin dato  Sin dato
+        Queretaro Queretaro
+        c1
+        NULL
+        c2
+        Ciudad de Mexico
+
+  - divider:
+      eyebrow: Block 02
+      title: Grouping, and filtering groups
+      lede: >-
+        Last week's drawing, now with GROUP BY and HAVING lit up. Out of it falls the one
+        error the whole room will meet today.
+      block: 2
+
+  - diagram:
+      eyebrow: Block 02 · The week 9 drawing, redrawn
+      title: Two filters, and between them the one that builds the groups
+      blocks:
+        - label: WHERE
+          title: Before grouping
+          desc: Filters row by row. No groups and no aggregates exist to ask about yet.
+        - label: GROUP BY
+          title: Builds the groups
+          desc: Joins the rows sharing a value. From here each row summarises several.
+          dark: true
+        - label: HAVING
+          title: After grouping
+          desc: Filters groups already formed, and it does take the alias born in SELECT.
+      note: >-
+        If a row of the result summarises several rows of the table, every column you name
+        has to hold one value for the whole group. That sentence is error 1055.
+
+  - code_output:
+      eyebrow: Measured · the error of the week
+      title: A loose column sitting next to an aggregate
+      filename: error1055.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT carrera, nombre, COUNT(*)
+        FROM alumno
+        GROUP BY carrera;
+      output: |
+        ERROR 1055 (42000): Expression
+        #2 of SELECT list is not in
+        GROUP BY clause and contains
+        nonaggregated column
+        'escolares.alumno.nombre' which
+        is not functionally dependent
+        on columns in GROUP BY clause;
+        this is incompatible with
+        sql_mode=only_full_group_by
+
+  - code_output:
+      eyebrow: Measured · the two ways to fix it
+      title: Grouping by the primary key is already enough
+      filename: grouping.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT carrera, COUNT(*) AS alumnos
+        FROM alumno
+        GROUP BY carrera;
+
+        SELECT alumno_id, nombre, COUNT(*) AS n
+        FROM alumno
+        GROUP BY alumno_id LIMIT 2;
+      output: |
+        carrera           alumnos
+        Ing. Industrial   4
+        Ing. Mecatronica  3
+        Ing. de Datos     4
+        NULL              1
+        alumno_id nombre             n
+        1         Ana Lopez Rivas    1
+        2         Bruno Ramírez Sosa 1
+
+  - code_output:
+      eyebrow: Measured · the alias rule, completed
+      title: HAVING does take the SELECT alias and WHERE still does not
+      filename: having.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave, COUNT(*) AS inscritos
+        FROM inscripcion
+        WHERE inscritos > 4
+        GROUP BY clave;
+
+        SELECT clave, COUNT(*) AS inscritos
+        FROM inscripcion
+        GROUP BY clave
+        HAVING inscritos > 4;
+      output: |
+        ERROR 1054 (42S22): Unknown
+        column 'inscritos' in 'where
+        clause'
+
+        clave   inscritos
+        COM112  7
+        MAT101  6
+
+  - code_output:
+      eyebrow: Measured · the number the coordinator wants
+      title: Six enrolments in Calculus and an average built from four
+      filename: per_subject.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave,
+               COUNT(*)            AS ins,
+               COUNT(calificacion) AS calif,
+               AVG(calificacion)   AS prom
+        FROM inscripcion
+        GROUP BY clave;
+      output: |
+        clave   ins  calif  prom
+        COM112  7    6      8.91667
+        MAT101  6    4      6.87500
+        FIS201  3    2      8.50000
+        COM103  4    2      8.75000
+
+  - divider:
+      eyebrow: Block 03
+      title: Expressions and subqueries
+      lede: >-
+        Classifying with no lookup table, counting per category in a single row, and
+        asking the database something that depends on another question.
+      block: 3
+
+  - code_output:
+      eyebrow: Measured · one row, two classifications
+      title: CASE sends it to Sin limite and IF sends it to Sin linea
+      filename: caseif.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT credito_maximo,
+          CASE
+            WHEN credito_maximo >= 100000 THEN 'Alto'
+            WHEN credito_maximo >=  50000 THEN 'Medio'
+            WHEN credito_maximo IS NULL   THEN 'Sin limite'
+            ELSE 'Bajo'
+          END AS tramo
+        FROM alumno WHERE alumno_id IN (1,3,4);
+
+        SELECT credito_maximo,
+          IF(credito_maximo >= 100000,
+             'Con linea','Sin linea') AS tramo
+        FROM alumno WHERE alumno_id IN (1,3,4);
+      output: |
+        credito_maximo  tramo
+        120000.00       Alto
+        NULL            Sin limite
+        0.00            Bajo
+        credito_maximo  tramo
+        120000.00       Con linea
+        NULL            Sin linea
+        0.00            Sin linea
+
+  - code_output:
+      eyebrow: Measured · the pivot
+      title: A conditional aggregate turns one column into a matrix
+      filename: pivot.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT clave,
+          SUM(CASE WHEN estatus='Inscrito'  THEN 1 ELSE 0 END) AS ins,
+          SUM(CASE WHEN estatus='Aprobado'  THEN 1 ELSE 0 END) AS apr,
+          SUM(CASE WHEN estatus='Reprobado' THEN 1 ELSE 0 END) AS rep,
+          SUM(CASE WHEN estatus='Baja'      THEN 1 ELSE 0 END) AS baj
+        FROM inscripcion GROUP BY clave;
+
+        SELECT estatus, COUNT(*) AS n
+        FROM inscripcion GROUP BY estatus;
+      output: |
+        clave   ins  apr  rep  baj
+        COM112  1    6    0    0
+        MAT101  2    3    1    0
+        FIS201  1    2    0    0
+        COM103  2    2    0    0
+        estatus    n
+        Aprobado   13
+        Inscrito   6
+        Reprobado  1
+
+  - code_output:
+      eyebrow: Measured · the most expensive trap in SQL
+      title: The same question written twice answers 0 and answers 10
+      filename: notin.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS con_not_in FROM alumno a
+        WHERE a.alumno_id NOT IN (SELECT tutor_id FROM alumno);
+
+        SELECT COUNT(*) AS con_not_exists FROM alumno a
+        WHERE NOT EXISTS (SELECT 1 FROM alumno t
+                          WHERE t.tutor_id = a.alumno_id);
+
+        SELECT COUNT(*) AS tutores_nulos FROM alumno
+        WHERE tutor_id IS NULL;
+      output: |
+        con_not_in        0
+        con_not_exists   10
+        tutores_nulos     6
+
+  - code_output:
+      eyebrow: Measured · why the PDF writes a t after the bracket
+      title: Every derived table needs its alias, and a CTE halves the text
+      filename: cte.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT * FROM (SELECT clave FROM inscripcion);
+
+        WITH carga AS (
+          SELECT clave, COUNT(*) AS ins
+          FROM inscripcion GROUP BY clave
+        )
+        SELECT clave, ins FROM carga
+        WHERE ins > (SELECT AVG(ins) FROM carga)
+        ORDER BY ins DESC;
+      output: |
+        ERROR 1248 (42000): Every derived
+        table must have its own alias
+
+        clave   ins
+        COM112  7
+        MAT101  6
+
+  - code_output:
+      eyebrow: Measured · a course in Spanish that prints August
+      title: Grouping by an expression and sorting by the SELECT alias
+      filename: months.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@lc_time_names AS idioma;
+
+        SELECT YEAR(fecha_pago) AS anio,
+               MONTHNAME(fecha_pago) AS mes,
+               COUNT(*) AS pagos, SUM(monto) AS total
+        FROM pago
+        GROUP BY YEAR(fecha_pago), MONTH(fecha_pago),
+                 MONTHNAME(fecha_pago)
+        ORDER BY anio, mes;
+
+        SET lc_time_names = 'es_MX';
+        SELECT MONTHNAME('2025-08-10') AS mes;
+      output: |
+        idioma
+        en_US
+        anio  mes        pagos  total
+        2025  August     4      74000.00
+        2025  September  3      57600.00
+        2026  January    5      100500.00
+        mes
+        agosto
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to group badly
+      items:
+        - label: Error 01
+          title: Padding the GROUP BY with everything
+          desc: >-
+            When you group by the primary key MySQL already knows the functional dependency
+            and asks for nothing else. The long list gets learned and never unlearned.
+        - label: Error 02
+          title: Treating zero as if it were unknown
+          desc: >-
+            A credit line of 0.00 lands in Bajo and a null one lands in Sin limite. Two
+            different things, and the branch that merges them misfiles one student in three.
+        - label: Error 03
+          title: NOT IN over a nullable subquery
+          desc: >-
+            It returns the empty set with no error and no warning. The same question with
+            NOT EXISTS answers ten. When the list may carry NULL, use NOT EXISTS.
+        - label: Error 04
+          title: Concatenating nullable columns
+          desc: >-
+            CONCAT returns NULL if a single argument is null, and the report line comes out
+            blank. CONCAT_WS skips the missing one and builds the text anyway.
+
+  - lab:
+      eyebrow: Lab
+      title: The end-of-term figures, in a single session
+      brief: >-
+        The coordinator wants five numbers. How many students per career, how many
+        enrolments per subject, which subjects went over capacity, the average grade per
+        subject, and the status matrix. All five come out of two tables and none of them
+        needs a JOIN yet.
+      blocks:
+        - label: Deliverable
+          text: One .sql file with the five queries and the output the server returned
+        - label: Constraint
+          text: >-
+            No GROUP BY may carry columns it does not need. If the grouping is by the key,
+            the list stays at a single column.
+        - label: The test
+          text: >-
+            Next to the average, write how many rows AVG skipped. If you do not know, the
+            figure going into the report does not know either.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Four of five aggregates skip NULL
+          desc: >-
+            Only COUNT of star counts everything. The average of the twenty enrolments was
+            computed from fourteen, and the report carries no note saying so
+        - title: The week 9 drawing explains 1055
+          desc: >-
+            If a row summarises several rows, every column you name has to hold one value
+            for the whole group. Grouping by the primary key already meets that condition
+        - title: NOT IN is not NOT EXISTS
+          desc: >-
+            The moment the subquery can return a NULL, NOT IN hands back the empty set.
+            Here it is zero rows against ten, with no error and no warning
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Five grouping queries over your own database, each with its output pasted in. One
+        of them has to raise error 1055 on purpose and carry the corrected version beside
+        it, with one line explaining why the correction works.
+      meta:
+        - [Due, Before week 11]
+        - [Format, Blackboard · one .sql file and its output]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Queries", "40 %", "All five group and none pads the GROUP BY"]
+        - ["The 1055", "25 %", "Raised, corrected and explained in one line"]
+        - ["Aggregates", "20 %", "All five show up at least once"]
+        - ["The NULL", "15 %", "Each aggregate says how many rows it skipped"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session we put JOIN underneath all of this, and two things from today break
+        at once, the COUNT that returns one and the grouping that merges two people.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

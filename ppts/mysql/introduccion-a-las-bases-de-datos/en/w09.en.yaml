@@ -1,0 +1,519 @@
+meta:
+  course: Introduction to Databases
+  code: COM112
+  lang: en
+  language: mysql
+  week: 9
+  footer: INTRODUCTION TO DATABASES · COM112 · MySQL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Week 09 · Block C · The single-table SELECT
+      title: Introduction to Databases
+      subtitle: >-
+        This is the statement you will write more often than every other one in the course
+        put together, and almost everything that goes wrong with it goes wrong quietly.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Engine, MySQL 9.7.2]
+        - [Session, 9 of 17]
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Filtering
+          desc: FROM, WHERE, and the filter that does not cut the table into two halves
+        - title: Searching
+          desc: LIKE, IN, BETWEEN, and the collation the server already came with
+        - title: Presenting
+          desc: DISTINCT, ORDER BY, LIMIT, aliases, and the order the clauses run in
+        - title: Your turn
+          desc: The student search screen of the registrar's office, on a single table
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Write a filtered SELECT over one table
+          sub: And explain why a condition and its opposite do not add up to the row count
+        - head: Search text without writing accent handling
+          sub: The utf8mb4_0900_ai_ci collation already ignores accents and case on this server
+        - head: Read the logical order of the clauses
+          sub: The rule for where an alias exists and where it does not yet falls straight out of it
+        - head: Sort and paginate a result
+          sub: With the NULLs where you want them, not where MySQL puts them by default
+        - head: Recognise the week's three silent failures
+          sub: The count that does not close, a numeric column sorted as text, and the missing comma
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where we are in the term
+      phases:
+        - label: A · Weeks 1–3
+          title: Why a database exists
+          desc: Origins, elements and the engine
+          state: done
+        - label: B · Weeks 4–6
+          title: Model before you write
+          desc: Entity-relationship, normal forms and keys
+          state: done
+        - label: C · Weeks 7–11
+          title: SQL that queries
+          desc: Types, DDL, DML, SELECT, grouping and JOIN
+          state: now
+        - label: D · Weeks 12–14
+          title: SQL the server keeps
+          desc: Views, procedures, triggers and events
+          state: todo
+        - label: E · Weeks 15–17
+          title: Operating it
+          desc: Indexes, concurrency, accounts and backups
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The filter does not cut the table
+      lede: >-
+        A condition and its opposite ought to cover every row. Over a column that accepts
+        NULL they do not, and nothing warns you.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A condition answers three things, not two
+      lead: >-
+        In a logic class a proposition is either true or false. SQL has a third state and
+        it is called unknown. When a column holds NULL, any comparison against it answers
+        unknown, and WHERE only lets through what came back true. Neither equals nor not
+        equals catches that row.
+      panel:
+        label: The working rule
+        title: NULL is not compared, it is asked about
+        note: >-
+          To ask about a missing value there are IS NULL and IS NOT NULL, and they are the
+          only operators that answer true or false over a NULL. The equals sign never
+          does, not even against another NULL.
+      steps:
+        - text: WHERE evaluates the condition one row at a time
+        - text: It keeps only the rows that came back true
+        - text: The ones that came back unknown leave with the false ones
+          loop: ↺ and that is why the two halves do not add up to the total
+
+  - code_output:
+      eyebrow: Measured · two tables, the same hole
+      title: Four plus seven is eleven, and thirteen plus one is not twenty
+      filename: counts.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS alumnos FROM alumno;
+        SELECT COUNT(*) AS industrial FROM alumno
+          WHERE carrera =  'Ing. Industrial';
+        SELECT COUNT(*) AS no_industrial FROM alumno
+          WHERE carrera <> 'Ing. Industrial';
+        SELECT COUNT(*) AS cmp_null FROM alumno WHERE carrera = NULL;
+
+        SELECT COUNT(*) AS inscripciones FROM inscripcion;
+        SELECT COUNT(*) AS aprueban FROM inscripcion
+          WHERE calificacion >= 6.0;
+        SELECT COUNT(*) AS reprueban FROM inscripcion
+          WHERE calificacion <  6.0;
+        SELECT COUNT(*) AS sin_calif FROM inscripcion
+          WHERE calificacion IS NULL;
+      output: |
+        alumnos          12
+        industrial        4
+        no_industrial     7
+        cmp_null          0
+        inscripciones    20
+        aprueban         13
+        reprueban         1
+        sin_calif         6
+
+  - code_output:
+      eyebrow: Measured · precedence
+      title: AND resolves before OR, and the brackets cost two students
+      filename: precedence.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT nombre, promedio FROM alumno
+        WHERE carrera = 'Ing. Industrial'
+           OR carrera = 'Ing. Mecatronica' AND promedio >= 9.0;
+
+        SELECT nombre, promedio FROM alumno
+        WHERE (carrera = 'Ing. Industrial'
+           OR  carrera = 'Ing. Mecatronica') AND promedio >= 9.0;
+      output: |
+        nombre               promedio
+        Ana Lopez Rivas      9.40
+        Diego Ortiz Luna     7.90
+        Elena Vargas Diaz    9.20
+        Gabriela Solis Paz   9.05
+        Javier Pineda Rojo   NULL
+        nombre               promedio
+        Ana Lopez Rivas      9.40
+        Elena Vargas Diaz    9.20
+        Gabriela Solis Paz   9.05
+
+  - divider:
+      eyebrow: Block 02
+      title: The search box
+      lede: >-
+        Partial name, partial student number, a percent sign that is data and not a
+        wildcard, and a collation that solved the accents before you arrived.
+      block: 2
+
+  - code_output:
+      eyebrow: Measured · wildcards
+      title: The underscore is one position and the percent sign is however many
+      filename: like.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS guion_bajo FROM alumno
+        WHERE grupo LIKE '1_';
+        SELECT COUNT(*) AS porcentaje FROM alumno
+        WHERE grupo LIKE '1%';
+
+        SELECT beca FROM alumno WHERE beca LIKE '%50%';
+        SELECT beca FROM alumno WHERE beca LIKE '%50\%%';
+      output: |
+        guion_bajo    2
+        porcentaje    7
+        beca
+        Beca 50% colegiatura
+        Beca 50 por ciento
+        Descuento 50 UMA
+        beca
+        Beca 50% colegiatura
+
+  - code_output:
+      eyebrow: Measured · collation
+      title: Nobody had to write the accent handling
+      filename: collation.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT @@collation_database AS colacion;
+
+        SELECT nombre FROM alumno WHERE nombre LIKE 'ana%';
+        SELECT nombre FROM alumno WHERE nombre LIKE '%Mendez%';
+        SELECT nombre FROM alumno
+        WHERE nombre = 'bruno ramirez sosa';
+      output: |
+        colacion
+        utf8mb4_0900_ai_ci
+        nombre
+        Ana Lopez Rivas
+        nombre
+        Carla Méndez Ruiz
+        nombre
+        Bruno Ramírez Sosa
+
+  - code_output:
+      eyebrow: Measured · lists and ranges
+      title: IN is the chain of ORs and BETWEEN takes both ends
+      filename: ranges.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT COUNT(*) AS con_in FROM alumno
+        WHERE carrera IN ('Ing. Industrial','Ing. de Datos');
+        SELECT COUNT(*) AS con_not_in FROM alumno
+        WHERE carrera NOT IN ('Ing. Industrial','Ing. de Datos');
+
+        SELECT COUNT(*) AS con_between FROM alumno
+        WHERE promedio BETWEEN 8.10 AND 9.20;
+        SELECT COUNT(*) AS estrictos FROM alumno
+        WHERE promedio > 8.10 AND promedio < 9.20;
+        SELECT COUNT(*) AS al_reves FROM alumno
+        WHERE promedio BETWEEN 9.20 AND 8.10;
+      output: |
+        con_in          8
+        con_not_in      3
+        con_between     6
+        estrictos       4
+        al_reves        0
+
+  - divider:
+      eyebrow: Block 03
+      title: Presenting the result
+      lede: >-
+        Drop the duplicates, sort, cut into pages and name a column. This is where error
+        1054 lives, and where the one that raises nothing lives too.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · The slide of the week
+      title: The order in which MySQL evaluates the clauses
+      headers: [Clause, When it runs, What it can see]
+      rows:
+        - ["FROM", "1 · opens the tables", "The tables and nothing else"]
+        - ["WHERE", "2 · before grouping", "Columns of the table"]
+        - ["GROUP BY", "3 · builds the groups", "Columns of the table"]
+        - ["HAVING", "4 · filters groups", "Groups and their aliases"]
+        - ["SELECT", "5 · computes columns", "Aliases are born here"]
+        - ["ORDER BY", "6 · sorts", "Aliases that already exist"]
+        - ["LIMIT", "7 · cuts", "Whatever came out sorted"]
+
+  - code_output:
+      eyebrow: Measured · the first consequence
+      title: The alias does not exist in WHERE and does exist in ORDER BY
+      filename: alias.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT nombre, promedio * 10 AS puntos
+        FROM alumno
+        WHERE puntos >= 90;
+
+        SELECT nombre, promedio * 10 AS puntos
+        FROM alumno
+        ORDER BY puntos DESC LIMIT 3;
+      output: |
+        ERROR 1054 (42S22): Unknown
+        column 'puntos' in 'where clause'
+
+        nombre               puntos
+        Carla Méndez Ruiz    97.50
+        Ana Lopez Rivas      94.00
+        Elena Vargas Diaz    92.00
+
+  - code_output:
+      eyebrow: Measured · four counts of the same thing
+      title: DISTINCT returns four rows and COUNT DISTINCT returns three
+      filename: distinct.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT DISTINCT carrera FROM alumno;
+
+        SELECT COUNT(DISTINCT carrera) AS d_carrera,
+               COUNT(carrera)          AS c_carrera,
+               COUNT(*)                AS c_todo
+        FROM alumno;
+
+        SELECT COUNT(*) FROM
+          (SELECT DISTINCT carrera, grupo FROM alumno) t;
+        SELECT COUNT(*) FROM
+          (SELECT DISTINCT(carrera), grupo FROM alumno) t;
+      output: |
+        carrera
+        Ing. Industrial
+        Ing. Mecatronica
+        Ing. de Datos
+        NULL
+        d_carrera c_carrera c_todo
+        3         11        12
+        COUNT(*)  10
+        COUNT(*)  10
+
+  - code_output:
+      eyebrow: Measured · sorting with NULL
+      title: NULL is the smallest value and the standard clause does not exist
+      filename: null_order.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT nombre, promedio FROM alumno
+        ORDER BY promedio ASC LIMIT 2;
+
+        SELECT nombre, promedio FROM alumno
+        ORDER BY promedio ASC NULLS LAST;
+
+        SELECT nombre, promedio FROM alumno
+        ORDER BY promedio IS NULL, promedio LIMIT 2;
+      output: |
+        Fabian Nieto Cruz    NULL
+        Javier Pineda Rojo   NULL
+        ERROR 1064 (42000): You have an
+        error in your SQL syntax; check
+        the manual that corresponds to
+        your MySQL server version for
+        the right syntax to use near
+        'NULLS LAST' at line 2
+        Hugo Serrano Mota    6.80
+        Diego Ortiz Luna     7.90
+
+  - code_output:
+      eyebrow: Measured · week 7 sends the bill
+      title: One, ten, one hundred, two, nine
+      filename: group_col.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT grupo FROM alumno
+        GROUP BY grupo
+        ORDER BY grupo;
+
+        SELECT '10' < '9' AS texto,
+                10  <  9  AS numero;
+      output: |
+        grupo
+        1
+        10
+        100
+        2
+        9
+        texto   numero
+        1       0
+
+  - code_output:
+      eyebrow: Measured · pagination
+      title: Page one and page two, three students to a page
+      filename: pages.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT nombre FROM alumno
+        ORDER BY matricula LIMIT 3;
+
+        SELECT nombre FROM alumno
+        ORDER BY matricula LIMIT 3 OFFSET 3;
+      output: |
+        nombre
+        Ana Lopez Rivas
+        Bruno Ramírez Sosa
+        Carla Méndez Ruiz
+        nombre
+        Diego Ortiz Luna
+        Elena Vargas Diaz
+        Fabian Nieto Cruz
+
+  - code_output:
+      eyebrow: Measured · same LIMIT, other rows
+      title: A LIMIT with no ORDER BY is not a sample
+      filename: sample.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT grupo  FROM alumno LIMIT 4;
+        SELECT nombre FROM alumno LIMIT 4;
+
+        EXPLAIN SELECT grupo  FROM alumno LIMIT 4;
+        EXPLAIN SELECT nombre FROM alumno LIMIT 4;
+      output: |
+        grupo LIMIT 4  -> 1 1 1 10
+        nombre LIMIT 4 ->
+        Ana Lopez Rivas
+        Bruno Ramírez Sosa
+        Carla Méndez Ruiz
+        Diego Ortiz Luna
+        EXPLAIN, second line:
+        -> Covering index scan on
+           alumno using ix_grupo
+        -> Table scan on alumno
+
+  - code_output:
+      eyebrow: Measured · the error that raises nothing
+      title: One comma short and the report ships with the wrong heading
+      filename: comma.sql
+      lang: sql
+      output_label: MySQL 9.7.2
+      source: |
+        SELECT nombre, promedio FROM alumno LIMIT 3;
+
+        SELECT nombre promedio FROM alumno LIMIT 3;
+      output: |
+        nombre               promedio
+        Ana Lopez Rivas      9.40
+        Bruno Ramírez Sosa   8.10
+        Carla Méndez Ruiz    9.75
+        promedio
+        Ana Lopez Rivas
+        Bruno Ramírez Sosa
+        Carla Méndez Ruiz
+
+  - pitfalls:
+      eyebrow: Common errors
+      title: Four ways to lose rows without noticing
+      items:
+        - label: Error 01
+          title: Filtering with equals against NULL
+          desc: >-
+            WHERE carrera = NULL returns zero rows and raises nothing. The question about
+            a missing value is written IS NULL, and it is the only form that answers.
+        - label: Error 02
+          title: Trusting NOT IN over data with NULLs
+          desc: >-
+            NOT IN loses the null row exactly as not equals did. Here it is three careers
+            out of eleven students with one, and the twelfth is on neither list.
+        - label: Error 03
+          title: Writing OFFSET without LIMIT
+          desc: >-
+            MySQL answers ERROR 1064 and points at near '3' at line 1. LIMIT 2+1 does the
+            same and points at near '+1'. OFFSET always travels attached to a LIMIT.
+        - label: Error 04
+          title: Reaching for BINARY to compare accents
+          desc: >-
+            It works, but the server answers Warning 1287, 'BINARY expr' is deprecated and
+            will be removed in a future release. Please use CAST instead.
+
+  - lab:
+      eyebrow: Lab
+      title: The registrar's search screen, in three passes
+      brief: >-
+        Over the alumno table, and without a single JOIN, build the query behind the
+        office search screen. First the exact filter by career, then the text box with
+        partial name and partial student number, and finally the results grid, sorted and
+        paginated five at a time.
+      blocks:
+        - label: Deliverable
+          text: One .sql file with the three queries and the output the server returned
+        - label: Constraint
+          text: >-
+            No query may lose the student whose career is null. If yours loses them, write
+            a comment saying why it did.
+        - label: The test
+          text: >-
+            Count the rows of the filter and of its opposite. If they do not add up to
+            twelve, you have already found the table's NULL.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: A condition answers three things
+          desc: >-
+            True, false and unknown. WHERE keeps the first one, and that is why a condition
+            and its opposite never add up to the whole table
+        - title: The logical order explains the aliases
+          desc: >-
+            WHERE runs before SELECT, so the alias does not exist yet and out comes 1054.
+            ORDER BY runs after and takes it. Week 10 adds HAVING to the same drawing
+        - title: Sorting is part of the answer
+          desc: >-
+            A LIMIT with no ORDER BY returns whatever the optimiser touched first, and the
+            same LIMIT 4 over two different columns brings back two different students
+
+  - homework:
+      eyebrow: Homework
+      title: Submission and grading criteria
+      brief: >-
+        Five queries over a single table, each with its output pasted in. One has to find
+        an accented string without typing the accent, another has to leave the students
+        with no average at the bottom of the list, and another has to raise error 1054 on
+        purpose and explain in one line why the alias did not exist yet.
+      meta:
+        - [Due, Before week 10]
+        - [Format, Blackboard · one .sql file and its output]
+        - [Weight, Part of the 20 % for assignments]
+      rubric:
+        - ["Queries", "40 %", "All five run over one table and use no JOIN"]
+        - ["Output", "30 %", "Every query carries what the server answered"]
+        - ["The NULL", "20 %", "The sorted query leaves the ungraded students last"]
+        - ["The 1054", "10 %", "The error is raised on purpose and explained in one line"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the same drawing with GROUP BY and HAVING lit up, the five
+        aggregates, and the error 1055 everyone in the room will meet on the same day.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]
