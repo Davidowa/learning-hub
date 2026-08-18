@@ -1,0 +1,583 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 4
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 04 · Sesiones 7 y 8 · Estadística, texto y fecha
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Dieciséis funciones en dos sesiones, y un cuadro de diálogo por el que pasan todas.
+        La semana en la que una fórmula empieza a decir lo que significa.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 7 y 8 de 34]
+      notes: >-
+        Fuentes. Sesiones 7 y 8 del programa de diciembre. Seis adiciones de COBERTURA.md,
+        semana 4. Rutas de procedures.en.md, objetivos 4.1.2, 4.2.1, 4.2.2, 4.3.1, 4.3.2,
+        4.3.3, Expert 2.2.1, 3.3.1 y 3.3.2. Todos los resultados de las diapositivas de
+        código se corrieron en el Excel del profesor, versión 16.0, interfaz en inglés con
+        idioma de instalación español de México, el 18 de agosto de 2026.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Estadística y conteo
+          desc: El cuadro [Function Arguments], los cuatro agregados, K.ESIMO.MAYOR y K.ESIMO.MENOR, y el trío de conteo
+        - title: Texto
+          desc: Partir una cadena con IZQUIERDA, DERECHA y EXTRAE, y rearmarla con CONCAT y UNIRCADENAS
+        - title: Fechas y formatos
+          desc: Una fecha es un número, HOY se mueve y Ctrl+punto y coma no, y los códigos a los que solo llega el cuadro de diálogo
+        - title: Tu turno
+          desc: Ejercicios 6 y 13, trabajo estadístico y sesenta alumnos con fecha de nacimiento
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Insertar una función desde su propio cuadro
+          sub: '[Insert Function] y [Function Arguments], la ruta que reutilizan todos los demás objetivos de funciones'
+        - head: Elegir entre las tres funciones de conteo
+          sub: Y explicar el rango donde las dos últimas suman más celdas de las que existen
+        - head: Partir una cadena y volver a armarla
+          sub: IZQUIERDA, DERECHA, EXTRAE y LARGO, luego CONCAT y UNIRCADENAS con su delimitador
+        - head: Leer una fecha como el número que es
+          sub: DIA, MES y AÑO sobre un número de serie, y la diferencia entre HOY y una marca fija
+        - head: Escribir un formato de número personalizado
+          sub: Las cuatro secciones, y los códigos que no tienen botón en ninguna parte de la cinta de opciones
+        - head: Usar un nombre definido dentro de una fórmula
+          sub: La mitad del objetivo 4.1.2, la mitad que no necesita una tabla
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: now
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia *.SI.CONJUNTO
+          state: todo
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: todo
+        - label: E · Semanas 14–17
+          title: Resumen y entrega
+          desc: Tablas dinámicas, filtro avanzado, análisis de hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01 · Sesión 7
+      title: El cuadro por el que pasa toda función
+      lede: >-
+        Teclear una fórmula es más rápido y el examen no te ve hacerlo. Lo que sí ve es el
+        cuadro [Function Arguments], y después de esta semana ya no se vuelve a explicar.
+      block: 1
+
+  - steps:
+      eyebrow: Bloque 01 · Objetivo 4.2.1
+      title: '[Insert Function], y luego los argumentos'
+      items:
+        - label: '01'
+          title: La lista de [AutoSum]
+          desc: Fórmulas, [Function Library], la flecha debajo de [AutoSum]. [Sum], [Average], [Max], [Min] y [Count Numbers]. La cara del botón aplica [Sum].
+        - label: '02'
+          title: '[Insert Function]'
+          desc: El mismo grupo. Elige una categoría, [Math & Trig] para SUMA, [Statistical] para PROMEDIO, MAX y MIN, o busca por lo que quieres hacer.
+        - label: '03'
+          title: '[Function Arguments]'
+          desc: Haz clic en [Number1] y arrastra sobre el rango. El botón de contraer, a la derecha del cuadro, quita el diálogo de en medio.
+        - label: '04'
+          title: Lee el resultado antes
+          desc: '[Formula result] aparece abajo a la izquierda antes de aceptar. Es la única comprobación gratis que da el cuadro.'
+        - label: '05'
+          title: Shift+F3
+          desc: Abre [Insert Function] en una celda vacía, y abre [Function Arguments] cuando el punto de inserción ya está dentro de una función.
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido en la máquina del laboratorio
+      title: Seis respuestas de una sola columna
+      filename: unidades.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        Las unidades de cinco vendedores están en C2:C6.
+
+          =SUMA(C2:C6)
+          =PROMEDIO(C2:C6)
+          =MAX(C2:C6)
+          =MIN(C2:C6)
+          =K.ESIMO.MAYOR(C2:C6,2)
+          =K.ESIMO.MENOR(C2:C6,2)
+      output: |
+        142  87  203  156  94
+
+        SUMA                  682
+        PROMEDIO              136.4
+        MAX                   203
+        MIN                   87
+        K.ESIMO.MAYOR(C..,2)  156
+        K.ESIMO.MENOR(C..,2)  94
+
+  - concept:
+      eyebrow: Bloque 01 · K.ESIMO.MAYOR y K.ESIMO.MENOR
+      title: El segundo mejor no es un máximo
+      lead: >-
+        MAX da el mejor número y nada más. K.ESIMO.MAYOR recibe un segundo argumento, k, y
+        devuelve el k-ésimo mayor, así que una k de 1 es MAX y una k de 2 es el vendedor que
+        nadie nota. K.ESIMO.MENOR trabaja desde el otro extremo, y ninguna de las dos tiene
+        que ordenar los datos antes.
+      panel:
+        label: Una advertencia sobre el material
+        title: Ningún ejercicio del paquete practica estas dos
+        note: >-
+          COBERTURA lo señala. El programa agenda K.ESIMO.MAYOR y K.ESIMO.MENOR en la sesión
+          7 y no aparecen en ninguno de los veinticinco ejercicios ni en ninguna de las
+          veintitrés tareas, así que hay que practicarlas aquí, en clase.
+      steps:
+        - text: MAX responde el mejor
+        - text: K.ESIMO.MAYOR con k de 2 responde el siguiente
+        - text: K.ESIMO.MENOR con k de 2 responde el segundo peor
+          loop: "↺ y una k más allá del rango devuelve #¡NUM!"
+
+  - code_output:
+      eyebrow: Bloque 01 · Objetivo 4.2.2
+      title: Tres conteos que no cuadran
+      filename: conteo.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        G1  5        un número
+        G2  texto    una cadena de texto
+        G3  =""      una fórmula que no devuelve nada
+        G4           vacía de verdad, nunca tocada
+
+          =CONTAR(G1:G4)
+          =CONTARA(G1:G4)
+          =CONTAR.BLANCO(G1:G4)
+      output: |
+        CONTAR          1
+        CONTARA         3
+        CONTAR.BLANCO   2
+
+        3 + 2 = 5, sobre cuatro celdas
+
+  - code:
+      eyebrow: Bloque 01 · Objetivo 4.1.2, primera mitad
+      title: Una fórmula que dice qué calcula
+      filename: nombres.xlsx
+      lang: excel
+      source: |
+        Con C2:C6 definido como Unidades, de la semana 3.
+
+          =SUMA(Unidades)
+          =PROMEDIO(Unidades)
+          =MAX(Unidades)-MIN(Unidades)
+
+        Teclea Un y [Formula AutoComplete] ofrece el
+        nombre con un icono de etiqueta. Tab lo inserta.
+        F3 abre el cuadro [Paste Name] en su lugar.
+      annotations:
+        - label: Por qué vale la pena
+          text: Seis meses después, =SUMA(Unidades) sigue diciendo qué suma. =SUMA(C2:C6) no.
+        - label: Dónde se califica
+          text: Cuando el reactivo pide usar el nombre definido, una dirección no da puntos.
+        - label: La otra mitad
+          text: También cubre las referencias estructuradas, Ventas[T1]. Esa mitad es la semana 10.
+        - label: Si falla
+          text: >-
+            Un [Refers to] equivocado da una respuesta limpia y falsa. Lee la barra de
+            fórmulas, y compruébalo con Ctrl+F3.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 02 · Sesión 8
+      title: El texto también es dato
+      lede: >-
+        Un nombre, una clave, un número de factura. La mitad del trabajo de limpieza de este
+        curso es partir una cadena y volver a unirla como alguien más la necesitaba.
+      block: 2
+
+  - code_output:
+      eyebrow: Bloque 02 · Objetivos 4.3.1 y 4.3.2
+      title: Partir una cadena, y contarla
+      filename: texto.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 tiene  ana luz mendez
+
+          =IZQUIERDA(A2,3)
+          =DERECHA(A2,6)
+          =EXTRAE(A2,5,3)
+          =LARGO(A2)
+          =LARGO("Ana Luz ")
+          =LARGO([TRIM]("Ana Luz "))
+      output: |
+        IZQUIERDA(A2,3)      ana
+        DERECHA(A2,6)        mendez
+        EXTRAE(A2,5,3)       luz
+        LARGO(A2)            14
+        LARGO("Ana Luz ")    8
+        LARGO([TRIM](...))   7
+
+  - concept:
+      eyebrow: Bloque 02 · Cómo leer las dos últimas líneas
+      title: LARGO encuentra el espacio que nadie ve
+      lead: >-
+        Ana Luz tiene siete caracteres y LARGO respondió ocho, porque la celda trae un
+        espacio al final. En pantalla las dos se ven idénticas. En las búsquedas de la semana
+        13 una coincide y la otra devuelve #N/D, y esa es la semana en la que aprendes a
+        apuntar LARGO a una columna que crees limpia.
+      panel:
+        label: Contar desde uno
+        title: EXTRAE empieza en 1 en el primer carácter
+        note: >-
+          EXTRAE recibe [Text], [Start_num] y [Num_chars]. [Start_num] cuenta desde 1, así
+          que el quinto carácter de ana luz mendez es la l de luz. El error de uno aparece en
+          la última fila de una columna, donde los nombres miden otra cosa.
+      steps:
+        - text: Apunta LARGO a una celda que creas limpia
+        - text: Compárala con los caracteres que puedes ver
+        - text: Uno de más quiere decir un espacio al final
+          loop: ↺ [TRIM] lo quita, y la semana 9 tiene una sesión entera de limpieza
+
+  - code_output:
+      eyebrow: Bloque 02 · Objetivo 4.3.2 y sesión 8
+      title: Mayúsculas, y la función de la lista equivocada
+      filename: mayusculas.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 tiene  ana luz mendez
+        A3 tiene  BRUNO RAMIREZ
+
+          =MAYUSC(A2)
+          =MINUSC(A3)
+          =NOMPROPIO(A2)
+      output: |
+        MAYUSC(A2)
+          ANA LUZ MENDEZ
+        MINUSC(A3)
+          bruno ramirez
+        NOMPROPIO(A2)
+          Ana Luz Mendez
+
+  - code_output:
+      eyebrow: Bloque 02 · Objetivo 4.3.3
+      title: CONCAT, y la que lleva delimitador
+      filename: unir.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 ana luz mendez    B2 Centro    C2 142
+
+          =CONCAT(A2," ",B2)
+          =CONCAT(A2:C2)
+          =UNIRCADENAS(", ",VERDADERO,A2,"",B2)
+          =UNIRCADENAS(", ",FALSO,A2,"",B2)
+      output: |
+        CONCAT con un espacio
+          ana luz mendez Centro
+        CONCAT sobre un rango
+          ana luz mendezCentro142
+        [Ignore_empty] VERDADERO
+          ana luz mendez, Centro
+        [Ignore_empty] FALSO
+          ana luz mendez, , Centro
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro formas de arruinar una columna de texto
+      items:
+        - label: Error 01
+          title: Relleno rápido en vez de la función
+          desc: >-
+            Escribes dos resultados, presionas Ctrl+E y la columna se llena. Es
+            completamente estático. Cambia un valor de origen y la separación no lo sigue, y
+            un reactivo que nombra IZQUIERDA o EXTRAE no da puntos.
+        - label: Error 02
+          title: El ampersand en vez de CONCAT
+          desc: >-
+            =A2&" "&B2 une bien y no es una función, así que una tarea que dice usa la
+            función CONCAT no queda resuelta con eso.
+        - label: Error 03
+          title: Recurrir a [CONCATENATE]
+          desc: >-
+            La antecesora retirada todavía funciona, y no acepta un rango entero en un solo
+            argumento. El objetivo nombra CONCAT y UNIRCADENAS, y nada más.
+        - label: Error 04
+          title: '[Ignore_empty] en FALSO'
+          desc: >-
+            Medido. Sobre tres celdas con la de en medio vacía, VERDADERO da un separador
+            limpio y FALSO lo da doble, que es la señal que busca la calificación.
+
+  - divider:
+      eyebrow: Bloque 03 · Sesión 8
+      title: Las fechas, y la imagen sobre el número
+      lede: >-
+        Cada fecha de la hoja es un número entero disfrazado. Una vez que eso queda claro, ni
+        las funciones de fecha ni los formatos personalizados vuelven a sorprender.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · Sesión 8 y Expert 3.3.1
+      title: Una fecha es un número de serie
+      filename: fechas.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        D2 tiene la fecha 05/03/2024.
+
+          =DIA(D2)
+          =MES(D2)
+          =AÑO(D2)
+          =D2*1
+          =HOY()
+          =AÑO(HOY())-AÑO(D2)
+      output: |
+        DIA(D2)             5
+        MES(D2)             3
+        AÑO(D2)             2024
+        D2*1                45356
+        HOY()               18/08/2026
+        años transcurridos  2
+
+  - compare:
+      eyebrow: Bloque 03 · Objetivo Expert 3.3.1
+      title: La marca fija y la función
+      before:
+        label: Ctrl+punto y coma, no califica
+        file: marca.txt
+        lang: text
+        code: |
+          En la celda        18/08/2026
+          Barra de fórmulas  18/08/2026
+          Mañana             18/08/2026
+          El año que entra   18/08/2026
+      after:
+        label: HOY, la respuesta que califica
+        file: hoy.txt
+        lang: text
+        code: |
+          En la celda        18/08/2026
+          Barra de fórmulas  =HOY()
+          Mañana             19/08/2026
+          El año que entra   sigue avanzando
+      note: >-
+        Las dos son indistinguibles el día que las escribes. Un reactivo que pide insertar un
+        valor que muestre la fecha actual cada vez que se abre el libro se reprueba con la
+        combinación de teclas y se aprueba con la función. Ctrl+Shift+punto y coma hace lo
+        mismo con la hora, y AHORA es su contraparte que se mueve.
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido en la máquina del laboratorio
+      title: TEXTO devuelve texto, y ahí está el truco
+      filename: textofn.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        C2 tiene 142. D2 tiene la fecha 05/03/2024.
+
+          =TEXTO(C2,"0.00")
+          =[ISNUMBER](TEXTO(C2,"0.00"))
+          =TEXTO(D2,"dddd")
+          =TEXTO(D2,"mmmm")
+
+        B1 y B2 tienen resultados de =TEXTO(...).
+
+          =SUMA(B1:B2)
+          =B1+B2
+      output: |
+        TEXTO(C2,"0.00")     142.00
+        [ISNUMBER] de eso    FALSO
+        TEXTO(D2,"dddd")     martes
+        TEXTO(D2,"mmmm")     marzo
+
+        SUMA(B1:B2)          0
+        B1+B2                229
+
+  - concept:
+      eyebrow: Bloque 03 · Cómo leer los dos totales de arriba
+      title: Cero, y luego la respuesta correcta
+      lead: >-
+        B1 y B2 tienen 142.00 y 87.00, como texto. SUMA sobre ese rango responde cero, porque
+        SUMA se salta el texto. Suma las mismas dos celdas con un signo de más y la respuesta
+        es 229, porque el operador convierte. Si el número todavía se va a sumar, dale
+        formato a la celda.
+      panel:
+        label: Otra cosa que dijo esa máquina
+        title: Los nombres de día salieron en español
+        note: >-
+          La interfaz está en inglés y el idioma de instalación es español de México, así que
+          TEXTO(D2,"dddd") responde martes y no Tuesday. Decide el idioma de instalación, no
+          la cinta de opciones, y hay que revisarlo en las máquinas del laboratorio.
+      steps:
+        - text: Si todavía se va a sumar, dale formato a la celda
+        - text: Si el número va dentro de una frase, usa TEXTO
+        - text: Nunca las dos en la misma columna
+          loop: ↺ la columna que se ve bien y suma cero empieza aquí
+
+  - table:
+      eyebrow: Bloque 03 · Objetivo Expert 2.2.1
+      title: Códigos que no tienen botón en ninguna parte
+      headers: [Código, En qué convierte 1234.5, Para qué sirve]
+      rows:
+        - ['#,##0.00 "kg"', "1,234.50 kg", "Una unidad, y sigue siendo número"]
+        - ['[Red](#,##0.00)', "(1,234.50) en rojo", "Negativos que se leen negativos"]
+        - ['0.0,,"M"', "12.3M desde 12345678", "Millones, sin dividir"]
+        - ['000-00-0000', "000-00-0042 desde 42", "Ceros a la izquierda que aguantan"]
+        - ['# ??/??', "1/2 desde 0.5", "Fracciones con barras alineadas"]
+        - [';;;', "nada en absoluto", "Oculto en pantalla, vivo en la barra"]
+
+  - figure:
+      eyebrow: Bloque 03 · Objetivo Expert 2.2.1
+      title: Personalizada es la última entrada, y la única que acepta un código
+      image: img/en/format-cells-dialog.png
+      caption: >-
+        Captura de la interfaz en inglés. La pestaña Número tal como se abre, en General.
+        [Special] y Personalizada están hasta abajo de la lista Categoría, y ninguna de las
+        dos tiene botón en la cinta de opciones.
+      alt: >-
+        El cuadro de diálogo Formato de celdas en su pestaña Número, con las seis pestañas de
+        arriba, la lista Categoría desde General hasta Personalizada, y el cuadro [Sample] a
+        la derecha.
+      side:
+        label: Qué mirar
+        text: >-
+          Arma primero el formato aproximado con Número o Moneda, y luego haz clic en
+          Personalizada. El cuadro [Type] llega con el código que Excel acaba de escribir,
+          listo para editarse, y [Sample], arriba de él, muestra la celda seleccionada antes
+          de que aceptes nada.
+
+  - steps:
+      eyebrow: Bloque 03 · Objetivo Expert 2.2.1
+      title: La ruta hasta el cuadro [Type]
+      items:
+        - label: '01'
+          title: Arma primero el formato aproximado
+          desc: Ctrl+1, pestaña Número, categoría Número. Fija las posiciones decimales, el separador de miles y el estilo de negativos que quieras.
+        - label: '02'
+          title: Luego haz clic en Personalizada
+          desc: Hasta abajo de la lista Categoría. El cuadro [Type] ya trae el código que Excel acaba de construir, listo para editarse.
+        - label: '03'
+          title: Cuatro secciones, en orden
+          desc: Positivo; negativo; cero; texto, separadas por punto y coma. Escribe dos y la segunda cubre todo lo negativo.
+        - label: '04'
+          title: Lee [Sample]
+          desc: El cuadro que está arriba de la lista [Type] muestra la celda seleccionada antes de que aceptes nada.
+        - label: '05'
+          title: Borra solo los tuyos
+          desc: Vuelve a abrir Ctrl+1, Personalizada, selecciona el código en la lista y haz clic en [Delete]. Los códigos integrados no traen ese botón.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas en que un formato engaña
+      items:
+        - label: Error 01
+          title: El código de año es aaaa, no yyyy
+          desc: >-
+            Medido en la máquina del laboratorio. dd/mm/yyyy muestra 05/03/yyyy con las
+            letras impresas tal cual, y dd/mm/aaaa muestra 05/03/2024, porque el idioma de
+            instalación es español de México.
+        - label: Error 02
+          title: TEXTO donde se pedía un formato
+          desc: >-
+            La columna se ve bien y suma cero. Un formato de número cambia la imagen, una
+            fórmula TEXTO cambia el valor por una cadena.
+        - label: Error 03
+          title: Teclear el formato en la celda
+          desc: >-
+            Escribe 50% en una celda que ya tiene 50 y el valor guardado se vuelve 0.5. La
+            imagen queda bien y todas las fórmulas que dependen de ella quedan mal.
+        - label: Error 04
+          title: Confiar en una fecha con formato
+          desc: >-
+            [Clear Formats] sobre una columna de fechas deja atrás números de serie de cinco
+            dígitos. Siempre estuvieron ahí, y el formato era lo único que los escondía.
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Sobre las mismas cuatro celdas CONTARA responde 3 y CONTAR.BLANCO responde 2. ¿Por qué?
+      options:
+        - "Una de las dos contó también la fila de encabezado"
+        - "Las dos cuentan la celda con una fórmula que no devuelve nada"
+        - "CONTAR.BLANCO contó la celda que tiene el número 5"
+        - "Los rangos se seleccionaron mal y vieron celdas distintas"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Ejercicios 6 y 13
+      brief: >-
+        El ejercicio 6 es el trabajo estadístico sobre la lista de pedidos. El ejercicio 13
+        son sesenta alumnos con fecha de nacimiento, donde las funciones de texto, las de
+        fecha y los formatos de número personalizados caen en un solo archivo. Agreguen lo
+        que ninguno de los dos pide, un top tres armado con K.ESIMO.MAYOR y un fondo tres
+        armado con K.ESIMO.MENOR.
+      blocks:
+        - label: Entregable
+          text: Los dos libros en Blackboard, con cada función insertada desde [Function Library]
+        - label: Restricción
+          text: Una columna tiene que llevar un formato de número personalizado que la cinta no puede producir, y un comentario que diga cuál código
+        - label: La prueba
+          text: Apunten LARGO a la columna de nombres. Cualquier respuesta mayor que los caracteres visibles es un espacio que hay que explicar
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Los tres conteos se traslapan
+          desc: >-
+            CONTAR toma números, CONTARA toma lo que sea, CONTAR.BLANCO toma lo vacío y lo
+            que parece vacío, y las dos últimas pueden sumar más que el tamaño del rango
+        - title: Una fecha es un número disfrazado
+          desc: >-
+            45356 es 05/03/2024. Por eso DIA y MES pueden leerla, por eso una resta da días,
+            y por eso [Clear Formats] deja atrás un número de cinco dígitos
+        - title: TEXTO y un formato no son lo mismo
+          desc: >-
+            Una reescribe el valor como una cadena que suma cero, el otro solo cambia la
+            imagen. Elige preguntándote si el número todavía se va a sumar
+
+  - homework:
+      eyebrow: Tarea
+      title: DIASEM y DIA.LAB, por tu cuenta
+      brief: >-
+        Estas dos no caben en la sesión 8 y están en los objetivos Expert, así que van de
+        tarea con solución comentada. En el ejercicio 13, saquen qué día de la semana nació
+        cada alumno, y luego el quinto día hábil después de cada cumpleaños con un rango de
+        días festivos que ustedes armen.
+      meta:
+        - [Entrega, Antes de la semana 5]
+        - [Formato, Blackboard · archivo .xlsx]
+        - [Peso, Parte del 30 % dentro del parcial 1]
+      rubric:
+        - ["DIASEM", "30 %", "[Return_type] elegido a propósito, y la elección explicada"]
+        - ["DIA.LAB", "40 %", "El argumento [Holidays] está lleno y fijado con F4"]
+        - ["Formato", "20 %", "Los resultados se leen como fechas, no como números de serie"]
+        - ["La comprobación", "10 %", "Un viernes más un día hábil cae en lunes"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima semana la hoja empieza a tomar decisiones, formato condicional,
+        minigráficos, y el primer SI.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

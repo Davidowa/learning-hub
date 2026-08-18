@@ -1,0 +1,497 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 11
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 11 · Sesiones 21 y 22 · Elección del gráfico y entrega
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        La semana pasada se construyeron gráficos. Esta semana se decide si eran los
+        correctos, y luego se deja el libro listo para salir de tus manos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 21 y 22 de 34]
+      notes: |
+        Sesiones 21 y 22 del temario, CLO07 y CLO09. La sesión 21 es crítica de gráficos;
+        la sesión 22 es ortografía, comprobador de accesibilidad, comentarios y protección.
+        Se cubren completos Expert 1.2.3 y 1.2.5, más la parte del comprobador de
+        accesibilidad del Associate 1.5.4 y una segunda pasada por 5.3.3. COBERTURA.md
+        agrega Expert 4.1.2 y 4.1.1 a la sesión 21, y Expert 1.2.2 y 1.2.1 a la sesión 22.
+        Expert 1.1.3, habilitar macros en un libro que ya las trae, se enseña en el bloque 3
+        por decisión del profesor. Grabar macros, Expert 3.6.1 a 3.6.3, no es parte de este
+        curso; le toca a TIA503.
+        La ortografía está en el temario y no es un objetivo propio en los dominios de 2019.
+        Aparece dentro de Expert 1.3.2, que este curso ancla a INNOVATIQ.
+        El ejercicio 18 es el archivo. Su libro trae seis nombres definidos muertos que
+        apuntan a #¡REF!, de un ejercicio viejo de filtro avanzado. Límpialos antes de
+        repartirlo.
+        La interfaz de las máquinas del laboratorio está en inglés. Los nombres de control
+        que van entre corchetes se dejaron en inglés porque no están en el glosario del
+        curso y traducirlos de oído dejaría al alumno sin poder seguir la ruta.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Cuál gráfico corresponde
+          desc: Los tipos ordinarios y qué responde cada uno, y luego los seis que el examen Expert nombra uno por uno
+        - title: Dos magnitudes, un solo trazo
+          desc: El gráfico combinado y el eje secundario, armados dentro del cuadro de diálogo y no parchados después
+        - title: Revisar antes de enviar
+          desc: Ortografía, comprobador de accesibilidad, texto alternativo, y la diferencia entre un comentario y una nota
+        - title: Cerrarlo con llave
+          desc: Desbloquear, bloquear, proteger la hoja, proteger la estructura, y la barra amarilla de un archivo con macros
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Decir qué tipo de gráfico responde la pregunta
+          sub: Y nombrar para qué existe cada uno de los seis tipos avanzados, en lugar de en qué galería se esconde
+        - head: Armar un gráfico combinado con eje secundario
+          sub: Tipo de gráfico y eje fijados dentro de un cuadro de diálogo, en una sola operación, antes de que cierre
+        - head: Ejecutar el comprobador de accesibilidad y atenderlo
+          sub: La segunda de las tres herramientas detrás del objetivo 1.5.4, y donde se lee el texto alternativo del gráfico
+        - head: Distinguir un comentario de una nota
+          sub: Dos objetos distintos en dos grupos distintos de la cinta, y solo uno aparece en el panel de Comentarios
+        - head: Proteger una hoja y dejar celdas editables
+          sub: Desbloquear todo primero, bloquear lo que importa, y proteger desde Permitir editar rangos
+        - head: Habilitar macros en un archivo que te enviaron
+          sub: La barra amarilla, la opción del [Trust Center] detrás de ella, y la barra roja que no trae botón
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importación, filtros, tablas, gráficos y las funciones de búsqueda
+          state: now
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El gráfico que hiciste contra el gráfico que necesitabas
+      lede: >-
+        Del ejercicio de la semana pasada salieron veinte gráficos. Construirlos era la
+        mitad fácil. Esta sesión es donde cada uno tiene que justificarse.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Los tipos ordinarios
+      title: Qué responde cada gráfico, y dónde se detiene
+      headers: [Gráfico, La pregunta que responde, Mala elección cuando]
+      rows:
+        - ["Circular", "Qué parte del total", "Más de unas seis rebanadas"]
+        - ["Columnas agrupadas", "Cómo se comparan las categorías", "Las partes forman un total"]
+        - ["100 % apilada", "Cómo se mueve la mezcla", "Importa el tamaño absoluto"]
+        - ["Líneas", "Cómo cambia algo con el tiempo", "El eje no está ordenado"]
+        - ["Dispersión", "Si dos números se mueven juntos", "Un eje es una categoría"]
+
+  - tiers:
+      eyebrow: Bloque 01 · Los seis que nombra el examen Expert
+      title: Cuatro galerías los contienen a todos
+      items:
+        - key: Estadística
+          title: Histograma, Pareto, cajas y bigotes
+          desc: Pestaña Insertar, grupo Gráficos, [Insert Statistic Chart]. Pareto es un subtipo del histograma con su propia línea acumulada.
+        - key: Jerarquía
+          title: Rectángulos y proyección solar
+          desc: "[Insert Hierarchy Chart]. Una columna de origen por nivel, el nivel más externo al final, y celdas vacías donde falte un nivel."
+        - key: Flujo
+          title: Cascada y embudo
+          desc: La galería de cascada, embudo, cotizaciones, superficie y radial. Un embudo necesita su única serie ordenada antes.
+        - key: Combinado
+          title: Combinado, y el de mapa
+          desc: "[Insert Combo Chart] para dos magnitudes en un solo trazo. El de mapa necesita Bing, y MO-211 dejó fuera ese gráfico."
+
+  - steps:
+      eyebrow: Bloque 01 · Lo que cada tipo necesita después
+      title: Construirlo no es toda la tarea
+      items:
+        - label: '01'
+          title: "[Change Chart Type]"
+          desc: Haz clic en el gráfico, Diseño de gráfico, grupo [Type], [Change Chart Type], pestaña [All Charts], elige la categoría y el subtipo nuevos, Aceptar. No hay que rehacer nada.
+        - label: '02'
+          title: Los rangos del histograma
+          desc: Haz clic en el eje horizontal, presiona Ctrl+1, y en [Format Axis], [Axis Options], elige [By Category], [Automatic], [Bin width] o [Number of bins].
+        - label: '03'
+          title: Los totales de la cascada
+          desc: Un clic en la serie selecciona todas las columnas, otro clic en esa columna la selecciona sola, clic derecho, [Set as Total]. Baja a la línea base.
+        - label: '04'
+          title: El orden del embudo
+          desc: Ordena el origen de mayor a menor antes de insertarlo. Un embudo dibujado sobre datos sin ordenar no es un embudo, es un gráfico de barras con las puntas redondeadas.
+        - label: '05'
+          title: El cuadro de diálogo siempre llega
+          desc: "[All Charts], dentro del cuadro [Insert Chart], los tiene todos, y [All Chart Types] al final de cualquier galería abre ese mismo cuadro."
+
+  - steps:
+      eyebrow: Bloque 01 · Dos magnitudes en un trazo
+      title: El gráfico combinado, en una sola operación
+      items:
+        - label: '01'
+          title: Selecciona las dos series
+          desc: Con encabezados. Las dos tienen que diferir en tamaño para que valga la pena, unidades en decenas contra ingresos en miles.
+        - label: '02'
+          title: "[Insert Combo Chart]"
+          desc: Pestaña Insertar, grupo Gráficos. No [Recommended Charts], que ofrece algo razonable y nunca te enseña la entrada del combinado.
+        - label: '03'
+          title: "[Create Custom Combo Chart]"
+          desc: Hasta abajo de esa galería. El cuadro [Insert Chart] abre en la pestaña [All Charts] con [Combo] ya seleccionado.
+        - label: '04'
+          title: El renglón de la segunda serie
+          desc: Pon su lista [Chart Type] en [Line] o [Line with Markers], y marca [Secondary Axis] en ese mismo renglón. Las dos cosas antes de que cierre el cuadro.
+        - label: '05'
+          title: Ponle nombre al eje nuevo
+          desc: Diseño de gráfico, [Chart Layouts], [Add Chart Element], Títulos de eje, [Secondary Vertical]. Un segundo eje sin rótulo es un gráfico que miente con buenos modales.
+
+  - compare:
+      eyebrow: Bloque 01 · Mover una serie que ya existe
+      title: Dos maneras de llegar al eje secundario
+      before:
+        label: Calificable · por [Current Selection]
+        file: eje.txt
+        lang: text
+        code: |
+          Pestaña [Format], grupo [Current Selection]
+          Lista Elementos de gráfico, elige la serie
+          [Format Selection]
+          [Format Data Series], [Series Options]
+          [Plot Series On], [Secondary Axis]
+      after:
+        label: No calificable · por el clic derecho
+        file: eje.txt
+        lang: text
+        code: |
+          Clic derecho sobre la serie del gráfico
+          [Format Data Series...]
+          [Series Options], [Secondary Axis]
+
+          El mismo panel, el mismo resultado, y
+          antes le tuviste que atinar a una línea
+          de dos píxeles
+      note: >-
+        La lista Elementos de gráfico de la pestaña [Format] nombra cada elemento del gráfico.
+        Es como se selecciona una serie delgada a la que no puedes hacerle clic, y es la
+        ruta contra la que está escrita la tarea cuando pide mover una serie con nombre al
+        segundo eje.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro gráficos correctos que aun así están mal
+      items:
+        - label: Error 01
+          title: Un circular con catorce rebanadas
+          desc: >-
+            Nadie ordena catorce ángulos a ojo. Si la pregunta es cuáles son los grandes,
+            un gráfico de barras ordenado la responde y uno circular no.
+        - label: Error 02
+          title: Un gráfico de líneas sobre categorías
+          desc: >-
+            La línea entre dos puntos afirma que algo pasó en medio. Entre sucursales o
+            productos no hay un en medio, y la afirmación está inventada.
+        - label: Error 03
+          title: Dos magnitudes en un solo eje
+          desc: >-
+            Unidades en decenas junto a ingresos en miles dejan una serie plana sobre la
+            línea base. Para eso existe el eje secundario.
+        - label: Error 04
+          title: Cortar el eje de valores
+          desc: >-
+            Arrancar el eje en 90 en lugar de 0 convierte una diferencia de dos por ciento
+            en un acantilado. Es una decisión de formato y también es un argumento.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Revisar antes de enviar
+      lede: >-
+        Tres herramientas que miran el libro en vez de los números, y una distinción que
+        el examen califica y que casi nadie ha notado.
+      block: 2
+
+  - method:
+      eyebrow: Bloque 02 · Ortografía
+      title: La pasada de revisión, y cuánto vale
+      statement: F7 abre [Spelling] sobre la hoja activa. La lista [Dictionary language] es donde una columna en español se juzga contra un diccionario en inglés y regresa llena de errores que no son errores.
+      points:
+        - label: La ruta
+          text: Pestaña Revisar, grupo [Proofing], [Spelling], o F7 desde cualquier punto de la hoja.
+        - label: Todas las hojas
+          text: Lee la hoja activa. Primero clic derecho en una pestaña y [Select All Sheets], luego desagrupa, o lo siguiente que escribas cae en todas.
+        - label: Dónde cuenta
+          text: La ortografía no es un objetivo propio en los dominios de 2019. Vive dentro de Expert 1.3.2, el bloque de idioma, que este curso cubre con el curso autogestivo de INNOVATIQ.
+
+  - steps:
+      eyebrow: Bloque 02 · El comprobador de accesibilidad
+      title: La segunda de las tres herramientas detrás de 1.5.4
+      items:
+        - label: '01'
+          title: Ábrelo
+          desc: Pestaña Revisar, grupo [Accessibility], Comprobador de accesibilidad. El mismo comando está en Archivo, [Info], Comprobar si hay problemas, Comprobador de accesibilidad.
+        - label: '02'
+          title: Lee los tres grupos
+          desc: El panel abre a la derecha con [Inspection Results] partido en [Errors], [Warnings] y [Tips]. Los errores son los que bloquean de plano a un lector de pantalla.
+        - label: '03'
+          title: Haz clic en un elemento
+          desc: Excel selecciona en la hoja el objeto que lo provoca. [Additional Information], hasta abajo del panel, da la corrección recomendada.
+        - label: '04'
+          title: Falta el texto alternativo
+          desc: El error más común, y de lo que trata el Associate 5.3.3. [Recommended Actions], [Add a description], abre el mismo panel de Texto alternativo que el clic derecho.
+        - label: '05'
+          title: Déjalo corriendo
+          desc: Marca [Keep accessibility checker running while I work] y te reporta mientras construyes, en lugar de hasta el final.
+
+  - table:
+      eyebrow: Bloque 02 · Dos objetos que se parecen
+      title: Una nota no es un comentario, y el examen lo sabe
+      headers: [Qué se mira, Comentario, Nota]
+      rows:
+        - ["Marca en la celda", "Triángulo morado pequeño", "Triángulo rojo"]
+        - ["El recuadro", "Trae un campo [Reply]", "Rectángulo amarillo simple"]
+        - ["Dónde se crea", "Revisar, Comentarios, Nuevo comentario", "Revisar, [Notes], Nueva nota"]
+        - ["Panel [Show Comments]", "Lista todas las conversaciones", "Nunca aparece ahí"]
+        - ["Atajo", "Shift+F2", "Ctrl+Shift+F2, por confirmar"]
+
+  - steps:
+      eyebrow: Bloque 02 · Manejar una conversación
+      title: Publicar, responder, resolver, eliminar
+      items:
+        - label: '01'
+          title: Nuevo comentario
+          desc: Selecciona la celda, pestaña Revisar, grupo Comentarios, Nuevo comentario. Escribe y haz clic en [Post], la flecha pequeña de abajo a la derecha del recuadro, o presiona Ctrl+Entrar.
+        - label: '02'
+          title: Responder
+          desc: Haz clic en el comentario y escribe en el cuadro [Reply], luego [Post]. La conversación crece hacia abajo. Ese campo de respuesta es lo que lo hace comentario y no nota.
+        - label: '03'
+          title: Los tres puntos
+          desc: Apunta al comentario y haz clic en el botón de su esquina superior derecha para [Edit comment], [Resolve thread] y [Delete thread], que algunas versiones llaman [Delete comment]. Resolver la deja en gris y la conserva.
+        - label: '04'
+          title: Recorrer la hoja
+          desc: "[Previous Comment] y [Next Comment] en el mismo grupo. [Show Comments] abre el panel que lista en orden todas las conversaciones de la hoja."
+        - label: '05'
+          title: Imprimirlos
+          desc: Cuadro Configurar página, pestaña [Sheet], la lista [Comments and notes], y elige [At end of sheet] o [As displayed on sheet]. Office 2019 le pone [Comments] a esa lista.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cerrarlo con llave
+      lede: >-
+        La protección en Excel no es una barda alrededor del archivo. Es una marca por
+        celda que no hace absolutamente nada hasta que enciendes la hoja.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Cada celda ya está bloqueada, y nada está protegido
+      lead: >-
+        Una hoja nueva trae marcada la casilla Bloqueada en todas sus celdas. Esa marca no
+        hace nada hasta que la hoja se protege, y en el momento en que la proteges, todo se
+        congela de golpe. Por eso el primer paso es desbloquear la hoja completa, y por eso
+        nadie se acuerda de él.
+      panel:
+        label: El orden que sí funciona
+        title: Desbloquea todo, bloquea lo poco, protege
+        note: >-
+          Hacerlo al revés, proteger primero y desbloquear después, no se puede. Formato de
+          celdas es una de las cosas que la protección bloquea, así que el cuadro que
+          necesitas es el que acabas de dejar bajo llave.
+      steps:
+        - text: Ctrl+A, Ctrl+1, Protección, quita Bloqueada
+        - text: Selecciona las fórmulas, marca Bloqueada y [Hidden]
+        - text: Revisar, Proteger, Permitir editar rangos
+          loop: ↺ y Proteger hoja es el botón de hasta abajo de ese cuadro
+
+  - steps:
+      eyebrow: Bloque 03 · Ejercicio 18, los 115 empleados
+      title: Cinco pasos, en este orden y en ningún otro
+      items:
+        - label: '01'
+          title: Desbloquea la hoja completa
+          desc: Seleccionar todo en la esquina de los encabezados o Ctrl+A, luego Ctrl+1, pestaña Protección, quita Bloqueada, Aceptar. No pasa nada visible.
+        - label: '02'
+          title: Bloquea lo que no debe moverse
+          desc: Selecciona las fórmulas de edad de la columna J. Ctrl+1, pestaña Protección, marca Bloqueada y marca [Hidden]. Las dos casillas en una sola visita al cuadro.
+        - label: '03'
+          title: Permitir editar rangos
+          desc: Pestaña Revisar, grupo Proteger, Permitir editar rangos, Nuevo. Llena [Title], [Refers to cells] y [Range password], Aceptar, confirma.
+        - label: '04'
+          title: Proteger hoja desde adentro
+          desc: El botón Proteger hoja de hasta abajo del cuadro Permitir editar rangos. Usarlo es lo que demuestra que las dos configuraciones son una sola operación.
+        - label: '05'
+          title: Elige qué sigue permitido
+          desc: Marca [Protect worksheet and contents of locked cells], escribe la contraseña, y luego recorre la lista Permitir a los usuarios de esta hoja de cálculo.
+
+  - table:
+      eyebrow: Bloque 03 · La lista de Proteger hoja
+      title: Quince casillas, y las cuatro que deciden
+      headers: [Casilla, Déjala marcada cuando, Quítala cuando]
+      rows:
+        - ["Seleccionar celdas bloqueadas", "Pueden leerlas", "Ni siquiera deben hacer clic"]
+        - ["Seleccionar celdas desbloqueadas", "Hay celdas que llenar", "Nunca, ese es el punto"]
+        - ["[Format cells]", "Los anchos pueden cambiar", "El acomodo es la respuesta"]
+        - ["Ordenar", "El orden es de ellos", "El orden significa algo"]
+        - ["[Use AutoFilter]", "Las flechas ya existen", "Ocultar filas oculta evidencia"]
+
+  - table:
+      eyebrow: Bloque 03 · Archivo, [Info], Proteger libro
+      title: Cinco entradas, cinco cosas que se detienen
+      headers: [Entrada, Qué detiene, Qué no detiene]
+      rows:
+        - ["Marcar como final", "Escribir, y lo dice", "Hacer clic en [Edit Anyway]"]
+        - ["[Encrypt with Password]", "Abrir el archivo", "A quien tenga la contraseña"]
+        - ["[Always Open Read-Only]", "Guardar encima sin querer", "Guardar como con otro nombre"]
+        - ["[Protect Workbook Structure]", "Agregar, mover, ocultar hojas", "Editar cualquier celda"]
+        - ["[Password to modify]", "Guardar encima del original", "Leerlo"]
+
+  - steps:
+      eyebrow: Bloque 03 · La estructura, y la barra amarilla
+      title: Proteger hojas frente a proteger el libro
+      items:
+        - label: '01'
+          title: "[Protect Workbook Structure]"
+          desc: Pestaña Revisar, grupo Proteger, Proteger libro. Marca [Structure], escribe la contraseña, Aceptar, confirma. La casilla [Windows] sale en gris en las versiones actuales.
+        - label: '02'
+          title: Cómo comprobar que quedó
+          desc: Clic derecho en una pestaña de hoja. [Insert], [Delete], [Rename], [Move or Copy], [Tab Color], [Hide] y [Unhide] salen en gris, y la pestaña se niega a que la arrastres.
+        - label: '03'
+          title: "[Password to modify]"
+          desc: Es distinta de la contraseña para abrir. Archivo, Guardar como, [Browse], el botón [Tools] junto a Guardar, [General Options], y llena [Password to modify].
+        - label: '04'
+          title: Habilitar macros en un archivo que te enviaron
+          desc: Vuelve a abrirlo. Una [Message Bar] dice [SECURITY WARNING] con un botón [Enable Content]. Haz clic una vez y la decisión queda guardada para ese archivo.
+        - label: '05'
+          title: Cuando la barra es roja
+          desc: El archivo viene de internet y no hay botón. Ciérralo, clic derecho en el Explorador de archivos, Propiedades, marca [Unblock] hasta abajo, vuelve a abrirlo.
+
+  - method:
+      eyebrow: Bloque 03 · Objetivo 1.1.3
+      title: La opción detrás de la barra, y lo que no entra en este curso
+      statement: La barra amarilla existe porque [Macro Settings] está en [Disable all macros with notification]. Esa opción, no el botón, es lo que el examen te pide encontrar.
+      points:
+        - label: Cómo llegar
+          text: Archivo, Opciones, [Customize Ribbon], marca Programador en [Main Tabs]. Luego pestaña Programador, grupo [Code], [Macro Security], que abre el [Trust Center] en [Macro Settings].
+        - label: La redacción
+          text: Las versiones actuales de Microsoft 365 escriben esa misma opción como [Disable VBA macros with notification]. Cuál muestran las máquinas del laboratorio está por confirmar.
+        - label: Fuera de este curso
+          text: Grabar, nombrar y editar macros son los objetivos Expert 3.6.1 a 3.6.3 y le tocan a TIA503. Aquí el objetivo se detiene en habilitar un archivo que ya las trae.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro maneras de que la protección no sirva de nada
+      items:
+        - label: Error 01
+          title: Proteger hoja sin desbloquear antes
+          desc: >-
+            Todas las celdas empezaron bloqueadas, así que la hoja entera se congela y
+            nadie puede escribir en ningún lado. La tarea pedía una hoja donde algunas
+            celdas siguieran sirviendo.
+        - label: Error 02
+          title: Bloqueada sin [Hidden]
+          desc: >-
+            La fórmula no se puede cambiar y se sigue leyendo en la barra de fórmulas. El
+            ejercicio 18 pide que la fórmula de edad quede protegida y oculta, que son dos
+            casillas.
+        - label: Error 03
+          title: Ocultar hojas en lugar de proteger la estructura
+          desc: >-
+            Clic derecho, [Hide], y cualquiera las regresa con [Unhide] en tres clics. El
+            libro no está protegido, está ordenado.
+        - label: Error 04
+          title: Solo lectura puesto en Windows
+          desc: >-
+            Excel respeta el atributo del archivo, así que se siente protegido. Nada
+            cambió dentro del archivo, y Archivo, [Info] sigue reportando un libro sin
+            proteger.
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Protegiste la hoja y las celdas de sueldo se siguen editando. ¿Qué salió mal?
+      options:
+        - La contraseña era demasiado corta para que Excel la aplicara
+        - Se quitó Bloqueada de toda la hoja y nunca se volvió a poner en las de sueldo
+        - Se usó Proteger libro en lugar de Proteger hoja
+        - Las celdas tenían que ser una tabla primero
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Excel 18, de un archivo de trabajo a un archivo que se puede enviar
+      brief: >-
+        Calculen la edad de cada uno de los 115 empleados en la columna J. Oculten y
+        protejan esa fórmula, protejan las celdas de sueldo, y dejen editable el resto de
+        la hoja. Después ejecuten el comprobador de accesibilidad, dejen una conversación
+        de comentarios que explique una decisión, y protejan la estructura del libro.
+      blocks:
+        - label: Entregable
+          text: Un libro, protegido, con las contraseñas escritas en el comentario de entrega
+        - label: Restricción
+          text: Un compañero tiene que poder escribir en las zonas que el ejercicio deja abiertas. Pruébenlo antes de entregar.
+        - label: Cuidado con
+          text: "El archivo trae seis nombres definidos muertos que apuntan a #¡REF! de un ejercicio viejo. Administrador de nombres, bórrenlos."
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: El gráfico es un argumento
+          desc: >-
+            El tipo, el rango del eje y usar uno o dos ejes cambian lo que el lector
+            concluye de los mismos números. Elegir mal no es un error de formato
+        - title: Una nota no es un comentario
+          desc: >-
+            Otro botón, otro grupo, otra marca, otro panel. Cuando la tarea dice
+            comentario, una nota no vale nada, y al revés también
+        - title: La protección es un interruptor de dos partes
+          desc: >-
+            La marca Bloqueada de cada celda no hace nada hasta que la hoja se protege, y
+            ya protegida, todo lo que traiga esa marca se congela en el mismo instante
+
+  - homework:
+      eyebrow: Tarea
+      title: Ejercicio 18 y el rehacer de los gráficos, entrega y calificación
+      brief: >-
+        El ejercicio 18 es el trabajo de protección de arriba. Encima de eso, regresen a
+        los gráficos del ejercicio 17 y rehagan dos. Uno como gráfico combinado con eje
+        secundario, y otro del que argumenten en dos renglones que era del tipo equivocado
+        y que debió ser otra cosa.
+      meta:
+        - [Entrega, Antes de la semana 12]
+        - [Formato, Blackboard · un .xlsx y una nota de dos páginas]
+        - [Peso, Parte del 30 % dentro del parcial 2]
+      rubric:
+        - ["Protección", "35 %", "Fórmula oculta y bloqueada, sueldos bloqueados, el resto editable"]
+        - ["Revisión", "20 %", "Comprobador de accesibilidad limpio, una conversación, ortografía revisada"]
+        - ["Gráfico combinado", "25 %", "Hecho desde [Create Custom Combo Chart], con el segundo eje rotulado"]
+        - ["El argumento", "20 %", "Dos renglones que digan qué pregunta responde mejor el gráfico nuevo"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima semana es el segundo parcial, luego el simulacro de certificación en
+        condiciones de examen, y la media sesión que queda abre BUSCARV.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

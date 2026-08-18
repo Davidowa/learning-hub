@@ -1,0 +1,467 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 13
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 13 · Sesiones 25 y 26 · Búsqueda y consolidación
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Cuatro funciones que traen un valor de otra tabla, y la única situación en la
+        que cada una de ellas es la que sirve.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 25 y 26 de 34]
+      notes: |
+        Sesiones 25 y 26 del temario, CLO08. La sesión 25 es BUSCARV a fondo; la
+        sesión 26 agrega BUSCARH y la práctica guiada que consolida entre hojas.
+        Se cubre completo: la mitad de BUSCARV y BUSCARH del objetivo Expert 3.2.1.
+        COBERTURA.md agrega ÍNDICE y COINCIDIR bajo el mismo objetivo, Expert 3.4.1
+        Consolidar, y Expert 1.1.2 referencias a otros libros.
+        Cada ruta sale de procedures.en.md. Ejercicios 20 y 21, y toma en cuenta que
+        el ejercicio 21 obliga a usar ÍNDICE y COINCIDIR sin nombrarlas nunca.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: BUSCARV a fondo
+          desc: El cuadro de diálogo, sus cuatro argumentos y los dos que cuestan puntos
+        - title: Cuando BUSCARV no puede
+          desc: BUSCARH por la fila superior, ÍNDICE y COINCIDIR cuando la clave queda a la derecha
+        - title: Juntar las piezas
+          desc: Consolidar por rótulo, y una fórmula que llega hasta otro archivo
+        - title: Tu turno
+          desc: 288 alumnos con cuotas por llenar, y luego 2,585 artículos de inventario
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Construir un BUSCARV desde el diálogo
+          sub: Fórmulas, [Lookup & Reference], y F4 sobre el [Table_array] antes que nada
+        - head: Elegir entre FALSO y VERDADERO
+          sub: Y decir en voz alta qué hace un [Range_lookup] vacío, porque no es FALSO
+        - head: "Leer #N/D en lugar de taparlo"
+          sub: Las cuatro cosas que lo producen, y el único momento en que SI.ERROR puede cubrirlo
+        - head: Llegar a una columna que BUSCARV no alcanza
+          sub: ÍNDICE con COINCIDIR anidada en [Row_num], en una sola pasada por un diálogo
+        - head: Resumir varios rangos por rótulo
+          sub: Datos, Consolidar, con [Top row] y [Left column] marcadas para que sume por nombre
+        - head: Ligar una fórmula a otro archivo
+          sub: La notación de corchetes, y qué puede y qué no puede devolver [Edit Links]
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: now
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: BUSCARV, argumento por argumento
+      lede: >-
+        La función son cuatro casillas. En dos de ellas están los puntos, y ninguna de
+        las dos es la que a todo el mundo le preocupa.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una clave, un bloque y un desplazamiento
+      lead: >-
+        Una búsqueda no es un rastreo. Le entregas a Excel tres cosas: una clave, un
+        rectángulo donde mirar y cuántas columnas caminar a la derecha cuando la clave
+        aparezca. Todo lo que sale mal con BUSCARV sale mal en una de esas tres, y la
+        hoja casi nunca lo avisa.
+      panel:
+        label: La regla de trabajo
+        title: La clave vive en la primera columna del bloque
+        note: >-
+          No la primera columna de la hoja, ni la columna que tengas seleccionada. Si la
+          clave no está en la columna uno del [Table_array], BUSCARV es la función
+          equivocada y ningún argumento lo arregla.
+      steps:
+        - text: Excel lee hacia abajo la columna uno del bloque
+        - text: Se detiene en la fila donde coincide la clave
+        - text: Camina a la derecha tantas columnas como diga [Col_index_num]
+          loop: ↺ y devuelve lo que esté ahí, correcto o no
+
+  - steps:
+      eyebrow: Bloque 01 · La ruta calificada
+      title: Cinco paradas dentro de [Function Arguments]
+      items:
+        - label: '01'
+          title: Abre el diálogo
+          desc: Pestaña Fórmulas, grupo [Function Library], [Lookup & Reference], luego BUSCARV
+        - label: '02'
+          title: "[Lookup_value]"
+          desc: La celda que tiene la clave. Déjala relativa para poder rellenar hacia abajo.
+        - label: '03'
+          title: "[Table_array]"
+          desc: Selecciona desde la columna de la clave hacia la derecha y presiona F4 para fijarlo en $A$2:$D$50
+        - label: '04'
+          title: "[Col_index_num]"
+          desc: Un número contado desde la columna uno del [Table_array], nunca desde la columna A de la hoja
+        - label: '05'
+          title: "[Range_lookup]"
+          desc: FALSO para exacta, VERDADERO para la búsqueda por rangos. Luego [OK], una vez.
+
+  - compare:
+      eyebrow: Bloque 01 · Hoy dan lo mismo, la calificación no
+      title: Tecleada a mano contra construida en el diálogo
+      before:
+        label: Tecleada directo en la celda
+        file: Students.xlsx
+        lang: excel
+        code: |
+          =BUSCARV(A2,Fees!A2:B24,2)
+      after:
+        label: Construida en [Function Arguments]
+        file: Students.xlsx
+        lang: excel
+        code: |
+          =BUSCARV(A2,Fees!$A$2:$B$24,2,FALSO)
+      note: >-
+        Las dos devuelven la cuota correcta en la fila 2. La de la izquierda se arrastra
+        un renglón hacia abajo de la tabla Fees con cada relleno y contesta VERDADERO en
+        silencio a una pregunta que nadie hizo. El diálogo es lo que hace que ocurran el
+        F4 y el FALSO, y es lo que vigila el examen.
+
+  - code:
+      eyebrow: Bloque 01 · Ejercicio 20, cuatro fórmulas
+      title: Exacta, ausente, por rangos y tapada
+      filename: Excel 20 (BuscarV).xlsx
+      lang: excel
+      source: |
+        =BUSCARV(B2,Fees!$A$2:$B$24,2,FALSO)
+
+        =BUSCARV(B2,Fees!$A$2:$B$24,2)
+
+        =BUSCARV(B2,$F$3:$G$7,2,VERDADERO)
+
+        =SI.ERROR(BUSCARV(B2,Fees!$A$2:$B$24,2,FALSO),"Revisar")
+      annotations:
+        - label: Exacta
+          text: >-
+            FALSO en [Range_lookup]. El programa encuentra una fila de Fees o la fórmula
+            se detiene en #N/D.
+        - label: El argumento que falta
+          text: >-
+            [Range_lookup] vacío. Vacío es VERDADERO, y una tabla sin ordenar devuelve
+            la cuota del vecino, en silencio.
+        - label: Por rangos, a propósito
+          text: >-
+            La tabla de puntajes guarda el límite inferior de cada nivel, así que
+            VERDADERO sirve y debe ir ordenada de menor a mayor.
+        - label: Riesgo
+          text: >-
+            SI.ERROR esconde #N/D. Úsalo cuando la búsqueda ya esté probada, nunca antes.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · Las cuatro casillas
+      title: Desde dónde se cuenta cada argumento
+      headers: [Argumento, Qué se pone dentro, Desde dónde se cuenta]
+      rows:
+        - ["[Lookup_value]", "La celda que tiene la clave", "Relativa, para rellenar abajo"]
+        - ["[Table_array]", "La clave y todo lo de su derecha", "Fijado con F4"]
+        - ["[Col_index_num]", "Un número, nunca una letra", "Columna 1 del [Table_array]"]
+        - ["[Range_lookup]", "FALSO, escrito completo", "Vacío es VERDADERO, no FALSO"]
+        - ["[Row_index_num]", "BUSCARH toma este en su lugar", "Fila 1 del [Table_array]"]
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de mentir en silencio
+      items:
+        - label: Error 01
+          title: Un rango de tabla que camina
+          desc: >-
+            Rellenar hacia abajo con Fees!A2:B24 sin fijar mueve el bloque una fila por
+            relleno. Las primeras respuestas salen bien, que es justo por lo que nadie
+            revisa el resto.
+        - label: Error 02
+          title: Contar desde la columna A
+          desc: >-
+            [Col_index_num] cuenta dentro del [Table_array]. Si el bloque empieza en la
+            columna C, el valor de la columna D es 2, no 4, y el 4 devuelve #¡REF! o el
+            campo equivocado.
+        - label: Error 03
+          title: "[Range_lookup] vacío"
+          desc: >-
+            Vacío significa VERDADERO, y VERDADERO sobre una tabla sin ordenar devuelve
+            la fila de arriba de la clave. El número se ve creíble y nada en la pantalla
+            se pone rojo.
+        - label: Error 04
+          title: SI.ERROR aplicado muy pronto
+          desc: >-
+            #N/D es lo único que te avisa que la clave no está o que el bloque está mal.
+            Tápalo antes de probar la fórmula y el libro deja de quejarse.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cuando BUSCARV no puede
+      lede: >-
+        La clave no está en la primera columna, o la tabla corre a lo ancho en vez de
+        hacia abajo. Dos de los tres inventarios del ejercicio 21 están armados así.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Ejercicio 21, una pregunta, tres tablas
+      title: El acomodo decide la función
+      headers: [Tabla, Cómo está acomodada, Qué sirve]
+      rows:
+        - ["Inventario 1", "Artículo, Descripción, Unidad, Costo", "BUSCARV"]
+        - ["Inventario 2", "Descripción primero, Artículo después", "ÍNDICE y COINCIDIR"]
+        - ["Inventario 3", "Los códigos corren por la fila 3", "BUSCARH"]
+
+  - code:
+      eyebrow: Bloque 02 · El mismo costo, traído de tres maneras
+      title: Hacia abajo, a lo ancho y desde el lado equivocado
+      filename: Excer 21 (HLookup).xlsx
+      lang: excel
+      source: |
+        =BUSCARV($C4,$B$4:$E$2588,4,FALSO)
+
+        =BUSCARH($C4,$W$3:$AJ$6,4,FALSO)
+
+        =INDICE($O$4:$O$2588,COINCIDIR($C4,$M$4:$M$2588,0))
+      annotations:
+        - label: Por la primera columna
+          text: >-
+            El inventario 1 pone Artículo primero, así que BUSCARV sirve y Costo es la
+            cuarta columna del bloque.
+        - label: Por la fila superior
+          text: >-
+            El inventario 3 acomoda los códigos a lo ancho de la fila 3. BUSCARH busca
+            en esa fila y el 4 baja hasta Costo.
+        - label: La clave del lado derecho
+          text: >-
+            El inventario 2 pone Descripción primero. COINCIDIR encuentra la posición
+            del código en M, ÍNDICE lee O en esa posición.
+        - label: Riesgo
+          text: >-
+            COINCIDIR toma una fila o una columna. Dale un rectángulo y contesta #N/D.
+          accent: true
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta calificada
+      title: ÍNDICE, y el diálogo antes del diálogo
+      items:
+        - label: '01'
+          title: ÍNDICE desde la biblioteca
+          desc: Pestaña Fórmulas, grupo [Function Library], [Lookup & Reference], luego ÍNDICE
+        - label: '02'
+          title: "[Select Arguments]"
+          desc: Elige array,row_num,column_num. La otra entrada es para referencias de varias áreas.
+        - label: '03'
+          title: "[Array]"
+          desc: La columna de valores por devolver. No la tabla completa, y sin fila de encabezado.
+        - label: '04'
+          title: Anida COINCIDIR
+          desc: Con el cursor en [Row_num], elige COINCIDIR en el Cuadro de nombres, a la izquierda de la barra de fórmulas
+        - label: '05'
+          title: Un solo [OK]
+          desc: Haz clic en la palabra INDICE de la barra de fórmulas para salir, y luego [OK] en el nivel de ÍNDICE
+
+  - table:
+      eyebrow: Bloque 02 · COINCIDIR devuelve una posición, no un valor
+      title: Qué le pide [Match_type] al rango
+      headers: ["[Match_type]", Qué encuentra, Qué necesita el rango]
+      rows:
+        - ["0", "Una coincidencia exacta", "Cualquier orden"]
+        - ["1 o vacío", "El mayor valor bajo la clave", "Ordenado de menor a mayor"]
+        - ["-1", "El menor valor sobre la clave", "Ordenado de mayor a menor"]
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: ¿Qué devuelve esto para un programa que no está en la tabla Fees?
+      filename: Excel 20 (BuscarV).xlsx
+      lang: excel
+      source: |
+        =BUSCARV(B2,Fees!$A$2:$B$24,2)
+      options:
+        - "#N/D, porque no encontró el programa"
+        - "La cuota del programa que queda justo antes en el orden"
+        - "0, porque [Range_lookup] se dejó vacío"
+        - "#¡REF!, porque el bloque solo tiene dos columnas"
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Juntar las piezas
+      lede: >-
+        Dos maneras más de traer un número de otro lado: una que suma varios rangos por
+        rótulo, y otra que llega hasta un archivo distinto.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · Por qué existe Consolidar
+      title: Sumar por posición y sumar por nombre
+      lead: >-
+        Una referencia 3D suma la celda B2 de todas las hojas. Eso funciona hasta que
+        una sucursal lista sus regiones en otro orden, y entonces el total está mal sin
+        que nada en la pantalla lo diga. Es justo el caso que arma el examen, y la razón
+        de que el cuadro Consolidar traiga dos casillas que nadie lee.
+      panel:
+        label: El punto entero
+        title: "[Top row] y [Left column] lo hacen sumar por nombre"
+        note: >-
+          Con las dos marcadas, Consolidar compara los rótulos en vez de las posiciones
+          de celda, así que tres hojas en tres órdenes distintos caen en las filas
+          correctas. Dilo en voz alta en clase; es la función, no un detalle de ella.
+      steps:
+        - text: Cada rango de origen se agrega a la lista por separado
+        - text: Los rótulos deciden a qué fila se suma cada número
+        - text: "[Create links to source data] agrega un esquema"
+          loop: ↺ y el resumen sigue a los orígenes de ahí en adelante
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta calificada
+      title: Datos, Consolidar, cinco paradas
+      items:
+        - label: '01'
+          title: Una sola celda
+          desc: Haz clic en la celda superior izquierda de un área vacía. Consolidar escribe hacia la derecha y hacia abajo lo que necesite.
+        - label: '02'
+          title: Datos, Consolidar
+          desc: Pestaña Datos, grupo [Data Tools]. La lista [Function] trae once entradas, [Sum] primero.
+        - label: '03'
+          title: "[Reference], luego [Add]"
+          desc: Arrastra un rango de origen, haz clic en [Add], repite. Uno equivocado sale con [Delete].
+        - label: '04'
+          title: "[Use labels in]"
+          desc: Marca [Top row] y [Left column] cuando las hojas traigan encabezados en distinto orden
+        - label: '05'
+          title: "[OK], no [Close]"
+          desc: Este cuadro trae [OK] y [Close] en vez de [OK] y [Cancel]. [Close] sale sin consolidar.
+
+  - code:
+      eyebrow: Bloque 03 · Una referencia que sale del archivo
+      title: El mismo vínculo, antes y después de cerrar
+      filename: Budget.xlsx
+      lang: excel
+      source: |
+        =[Sales.xlsx]Q1!$B$4
+
+        ='C:\Reports\[Sales.xlsx]Q1'!$B$4
+
+        =SUMA('C:\Reports\[Sales.xlsx]Q1'!$B$4:$B$40)
+      annotations:
+        - label: Con el origen abierto
+          text: >-
+            Corchetes en el nombre del archivo, luego la hoja. Excel la escribe al
+            señalar.
+        - label: Al cerrarse el origen
+          text: >-
+            Cierra el origen y la fórmula se reescribe sola con la ruta completa entre
+            comillas.
+        - label: Cómo se administra
+          text: >-
+            Pestaña Datos, [Queries & Connections], [Edit Links]: [Update Values],
+            [Change Source], [Check Status].
+        - label: Riesgo
+          text: >-
+            [Break Link] convierte las fórmulas en valores, para siempre. Las nuevas
+            versiones abren [Workbook Links]; confírmalo en el laboratorio.
+          accent: true
+
+  - method:
+      eyebrow: Bloque 03 · La regla que decide
+      title: Señala la celda, nunca teclees la ruta
+      statement: Excel no ha escrito ni una sola referencia externa equivocada. Cada vínculo roto de este curso lo tecleó una persona.
+      points:
+        - label: Hazlo
+          text: Abre los dos archivos, escribe el signo igual, usa la pestaña Vista, grupo Ventana, [Switch Windows], y haz clic en la celda.
+        - label: Evita
+          text: "Teclear la ruta, los corchetes y las comillas a mano. Un carácter de más y la celda dice #¡REF!."
+        - label: Nunca
+          text: Copiar el número en vez de vincularlo. Correcto hoy, viejo mañana, y sin nada que [Edit Links] pueda listar.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tres tablas, tres funciones, un inventario
+      brief: >-
+        Primero el ejercicio 20: llenen la columna de cuota de los 288 alumnos desde la
+        hoja Fees, y luego la columna de calificación desde la tabla de rangos de
+        puntaje, que es el único lugar donde VERDADERO es la respuesta correcta. Después
+        el ejercicio 21, donde el inventario 2 pone Descripción antes que Artículo y el
+        inventario 3 acomoda los códigos a lo ancho de la fila 3. Elijan la función que
+        obliga cada tabla, y escriban un renglón que diga por qué las otras dos no pueden.
+      blocks:
+        - label: Entregable
+          text: Un solo libro con los dos ejercicios, subido a Blackboard
+        - label: Restricción
+          text: Cada [Table_array] fijado con F4, y cada [Range_lookup] escrito como FALSO o VERDADERO en vez de dejarlo vacío
+        - label: La prueba
+          text: Rellenen cada fórmula dos filas más allá de los datos. Si las respuestas dejan de seguir la tabla correcta, el bloque se movió.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: F4 no es adorno
+          desc: >-
+            Un [Table_array] sin fijar camina hoja abajo con cada relleno. Las primeras
+            filas salen bien, el resto sale mal, y nada en la hoja se pone rojo
+        - title: Vacío no es FALSO
+          desc: >-
+            Un [Range_lookup] que falta significa VERDADERO, que es una búsqueda por
+            rangos sobre una tabla que nadie ordenó. Contesta con el valor del vecino y
+            lo llama resultado
+        - title: BUSCARV es una forma del problema
+          desc: >-
+            ÍNDICE con COINCIDIR alcanza una columna a la izquierda, BUSCARH lee a lo
+            ancho de una fila, y BUSCARX, donde lo tengan las máquinas del laboratorio,
+            no es uno de los cuatro nombres del MO-201
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        Terminen los dos ejercicios de búsqueda y agreguen una hoja propia que consolide
+        tres rangos pequeños por rótulo, con [Top row] y [Left column] marcadas, más una
+        fórmula que se ligue a un segundo libro que también entreguen.
+      meta:
+        - [Entrega, Antes de la semana 14]
+        - [Formato, Blackboard · dos archivos .xlsx]
+        - [Peso, Parte de la calificación de tareas]
+      rubric:
+        - ["Ejercicio 20", "30 %", "Cuotas y calificaciones llenas, F4 y FALSO visibles en la barra"]
+        - ["Ejercicio 21", "30 %", "La función correcta por tabla, con el motivo escrito"]
+        - ["Consolidar", "20 %", "Al reabrir el cuadro vuelve la lista de referencias"]
+        - ["El vínculo", "20 %", "La ruta aparece entre comillas al cerrar el origen"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, las dos maneras de reducir una lista larga a los números que
+        alguien pidió: subtotales con su esquema, y la tabla dinámica.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

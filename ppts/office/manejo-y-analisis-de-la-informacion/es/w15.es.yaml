@@ -1,0 +1,467 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 15
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 15 · Sesiones 29 y 30 · Filtros avanzados
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Filtrar con un rango de criterios escrito por ti en lugar de menús que se van
+        marcando, y los objetos que filtran un reporte con botones.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 29 y 30 de 34]
+      notes: |
+        Sesiones 29 y 30 del temario, CLO06. Las dos sesiones son de filtros avanzados,
+        que además cargan con la rama no destructiva de Expert 2.2.5.
+        COBERTURA.md agrega Expert 4.2.3, segmentación de datos y escalas de tiempo, y
+        todo Expert 4.3, gráficos dinámicos, que se movieron aquí porque no cupieron en
+        la semana 14.
+        Las rutas salen de procedures.en.md. Ejercicios 24 y 23 versión 2, y ojo que el
+        23 viene en dos versiones y hay que declarar cuál es la oficial.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El rango de criterios
+          desc: Misma fila es Y, una fila nueva es O, y el encabezado hay que copiarlo
+        - title: Correr el filtro
+          desc: Oculto en su lugar o extraído aparte, y la casilla [Unique records only]
+        - title: Botones en vez de listas
+          desc: Segmentaciones, escalas de tiempo y gráficos dinámicos sobre 26,608 tickets
+        - title: Tu turno
+          desc: Quince filtros de dificultad creciente sobre 27 empleados
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Armar un rango de criterios que Excel acepte
+          sub: Encabezados copiados, condiciones debajo y ninguna fila en blanco adentro
+        - head: Combinar Y con O sin tocar un menú
+          sub: A lo ancho para las dos, hacia abajo para cualquiera, y los pares que las mezclan
+        - head: Extraer el resultado en vez de ocultar filas
+          sub: Copiar a otra ubicación, y la fila de encabezados que decide qué campos salen
+        - head: Escribir un criterio que es una fórmula
+          sub: Devuelve VERDADERO o FALSO, apunta a la primera fila de datos y nunca lleva nombre de campo
+        - head: Filtrar un reporte con una segmentación de datos
+          sub: Y con una escala de tiempo, y conectar una segmentación a más de una tabla dinámica
+        - head: Armar un gráfico dinámico y bajar al detalle
+          sub: Los [Field Buttons], Cambiar fila o columna, y la hoja que escribe un doble clic
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: done
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El rango de criterios es el ejercicio
+      lede: >-
+        El cuadro de diálogo tiene tres cuadros y toma diez segundos. Todo lo difícil de
+        un filtro avanzado pasa en la tablita que escribes arriba de la lista.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un filtro que lee un rango, no un menú
+      lead: >-
+        El filtro automático te pide marcar valores en una lista. Un filtro avanzado lee
+        sus condiciones de las celdas, así que se pueden escribir, revisar y reutilizar.
+        Por eso también alcanza lo que los menús no: varios campos unidos con O, y un
+        criterio que es una fórmula completa.
+      panel:
+        label: Qué necesita primero
+        title: Una tabla estándar, en un bloque, en una hoja
+        note: >-
+          Un solo renglón de encabezados de izquierda a derecha, un registro por fila, un
+          campo por columna, tipos consistentes en cada columna y ninguna fila ni columna
+          en blanco adentro. Rompe cualquiera de esas y el filtro lee una lista más corta
+          de lo que crees.
+      steps:
+        - text: Copia los encabezados de los campos que vas a filtrar
+        - text: Escribe las condiciones en las filas de abajo
+        - text: Datos, Ordenar y filtrar, Avanzadas
+          loop: ↺ y cambia las celdas para cambiar el filtro, sin volver a abrir nada
+
+  - table:
+      eyebrow: Bloque 01 · La geometría es la lógica
+      title: Dónde lo pones es lo que significa
+      headers: [Acomodo, Qué significa, El ejercicio 24 pide]
+      rows:
+        - ["Misma fila", "Las dos se cumplen", "Centro y Accounting"]
+        - ["Fila de abajo", "Cualquiera se cumple", "Administration o Logistics"]
+        - ["Dos filas, dos campos", "Un par o el otro", "Centro con Accounting, o Azca con Logistics"]
+        - ["Un campo dos veces", "Los dos extremos de un rango", "Sueldo arriba de 4,000 y abajo de 6,000"]
+
+  - code:
+      eyebrow: Bloque 01 · Escrito en las celdas, no tecleado en un cuadro
+      title: Comodines y comparaciones
+      filename: Excel24_instructions(Advanced Filters).xlsx
+      lang: excel
+      source: |
+        E*
+        ?E*
+        *A*
+        *8
+
+        >6000
+        <>Azcapotzalco
+        >=1991
+      annotations:
+        - label: Los dos comodines
+          text: >-
+            El asterisco vale por cualquier cadena de caracteres y el signo de
+            interrogación por uno solo.
+        - label: Cómo se leen
+          text: >-
+            E* empieza con E, ?E* tiene la E como segundo carácter, *A* contiene una A y
+            *8 termina en 8.
+        - label: Comparaciones
+          text: >-
+            Se escriben directo debajo del encabezado del campo. Sin signo de igual, sin
+            comillas, sin fórmula.
+        - label: Riesgo
+          text: >-
+            Una fila en blanco en el rango de criterios le atina a todo, así que el
+            filtro devuelve la lista entera y parece roto al revés.
+          accent: true
+
+  - code:
+      eyebrow: Bloque 01 · El criterio que es una fórmula
+      title: Tres reglas, y las tres se califican
+      filename: Excel24_instructions(Advanced Filters).xlsx
+      lang: excel
+      source: |
+        =$J4>PROMEDIO($J$4:$J$29)
+
+        =Y(AÑO($F4)>=1991,AÑO($F4)<=1994)
+
+        =IZQUIERDA($B4,1)="E"
+      annotations:
+        - label: El encabezado es la trampa
+          text: >-
+            Sobre un criterio calculado el encabezado no lleva nombre de campo. Déjalo
+            vacío o escribe f(x).
+        - label: Relativa a propósito
+          text: >-
+            $J4 apunta a la primera fila de datos y se queda relativa hacia abajo, así
+            Excel recorre la lista. Contra lo que se compara queda fijo.
+        - label: Qué debe devolver
+          text: >-
+            VERDADERO o FALSO. Cualquier otra cosa se lee como texto y no coincide con
+            nada.
+        - label: Riesgo
+          text: >-
+            La celda muestra VERDADERO o FALSO solo para la fila 4 y parece un error. No
+            lo es: el filtro la vuelve a evaluar una vez por registro.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de no recibir nada
+      items:
+        - label: Error 01
+          title: Una fila en blanco en el criterio
+          desc: >-
+            Una fila vacía es una condición sin nada adentro, así que todo pasa. El filtro
+            parece no haber hecho nada, y hizo exactamente lo que escribiste.
+        - label: Error 02
+          title: Encabezados tecleados a mano
+          desc: >-
+            Un espacio de más o una variante en la escritura y el campo no se reconoce.
+            Copia las celdas de encabezado de la lista; nunca las vuelvas a teclear.
+        - label: Error 03
+          title: Nombre de campo sobre una fórmula
+          desc: >-
+            Excel compara el texto de la fórmula contra la columna en vez de ejecutarla.
+            Nada coincide, nada se marca y no aparece ningún error.
+        - label: Error 04
+          title: Creer que el extracto es vivo
+          desc: >-
+            Copiar a otra ubicación escribe valores, una sola vez. Cambia la lista después
+            y el bloque extraído no se mueve con ella.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Correrlo, y qué sale de ahí
+      lede: >-
+        Tres cuadros y dos botones de opción. El botón de opción que elijas decide si
+        después queda algo que alguien pueda calificar.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta que se califica
+      title: Cinco paradas en el cuadro Filtro avanzado
+      items:
+        - label: '01'
+          title: Haz clic dentro de la lista
+          desc: Pestaña Datos, grupo Ordenar y filtrar, Avanzadas. Rango de la lista llega lleno.
+        - label: '02'
+          title: Elige la acción
+          desc: Filtrar la lista, de forma local, o Copiar a otra ubicación. Esto decide todo lo demás.
+        - label: '03'
+          title: Rango de criterios
+          desc: Selecciona los encabezados copiados y todas las filas de criterios de abajo, nada más.
+        - label: '04'
+          title: Copiar a
+          desc: Una celda de destino para todos los campos, o una fila de encabezados copiados para escoger cuáles.
+        - label: '05'
+          title: La casilla [Unique records only]
+          desc: Marcada con el rango de criterios vacío, es la manera no destructiva de listar únicos.
+
+  - figure:
+      eyebrow: Bloque 02 · El cuadro de diálogo
+      title: Tres cuadros y dos botones de opción
+      image: img/en/advanced-filter.png
+      caption: >-
+        La captura es de la interfaz en inglés. Copiar a se queda en gris hasta que eliges
+        Copiar a otra ubicación, que es la forma en que el cuadro dice que las dos
+        decisiones son una sola.
+      alt: >-
+        El cuadro de diálogo Filtro avanzado de Excel, con Filtrar la lista, de forma
+        local seleccionado y los cuadros Rango de la lista, Rango de criterios y Copiar a
+        vacíos.
+      side:
+        label: Lee los letreros
+        text: >-
+          Filtrar la lista, de forma local y Copiar a otra ubicación son los nombres
+          exactos de los dos botones. La casilla [Unique records only] va debajo de los
+          tres cuadros y funciona con el rango de criterios vacío.
+
+  - table:
+      eyebrow: Bloque 02 · Los dos botones de opción
+      title: Qué deja cada uno en la hoja
+      headers: [Opción, Qué ves, Qué cuesta]
+      rows:
+        - ["En su lugar", "Filas ocultas, lista intacta", "Un resultado a la vez"]
+        - ["Copiar a", "Un bloque de valores fijo", "Ya nunca se actualiza"]
+        - ["[Unique records only]", "Se van los duplicados", "Nada, la lista no se toca"]
+
+  - method:
+      eyebrow: Bloque 02 · Dos límites que conviene decir en voz alta
+      title: Dónde pueden vivir las piezas
+      statement: La extracción se escribe en la hoja desde la que se corrió el filtro, y la nota del propio ejercicio dice que el rango de criterios también va ahí.
+      points:
+        - label: Misma hoja
+          text: Corre el filtro desde la hoja que tiene la lista y los criterios. Si no, Excel rechaza el destino, y el mensaje no explica por qué.
+        - label: Debajo de la lista
+          text: El ejercicio 24 empieza sus extracciones en B32, debajo de 27 registros que terminan en la fila 29. Deja una fila libre entre bloques o el siguiente filtro los lee como datos.
+        - label: Origen intacto
+          text: Ninguno de los dos botones de opción modifica la lista original, y esa es la razón para preferir esto antes que borrar filas a mano.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Filtrar con botones en vez de listas
+      lede: >-
+        Una segmentación de datos es un filtro que se ve. Un gráfico dinámico es un
+        reporte al que puedes apuntar. Los dos dejan un objeto, y eso es lo que se
+        califica.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta que se califica
+      title: Insertar la segmentación y darle medidas
+      items:
+        - label: '01'
+          title: Haz clic en el reporte
+          desc: Pestaña Analizar tabla dinámica, grupo [Filter], [Insert Slicer]
+        - label: '02'
+          title: Marca cada campo que te pidan
+          desc: Más de una casilla marcada da varias segmentaciones en una sola operación.
+        - label: '03'
+          title: Medidas y botones
+          desc: Pestaña [Slicer], grupo [Size] para [Height] y [Width], grupo [Buttons] para [Columns]. Se teclea, no se arrastra.
+        - label: '04'
+          title: Título y opciones
+          desc: El cuadro [Slicer Caption] para el texto del encabezado, y [Slicer Settings] para el orden y los elementos vacíos. Las dos leyendas están por confirmar.
+        - label: '05'
+          title: El botón [Report Connections]
+          desc: Una segmentación, varios reportes, si comparten caché. Office 2019 le llama [PivotTable Connections].
+
+  - table:
+      eyebrow: Bloque 03 · Tres maneras de filtrar el mismo reporte
+      title: Solo una de ellas deja un objeto
+      headers: [Ruta, Qué queda en la hoja, Qué encuentra quien califica]
+      rows:
+        - ["Flecha de filtro", "Nada de nada", "Ningún objeto, cero puntos"]
+        - ["Área [Filters]", "Una lista en el reporte", "Un campo, no una segmentación"]
+        - ["[Insert Slicer]", "Un objeto con encabezado", "Una caché llamada Slicer_Field"]
+        - ["Escala de tiempo", "Una barra de fechas con niveles", "[Years, Quarters, Months, Days]"]
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta que se califica
+      title: Un gráfico conectado al reporte de abajo
+      items:
+        - label: '01'
+          title: Desde un reporte que ya existe
+          desc: Clic en la tabla dinámica, pestaña Analizar tabla dinámica, grupo [Tools], Gráfico dinámico
+        - label: '02'
+          title: Desde los datos crudos
+          desc: Pestaña Insertar, grupo Gráficos, la flecha debajo de Gráfico dinámico, y luego [PivotChart & PivotTable]
+        - label: '03'
+          title: El panel renombra las áreas
+          desc: Ahí dice [Filters], [Legend (Series)], [Axis (Categories)] y [Values], no [Rows] y [Columns]
+        - label: '04'
+          title: Los [Field Buttons]
+          desc: En [PivotChart Analyze], [Show/Hide], [Field Buttons]. Quita solo los tipos que te pidan, nunca la entrada que los oculta todos.
+        - label: '05'
+          title: Cambiar fila o columna
+          desc: En un gráfico dinámico esto intercambia también el reporte de abajo, y eso es lo que se revisa.
+
+  - method:
+      eyebrow: Bloque 03 · Objetivo 4.3.3
+      title: Darle estilo son tres calificaciones aparte
+      statement: Diseño de gráfico, Estilos de gráfico, la flecha [More] para la galería completa. Luego [Change Colors] al lado, y luego Diseño rápido en el grupo de la izquierda. Tres botones, tres acciones calificadas.
+      points:
+        - label: Estilo
+          text: >-
+            La galería enmarca lo que ya está aplicado, así que volver a abrirla es la
+            comprobación. Es la misma galería que usa un gráfico común, en la misma
+            pestaña contextual.
+        - label: Color
+          text: >-
+            El botón [Change Colors] va aparte, con paletas [Colorful] y [Monochromatic].
+            La leyenda está verificada en un gráfico común y falta confirmarla en uno
+            dinámico.
+        - label: Primero el diseño, luego el estilo
+          text: >-
+            Diseño rápido decide qué elementos existen y el estilo decide cómo se ven, así
+            que una tarea que nombra los dos los quiere en ese orden o el diseño deshace
+            el estilo.
+
+  - table:
+      eyebrow: Bloque 03 · Un gráfico dinámico no es un gráfico con extras
+      title: Cinco puntos donde se portan distinto
+      headers: [Acción, En un gráfico dinámico, En un gráfico común]
+      rows:
+        - ["Cambiar fila o columna", "Intercambia también el reporte", "Solo intercambia el dibujo"]
+        - ["Dispersión o burbujas", "Lo rechaza de entrada", "Disponible"]
+        - ["[Field Buttons]", "Van sobre el gráfico", "No existen"]
+        - ["Doble clic en un valor", "Escribe una hoja de detalle", "No pasa nada"]
+        - ["Pestaña contextual", "[PivotChart Analyze]", "Solo Diseño de gráfico"]
+
+  - concept:
+      eyebrow: Bloque 03 · Bajar al detalle
+      title: Un doble clic escribe una hoja nueva
+      lead: >-
+        Haz doble clic en una celda de valor y Excel agrega una hoja de cálculo con solo
+        los renglones de origen que están detrás de ese número, con formato de tabla.
+        Sobre 26,608 tickets esa es la diferencia entre creerle a un total y enseñar de
+        dónde salió, y es la única ruta que deja evidencia escrita.
+      panel:
+        label: Cómo se comprueba
+        title: Compara la hoja nueva contra el número
+        note: >-
+          Suma la columna de importe de la hoja de detalle. Tiene que dar igual que la
+          celda que la produjo. La opción que lo permite o lo prohíbe está en la pestaña
+          [Data] de [PivotTable Options], escrita [Enable show details] en la versión de
+          la que se leyó esto.
+      steps:
+        - text: Pon un segundo campo debajo del primero en [Axis (Categories)]
+        - text: Con [Collapse Field] y [Expand Field] recorres los niveles
+        - text: Doble clic en el valor para ver los renglones mismos
+          loop: ↺ y la hoja se queda en el libro hasta que la borres
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Una segmentación está en la hoja y la segunda tabla dinámica la ignora. ¿Por qué?
+      options:
+        - "Los dos reportes se armaron con PivotCaches distintas"
+        - "La segmentación se insertó desde la pestaña Insertar"
+        - "[Report Connections] sirve para tablas, no para tablas dinámicas"
+        - "[Multi Select] quedó apagado en el encabezado de la segmentación"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Quince filtros, y luego un reporte con botones
+      brief: >-
+        Primero el ejercicio 24, con las extracciones empezando en B32: los quince filtros
+        salen de una sola condición, pasan por pares de departamentos unidos con O, siguen
+        con códigos buscados con comodines en cuatro posiciones, y terminan en sueldos
+        arriba del promedio de la lista, que no se puede escribir sin un criterio de
+        fórmula. Después el ejercicio 23, donde el reporte del restaurante recibe una
+        segmentación por mesero, una escala de tiempo mensual y un gráfico dinámico de
+        ventas por mes partido por tipo.
+      blocks:
+        - label: Entregable
+          text: Los dos libros en Blackboard, con cada rango de criterios visible en la hoja
+        - label: Restricción
+          text: Nada de filtro automático. Cada uno de los quince resultados es una extracción producida por un rango de criterios.
+        - label: La prueba
+          text: Cambia una celda de un rango de criterios y vuelve a correr. Si el resultado no se mueve, el filtro leyó otro rango.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: El acomodo es la lógica
+          desc: >-
+            Las condiciones de una misma fila se unen con Y, las de filas distintas con O.
+            Nada más en Excel plantea una condición compuesta con esa claridad
+        - title: Tres reglas del criterio de fórmula
+          desc: >-
+            Devuelve VERDADERO o FALSO, apunta a la primera fila de datos con una
+            referencia relativa, y su encabezado no puede ser el nombre de un campo
+        - title: Lo que se califica es el objeto
+          desc: >-
+            Una flecha de filtro no deja nada. Una segmentación, una escala de tiempo y un
+            gráfico dinámico son objetos en la hoja, y eso es lo que pide la tarea cuando
+            dice insertar uno
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        Termina los quince filtros, luego toma un conjunto de datos tuyo y extrae dos
+        resultados de él: uno que combine dos campos con O, y otro movido por un criterio
+        de fórmula. Agrega un gráfico dinámico con una segmentación, y baja al detalle de
+        un solo valor.
+      meta:
+        - [Entrega, Antes de la semana 16]
+        - [Formato, Blackboard · dos archivos .xlsx]
+        - [Peso, Parte de la calificación de ejercicios]
+      rubric:
+        - ["Los quince", "40 %", "Todos extraídos, con los rangos de criterios en la hoja"]
+        - ["Comodines", "20 %", "Las cuatro posiciones resueltas sin columna auxiliar"]
+        - ["Criterio de fórmula", "20 %", "Encabezado vacío, primera fila relativa, rango fijo"]
+        - ["Los objetos", "20 %", "Segmentación, escala de tiempo y gráfico dinámico conectados"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, el modelo corrido al revés: Buscar objetivo, tablas de datos
+        sobre un rango de valores, escenarios y el proyecto.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

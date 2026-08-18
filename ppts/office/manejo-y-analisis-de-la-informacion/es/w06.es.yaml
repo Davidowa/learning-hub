@@ -1,0 +1,444 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 6
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 06 · Sesiones 11 y 12 · SI a fondo, y luego el parcial
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Una sesión de clase y una de examen. SI hasta donde llega por sí solo, y después
+        un repaso de todo lo que el primer bloque pidió saber hacer.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 11 y 12 de 34]
+      notes: |
+        La sesión 11 es la única sesión de clase de la semana; la sesión 12 es el primer
+        parcial. COBERTURA.md no agrega nada aquí, y es a propósito. Material nuevo en la
+        semana del examen es la manera más rápida de perder los puntos que el bloque ya se
+        ganó. Por eso la presentación cruza el bloque en vez de extenderlo. Word entra en
+        el examen y estas presentaciones no lo cubren, lo cual se dice en voz alta en la
+        diapositiva 12 en lugar de dejarlo implícito.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: SI a fondo
+          desc: Las seis comparaciones, las dos ramas como fórmulas, y hasta dónde llega la función
+        - title: El repaso
+          desc: Semanas 2 a 5, los cuadros de diálogo, y las referencias que se rompieron
+        - title: La sesión de examen
+          desc: Qué califica la sesión 12, y cómo repartir el tiempo que te da
+        - title: Tu turno
+          desc: Un libro que rehace los ejercicios 1 a 7 sin abrir ninguno de ellos
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Usar los seis operadores de comparación
+          sub: Y decir qué pasa cuando un número se topa con un número escrito como texto
+        - head: Poner una fórmula en cualquier rama
+          sub: Las dos respuestas son valores, y un cálculo es un valor
+        - head: Nombrar el cuadro detrás de cada comando
+          sub: Siete de ellos cargan con todo el primer bloque, y el examen los nombra
+        - head: Predecir un rellenado en cualquier dirección
+          sub: Relativa, absoluta y las dos formas mixtas, sobre la misma fórmula inicial
+        - head: Leer un reactivo por su verbo y su alcance
+          sub: Aplicar, insertar, modificar, quitar y borrar son cinco comandos distintos
+        - head: Presentar la sesión 12 sin sorpresas
+          sub: Qué viene en el examen, incluida la mitad que estas presentaciones no cubren
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidado y la familia SI.CONJUNTO
+          state: now
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: todo
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: SI, hasta donde llega solo
+      lede: >-
+        Una condición y dos respuestas es toda la función. Todo lo que parece más difícil
+        es una comparación que no leíste con cuidado, o un segundo SI disfrazado.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una comparación es un valor, no una pregunta
+      lead: >-
+        Que B2 sea mayor o igual que 70 no es algo que Excel pregunte. Es algo que Excel
+        calcula, y la respuesta es VERDADERO o FALSO, un valor como cualquier otro.
+        Escribe esa comparación en una celda libre y lee la palabra que regresa. SI no
+        hace nada más que elegir entre dos valores usando esa palabra.
+      panel:
+        label: El hábito que conviene
+        title: Prueba la comparación en su propia celda
+        note: >-
+          Cuando un SI devuelve la rama equivocada, pon el [Logical_test] solo en una celda
+          libre y lee VERDADERO o FALSO. Eso separa una comparación rota de una respuesta
+          rota en unos cuatro segundos, y también sirve con fórmulas anidadas.
+      steps:
+        - text: La comparación se resuelve en VERDADERO o FALSO
+        - text: SI lee esa palabra y nada más
+        - text: Uno de tus dos valores cae en la celda
+          loop: ↺ y la siguiente fila se lee desde cero
+
+  - table:
+      eyebrow: Bloque 01 · Completo y en orden
+      title: Los seis operadores de comparación
+      headers: [Operador, Se lee, Devuelve VERDADERO cuando]
+      rows:
+        - ["=", "igual a", "B2=70 y B2 tiene 70"]
+        - ["<>", "distinto de", "B2<>70 y B2 tiene otra cosa"]
+        - [">", "mayor que", "B2>70 y B2 tiene 71"]
+        - ["<", "menor que", "B2<70 y B2 tiene 69"]
+        - [">=", "mayor o igual que", "B2>=70 y B2 tiene 70 o más"]
+        - ["<=", "menor o igual que", "B2<=70 y B2 tiene 70 o menos"]
+
+  - code_output:
+      eyebrow: Medido · una celda, siete lecturas
+      title: La misma prueba, escrita de siete maneras
+      filename: comparar.xlsx
+      lang: excel
+      output_label: Lo que muestra la celda
+      source: |
+        =SI(B2>=70,"Aprobado","Reprobado")
+        =SI(B2>70,"Aprobado","Reprobado")
+        =SI(B2=70,"Aprobado","Reprobado")
+        =SI(B2<>70,"Aprobado","Reprobado")
+        =SI(B2>=70,"Aprobado")
+        =SI(B2>="70","Aprobado","Reprobado")
+        =SI(B2>=60,"Aprobado")
+      output: |
+        B2 = 70, un número
+          >= 70            Aprobado
+          >  70            Reprobado
+          =  70            Aprobado
+          <> 70            Reprobado
+          >= 70, dos arg.  Aprobado
+          >= "70"          Reprobado
+        B2 = 50
+          >= 60, dos arg.  FALSO
+
+  - concept:
+      eyebrow: Bloque 01 · La línea que sorprende a todos
+      title: Un número nunca es igual a su propio texto
+      lead: >-
+        Excel acomoda cada valor en tres bandas antes de comparar nada. Primero los
+        números, luego el texto, y al final FALSO y VERDADERO. Por eso 70 es menor que la
+        cadena que dice setenta, y por eso un SI sobre una columna importada como texto
+        contesta mal en todas las filas sin marcar un solo error.
+      panel:
+        label: Cómo detectarlo
+        title: Un número a la izquierda no es un número
+        note: >-
+          Excel alinea los números a la derecha y el texto a la izquierda por su cuenta,
+          así que la columna te lo dice antes que cualquier fórmula. La semana 9 lo arregla
+          de raíz en la importación; hoy basta con leerlo.
+      steps:
+        - text: Revisa la alineación de la columna
+        - text: Prueba la comparación en una celda libre
+        - text: Si dice FALSO en todas las filas, la banda está mal
+          loop: ↺ no el operador, y no el umbral
+
+  - code:
+      eyebrow: Bloque 01 · Las dos ramas son valores
+      title: Una respuesta puede ser un cálculo
+      filename: ramas.xlsx
+      lang: excel
+      source: |
+        =SI(D2>=1000,D2*0.1,0)
+        =SI(D2>=1000,D2*0.1,D2*0.05)
+        =SI(E2="Sí",F2-G2,F2)
+        =SI(H2=0,"",I2/H2)
+        =SI(J2>K2,J2-K2,0)
+      annotations:
+        - label: Líneas 1 y 2
+          text: Ninguna rama tiene que ser una palabra. Una regla de comisión son dos fórmulas y una prueba.
+        - label: Línea 4
+          text: >-
+            Cuidar el divisor deja #¡DIV/0! fuera del reporte. La semana 7 abre el cuadro
+            que los encuentra.
+        - label: Línea 5
+          text: Un negativo convertido en cero. Léelo en voz alta como la regla que el negocio sí tiene.
+        - label: Si falla
+          text: >-
+            El texto lleva comillas en la celda y ninguna en el cuadro. Mezclarlas es el SI
+            roto más común del ejercicio 7.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de que un SI conteste mal
+      items:
+        - label: Error 01
+          title: El tercer argumento omitido
+          desc: >-
+            Excel llena el hueco con FALSO y pone esa palabra en la celda. No es un error,
+            nada se marca, y el reporte sale con FALSO en una columna.
+        - label: Error 02
+          title: El umbral escrito adentro
+          desc: >-
+            El número vive en setenta fórmulas en lugar de una celda. Cuando cambia la
+            regla, hay que editar cada una de ellas a mano.
+        - label: Error 03
+          title: Rellenar sobre una referencia suelta
+          desc: >-
+            La celda de la comparación baja junto con la fórmula y para la fila 20 ya no
+            apunta a nada. F4 sobre esa referencia antes del rellenado, no después.
+        - label: Error 04
+          title: Comparar contra "VERDADERO"
+          desc: >-
+            Entre comillas es texto y nunca es igual al valor lógico. Una celda que ya
+            tiene VERDADERO es su propia prueba y no necesita comparación.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: El repaso
+      lede: >-
+        Cinco semanas de comandos, y el examen va a pedir la ruta antes que el dibujo.
+        Esta es la lista de rutas.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Qué es el primer parcial
+      title: La mitad del examen es Word, y no está aquí
+      lead: >-
+        El programa reparte parte de las semanas 1 y 2 al procesador de textos, y la sesión
+        12 califica ese trabajo junto con el bloque de Excel. Estas presentaciones cubren
+        solo la mitad de Excel, y lo dicen en lugar de dejar que te enteres el día del
+        examen. Repasa Word con tus propias notas y con lo que entregaste.
+      panel:
+        label: Qué deja eso para estas diapositivas
+        title: Las semanas 2 a 5, y las rutas que traen
+        note: >-
+          Formato de celdas, manejo de hojas, referencias, la biblioteca de funciones,
+          formato condicional, minigráficos y SI. Todo lo que viene en las dos tablas
+          siguientes tiene sesión, ejercicio y ruta.
+      steps:
+        - text: Word sale de tus propias notas y entregas
+        - text: Excel sale de los ejercicios 1 a 7
+        - text: Las dos mitades se califican en el mismo examen
+          loop: ↺ y la mitad de Excel es la que sigue
+
+  - table:
+      eyebrow: Bloque 02 · Qué puede pedir el examen
+      title: Semana por semana, y dónde practicarlo
+      headers: [Semana, Qué cubrió, Dónde practicar]
+      rows:
+        - ["Semanas 1 y 2", "Word, estilos, secciones, referencias", "Tus propias entregas"]
+        - ["Semana 2", "Formato de celdas, estilos, combinar", "Ejercicio 1"]
+        - ["Semana 3", "Hojas, nombres, referencias, rastreo", "Ejercicios 2 y 5"]
+        - ["Semana 4", "Estadística, texto y fechas", "Ejercicios 6 y 13"]
+        - ["Semana 5", "Formato condicional, minigráficos", "Ejercicio 3"]
+        - ["Semana 6", "SI, en todas las formas ya vistas", "Ejercicio 7"]
+
+  - table:
+      eyebrow: Bloque 02 · Siete cuadros de diálogo
+      title: Dónde vive de verdad el primer bloque
+      headers: [Cuadro de diálogo, Cómo se abre, Qué solo él hace]
+      rows:
+        - ["Formato de celdas", "Ctrl+1", "Bordes, relleno, personalizados"]
+        - ["Admin. de nombres", "Fórmulas, Nombres definidos", "Rangos con nombre y su ámbito"]
+        - ["Serie", "Inicio, Edición, [Fill], Serie", "Incremento, límite, unidad de fecha"]
+        - ["[Function Arguments]", "Shift+F3", "Un cuadro por argumento, ya evaluado"]
+        - ["Nueva regla", "Formato condicional", "Los seis tipos de regla"]
+        - ["Admin. de reglas", "Formato condicional", "Orden, rangos, Detener si es verdad"]
+        - ["[Create Sparklines]", "Insertar, Minigráficos", "[Data Range] y [Location Range]"]
+
+  - trace:
+      eyebrow: Bloque 02 · Semana 3, en una tabla
+      title: Una fórmula en C3, rellenada de dos maneras
+      headers: ["Escrita en C3", "Rellenada a D3", "Rellenada a C4", "Qué se queda fijo"]
+      rows:
+        - ["=B2", "=C2", "=B3", "nada"]
+        - ["=$B$2", "=$B$2", "=$B$2", "las dos"]
+        - ["=$B2", "=$B2", "=$B3", "la columna"]
+        - ["=B$2", "=C$2", "=B$2", "la fila"]
+      verdict: Una tabla de multiplicar necesita las dos últimas filas al mismo tiempo, y por eso la absoluta sola nunca alcanzó.
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: B2 tiene el número 70. ¿Qué cae en la celda?
+      filename: quiz.xlsx
+      lang: excel
+      source: |
+        =SI(B2>="70","Aprobado","Reprobado")
+      options:
+        - "Aprobado, porque 70 es igual a 70"
+        - "Reprobado, porque el texto va arriba de todo número"
+        - "Devuelve un valor de error"
+        - "Aprobado, porque Excel convierte el texto primero"
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Una regla [Top 10] pintó el encabezado de la columna. ¿Qué pasó?
+      options:
+        - "A la regla le falta Detener si es verdad"
+        - "El encabezado estaba dentro del rango seleccionado"
+        - "Las reglas [Top 10] solo sirven dentro de una tabla"
+        - "Hay que subir la regla en el orden de prioridad"
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro hábitos que cuestan puntos en las semanas 2 a 5
+      items:
+        - label: Error 01
+          title: La cinta en vez del cuadro
+          desc: >-
+            Color de letra desde un botón y relleno desde otro son dos operaciones. El
+            reactivo pide el cuadro Formato de celdas porque quiere una sola.
+        - label: Error 02
+          title: Renombrar una hoja rehaciéndola
+          desc: >-
+            Doble clic en la pestaña de la hoja, o clic derecho y [Rename]. Borrar la hoja
+            y crear otra pierde toda referencia que apuntaba a ella.
+        - label: Error 03
+          title: Arrastrar el controlador de relleno
+          desc: >-
+            No puede fijar un límite, no hace crecimiento y no ajusta una tendencia. El
+            cuadro Serie sí puede, y por eso la tarea lo nombra.
+        - label: Error 04
+          title: Dejar el borde marchando
+          desc: >-
+            Después de copiar, el origen sigue seleccionado y la siguiente tecla puede
+            pisar el portapapeles. Esc lo cierra, y no cuesta nada.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Sesión 12, el primer parcial
+      lede: >-
+        El examen no pregunta si la hoja se ve bien. Pregunta cómo llegó a verse así, y sí
+        lo puede saber.
+      block: 3
+
+  - method:
+      eyebrow: Bloque 03 · Cómo se lee un reactivo
+      title: Un reactivo es una oración sobre una ruta
+      statement: Léelo dos veces antes de tocar el ratón. Una por el verbo, que nombra el comando, y otra por el alcance, que nombra la selección.
+      points:
+        - label: El verbo
+          text: >-
+            Aplicar, insertar, modificar, quitar y borrar son cinco comandos distintos con
+            cinco entradas de menú distintas. Borrar reglas de las celdas seleccionadas y
+            borrarlas de toda la hoja se califican aparte.
+        - label: El alcance
+          text: >-
+            Las celdas seleccionadas, esta hoja de cálculo, esta tabla, todo el libro. El
+            alcance equivocado es la respuesta de otro reactivo, y así se califica.
+        - label: La prueba
+          text: >-
+            Cada objetivo tiene una comprobación que toma unos diez segundos. Cambia un
+            valor y observa, o vuelve a abrir el cuadro de diálogo y lee lo que te dice.
+
+  - steps:
+      eyebrow: Bloque 03 · El día del examen
+      title: Cinco hábitos que valen los segundos que cuestan
+      items:
+        - label: '01'
+          title: Selecciona antes del comando
+          desc: Casi toda ruta de este curso empieza por la selección, y es la parte que nadie revisa después
+        - label: '02'
+          title: Señala, no teclees
+          desc: Un umbral en una celda sobrevive al siguiente reactivo. Un umbral dentro de la fórmula hay que volver a buscarlo.
+        - label: '03'
+          title: Lee la línea de vista previa
+          desc: El [Formula result] hasta abajo de [Function Arguments], y la columna Formato en el administrador de reglas
+        - label: '04'
+          title: Revisa la frontera
+          desc: Una fila separa mayor que de mayor o igual que, y esa es la fila que se está calificando
+        - label: '05'
+          title: Cierra lo que abriste
+          desc: Esc después de copiar, [OK] en lugar de [Cancel], y nada seleccionado que herede el siguiente reactivo
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Rehacer el bloque desde una hoja en blanco
+      brief: >-
+        Un libro, cuatro hojas, armado sin volver a abrir los ejercicios 1 a 7. La hoja 1
+        da formato a un bloque crudo usando solo Ctrl+1. La hoja 2 nombra dos rangos y los
+        usa en una fórmula. La hoja 3 corre las funciones de estadística, texto y fecha de
+        la semana 4 sobre treinta filas. La hoja 4 agrega dos reglas, una columna de
+        minigráficos y un SI.
+      blocks:
+        - label: Entregable
+          text: El libro de cuatro hojas, subido antes de que abra la sesión 12
+        - label: Restricción
+          text: >-
+            Todo formato de la hoja 1 sale del cuadro Formato de celdas, y toda regla de la
+            hoja 4 aparece en el administrador de reglas
+        - label: La comprobación
+          text: >-
+            Denle el archivo a alguien más y pídanle que cambie tres valores. Lo que no
+            reaccione se hizo a mano y no va a sobrevivir el examen.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Una comparación es un valor
+          desc: >-
+            Ponla sola en una celda libre y lee VERDADERO o FALSO, que separa una prueba
+            rota de una respuesta rota en segundos
+        - title: El cuadro de diálogo es la respuesta
+          desc: >-
+            Siete de ellos cargan con todo el primer bloque, y un reactivo que nombra uno
+            pide ese cuadro y no el dibujo que produce
+        - title: El examen califica la ruta
+          desc: >-
+            Verbo y alcance, luego el comando, luego la comprobación de diez segundos. Que
+            la hoja se vea bien es necesario y no es suficiente
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        El libro de cuatro hojas del laboratorio, más una página de notas con sus propias
+        palabras que enliste cada cuadro de diálogo que tuvieron que abrir para armarlo y
+        qué les dio cada uno que la cinta no podía dar. Lleven las notas a la sesión 12.
+      meta:
+        - [Entrega, Antes de la sesión 12]
+        - [Formato, Blackboard · un archivo .xlsx y una página de notas]
+        - [Peso, Parte del 30 % del primer parcial]
+      rubric:
+        - ["Hojas 1 y 2", "30 %", "Formato desde el cuadro de diálogo, y dos rangos con nombre en uso"]
+        - ["Hoja 3", "25 %", "Las funciones de la semana 4 devuelven lo que dicen los datos"]
+        - ["Hoja 4", "25 %", "Dos reglas, una columna de minigráficos en escala común, un SI"]
+        - ["Las notas", "20 %", "Cada cuadro nombrado, con lo que hace y la cinta no puede hacer"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Después del parcial, operadores y comodines, luego Y, O y NO, y el SI anidado que
+        la semana 5 venía prometiendo.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

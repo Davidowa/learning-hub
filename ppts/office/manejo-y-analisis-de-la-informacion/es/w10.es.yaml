@@ -1,0 +1,522 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 10
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 10 · Sesiones 19 y 20 · Tablas y gráficos
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        El rango deja de ser un rango y pasa a ser un objeto con nombre, y los números
+        reciben una imagen que alguien más tiene que poder leer.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 19 y 20 de 34]
+      notes: |
+        Sesiones 19 y 20 del temario, CLO06 y CLO07. Esta es la semana que cierra más
+        objetivos que ninguna otra del curso: Associate 2.3.2, 3.1.1, 3.1.2, 3.1.3,
+        3.2.2, 3.2.3, 5.1.1, 5.1.2, 5.2.2, 5.2.3, 5.3.1, 5.3.2 y 5.3.3.
+        COBERTURA.md agrega tres cortos, todos dentro de una pantalla que ya está abierta,
+        que son 3.2.1, 4.1.2 en su mitad de referencia estructurada, y 5.2.1.
+        Las rutas salen de procedures.en.md. Ejercicios 16 y 17, y hay que notar que el
+        ejercicio 17 no pide la hoja de gráfico, ni el cambio de filas por columnas, ni el
+        texto alternativo, así que a esos tres les toca una tarea escrita aparte.
+        Los nombres de estilo, las columnas de la tabla y los nombres de hoja se quedan en
+        inglés porque así vienen en el libro del ejercicio.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El rango se vuelve un objeto
+          desc: Ctrl+T, la galería de estilos, las siete casillas, el nombre, y cómo crece sola una tabla
+        - title: La tabla dentro de una fórmula
+          desc: Referencias estructuradas, la fila de totales que sobrevive a un filtro, y qué tira Convertir en rango
+        - title: El gráfico
+          desc: El cuadro [Insert Chart], la hoja de gráfico, el origen de datos, los elementos y el texto alternativo
+        - title: Tu turno
+          desc: Treinta pedidos de ropa, una tabla llamada Lorena, y los primeros gráficos hechos con ella
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Convertir un rango en una tabla con nombre
+          sub: Leyendo la dirección en el cuadro [Create Table] en vez de aceptar la que Excel propone
+        - head: Fijar el estilo y las opciones de estilo por separado
+          sub: La galería es una acción calificada, y cada una de las siete casillas es otra
+        - head: Escribir una referencia estructurada
+          sub: Lorena[Quantity] fuera de la tabla y [@Quantity] adentro, sin tocar el mouse
+        - head: Agregar una fila de totales que respete el filtro
+          sub: Y leer el código SUBTOTALES que escribió, en vez de creerle al número
+        - head: Construir un gráfico desde el cuadro de diálogo
+          sub: El cuadro [Insert Chart], la pestaña [All Charts], la familia a la izquierda y el subtipo hasta arriba
+        - head: Darle elementos y descripción a un gráfico
+          sub: El menú [Add Chart Element] con su posición, Diseño rápido, el estilo, y texto alternativo que sirva a un lector de pantalla
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana dentro del semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y después la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importación, filtros, tablas, gráficos y las funciones de búsqueda
+          state: now
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Un rango deja de ser un rango
+      lede: >-
+        Las mismas celdas, los mismos números, y a partir de Ctrl+T Excel sabe dónde
+        terminan los datos, cómo se llaman las columnas, y que una fila nueva le pertenece.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Qué gana Excel cuando presionas Ctrl+T
+      lead: >-
+        Un rango es una dirección. Excel no sabe que la fila 33 es la última, que B3 es un
+        encabezado y no un dato, ni que el bloque es una sola cosa. Una tabla sabe las
+        tres, y todo lo que viene después, la fila de totales, las bandas, el crecimiento
+        automático, existe porque lo sabe.
+      panel:
+        label: La señal
+        title: Aparece Diseño de tabla y la enlista el Administrador de nombres
+        note: >-
+          Ponerle rayas a un rango con formato no da nada de esto. Las rayas dejan de
+          alternarse en cuanto alguien inserta una fila, porque nada sabe que esas filas
+          van juntas.
+      steps:
+        - text: Una celda dentro del bloque, luego Insertar, Tabla
+        - text: Lee la dirección antes de aceptarla
+        - text: Ponle nombre en la pestaña Diseño de tabla
+          loop: ↺ y toda fórmula que usaba Table1 se reescribe sola
+
+  - steps:
+      eyebrow: Bloque 01 · Del rango a la tabla con nombre
+      title: Cinco pasos, y el que todo mundo se salta
+      items:
+        - label: '01'
+          title: Una celda dentro del bloque
+          desc: No selecciones el rango a mano todavía. Excel propone una extensión, y revisarla es justo el punto del paso siguiente.
+        - label: '02'
+          title: Insertar, Tablas, Tabla
+          desc: Ctrl+T y Ctrl+L abren el mismo cuadro [Create Table]. Presionar Ctrl+T y luego Enter acepta una propuesta que nunca leíste.
+        - label: '03'
+          title: Lee la dirección
+          desc: Dónde están los datos de la tabla. Tiene que cubrir la fila de encabezados y la última fila de datos. Una celda suelta cerca es lo que la ensancha.
+        - label: '04'
+          title: La casilla [My table has headers]
+          desc: Márcala cuando la primera fila trae los nombres de columna. Déjala vacía y Excel inventa Column1, Column2, y todas tus fórmulas dirán Column1.
+        - label: '05'
+          title: Ponle nombre y presiona Enter
+          desc: Pestaña Diseño de tabla, grupo [Properties], el cuadro Nombre de la tabla. Mismas reglas que un nombre definido. Nada queda guardado hasta Enter.
+
+  - method:
+      eyebrow: Bloque 01 · Objetivo 3.1.2
+      title: El estilo tiene nombre, y el nombre es lo que se lee
+      statement: Diseño de tabla, Estilos de tabla, la flecha [More] en la esquina de la galería. Apunta a un estilo y la etiqueta te da su nombre literal, Green, Table Style Medium 7.
+      points:
+        - label: La galería
+          text: >-
+            Abre en tres secciones, [Light], [Medium] y [Dark], y hace la vista previa en
+            la hoja mientras apuntas. Haz clic en el que nombró la tarea, no en el que se
+            le parece más.
+        - label: El predeterminado
+          text: >-
+            Una tabla nueva llega como Blue, Table Style Medium 2. Si ese sigue siendo el
+            estilo enmarcado en la galería, no se aplicó nada y el reactivo quedó sin
+            responder.
+        - label: La ruta corta
+          text: >-
+            Sombrear filas alternas a mano desde Inicio, Fuente, [Fill Color]. La misma
+            imagen, sin nombre de estilo, y deja de alternarse en cuanto alguien inserta
+            una fila.
+
+  - table:
+      eyebrow: Bloque 01 · Opciones de estilo de tabla
+      title: Siete casillas, siete acciones calificadas aparte
+      headers: [Casilla, Qué cambia, Qué no es]
+      rows:
+        - ["[Header Row]", "El encabezado y las flechas", "Un panel inmovilizado"]
+        - ["Fila de totales", "Una fila de SUBTOTALES abajo", "Una SUMA tecleada"]
+        - ["Filas con bandas", "Rayas que se reparan solas", "Relleno manual"]
+        - ["Columnas con bandas", "Lo mismo, al otro lado", "Relleno manual"]
+        - ["[First] y [Last]", "Dos casillas, una por orilla", "Negritas a mano"]
+        - ["[Filter Button]", "Las flechas, el encabezado se queda", "[Header Row]"]
+
+  - steps:
+      eyebrow: Bloque 01 · Filas y columnas, versión tabla
+      title: Aquí los comandos de la hoja son los comandos equivocados
+      items:
+        - label: '01'
+          title: Clic derecho, Insertar
+          desc: Dentro de una tabla el submenú dice [Table Columns to the Left], [Table Column to the Right], [Table Rows Above] y [Table Row Below]. No los de la hoja.
+        - label: '02'
+          title: Clic derecho, Eliminar
+          desc: Ofrece [Table Columns] y [Table Rows]. Todo lo que está fuera de la tabla se queda donde está, que es la razón entera de usarlos.
+        - label: '03'
+          title: Qué hereda la fila nueva
+          desc: Las bandas, el nombre de los encabezados, y cualquier fórmula de columna calculada. No hay que arrastrar nada hacia abajo.
+        - label: '04'
+          title: El comando [Resize Table]
+          desc: Diseño de tabla, [Properties], [Resize Table], y escribe o arrastra el rango nuevo. La fila de encabezados tiene que quedarse en la misma fila.
+        - label: '05'
+          title: El triangulito no es la ruta
+          desc: Arrastrar el triangulito de la esquina inferior derecha funciona y no demuestra nada. Lo mismo escribir en la primera fila vacía de abajo.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de arruinar una tabla en silencio
+      items:
+        - label: Error 01
+          title: Ctrl+T y luego Enter
+          desc: >-
+            El cuadro se abrió, propuso una extensión y se cerró otra vez sin que nadie lo
+            leyera. Basta una columna vacía tragada por la tabla para romper todos los
+            totales que vengan después.
+        - label: Error 02
+          title: Dar formato como tabla cuando solo piden tabla
+          desc: >-
+            La ruta de la pestaña Inicio crea la tabla y aplica un estilo en un solo
+            movimiento. Cambia formato que la tarea nunca mencionó, encima de un rango que
+            nunca revisaste.
+        - label: Error 03
+          title: Dejar el nombre en Table1
+          desc: >-
+            El nombre es lo que leen las fórmulas. El ejercicio 16 pide un nombre, y el
+            archivo viene con la tabla llamada Lorena, que es lo que hace legibles sus
+            fórmulas.
+        - label: Error 04
+          title: Rayar la tabla a mano
+          desc: >-
+            El relleno directo en filas alternas se ve igual hasta que alguien inserta una
+            fila. La casilla también es lo que lee quien califica, y se queda sin marcar.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La tabla dentro de una fórmula
+      lede: >-
+        Una vez que las columnas tienen nombre, una fórmula puede decir lo que significa.
+        Lorena[Quantity] son las mismas celdas que E4 a E33, y sobrevive a todo lo que una
+        dirección no.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Ejercicio 16, la tabla llamada Lorena
+      title: Las cuatro formas de una referencia estructurada
+      filename: Lorena.xlsx
+      lang: excel
+      source: |
+        En la columna calculada, se escribe una vez y Excel la rellena
+        =MES(Lorena[[#This Row],[Order Date]])
+
+        Dentro de la tabla, la forma corta de lo mismo
+        =MES([@[Order Date]])
+
+        Fuera de la tabla, la columna entera
+        =SUMA(Lorena[Quantity])
+        =PROMEDIO(Lorena[Quantity])
+
+        El texto del encabezado de una columna
+        =Lorena[[#Headers],[Quantity]]
+      annotations:
+        - label: La arroba
+          text: La @ quiere decir esta fila. Dentro de la tabla se omite el nombre porque ya estás en ella.
+        - label: Los cuatro elementos especiales
+          text: "Los otros son #Data, #Totals y #All. Toman partes de la tabla, no celdas."
+        - label: Tecleada, no arrastrada
+          text: Teclea el nombre y luego el corchete. Excel lista las columnas y tú eliges una.
+        - label: Si falla
+          text: Arrastrar con el mouse escribe $E$4 y la referencia deja de crecer con la tabla.
+          accent: true
+
+  - compare:
+      eyebrow: Bloque 02 · Las dos rutas
+      title: La misma aritmética, y solo una se mantiene al día
+      before:
+        label: Califica · la referencia estructurada
+        file: total.txt
+        lang: excel
+        code: |
+          =SUMA(Lorena[Quantity])
+
+          30 pedidos hoy
+          31 pedidos después de pegar
+          La fórmula nunca cambió
+          El total se movió solo
+      after:
+        label: No califica · la dirección arrastrada
+        file: total.txt
+        lang: excel
+        code: |
+          =SUMA(E4:E33)
+
+          30 pedidos hoy
+          31 pedidos después de pegar
+          La fórmula nunca cambió
+          El pedido 31 no está adentro
+      note: >-
+        El ejercicio 16 te pide copiar las filas de la hoja Ex1-2 a la tabla de pedidos.
+        Ese pegado es la prueba. Una referencia estructurada absorbe las filas nuevas y una
+        dirección no, y ninguna de las dos dice una palabra al respecto.
+
+  - code:
+      eyebrow: Bloque 02 · La fila de totales
+      title: La fila que lee el filtro, y la fila que no
+      filename: totales.xlsx
+      lang: excel
+      source: |
+        Diseño de tabla, Opciones de estilo de tabla, Fila de totales
+        =SUBTOTALES(109,[Quantity])
+
+        Elige [Average] en la lista desplegable de la celda
+        =SUBTOTALES(101,[Quantity])
+
+        [Count] en una columna de texto como Status
+        =SUBTOTALES(103,[Status])
+
+        Tecleada a mano en la primera fila bajo la tabla
+        =SUMA(E4:E33)
+      annotations:
+        - label: Dónde está la lista
+          text: Sale una lista desplegable en la orilla derecha de cada celda de total. Ese es el control calificado.
+        - label: Las diez entradas
+          text: "None, Average, Count, Count Numbers, Max, Min, Sum, StdDev, Var, More Functions."
+        - label: Count contra Count Numbers
+          text: Count es CONTARA y cuenta lo que sea. Count Numbers se salta el texto. Status necesita el primero.
+        - label: Si falla
+          text: Una SUMA tecleada bajo la tabla no le pertenece y no se mueve cuando filtras.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 02 · El número dentro de SUBTOTALES
+      title: Por qué la fila de totales escribe 109 y no 9
+      headers: [Código, Función, Filas que ocultó un filtro, Filas ocultas a mano]
+      rows:
+        - ["9", "SUMA", "Las ignora", "Las suma"]
+        - ["109", "SUMA", "Las ignora", "Las ignora"]
+        - ["1", "PROMEDIO", "Las ignora", "Las promedia"]
+        - ["101", "PROMEDIO", "Las ignora", "Las ignora"]
+        - ["103", "CONTARA", "Las ignora", "Las ignora"]
+
+  - concept:
+      eyebrow: Bloque 02 · Convertir en rango
+      title: Qué sobrevive cuando la tabla deja de serlo
+      lead: >-
+        Diseño de tabla, [Tools], Convertir en rango, y confirmas el mensaje. Se van los
+        botones de filtro, se va la pestaña contextual, el nombre desaparece del
+        Administrador de nombres, y toda referencia estructurada del libro se reescribe
+        como dirección común. Nada te avisa que pasó.
+      panel:
+        label: Lo que se queda
+        title: El estilo, ahora como formato directo en las celdas
+        note: >-
+          Si la tarea pide un rango limpio, bórralo después con Inicio, Edición, Borrar,
+          [Clear Formats]. El ejercicio 14 necesita justo esto después de importar, porque
+          [From Text/CSV] deja los datos como tabla.
+      steps:
+        - text: SUMA(Lorena[Quantity]) se vuelve SUMA(E4:E33)
+        - text: El Administrador de nombres ya no la enlista
+        - text: Los colores siguen ahí
+          loop: ↺ y apagar los botones de filtro no es el mismo comando
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El gráfico
+      lede: >-
+        Un gráfico lo lee alguien que no estuvo en el salón. Qué tipo, qué series, qué
+        elementos, y qué se le dice de él a un lector de pantalla.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · Cómo se crea uno
+      title: El cuadro de diálogo, no el botón de la galería
+      items:
+        - label: '01'
+          title: Selecciona el origen
+          desc: Incluye la fila de encabezados y la columna de categorías. Si las columnas no están juntas, selecciona el primer bloque, mantén Ctrl y selecciona el segundo.
+        - label: '02'
+          title: Abre el cuadro de diálogo
+          desc: Pestaña Insertar, grupo Gráficos, y la flechita de la esquina inferior derecha del grupo, que es la que abre el cuadro completo.
+        - label: '03'
+          title: La pestaña [All Charts]
+          desc: El cuadro abre en [Recommended Charts]. Haz clic en [All Charts] y elige la familia en la lista de la izquierda.
+        - label: '04'
+          title: El subtipo va hasta arriba
+          desc: Columnas agrupadas, Columna apilada, Columna 100 % apilada y las versiones 3D están como iconos arriba del panel. Apunta a cada uno y lee la etiqueta.
+        - label: '05'
+          title: Lee la vista previa y acepta
+          desc: La vista previa se dibuja con tus datos reales, que es donde se delata un gráfico apilado que debía ser agrupado.
+
+  - steps:
+      eyebrow: Bloque 03 · Dónde vive el gráfico y qué grafica
+      title: Mover el gráfico y elegir el origen de datos
+      items:
+        - label: '01'
+          title: Selecciona el gráfico completo
+          desc: Haz clic en el borde o en una parte vacía del área del gráfico. Si quedó seleccionado un título o una serie, presiona Esc y vuelve a hacer clic.
+        - label: '02'
+          title: El comando [Move Chart]
+          desc: Diseño de gráfico, [Location], [Move Chart]. Elige [New sheet] y escribe el nombre. No lo dejes en Chart1 cuando la tarea nombra una hoja.
+        - label: '03'
+          title: El comando [Select Data]
+          desc: Diseño de gráfico, [Data], [Select Data]. Arriba [Chart data range], a la izquierda [Legend Entries], a la derecha [Horizontal Axis Labels].
+        - label: '04'
+          title: Agrega una serie
+          desc: El botón [Add] bajo [Legend Entries]. En [Edit Series] haz clic en la celda del encabezado para [Series name] en vez de teclearlo, y arrastra los valores.
+        - label: '05'
+          title: Cambiar fila o columna
+          desc: El botón que está entre las dos listas lo hace dentro del cuadro, que es justo donde ya está la siguiente edición.
+
+  - table:
+      eyebrow: Bloque 03 · El menú [Add Chart Element]
+      title: El elemento es media respuesta, la posición es la otra media
+      headers: [Elemento, Qué pide el submenú, La respuesta equivocada]
+      rows:
+        - ["Título del gráfico", "[Above Chart] o [Centered Overlay]", "Escribir en el cuadro"]
+        - ["Leyenda", "[Right], [Top], [Left] o [Bottom]", "Arrastrarla hasta ahí"]
+        - ["Etiquetas de datos", "[Center], [Inside End], [Outside End]", "Un cuadro de texto"]
+        - ["Títulos de eje", "[Primary Horizontal] o [Vertical]", "El encabezado de la hoja"]
+        - ["Cualquiera", "[None] lo quita", "Presionar Supr"]
+
+  - tiers:
+      eyebrow: Bloque 03 · Cuatro acciones calificadas aparte
+      title: Diseño, estilo, color y descripción
+      items:
+        - key: Diseño
+          title: Diseño rápido
+          desc: Diseño de gráfico, [Chart Layouts], Diseño rápido. Es un paquete numerado. Aplícalo primero y edita los elementos después.
+        - key: Estilo
+          title: Estilos de gráfico
+          desc: Diseño de gráfico, Estilos de gráfico, la flecha [More] para abrir la galería entera. La etiqueta da el nombre literal, Style 1, Style 2.
+        - key: Color
+          title: El botón [Change Colors]
+          desc: Mismo grupo, botón aparte, acción calificada aparte. Recolorear a mano deja formato que ningún estilo puede sobreescribir.
+        - key: Alt
+          title: La descripción
+          desc: Clic derecho en el borde, Texto alternativo, que en algunas versiones se lee [Edit Alt Text]. No tiene botón de aceptar, se guarda mientras escribes.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro maneras de perder puntos con un gráfico correcto
+      items:
+        - label: Error 01
+          title: Construirlo con Alt+F1
+          desc: >-
+            Una tecla, un gráfico, el tipo predeterminado. La tarea casi siempre nombra un
+            subtipo, y la ruta de la galería nunca enseña la vista previa donde se comparan
+            los subtipos.
+        - label: Error 02
+          title: Presionar F11 para la hoja de gráfico
+          desc: >-
+            Sí produce una hoja de gráfico, con el tipo predeterminado y el nombre Chart1.
+            El objeto correcto, con el tipo equivocado y el nombre equivocado.
+        - label: Error 03
+          title: Un pie en la celda debajo del gráfico
+          desc: >-
+            Un lector de pantalla anuncia un objeto sin etiqueta. La propiedad de texto
+            alternativo se queda vacía, y esa propiedad es la que lee el Comprobador de
+            accesibilidad.
+        - label: Error 04
+          title: Transponer los datos en vez de cambiarlos
+          desc: >-
+            Pegado especial con Transponer y un segundo gráfico dan la misma imagen, un
+            bloque de datos duplicado, y un gráfico original al que nunca le cambiaste
+            filas por columnas.
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Filtras la tabla a un solo producto y el total de Quantity no se mueve. ¿Qué pasó?
+      options:
+        - La fila de totales está apagada y ese número es una SUMA tecleada
+        - La fórmula dice SUBTOTALES(9,...) y el filtro se está ignorando
+        - Los filtros nunca cambian una fila de totales
+        - Primero hay que convertir la tabla en rango
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Treinta pedidos, una tabla, un gráfico honesto
+      brief: >-
+        Abran el Excel 16, conviertan el bloque de pedidos en tabla y pónganle su propio
+        nombre. Agreguen la fila de totales con [Count] en Status y [Average] en Quantity.
+        Peguen ahí las filas de la hoja Ex1-2 y confirmen que los totales se movieron.
+        Luego grafiquen la cantidad por producto desde el cuadro [Insert Chart] y
+        escríbanle texto alternativo.
+      blocks:
+        - label: Entregable
+          text: Un libro con la tabla nombrada, la fila de totales y un gráfico que lleve descripción
+        - label: Restricción
+          text: Toda fórmula de la hoja usa el nombre de la tabla. Ninguna puede llevar una dirección de celda.
+        - label: La prueba
+          text: La fila de totales cambia cuando filtras la columna Status. Si no cambia, lee la fórmula.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Una tabla sabe dónde termina
+          desc: >-
+            Ese solo hecho es lo que paga la fila de totales, las bandas que se reparan
+            solas, el crecimiento automático y la referencia que crece con los datos
+        - title: El nombre es la interfaz
+          desc: >-
+            Lorena[Quantity] dice lo que significa y sigue a la tabla. E4 a E33 dice dónde
+            está, y deja de ser cierto la primera vez que alguien pega una fila
+        - title: El gráfico se califica por partes
+          desc: >-
+            Tipo y subtipo, series y categorías, cada elemento con su posición, el número
+            de diseño, el número de estilo, el juego de colores y la descripción. Ocho
+            acciones aparte, no una sola imagen
+
+  - homework:
+      eyebrow: Tarea
+      title: Ejercicios 16 y 17, entrega y calificación
+      brief: >-
+        El ejercicio 16 es la tabla, su fila de totales y sus referencias estructuradas. El
+        17 construye veinte tipos de gráfico sobre cinco hojas. Agreguen tres cosas que el
+        ejercicio no pide y el temario sí. Un gráfico en su propia hoja de gráfico, un
+        gráfico con las filas y las columnas cambiadas, y texto alternativo en cada gráfico
+        que conserven.
+      meta:
+        - [Entrega, Antes de la semana 11]
+        - [Formato, Blackboard · dos archivos .xlsx]
+        - [Peso, Parte del 30 % del segundo parcial]
+      rubric:
+        - ["La tabla", "25 %", "Con nombre, encabezados leídos, fila de totales con la función que pide cada columna"]
+        - ["Referencias", "20 %", "Estructuradas en toda la hoja, y siguen bien después de pegar Ex1-2"]
+        - ["Gráficos", "35 %", "Veinte tipos, hechos desde el cuadro, con el subtipo que piden los datos"]
+        - ["Los tres extras", "20 %", "Una hoja de gráfico, un gráfico cambiado, y texto alternativo en cada uno"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, la mitad difícil de los gráficos. Qué tipo corresponde de
+        verdad, el segundo eje, y luego dejar el libro listo para salir de tus manos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

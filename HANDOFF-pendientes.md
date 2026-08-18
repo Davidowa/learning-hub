@@ -39,24 +39,34 @@ ninguno se notaba en un listado de carpeta:
 Los tres se volvieron a tomar. De paso salieron cuatro capturas más, tres de ellas de la
 lista de imposibles del punto 4. Todo está escrito en `ppts/kit/SCREENSHOTS.md`.
 
-## 2. Español de TIA501
+## 2. Español de TIA501 · a medias, y el resto depende de una decisión
 
-Es el único curso que no es bilingüe. Faltan:
+Hecho:
 
-- Los 17 decks. La fuente está en `ppts/office/manejo-y-analisis-de-la-informacion/en/`.
-- Los ejercicios, `exercises.en.md` y `solutions.en.md`, 51 ejercicios.
-- Los 49 archivos de `labs/`.
+- **Los 17 decks**, en `es/`. Estructura idéntica al inglés, diapositiva por diapositiva,
+  con las mismas capas y las mismas listas. Los cuatro chequeos del kit en cero sobre los 34
+  decks del curso, sin renglones de build que empiecen con `!`.
+- **`procedures.es.md`**, las 107 rutas traducidas paso por paso. Ya no queda un solo hueco.
 
-`procedures.es.md` ya existe y **es un andamio deliberado, no una traducción**: 107 huecos con
-la ruta en inglés arriba de cada uno como texto fuente, más el glosario inglés-español. El
-profesor dijo que eso lo haría un becario. Si en su lugar lo hace un agente, el andamio sigue
-siendo el punto de partida correcto.
+Lo que hay que saber de los decks. El español sí revienta topes que el inglés no tocaba, tal
+como estaba anotado: se arregló acortando el español, nunca bajando el tipo. Las fórmulas van
+con los nombres de función en español del glosario y con **la coma** como separador de
+argumentos, que es lo que corresponde a es-MX, donde el punto es el separador decimal. Si las
+máquinas del salón están en configuración de España, eso hay que cambiarlo a punto y coma en
+los 17 decks. Las imágenes siguen apuntando a `img/en/`, porque no existe `img/es/`, y cada
+diapositiva que muestra una captura lo dice.
 
-Ojo con una cosa medida: el español corre más largo que el inglés y revienta topes que el
-inglés no tocaba. En Unity hubo que rehacer nueve elementos por eso, cuatro títulos de
-`pitfalls` que solo aceptan un renglón y cinco celdas de tabla con tope de 36 caracteres. Se
-arregla acortando el español, nunca bajando el tamaño de tipo, y `preflight` y `lint` lo
-cazan.
+**Lo que falta, y por qué está detenido.** Los ejercicios y los 49 archivos de `labs/` no se
+tradujeron todavía, porque antes hay que decidir algo que también afecta a lo ya hecho.
+
+El glosario tiene 303 filas útiles. Las rutas y los decks nombran **1,426 cadenas de interfaz
+distintas**. Donde el término estaba en el glosario se escribió en español; donde no, quedó en
+inglés entre corchetes, que es lo que manda el propio documento. Son 3,392 apariciones. La
+lista completa, ordenada por frecuencia, está en `TERMINOS-PENDIENTES.md`.
+
+Esta máquina no puede cerrarlo: tiene el corrector en español pero no el paquete de idioma de
+la interfaz. Está comprobado, no supuesto, y los tres renglones que lo prueban están en ese
+mismo archivo. Traducir de oído está prohibido por el documento y por buenas razones.
 
 ## 3. Los 82 pendientes de las rutas
 

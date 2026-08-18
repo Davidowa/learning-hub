@@ -1,0 +1,480 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 16
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 16 · Sesiones 31 y 32 · Análisis de hipótesis
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Correr un modelo al revés, barrerlo sobre un rango de entradas y guardar varias
+        versiones con nombre de la misma hoja.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 31 y 32 de 34]
+      notes: |
+        Sesiones 31 y 32 del programa, CLO08, con las presentaciones de proyecto encima.
+        Cubierto de frente: Expert 3.4.2, Buscar objetivo y Administrador de escenarios.
+        COBERTURA.md agrega Expert 3.4.4 PAGO y Expert 3.4.3 NPER, y pide que el
+        Administrador de escenarios se practique en vez de describirse, porque el
+        ejercicio 25 lo explica y nunca lo usa. Expert 1.2.4 regresa como
+        [Automatic Except for Data Tables].
+        El ejercicio 25 llega en .docx y sin libro, así que los tres modelos se construyen
+        desde cero. Preparar el archivo con anticipación es el arreglo barato.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Buscar objetivo
+          desc: Una fórmula, una meta, una celda de entrada y un cuadro de estado que vale la pena leer
+        - title: Tablas de datos
+          desc: Una entrada por columna, dos en esquina y la fórmula que escribe Excel
+        - title: Escenarios y dinero
+          desc: Administrador de escenarios, PAGO y NPER sobre un solo modelo de crédito
+        - title: El proyecto
+          desc: Qué se entrega esta semana y cómo se califica la presentación
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Correr un modelo al revés con Buscar objetivo
+          sub: "[Set cell], [To value], [By changing cell], y por qué solo una de las tres acepta una referencia"
+        - head: Decir por qué la celda que cambia guarda un valor
+          sub: Buscar objetivo se niega a sobrescribir una fórmula, y esa negativa protege tu modelo
+        - head: Barrer una entrada con una tabla de datos
+          sub: La celda que apunta al resultado, y el rectángulo que hay que seleccionar antes
+        - head: Construir una tabla de dos variables
+          sub: "[Row input cell] y [Column input cell], y cuál de los dos ejes es cuál"
+        - head: Guardar y comparar escenarios con nombre
+          sub: "[Add], [Scenario Values], [Summary], y por qué tres copias de una hoja no son escenarios"
+        - head: Calcular un pago y un plazo
+          sub: PAGO y NPER sobre el mismo modelo de crédito, con la tasa y los periodos de acuerdo
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidado y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: done
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Correr el modelo al revés
+      lede: >-
+        Todos los modelos hasta ahora corrieron hacia adelante, de las entradas al
+        resultado. Esta semana el resultado viene dado y la entrada es la pregunta.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un modelo son entradas, fórmulas y un resultado
+      lead: >-
+        El análisis de hipótesis trabaja sobre el cableado, no sobre los números. Buscar
+        objetivo lo recorre al revés, una tabla de datos lo corre una vez por entrada, y el
+        Administrador de escenarios guarda juegos de entradas con nombre. Las tres piden un
+        resultado calculado, no tecleado.
+      panel:
+        label: La regla de trabajo
+        title: Si el resultado se teclea, no sirve ninguna de las tres
+        note: >-
+          Buscar objetivo avisa que la celda debe contener una fórmula, una tabla de datos
+          repite el mismo número, y un escenario cambia las entradas sin mover nada. Las
+          herramientas no fallan; el modelo no está conectado.
+      steps:
+        - text: Las entradas van en sus propias celdas con etiqueta
+        - text: Las fórmulas leen esas celdas, nunca números literales
+        - text: Una celda guarda el resultado del que se pregunta
+          loop: ↺ y toda herramienta de esta semana cuelga de esa celda
+
+  - code:
+      eyebrow: Bloque 01 · Ejercicio 25, el primer modelo
+      title: Cincuenta mil unidades de Churrumpin
+      filename: Churrumpin.xlsx
+      lang: excel
+      source: |
+        B9   =B2*B3
+        B10  =B2*B4
+        B12  =B9-B10-B11
+
+        B14  =B12*(1-B13)
+      annotations:
+        - label: Ingreso y costo variable
+          text: >-
+            Unidades por precio, unidades por costo unitario. Las dos leen la misma celda de
+            Unidades, y eso es lo que hace contestable el modelo.
+        - label: Utilidad de operación
+          text: >-
+            Ingreso menos costo variable menos el 1,500,000 de costo fijo en B11.
+        - label: Utilidad neta
+          text: >-
+            Lo que sobrevive a la tasa del 15 por ciento. En 50,000 unidades da 425,000.
+        - label: Riesgo
+          text: >-
+            Buscar objetivo cambia una celda y esa celda debe guardar un valor. Apúntalo a
+            B9 y se niega, porque B9 es una fórmula.
+          accent: true
+
+  - stat:
+      eyebrow: Bloque 01 · La respuesta que nadie tuvo que despejar
+      value: '37,500'
+      text: >-
+        unidades es donde la utilidad neta deja de ser negativa, en un producto planeado
+        para cincuenta mil.
+      note: >-
+        El álgebra es un renglón: el costo fijo entre los cuarenta pesos que aporta cada
+        unidad. El punto de la herramienta es que esas tres casillas contestan la misma
+        pregunta en un modelo que nadie puede reacomodar, y en uno sin forma cerrada.
+
+  - steps:
+      eyebrow: Bloque 01 · La ruta calificada
+      title: Cinco paradas por Buscar objetivo
+      items:
+        - label: '01'
+          title: Revisa las dos celdas
+          desc: La meta guarda una fórmula y la entrada guarda un valor. Si no, Buscar objetivo se niega.
+        - label: '02'
+          title: Selecciona la celda de fórmula
+          desc: "[Set cell] llega ya llena con ella. Confirma que sea una sola celda."
+        - label: '03'
+          title: Datos, Análisis de hipótesis
+          desc: Pestaña Datos, grupo [Forecast], Análisis de hipótesis, luego Buscar objetivo
+        - label: '04'
+          title: "[To value]"
+          desc: Un número simple. Sin signo de igual y sin referencia; la casilla no la acepta.
+        - label: '05'
+          title: Lee el estado
+          desc: "[Target value] y [Current value]. [OK] conserva la entrada nueva, [Cancel] regresa la hoja."
+
+  - figure:
+      eyebrow: Bloque 01 · El cuadro de diálogo
+      title: Tres casillas, una de ellas distinta
+      image: img/en/goal-seek-dialog.png
+      caption: >-
+        Captura de la interfaz en inglés. [Set cell] llega con lo que estuviera
+        seleccionado. [To value] acepta un número simple. [By changing cell] acepta una
+        celda, y esa celda tiene que guardar un valor.
+      alt: >-
+        El cuadro de diálogo Buscar objetivo de Excel, con [Set cell] en F16 y las casillas
+        [To value] y [By changing cell] vacías.
+      side:
+        label: Qué significan las flechitas
+        text: >-
+          [Set cell] y [By changing cell] traen la flecha de contraer que deja hacer clic en
+          la hoja. [To value] no la trae, y esa flecha ausente es el producto avisando que
+          no va a aceptar una referencia.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Una pregunta, veinte respuestas de golpe
+      lede: >-
+        Una tabla de datos corre el modelo completo una vez por cada valor de entrada y
+        escribe los resultados en un rectángulo que seleccionaste antes de empezar.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Qué es el rectángulo
+      title: Una celda de adentro apunta al resultado
+      lead: >-
+        Una tabla de datos no es una tabla de resultados que tecleaste. Es un rectángulo que
+        guarda una referencia a la celda de resultado, los valores de entrada por probar en
+        su primera columna o en su primer renglón, y un cuerpo que Excel llena volviendo a
+        correr el modelo una vez por cada uno de ellos.
+      panel:
+        label: La regla de trabajo
+        title: Esa celda guarda una referencia, nunca un valor
+        note: >-
+          Ahí se escribe =B14, no 425,000. Esa referencia es como Excel sabe qué está
+          recogiendo, y un número tecleado da una tabla de ese mismo número repetido por
+          toda la columna.
+      steps:
+        - text: Entradas por columna, o por renglón, o las dos
+        - text: La referencia va arriba de ellas, o en la esquina
+        - text: Selecciona el rectángulo completo, con esa celda adentro
+          loop: ↺ y Datos, Análisis de hipótesis, Tabla de datos
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta calificada
+      title: Cinco paradas, y la que todos se saltan
+      items:
+        - label: '01'
+          title: Primero el modelo
+          desc: Una celda de resultado, y las entradas que lee en sus propias celdas con etiqueta
+        - label: '02'
+          title: Acomoda las entradas
+          desc: Por columna para una entrada de columna, por renglón para una de renglón, o las dos
+        - label: '03'
+          title: Escribe la referencia
+          desc: Una variable, un renglón arriba del primer resultado. Dos variables, en la esquina donde se cruzan los ejes.
+        - label: '04'
+          title: Selecciona el rectángulo
+          desc: La referencia, las entradas y el cuerpo vacío. Este es el paso que la gente se salta.
+        - label: '05'
+          title: Llena las casillas
+          desc: "[Row input cell], [Column input cell], o las dos. Luego [OK], y todo se llena de golpe."
+
+  - code:
+      eyebrow: Bloque 02 · Lo que Excel escribió en el cuerpo
+      title: Las llaves que no se pueden teclear
+      filename: Churrumpin.xlsx
+      lang: excel
+      source: |
+        Una variable, las entradas por A10:A20
+        B9   =B14
+        B10  {=TABLE(,B2)}
+
+        Dos variables, por H10:H20 y por I9:M9
+        H9   =B14
+        I10  {=TABLE(B3,B2)}
+      annotations:
+        - label: Dónde va
+          text: >-
+            Una variable, un renglón arriba del primer resultado. Dos variables, la esquina
+            de los ejes.
+        - label: Una variable
+          text: >-
+            Primer argumento vacío y la entrada de columna en segundo lugar. Las llaves
+            son de matriz.
+        - label: Dos variables
+          text: >-
+            Entrada de renglón primero, entrada de columna después, y la esquina donde se
+            cruzan los ejes.
+        - label: Riesgo
+          text: >-
+            Borrar una celda del bloque devuelve "You cannot change part of a data table".
+            Selecciona todo el rectángulo o nada se mueve.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 02 · Qué casilla toma qué celda
+      title: Dónde van las entradas y qué alimentan
+      headers: [El modelo tiene, Entradas acomodadas, Qué casilla llenas]
+      rows:
+        - ["Una variable", "Por columna", "[Column input cell]"]
+        - ["Una variable", "Por renglón", "[Row input cell]"]
+        - ["Dos variables", "Un renglón y una columna", "Las dos casillas"]
+        - ["Dos variables", "Esquina entre ellas", "Renglón primero, columna después"]
+
+  - method:
+      eyebrow: Bloque 02 · Regresa el ajuste de la semana 3
+      title: Por qué una tabla de datos grande congela el archivo
+      statement: Una tabla de datos se recalcula con cada tecla en cualquier parte del libro, y una tabla de dos variables es una corrida completa del modelo por cada celda del cuerpo.
+      points:
+        - label: Dónde vive
+          text: Pestaña Fórmulas, grupo Cálculo, Opciones de cálculo. El mismo menú de la sesión que abrió la pestaña Fórmulas.
+        - label: La entrada que se elige
+          text: "[Automatic Except for Data Tables]. Todo lo demás sigue vivo y solo las tablas esperan a que se les avise."
+        - label: Qué les avisa
+          text: F9 recalcula el libro, Shift+F9 la hoja activa. Nada se queda viejo más de una tecla.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Versiones con nombre, dinero prestado y el proyecto
+      lede: >-
+        El Administrador de escenarios guarda varios conjuntos de entradas a la vez. PAGO y
+        NPER le dan a la hoja algo sobre lo que valga la pena guardar conjuntos de entradas.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta calificada
+      title: Cinco paradas por el Administrador de escenarios
+      items:
+        - label: '01'
+          title: Ábrelo vacío
+          desc: Datos, Análisis de hipótesis, Administrador de escenarios. Se lee "No Scenarios defined".
+        - label: '02'
+          title: "[Add], y ponle nombre"
+          desc: Los nombres salen en el informe de resumen, así que usa palabras que un lector entienda.
+        - label: '03'
+          title: "[Changing cells]"
+          desc: Ctrl+clic para las celdas que no están juntas. El tope práctico son 32 de ellas.
+        - label: '04'
+          title: Valores, y otra vez [Add]
+          desc: Una casilla por celda que cambia. [Add] entra al siguiente escenario sin salir del cuadro.
+        - label: '05'
+          title: "[Summary]"
+          desc: "[Scenario summary] o [Scenario PivotTable report], más las [Result cells] a comparar"
+
+  - figure:
+      eyebrow: Bloque 03 · El cuadro de diálogo
+      title: Vacío, y diciéndolo con palabras
+      image: img/en/scenario-manager.png
+      caption: >-
+        Captura de la interfaz en inglés. "No Scenarios defined. Choose Add to add
+        scenarios." [Show], [Delete], [Edit] y [Summary] siguen en gris hasta que existe el
+        primer escenario.
+      alt: >-
+        El cuadro de diálogo Administrador de escenarios de Excel en una hoja sin
+        escenarios, con [Add] disponible y los demás botones en gris.
+      side:
+        label: Qué pide [Summary]
+        text: >-
+          [Summary] se enciende en cuanto existe un escenario y pide las [Result cells], las
+          fórmulas que se comparan. Excel escribe entonces una hoja llamada Scenario
+          Summary, y esa hoja es la que abre quien califica.
+
+  - code:
+      eyebrow: Bloque 03 · Ejercicio 25, el segundo modelo
+      title: Un pago, un plazo y una decisión
+      filename: Credito.xlsx
+      lang: excel
+      source: |
+        B5   =PAGO(B2/12,B3*12,B4)
+
+        B6   =NPER(B2/12,-B5,B4)
+
+        B7   =SI(Y(B6<=36,-B5<=5000),"Aprobar","Rechazar")
+      annotations:
+        - label: Tasa y plazo coinciden
+          text: >-
+            B2/12 y B3*12. La tasa anual sin dividir es la respuesta equivocada más común
+            del objetivo.
+        - label: El convenio de signos
+          text: >-
+            Un [Pv] positivo devuelve un pago negativo: Excel dice que el dinero sale.
+            Decídelo una vez y respétalo.
+        - label: Los órdenes difieren
+          text: >-
+            PAGO toma [Rate], [Nper], [Pv]. NPER toma [Rate], [Pmt], [Pv]. Aquí el cuadro se
+            gana los segundos.
+        - label: Riesgo
+          text: >-
+            Que NPER dé negativo o #¡NUM! quiere decir que [Pmt] y [Pv] traen el mismo
+            signo.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro maneras de que el análisis no analice
+      items:
+        - label: Error 01
+          title: Fórmula en la celda que cambia
+          desc: >-
+            Buscar objetivo se detiene y dice que la celda debe contener un valor. No es una
+            falla, es la herramienta negándose a sobrescribir el modelo con un número.
+        - label: Error 02
+          title: Una referencia en [To value]
+          desc: >-
+            Esa casilla solo acepta un número simple. Nada te avisa; el campo no guarda lo
+            que le pusiste y la corrida nunca empieza.
+        - label: Error 03
+          title: Tres copias de la hoja
+          desc: >-
+            Llega a la misma comparación y no deja ningún escenario que alguien pueda abrir.
+            Evitar exactamente ese desorden es para lo que existe el Administrador de
+            escenarios.
+        - label: Error 04
+          title: La tasa anual sin dividir
+          desc: >-
+            PAGO devuelve un pago que se ve plausible y es demasiado grande. Revisa que el
+            pago por el plazo pase del monto prestado.
+
+  - table:
+      eyebrow: Bloque 03 · El proyecto final
+      title: Qué se entrega y se presenta esta semana
+      headers: [Parte, Qué contiene, De dónde salió]
+      rows:
+        - ["Los datos", "Un conjunto real y propio", "Semanas 9 y 10"]
+        - ["El modelo", "Entradas, fórmulas, un resultado", "Esta semana"]
+        - ["El análisis", "Buscar objetivo y una tabla", "Esta semana"]
+        - ["El informe", "Una tabla dinámica y un gráfico", "Semanas 11 y 14"]
+        - ["La defensa", "Tus decisiones, explicadas", "En clase"]
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Buscar objetivo reporta solución y la celda meta dice 0.0000000012 en lugar de 0. ¿Por qué?
+      options:
+        - "Se detiene en una tolerancia en vez de caer exacto en el valor"
+        - "La celda que cambia quedó con muy pocos decimales de formato"
+        - "El modelo trae una referencia circular más arriba"
+        - "El cálculo iterativo quedó apagado en las opciones"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tres modelos, tres herramientas
+      brief: >-
+        Ejercicio 25, los tres casos. El producto de limpieza: utilidad neta en cincuenta
+        mil unidades, el volumen de equilibrio con Buscar objetivo, y la utilidad barrida de
+        treinta a setenta mil en pasos de cinco mil. El crédito automotriz: PAGO con
+        validación de datos en la tasa y el plazo, y luego el mismo pago sobre una columna
+        de tasas y un renglón de precios. El caso de divisas: una tabla de dos variables
+        sobre el tipo de compra y el de venta. Agreguen lo que el ejercicio deja fuera, tres
+        escenarios con nombre y un informe de resumen.
+      blocks:
+        - label: Entregable
+          text: Un libro con una hoja por caso, subido a Blackboard junto con el proyecto
+        - label: Restricción
+          text: Toda fórmula referencia las celdas de entrada. Un número escrito dentro de una fórmula deja la hoja entera sin poder contestar.
+        - label: La prueba
+          text: Cambien una entrada a mano. Si la tabla de datos y la celda de resultado no se mueven las dos, el modelo no está conectado.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Las herramientas ven el cableado
+          desc: >-
+            No los números. Una celda de resultado tecleada en vez de calculada hace que las
+            tres herramientas de esta semana no reporten nada y no cambien nada
+        - title: La celda de referencia es la tabla
+          desc: >-
+            Un renglón arriba del primer resultado para una entrada, en la esquina para dos,
+            y el rectángulo completo seleccionado antes de abrir el cuadro
+        - title: La tasa y los periodos coinciden
+          desc: >-
+            B2/12 con B3*12, siempre. La tasa anual sin dividir es la respuesta equivocada
+            que más se parece a una correcta, igual en PAGO que en NPER
+
+  - homework:
+      eyebrow: Tarea
+      title: El proyecto final, entregado y presentado
+      brief: >-
+        El libro toma un conjunto de datos real de tu área, calcula lo que pide el problema
+        y carga el análisis que respalda una decisión: un modelo con entradas con nombre, un
+        resultado de Buscar objetivo, una tabla de datos sobre una de ellas, y una tabla
+        dinámica con gráfico que resuma los datos.
+      meta:
+        - [Entrega, "Esta semana, en clase"]
+        - [Formato, Blackboard · un archivo .xlsx]
+        - [Peso, Parte del componente de proyecto]
+      rubric:
+        - ["El modelo", "30 %", "Entradas en celdas, fórmulas que las leen, un resultado"]
+        - ["Hipótesis", "30 %", "Buscar objetivo y una tabla de datos que se muevan al cambiar"]
+        - ["El informe", "20 %", "Una tabla dinámica y un gráfico sacados de los mismos datos"]
+        - ["La defensa", "20 %", "Cada decisión explicada, incluidas las que se descartaron"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, lo último que hace el libro: configurar página, área de
+        impresión, vistas y las tres revisiones antes de que salga de tu pantalla.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

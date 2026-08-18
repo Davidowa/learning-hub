@@ -1,0 +1,486 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 14
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 14 · Sesiones 27 y 28 · Subtotales y tablas dinámicas
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Dos maneras de reducir una lista larga a los números que alguien pidió, y los
+        cuadros de diálogo que hacen que cada una cuente el día del examen.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 27 y 28 de 34]
+      notes: |
+        Sesiones 27 y 28 del temario, CLO08. Las dos sesiones son subtotales y tablas
+        dinámicas. Se cubren de lleno: Expert 2.2.4 y Expert 4.2.1, más la mitad de
+        SUBTOTALES que vive en la fila de totales de una tabla, Associate 3.2.3.
+        COBERTURA.md agrega Expert 2.2.3, 4.2.2, 4.2.4, 4.2.5 y 4.2.6, que es el conjunto
+        de agregados más pesado del periodo y solo cabe porque la segmentación de datos y
+        los gráficos dinámicos se movieron a la semana 15.
+        Las rutas salen de procedures.en.md. Ejercicios 22 y 23 versión 2.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Subtotales
+          desc: Ordenar primero, luego un cuadro de diálogo, y el esquema que arma sin avisar
+        - title: La tabla dinámica
+          desc: Las cuatro áreas, arrastrar en vez de marcar casillas, y Configuración de campo de valor
+        - title: Agrupar y calcular
+          desc: Fechas en trimestres, números en rangos, y un campo calculado
+        - title: Tu turno
+          desc: 576 renglones de población de la Ciudad de México, luego 26,608 tickets de restaurante
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Insertar subtotales que agrupen bien
+          sub: Ordenando primero por la columna de corte, porque el cuadro de diálogo no lo hace por ti
+        - head: Leer el código que recibió SUBTOTALES
+          sub: Por qué una fila de totales escribe 109 y el comando Subtotal escribe 9
+        - head: Manejar el esquema a mano
+          sub: Agrupar, Desagrupar, [Clear Outline] y los botones de nivel que dejaron los subtotales
+        - head: Armar una tabla dinámica arrastrando
+          sub: Las cuatro áreas, y por qué marcar la casilla es otra respuesta
+        - head: Configurar un campo, no un bloque de celdas
+          sub: Función, cálculo, título y formato de número en una sola pasada por un cuadro
+        - head: Agrupar y calcular dentro del reporte
+          sub: Fechas por mes y trimestre, rangos numéricos, y un campo calculado que no miente
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidado y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: done
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Subtotales, y el esquema que nadie explicó
+      lede: >-
+        Un comando escribe las fórmulas, inserta las filas y arma un esquema de tres
+        niveles. Dos de esas tres cosas sorprenden a alguien cada año.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Ordenar es parte del comando
+      lead: >-
+        Los subtotales cortan la lista donde cambia el valor de la columna elegida.
+        Ordenada, eso es un corte por municipio. Sin ordenar, es un corte por renglón, y
+        Excel lo hace sin quejarse, porque desde donde él está nada está mal. Ordenar es
+        la mitad del comando, no la preparación para él.
+      panel:
+        label: La regla de trabajo
+        title: Ordena por la columna donde vas a cortar
+        note: >-
+          Pestaña Datos, grupo Ordenar y filtrar, Ordenar, elige la columna en [Sort by] y
+          clic en [OK]. Luego haz clic en una sola celda dentro de la lista, no en el
+          rango, y abre Subtotal. Excel se extiende al bloque completo solo y le atina.
+      steps:
+        - text: Ordena por la columna de corte
+        - text: Haz clic en una celda de la lista
+        - text: Datos, Esquema, Subtotal
+          loop: ↺ y las filas, las fórmulas y el esquema llegan juntos
+
+  - steps:
+      eyebrow: Bloque 01 · La ruta que califica
+      title: Cinco decisiones dentro del cuadro Subtotal
+      items:
+        - label: '01'
+          title: '[At each change in]'
+          desc: La columna que acabas de ordenar. Esto decide dónde termina cada grupo.
+        - label: '02'
+          title: '[Use function]'
+          desc: '[Sum, Count, Average, Max, Min, Product, Count Numbers, StdDev, Var] y su pareja'
+        - label: '03'
+          title: Agregar subtotal a
+          desc: Marca cada columna que lleva total y limpia el resto. Excel preselecciona la última numérica.
+        - label: '04'
+          title: Reemplazar subtotales actuales
+          desc: Déjalo puesto en la primera pasada. Quítalo para apilar una segunda función sobre la primera.
+        - label: '05'
+          title: Los dos extras
+          desc: '[Page break between groups] para imprimir, y Resumen debajo de los datos para subir los totales'
+
+  - figure:
+      eyebrow: Bloque 01 · El cuadro de diálogo
+      title: Cinco decisiones en una caja
+      image: img/en/subtotal-dialog.png
+      caption: >-
+        [At each change in] decide dónde termina cada grupo, [Use function] decide qué
+        calcula la fila, y Agregar subtotal a decide qué columnas llevan una. La captura
+        es de la interfaz en inglés.
+      alt: >-
+        El cuadro Subtotal de Excel, con [At each change in] en Region, [Use function] en
+        Sum y Revenue marcado en la lista Agregar subtotal a.
+      side:
+        label: La casilla que cuesta puntos
+        text: >-
+          Reemplazar subtotales actuales llega marcada. Déjala en la primera pasada y
+          quítala antes de la segunda, o un promedio apilado sobre una suma borra la suma.
+          Quitar todos, abajo a la izquierda, regresa la lista como estaba.
+
+  - code:
+      eyebrow: Bloque 01 · Lo que escribió el comando
+      title: Nadie tecleó ninguna de estas
+      filename: Excel22_Subtotals.xlsx
+      lang: excel
+      source: |
+        =SUBTOTALES(9,D2:D48)
+        =SUBTOTALES(9,D50:D97)
+
+        =SUBTOTALES(9,D2:D98)
+
+        =SUBTOTALES(109,Lorena[Quantity])
+      annotations:
+        - label: Uno por grupo
+          text: >-
+            El comando inserta una fila en cada corte de la columna ordenada y escribe
+            esto adentro.
+        - label: El gran total
+          text: >-
+            Abarca las filas de detalle y cada subtotal que hay entre ellas, y nunca
+            cuenta doble.
+        - label: 9 contra 109
+          text: >-
+            Una fila de totales de tabla escribe 109. Los códigos 1xx también ignoran las
+            filas ocultas a mano; los códigos 9 solo ignoran las filtradas.
+        - label: Riesgo
+          text: >-
+            Alt+= escribe SUMA, no SUBTOTALES. Un gran total hecho así vuelve a contar los
+            subtotales y sale al doble.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · La barra junto a los encabezados de fila
+      title: Tres niveles, y de dónde salió cada uno
+      headers: [Botón de nivel, Qué muestra, Quién lo puso]
+      rows:
+        - ["1", "Solo el gran total", "El comando Subtotal"]
+        - ["2", "Una fila por grupo", "La columna de corte"]
+        - ["3", "Cada registro", "Tu lista original"]
+
+  - steps:
+      eyebrow: Bloque 01 · Esquemas sin subtotales
+      title: Agrupar filas a mano
+      items:
+        - label: '01'
+          title: Ordena primero, otra vez
+          desc: Los grupos hechos sobre datos sin ordenar se entrelazan y ya no se arreglan.
+        - label: '02'
+          title: Filas completas
+          desc: Arrastra sobre los encabezados de fila. Si eliges celdas, un cuadro pregunta Filas o Columnas.
+        - label: '03'
+          title: Datos, Esquema, Agrupar
+          desc: La mitad de arriba del botón partido. Repite dentro de un grupo para un segundo nivel.
+        - label: '04'
+          title: Deshacerlo
+          desc: Desagrupar para un grupo. La flecha de Desagrupar y luego [Clear Outline] para todo.
+        - label: '05'
+          title: Configuración
+          desc: La flecha en la esquina de ese grupo sube las filas de resumen arriba del detalle
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de arruinar un subtotal
+      items:
+        - label: Error 01
+          title: La lista nunca se ordenó
+          desc: >-
+            Sale una fila de subtotal por registro, cientos de ellas, y cada número es
+            correcto. Nada está roto, y por eso tarda tanto en notarse.
+        - label: Error 02
+          title: Dejar marcado el reemplazo
+          desc: >-
+            Correr el cuadro una segunda vez para apilar un promedio sobre una suma borra
+            la suma. Quita esa casilla y sobreviven las dos.
+        - label: Error 03
+          title: Ocultar filas en vez de agrupar
+          desc: >-
+            Clic derecho, [Hide], se ve idéntico en pantalla. Sin barra de esquema, sin
+            botones de nivel, nada que calificar. Ctrl+8 muestra cuál de las dos hiciste.
+        - label: Error 04
+          title: Seleccionar el rango primero
+          desc: >-
+            Haz clic en una celda dentro de la lista. Un bloque preseleccionado angosta lo
+            que Excel toma como lista, y los totales se detienen donde tu selección.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La tabla dinámica, área por área
+      lede: >-
+        El reporte se arma arrastrando campos a cuatro cajas. En qué caja cae cada campo
+        es la respuesta, y casi nunca es la que viene por omisión.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta que califica
+      title: De una celda a un reporte con nombre
+      items:
+        - label: '01'
+          title: Una celda adentro
+          desc: Ni la columna completa ni la hoja completa. Excel se extiende al bloque solo.
+        - label: '02'
+          title: Insertar, Tabla dinámica
+          desc: Pestaña Insertar, grupo Tablas. Si el botón abre un menú, elige [From Table/Range].
+        - label: '03'
+          title: Revisa [Table/Range]
+          desc: Debe mostrar el bloque completo con la fila de encabezados, como Data!$A$1:$L$26609
+        - label: '04'
+          title: Dónde queda
+          desc: '[New Worksheet], o [Existing Worksheet] y clic en la celda de la esquina superior izquierda'
+        - label: '05'
+          title: Arrastra y ponle nombre
+          desc: Arrastra a Filtros, Columnas, Filas, Valores. Luego el cuadro [PivotTable Name] en Analizar.
+
+  - concept:
+      eyebrow: Bloque 02 · Por qué arrastrar es la respuesta
+      title: Cuatro cajas, y lo que viene por omisión es una suposición
+      lead: >-
+        Marcar la casilla de un campo manda el texto a Filas y los números a Valores. Esa
+        es una suposición que Excel hace por el tipo de dato, y la tarea casi siempre pide
+        otra área. Mesero en Columnas y Categoría en Filas es un reporte distinto del
+        inverso, con los mismos cuatro campos.
+      panel:
+        label: Cómo se revisa
+        title: Se leen las cuatro cajas, no la cuadrícula
+        note: >-
+          Quien califica lee las cajas Filtros, Columnas, Filas y Valores en la parte de
+          abajo del panel [PivotTable Fields], porque ahí queda registrada la decisión. La
+          cuadrícula puede verse bien en un reporte armado al revés.
+      steps:
+        - text: Arrastra el campo al área que pide la tarea
+        - text: Arrástralo otra vez para moverlo de área
+        - text: Sácalo del panel para quitarlo
+          loop: ↺ y vuelve a leer las cuatro cajas antes de darlo por hecho
+
+  - steps:
+      eyebrow: Bloque 02 · Un cuadro, cuatro decisiones
+      title: Configuración de campo de valor sin cerrarla
+      items:
+        - label: '01'
+          title: Clic en una celda de valor
+          desc: El campo bajo el puntero queda activo, y su nombre sale en Analizar tabla dinámica.
+        - label: '02'
+          title: Configuración de campo
+          desc: Pestaña Analizar tabla dinámica, grupo [Active Field]. Sobre un campo de valor abre Configuración de campo de valor, título aún por confirmar.
+        - label: '03'
+          title: Resumir valores por
+          desc: '[Sum, Count, Average, Max, Min, Product, Count Numbers, StdDev, StdDevp, Var, Varp]'
+        - label: '04'
+          title: Mostrar valores como
+          desc: '[% of Grand Total, % of Column Total, Difference From, Running Total In] y su campo base'
+        - label: '05'
+          title: Nombre y formato
+          desc: Corrige [Custom Name], clic en Formato de número para el Formato de celdas recortado, y un solo [OK].
+
+  - table:
+      eyebrow: Bloque 02 · La mitad del objetivo que se pierde
+      title: Dónde tiene que vivir el formato de número
+      headers: [Aplicado a, Cómo se aplicó, Qué pasa al actualizar]
+      rows:
+        - ["Celdas", "Ctrl+1 sobre el rango", "Se mueve o desaparece"]
+        - ["Celdas", "[Percent Style] en Inicio", "Igual, solo que más rápido"]
+        - ["El campo", "Configuración, Formato de número", "Sobrevive y alcanza lo nuevo"]
+
+  - table:
+      eyebrow: Bloque 02 · La pestaña [Design], junto a Analizar
+      title: Cinco menús, cinco puntos aparte
+      headers: [Menú, Entradas que nombra el examen, Qué decide]
+      rows:
+        - ["[Report Layout]", "[Compact, Outline, Tabular]", "Dónde van las etiquetas"]
+        - ["[Report Layout]", "[Repeat All Item Labels]", "Las celdas en blanco"]
+        - ["Subtotales", "[Top, Bottom, Do Not Show]", "Las filas de cada grupo"]
+        - ["[Grand Totals]", "Filas, columnas, ambas, no", "La última fila y columna"]
+        - ["[Blank Rows]", "[Insert Blank Line]", "Un espacio tras cada elemento"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Agrupar y calcular dentro del reporte
+      lede: >-
+        Fechas en trimestres, montos en rangos, y un campo que hace una cuenta que los
+        datos de origen nunca tuvieron. Uno de los tres trae trampa.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta que califica
+      title: '[Group Field], y la lista que alterna'
+      items:
+        - label: '01'
+          title: Clic en un elemento
+          desc: Un elemento de fecha dentro de Filas o Columnas. El elemento, no el encabezado del campo.
+        - label: '02'
+          title: '[Group Field]'
+          desc: Pestaña Analizar tabla dinámica, grupo Agrupar. El clic derecho llega al mismo cuadro y no es la redacción.
+        - label: '03'
+          title: '[Starting at] y [Ending at]'
+          desc: Vienen llenos con los datos. Quita la casilla para escribir tu propio límite.
+        - label: '04'
+          title: La lista [By] alterna
+          desc: Clic en [Months], luego [Quarters], luego [Years]. Los tres quedan encendidos y no hace falta Ctrl.
+        - label: '05'
+          title: Lee el panel de campos
+          desc: Excel agregó un campo por nivel. Arrástralos al orden que pidió la tarea.
+
+  - table:
+      eyebrow: Bloque 03 · Tres formas de agrupar
+      title: Qué deja cada una
+      headers: [Qué agrupas, El comando, Qué agrega Excel]
+      rows:
+        - ["Fechas", "[Group Field]", "Campos Quarters y Years"]
+        - ["Números", "[Group Field], By 500", "Rangos escritos 0-499"]
+        - ["Elementos elegidos", "[Group Selection]", "Group1, y un segundo campo"]
+        - ["Días en bloques", "[Group Field], Days, 7", "Nada, sigue siendo un campo"]
+
+  - steps:
+      eyebrow: Bloque 03 · La ruta que califica
+      title: Un campo calculado, armado desde la lista
+      items:
+        - label: '01'
+          title: En cualquier parte adentro
+          desc: Haz clic en una celda del reporte. Fuera de él el comando está en gris.
+        - label: '02'
+          title: '[Fields, Items, & Sets]'
+          desc: Pestaña Analizar tabla dinámica, grupo Cálculos, y luego Campo calculado
+        - label: '03'
+          title: Primero el nombre
+          desc: El cuadro Fórmula ya trae = 0. Borra el cero y deja el signo de igual.
+        - label: '04'
+          title: '[Insert Field], no teclear'
+          desc: Clic en un campo, clic en [Insert Field], teclea el operador, repite. Las referencias de celda se rechazan.
+        - label: '05'
+          title: '[Add], luego [OK]'
+          desc: El campo aparece al final del panel y cae en Valores como Suma de ese campo
+
+  - code:
+      eyebrow: Bloque 03 · La respuesta equivocada más común
+      title: Un campo calculado trabaja sobre totales
+      filename: Excel 23_PivotTables v.2.xlsx
+      lang: excel
+      source: |
+        = Price - Cost
+
+        = Price * Tip
+
+        =SUMAPRODUCTO($I$2:$I$26609,$K$2:$K$26609)
+      annotations:
+        - label: Bien
+          text: >-
+            La resta de dos sumas es igual a la suma de las restas, así que la utilidad
+            por categoría sale correcta.
+        - label: Mal
+          text: >-
+            Esto multiplica el precio total del grupo por su tasa total de propina. Nadie
+            pidió ese número.
+        - label: La comprobación
+          text: >-
+            SUMAPRODUCTO sobre los renglones de origen da la respuesta real, línea por
+            línea. Compara una celda.
+        - label: Riesgo
+          text: >-
+            Una columna auxiliar es más correcta y no puntúa cuando la tarea pide campo
+            calculado.
+          accent: true
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Al actualizar entran tres productos y la columna de ingresos pierde su formato de moneda. ¿Qué pasó?
+      options:
+        - "El formato se aplicó a las celdas, no en Configuración de campo"
+        - "El reporte se armó desde un rango y no desde una tabla de Excel"
+        - "Quedó marcada [Preserve cell formatting on update]"
+        - "El campo calculado se agregó después del formato"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Cuatro subtotales, y un reporte de 26,608 tickets
+      brief: >-
+        Primero el ejercicio 22: cuatro copias de la hoja Data, y en cada una un subtotal
+        distinto sobre los 576 renglones de población, suma por municipio, promedio por
+        rango de edad, suma por sexo y máximo por municipio. Luego el ejercicio 23, donde
+        el archivo del restaurante pide el total cobrado por producto agrupado por mesero,
+        el mismo reporte como porcentaje del gran total, el promedio de ventas por
+        categoría por mes, y la utilidad por categoría como campo calculado.
+      blocks:
+        - label: Entregable
+          text: Un libro por ejercicio, los dos subidos a Blackboard
+        - label: Restricción
+          text: Cada campo colocado arrastrando, y cada formato de número puesto en Configuración de campo y no sobre las celdas
+        - label: La prueba
+          text: Actualiza el reporte. Un formato que desaparece se aplicó a celdas, y el punto se va con él.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Ordenar es la mitad del comando
+          desc: >-
+            Los subtotales cortan donde cambia la columna. En una lista sin ordenar eso es
+            cada renglón, cada número está bien, y el reporte no sirve
+        - title: Las cuatro cajas son la respuesta
+          desc: >-
+            Marcar la casilla deja que Excel adivine el área por el tipo de dato. La tarea
+            nombra el área, así que arrastra el campo ahí y vuelve a leer las cajas
+        - title: Da formato al campo, no a las celdas
+          desc: >-
+            Configuración de campo, Formato de número sobrevive a una actualización y
+            alcanza elementos que aún no existían. Ctrl+1 sobre las mismas celdas no hace
+            ninguna de las dos cosas
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        Terminen los dos ejercicios, y en el archivo del restaurante agreguen una tabla
+        dinámica propia que agrupe las fechas por trimestre y mes, muestre los valores
+        como porcentaje del total de la columna, y traiga un campo calculado que puedan
+        defender frente a una columna auxiliar.
+      meta:
+        - [Entrega, Antes de la semana 15]
+        - [Formato, Blackboard · dos archivos .xlsx]
+        - [Peso, Parte de la calificación de tareas]
+      rubric:
+        - ["Ejercicio 22", "25 %", "Cuatro hojas, cuatro subtotales, SUBTOTALES en la barra"]
+        - ["Ejercicio 23", "35 %", "Campos en las áreas pedidas, formatos puestos en el campo"]
+        - ["Agrupar", "20 %", "Quarters y Years aparecen en el panel de campos"]
+        - ["Campo calculado", "20 %", "Existe en el cuadro y coincide con la comprobación"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión, filtrar con un rango de criterios escrito en vez de menús, y
+        los objetos que filtran este reporte con botones.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

@@ -602,7 +602,20 @@ The exam grades the wizard, not the result. A tab-delimited file opens on a doub
 
 <!-- ES-INICIO MO200-1.1.1 -->
 
-_Pendiente._
+El examen califica el asistente, no el resultado. Un archivo delimitado por tabulaciones se abre con doble clic y se ve bien, y eso no da puntos, porque el asistente es donde se eligen el delimitador, el origen del archivo y el tipo de datos de cada columna.
+
+**Ruta de examen**
+
+1. Confirme que el asistente heredado está disponible. Vaya a la pestaña **Archivo**, haga clic en **[Options]** y seleccione el panel **Datos** de la izquierda.
+2. En la sección de los asistentes heredados para importar datos, marque la casilla **[From Text (Legacy)]**. Haga clic en **[OK]**. (Redacción del encabezado de la sección: **TO CONFIRM**. Lo que sí está confirmado es que en esta máquina la opción está desactivada, que `HKCU\Software\Microsoft\Office\16.0\Excel\Options` no guarda ningún valor de asistente heredado y que ese valor solo se escribe cuando se marca la casilla.)
+3. Haga clic en la celda donde debe empezar el bloque importado.
+4. Vaya a la pestaña **Datos**, grupo **[Get & Transform Data]**, y haga clic en **[Get Data]**.
+5. Señale **[Legacy Wizards]** y haga clic en **[From Text (Legacy)]**.
+6. En el explorador **[Import Text File]**, seleccione el archivo .txt y haga clic en **[Import]**.
+7. **[Text Import Wizard, Step 1 of 3]**. En **[Original data type]**, elija **[Delimited]** o **[Fixed width]**. Ponga en **[Start import at row:]** la primera fila que de verdad le interesa. Abra la lista **[File origin:]** y elija la codificación, normalmente `65001 : Unicode (UTF-8)` o `Windows (ANSI)`. Marque **[My data has headers]** si la primera fila trae los nombres de los campos. Haga clic en **[Next]**.
+8. **[Step 2 of 3]**. En **[Delimiters]**, marque todos los delimitadores que use el archivo: **[Tab]**, **[Semicolon]**, **[Comma]**, **[Space]**, o **[Other:]** con el carácter escrito en el cuadro. Marque **[Treat consecutive delimiters as one]** solo si el archivo rellena con separadores repetidos. Ponga `"` en **[Text qualifier:]** cuando los campos vengan entre comillas. Vea cómo el panel **[Data preview]** se separa en columnas antes de continuar. Haga clic en **[Next]**.
+9. **[Step 3 of 3]**. Haga clic en una columna del **[Data preview]** y defina su **[Column data format]**: **[General]**, **[Text]**, **Fecha** con la lista de orden que tiene al lado, o **[Do not import column (skip)]**. Repita con cada columna que mencione la tarea. Si los separadores de decimales o de miles no coinciden con la configuración regional de la máquina, haga clic en **[Advanced...]** y defínalos en el cuadro de diálogo **[Advanced Text Import Settings]**. Haga clic en **[Finish]**.
+10. En el cuadro de diálogo **[Import Data]**, en **[Where do you want to put the data?]**, elija **[Existing worksheet:]** y confirme la referencia, o **[New worksheet]**. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.1.1 -->
 
@@ -627,7 +640,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haga clic en la celda donde van a caer los datos.
+2. Vaya a la pestaña **Datos**, grupo **[Get & Transform Data]**, y haga clic en **[From Text/CSV]**.
+3. En el cuadro de diálogo del explorador, seleccione el archivo .csv y haga clic en **[Import]**.
+4. La ventana de vista previa se abre con el nombre del archivo como título. Abra la lista **[File Origin]** y defina la codificación. `65001: Unicode (UTF-8)` es la que arregla los caracteres acentuados que llegan convertidos en basura.
+5. Abra la lista **[Delimiter]** y defina el separador: **[Comma]**, **[Semicolon]**, **[Tab]**, **[Space]**, **[Colon]** o **Personalizada**. Vea cómo la cuadrícula de vista previa se vuelve a separar antes de seguir.
+6. Abra la lista **[Data Type Detection]** y elija **[Based on first 200 rows]**, **[Based on entire dataset]** o **[Do not detect data types]**. Elija **[Do not detect data types]** siempre que la tarea hable de códigos, identificadores o códigos postales.
+7. Haga clic en **[Transform Data]** si la tarea pide alguna limpieza, lo que abre el editor de Power Query. Si no, haga clic en la flecha que está junto a **[Load]** y elija **[Load To...]**.
+8. En el cuadro de diálogo **[Import Data]**, elija cómo ver los datos (**[Table]**, **[PivotTable Report]**, **Gráfico dinámico** o **[Only Create Connection]**) y luego, en **[Where do you want to put the data?]**, elija **[Existing worksheet:]** con la referencia, o **[New worksheet]**. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.1.2 -->
 
@@ -654,7 +676,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haga clic en una sola celda, la que sea. No seleccione un rango a menos que la tarea limite la búsqueda a uno, porque una selección de varias celdas restringe la búsqueda a esa selección sin avisar.
+2. Vaya a la pestaña **Inicio**, grupo **Edición**, haga clic en **[Find & Select]** y haga clic en **[Find...]**.
+3. En el cuadro de diálogo **[Find and Replace]**, pestaña **[Find]**, haga clic en **[Options >>]** para expandir el cuadro. Ese clic es el objetivo. El cuadro contraído no puede expresar nada de lo que sigue.
+4. Escriba el texto que busca en **[Find what:]**.
+5. Abra la lista **[Within:]** y elija **[Sheet]** o **Libro**. Cuando el enunciado de la tarea dice "libro", se refiere a esta lista puesta en **Libro**.
+6. Abra la lista **[Search:]** y elija **[By Rows]** o **[By Columns]**.
+7. Abra la lista **[Look in:]** y elija **Fórmulas**, **[Values]**, **[Notes]** o **Comentarios**. **Fórmulas** encuentra el texto que está dentro de una fórmula; **[Values]** encuentra solo lo que se muestra. (Office 2019 ofrecía tres entradas, sin la separación entre Notes y Comments.)
+8. Marque **[Match case]** y **[Match entire cell contents]** según lo pida la tarea.
+9. Para buscar por formato en lugar de por contenido, haga clic en **Formato...** y defina los criterios en el cuadro de diálogo **[Find Format]**, o haga clic en la flecha que está junto a **Formato...** y elija **[Choose Format From Cell...]**.
+10. Haga clic en **[Find All]**. El cuadro crece y muestra una lista de resultados con Book, Sheet, Name, Cell, Value y Formula para cada coincidencia. Haga clic en un renglón para ir a él, o presione `Ctrl+A` dentro de la lista para seleccionar todas las coincidencias de una vez.
 
 <!-- ES-FIN MO200-1.2.1 -->
 
@@ -679,7 +712,16 @@ This dialog comes back three more times in the document: Expert 2.2.2 uses **Dat
 
 <!-- ES-INICIO MO200-1.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Presione `F5` o `Ctrl+G` para abrir el cuadro de diálogo **[Go To]**. También puede ir a la pestaña **Inicio**, grupo **Edición**, hacer clic en **[Find & Select]** y hacer clic en **[Go To...]**.
+2. En la lista **[Go to:]**, haga clic en el nombre definido que quiere. Ahí aparecen todos los nombres con ámbito de libro; los que tienen ámbito de hoja aparecen solo mientras su hoja está activa.
+3. Haga clic en **[OK]**. El rango con nombre queda seleccionado, no solo se desplaza la vista hasta él.
+4. Para llegar a una celda que no tiene nombre, escriba la dirección en el cuadro **[Reference:]**, por ejemplo `Sheet3!B47`, y haga clic en **[OK]**.
+5. Para elementos del libro y no rangos con nombre, haga clic en **[Special...]** dentro del mismo cuadro, o vaya a **[Find & Select]** y haga clic en **Ir a Especial...**.
+6. En el cuadro de diálogo **Ir a Especial**, elija el tipo de elemento: **Comentarios**, **[Constants]**, **Fórmulas** con sus cuatro casillas secundarias **[Numbers]**, **[Text]**, **[Logicals]** y **[Errors]**, **[Blanks]**, **[Current region]**, **[Current array]**, **[Objects]**, **[Row differences]**, **[Column differences]**, **[Precedents]**, **[Dependents]**, **[Last cell]**, **[Visible cells only]**, **[Conditional formats]** o **[Data validation]**. Haga clic en **[OK]**.
+
+Este cuadro de diálogo vuelve a aparecer tres veces más en el documento: Expert 2.2.2 usa **[Data validation]**, Expert 2.3.4 usa **[Conditional formats]** y Expert 3.5.1 usa **[Precedents]** y **[Dependents]** con las opciones **[Direct only]** y **[All levels]** que se encienden debajo.
 
 <!-- ES-FIN MO200-1.2.2 -->
 
@@ -706,7 +748,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Seleccione la celda que va a llevar el vínculo.
+2. Vaya a la pestaña **Insertar**, grupo **Vínculos**, y haga clic en **[Link]** (las compilaciones anteriores y el menú contextual todavía dicen `Hyperlink...`).
+3. Se abre el cuadro de diálogo **Insertar hipervínculo**. Elija el tipo de destino en la barra **[Link to:]** del lado izquierdo: **Archivo o página web existente**, **Lugar de este documento**, **[Create New Document]** o **Dirección de correo electrónico**. Esos cuatro botones son cuatro caras distintas del cuadro, y elegir el correcto es el objetivo.
+4. Para **Archivo o página web existente**, escriba el destino en el cuadro **[Address:]** o búsquelo con **[Current Folder]**, **[Browsed Pages]** o **[Recent Files]**.
+5. Para **Lugar de este documento**, elija una hoja en **[Cell Reference]** y escriba la celda en **[Type the cell reference:]**, o elija una entrada en **Nombres definidos**.
+6. Para **Dirección de correo electrónico**, llene **[E-mail address:]** y **[Subject:]**.
+7. Escriba el texto visible en **[Text to display:]**.
+8. Haga clic en **[ScreenTip...]**, escriba el texto que aparece al pasar el puntero en el cuadro de diálogo **[Set Hyperlink ScreenTip]** y haga clic en **[OK]**.
+9. Haga clic en **[OK]** para cerrar **Insertar hipervínculo**.
+10. Para quitar un vínculo, haga clic derecho en su celda y haga clic en **[Remove Hyperlink]**. Para quitar varios de una vez, seleccione el rango, vaya a la pestaña **Inicio**, grupo **Edición**, haga clic en **[Clear]** y haga clic en **[Clear Hyperlinks]** para quitar el vínculo pero dejar el aspecto azul subrayado, o en **[Remove Hyperlinks]** para quitar los dos.
 
 <!-- ES-FIN MO200-1.2.3 -->
 
@@ -732,7 +785,17 @@ This is the first appearance of the **Page Setup** dialog, which 1.3.3, 1.5.1, 1
 
 <!-- ES-INICIO MO200-1.3.1 -->
 
-_Pendiente._
+Aquí aparece por primera vez el cuadro de diálogo **Configurar página**, al que vuelven 1.3.3, 1.5.1, 1.5.3 y Expert 1.2.5. Sus cuatro pestañas se describen completas en este objetivo.
+
+**Ruta de examen**
+
+1. Seleccione la hoja de cálculo, o seleccione varias [sheet tabs] con `Ctrl` para aplicar la misma configuración a un grupo.
+2. Vaya a la pestaña **Diseño de página**, grupo **Configurar página**, y haga clic en el [dialog box launcher], la flechita de la esquina inferior derecha del grupo.
+3. Se abre el cuadro de diálogo **Configurar página** con cuatro pestañas: **[Page]**, **[Margins]**, **[Header/Footer]**, **[Sheet]**. Todo lo que sigue ocurre sin cerrarlo.
+4. En la pestaña **[Page]**, en **[Orientation]**, elija **[Portrait]** o **[Landscape]**. En **[Scaling]**, elija **[Adjust to: __ % normal size]** o **[Fit to: __ page(s) wide by __ tall]**. Defina **[Paper size:]** y **[Print quality:]**. Defina **[First page number:]** si la tarea pide una numeración que no empieza en 1.
+5. Vaya a la pestaña **[Margins]**. Defina **[Top:]**, **[Bottom:]**, **[Left:]**, **[Right:]** y las distancias **[Header:]** y **[Footer:]**. En **[Center on page]**, marque **[Horizontally]** y **[Vertically]** según se pida.
+6. Vaya a la pestaña **[Sheet]**. En **Imprimir títulos**, defina **Repetir filas en extremo superior:** y **[Columns to repeat at left:]**. En **[Print]**, marque **Líneas de cuadrícula**, **[Black and white]**, **[Draft quality]** y **[Row and column headings]**. Defina **[Comments and notes:]** y **[Cell errors as:]**. En **[Page order]**, elija **[Down, then over]** u **[Over, then down]**. El cuadro **Área de impresión:** que está hasta arriba de esta pestaña es la segunda ruta al objetivo 1.5.1.
+7. Haga clic en **[Print Preview]** dentro del cuadro de diálogo para revisar el resultado antes de confirmar, y luego en **[OK]**.
 
 <!-- ES-FIN MO200-1.3.1 -->
 
@@ -755,7 +818,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Seleccione las filas o las columnas haciendo clic en sus encabezados. Arrastre sobre los encabezados, o haga clic con `Ctrl` presionada para un conjunto no adyacente.
+2. Vaya a la pestaña **Inicio**, grupo **Celdas**, y haga clic en **Formato**.
+3. Para las filas, haga clic en **[Row Height...]**, escriba el valor en puntos en el cuadro **[Row height:]** del cuadro de diálogo **[Row Height]** y haga clic en **[OK]**.
+4. Para las columnas, haga clic otra vez en **Formato** y haga clic en **[Column Width...]**, escriba el valor en el cuadro **[Column width:]** y haga clic en **[OK]**. La unidad son caracteres de la fuente estándar, no puntos, y por eso 20 es una columna ancha y 20 es una fila baja.
+5. Para ajustar al contenido en lugar de a un número, haga clic en **Formato** y haga clic en **[AutoFit Row Height]** o **[AutoFit Column Width]**.
+6. Para cambiar el valor predeterminado de toda la hoja, haga clic en **Formato**, haga clic en **[Default Width...]** y escriba el valor en el cuadro de diálogo **[Standard Width]**. En esta máquina los valores predeterminados de la hoja son `StandardHeight = 14.5` y `StandardWidth = 8.09`.
 
 <!-- ES-FIN MO200-1.3.2 -->
 
@@ -782,7 +852,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.3.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Abra el cuadro de diálogo **Configurar página** como en 1.3.1: pestaña **Diseño de página**, grupo **Configurar página**, [dialog box launcher].
+2. Vaya a la pestaña **[Header/Footer]**.
+3. Para un encabezado predefinido, abra la lista **[Header:]** y elija uno, y haga lo mismo con la lista **[Footer:]**. Si la tarea pide algo con palabras específicas, no use las listas.
+4. Haga clic en **[Custom Header...]**. Se abre el cuadro de diálogo **[Header]** con tres cuadros: **[Left section:]**, **[Center section:]** y **[Right section:]**.
+5. Haga clic dentro de la sección que menciona la tarea. Escriba el texto literal que se pida.
+6. Inserte los campos dinámicos con los botones que están arriba de los cuadros, en lugar de escribir los códigos: **[Format Text]**, **[Insert Page Number]**, **[Insert Number of Pages]**, **[Insert Date]**, **[Insert Time]**, **[Insert File Path]**, **[Insert File Name]**, **[Insert Sheet Name]**, **[Insert Picture]**, **[Format Picture]**. Cada uno escribe su código en el cuadro. Códigos verificados de ida y vuelta con el modelo de objetos: `&P` número de página, `&N` número de páginas, `&D` fecha, `&T` hora, `&F` nombre del archivo, `&A` nombre de la hoja.
+7. Haga clic en **[OK]** para volver a **Configurar página**.
+8. Haga clic en **[Custom Footer...]** y repita con las secciones del pie de página.
+9. De vuelta en la pestaña **[Header/Footer]**, marque las cuatro casillas según se pida: **[Different odd and even pages]**, **[Different first page]**, **[Scale with Document]**, **[Align with page margins]**. Valores predeterminados verificados en una hoja nueva: las dos primeras desactivadas, las dos últimas activadas.
+10. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.3.3 -->
 
@@ -809,7 +890,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.4.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Si la barra de herramientas de acceso rápido no está visible, haga clic derecho en cualquier parte de la cinta de opciones y haga clic en el comando que la muestra. (Redacción del comando: **TO CONFIRM**. Las compilaciones recientes de Microsoft 365 ocultan la barra de forma predeterminada y el menú contextual de la cinta trae el interruptor; el modelo de objetos no expone ninguna etiqueta para ese control.)
+2. Vaya a la pestaña **Archivo** y haga clic en **[Options]**.
+3. En el cuadro de diálogo **Opciones de Excel**, seleccione el panel **Barra de herramientas de acceso rápido** de la izquierda.
+4. Abra la lista **Personalizar la barra de herramientas de acceso rápido:** de la derecha y elija **[For all documents (default)]** o el archivo actual por su nombre. Elegir el archivo limita el botón a ese libro, y las tareas que dicen "para este libro" se refieren a esta lista.
+5. Abra la lista **[Choose commands from:]** de la izquierda y elija el origen: **[Popular Commands]**, **[Commands Not in the Ribbon]**, **[All Commands]**, **[Macros]**, o una pestaña por su nombre. En **[Commands Not in the Ribbon]** es donde el examen esconde sus peticiones incómodas.
+6. Haga clic en el comando de la lista de la izquierda y haga clic en **[Add >>]**.
+7. Ordene la barra con las flechas **[Move Up]** y **[Move Down]** del borde derecho.
+8. Para cambiar el icono o el nombre visible de un botón, selecciónelo en la lista de la derecha y haga clic en **[Modify...]**.
+9. Para quitar uno, selecciónelo en la lista de la derecha y haga clic en **[Remove]**.
+10. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.4.1 -->
 
@@ -834,7 +926,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.4.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Vaya a la pestaña **Vista**, grupo **[Workbook Views]**.
+2. Haga clic en la vista que menciona la tarea: **[Normal]**, **Vista previa de salto de página** o **Diseño de página**. En el modelo de objetos son los valores 1, 2 y 3 de `Window.View`, y los tres se pudieron establecer y volver a leer en esta máquina.
+3. En **Vista previa de salto de página**, arrastre una línea azul de salto de página para moverla. Al arrastrarla se crea un salto manual, dibujado como línea continua donde el salto automático era punteado. Haga clic derecho en una celda y haga clic en **[Reset All Page Breaks]** para volver a los saltos automáticos.
+4. En **Diseño de página**, haga clic directamente en los cuadros del encabezado y del pie de página para editarlos, y arrastre las reglas para cambiar los márgenes.
+5. Para guardar una vista en lugar de cambiar a una, deje la hoja exactamente como se debe recordar y haga clic en **[Custom Views...]** en el mismo grupo.
+6. En el cuadro de diálogo **[Custom Views]**, haga clic en **[Add...]**.
+7. En el cuadro de diálogo **[Add View]**, escriba un nombre en el cuadro **[Name:]**. En **[Include in view]**, marque **[Print settings]** y **[Hidden rows, columns and filter settings]**. Verificado: `CustomViews.Add` recibe exactamente esos dos booleanos y la vista se creó. Haga clic en **[OK]**.
+8. Para recuperarla después, abra **[Custom Views...]**, seleccione el nombre en la lista **[Views:]** y haga clic en **[Show]**.
 
 <!-- ES-FIN MO200-1.4.2 -->
 
@@ -858,7 +959,15 @@ Verified on this machine: selecting `B3` and freezing produced `SplitRow = 2` an
 
 <!-- ES-INICIO MO200-1.4.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Calcule la celda de anclaje. Excel inmoviliza todo lo que está arriba y todo lo que está a la izquierda de la celda que seleccione, así que para inmovilizar las filas 1 y 2 más la columna A la celda de anclaje es `B3`.
+2. Haga clic en esa única celda. No en el encabezado de fila, no en el encabezado de columna: la celda.
+3. Vaya a la pestaña **Vista**, grupo **Ventana**, y haga clic en **Inmovilizar paneles**.
+4. Haga clic en **Inmovilizar paneles** dentro de la lista desplegable. Las dos entradas de conveniencia que están debajo, **[Freeze Top Row]** y **[Freeze First Column]**, ignoran por completo su selección e inmovilizan exactamente una línea cada una.
+5. Para liberarlos, haga clic otra vez en **Inmovilizar paneles** y haga clic en **[Unfreeze Panes]**.
+
+Verificado en esta máquina: seleccionar `B3` e inmovilizar produjo `SplitRow = 2` y `SplitColumn = 1`, que es la aritmética que describe la regla de la celda de anclaje.
 
 <!-- ES-FIN MO200-1.4.3 -->
 
@@ -884,7 +993,17 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.4.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Vaya a la pestaña **Vista**, grupo **Ventana**.
+2. Haga clic en **[New Window]** para abrir una segunda ventana sobre el mismo libro. Verificado: los títulos de las dos ventanas quedan como `file.xlsx  -  1` y `file.xlsx  -  2`, y el número que va después del nombre del archivo es la manera de distinguirlas.
+3. Haga clic en **[Arrange All]**.
+4. En el cuadro de diálogo **[Arrange Windows]**, en **[Arrange]**, elija **[Tiled]**, **[Horizontal]**, **[Vertical]** o **[Cascade]**. Marque **[Windows of active workbook]** para organizar solo las ventanas del archivo actual y no todos los libros abiertos. Haga clic en **[OK]**. Verificado: `Windows.Arrange(2)` para vertical se ejecutó sin error.
+5. Para comparar dos libros, haga clic en **[View Side by Side]**, luego en **[Synchronous Scrolling]** para amarrar las dos posiciones de desplazamiento, y en **[Reset Window Position]** para volver a emparejarlas.
+6. Para dividir una ventana en lugar de abrir otra, haga clic en la celda donde debe caer la división y haga clic en **Dividir**. Haga clic otra vez en **Dividir** para quitarla.
+7. Para quitar una ventana de en medio, haga clic en **[Hide]**. Para traerla de vuelta, haga clic en **[Unhide...]**, seleccione el libro en el cuadro de diálogo **[Unhide]** y haga clic en **[OK]**.
+8. Para saltar entre las ventanas abiertas, haga clic en **[Switch Windows]** y elija de la lista numerada.
+9. Para la ampliación, use el grupo **Zoom**: haga clic en **Zoom...** y elija una opción de **[Magnification]** (**200%**, **100%**, **75%**, **50%**, **25%**, **[Fit selection]** o **[Custom: __ %]**), luego **[OK]**. **[Zoom to Selection]** ajusta la selección actual para que llene la ventana.
 
 <!-- ES-FIN MO200-1.4.4 -->
 
@@ -909,7 +1028,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.4.5 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Vaya a la pestaña **Archivo** y haga clic en **[Info]**.
+2. Vea el panel **[Properties]** del lado derecho. Ahí aparecen Size, Title, Tags, Categories y las fechas. Haga clic en el valor de un campo para editarlo ahí mismo.
+3. Haga clic en **[Show All Properties]**, al fondo del panel, para mostrar el resto: Comments, Template, Status, Subject, Hyperlink Base, Company, Manager, Author, Last Modified By.
+4. Para los campos que el panel de Backstage no muestra, haga clic en **[Properties]**, arriba del panel, y haga clic en **[Advanced Properties]** (el mismo control se resuelve en el modelo de objetos como `View Document Properties...`).
+5. En el cuadro de diálogo **[Document Properties]**, vaya a la pestaña **[Summary]** y llene los cuadros: **[Title:]**, **[Subject:]**, **[Author:]**, **[Manager:]**, **[Company:]**, **[Category:]**, **[Keywords:]**, **Comentarios:**, **[Hyperlink base:]**, **[Template:]**. Verificado: todas existen como propiedades integradas en esta compilación y se pudieron leer con el modelo de objetos.
+6. Marque **[Save preview picture]** si la tarea pide una miniatura.
+7. Para crear una propiedad que no está integrada, vaya a la pestaña **Personalizada**. Escriba en **[Name:]** o elija uno de la lista que está arriba, ponga **[Type:]** en Text, Date, Number o Yes or no, escriba el valor en **[Value:]** y haga clic en **[Add]**. Marque **[Link to content]** para amarrar la propiedad a un nombre definido del libro.
+8. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.4.5 -->
 
@@ -930,7 +1058,12 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.4.6 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haga clic en la hoja cuyas fórmulas se van a mostrar. La opción es por ventana de hoja de cálculo, no por libro.
+2. Vaya a la pestaña **Fórmulas**, grupo **Auditoría de fórmulas**.
+3. Haga clic en **Mostrar fórmulas**. Cada celda muestra ahora su fórmula en lugar de su resultado, y Excel ensancha las columnas que se ven para que quepan.
+4. Haga clic otra vez en **Mostrar fórmulas** para desactivarlo. Los anchos de columna vuelven a sus valores guardados.
 
 <!-- ES-FIN MO200-1.4.6 -->
 
@@ -952,7 +1085,13 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.5.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Seleccione el rango que se va a imprimir. Para un área de impresión de varios bloques, agregue cada bloque adicional a la misma selección haciendo clic con `Ctrl` presionada.
+2. Vaya a la pestaña **Diseño de página**, grupo **Configurar página**, y haga clic en **Área de impresión**.
+3. Haga clic en **[Set Print Area]**.
+4. Para ampliar un área de impresión que ya existe, seleccione el rango adicional, haga clic otra vez en **Área de impresión** y haga clic en **[Add to Print Area]**. Cada bloque agregado así se convierte en su propia página.
+5. Para quitarla, haga clic en **Área de impresión** y haga clic en **[Clear Print Area]**.
 
 <!-- ES-FIN MO200-1.5.1 -->
 
@@ -979,7 +1118,18 @@ The formats behind the list entries were each written successfully on this machi
 
 <!-- ES-INICIO MO200-1.5.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Vaya a la pestaña **Archivo** y haga clic en **[Export]**.
+2. Para PDF, haga clic en **[Create PDF/XPS Document]** y luego en el botón **[Create PDF/XPS]**.
+3. En el cuadro de diálogo **[Publish as PDF or XPS]**, ponga el nombre del archivo, elija **[Optimize for: Standard (publishing online and printing)]** o **[Minimum size (publishing online)]**, y marque **[Open file after publishing]** si se quiere.
+4. Haga clic en **[Options...]** y defina **[Page range]**; luego, en **[Publish what]**, elija **[Selection]**, **[Active sheet(s)]**, **[Entire workbook]** o **[Table]**, y marque **[Ignore print areas]**, **[Document properties]** y **[Document structure tags for accessibility]** según se pida. Haga clic en **[OK]**.
+5. Haga clic en **[Publish]**.
+6. Para cualquier otro formato, regrese a **Archivo**, **[Export]**, y haga clic en **[Change File Type]**.
+7. Elija de las listas **[Workbook File Types]** y **[Other File Types]**, y luego haga clic en el botón **Guardar como** que está debajo.
+8. En el cuadro de diálogo **Guardar como**, confirme la entrada de la lista **[Save as type:]**, ponga el nombre del archivo y haga clic en **[Save]**. Lea la advertencia de compatibilidad si aparece alguna.
+
+Los formatos que están detrás de las entradas de la lista se escribieron todos con éxito en esta máquina: `.csv`, `.txt` delimitado por tabulaciones, `.xlsm`, `.xltx`, `.xls`, XML Spreadsheet 2003 y PDF. Las entradas de la lista dicen **[Excel Workbook (\*.xlsx)]**, **[Excel Macro-Enabled Workbook (\*.xlsm)]**, **[Excel Binary Workbook (\*.xlsb)]**, **[Excel 97-2003 Workbook (\*.xls)]**, **[CSV UTF-8 (Comma delimited) (\*.csv)]**, **[Excel Template (\*.xltx)]**, **[PDF (\*.pdf)]**, **[Text (Tab delimited) (\*.txt)]**. Puntuación exacta de cada entrada: **TO CONFIRM** contra el cuadro de diálogo abierto.
 
 <!-- ES-FIN MO200-1.5.2 -->
 
@@ -1005,7 +1155,17 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-1.5.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Vaya a la pestaña **Archivo** y haga clic en **[Print]**, o presione `Ctrl+P`. Se abre la vista Backstage de impresión, con la columna de opciones a la izquierda y la vista previa a la derecha.
+2. Defina **[Copies:]** con el control de número que está hasta arriba.
+3. Elija la impresora en la lista **[Printer]**.
+4. Abra la primera lista de **[Settings]** y elija **[Print Active Sheets]**, **[Print Entire Workbook]** o **[Print Selection]**. Si ya hay un área de impresión y la tarea pide saltársela, marque **[Ignore Print Area]** al final de esa misma lista.
+5. Defina **[Pages:]** __ **[to]** __ para limitar el intervalo de páginas.
+6. Abra las siguientes listas una por una y defina **[Print One Sided]** o **[Print on Both Sides]**, **[Collated]** o **[Uncollated]**, **[Portrait Orientation]** o **[Landscape Orientation]**, el tamaño de papel, y **[Normal Margins]**, **[Wide Margins]**, **[Narrow Margins]** o **[Custom Margins]**.
+7. Abra la última lista y elija el ajuste de escala: **[No Scaling]**, **[Fit Sheet on One Page]**, **[Fit All Columns on One Page]**, **[Fit All Rows on One Page]** o **[Custom Scaling Options...]**, que abre el cuadro de diálogo **Configurar página** en su pestaña **[Page]**.
+8. Revise el contador de páginas que está debajo de la vista previa antes de imprimir.
+9. Haga clic en **[Print]**.
 
 <!-- ES-FIN MO200-1.5.3 -->
 
@@ -1049,7 +1209,35 @@ Three separate tools sit behind this objective, and the exam names them one at a
 
 <!-- ES-INICIO MO200-1.5.4 -->
 
-_Pendiente._
+Detrás de este objetivo hay tres herramientas distintas, y el examen las menciona una por una.
+
+**Ruta de examen**
+
+1. Vaya a la pestaña **Archivo** y haga clic en **[Info]**.
+2. Haga clic en **Comprobar si hay problemas**.
+
+*Inspector de documento.*
+
+3. Haga clic en **[Inspect Document]**. Guarde el archivo primero si se lo pide, porque lo que se quita no se puede deshacer.
+4. En el cuadro de diálogo **Inspector de documento**, marque solo las categorías que menciona la tarea y desmarque el resto: **[Comments and Notes]**; **[Document Properties and Personal Information]**; **[Data Model]**; **[Content Add-ins]**; **[Task Pane Add-ins]**; **[PivotTables, PivotCharts, Cube Formulas, Slicers, and Timelines]**; **[Custom XML Data]**; **[Headers and Footers]**; **[Hidden Rows and Columns]**; **[Hidden Worksheets]**; **[Invisible Content]**. (Redacción de las categorías: **TO CONFIRM** contra el cuadro de diálogo abierto. El conjunto es estable en las compilaciones recientes, pero el modelo de objetos no expone las cadenas.)
+5. Haga clic en **[Inspect]**.
+6. Lea los resultados. Cada sección que encontró algo ofrece un botón **Quitar todos**. Haga clic en él solo para las secciones que menciona la tarea, porque quitar es permanente.
+7. Haga clic en **[Reinspect]** para confirmar, y luego en **[Close]**.
+
+*Comprobador de accesibilidad.* Es la herramienta a la que vuelve Associate 5.3.3 para el texto alternativo de los gráficos.
+
+8. Regrese a **Archivo**, **[Info]**, **Comprobar si hay problemas**, y haga clic en **Comprobador de accesibilidad**. El mismo comando está en la pestaña **Revisar**, grupo **[Accessibility]**.
+9. El panel **[Accessibility]** se abre a la derecha con **[Inspection Results]** agrupados en **[Errors]**, **[Warnings]** y **[Tips]**.
+10. Haga clic en un elemento para seleccionar el objeto que lo provoca, y use **[Additional Information]**, al fondo del panel, para ver la corrección recomendada. Marque **[Keep accessibility checker running while I work]** para dejarlo activo.
+
+*Comprobador de compatibilidad.*
+
+11. Regrese a **Archivo**, **[Info]**, **Comprobar si hay problemas**, y haga clic en **[Check Compatibility]**.
+12. En el cuadro de diálogo **[Microsoft Excel - Compatibility Checker]**, haga clic en **[Select versions to show]** y marque las versiones contra las que se va a probar: **Excel 97-2003**, **Excel 2007**, **Excel 2010**, **Excel 2013**.
+13. Lea la lista **[Summary]**, que reporta la pérdida importante de funcionalidad y la pérdida menor de fidelidad, con un conteo de apariciones y un vínculo **[Find]** para cada una.
+14. Haga clic en **[Copy to New Sheet]** para escribir el reporte dentro del libro como evidencia.
+15. Marque **[Check compatibility when saving this workbook]** si la tarea lo pide. Verificado: es la propiedad `Workbook.CheckCompatibility`, y en un libro nuevo se lee `False`.
+16. Haga clic en **[OK]**.
 
 <!-- ES-FIN MO200-1.5.4 -->
 
@@ -1083,7 +1271,21 @@ The Paste section, the Operation section and the two check boxes are all applied
 
 <!-- ES-INICIO MO200-2.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango de origen.
+2. Ve a la pestaña **Inicio**, grupo **Portapapeles**, y haz clic en **Copiar**. Aparece un borde punteado en movimiento alrededor del origen. No presiones Ctrl+X a menos que la tarea pida mover: cortar desactiva casi todas las opciones de Pegado especial.
+3. Selecciona el destino. Basta con una celda, Excel la toma como esquina superior izquierda.
+4. Ve a la pestaña **Inicio**, grupo **Portapapeles**, y haz clic en la **flecha que está debajo del botón Pegar**, no en el botón mismo. Se abre la galería de pegado.
+5. Hasta abajo de la galería, haz clic en **Pegado especial...**. Se abre el cuadro de diálogo **Pegado especial**.
+6. En la sección **Pegar**, selecciona la opción que nombra la tarea: **[All]**, **Fórmulas**, **[Values]**, **[Formats]**, **[Comments and Notes]**, **[Validation]**, **[All using Source theme]**, **[All except borders]**, **[Column widths]**, **[Formulas and number formats]**, **[Values and number formats]**, **[All merging conditional formats]**.
+7. Si la tarea pide una operación aritmética contra lo que ya está en el destino, ve a la sección **[Operation]** y selecciona **[None]**, **[Add]**, **[Subtract]**, **[Multiply]** o **[Divide]**. Esta sección solo existe aquí.
+8. Selecciona la casilla **[Skip blanks]** si las celdas vacías del origen no deben sobrescribir los valores del destino.
+9. Selecciona la casilla **Transponer** si las filas deben convertirse en columnas.
+10. Haz clic en **[OK]**. Si lo que quieres es pegar un vínculo activo, haz clic en el botón **[Paste Link]** de la esquina inferior izquierda y no en [OK].
+11. Presiona **Esc** para quitar el borde punteado.
+
+La sección Pegar, la sección [Operation] y las dos casillas se aplican en una sola operación. [Values] más Transponer más [Skip blanks] es un solo pegado, no tres.
 
 <!-- ES-FIN MO200-2.1.1 -->
 
@@ -1113,7 +1315,21 @@ The Series dialog is the Associate half of this; its Growth, Stop value, Trend a
 
 <!-- ES-INICIO MO200-2.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Escribe el primer valor. Si el paso no es 1, escribe también el segundo valor y selecciona los dos.
+2. Selecciona la celda o las celdas semilla **junto con todo el rango que se va a rellenar**. La selección define la extensión, así que incluye el destino.
+3. Ve a la pestaña **Inicio**, grupo **Edición**, y haz clic en **[Fill]**.
+4. Para una copia directa, haz clic en **[Down]**, **[Right]**, **[Up]** o **[Left]**.
+5. Para un patrón, haz clic en **Serie...**. Se abre el cuadro de diálogo **Serie**.
+6. En **[Series in]**, selecciona **[Rows]** o **[Columns]**.
+7. En **[Type]**, selecciona **[Linear]**, **[Growth]**, **Fecha** o **[AutoFill]**.
+8. Si [Type] es Fecha, pon **[Date unit]** en **[Day]**, **[Weekday]**, **[Month]** o **[Year]**.
+9. Escribe el **[Step value]**. Escribe un **[Stop value]** si la tarea da un final en lugar de un rango.
+10. Selecciona la casilla **[Trend]** solo si la tarea pide una tendencia ajustada a los valores que ya están.
+11. Haz clic en **[OK]**.
+
+El cuadro de diálogo Serie es la mitad Associate de este objetivo; su comportamiento de [Growth], [Stop value], [Trend] y listas personalizadas es el Expert 2.1.2 y ahí está escrito completo.
 
 <!-- ES-FIN MO200-2.1.2 -->
 
@@ -1136,7 +1352,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-2.1.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Decide cuántas filas o columnas hacen falta. Excel inserta exactamente tantas como estén seleccionadas.
+2. Selecciona esa cantidad de **filas completas** arrastrando hacia abajo sobre los encabezados de fila, o esa cantidad de **columnas completas** arrastrando a lo ancho sobre los encabezados de columna. Para insertar tres filas arriba de la fila 5, selecciona las filas 5, 6 y 7.
+3. Ve a la pestaña **Inicio**, grupo **Celdas**, y haz clic en la **flecha del botón Insertar**, no en el botón mismo.
+4. Haz clic en **[Insert Sheet Rows]** o en **Insertar columnas de hoja**.
+5. Para eliminar, selecciona las filas o columnas completas, ve a la pestaña **Inicio**, grupo **Celdas**, haz clic en la **flecha del botón Eliminar** y haz clic en **[Delete Sheet Rows]** o **[Delete Sheet Columns]**.
+6. Las filas nuevas heredan el formato de la fila de arriba. Si la tarea las quiere limpias, haz clic en el pincel **[Insert Options]** que aparece junto a la inserción y elige **[Clear Formatting]**.
 
 <!-- ES-FIN MO200-2.1.3 -->
 
@@ -1161,7 +1384,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-2.1.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona un **rango de celdas**, no filas completas ni columnas completas. Eso es lo que separa el 2.1.4 del 2.1.3.
+2. Ve a la pestaña **Inicio**, grupo **Celdas**, y haz clic en la **flecha del botón Insertar**.
+3. Haz clic en **[Insert Cells...]**. Se abre el cuadro de diálogo **Insertar**.
+4. Selecciona **[Shift cells right]**, **[Shift cells down]**, **[Entire row]** o **[Entire column]**.
+5. Haz clic en **[OK]**.
+6. Para eliminar, selecciona el rango, ve a la pestaña **Inicio**, grupo **Celdas**, haz clic en la **flecha del botón Eliminar** y haz clic en **Eliminar celdas...**. Se abre el cuadro de diálogo **[Delete]**.
+7. Selecciona **[Shift cells left]**, **[Shift cells up]**, **[Entire row]** o **[Entire column]**.
+8. Haz clic en **[OK]**.
 
 <!-- ES-FIN MO200-2.1.4 -->
 
@@ -1188,7 +1420,18 @@ The dialog route, worth knowing because it combines with 2.2.6: select the range
 
 <!-- ES-INICIO MO200-2.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango que vas a combinar. Solo la celda **superior izquierda** conserva su valor; todo lo demás se descarta.
+2. Ve a la pestaña **Inicio**, grupo **Alineación**, y haz clic en la **flecha de Combinar y centrar**, no en el botón mismo. Se abre el menú **[Merge]**.
+3. Haz clic en la opción que nombra la tarea:
+   - **Combinar y centrar** une toda la selección en una sola celda y centra el contenido.
+   - **[Merge Across]** combina cada fila de la selección por separado, así que una selección de tres filas da tres celdas combinadas, no una.
+   - **[Merge Cells]** une en una sola celda y deja la alineación como estaba.
+4. Si Excel avisa que al combinar solo se conserva el valor superior izquierdo, lee el aviso antes de hacer clic en **[OK]**.
+5. Para separar, selecciona la celda combinada, haz clic en la **flecha de Combinar y centrar** y haz clic en **[Unmerge Cells]**.
+
+La ruta por cuadro de diálogo, que conviene conocer porque se combina con el 2.2.6: selecciona el rango, presiona **Ctrl+1**, ve a la pestaña **Alineación**, selecciona la casilla **[Merge cells]** de la sección **[Text control]**, define Horizontal y Vertical en la misma pasada y haz clic en **[OK]**. Al desmarcar esa misma casilla, las celdas se separan. Una operación en lugar de tres.
 
 <!-- ES-FIN MO200-2.2.1 -->
 
@@ -1217,7 +1460,20 @@ Certiport bundles three sub-skills into one objective, and only one place in Exc
 
 <!-- ES-INICIO MO200-2.2.2 -->
 
-_Pendiente._
+Certiport junta tres subhabilidades en un solo objetivo, y en Excel hay un solo lugar que tiene las tres. Ese lugar es la ruta que se califica.
+
+**Ruta de examen**
+
+1. Selecciona el rango.
+2. Presiona **Ctrl+1**, o ve a la pestaña **Inicio**, grupo **Alineación**, y haz clic en el [dialog box launcher]. **Formato de celdas** se abre en la pestaña **Alineación**.
+3. En la sección **[Text alignment]**, abre la lista **Horizontal** y elige entre **[General]**, **[Left (Indent)]**, **[Center]**, **[Right (Indent)]**, **[Fill]**, **[Justify]**, **[Center Across Selection]**, **[Distributed (Indent)]**.
+4. Abre la lista **Vertical** y elige entre **[Top]**, **[Center]**, **[Bottom]**, **[Justify]**, **[Distributed]**.
+5. Ajusta el control **[Indent]**. Solo se habilita cuando Horizontal está en [Left (Indent)], [Right (Indent)] o [Distributed (Indent)], así que define Horizontal primero.
+6. En la sección **[Orientation]**, del lado derecho, arrastra el rombo rojo del semicírculo o escribe el ángulo en el cuadro **[Degrees]**. El rango va de -90 a 90. Para las letras apiladas que bajan por la celda, haz clic en el cuadro alto y angosto que dice **[Text]** en vertical, a la izquierda del semicírculo.
+7. Define lo demás que pida la tarea mientras el cuadro de diálogo sigue abierto: **Ajustar texto**, **[Shrink to fit]**, **[Merge cells]** en la sección **[Text control]**.
+8. Haz clic en **[OK]**. Todo eso entra como una sola operación.
+
+**[Center Across Selection]** merece mención aparte. Centra un título sobre varias columnas y se ve igualito que Combinar y centrar, y no combina, así que ordenar y filtrar siguen funcionando. Los reactivos que dicen "centra el título en A1:F1 sin combinar" quieren esta entrada de la lista.
 
 <!-- ES-FIN MO200-2.2.2 -->
 
@@ -1247,7 +1503,21 @@ The double-click is the part the exam is looking for whenever the task names mor
 
 <!-- ES-INICIO MO200-2.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la celda o el rango que ya trae el formato que se va a copiar. Basta con una celda si el formato es uniforme.
+2. Ve a la pestaña **Inicio**, grupo **Portapapeles**, y haz clic en **Copiar formato**. El puntero se convierte en brocha y el origen queda con un borde punteado en movimiento.
+3. Arrastra sobre el rango de destino, o haz clic en su celda superior izquierda. El formato se transfiere; los valores, las fórmulas y los comentarios no.
+4. La brocha se apaga sola después de un uso.
+
+Para varios destinos que no están juntos:
+
+5. Selecciona el origen.
+6. Haz **doble clic** en Copiar formato. La brocha se queda fija.
+7. Arrastra sobre cada destino por turno. La brocha sigue activa entre uno y otro.
+8. Presiona **Esc**, o haz clic otra vez en Copiar formato, para soltarla.
+
+El doble clic es lo que el examen busca cuando la tarea nombra más de una zona de destino.
 
 <!-- ES-FIN MO200-2.2.3 -->
 
@@ -1272,7 +1542,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-2.2.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la celda o el rango.
+2. Presiona **Ctrl+1**, o ve a la pestaña **Inicio**, grupo **Alineación**, y haz clic en el [dialog box launcher].
+3. Haz clic en la pestaña **Alineación** si no está ya al frente.
+4. En la sección **[Text control]**, selecciona la casilla **Ajustar texto**.
+5. Con el cuadro de diálogo abierto, define lo demás que la tarea pida junto con eso: **Vertical** en **[Top]** para que el texto ajustado empiece en la parte de arriba de la celda, **Horizontal**, **[Shrink to fit]** si la tarea quiere encoger en lugar de ajustar, **[Merge cells]**.
+6. Haz clic en **[OK]**.
+
+**[Shrink to fit]** y **Ajustar texto** se excluyen entre sí; al seleccionar uno se desmarca el otro. Las tareas que dicen "haz que el texto quepa sin cambiar el alto de la fila" quieren [Shrink to fit], no Ajustar texto.
 
 <!-- ES-FIN MO200-2.2.4 -->
 
@@ -1299,7 +1578,18 @@ This objective is the ribbon one on purpose. Certiport separates it from 2.2.6 p
 
 <!-- ES-INICIO MO200-2.2.5 -->
 
-_Pendiente._
+Este objetivo es el de la cinta, a propósito. Certiport lo separa del 2.2.6 justo para que un reactivo evalúe el grupo Número y el otro evalúe el cuadro de diálogo. No resuelvas este objetivo desde Formato de celdas a menos que la tarea lo diga.
+
+**Ruta de examen**
+
+1. Selecciona el rango. Selecciona solo los números, no el encabezado.
+2. Ve a la pestaña **Inicio**, grupo **Número**.
+3. Abre la lista **[Number Format]** de la parte de arriba del grupo. Por defecto dice **[General]**.
+4. Elige el formato: **[General]**, **Número**, **Moneda**, **Contabilidad**, **[Short Date]**, **[Long Date]**, **[Time]**, **Porcentaje**, **[Fraction]**, **[Scientific]**, **[Text]**.
+5. Ajusta con los botones de abajo: **[Accounting Number Format]** con su flecha para el símbolo de moneda, **[Percent Style]**, **[Comma Style]**, **Aumentar decimales**, **[Decrease Decimal]**.
+6. Si la tarea nombra posiciones decimales, haz clic en Aumentar decimales o en [Decrease Decimal] hasta que la cuenta quede bien, en lugar de reescribir los números.
+
+**Moneda** y **Contabilidad** no son lo mismo y el examen lo sabe. Moneda pega el símbolo a los dígitos y muestra los negativos con el estilo que se haya elegido en el cuadro de diálogo. Contabilidad alinea los símbolos en el borde izquierdo de la celda, alinea los puntos decimales, muestra el cero como un guion y pone los negativos entre paréntesis.
 
 <!-- ES-FIN MO200-2.2.5 -->
 
@@ -1333,7 +1623,25 @@ This is the objective the whole document is built around, and this is where the 
 
 <!-- ES-INICIO MO200-2.2.6 -->
 
-_Pendiente._
+Este es el objetivo sobre el que está construido todo el documento, y aquí es donde el cuadro de diálogo queda escrito completo. Certiport lo lista aparte del 2.2.5 por una razón: al resultado se llega por dos caminos y solo uno se califica. El cuadro de diálogo es una sola operación repartida en seis pestañas. La cinta es una operación por botón. Misma imagen, distinta ruta, distinta calificación.
+
+**Ruta de examen**
+
+1. Selecciona la celda o el rango.
+2. Presiona **Ctrl+1**. Con el mouse, ve a la pestaña **Inicio** y haz clic en el [dialog box launcher] del grupo que necesites, la flecha diagonal pequeña de la esquina inferior derecha del grupo **Fuente**, **Alineación** o **Número**. Los tres abren el mismo cuadro de diálogo **Formato de celdas**, nada más que en una pestaña distinta.
+3. El cuadro de diálogo tiene seis pestañas arriba: **Número**, **Alineación**, **Fuente**, **Borde**, **Relleno**, **Protección**.
+4. **Pestaña Fuente.** Define **Fuente**, **[Font style]** ([Regular], [Italic], [Bold], [Bold Italic]) y **[Size]**. Abre la lista **[Underline]** para **[None]**, **[Single]**, **[Double]**, **[Single Accounting]**, **[Double Accounting]**. Abre la lista **[Color]** y elige el color de letra, o haz clic en **[More Colors...]** para uno que no esté en la paleta. Las casillas de **[Effects]** son **[Strikethrough]**, **[Superscript]** y **[Subscript]**.
+5. **No hagas clic en [OK].** Haz clic en la pestaña **Relleno**.
+6. **Pestaña Relleno.** Haz clic en una muestra de **[Background Color]**. **[No Color]** quita el relleno. **[Fill Effects...]** arma un degradado con dos colores y un estilo de sombreado. **[More Colors...]** abre el selector de color, con sus pestañas [Standard] y Personalizada. **[Pattern Color]** y **[Pattern Style]** ponen una trama encima del fondo. El cuadro **[Sample]** muestra la vista previa del resultado.
+7. Todavía sin cerrar el cuadro de diálogo, haz clic en la pestaña **Borde** si también piden bordes. **En esta pestaña el orden importa y es la forma más común de perder el reactivo.** Elige **primero** el **[Style]** en el cuadro de línea y el **[Color]** en la lista de color, y después haz clic en un botón de **[Presets]** (**[None]**, **Esquema**, **[Inside]**) o haz clic en cada borde dentro del cuadro de vista previa **Borde**. Un borde dibujado antes de definir el estilo sale con el estilo anterior, y hacer clic en el estilo después no le hace nada.
+8. Haz clic en la pestaña **Número** si también piden un formato de número. Elige de la lista **Categoría**: **[General]**, **Número**, **Moneda**, **Contabilidad**, **Fecha**, **[Time]**, **Porcentaje**, **[Fraction]**, **[Scientific]**, **[Text]**, **[Special]**, **Personalizada**. Luego define las opciones de la derecha, que cambian según la categoría: **Posiciones decimales**, **[Use 1000 Separator (,)]**, **[Negative numbers]**, **[Symbol]**, o el cuadro **[Type]** para **Personalizada**.
+9. Haz clic en la pestaña **Alineación** para **Horizontal**, **Vertical**, **[Indent]**, **[Orientation]** y las casillas de **[Text control]**.
+10. Haz clic en la pestaña **Protección** para las casillas **Bloqueada** y **[Hidden]**, que no hacen nada hasta que la hoja esté protegida. El objetivo que las usa es el Expert 1.2.2.
+11. Haz clic en **[OK]** una sola vez. Todas las pestañas que hayas tocado se aplican en una sola operación.
+
+**Por qué la ruta lo es todo.** Hazlo desde el cuadro de diálogo y una sola presión de **Ctrl+Z** deshace el color de letra y el relleno juntos. Hazlo desde la cinta y hacen falta dos. Ese deshacer único es la prueba visible de qué ruta se tomó, y es la forma más rápida de revisarte a ti mismo en el examen.
+
+**Lo que la cinta simplemente no alcanza.** El subrayado [Single Accounting] y [Double Accounting]. [Shrink to fit]. Los bordes diagonales. Los rellenos de trama y los rellenos con degradado. Las categorías de número **[Special]** y **Personalizada**. La pestaña **Protección**. Los números negativos en rojo y entre paréntesis. Si una tarea nombra cualquiera de estas, no hay ruta corta a la que recurrir.
 
 <!-- ES-FIN MO200-2.2.6 -->
 
@@ -1367,7 +1675,25 @@ To build one:
 
 <!-- ES-INICIO MO200-2.2.7 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango.
+2. Ve a la pestaña **Inicio**, grupo **Estilos**, y haz clic en **Estilos de celda**.
+3. La galería se abre en secciones: **[Good, Bad and Neutral]**; **[Data and Model]**; **[Titles and Headings]**; **[Themed Cell Styles]**; **[Number Format]**.
+4. Pasa el puntero sobre un estilo para verlo en vista previa sobre la selección.
+5. Haz clic en el estilo. La tarea lo va a nombrar: **[Heading 1]**, **[Total]**, **[Input]**, **[Currency [0]]**.
+
+Para cambiar un estilo en todos los lugares donde se usa:
+
+6. Abre **Estilos de celda**, haz clic derecho en el estilo y haz clic en **[Modify...]**. Se abre el cuadro de diálogo **[Style]**.
+7. Haz clic en **Formato...**, que abre **Formato de celdas** (2.2.6). Cambia lo que haga falta, haz clic en **[OK]** y vuelve a hacer clic en **[OK]**. Todas las celdas que traigan ese estilo se actualizan de golpe.
+
+Para crear uno:
+
+8. Abre **Estilos de celda** y haz clic hasta abajo en **[New Cell Style...]**. Se abre el cuadro de diálogo **[Style]**.
+9. Escribe un nombre en **[Style name]**.
+10. Desmarca las casillas de **[Style Includes]** que el estilo no deba cargar: **Número**, **Alineación**, **Fuente**, **Borde**, **Relleno**, **Protección**.
+11. Haz clic en **Formato...**, define los formatos, haz clic en **[OK]** y haz clic en **[OK]**.
 
 <!-- ES-FIN MO200-2.2.7 -->
 
@@ -1391,7 +1717,15 @@ Know which one does what before clicking. **Clear Contents** removes the values 
 
 <!-- ES-INICIO MO200-2.2.8 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango.
+2. Ve a la pestaña **Inicio**, grupo **Edición**, y haz clic en **[Clear]**, el icono de borrador que está a la derecha del grupo.
+3. El menú ofrece **Borrar todo**, **[Clear Formats]**, **[Clear Contents]**, **[Clear Comments and Notes]**, **[Clear Hyperlinks]**, **[Remove Hyperlinks]**.
+4. Haz clic en **[Clear Formats]**. El formato se va, los valores se quedan.
+5. Haz clic en **Borrar todo** solo cuando la tarea quiera las celdas vacías de todo: valores, formatos, comentarios y reglas de formato condicional.
+
+Ten claro cuál hace qué antes de hacer clic. **[Clear Contents]** quita los valores y conserva el formato, que es exactamente lo contrario de **[Clear Formats]**, y los dos están uno junto al otro en el mismo menú corto.
 
 <!-- ES-FIN MO200-2.2.8 -->
 
@@ -1429,7 +1763,29 @@ To edit or delete:
 
 <!-- ES-INICIO MO200-2.3.1 -->
 
-_Pendiente._
+Aquí aparecen por primera vez el cuadro de diálogo **[New Name]** y el **Administrador de nombres**; el 1.2.2, el 4.1.2 y el Expert 1.1.2 remiten a esta entrada.
+
+**Ruta de examen**
+
+1. Selecciona el rango que vas a nombrar.
+2. Ve a la pestaña **Fórmulas**, grupo **Nombres definidos**, y haz clic en **[Define Name]**.
+3. Se abre el cuadro de diálogo **[New Name]**.
+4. En el cuadro **[Name]**, escribe el nombre. Tiene que empezar con una letra, un guion bajo o una barra invertida. Sin espacios, usa un guion bajo. No puede ser una dirección de celda como `A1` o `R1C1`, y no puede ser una sola letra `C` ni `R`. [Estos dos literales cambian en el Excel en español: el estilo de referencia se llama F1C1 y las letras reservadas serían F y C. Confirmar contra el producto antes de que esto llegue al grupo.] Aquí Excel no distingue mayúsculas de minúsculas, así que `Sales` y `sales` son el mismo nombre.
+5. Abre la lista **[Scope]** y elige **Libro**, para que el nombre sirva desde cualquier hoja, o el nombre de una hoja específica, para que sirva solo ahí. La tarea va a decir cuál.
+6. Escribe en el cuadro **[Comment]** si la tarea pide una descripción.
+7. Revisa el cuadro **[Refers to]**. Tiene que traer una referencia absoluta como `=Sheet1!$A$1:$A$20` [en el Excel en español la hoja se llama Hoja1: confirmar]. Para volver a seleccionar sobre la hoja, haz clic en la flecha pequeña de contraer que está a la derecha del cuadro, arrastra el rango y haz clic otra vez en la flecha.
+8. Haz clic en **[OK]**.
+
+Para nombrar varios rangos de una sola vez a partir de sus encabezados:
+
+9. Selecciona el bloque incluyendo su fila de encabezados o su columna de etiquetas.
+10. Ve a la pestaña **Fórmulas**, grupo **Nombres definidos**, y haz clic en **[Create from Selection]**.
+11. En el cuadro de diálogo **[Create Names from Selection]**, selecciona **[Top row]**, **[Left column]**, **[Bottom row]** o **[Right column]**.
+12. Haz clic en **[OK]**. Los espacios de los encabezados se vuelven guiones bajos automáticamente.
+
+Para editar o eliminar:
+
+13. Ve a la pestaña **Fórmulas**, grupo **Nombres definidos**, y haz clic en **Administrador de nombres**. Usa **[New...]**, **[Edit...]**, **[Delete]** y el botón **Filtro**. El cuadro **[Refers to]** está hasta abajo con su propia palomita y su propia tacha. Ciérralo con **[Close]**.
 
 <!-- ES-FIN MO200-2.3.1 -->
 
@@ -1452,7 +1808,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-2.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda dentro de la tabla. Una tabla es un rango convertido con **Dar formato como tabla** o con **Insertar > [Table]** (3.1.1), y muestra flechas de filtro en su fila de encabezados.
+2. La pestaña contextual **Diseño de tabla** aparece en el extremo derecho de la cinta de opciones. Haz clic en ella.
+3. Mira el grupo **[Properties]**, el grupo que está más a la izquierda de esa pestaña. Ahí hay un cuadro con la etiqueta **Nombre de la tabla:**.
+4. Haz clic en el cuadro y selecciona todo el nombre que ya tiene. Excel nombra las tablas `Table1`, `Table2` y así. [En el Excel en español son Tabla1, Tabla2: confirmar.]
+5. Escribe el nombre nuevo. Las reglas son las mismas que para un nombre definido: empezar con letra o guion bajo, sin espacios, que no sea una dirección de celda y que sea único en todo el libro.
+6. Presiona **Enter**. Nada queda confirmado hasta presionar Enter; hacer clic en otro lado puede descartarlo.
 
 <!-- ES-FIN MO200-2.3.2 -->
 
@@ -1483,7 +1846,22 @@ Formatting, on the **Sparkline** contextual tab that appears once a sparkline ce
 
 <!-- ES-INICIO MO200-2.4.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona las celdas que van a **contener** los minigráficos, una celda por cada fila de datos. Normalmente la columna vacía que está a la derecha de los datos.
+2. Ve a la pestaña **Insertar**, grupo **Minigráficos**.
+3. Haz clic en **[Line]**, **Columna** o **[Win/Loss]**, el que nombre la tarea.
+4. Se abre el cuadro de diálogo **[Create Sparklines]** con dos cuadros.
+5. En **[Data Range:]**, arrastra sobre los números de la hoja o escribe la referencia. Selecciona solo los datos; los encabezados y los totales rompen la escala.
+6. Revisa **[Location Range:]**. Ya viene lleno con las celdas seleccionadas en el paso 1, y tiene que tener el mismo número de filas que [Data Range].
+7. Haz clic en **[OK]**.
+
+El formato se da en la pestaña contextual **Minigráfico**, que aparece en cuanto se selecciona una celda con minigráfico. En Office 2019 esa misma pestaña se llama **[Sparkline Tools > Design]**.
+
+8. Grupo **[Show]**: selecciona **[High Point]**, **[Low Point]**, **[Negative Points]**, **[First Point]**, **[Last Point]**, **[Markers]**. [Markers] solo está disponible para los minigráficos de [Line].
+9. Grupo **[Style]**: elige de la galería, o define **[Sparkline Color]** y **[Marker Color]**.
+10. Grupo **Agrupar**: haz clic en **[Axis]** para **[Show Axis]** y para las **[Minimum Value Options]** y **[Maximum Value Options]**, donde **[Same for All Sparklines]** pone todas las filas en una escala común. Sin eso, cada fila se escala consigo misma y las filas no se pueden comparar, que es lo que en realidad evalúan casi todas las tareas.
+11. **Agrupar** y **Desagrupar** amarran los minigráficos entre sí o los separan. **[Clear]** los quita, con **[Clear Selected Sparklines]** y **[Clear Selected Sparkline Groups]**.
 
 <!-- ES-FIN MO200-2.4.1 -->
 
@@ -1517,7 +1895,25 @@ For a graphic rule:
 
 <!-- ES-INICIO MO200-2.4.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango al que aplica la regla. Solo celdas de datos. Incluir la fila de encabezados es la causa más común de una regla que da formato a las celdas equivocadas, porque un encabezado de texto cuenta como menor que cualquier número.
+2. Ve a la pestaña **Inicio**, grupo **Estilos**, y haz clic en **Formato condicional**.
+3. El menú tiene **Resaltar reglas de celdas**, **Reglas superiores e inferiores**, **Barras de datos**, **Escalas de color**, **Conjuntos de iconos**, **Nueva regla...**, **Borrar reglas** y **Administrar reglas...**. Los últimos tres son el Expert 2.3.1, el 2.4.3 y el Expert 2.3.4 respectivamente.
+4. Para un umbral, apunta a **Resaltar reglas de celdas** y haz clic en **[Greater Than...]**, **[Less Than...]**, **[Between...]**, **[Equal To...]**, **[Text that Contains...]**, **[A Date Occurring...]** o **Duplicar valores...**.
+5. En el cuadro de diálogo chico, escribe el valor en el cuadro de la izquierda, o haz clic en la flecha de contraer y elige la celda que lo tiene. Apuntar a una celda en lugar de escribir el número es lo que hace que la regla siga a los datos cuando el número cambia.
+6. Abre la lista **[with]** de la derecha y elige el formato: **[Light Red Fill with Dark Red Text]**, **[Yellow Fill with Dark Yellow Text]**, **[Green Fill with Dark Green Text]**, **[Light Red Fill]**, **[Red Text]**, **[Red Border]**, **[Custom Format...]**.
+7. **[Custom Format...]** abre **Formato de celdas** recortado a cuatro pestañas, **Número**, **Fuente**, **Borde** y **Relleno**. Es el mismo cuadro de diálogo del 2.2.6 menos Alineación y Protección, porque una regla no puede cambiar ninguna de las dos.
+8. Haz clic en **[OK]**.
+
+Para una regla de rango:
+
+9. Apunta a **Reglas superiores e inferiores** y haz clic en **[Top 10 Items...]**, **[Top 10 %...]**, **[Bottom 10 Items...]**, **[Bottom 10 %...]**, **Por encima del promedio...** o **[Below Average...]**. El **10** es un control editable, así que "los 5 de arriba" también empieza desde la entrada [Top 10 Items].
+
+Para una regla gráfica:
+
+10. Apunta a **Barras de datos**, **Escalas de color** o **Conjuntos de iconos**. Pasa el puntero por la galería para la vista previa y haz clic en la variante.
+11. Haz clic en **[More Rules...]** hasta abajo de cualquiera de esas tres galerías para abrir **Nueva regla de formato**, donde viven las variantes que se califican: **[Show Bar Only]**, **[Reverse Icon Order]**, **[Show Icon Only]** y los umbrales escritos como **Número**, **[Percent]**, **Fórmula** o **[Percentile]** en lugar de los automáticos. Ese cuadro de diálogo está escrito completo en el Expert 2.3.1.
 
 <!-- ES-FIN MO200-2.4.2 -->
 
@@ -1542,7 +1938,16 @@ To remove one rule and leave the others alone, use the **Conditional Formatting 
 
 <!-- ES-INICIO MO200-2.4.3 -->
 
-_Pendiente._
+Certiport lo cuenta aparte del 2.4.2 porque quitar de una selección y quitar de una hoja entera son dos comandos distintos. Lee la redacción de la tarea para saber qué alcance pide antes de tocar nada.
+
+**Ruta de examen**
+
+1. Si el alcance es una parte de la hoja, selecciona ese rango primero. Si el alcance es la hoja entera, la selección da igual.
+2. Ve a la pestaña **Inicio**, grupo **Estilos**, y haz clic en **Formato condicional**.
+3. Apunta a **Borrar reglas**. El submenú ofrece **[Clear Rules from Selected Cells]**, **[Clear Rules from Entire Sheet]**, **[Clear Rules from This Table]** y **[Clear Rules from This PivotTable]**. Los dos últimos están en gris a menos que el cursor esté dentro de una tabla o de una tabla dinámica.
+4. Haz clic en el que nombre la tarea.
+
+Para quitar una sola regla y dejar las demás en paz, usa el **Administrador de reglas de formato condicionales**, que está escrito completo en el Expert 2.3.4. En corto: **Formato condicional > Administrar reglas...**, pon **[Show formatting rules for]** en **[This Worksheet]** (se abre en **[Current Selection]**, que esconde todas las reglas en las que no estás parado), selecciona la regla, confírmala por su descripción, por su vista previa de **Formato** y por su rango de **[Applies to]**, haz clic en **[Delete Rule]** y luego en **[OK]**. Ese mismo cuadro de diálogo es donde se recorta el rango de una regla en lugar de eliminarla: edita el cuadro **[Applies to]** a un rango más chico y el formato se va de las celdas que quedan fuera mientras la regla sobrevive.
 
 <!-- ES-FIN MO200-2.4.3 -->
 
@@ -1567,7 +1972,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en una sola celda dentro del bloque de datos. Todavía no selecciones el rango completo a mano.
+2. Ve a la pestaña **Insertar**, grupo **Tablas**, y haz clic en **[Table]**.
+3. Se abre el cuadro de diálogo **[Create Table]**. Lee el cuadro que está debajo de **[Where is the data for your table?]** y comprueba que la dirección abarque la fila de encabezados y la última fila de datos. Si está mal, arrastra sobre la hoja para volver a seleccionar, o escribe la dirección.
+4. Selecciona la casilla **[My table has headers]**. Desactívala solo cuando la primera fila sea de datos, en cuyo caso Excel escribe encabezados llamados [Column1], [Column2] y así sucesivamente.
+5. Haz clic en **[OK]**.
+6. Confirma que apareció la pestaña contextual **Diseño de tabla** en la cinta de opciones. La tabla toma el nombre predeterminado [`Table1`] y el estilo predeterminado [Blue, Table Style Medium 2], y aparecen botones de filtro en la fila de encabezados.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.1.1 -->
 
@@ -1590,7 +2004,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda de la tabla.
+2. Ve a la pestaña contextual **Diseño de tabla**.
+3. En el grupo **[Table Styles]**, haz clic en la flecha **[More]** de la esquina inferior derecha de la galería para abrir la galería completa.
+4. La galería está dividida en las secciones **[Light]**, **[Medium]** y **[Dark]**. Apunta a un estilo y lee la etiqueta emergente, que da el nombre literal, por ejemplo ["Green, Table Style Medium 7"]. Excel muestra la vista previa en la hoja mientras pasas el puntero.
+5. Haz clic en el estilo que pida la tarea.
+6. No salgas de la pestaña todavía si la tarea también nombra opciones de estilo, esas son las del 3.2.2 y están en el grupo que está inmediatamente a la izquierda.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.1.2 -->
 
@@ -1612,7 +2035,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.1.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda de la tabla.
+2. Ve a la pestaña **Diseño de tabla**, grupo **[Tools]**, y haz clic en **Convertir en rango**.
+3. Un cuadro de mensaje pregunta si quieres convertir la tabla en un rango normal. Haz clic en **[Yes]**.
+4. Confirma lo que cambió: desaparecen los botones de filtro, desaparece la pestaña **Diseño de tabla** y todas las referencias estructuradas del libro se reescriben solas como referencias A1 normales, `=SUMA(Sales[Q1])` se convierte en `=SUMA(B2:B31)`.
+5. Fíjate en lo que no cambió: el estilo de la tabla se queda ahí como formato directo. Si la tarea pide un rango sin formato, bórralo con la pestaña **Inicio**, grupo **Edición**, **[Clear]**, **[Clear Formats]**.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.1.3 -->
 
@@ -1646,7 +2077,27 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.2.1 -->
 
-_Pendiente._
+**Ruta de examen, insertar**
+
+1. Haz clic con el botón derecho en una celda de la fila o la columna que esté junto al lugar donde va la nueva.
+2. Apunta a **Insertar**. Dentro de una tabla el submenú ofrece cuatro comandos, no los de la hoja de cálculo: **[Table Columns to the Left]**, **[Table Column to the Right]**, **[Table Rows Above]**, **[Table Row Below]**.
+3. Haz clic en el que pida la tarea.
+4. La fila o la columna nueva se integra a la tabla: hereda las bandas, el nombre del encabezado y cualquier fórmula de columna calculada.
+
+**Ruta de examen, eliminar**
+
+1. Haz clic con el botón derecho en una celda de la fila o la columna que vas a quitar.
+2. Apunta a **Eliminar**. Dentro de una tabla el submenú ofrece **[Table Columns]** y **[Table Rows]**.
+3. Haz clic en el que necesites. El resto de la hoja de cálculo, fuera de la tabla, queda intacto, que es justo el motivo para usar estos comandos y no los de la hoja.
+
+**Ruta de examen, cambiar el tamaño de toda la tabla de una vez**
+
+1. Haz clic en cualquier celda de la tabla.
+2. Ve a la pestaña **Diseño de tabla**, grupo **[Properties]**, y haz clic en **[Resize Table]**.
+3. En el cuadro de diálogo **[Resize Table]**, debajo de **[Select the new data range for your table]**, arrastra sobre la hoja o escribe la dirección nueva. La fila de encabezados tiene que quedarse en la misma fila.
+4. Haz clic en **[OK]**.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.2.1 -->
 
@@ -1668,7 +2119,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda de la tabla.
+2. Ve a la pestaña **Diseño de tabla**, grupo **Opciones de estilo de tabla**.
+3. El grupo tiene siete casillas, todas literales: **[Header Row]**, **Fila de totales**, **Filas con bandas**, **[First Column]**, **[Last Column]**, **Columnas con bandas**, **[Filter Button]**.
+4. Selecciona o desactiva todas las que pida la tarea antes de salir del grupo. Cada una es una acción calificada aparte, y cada una vuelve a dibujar la tabla en cuanto le das clic.
+5. Lee el resultado: **[First Column]** y **[Last Column]** ponen en negritas y sombrean las columnas de los extremos; **Filas con bandas** y **Columnas con bandas** rayan el cuerpo; si desactivas **[Header Row]** se oculta el texto del encabezado y se desactivan los botones de filtro; si desactivas **[Filter Button]** el encabezado se queda y solo se quitan las flechas.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.2.2 -->
 
@@ -1695,7 +2154,20 @@ Expert 2.2.4 is the same control seen from the other side, where the `1xx` and `
 
 <!-- ES-INICIO MO200-3.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda de la tabla.
+2. Ve a la pestaña **Diseño de tabla**, grupo **Opciones de estilo de tabla**, y selecciona la casilla **Fila de totales**.
+3. Aparece una fila al final de la tabla. Su primera celda dice `Total` y su última columna ya trae `=SUBTOTALES(109,[Q1])`, que es SUMA sin contar las filas ocultas. Comportamiento predeterminado verificado.
+4. Haz clic en la celda de total que está debajo de la columna que necesitas totalizar.
+5. En el borde derecho de esa celda aparece una flecha desplegable. Haz clic en ella.
+6. Elige la función de la lista: **[None]**, **[Average]**, **[Count]**, **[Count Numbers]**, **[Max]**, **[Min]**, **[Sum]**, **[StdDev]**, **[Var]**, **[More Functions]**.
+7. Excel escribe la función SUBTOTALES que corresponde. [Average] da `=SUBTOTALES(101,[Q1])`, [Sum] da `=SUBTOTALES(109,[Q1])`. Los dos verificados en el producto.
+8. Repite en cada columna que pida la tarea. Pon **[None]** en la columna que deba quedarse vacía.
+
+El objetivo 2.2.4 del Expert es este mismo control visto desde el otro lado, donde sí importan los códigos `1xx` y `9` de SUBTOTALES; la diferencia entre unos y otros está escrita ahí.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.2.3 -->
 
@@ -1732,7 +2204,30 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.3.1 -->
 
-_Pendiente._
+**Ruta de examen, filtro por valores**
+
+1. Haz clic en cualquier celda de la tabla. En un rango normal, primero ve a la pestaña **Datos**, grupo **Ordenar y filtrar**, y haz clic en **Filtro** para poner las flechas en la fila de encabezados.
+2. Haz clic en la flecha de filtro del encabezado de la columna que vas a filtrar.
+3. Desactiva la casilla **[(Select All)]**. Con ella se desactivan todos los valores.
+4. Selecciona solo los valores que pida la tarea. Usa el cuadro **[Search]** que está arriba de la lista cuando la lista sea larga, y luego selecciona **[Add current selection to filter]** si vas armando la selección en varias pasadas.
+5. Haz clic en **[OK]**.
+
+**Ruta de examen, filtro por criterios**
+
+1. Haz clic en la flecha de filtro del encabezado de la columna.
+2. Apunta a **[Number Filters]**, **[Text Filters]** o **[Date Filters]**. Excel ofrece el que corresponde al tipo de dato de la columna.
+3. Haz clic en el operador que pida la tarea, por ejemplo **[Greater Than...]**, **[Between...]**, **[Top 10...]**, **[Begins With...]**, **[Contains...]**.
+4. En el cuadro de diálogo **[Custom AutoFilter]**, escribe el valor en el cuadro que está a la derecha del operador.
+5. Para una segunda condición, selecciona el botón de opción **[And]** o el **[Or]** y llena el segundo renglón. Usa `?` para un carácter y `*` para cualquier cantidad de caracteres.
+6. Haz clic en **[OK]**.
+
+**Ruta de examen, borrar el filtro**
+
+1. Para borrar una sola columna, haz clic en la flecha de filtro de esa columna y haz clic en **[Clear Filter From "Column name"]**.
+2. Para borrar todos los filtros y dejar las flechas, ve a la pestaña **Datos**, grupo **Ordenar y filtrar**, y haz clic en **[Clear]**.
+3. Para quitar también las flechas, haz clic en **Filtro** en el mismo grupo.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.3.1 -->
 
@@ -1758,7 +2253,19 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-3.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en una sola celda dentro del rango o de la tabla. No preselecciones una columna, que es la forma de romper las filas.
+2. Ve a la pestaña **Datos**, grupo **Ordenar y filtrar**, y haz clic en **Ordenar**.
+3. Se abre el cuadro de diálogo **Ordenar**. Selecciona la casilla **[My data has headers]** para que la fila de encabezados se quede en su lugar y las listas muestren nombres de columna en vez de letras.
+4. Llena el primer nivel: abre la lista **[Sort by]** y elige la columna; abre la lista **[Sort On]** y elige **[Cell Values]**, **[Cell Color]**, **[Font Color]** o **[Conditional Formatting Icon]**; abre la lista **[Order]** y elige **[A to Z]**, **[Smallest to Largest]**, **[Oldest to Newest]** o **[Custom List...]**.
+5. Haz clic en **[Add Level]**.
+6. Llena el segundo nivel igual. Su primera lista se llama **[Then by]**.
+7. Repite en cada nivel que pida la tarea. Usa los botones de flecha de la parte superior del cuadro de diálogo para subir o bajar un nivel, porque el orden de los niveles es la prioridad.
+8. Haz clic en **[Options...]** si la tarea pide distinguir mayúsculas y minúsculas o si pide ordenar de izquierda a derecha.
+9. Haz clic en **[OK]**.
+
+_Los términos entre corchetes se quedan en inglés porque no están en el glosario y no se pudieron leer de un Excel en español. **TO CONFIRM**._
 
 <!-- ES-FIN MO200-3.3.2 -->
 
@@ -1784,7 +2291,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en la celda donde va la fórmula y escribe `=`.
+2. Haz clic en la celda a la que quieres hacer referencia, o escribe su dirección. Se inserta como relativa, en la forma `B2`.
+3. Deja el punto de inserción tocando esa referencia y presiona `F4`. Cada vez que lo presionas avanza un paso: `B2`, `$B$2`, `B$2`, `$B2`, y de regreso a `B2`.
+4. Detente en la forma que pide la tarea. `$B$2` fija la columna y la fila. `B$2` fija solo la fila, así que la referencia se recorre de lado al rellenar hacia la derecha y se queda en la fila 2 al rellenar hacia abajo. `$B2` fija solo la columna.
+5. Presiona `Entrar`.
+6. Rellena la fórmula en las dos direcciones, a la derecha y hacia abajo, con el controlador de relleno o con `Ctrl+R` y `Ctrl+D` (**TO CONFIRM**: las letras de estos dos métodos abreviados cambian en el Excel en español).
+7. Haz clic en una celda de la esquina más lejana del bloque rellenado y lee la barra de fórmulas para confirmar que la parte fijada no se movió.
 
 <!-- ES-FIN MO200-4.1.1 -->
 
@@ -1813,7 +2328,22 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.1.2 -->
 
-_Pendiente._
+**Ruta de examen, rango con nombre**
+
+1. Crea el nombre como en 2.3.1: pestaña **Fórmulas**, grupo **Nombres definidos**, [**Define Name**], llena [**Name**], [**Scope**] y [**Refers to**], y haz clic en [**OK**].
+2. En la fórmula, empieza a escribir las primeras letras del nombre. [**Formula AutoComplete**] lo enlista con un icono de etiqueta; presiona `Tab` para insertarlo.
+3. La otra vía es presionar `F3` para abrir el cuadro de diálogo [**Paste Name**], seleccionar el nombre y hacer clic en [**OK**].
+
+**Ruta de examen, tabla con nombre**
+
+1. Haz clic en cualquier celda dentro de la tabla.
+2. Ve a la pestaña **Diseño de tabla**, grupo [**Properties**]. El primer control es el cuadro rotulado **Nombre de la tabla:** (2.3.2).
+3. Selecciona el contenido, escribe el nombre nuevo y presiona `Entrar`.
+4. En una fórmula escrita fuera de la tabla, escribe `=SUMA(`, luego el nombre de la tabla y luego `[`. Excel enlista las columnas. Elige una y cierra los corchetes: `=SUMA(Sales[Q1])`.
+5. En una fórmula escrita dentro de la tabla, esa misma referencia se escribe `=SUMA([@Q1],[@Q2])`. Excel quita el nombre de la tabla porque ya estás dentro de ella, y `@` significa esta fila. Las dos formas están verificadas en el producto.
+6. Para el texto del encabezado de una columna, la referencia es `=Sales[[#Headers],[Q1]]`. Los otros elementos especiales son `[#Data]`, `[#Totals]` y `[#All]` (**TO CONFIRM**: el Excel en español localiza estos elementos especiales y el glosario no los trae).
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.1.2 -->
 
@@ -1849,7 +2379,29 @@ This is the first appearance of **Insert Function** and the **Function Arguments
 
 <!-- ES-INICIO MO200-4.2.1 -->
 
-_Pendiente._
+Aquí aparecen por primera vez [**Insert Function**] y el cuadro de diálogo [**Function Arguments**]. Todos los demás objetivos de funciones de los dos exámenes pasan por ellos, así que el recorrido de aquí es al que remiten los otros.
+
+**Ruta de examen, desde la cinta de opciones**
+
+1. Haz clic en la celda del resultado. Colócala justo debajo de la columna o a la derecha de la fila que estás resumiendo, para que Excel adivine bien.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], y haz clic en la flecha que está debajo de [**AutoSum**].
+3. Elige [**Sum**], [**Average**], [**Max**], [**Min**] o [**Count Numbers**] de la lista. Si haces clic en el botón y no en la flecha, se aplica [**Sum**].
+4. Excel escribe la función y propone un rango con un borde punteado en movimiento.
+5. Si la propuesta está mal, arrastra sobre el rango correcto en ese momento, mientras la función sigue abierta. Excel reemplaza el argumento.
+6. Presiona `Entrar`.
+
+**Ruta de examen, por el cuadro de diálogo**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], y haz clic en [**Insert Function**].
+3. En el cuadro de diálogo [**Insert Function**], abre la lista [**Or select a category**] y elige [**Math & Trig**] para SUMA o [**Statistical**] para PROMEDIO, MAX y MIN. O escribe lo que buscas en [**Search for a function**] y haz clic en [**Go**].
+4. Selecciona la función en la lista [**Select a function**]. Lee la línea de sintaxis que aparece debajo de la lista.
+5. Haz clic en [**OK**].
+6. En el cuadro de diálogo [**Function Arguments**], haz clic en el cuadro [**Number1**] y arrastra sobre el rango en la hoja. Usa el botón de contraer que está a la derecha del cuadro si el cuadro de diálogo tapa los datos.
+7. Lee [**Formula result =**] en la esquina inferior izquierda antes de confirmar.
+8. Haz clic en [**OK**].
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.2.1 -->
 
@@ -1872,7 +2424,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], haz clic en [**More Functions**], apunta a [**Statistical**] y haz clic en **CONTAR**, **CONTARA** o **CONTAR.BLANCO**. CONTAR también está en la lista de [**AutoSum**] con el nombre [**Count Numbers**], que es la misma función con una etiqueta más amable.
+3. En el cuadro de diálogo [**Function Arguments**], haz clic en el cuadro [**Value1**] para CONTAR y CONTARA, o en el cuadro **Rango** para CONTAR.BLANCO, y arrastra sobre el rango.
+4. Lee [**Formula result =**] en la parte inferior del cuadro de diálogo.
+5. Haz clic en [**OK**].
+6. Elige a conciencia, porque las tres no se traslapan como la gente supone. Verificado sobre un rango de cuatro celdas con un número, una cadena de texto, una fórmula que devuelve `""` y una celda realmente vacía: CONTAR devuelve 1, CONTARA devuelve 3 y CONTAR.BLANCO devuelve 2. CONTARA y CONTAR.BLANCO cuentan las dos la celda que tiene `""`, así que los dos resultados suman más celdas de las que tiene el rango.
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.2.2 -->
 
@@ -1898,7 +2459,19 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], haz clic en [**Logical**] y haz clic en **SI**.
+3. En el cuadro de diálogo [**Function Arguments**], haz clic en el cuadro [**Logical_test**] y arma la comparación, por ejemplo haz clic en la celda B2 y escribe `>=70`.
+4. Haz clic en el cuadro [**Value_if_true**] y escribe el texto sin comillas. El cuadro de diálogo las agrega por ti y muestra el valor terminado a la derecha del cuadro.
+5. Haz clic en el cuadro [**Value_if_false**] y haz lo mismo. Si lo dejas vacío devuelve FALSO, que casi nunca es lo que pide la tarea.
+6. Lee [**Formula result =**] en la parte inferior del cuadro de diálogo.
+7. Haz clic en [**OK**].
+8. Fija cualquier referencia que no deba moverse antes de rellenar hacia abajo: pon el punto de inserción sobre ella en la barra de fórmulas y presiona `F4`.
+9. Rellena hacia abajo y revisa una fila de cada lado del límite.
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.2.3 -->
 
@@ -1921,7 +2494,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.3.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], haz clic en [**Text**] y haz clic en **IZQUIERDA**, **DERECHA** o **EXTRAE**.
+3. Para **IZQUIERDA** y **DERECHA**, el cuadro de diálogo [**Function Arguments**] muestra dos cuadros. Haz clic en [**Text**] y selecciona la celda de origen; haz clic en [**Num_chars**] y escribe cuántos caracteres tomar. Si dejas [**Num_chars**] vacío devuelve un carácter.
+4. Para **EXTRAE**, el cuadro de diálogo muestra tres cuadros: [**Text**], [**Start_num**] y [**Num_chars**]. [**Start_num**] cuenta desde 1 en el primer carácter. Verificado: `=EXTRAE("2026-08-18",6,2)` devuelve `08`.
+5. Lee [**Formula result =**] en la parte inferior del cuadro de diálogo.
+6. Haz clic en [**OK**] y rellena hacia abajo.
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.3.1 -->
 
@@ -1945,7 +2527,17 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], y haz clic en [**Text**].
+3. Haz clic en **MAYUSC**, **MINUSC** o **LARGO**. **NOMPROPIO** está en la misma lista y pertenece a otro objetivo, así que lee el nombre antes de hacer clic.
+4. En el cuadro de diálogo [**Function Arguments**], haz clic en el cuadro [**Text**] y selecciona la celda de origen. Las tres toman exactamente un argumento.
+5. Lee [**Formula result =**] y haz clic en [**OK**].
+6. Rellena hacia abajo.
+7. Acuérdate de qué cuenta LARGO: todos los caracteres, espacios y signos de puntuación incluidos. Verificado: `=LARGO("Ana Luz ")` devuelve 8, contando el espacio final.
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.3.2 -->
 
@@ -1976,7 +2568,24 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-4.3.3 -->
 
-_Pendiente._
+**Ruta de examen, CONCAT**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], haz clic en [**Text**] y haz clic en **CONCAT**.
+3. En el cuadro de diálogo [**Function Arguments**], haz clic en [**Text1**]. CONCAT toma un rango completo en un solo cuadro, así que arrastra sobre `A2:C2` en lugar de llenar un cuadro por celda. Verificado: `=CONCAT(E1:G1)` sobre Ana, vacía y Luz devuelve `AnaLuz`.
+4. Agrega el texto literal en el cuadro siguiente, con sus espacios, por ejemplo `" "`. Ahí escribes el espacio y el cuadro de diálogo agrega las comillas.
+5. Lee [**Formula result =**] y haz clic en [**OK**].
+
+**Ruta de examen, UNIRCADENAS**
+
+1. Haz clic en la celda del resultado.
+2. Ve a la pestaña **Fórmulas**, grupo [**Function Library**], haz clic en [**Text**] y haz clic en **UNIRCADENAS**.
+3. En el cuadro de diálogo [**Function Arguments**], haz clic en [**Delimiter**] y escribe el separador, por ejemplo una coma y un espacio.
+4. Haz clic en [**Ignore_empty**] y escribe `VERDADERO`. Este es el cuadro que importa. Verificado sobre Ana, vacía y Luz: `VERDADERO` devuelve `Ana, Luz` y `FALSO` devuelve `Ana, , Luz`, con el separador doble a la vista.
+5. Haz clic en [**Text1**] y arrastra sobre el rango.
+6. Lee [**Formula result =**] y haz clic en [**OK**].
+
+**TO CONFIRM**: los nombres entre corchetes no están en el glosario. Se quedan en inglés hasta leerlos en un Excel en español.
 
 <!-- ES-FIN MO200-4.3.3 -->
 
@@ -2005,7 +2614,18 @@ This is the first appearance of the **Insert Chart** dialog; Expert 4.1.1 and 4.
 
 <!-- ES-INICIO MO200-5.1.1 -->
 
-_Pendiente._
+Aquí aparece por primera vez el cuadro de diálogo **[Insert Chart]**; los objetivos 4.1.1 y 4.1.2 del Expert regresan a él para los tipos avanzados.
+
+**Ruta de examen**
+
+1. Selecciona los datos de origen, incluidas la fila de encabezados y la columna de categorías. Si las columnas no están juntas, selecciona el primer bloque, mantén presionada `Ctrl` y selecciona el segundo.
+2. Ve a la pestaña **Insertar**, grupo **Gráficos**, y haz clic en el [dialog box launcher], la flecha pequeña de la esquina inferior derecha del grupo.
+3. Se abre el cuadro de diálogo **[Insert Chart]** con dos pestañas, **[Recommended Charts]** y **[All Charts]**. Haz clic en **[All Charts]**.
+4. En la lista de la izquierda, haz clic en la familia: **Gráfico de columnas**, **Gráfico de barras**, **Gráfico de líneas**, **Gráfico circular**, **Gráfico de anillos**, **Gráfico de área**, **Gráfico XY (dispersión)**, **Gráfico de mapa**, **Gráfico de cotizaciones**, **Gráfico de superficie**, **Gráficos radiales**, **Gráfico de rectángulos**, **Gráfico de proyección solar**, **Gráficos de histograma**, **Gráfico de cajas y bigotes**, **Gráficos de cascada**, **Gráficos de embudo**, **Gráficos combinados**.
+5. En la parte superior del panel derecho, haz clic en el icono del subtipo; para las columnas, **Columnas agrupadas**, **Columna apilada**, **Columna 100 % apilada** y sus versiones en 3D. Apunta a cada uno y lee el nombre que aparece.
+6. Revisa la vista previa en el panel de abajo. Se dibuja con tus datos reales.
+7. Haz clic en **Aceptar**.
+8. El gráfico queda en la hoja como un objeto flotante, seleccionado, con las pestañas contextuales **Diseño de gráfico** y **Formato** en la cinta de opciones.
 
 <!-- ES-FIN MO200-5.1.1 -->
 
@@ -2029,7 +2649,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic una vez en el borde del gráfico o en una parte vacía del área del gráfico, de modo que quede seleccionado todo el objeto. Si en lugar de eso queda seleccionado un título o una serie, presiona `Esc` y vuelve a hacer clic en el borde.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **[Location]**, y haz clic en **[Move Chart]**.
+3. En el cuadro de diálogo **[Move Chart]**, selecciona el botón de opción **[New sheet:]**.
+4. Escribe el nombre de la hoja en el cuadro que está a un lado. No dejes el nombre predeterminado `Chart1` cuando la tarea nombra una hoja.
+5. Haz clic en **Aceptar**.
+6. El gráfico se mueve a su propia hoja. Esa hoja de gráfico no tiene celdas ni cuadrícula, y su pestaña queda en la barra de pestañas del libro como cualquier otra.
+7. Para devolverlo a una hoja de cálculo, repite el procedimiento y selecciona **[Object in:]**, luego elige la hoja de cálculo de la lista.
 
 <!-- ES-FIN MO200-5.1.2 -->
 
@@ -2056,7 +2684,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para seleccionar todo el gráfico.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **Datos**, y haz clic en **[Select Data]**.
+3. Se abre el cuadro de diálogo **[Select Data Source]**. El cuadro de arriba es **[Chart data range]**. La lista de la izquierda es **[Legend Entries (Series)]**. La de la derecha es **[Horizontal (Category) Axis Labels]**.
+4. Para agregar una serie, haz clic en **Agregar** debajo de **[Legend Entries (Series)]**.
+5. En el cuadro de diálogo **[Edit Series]**, haz clic en **[Series name]** y selecciona la celda de encabezado de la columna nueva. No escribas el texto: seleccionar la celda mantiene la leyenda vinculada.
+6. Haz clic en **[Series values]**, borra el marcador de posición `={1}` y arrastra sobre el rango de datos nuevo.
+7. Haz clic en **Aceptar** para cerrar **[Edit Series]**.
+8. De vuelta en **[Select Data Source]**, usa los botones de flecha hacia arriba y hacia abajo para fijar el orden de trazado, **Editar** para corregir una serie y **Quitar** para eliminar una.
+9. Si las categorías están mal, haz clic en **Editar** debajo de **[Horizontal (Category) Axis Labels]** y selecciona el rango de las etiquetas.
+10. Haz clic en **Aceptar**.
 
 <!-- ES-FIN MO200-5.2.1 -->
 
@@ -2078,7 +2717,13 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para seleccionar todo el gráfico.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **Datos**, y haz clic en **Cambiar fila o columna**.
+3. La leyenda y el eje de categorías intercambian lugares. Verificado sobre un bloque de tres regiones por dos trimestres: trazado por columna el gráfico tiene 2 series, trazado por fila tiene 3.
+4. Cuando la tarea también cambia la serie, hazlo mejor dentro del cuadro de diálogo: pestaña **Diseño de gráfico**, grupo **Datos**, **[Select Data]**, haz clic en el botón **Cambiar fila o columna** que está entre las dos listas del cuadro de diálogo **[Select Data Source]** y luego en **Aceptar**. El resultado es el mismo, y ya estás donde ocurre la siguiente edición.
+5. El botón no está disponible mientras el gráfico no esté seleccionado, y aparece atenuado en los tipos de gráfico que solo aceptan una serie, como el gráfico circular.
 
 <!-- ES-FIN MO200-5.2.2 -->
 
@@ -2102,7 +2747,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para seleccionar todo el gráfico.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **[Chart Layouts]**, y haz clic en **[Add Chart Element]**.
+3. Apunta al elemento que nombra la tarea. El menú tiene **[Axes]**, **Títulos de eje**, **Título del gráfico**, **Etiquetas de datos**, **Tabla de datos**, **[Error Bars]**, **Líneas de cuadrícula**, **Leyenda**, **[Lines]**, **[Trendline]** y **[Up/Down Bars]**, y cuáles están disponibles depende del tipo de gráfico.
+4. Haz clic en la posición dentro del submenú, no solo en el elemento. **Título del gráfico** ofrece **[Above Chart]** y **[Centered Overlay]**. **Leyenda** ofrece **[Right]**, **[Top]**, **[Left]** y **[Bottom]**. **Etiquetas de datos** ofrece **[Center]**, **[Inside End]**, **[Inside Base]**, **[Outside End]** y **[Data Callout]**. **Títulos de eje** ofrece **[Primary Horizontal]** y **[Primary Vertical]**. **[None]** quita el elemento.
+5. Para escribir el texto, haz clic una vez en el elemento para seleccionarlo, haz clic una segunda vez para poner el punto de inserción dentro y escribe. Si en vez de eso quieres vincular el texto a una celda, selecciona el elemento, escribe `=` en la barra de fórmulas, haz clic en la celda y presiona `Entrar`.
+6. Para dar formato a un elemento, haz clic derecho en él y haz clic en **[Format ...]**, que abre el panel de tareas a la derecha de la ventana. El panel trae las pestañas propias del elemento, por ejemplo **[Fill & Line]**, **[Effects]**, **[Size & Properties]**, **[Label Options]**.
+7. Para quitar un elemento, selecciónalo y presiona `Supr`, o vuelve a **[Add Chart Element]** y haz clic en **[None]**.
 
 <!-- ES-FIN MO200-5.2.3 -->
 
@@ -2125,7 +2778,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.3.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para seleccionar todo el gráfico.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **[Chart Layouts]**, y haz clic en **Diseño rápido**.
+3. La galería se abre con los diseños disponibles para ese tipo de gráfico, numerados desde **[Layout 1]** en adelante. Apunta a cada uno y lee el nombre que aparece, que trae el número, y observa la vista previa en vivo sobre el gráfico.
+4. Haz clic en el diseño que la tarea nombra por número.
+5. Lee lo que hizo. Un diseño es un paquete: puede agregar una tabla de datos, mover la leyenda hacia abajo, quitar las líneas de cuadrícula o agregar títulos de eje como texto de marcador de posición. Sobrescribe las posiciones de los elementos que hayas fijado a mano antes.
+6. Aplica el diseño primero y después agrega o edita los elementos individuales. Al revés, tiras el trabajo.
 
 <!-- ES-FIN MO200-5.3.1 -->
 
@@ -2149,7 +2809,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para seleccionar todo el gráfico.
+2. Ve a la pestaña **Diseño de gráfico**, grupo **Estilos de gráfico**.
+3. Haz clic en la flecha **[More]** de la esquina inferior derecha de la galería para abrir el conjunto completo, en lugar de las tres o cuatro miniaturas que caben en la cinta de opciones.
+4. Apunta a cada miniatura. El nombre que aparece dice **[Style 1]**, **[Style 2]** y así, y el gráfico se previsualiza en vivo.
+5. Haz clic en el estilo que la tarea nombra.
+6. Para el juego de colores, quédate en la pestaña **Diseño de gráfico**, grupo **Estilos de gráfico**, y haz clic en **[Change Colors]**. Elige una fila de **[Colorful]** o de **[Monochromatic]**. Es una acción que se califica aparte del estilo.
+7. Si el formato que aplicaste a mano antes pelea con el estilo, selecciona el elemento, ve a la pestaña **Formato**, grupo **[Current Selection]**, y haz clic en **[Reset to Match Style]**.
 
 <!-- ES-FIN MO200-5.3.2 -->
 
@@ -2179,7 +2847,21 @@ _Pendiente._
 
 <!-- ES-INICIO MO200-5.3.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el borde del gráfico para que quede seleccionado todo el objeto. Los controladores deben verse por fuera del gráfico, no alrededor de una serie o de un título.
+2. Haz clic derecho en el borde y haz clic en **Texto alternativo...**. **TO CONFIRM**: en algunas versiones esta entrada dice **[Edit Alt Text...]**. Se abre el panel **Texto alternativo** a la derecha de la ventana.
+3. Escribe la descripción en el cuadro. Di qué muestra el gráfico y qué se espera que el lector saque de él, en una o dos oraciones, no la palabra "gráfico".
+4. Si el gráfico es decorativo y no lleva información, selecciona mejor la casilla **[Mark as decorative]**. El cuadro de la descripción se atenúa.
+5. Cierra el panel. No hay botón Aceptar: el texto se guarda mientras escribes.
+
+**Ruta de examen con el Comprobador de accesibilidad** (la misma herramienta del 1.5.4)
+
+1. Ve a la pestaña **Revisar**, grupo **[Accessibility]**, y haz clic en **Comprobador de accesibilidad**.
+2. El panel **[Accessibility]** enumera los errores bajo **[Missing alternative text]**.
+3. Haz clic en el gráfico dentro de la lista. Excel lo selecciona en la hoja.
+4. En **[Recommended Actions]**, haz clic en **[Add a description]**, que abre el mismo panel **Texto alternativo**.
+5. Escribe la descripción y cierra el panel.
 
 <!-- ES-FIN MO200-5.3.3 -->
 
@@ -2207,7 +2889,17 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-1.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Abre los dos libros en la misma ventana de Excel. El origen tiene que ser `.xlsm`, `.xlsb` o `.xlam`; un `.xlsx` no puede contener un módulo.
+2. Ve a la pestaña **Programador**, grupo **[Code]**, y haz clic en **Visual Basic**. Si la pestaña Programador no está en la cinta de opciones, ponla ahí primero: esos tres clics son el paso 1 del objetivo 1.1.3.
+3. En el editor de Visual Basic, abre el menú **Vista** y haz clic en **[Project Explorer]**. El panel de proyecto se acopla del lado izquierdo.
+4. Expande el proyecto de origen, `VBAProject (Source.xlsm)`, y luego expande su carpeta **[Modules]**.
+5. Arrastra `Module1` del proyecto de origen y suéltalo sobre el nodo del proyecto de destino, `VBAProject (Destination.xlsm)`. Arrastrar copia el módulo, no lo mueve.
+6. Ruta alterna que también puntúa, y la que se usa cuando los dos archivos no pueden estar abiertos al mismo tiempo: haz clic derecho en `Module1`, haz clic en **[Export File...]** y guarda el `.bas`. Después haz clic derecho en el nodo `VBAProject` de destino, haz clic en **[Import File...]**, selecciona el `.bas` y haz clic en **Abrir**.
+7. Regresa a Excel con Alt+F11.
+8. Ve a la pestaña **Archivo**, haz clic en **Guardar como**, abre la lista **[Save as type]** y elige **[Excel Macro-Enabled Workbook (\*.xlsm)]**. Guarda.
+9. Para que una macro esté disponible en todos los libros y no en uno solo, grábala o muévela a `PERSONAL.XLSB`: en el cuadro de diálogo **Grabar macro** pon **[Store macro in]** en **[Personal Macro Workbook]**, o arrastra el módulo hasta `VBAProject (PERSONAL.XLSB)` en el panel de proyecto.
 
 <!-- ES-FIN MO201-1.1.1 -->
 
@@ -2236,7 +2928,20 @@ The label **Edit Links** was read back from the product on the professor's build
 
 <!-- ES-INICIO MO201-1.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Abre el libro de origen y el libro de destino.
+2. Haz clic en la celda de destino y escribe `=`.
+3. Ve a la pestaña **Vista**, grupo **Ventana**, haz clic en **[Switch Windows]** y elige el libro de origen de la lista.
+4. Haz clic en la celda o arrastra el rango que quieras. Excel escribe la referencia por ti.
+5. Presiona Entrar. Excel regresa al libro de destino y termina la fórmula.
+6. Mientras el origen está abierto, la referencia se lee `=[Source.xlsx]Sheet1!$A$1`. Cierra el origen y esa misma fórmula se reescribe sola como `='C:\Folder\[Source.xlsx]Sheet1'!$A$1`, con la ruta dentro de las comillas simples. Las dos formas son correctas, y esa reescritura es la forma en que el producto te avisa que el vínculo es real.
+7. Para darle un nombre al rango externo, ve a la pestaña **Fórmulas**, grupo **Nombres definidos**, haz clic en **[Define Name]** (Associate 2.3.1), escribe el **[Name]** y en **[Refers to]** escribe `='C:\Folder\[Source.xlsx]Sheet1'!$A$1:$A$10`. Haz clic en **Aceptar**. El nombre ya sirve en cualquier fórmula del libro de destino.
+8. Para administrar los vínculos, ve a la pestaña **Datos**, grupo **[Queries & Connections]**, y haz clic en **[Edit Links]**. El cuadro de diálogo **[Edit Links]** lista cada **[Source]** con su **[Type]**, su modo de **[Update]** y su **[Status]**, y trae los botones **[Update Values]**, **[Change Source...]**, **[Open Source]**, **[Break Link]** y **[Check Status]**.
+9. Haz clic en **[Startup Prompt...]** dentro de ese cuadro de diálogo para decidir si al abrir se le pregunta al usuario si quiere actualizar.
+10. **[Break Link]** convierte cada fórmula que apunta a ese origen en su valor actual, de forma permanente. Úsalo solo cuando te lo pidan.
+
+La etiqueta **[Edit Links]** se leyó del producto en la máquina del profesor. Las versiones recientes de Microsoft 365 le cambian el nombre a ese botón de la pestaña Datos por **[Workbook Links]** y abren un panel de tareas en lugar del cuadro de diálogo. **TO CONFIRM** cuál de los dos muestran las máquinas del laboratorio.
 
 <!-- ES-FIN MO201-1.1.2 -->
 
@@ -2261,7 +2966,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-1.1.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Archivo** y haz clic en **Opciones**. En el cuadro de diálogo **Opciones de Excel** haz clic en **[Customize Ribbon]**. En la lista **[Main Tabs]** de la derecha, selecciona la casilla **Programador**. Haz clic en **Aceptar**. Este es el paso del que dependen tanto 1.1.1 como 3.6.1.
+2. Ve a la pestaña **Programador**, grupo **[Code]**, y haz clic en **[Macro Security]**. El [Trust Center] se abre directo en el panel **[Macro Settings]**.
+3. Selecciona **[Disable all macros with notification]**. Esta es la opción que espera el examen, porque bloquea de forma predeterminada y aun así te deja habilitar archivo por archivo. Las versiones actuales de Microsoft 365 escriben esa misma opción como **[Disable VBA macros with notification]**. **TO CONFIRM** cuál de las dos redacciones muestra la instalación del laboratorio.
+4. Haz clic en **Aceptar**.
+5. Cierra el libro habilitado para macros y ábrelo otra vez. Debajo de la cinta de opciones aparece una barra de mensajes que dice SECURITY WARNING Macros have been disabled, con un botón **[Enable Content]**. Haz clic en él. La decisión queda guardada para ese archivo.
+6. Si el archivo llegó de internet o de un correo, el aviso es rojo, dice que las macros están bloqueadas y no trae botón [Enable Content]. Cierra el archivo. En el Explorador de archivos, haz clic derecho en él, haz clic en **[Properties]** y, en la pestaña **[General]**, selecciona la casilla **[Unblock]** que está hasta abajo. Haz clic en **Aceptar** y vuelve a abrirlo.
+7. Para que deje de preguntar en una carpeta que tú controlas, ve a la pestaña **Archivo**, **Opciones**, **[Trust Center]**, y haz clic en **[Trust Center Settings...]**. Haz clic en **[Trusted Locations]** y luego en **[Add new location...]**. Haz clic en **[Browse...]**, selecciona la carpeta, selecciona **[Subfolders of this location are also trusted]** y haz clic en **Aceptar** tres veces.
+8. Guarda el archivo para que la macro sobreviva: pestaña **Archivo**, **Guardar como**, **[Save as type]**, **[Excel Macro-Enabled Workbook (\*.xlsm)]**.
 
 <!-- ES-FIN MO201-1.1.3 -->
 
@@ -2288,7 +3002,18 @@ Read back from the professor's build: AutoRecover is enabled and the interval is
 
 <!-- ES-INICIO MO201-1.1.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Archivo** y haz clic en **[Info]**.
+2. Lee la sección **[Manage Workbook]**. Cada versión guardada de forma automática aparece con su hora, y las que Excel conservó porque el archivo se cerró sin guardar traen la etiqueta (when I closed without saving).
+3. Haz clic en una versión. Se abre como solo lectura en una segunda ventana, con una barra de mensajes que trae **[Restore]** y **[Compare]**. Haz clic en **[Restore]** para sobrescribir el archivo actual con esa versión, y haz clic en **Aceptar** en la confirmación.
+4. Para un archivo que nunca se guardó, ve a la pestaña **Archivo**, **Abrir**, haz clic en **[Recent]**, baja hasta el final de la lista y haz clic en **[Recover Unsaved Workbooks]**. Se abre la carpeta Unsaved Files. Selecciona el borrador `.xlsb`, haz clic en **Abrir** y haz clic en **Guardar como** en la barra de mensajes.
+5. El mismo comando está en la pestaña **Archivo**, **[Info]**, **[Manage Workbook]**, **[Recover Unsaved Workbooks]**.
+6. Para controlar cada cuánto se generan las versiones, ve a la pestaña **Archivo**, **Opciones**, y haz clic en **Guardar**. Ajusta **[Save AutoRecover information every N minutes]** y selecciona **[Keep the last AutoRecovered version if I close without saving]**. Lee el cuadro **[AutoRecover file location]**, que es donde viven los borradores.
+7. Haz clic en **Aceptar**.
+8. En un archivo guardado en OneDrive o en SharePoint con Microsoft 365, ese mismo lugar del panel [Info] dice **[Version History]** en vez de **[Manage Workbook]**, y abre un panel de tareas a la derecha en lugar de una lista. **TO CONFIRM** cuál de los dos muestran las máquinas del laboratorio con un archivo local.
+
+Leído de la máquina del profesor: la recuperación automática está activada y el intervalo es de 10 minutos, así que el panel de opciones ya trae un valor que el grupo puede ver cambiar.
 
 <!-- ES-FIN MO201-1.1.4 -->
 
@@ -2311,7 +3036,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-1.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Archivo** y haz clic en **[Info]**.
+2. Haz clic en **Proteger libro**. El menú lista **[Always Open Read-Only]**, **[Encrypt with Password]**, **[Protect Current Sheet]**, **[Protect Workbook Structure]**, **[Restrict Access]**, **[Add a Digital Signature]** y **Marcar como final**.
+3. *Marcar como final:* haz clic en **Marcar como final**. Haz clic en **Aceptar** en el mensaje que dice que el libro se va a marcar como final y luego se va a guardar, y **Aceptar** en el segundo mensaje, el que explica qué hace marcarlo como final.
+4. *Contraseña para abrir el archivo:* **Proteger libro**, **[Encrypt with Password]**. En el cuadro de diálogo **[Encrypt Document]** escribe la contraseña en el cuadro **[Password]** y haz clic en **Aceptar**. Vuelve a escribirla en el cuadro **[Reenter password]** y haz clic en **Aceptar**. Después guarda el archivo: la contraseña solo existe una vez que el archivo se escribe.
+5. *[Always Open Read-Only]:* **Proteger libro**, **[Always Open Read-Only]**. Guarda.
+6. *Contraseña para modificar,* que no es lo mismo que la contraseña para abrir: pestaña **Archivo**, **Guardar como**, **[Browse]**. En el cuadro de diálogo **Guardar como** haz clic en el botón **[Tools]** que está junto a Guardar y haz clic en **[General Options...]**. Escribe en **[Password to modify]**, y en **[Password to open]** si quieres las dos. Selecciona **[Read-only recommended]**. Haz clic en **Aceptar**, vuelve a escribir cada contraseña en **[Confirm Password]** y haz clic en **Guardar**.
 
 <!-- ES-FIN MO201-1.2.1 -->
 
@@ -2342,7 +3074,22 @@ The check box list above matches the properties Excel exposes for a protected sh
 
 <!-- ES-INICIO MO201-1.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en el botón **[Select All]**, el de la esquina donde se juntan los encabezados de fila y de columna, o presiona Ctrl+A.
+2. Presiona Ctrl+1, o ve a la pestaña **Inicio**, grupo **Fuente**, y haz clic en el [dialog box launcher].
+3. En **Formato de celdas** (Associate 2.2.6) ve a la pestaña **Protección** y desmarca la casilla **Bloqueada**. Haz clic en **Aceptar**. No pasa nada visible. Ahora todas las celdas están desbloqueadas, que es lo contrario de como viene Excel de fábrica y el paso que nadie recuerda.
+4. Selecciona solo las celdas que deben quedar bloqueadas, por ejemplo la columna de fórmulas.
+5. Presiona Ctrl+1 otra vez. En la pestaña **Protección** selecciona **Bloqueada**, y selecciona también **[Hidden]** si la fórmula no debe verse en la barra de fórmulas. Haz clic en **Aceptar**. Las dos casillas quedaron marcadas en una sola visita al cuadro de diálogo.
+6. Ve a la pestaña **Revisar**, grupo **Proteger**, y haz clic en **Permitir editar rangos**.
+7. En el cuadro de diálogo **Permitir que los usuarios editen rangos** haz clic en **[New...]**. En el cuadro de diálogo **[New Range]** escribe el **[Title]**, pon **[Refers to cells]** en el rango y escribe una **[Range password]**. Haz clic en **Aceptar**, vuelve a escribir la contraseña en **[Confirm Password]** y haz clic en **Aceptar**.
+8. Haz clic en **[Permissions...]** dentro de [New Range] si quieres que ciertos usuarios de Windows editen sin escribir ninguna contraseña.
+9. De regreso en **Permitir que los usuarios editen rangos**, haz clic en el botón **Proteger hoja...** que está hasta abajo. Ese botón es la forma que puntúa de entrar al siguiente cuadro de diálogo, porque demuestra que las dos configuraciones son una sola operación.
+10. En el cuadro de diálogo **Proteger hoja** selecciona **[Protect worksheet and contents of locked cells]**. Escribe una **Contraseña para desproteger la hoja**.
+11. En la lista **Permitir a los usuarios de esta hoja de cálculo**, selecciona las operaciones que quieres permitir: **Seleccionar celdas bloqueadas**, **Seleccionar celdas desbloqueadas**, **[Format cells]**, **[Format columns]**, **[Format rows]**, **[Insert columns]**, **[Insert rows]**, **[Insert hyperlinks]**, **[Delete columns]**, **[Delete rows]**, **Ordenar**, **[Use AutoFilter]**, **[Use PivotTable and PivotChart]**, **[Edit objects]**, **[Edit scenarios]**. Desmarca **Seleccionar celdas bloqueadas** si en las celdas bloqueadas ni siquiera se debe poder hacer clic.
+12. Haz clic en **Aceptar**, vuelve a escribir la contraseña en **[Confirm Password]** y haz clic en **Aceptar**.
+
+La lista de casillas de arriba corresponde a las propiedades que Excel expone para una hoja protegida, que se configuraron y se volvieron a leer en la máquina del profesor: AllowFormattingCells, AllowSorting, AllowFiltering, AllowUsingPivotTables, AllowInsertingRows y las demás. La entrada de Permitir editar rangos se creó con Title, Range y Password, y se leyó de vuelta intacta.
 
 <!-- ES-FIN MO201-1.2.2 -->
 
@@ -2367,7 +3114,16 @@ The **Windows** check box in the same dialog is dimmed on current Microsoft 365 
 
 <!-- ES-INICIO MO201-1.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Revisar**, grupo **Proteger**, y haz clic en **Proteger libro**.
+2. Se abre el cuadro de diálogo **[Protect Structure and Windows]**. Selecciona la casilla **[Structure]**.
+3. Escribe una contraseña en el cuadro **[Password (optional)]**.
+4. Haz clic en **Aceptar**. Vuelve a escribir la contraseña en el cuadro de diálogo **[Confirm Password]** y haz clic en **Aceptar**.
+5. Al mismo cuadro de diálogo se llega también desde la pestaña **Archivo**, **[Info]**, **Proteger libro**, **[Protect Workbook Structure]**. Cualquiera de las dos entradas cuenta.
+6. Para quitarla, haz clic otra vez en **Proteger libro** en la pestaña Revisar y escribe la contraseña.
+
+La casilla **[Windows]** de ese mismo cuadro de diálogo aparece atenuada en las versiones actuales de Microsoft 365; ahí la protección de ventanas ya no existe. En la máquina del profesor la marca de estructura se puso y se leyó de vuelta como protegida mientras la de ventanas se quedó apagada, así que arma la demostración solo con [Structure].
 
 <!-- ES-FIN MO201-1.2.3 -->
 
@@ -2393,7 +3149,17 @@ Read back from the professor's build: calculation mode Automatic, iterative calc
 
 <!-- ES-INICIO MO201-1.2.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Fórmulas**, grupo **Cálculo**, y haz clic en **Opciones de cálculo**.
+2. Elige una de las tres entradas: **[Automatic]**, **[Automatic Except for Data Tables]**, **[Manual]**.
+3. Con Manual puesto, nada se recalcula hasta que tú lo pidas. Presiona F9 para recalcular todos los libros abiertos, o Mayús+F9 para recalcular solo la hoja activa.
+4. Los mismos dos comandos están en la cinta de opciones, junto al menú: pestaña **Fórmulas**, grupo **Cálculo**, **[Calculate Now]** y **[Calculate Sheet]**.
+5. Para llegar a las mismas tres opciones por el lado de la configuración, ve a la pestaña **Archivo**, **Opciones**, y haz clic en **Fórmulas**. La sección **Opciones de cálculo**, hasta arriba del panel, trae los mismos botones de opción más la casilla **[Recalculate workbook before saving]**.
+6. Para el cálculo iterativo, quédate en la pestaña **Archivo**, **Opciones**, **Fórmulas**. Selecciona **[Enable iterative calculation]**. Ajusta **[Maximum Iterations]** y **[Maximum Change]**. Haz clic en **Aceptar**.
+7. Para redondear a lo que se muestra, ve a la pestaña **Archivo**, **Opciones**, **Avanzadas**, y baja hasta la sección **[When calculating this workbook]**. Selecciona **[Set precision as displayed]**. Excel advierte que los datos van a perder precisión de forma permanente. Haz clic en **Aceptar** y luego otra vez en **Aceptar**.
+
+Leído de la máquina del profesor: modo de cálculo en [Automatic], cálculo iterativo apagado, [Maximum Iterations] en 100 y [Maximum Change] en 0.001.
 
 <!-- ES-FIN MO201-1.2.4 -->
 
@@ -2423,7 +3189,21 @@ Threaded comments and notes were both created on the professor's build and count
 
 <!-- ES-INICIO MO201-1.2.5 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la celda.
+2. Ve a la pestaña **Revisar**, grupo **Comentarios**, y haz clic en **Nuevo comentario**. Se abre un cuadro anclado a la celda.
+3. Escribe el texto y haz clic en el botón **[Post]**, la flechita de la esquina inferior derecha del cuadro, o presiona Ctrl+Entrar.
+4. Para responder uno, haz clic en el comentario y escribe en el cuadro **[Reply]**, luego haz clic en **[Post]**. El hilo crece hacia abajo. Eso es lo que lo hace un comentario y no una nota.
+5. Para cambiar tu propio texto, coloca el puntero sobre el comentario, haz clic en el botón **...** de su esquina superior derecha y haz clic en **[Edit comment]**.
+6. Para cerrar un hilo sin borrarlo, haz clic en **...** y haz clic en **[Resolve thread]**. El hilo se pone gris y se queda ahí.
+7. Para quitarlo, haz clic en **...** y haz clic en **[Delete thread]**. **TO CONFIRM** si esta instalación lo llama Delete thread o Delete comment.
+8. Para recorrer la hoja, usa la pestaña **Revisar**, grupo **Comentarios**, **[Previous Comment]** y **[Next Comment]**.
+9. Para verlos todos en una sola lista, ve a la pestaña **Revisar**, grupo **Comentarios**, y haz clic en **[Show Comments]**. El panel **Comentarios** se abre a la derecha y lista en orden todos los hilos de la hoja.
+10. Las notas son los cuadros amarillos de antes y viven en otro botón. Ve a la pestaña **Revisar**, grupo **[Notes]**, y usa **Nueva nota**, **[Edit Note]**, **[Previous Note]**, **[Next Note]**, **[Show All Notes]** y **[Convert to Comments]**.
+11. Para imprimirlos, abre el cuadro de diálogo **Configurar página** (Associate 1.3.1) y, en la pestaña **[Sheet]**, abre la lista **[Comments and notes]** y elige **[At end of sheet]** o **[As displayed on sheet]**. **TO CONFIRM** el nombre de esa lista en esta instalación; en Office 2019 dice Comments.
+
+En la máquina del profesor se crearon comentarios con hilo y notas, y se contaron en dos colecciones distintas, que es la prueba dura de que en esta versión una nota no es un comentario.
 
 <!-- ES-FIN MO201-1.2.5 -->
 
@@ -2451,7 +3231,19 @@ Read back from the professor's build: display language 1033, install language 20
 
 <!-- ES-INICIO MO201-1.3.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Archivo** y haz clic en **Opciones**.
+2. En el cuadro de diálogo **Opciones de Excel** haz clic en **[Language]**, en la columna de la izquierda.
+3. En **[Office display Language]**, selecciona el idioma de la lista y haz clic en **[Set as Preferred]**. Si el idioma que necesitas no aparece, haz clic en **[Install additional display languages from Office.com]** y sigue la descarga.
+4. En **[Office authoring languages and proofing]**, haz clic en **[Add a Language...]**. Selecciona el idioma de la lista y haz clic en **[Add]**. Luego selecciónalo en el panel y haz clic en **[Set as Preferred]** para volverlo el idioma de edición.
+5. Lee la columna **[Proofing]** de esa misma lista. Cada idioma de creación dice **[Proofing installed]** o **[Proofing not installed]**. Instalar un idioma de presentación y tener corrección para ese idioma son dos cosas distintas, y el examen las separa.
+6. Haz clic en **Aceptar**. Un mensaje avisa que el cambio se aplica la próxima vez que inicies Office.
+7. Cierra Excel por completo y vuelve a abrirlo.
+
+Office 2019 redacta ese mismo panel de otra forma: dos bloques con los títulos **[Choose Editing Languages]** y **[Choose Display and Help Languages]**, cada uno con un botón **[Set as Default]** en lugar de **[Set as Preferred]**. **TO CONFIRM** cuál de las dos redacciones muestra la instalación del laboratorio, porque MO-201 es el examen de 2019.
+
+Leído de la máquina del profesor: idioma de presentación 1033, idioma de instalación 2058, ayuda 1033. Esa máquina ya trae las dos configuraciones jalando para lados distintos, y por eso es la indicada para la demostración.
 
 <!-- ES-FIN MO201-1.3.1 -->
 
@@ -2477,7 +3269,17 @@ Verified on the professor's build: `[$-es-MX]dddd, d "de" mmmm "de" yyyy` displa
 
 <!-- ES-INICIO MO201-1.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la celda o el texto que está dentro de ella.
+2. Ve a la pestaña **Revisar**, grupo **[Language]**, y haz clic en **[Translate]**. El panel [Translator] se abre a la derecha. Ajusta la lista **[From]** y la lista **[To]**, y lee el resultado en el cuadro de abajo. **TO CONFIRM** si esta instalación llama al botón Translate o Translate Selection.
+3. Para fijar el idioma que usa el corrector ortográfico, ve a la pestaña **Revisar**, grupo **[Language]**, haz clic en **[Language]** y luego en **[Set Proofing Language...]**. Selecciona el idioma y haz clic en **Aceptar**. **TO CONFIRM**: en algunas instalaciones de Excel este comando solo está en la pestaña **Archivo**, **Opciones**, **[Language]**, y no en la pestaña Revisar.
+4. Ve a la pestaña **Revisar**, grupo **[Proofing]**, y haz clic en **[Spelling]**, o presiona F7. El cuadro de diálogo **[Spelling]** muestra una lista **[Dictionary language]**; confirma que tenga el idioma que fijaste.
+5. Para una fecha o una moneda que pertenecen a otra configuración regional y no a la tuya, presiona Ctrl+1. En la pestaña **Número** selecciona **Fecha** en la lista **Categoría**, abre la lista **[Locale (location)]** y elige la configuración regional, luego elige el patrón en la lista **[Type]**. Haz clic en **Aceptar**.
+6. Para un símbolo de moneda de otra configuración regional, presiona Ctrl+1, pestaña **Número**, **Categoría** **Moneda**, abre la lista **[Symbol]** y elige. Ajusta **[Negative numbers]** en esa misma visita al cuadro de diálogo.
+7. Para leer lo que Excel guardó, presiona Ctrl+1 otra vez y haz clic en **Personalizada** en la lista **Categoría**. El cuadro **[Type]** ahora muestra el código de la configuración regional entre corchetes, al inicio del formato.
+
+Verificado en la máquina del profesor: `[$-es-MX]dddd, d "de" mmmm "de" yyyy` mostró `lunes, 9 de marzo de 2026` con la interfaz en inglés, y Excel guardó el código de vuelta como `[$-80A]...`, cambiando la etiqueta de idioma por su identificador regional en hexadecimal. `[$-en-US]dddd, mmmm d, yyyy` en esa misma fecha mostró `Monday, March 9, 2026`.
 
 <!-- ES-FIN MO201-1.3.2 -->
 
@@ -2504,7 +3306,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-2.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Coloca la columna que vas a rellenar justo al lado de la columna que tiene el texto de origen. El relleno rápido lee las columnas vecinas y nada que esté más lejos.
+2. Dale a los datos una fila de encabezado. El relleno rápido la usa para decidir dónde empiezan los datos.
+3. En la primera celda de la columna vacía, escribe la respuesta de la primera fila tal como debe quedar, con sus mayúsculas y sus separadores. Presiona Entrar.
+4. Empieza a escribir la respuesta de la segunda fila. Después de dos o tres caracteres, Excel muestra la columna completa en gris como vista previa.
+5. Presiona Entrar para aceptar la vista previa. El gris se vuelve sólido y el resto de la columna se llena.
+6. Si no aparece la vista previa, selecciona la celda que está debajo de la que escribiste y ve a la pestaña **Datos**, grupo **[Data Tools]**, y haz clic en **Relleno rápido**.
+7. El mismo comando también está en la pestaña **Inicio**, grupo **Edición**, **[Fill]**, **Relleno rápido**.
+8. Después del relleno aparece un botón pequeño, **[Flash Fill Options]**, junto al rango. Ábrelo para **[Undo Flash Fill]** o para **[Accept suggestions]**. **TO CONFIRM**: las entradas exactas en esta instalación.
 
 <!-- ES-FIN MO201-2.1.1 -->
 
@@ -2538,7 +3349,25 @@ Verified on the professor's build: Growth from 2 with a step of 3 produced 2, 6,
 
 <!-- ES-INICIO MO201-2.1.2 -->
 
-_Pendiente._
+La mitad Associate de este cuadro de diálogo está en el 2.1.2 del MO-200; lo que sigue es todo lo que el arrastre no puede hacer.
+
+**Ruta de examen**
+
+1. Escribe el valor inicial en la primera celda.
+2. Selecciona el rango que va a llevar la serie, empezando por esa celda.
+3. Ve a la pestaña **Inicio**, grupo **Edición**, haz clic en **[Fill]** y luego en **Serie...**. Se abre el cuadro de diálogo **Serie**.
+4. En **[Series in]**, selecciona **Filas** o **Columnas** según la dirección de la selección. Excel adivina, y adivina mal cuando la selección es una sola celda.
+5. En **[Type]**, selecciona **[Linear]**, **[Growth]**, **Fecha** o **[AutoFill]**. [Linear] suma el incremento, [Growth] multiplica por él.
+6. Si elegiste Fecha, se habilita el grupo **[Date unit]**. Selecciona **[Day]**, **[Weekday]**, **[Month]** o **[Year]**. [Weekday] salta sábado y domingo.
+7. Escribe el **[Step value]**.
+8. Escribe el **[Stop value]** cuando la serie tenga que terminar en un número y no al final de la selección. Con un [Stop value] puedes seleccionar una sola celda y dejar que Excel decida hasta dónde llega.
+9. Selecciona **[Trend]** para ajustar una recta, con [Linear], o una curva, con [Growth], a los valores que ya están en la selección, en lugar de usar [Step value].
+10. Haz clic en **[OK]**.
+11. Ruta alternativa que también puntúa, y la rápida: apunta al controlador de relleno, mantén presionado el botón DERECHO del mouse, arrastra y suelta. El menú contextual ofrece **[Copy Cells]**, **[Fill Series]**, **[Fill Formatting Only]**, **[Fill Without Formatting]**, **[Fill Days]**, **[Fill Weekdays]**, **[Fill Months]**, **[Fill Years]**, **[Linear Trend]**, **[Growth Trend]** y **Serie...**, donde Serie... abre el mismo cuadro de diálogo.
+12. Para una lista personalizada: ve a la pestaña **Archivo**, **Opciones**, **Avanzadas**, baja hasta la sección **[General]** y haz clic en **[Edit Custom Lists...]**. En el cuadro de diálogo **[Custom Lists]** escribe las entradas en el cuadro **[List entries]**, una por línea, y haz clic en **[Add]**. O haz clic en el cuadro **[Import list from cells]**, selecciona el rango en la hoja y haz clic en **[Import]**. Haz clic en **[OK]** y otra vez en **[OK]**.
+13. Escribe cualquier miembro de esa lista en una celda y arrastra el controlador de relleno. La lista continúa en su propio orden y da la vuelta.
+
+Verificado en la instalación del profesor: [Growth] desde 2 con un incremento de 3 produjo 2, 6, 18, 54. Una serie de tipo Fecha con la unidad [Month] llevó el 31 de enero de 2026 a febrero, marzo y abril. [Trend] sobre 1, 3, 5 se extendió a 7, 9, 11. Esa máquina ya trae ocho listas personalizadas integradas en lugar de cuatro (en inglés `Sun`/`Sunday`/`Jan`/`January` y en español `Dom.`/`Domingo`/`ene`/`enero`) porque el idioma de instalación es español de México mientras que la interfaz está en inglés. Arrastra una celda que contenga `enero` y siguen los meses en español.
 
 <!-- ES-FIN MO201-2.1.2 -->
 
@@ -2574,7 +3403,27 @@ Codes that repay memorising, every one of them applied and read back on the prof
 
 <!-- ES-INICIO MO201-2.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona las celdas.
+2. Presiona Ctrl+1, o ve a la pestaña **Inicio**, grupo **Número**, y haz clic en el [dialog box launcher]. **Formato de celdas** se abre en la pestaña **Número** (2.2.6 del Associate).
+3. Arma primero la aproximación más cercana con una categoría real. Selecciona **Número**, ajusta **Posiciones decimales**, selecciona **[Use 1000 Separator (,)]** y elige una entrada en **[Negative numbers]**. Este paso no es adorno: Excel recuerda el código que acaba de construir.
+4. Ahora selecciona **Personalizada**, hasta abajo de la lista **Categoría**. El cuadro **[Type]** ya muestra el código del paso 3, listo para editarse.
+5. Edita el código en el cuadro **[Type]**. Un formato personalizado tiene hasta cuatro secciones separadas por punto y coma, en este orden: positivo; negativo; cero; texto. Si escribes dos secciones, Excel usa la segunda para todo lo negativo y la primera para el cero. Si escribes una, se aplica a todo lo numérico.
+6. Haz clic en **[OK]**.
+7. Para borrar un código que ya no quieres, vuelve a abrir con Ctrl+1, ve a **Personalizada**, selecciona el código en la lista **[Type]** y haz clic en **[Delete]**. Solo se pueden borrar los códigos personalizados; los integrados no tienen [Delete].
+
+Códigos que vale la pena memorizar, todos aplicados y vueltos a leer en la instalación del profesor:
+
+- `#,##0.00 "kg"` pone una unidad después del número y deja el valor como número. 1234.5 se muestra como `1,234.50 kg`.
+- `#,##0.00;[Red](#,##0.00);"-";@` cuatro secciones: negativos en rojo y entre paréntesis, cero como un guion, el texto pasa tal cual.
+- `#,##0.00;[Red](#,##0.00);"-";"Note: "@` la cuarta sección puede agregar su propio texto; `hello` se muestra como `Note: hello`.
+- `[>=1000000]0.0,,"M";[>=1000]0.0,"K";0` dos condiciones entre corchetes y un valor predeterminado. Cada coma final divide entre mil, así que 12345678 se muestra como `12.3M`.
+- `000-00-0000` identificador de ancho fijo. Un marcador de posición de cero conserva los ceros a la izquierda; 42 se muestra como `000-00-0042`.
+- `# ??/??` fracciones con los denominadores alineados. 0.5 se muestra como `1/2`.
+- `[h]:mm` tiempo transcurrido más allá de 24 horas. Los corchetes son lo que impide que dé la vuelta.
+- `;;;` tres secciones vacías y nada más oculta la celda en pantalla mientras el valor sigue vivo en la barra de fórmulas.
+- `[$-en-US]dddd, mmmm d, yyyy` una fecha en una configuración regional con nombre. Excel lo guarda de vuelta como `[$-409]...`.
 
 <!-- ES-FIN MO201-2.2.1 -->
 
@@ -2606,7 +3455,23 @@ Everything above was set through the object model on the professor's build and r
 
 <!-- ES-INICIO MO201-2.2.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona las celdas que van a llevar la regla.
+2. Ve a la pestaña **Datos**, grupo **[Data Tools]**, y haz clic en **Validación de datos**, la mitad superior del botón dividido, que abre **Validación de datos...**.
+3. El cuadro de diálogo se abre en la pestaña **Configuración**. Abre la lista **Permitir**: **[Any value]**, **Número entero**, **Decimal**, **[List]**, **Fecha**, **[Time]**, **Longitud del texto**, **Personalizada**.
+4. Elige el tipo. Aparece una lista **Datos** con **[between]**, **[not between]**, **[equal to]**, **[not equal to]**, **[greater than]**, **[less than]**, **[greater than or equal to]**, **[less than or equal to]**. Llena los cuadros que produce: **[Minimum]** y **[Maximum]**, o **[Start date]** y **[End date]**, o **[Length]**.
+5. Para **[List]**, escribe las entradas en el cuadro **Origen** separadas por comas, o haz clic en el botón de contraer que está a la derecha del cuadro y selecciona el rango en la hoja, o escribe `=` seguido de un nombre definido. Deja seleccionada la casilla **[In-cell dropdown]** o no habrá lista de dónde elegir.
+6. Para **Personalizada**, escribe en el cuadro **Fórmula** una fórmula que devuelva VERDADERO para lo que sí se permite. Escríbela para la celda superior izquierda de la selección y Excel la desplaza al resto, igual que se desplaza una fórmula copiada. Ejemplo: `=B2<=A2*0.1` para topar un bono en la décima parte del sueldo.
+7. Deja seleccionada **[Ignore blank]** salvo que las celdas vacías también tengan que rechazarse.
+8. SIN cerrar el cuadro de diálogo, ve a la pestaña **Mensaje de entrada**. Deja seleccionada la casilla **[Show input message when cell is selected]**. Escribe un **[Title]** y un **Mensaje de entrada**.
+9. SIN cerrar el cuadro de diálogo, ve a la pestaña **Mensaje de error**. Deja seleccionada la casilla **[Show error alert after invalid data is entered]**. Abre la lista **[Style]** y elige **[Stop]**, **[Warning]** o **[Information]**: [Stop] rechaza la entrada, [Warning] pregunta, [Information] solo avisa. Escribe un **[Title]** y un **Mensaje de error**.
+10. Haz clic en **[OK]**. Se configuraron tres pestañas en una sola operación, que es el punto del objetivo.
+11. Para empujar un cambio a todas las celdas que ya comparten la regla, vuelve a abrir el cuadro de diálogo en una de ellas y selecciona **[Apply these changes to all other cells with the same settings]** en la pestaña Configuración antes de hacer clic en [OK].
+12. Para sacar a la luz los valores que se escribieron antes de que existiera la regla, ve a la pestaña **Datos**, grupo **[Data Tools]**, haz clic en la flecha de **Validación de datos** y haz clic en **[Circle Invalid Data]**. Aparecen óvalos rojos alrededor de cada infractor. Quítalos con **[Clear Validation Circles]** en el mismo menú.
+13. Para quitar una regla, selecciona las celdas, abre el cuadro de diálogo y haz clic en **Borrar todo**, luego en **[OK]**.
+
+Todo lo anterior se configuró desde el modelo de objetos en la instalación del profesor y se volvió a leer: tipo, estilo de alerta, origen, [Ignore blank], [In-cell dropdown], título y mensaje de entrada, título y mensaje de error.
 
 <!-- ES-FIN MO201-2.2.2 -->
 
@@ -2634,7 +3499,19 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-2.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ordena los datos por la columna sobre la que vas a agrupar. Los grupos hechos sobre datos sin ordenar se entrelazan y después ya no hay cómo arreglarlos.
+2. Selecciona las filas completas arrastrando por sus encabezados de fila, no las celdas de adentro.
+3. Ve a la pestaña **Datos**, grupo **Esquema**, y haz clic en **Agrupar**, la mitad superior del botón dividido.
+4. Si seleccionaste celdas en lugar de filas completas, aparece el cuadro de diálogo **Agrupar** y pregunta si filas o columnas. Selecciona **Filas** y haz clic en **[OK]**.
+5. Repite sobre un subconjunto de esas filas para hacer un nivel interior. En la barra de esquema, a la izquierda de los encabezados de fila, aparecen botones de nivel numerados 1, 2, 3.
+6. Contrae y expande con los botones de menos y de más de la barra de esquema, o salta directo a una profundidad con los botones de nivel numerados que están arriba de la barra.
+7. Para deshacer un grupo, selecciona sus filas y ve a la pestaña **Datos**, grupo **Esquema**, y haz clic en **Desagrupar**, mitad superior.
+8. Para quitar todo el esquema de una vez, haz clic en la flecha de **Desagrupar** y luego en **[Clear Outline]**.
+9. Para que Excel lo arme, haz clic en la flecha de **Agrupar** y luego en **[Auto Outline]**. Excel solo lo acepta cuando la hoja ya tiene fórmulas de resumen que apuntan a las filas de detalle; si no, se niega con un mensaje de que no puede crear un esquema.
+10. Para mover las filas de resumen arriba del detalle en lugar de abajo, ve a la pestaña **Datos**, grupo **Esquema**, y haz clic en el [dialog box launcher]. En el cuadro de diálogo **[Settings]** desmarca **[Summary rows below detail]** o **[Summary columns to right of detail]**, luego haz clic en **[Create]** para aplicarlo, o en **[OK]** para guardar el ajuste para el siguiente esquema.
+11. **[Show Detail]** y **[Hide Detail]**, en el mismo grupo, actúan sobre el grupo en el que esté parado el cursor.
 
 <!-- ES-FIN MO201-2.2.3 -->
 
@@ -2664,7 +3541,21 @@ Total row on a table, the other half of the objective, is Associate 3.2.3: **Tab
 
 <!-- ES-INICIO MO201-2.2.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ordena la lista por la columna que va a marcar los cortes de grupo. Ve a la pestaña **Datos**, grupo **Ordenar y filtrar**, haz clic en **Ordenar**, elige la columna en **[Sort by]** y haz clic en **[OK]**. Los subtotales sobre datos sin ordenar producen un grupo por fila.
+2. Haz clic en una sola celda dentro de la lista. No selecciones el rango; Excel se extiende al bloque completo por su cuenta.
+3. Ve a la pestaña **Datos**, grupo **Esquema**, y haz clic en **Subtotal**.
+4. En el cuadro de diálogo **Subtotal**, abre la lista **[At each change in]** y selecciona la columna por la que acabas de ordenar.
+5. Abre la lista **[Use function]** y selecciona una de estas: **[Sum]**, **[Count]**, **[Average]**, **[Max]**, **[Min]**, **[Product]**, **[Count Numbers]**, **[StdDev]**, **[StdDevp]**, **[Var]**, **[Varp]**.
+6. En la lista **Agregar subtotal a**, marca la casilla de cada columna que lleva total y desmarca las demás. Excel preselecciona la última columna numérica, que casi nunca es la que quieres.
+7. Deja seleccionada **Reemplazar subtotales actuales** en la primera pasada. DESMÁRCALA cuando corras el cuadro de diálogo una segunda vez para apilar una segunda función sobre la primera, porque si no la segunda corrida borra la primera.
+8. Selecciona **[Page break between groups]** cuando cada grupo tenga que imprimirse en su propia página.
+9. Deja seleccionada **Resumen debajo de los datos**, o desmárcala para poner los totales arriba de sus grupos.
+10. Haz clic en **[OK]**. Excel inserta filas con fórmulas `SUBTOTALES` y arma un esquema de tres niveles.
+11. Para quitarlos todos, haz clic en una celda de la lista, vuelve a abrir el cuadro de diálogo y haz clic en **Quitar todos**.
+
+La fila de totales de una tabla, la otra mitad del objetivo, es el 3.2.3 del Associate: pestaña **Diseño de tabla**, grupo **Opciones de estilo de tabla**, casilla **Fila de totales**, y luego la lista desplegable de cada celda de total. Lo que importa aquí es el código que escribe. Verificado en la instalación del profesor: una fila de totales de tabla escribe `=SUBTOTALES(109,[Columna])`. Los códigos `1xx` ignoran tanto las filas ocultas a mano como las ocultas por un filtro; los códigos `9` ignoran solo las filtradas. Sobre datos sin filtrar, `SUBTOTALES(9,...)`, `SUBTOTALES(109,...)` y `AGGREGATE(9,3,...)` devolvieron el mismo número, así que la diferencia solo se ve cuando hay filas ocultas.
 
 <!-- ES-FIN MO201-2.2.4 -->
 
@@ -2693,7 +3584,20 @@ Non-destructive branch, which the exam asks for when it says extract or list the
 
 <!-- ES-INICIO MO201-2.2.5 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz primero una copia de la hoja. Haz clic derecho en la [sheet tab], haz clic en **[Move or Copy...]**, selecciona **[Create a copy]** y haz clic en **[OK]**. Este comando borra filas y no las regresa después de guardar.
+2. Haz clic en una celda dentro de la lista. Excel se extiende al bloque completo.
+3. Ve a la pestaña **Datos**, grupo **[Data Tools]**, y haz clic en **Quitar duplicados**.
+4. En el cuadro de diálogo **Quitar duplicados**, selecciona **[My data has headers]** cuando la primera fila tenga los nombres de las columnas. Observa la lista **Columnas** mientras haces clic en la casilla: las entradas cambian entre `Columna A, Columna B` y los nombres reales de los encabezados, que es la confirmación más rápida de que la casilla está bien.
+5. Usa **[Select All]** o **[Unselect All]**, y después selecciona solo las columnas que definen un duplicado. Dos filas cuentan como duplicadas solo cuando coinciden todas las columnas seleccionadas. Seleccionar todas las columnas es la prueba más estricta, seleccionar una es la más laxa, y la tarea va a decir cuál.
+6. Haz clic en **[OK]**. Un mensaje informa cuántos valores duplicados se encontraron y se quitaron y cuántos valores únicos quedan. Léelo antes de hacer clic en [OK], porque es el único registro de lo que pasó.
+7. Excel borra las filas y las de abajo suben. No se oculta nada.
+
+Rama no destructiva, la que pide el examen cuando dice extraer o listar los valores únicos:
+
+8. Ve a la pestaña **Datos**, grupo **Ordenar y filtrar**, y haz clic en **Avanzadas**. En el cuadro de diálogo **Filtro avanzado** selecciona **Copiar a otra ubicación**, define **Rango de la lista**, deja vacío **Rango de criterios**, define **Copiar a** con una sola celda de destino, selecciona **[Unique records only]** y haz clic en **[OK]**.
+9. O márcalos sin tocarlos: pestaña **Inicio**, grupo **Estilos**, **Formato condicional**, **Resaltar reglas de celdas**, **Duplicar valores...**, elige el formato en la lista **[with]** y haz clic en **[OK]**.
 
 <!-- ES-FIN MO201-2.2.5 -->
 
@@ -2730,7 +3634,28 @@ Verified on the professor's build: the top-and-bottom rule type stores a rank an
 
 <!-- ES-INICIO MO201-2.3.1 -->
 
-_Pendiente._
+Aquí es donde queda escrito completo el cuadro de diálogo **Nueva regla de formato**; el 2.4.2 del Associate llega a él por **[More Rules...]** y remite aquí.
+
+**Ruta de examen**
+
+1. Selecciona el rango primero. La regla se guarda junto con el rango que estaba seleccionado al crearla, y corregirlo después obliga a editar **[Applies to]** a mano.
+2. Ve a la pestaña **Inicio**, grupo **Estilos**, haz clic en **Formato condicional** y luego en **Nueva regla...**.
+3. Se abre el cuadro de diálogo **Nueva regla de formato**. Elige una entrada de la lista **Seleccionar un tipo de regla**, arriba:
+   - **[Format all cells based on their values]**
+   - **[Format only cells that contain]**
+   - **[Format only top or bottom ranked values]**
+   - **[Format only values that are above or below average]**
+   - **[Format only unique or duplicate values]**
+   - **[Use a formula to determine which cells to format]**
+4. El panel **[Edit the Rule Description]** de abajo cambia según el tipo que elegiste. Llénalo.
+5. Para **[Format all cells based on their values]**, abre **[Format Style]** y elige **[2-Color Scale]**, **[3-Color Scale]**, **Barra de datos** o **Conjunto de iconos**. Después ajusta cada punto de corte: la lista **[Type]** de cada punto tiene **[Lowest Value]**, **Número**, **[Percent]**, **Fórmula**, **[Percentile]**, **[Highest Value]**, y el cuadro **[Value]** de al lado recibe el umbral.
+6. Para una **Barra de datos**, selecciona **[Show Bar Only]** para ocultar el número. En **[Bar Appearance]** ajusta **Relleno** a **[Gradient Fill]** o **[Solid Fill]**, y **Borde** a **[Solid Border]** o **[No Border]**. Haz clic en **[Negative Value and Axis...]** para decir dónde queda el cero y de qué color va una barra negativa.
+7. Para un **Conjunto de iconos**, abre la lista **[Icon Style]** y luego selecciona **[Reverse Icon Order]** o **[Show Icon Only]** si te lo piden. Ajusta el **[Value]** y el **[Type]** de cada banda. Pon cualquier icono suelto en **[No Cell Icon]** para dejar esa banda sin marcar.
+8. Para los tipos de regla que colorean celdas en lugar de dibujar dentro de ellas, haz clic en el botón **Formato...**. Se abre un Formato de celdas recortado, con cuatro pestañas nada más: **Número**, **Fuente**, **Borde** y **Relleno**. No hay pestaña Alineación ni pestaña Protección, porque una regla no puede cambiar ninguna de las dos.
+9. Pon el color de la letra en la pestaña **Fuente** y luego, SIN cerrar el cuadro de diálogo, ve a la pestaña **Relleno** y pon el fondo. Haz clic en **[OK]**. Los dos se aplicaron en una sola operación, el mismo principio que en el 2.2.6 del Associate.
+10. Haz clic en **[OK]** para cerrar **Nueva regla de formato**.
+
+Verificado en la instalación del profesor: el tipo de regla de superiores e inferiores guarda un número de posición y una marca de porcentaje, y el tipo por encima del promedio guarda una marca de arriba o abajo, cada uno como su propia regla con su propia prioridad, que es justo lo que el cuadro de diálogo escribe cuando llenas esos paneles.
 
 <!-- ES-FIN MO201-2.3.1 -->
 
@@ -2767,7 +3692,28 @@ Verified on the professor's build: a rule of this type accepted `=AND($E1>3,MOD(
 
 <!-- ES-INICIO MO201-2.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango empezando por su celda superior izquierda. Esto importa aquí más que en ningún otro lado: la fórmula se escribe una sola vez, para la celda activa de la selección, y Excel la desplaza al resto con las mismas reglas con que se desplaza una fórmula copiada.
+2. Ve a la pestaña **Inicio**, grupo **Estilos**, haz clic en **Formato condicional** y luego en **Nueva regla...**.
+3. En **Seleccionar un tipo de regla** haz clic en **[Use a formula to determine which cells to format]**.
+4. Haz clic dentro del cuadro **[Format values where this formula is true]**.
+5. Presiona F2 antes de usar las teclas de flecha. Ese cuadro arranca en modo de señalamiento, donde una flecha inserta una referencia de celda en lugar de mover el cursor; F2 lo pasa a modo de edición.
+6. Escribe una fórmula que devuelva VERDADERO o FALSO para la celda superior izquierda. Fija la columna con un signo de pesos cuando una sola columna decide toda la fila: `=$E2="Overdue"` sobre `A2:H200` colorea la fila entera.
+7. Haz clic en **Formato...**. Pon el color en la pestaña **Fuente** y luego, SIN cerrar, el fondo en la pestaña **Relleno**. Haz clic en **[OK]**.
+8. Haz clic en **[OK]** para cerrar el cuadro de diálogo de la regla.
+
+Patrones que conviene tener a la mano, todos escritos para un rango cuya celda superior izquierda está en la fila 2:
+
+- fila entera gobernada por una sola columna: `=$E2="Overdue"`
+- filas con bandas: `=MOD(ROW(),2)=0`
+- columnas de fin de semana en el encabezado de un calendario: `=DIASEM(B$1,2)>5`
+- por encima del objetivo de la propia fila: `=Y($C2>$B2,$B2<>"")`
+- vacío donde se pedía un valor: `=Y($A2<>"",$D2="")`
+- clave repetida: `=CONTAR.SI($A:$A,$A2)>1`
+- vence dentro de treinta días: `=Y($F2>=HOY(),$F2<=HOY()+30)`
+
+Verificado en la instalación del profesor: una regla de este tipo aceptó `=AND($E1>3,MOD(ROW(),2)=0)` y devolvió la fórmula tal cual, con una prioridad propia y con Detener si es verdad disponible.
 
 <!-- ES-FIN MO201-2.3.2 -->
 
@@ -2798,7 +3744,22 @@ Verified on the professor's build: three rules added to one range took prioritie
 
 <!-- ES-INICIO MO201-2.3.4 -->
 
-_Pendiente._
+Certiport numera este dominio 2.3.1, 2.3.2 y 2.3.4, sin 2.3.3. No falta nada en la lista.
+
+**Ruta de examen**
+
+1. Ve a la pestaña **Inicio**, grupo **Estilos**, haz clic en **Formato condicional** y luego en **Administrar reglas...**.
+2. Se abre el **Administrador de reglas de formato condicionales**. Abre la lista **[Show formatting rules for]** de arriba y elige **[Current Selection]**, **[This Worksheet]** o una hoja por su nombre. [Current Selection] es la opción predeterminada, y es la razón por la que las reglas parecen desaparecer: oculta toda regla cuyo rango no sea donde estás parado.
+3. Selecciona una regla y haz clic en **[Edit Rule...]**. Se abre el cuadro de diálogo **Editar regla de formato**, idéntico a **Nueva regla de formato** (2.3.1). Cambia el tipo de regla, la descripción o el **Formato**. Haz clic en **[OK]**.
+4. Reordena con los botones de flecha **[Move Up]** y **[Move Down]**. Cuando dos reglas tocan la misma celda y ajustan la misma propiedad, gana la que está más arriba en la lista; las reglas que ajustan propiedades distintas se aplican las dos.
+5. Marca la casilla **Detener si es verdad** en una regla para impedir que se evalúe cualquier regla debajo de ella en las celdas que esa regla marcó. Úsala para proteger una excepción de máxima prioridad de una regla amplia que esté abajo.
+6. Cambia el rango de una regla sin volver a crearla: haz clic en el cuadro **[Applies to]** y después escribe el rango o arrástralo sobre la hoja que está detrás del cuadro de diálogo.
+7. Haz clic en **[Delete Rule]** para quitar la que está seleccionada.
+8. Haz clic en **[Apply]** para confirmar sin cerrar, y así ver el efecto y seguir editando. Haz clic en **[OK]** para confirmar y cerrar.
+9. Para borrar reglas sin abrir el administrador, usa **Formato condicional**, **Borrar reglas** (2.4.3 del Associate).
+10. Para encontrar dónde están las reglas, ve a la pestaña **Inicio**, grupo **Edición**, **[Find & Select]**, **Formato condicional**, que selecciona todas las celdas que llevan alguna regla. Para quedarte solo con las celdas que comparten la regla de la celda activa, usa **[Find & Select]**, **Ir a Especial...**, **[Conditional formats]** y luego **[Same]**.
+
+Verificado en la instalación del profesor: tres reglas agregadas a un mismo rango tomaron las prioridades 1, 2 y 3 en el orden en que se crearon, mover la tercera al frente renumeró las otras dos, y Detener si es verdad se activó y se volvió a leer. Eso es exactamente lo que hacen [Move Up] y la casilla desde el cuadro de diálogo.
 
 <!-- ES-FIN MO201-2.3.4 -->
 
@@ -2859,7 +3820,48 @@ Note the trap the singular and plural families set. SUMIF puts the range to add 
 
 <!-- ES-INICIO MO201-3.1.1 -->
 
-_Pendiente._
+La ruta que se califica nunca teclea la función a ciegas. Pasa por el grupo [Function Library] y llena los cuadros de argumento uno por uno, porque esa es la única ruta que además demuestra que el candidato sabe cuál argumento es cuál.
+
+**Ruta de examen, parte A, una función, sin anidar**
+
+1. Selecciona la celda que va a contener la fórmula.
+2. Ve a la pestaña **Fórmulas**, grupo **[Function Library]**.
+3. Haz clic en la galería de categoría a la que pertenece la función. SI, SI.CONJUNTO, CAMBIAR, Y, O y NO están bajo **[Logical]**. La familia de agregación condicional no está en una galería de primer nivel: haz clic en **[More Functions]** y después en **[Statistical]** para CONTAR.SI, CONTAR.SI.CONJUNTO, PROMEDIO.SI, PROMEDIO.SI.CONJUNTO, MAX.SI.CONJUNTO y MIN.SI.CONJUNTO, y usa **[Math & Trig]** para SUMAR.SI y SUMAR.SI.CONJUNTO.
+4. Haz clic en el nombre de la función. Se abre el cuadro de diálogo **[Function Arguments]**, titulado con el nombre de la función.
+5. Haz clic dentro del primer cuadro de argumento. Su etiqueta es el nombre del argumento, y el cuadro de diálogo muestra la descripción del argumento debajo de los cuadros conforme te mueves entre ellos.
+6. Escribe la referencia, o haz clic en el botón de contraer que está a la derecha del cuadro y arrastra el rango sobre la hoja, y después haz clic otra vez en el botón para volver a expandir el cuadro de diálogo.
+7. Presiona Tab para pasar al siguiente cuadro. Excel evalúa cada argumento en vivo y muestra el valor a la derecha del cuadro. Observa la línea **[Formula result =]** al final.
+8. Haz clic en **[OK]**. El cuadro de diálogo escribe la fórmula terminada en la celda.
+
+**Ruta de examen, parte B, anidar una función dentro de otra.** Esta es la parte que el examen está probando de verdad, y cada objetivo posterior que anida remite a estos seis pasos.
+
+1. Arma la función exterior con la parte A, hasta el paso 5.
+2. Haz clic dentro del cuadro de argumento que tiene que recibir la función anidada. Déjalo vacío.
+3. Mira el **Cuadro de nombres**, en el extremo izquierdo de la barra de fórmulas. Mientras hay un cuadro de diálogo [Function Arguments] abierto, deja de mostrar la referencia de celda y se convierte en una lista desplegable de funciones.
+4. Ábrela y elige la función interior de la lista de funciones usadas recientemente, o elige **[More Functions...]** para abrir **[Insert Function]** y escoger desde **[Or select a category:]** y **[Select a function:]**.
+5. El cuadro de diálogo [Function Arguments] queda reemplazado por el de la función interior. Llena sus cuadros y no hagas clic en [OK] todavía. Para regresar hacia afuera, haz clic en el nombre de la función exterior dentro de la barra de fórmulas; el cuadro de diálogo exterior vuelve con la llamada anidada ya puesta.
+6. Haz clic en **[OK]** una sola vez, en el nivel exterior. Un solo [OK] confirma todo el anidamiento.
+
+**Ruta de examen, parte C, los cuadros de argumento,** leídos del cuadro de diálogo [Function Arguments] en vivo en la compilación 16.0.20228 para poder citarlos en clase.
+
+| Función | Cuadros, en orden |
+|---|---|
+| SI | [Logical_test], [Value_if_true], [Value_if_false] |
+| SI.CONJUNTO | [Logical_test1], [Value_if_true1], [Logical_test2], [Value_if_true2], … |
+| CAMBIAR | [Expression], [Value1], [Result1], [Default_or_value2], [Result2], … |
+| Y | [Logical1], [Logical2], … |
+| O | [Logical1], [Logical2], … |
+| NO | [Logical] |
+| SUMAR.SI | Rango, Criterio, [Sum_range] |
+| CONTAR.SI | Rango, Criterio |
+| PROMEDIO.SI | Rango, Criterio, [Average_range] |
+| SUMAR.SI.CONJUNTO | [Sum_range], [Criteria_range1], [Criteria1] |
+| CONTAR.SI.CONJUNTO | [Criteria_range1], [Criteria1] |
+| PROMEDIO.SI.CONJUNTO | [Average_range], [Criteria_range1], [Criteria1] |
+| MAX.SI.CONJUNTO | [Max_range], [Criteria_range1], [Criteria1] |
+| MIN.SI.CONJUNTO | [Min_range], [Criteria_range1], [Criteria1] |
+
+Fíjate en la trampa que tienden las familias en singular y en plural. SUMAR.SI pone **al final** el rango que se suma; SUMAR.SI.CONJUNTO lo pone **al principio**. Lo mismo pasa con PROMEDIO.SI frente a PROMEDIO.SI.CONJUNTO. El cuadro de diálogo es lo que hace visible esa diferencia; teclear la esconde.
 
 <!-- ES-FIN MO201-3.1.1 -->
 
@@ -2911,7 +3913,43 @@ HLOOKUP is the same dialog with **Row_index_num** in place of Col_index_num, and
 
 <!-- ES-INICIO MO201-3.2.1 -->
 
-_Pendiente._
+**Ruta de examen, BUSCARV**
+
+1. Selecciona la celda que va a contener la búsqueda.
+2. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Lookup & Reference]**, y después **BUSCARV**.
+3. En **[Lookup_value]**, pon la celda que tiene la clave. Déjala relativa si la fórmula se va a rellenar hacia abajo.
+4. En **[Table_array]**, selecciona toda la tabla de referencia incluida su primera columna. Presiona F4 para fijarla como `$A$2:$D$50`. Este es el paso en el que los candidatos pierden puntos, porque una matriz de tabla relativa se recorre hacia abajo por la hoja cuando se rellena la fórmula.
+5. En **[Col_index_num]**, escribe el número de columna contado desde la primera columna de [Table_array], no desde la columna A de la hoja.
+6. En **[Range_lookup]**, escribe FALSO para una coincidencia exacta o VERDADERO para la coincidencia aproximada por rangos. Dejarlo vacío no es lo mismo que FALSO: vacío significa VERDADERO.
+7. Haz clic en **[OK]**.
+
+BUSCARH es el mismo cuadro de diálogo con **[Row_index_num]** en lugar de [Col_index_num], y la clave se busca a lo largo de la fila superior de [Table_array] en vez de hacia abajo por su primera columna.
+
+**Ruta de examen, COINCIDIR**
+
+1. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Lookup & Reference]**, y después **COINCIDIR**.
+2. **[Lookup_value]**, la clave.
+3. **[Lookup_array]**, una sola fila o una sola columna. COINCIDIR rechaza un rango de dos dimensiones.
+4. **[Match_type]**, 0 para exacta. 1 necesita la matriz ordenada de forma ascendente, -1 la necesita ordenada de forma descendente.
+5. Haz clic en **[OK]**. COINCIDIR devuelve un número de posición, no un valor.
+
+**Ruta de examen, ÍNDICE.** Esta es la única función del objetivo que muestra un cuadro de diálogo extra antes.
+
+1. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Lookup & Reference]**, y después **INDICE**.
+2. Se abre el cuadro de diálogo **[Select Arguments]**, encabezado INDICE, con la línea ["This function has multiple argument lists. Please select one of them."] y una lista **[Arguments:]** con dos entradas, `array,row_num,column_num` y `reference,row_num,column_num,area_num`.
+3. Elige `array,row_num,column_num` para el caso ordinario. Haz clic en **[OK]**.
+4. Se abre el cuadro de diálogo [Function Arguments] con **[Array]**, **[Row_num]**, **[Column_num]**.
+5. En [Array], selecciona el bloque de valores del que se va a devolver el resultado, no toda la tabla con sus encabezados.
+6. Llena [Row_num] y [Column_num]. Cualquiera de los dos puede quedar vacío cuando la matriz es una sola fila o una sola columna.
+7. Haz clic en **[OK]**.
+
+**Ruta de examen, ÍNDICE con COINCIDIR anidada**: la pareja que el examen realmente quiere, y la que el Ejercicio 21 obliga a usar sin nombrarla nunca.
+
+1. Arma ÍNDICE como arriba y detente en el paso 4, con el cursor en **[Row_num]**.
+2. Anida COINCIDIR con la técnica del **Cuadro de nombres** de la parte B de 3.1.1.
+3. Llena los tres cuadros de COINCIDIR y después haz clic en la palabra INDICE dentro de la barra de fórmulas para regresar hacia afuera.
+4. Si [Column_num] también necesita una COINCIDIR, haz clic dentro y repite.
+5. Haz clic en **[OK]** una sola vez, en el nivel de ÍNDICE.
 
 <!-- ES-FIN MO201-3.2.1 -->
 
@@ -2935,7 +3973,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.3.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la celda.
+2. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Date & Time]**.
+3. Haz clic en **HOY** o en **AHORA**.
+4. Se abre el cuadro de diálogo **[Function Arguments]** sin ningún cuadro de argumento, solo con la descripción y la línea **[Formula result =]**. Ninguna de las dos funciones toma argumentos.
+5. Haz clic en **[OK]**. La celda recibe `=HOY()` o `=AHORA()`.
+6. Da formato al resultado, porque lo que devuelve en crudo es un número de serie. Selecciona la celda, presiona Ctrl+1, pestaña **Número**, elige **Fecha** o **[Time]** en la lista **Categoría**, escoge el tipo y haz clic en **[OK]**.
+7. Para calcular una edad o los días transcurridos, resta en una segunda celda, por ejemplo `=HOY()-B2`, y después pon esa celda en la categoría **[General]** o **Número**, no en Fecha, o Excel muestra la diferencia como una fecha de 1900.
 
 <!-- ES-FIN MO201-3.3.1 -->
 
@@ -2967,7 +4013,23 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.3.2 -->
 
-_Pendiente._
+**Ruta de examen, DIASEM**
+
+1. Selecciona la celda.
+2. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Date & Time]**, y después **DIASEM**.
+3. En **[Serial_number]**, apunta a la celda que tiene la fecha. No escribas una fecha como texto.
+4. En **[Return_type]**, escribe el esquema de numeración. La propia descripción del cuadro de diálogo los detalla: 1 para domingo=1 hasta sábado=7, 2 para lunes=1 hasta domingo=7, 3 para lunes=0 hasta domingo=6. Dejar el cuadro vacío da 1.
+5. Haz clic en **[OK]**.
+6. Para convertir el número en un nombre de día, anídalo en otra función o dale formato. La ruta de formato que se califica es Ctrl+1, pestaña **Número**, categoría **Personalizada**, y `dddd` en el cuadro **[Type]** aplicado a la celda de la fecha original.
+
+**Ruta de examen, DIA.LAB**
+
+1. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Date & Time]**, y después **DIA.LAB**.
+2. En **[Start_date]**, apunta a la celda de la fecha inicial.
+3. En **[Days]**, escribe la cantidad de días laborables que hay que avanzar. Un número negativo retrocede.
+4. En **[Holidays]**, selecciona el rango que tiene las fechas no laborables. Presiona F4 para fijarlo, porque esta fórmula casi siempre se rellena hacia abajo. Este cuadro es opcional y es el que revisa el examen, porque sin él se saltan el sábado y el domingo pero no un día festivo.
+5. Haz clic en **[OK]**.
+6. Da formato de fecha al resultado: Ctrl+1, pestaña **Número**, categoría **Fecha**.
 
 <!-- ES-FIN MO201-3.3.2 -->
 
@@ -2994,7 +4056,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.4.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en una sola celda, la superior izquierda del área vacía donde va a aparecer el resumen. No selecciones un bloque: Consolidar escribe tan a la derecha y tan abajo como lo necesite.
+2. Ve a la pestaña **Datos**, grupo **[Data Tools]**, y haz clic en **Consolidar**. Se abre el cuadro de diálogo **Consolidar**.
+3. Abre la lista **Función:** y elige la operación de resumen. La lista tiene exactamente once entradas: [Sum], [Count], [Average], [Max], [Min], [Product], [Count Numbers], [StdDev], [StdDevp], [Var], [Varp].
+4. Haz clic dentro del cuadro **[Reference:]**.
+5. Ve a la primera hoja de origen y arrastra el primer rango de origen, con encabezados incluidos si piensas usar los rótulos. Usa **[Browse...]** en su lugar si el origen es un libro cerrado.
+6. Haz clic en **[Add]**. El rango aparece en la lista **[All references:]**.
+7. Repite los pasos 4 a 6 con cada rango de origen. Cada uno se tiene que agregar por separado; un rango equivocado se saca seleccionándolo en [All references:] y haciendo clic en **[Delete]**.
+8. En **[Use labels in]**, marca **[Top row]** y **[Left column]** si los orígenes traen encabezados y las filas no están en el mismo orden en todas las hojas. Esto es lo que hace que Consolidar empareje por nombre y no por posición, y es la diferencia entre la respuesta que se califica y una equivocada.
+9. Marca **[Create links to source data]** si el resumen tiene que actualizarse cuando cambien los orígenes. Esto inserta un esquema con una fila de detalle oculta por cada origen. Déjalo sin marcar para un resumen plano y estático.
+10. Haz clic en **[OK]**. Ten en cuenta que este cuadro de diálogo tiene **[OK]** y **[Close]**, no [OK] y [Cancel]: [Close] sale sin consolidar.
 
 <!-- ES-FIN MO201-3.4.1 -->
 
@@ -3034,7 +4107,31 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.4.2 -->
 
-_Pendiente._
+**Ruta de examen, Buscar objetivo**
+
+1. Asegúrate de que la celda objetivo contiene una fórmula y de que la celda que piensas cambiar contiene un valor, no una fórmula. Buscar objetivo se niega a cambiar una celda con fórmula.
+2. Selecciona la celda que tiene la fórmula.
+3. Ve a la pestaña **Datos**, grupo **[Forecast]**, haz clic en **Análisis de hipótesis** y después en **Buscar objetivo...**. El cuadro de diálogo se abre con tres cuadros.
+4. **[Set cell:]** ya viene lleno con la celda que seleccionaste. Confírmala, tiene que ser una sola celda que contenga una fórmula.
+5. Haz clic dentro de **[To value:]** y escribe el resultado que quieres como número simple. Sin signo de igual, sin referencia de celda; este cuadro no acepta una referencia.
+6. Haz clic dentro de **[By changing cell:]** y haz clic en la celda de entrada sobre la hoja. Una sola celda.
+7. Haz clic en **[OK]**.
+8. El cuadro de diálogo **[Goal Seek Status]** informa el resultado y muestra **[Target value:]** y **[Current value:]** para que veas qué tan cerca quedó. Haz clic en **[OK]** para conservar el nuevo valor de entrada en la hoja, o en **[Cancel]** para dejar la hoja como estaba. El cuadro de diálogo también trae **[Step]** y **[Pause]**, que recorren la iteración un paso a la vez.
+
+**Ruta de examen, Administrador de escenarios**
+
+1. Pestaña **Datos**, grupo **[Forecast]**, **Análisis de hipótesis**, y después **Administrador de escenarios...**. En una hoja limpia dice ["No Scenarios defined. Choose Add to add scenarios."].
+2. Haz clic en **[Add...]**. Se abre el cuadro de diálogo **[Add Scenario]**.
+3. En **[Scenario name:]**, escribe un nombre. Los nombres son lo que aparece en el informe de resumen, así que usa palabras que el lector entienda, no Escenario 1.
+4. En **[Changing cells:]**, selecciona las celdas de entrada. Para celdas que no están una junto a otra, mantén presionada Ctrl y haz clic en cada una; el propio cuadro de diálogo lo dice, en la línea ["Ctrl+click cells to select non-adjacent changing cells."]. El techo práctico es de 32 celdas cambiantes.
+5. **[Comment:]** viene lleno de antemano con tu nombre y la fecha de hoy. Sobrescríbelo o déjalo.
+6. En **[Protection]**, **[Prevent changes]** viene marcado de forma predeterminada y **[Hide]** viene sin marcar. Los dos solo surten efecto una vez que la hoja está protegida. Déjalos así salvo que el reactivo pida otra cosa.
+7. Haz clic en **[OK]**. Se abre el cuadro de diálogo **[Scenario Values]** con la línea ["Enter values for each of the changing cells."] y un cuadro por cada celda cambiante.
+8. Escribe el valor de cada cuadro.
+9. Haz clic en **[Add]** para entrar directo a otro escenario sin salir, o en **[OK]** para volver al Administrador de escenarios. Usa [Add]: es el camino rápido y el examen casi siempre pide dos o tres escenarios.
+10. De vuelta en el Administrador de escenarios, selecciona un escenario y haz clic en **[Show]** para poner sus valores sobre la hoja. **[Edit...]** lo vuelve a abrir, **[Delete]** lo quita, **[Merge...]** trae escenarios desde otra hoja o desde otro libro.
+11. Para el informe, haz clic en **[Summary...]**. En **[Report type]**, elige **[Scenario summary]** o **[Scenario PivotTable report]**. En **[Result cells:]**, selecciona las celdas con fórmula cuyo resultado se debe comparar, usando Ctrl para las que no están una junto a otra. Haz clic en **[OK]**. Excel inserta una hoja nueva llamada [Scenario Summary].
+12. Haz clic en **[Close]** para salir del Administrador de escenarios.
 
 <!-- ES-FIN MO201-3.4.2 -->
 
@@ -3073,7 +4170,30 @@ The objective bundles a financial function with two logical ones, because the ex
 
 <!-- ES-INICIO MO201-3.4.3 -->
 
-_Pendiente._
+El objetivo junta una función financiera con dos lógicas, porque el reactivo del examen siempre tiene la misma forma: calcular cuánto tarda algo y después decidir algo con base en esa respuesta.
+
+**Ruta de examen, parte A, NPER**
+
+1. Selecciona la celda.
+2. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Financial]**, y después **NPER**.
+3. Se abre el cuadro de diálogo **[Function Arguments]** con cinco cuadros: **[Rate]**, **[Pmt]**, **[Pv]**, **[Fv]**, **[Type]**.
+4. **[Rate]**, la tasa por periodo. Divide la tasa anual entre el número de periodos por año dentro del mismo cuadro, `B2/12`, para que la hoja se siga leyendo bien.
+5. **[Pmt]**, el pago que se hace cada periodo. Ponlo negativo si es dinero que sale, porque Excel les da signo a los flujos de efectivo.
+6. **[Pv]**, el valor presente, la cantidad prestada o la suma que se tiene hoy. Lleva el signo contrario al de [Pmt].
+7. **[Fv]**, opcional, el saldo que debe quedar al final. Vacío significa cero.
+8. **[Type]**, opcional, 0 o vacío para el pago al final del periodo, 1 para el pago al principio.
+9. Observa **[Formula result =]** al final del cuadro de diálogo. Si muestra un error antes de que hayas hecho clic en [OK], los signos están mal. Este es el diagnóstico que te da el cuadro de diálogo y que la ruta tecleada no da.
+10. Haz clic en **[OK]**.
+
+**Ruta de examen, parte B, la decisión que va encima**
+
+1. Selecciona la celda de la decisión.
+2. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Logical]**, y después **SI**.
+3. Haz clic dentro de **[Logical_test]** y anida Y con la técnica del **Cuadro de nombres** de la parte B de 3.1.1.
+4. Llena **[Logical1]** y **[Logical2]** con las dos condiciones, por ejemplo la celda de NPER contra un tope y el pago contra un presupuesto.
+5. Haz clic en la palabra SI dentro de la barra de fórmulas para volver al cuadro de diálogo exterior.
+6. Llena **[Value_if_true]** y **[Value_if_false]** con texto entre comillas o con referencias.
+7. Haz clic en **[OK]**.
 
 <!-- ES-FIN MO201-3.4.3 -->
 
@@ -3103,7 +4223,21 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.4.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Acomoda primero las entradas en celdas con rótulo: tasa anual, plazo en años, cantidad prestada. El examen espera que la fórmula haga referencia a celdas, no que traiga números fijos.
+2. Selecciona la celda del pago.
+3. Pestaña **Fórmulas**, grupo **[Function Library]**, **[Financial]**, y después **PAGO**.
+4. Se abre el cuadro de diálogo **[Function Arguments]** con cinco cuadros: **[Rate]**, **[Nper]**, **[Pv]**, **[Fv]**, **[Type]**.
+5. **[Rate]**, la tasa por periodo. Escribe `B2/12` para un pago mensual sobre una tasa anual. Poner la tasa anual en crudo es la respuesta equivocada más común de todas.
+6. **[Nper]**, el número total de pagos. Escribe `B3*12`, no el número de años.
+7. **[Pv]**, la cantidad prestada, como número positivo si quieres que el pago se devuelva negativo, o escrita como `-B4` si quieres el pago positivo. Decídelo una sola vez y sé consistente en toda la hoja.
+8. **[Fv]**, opcional, el saldo o valor residual que queda al final. Vacío significa cero.
+9. **[Type]**, opcional, 0 o vacío para el pago al final del periodo, 1 para el principio.
+10. Lee **[Formula result =]** al final antes de confirmar.
+11. Haz clic en **[OK]**.
+12. Da formato al resultado: selecciónalo, presiona Ctrl+1, pestaña **Número**, **Moneda** o **Contabilidad** en la lista **Categoría**, define **Posiciones decimales** y haz clic en **[OK]**.
+13. Para una tabla de amortización, fija las celdas de entrada con F4 mientras armas la primera fila, para que la fórmula se pueda rellenar hacia abajo sin que las referencias se recorran.
 
 <!-- ES-FIN MO201-3.4.4 -->
 
@@ -3138,7 +4272,26 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.5.1 -->
 
-_Pendiente._
+**Ruta de examen, precedentes, las celdas que lee esta fórmula**
+
+1. Selecciona la celda que contiene la fórmula.
+2. Ve a la pestaña **Fórmulas**, grupo **Auditoría de fórmulas**.
+3. Haz clic en **Rastrear precedentes**. Aparecen flechas azules que van desde cada celda que lee la fórmula hasta la celda seleccionada, con un punto en el extremo de cada origen.
+4. Haz clic otra vez en **Rastrear precedentes** para ir un nivel más atrás. Cada clic agrega un nivel. Sigue haciendo clic hasta que no aparezca ninguna flecha nueva.
+5. Si aparece una flecha negra punteada que apunta a un icono pequeño de hoja de cálculo, el precedente está en otra hoja o en otro libro. Haz doble clic en esa flecha punteada para abrir el cuadro de diálogo **[Go To]**, que enlista la referencia externa; selecciónala y haz clic en **[OK]** para saltar allá. El libro de origen tiene que estar abierto para que esto funcione.
+
+**Ruta de examen, dependientes, las celdas que leen esta celda**
+
+1. Selecciona la celda.
+2. Pestaña **Fórmulas**, grupo **Auditoría de fórmulas**, haz clic en **Rastrear dependientes**.
+3. Haz clic otra vez por cada nivel adicional.
+
+**Ruta de examen, quitar las flechas,** que el examen sí revisa porque quiere la hoja limpia.
+
+1. Pestaña **Fórmulas**, grupo **Auditoría de fórmulas**, haz clic en la flecha del botón **Quitar flechas**.
+2. El menú tiene tres entradas: **Quitar flechas**, **[Remove Precedent Arrows]**, **[Remove Dependent Arrows]**. Elige la que se pida. Hacer clic en la cara del botón en lugar de en su flecha ejecuta Quitar flechas y borra todo.
+
+**Ruta de examen, seleccionar en vez de dibujar,** cuando el reactivo dice "selecciona las celdas que alimentan esta fórmula": usa **Ir a Especial** (Associate 1.2.2) y elige **[Precedents]** o **[Dependents]**. Debajo se encienden dos opciones más, **[Direct only]** y **[All levels]**; escoge la que pida el reactivo. [Direct only] es un solo nivel, [All levels] recorre toda la cadena. Haz clic en **[OK]** y las celdas quedan seleccionadas, sin dibujar ninguna flecha.
 
 <!-- ES-FIN MO201-3.5.1 -->
 
@@ -3165,7 +4318,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.5.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Fórmulas**, grupo **Auditoría de fórmulas**, y haz clic en **Ventana Inspección**. Se abre un panel titulado **Ventana Inspección**, acoplado o flotante.
+2. Haz clic en **[Add Watch...]** dentro del panel. Se abre el cuadro de diálogo **[Add Watch]** con la línea ["Select the cells that you would like to watch the value of:"] y un cuadro de referencia debajo.
+3. Selecciona la celda o el rango sobre la hoja. El cuadro se llena con la referencia completa, incluido el nombre de la hoja, por ejemplo `=Sheet1!$A$3`. Se puede agregar un rango entero de una vez, y cada celda dentro de él se vuelve su propia fila.
+4. Haz clic en **[Add]**.
+5. La inspección aparece como una fila en el panel bajo seis columnas: **[Book]**, **[Sheet]**, **[Name]**, **Celda**, **[Value]**, **Fórmula**. La columna [Name] se queda vacía a menos que la celda traiga un nombre definido, que es una buena razón para nombrar las celdas antes de inspeccionarlas.
+6. Repite los pasos 2 a 4 con cada celda que se vaya a monitorear. Las inspecciones de otras hojas y de otros libros abiertos caen todas en el mismo panel, que es el punto de la herramienta.
+7. Haz doble clic en cualquier fila para saltar directo a esa celda, esté donde esté.
+8. Haz clic en un encabezado de columna para ordenar la lista por esa columna.
+9. Para quitar una, selecciona su fila y haz clic en **[Delete Watch]**. Ctrl+clic o Mayús+clic selecciona varias filas a la vez.
+10. Para cerrar el panel, haz clic otra vez en **Ventana Inspección** en la cinta de opciones, o haz clic en la X de la esquina superior derecha del panel. Cerrar el panel no borra las inspecciones: al volver a abrirlo regresan.
 
 <!-- ES-FIN MO201-3.5.2 -->
 
@@ -3219,7 +4383,45 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.5.3 -->
 
-_Pendiente._
+**Ruta de examen, parte A, ejecutar la comprobación**
+
+1. Selecciona la primera celda del área que se va a comprobar, o cualquier celda si toda la hoja está dentro del alcance.
+2. Ve a la pestaña **Fórmulas**, grupo **Auditoría de fórmulas**. **Comprobación de errores** es un botón dividido.
+3. Haz clic en la cara del botón, o abre su flecha y haz clic en **Comprobación de errores...**. El cuadro de diálogo **Comprobación de errores** se abre en la primera celda marcada.
+4. Lee lo que muestra. Nombra la celda, por ejemplo ["Error in cell D1"], imprime la fórmula debajo, da el tipo de error como encabezado, por ejemplo ["Divide by Zero Error"], y lo explica en una sola oración.
+5. Elige uno de los cuatro botones de acción del lado derecho:
+   - **[Help on this Error]** abre el tema de ayuda.
+   - **[Show Calculation Steps]** pasa la celda directo al cuadro de diálogo **Evaluar fórmula**. Este es el puente entre este objetivo y el 3.5.4.
+   - **[Ignore Error]** marca esta celda como revisada y sigue adelante.
+   - **[Edit in Formula Bar]** pone el cursor en la fórmula para que la corrijas, y entonces el cuadro de diálogo ofrece **[Resume]** para continuar la comprobación.
+6. Usa **[Previous]** y **[Next]** al final para recorrer las marcas que quedan.
+7. Cuando termina el barrido, Excel dice que la comprobación de errores está completa para la hoja. Haz clic en **[OK]**.
+
+**Ruta de examen, parte B, cambiar qué reglas se aplican.** Esta es la mitad del objetivo que de verdad trata de reglas, y vive en Opciones de Excel, no en la cinta de opciones.
+
+1. Haz clic en **[Options...]** dentro del cuadro de diálogo Comprobación de errores, o ve a la pestaña **Archivo**, haz clic en **[Options]** y selecciona **Fórmulas** en la lista de categorías de la izquierda.
+2. En **Comprobación de errores**, la casilla **[Enable background error checking]** enciende y apaga los triángulos verdes para toda la aplicación. **[Indicate errors using this color]** define el color del triángulo. **[Reset Ignored Errors]** deshace todo lo que se descartó con [Ignore Error], en todo el libro.
+3. En **[Error checking rules]**, marca o desmarca las reglas individuales. En la compilación 16.0.20228 de Microsoft 365 hay doce, y estos son sus rótulos exactos:
+   1. [Cells containing formulas or PivotTables that result in an error]
+   2. [Inconsistent calculated column formula in tables]
+   3. [Cells containing years represented as 2 digits]
+   4. [Numbers formatted as text or preceded by an apostrophe]
+   5. [Formulas inconsistent with other formulas in the region]
+   6. [Formulas which omit cells in a region]
+   7. [Unlocked cells containing formulas]
+   8. [Formulas referring to empty cells]
+   9. [Data entered in a table is invalid]
+   10. [Misleading number formats]
+   11. [Cells containing data types that couldn't refresh]
+   12. [Cells containing stale values]
+4. Haz clic en **[OK]**.
+5. Nota para quien enseñe desde una máquina con Office 2019: las reglas 10, 11 y 12 no están. Office 2019 muestra nueve, y esas primeras nueve son las que MO-201 puede preguntar.
+
+**Ruta de examen, parte C, la ruta en línea sobre una sola celda**
+
+1. Haz clic en una celda que traiga un triángulo verde en su esquina superior izquierda.
+2. Haz clic en el botón de advertencia que aparece a la izquierda de la celda.
+3. El menú nombra el error en su primera línea y después ofrece las mismas opciones, incluidas **[Help on this error]**, **[Show Calculation Steps...]**, **[Ignore Error]**, **[Edit in Formula Bar]** y **[Error Checking Options...]**.
 
 <!-- ES-FIN MO201-3.5.3 -->
 
@@ -3244,7 +4446,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.5.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona la única celda que contiene la fórmula. Evaluar fórmula trabaja sobre una celda a la vez.
+2. Ve a la pestaña **Fórmulas**, grupo **Auditoría de fórmulas**, y haz clic en **Evaluar fórmula**.
+3. Lee la disposición. **[Reference:]** arriba muestra la celda que se está evaluando, con la referencia completa, por ejemplo `Sheet1!$A$3`. **[Evaluation:]** debajo muestra la fórmula con una parte subrayada. Bajo el cuadro, el cuadro de diálogo enuncia la regla: ["To show the result of the underlined expression, click Evaluate. The most recent result appears italicized."]
+4. Haz clic en **[Evaluate]**. La parte subrayada queda reemplazada por su resultado, mostrado en cursiva, y el subrayado se mueve a la siguiente parte por resolver. Así se ve el orden de evaluación del propio Excel, que es toda la razón de ser de la herramienta.
+5. Sigue haciendo clic en **[Evaluate]** hasta que el cuadro de diálogo haya reducido la fórmula a un solo valor. En ese punto el botón ofrece reiniciar la evaluación.
+6. Cuando la parte subrayada es una referencia a otra celda que a su vez contiene una fórmula, **[Step In]** se habilita. Haz clic para abrir la fórmula de esa celda en el mismo cuadro de diálogo, con sangría debajo. Recórrela y después haz clic en **[Step Out]** para colapsarla de vuelta y llevar el valor resuelto a la fórmula exterior.
+7. **[Step In]** se queda en gris en dos casos: cuando la referencia subrayada aparece por segunda vez en la misma fórmula, y cuando apunta a una celda de otro libro. No gastes tiempo de examen tratando de encenderlo.
+8. Haz clic en **[Close]** cuando termines. El cuadro de diálogo no tiene [OK]; evaluar no cambia nada en la hoja.
 
 <!-- ES-FIN MO201-3.5.4 -->
 
@@ -3271,7 +4482,18 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.6.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Pon la pestaña Programador en la cinta de opciones una sola vez, al inicio de la sesión (Expert 1.1.3, paso 1).
+2. Decide dónde empieza la macro y haz clic en esa celda ahora. La grabadora captura la posición del cursor desde la primera acción, no desde antes de ella.
+3. Ve a la pestaña **Programador**, grupo **[Code]**, y haz clic en **Grabar macro...**. El mismo comando está en la pestaña **Vista** bajo **[Macros]**, y como un cuadrito en el extremo izquierdo de la barra de estado.
+4. El cuadro de diálogo **Grabar macro** tiene cuatro cuadros: **Nombre de la macro**, **[Shortcut key]**, **[Store macro in]**, **[Description]**.
+5. Abre **[Store macro in]** y elige **[This Workbook]** para dejar la macro en este archivo, **[Personal Macro Workbook]** para tenerla en todos los libros que abras en esta máquina, o **[New Workbook]**.
+6. Haz clic en **[OK]**. La grabación ya empezó; el cuadrito de la barra de estado se convierte en un cuadro de detener.
+7. Antes de tocar los datos, define el modo de referencia: pestaña **Programador**, grupo **[Code]**, **[Use Relative References]**. Con la opción apagada, la grabadora escribe la dirección en la que hiciste clic, así que la macro siempre trabaja sobre las mismas celdas. Con la opción encendida, escribe el desplazamiento desde donde arrancó la macro, así que la macro trabaja donde esté el cursor.
+8. Haz el trabajo. Usa la cinta de opciones y el teclado. Cada selección, cada desplazamiento hasta una celda con nombre y cada clic equivocado quedan anotados.
+9. Ve a la pestaña **Programador**, grupo **[Code]**, y haz clic en **[Stop Recording]**, o haz clic en el cuadro de la barra de estado.
+10. Ve a la pestaña **Archivo**, **Guardar como**, abre **[Save as type]** y elige **[Excel Macro-Enabled Workbook (\*.xlsm)]**. Guardar como `.xlsx` tira el módulo, y la única advertencia es un cuadro de diálogo que la mayoría de la gente cierra sin leer.
 
 <!-- ES-FIN MO201-3.6.1 -->
 
@@ -3296,7 +4518,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.6.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Escribe el nombre en el cuadro **Nombre de la macro** del cuadro de diálogo **Grabar macro**, antes de grabar, no después. No hay ningún comando de cambiar nombre en toda la interfaz de Excel.
+2. Respeta las reglas que impone el cuadro: el primer carácter tiene que ser una letra; nada de espacios, puntos, guiones ni otra puntuación; solo letras, dígitos y guion bajo; hasta 255 caracteres; y el nombre no puede ser una referencia de celda como `A1` o `R1C1`, ni un nombre que ya use otra macro del mismo libro.
+3. Si el nombre rompe una regla, Excel lo rechaza al hacer clic en [OK], muestra un mensaje y deja el cuadro de diálogo abierto con el nombre todavía en el cuadro.
+4. Llena **[Shortcut key]** con una sola letra. Excel le antepone `Ctrl+`. Mantén presionada Mayús mientras escribes la letra y el cuadro muestra `Ctrl+Mayús+` en su lugar. Prefiere la forma con Mayús: una macro asignada a `Ctrl+c` o a `Ctrl+s` le quita esa tecla a Excel mientras el libro esté abierto.
+5. Escribe una **[Description]**. Aparece debajo de la lista en el cuadro de diálogo de macros y es la única documentación que una macro grabada llega a tener.
+6. Haz clic en **[OK]**.
+7. Para cambiar el nombre después de los hechos, presiona Alt+F11, abre el módulo y edita el nombre en la línea `Sub`: `Sub Nombre_Viejo()` se vuelve `Sub Nombre_Nuevo()`. La línea `End Sub` no cambia.
+8. Presiona Alt+F8, selecciona la macro y haz clic en **[Options...]** para cambiar después la tecla de método abreviado y la descripción. Ese cuadro de diálogo no ofrece el nombre.
 
 <!-- ES-FIN MO201-3.6.2 -->
 
@@ -3324,7 +4555,19 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-3.6.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Ve a la pestaña **Programador**, grupo **[Code]**, y haz clic en **[Macros]**, o presiona Alt+F8.
+2. Selecciona la macro en la lista y haz clic en **[Edit]**. Se abre el **[Visual Basic Editor]** con el cursor dentro del `Sub`.
+3. Lee lo que escribió la grabadora antes de cambiar nada. Un paso grabado casi siempre son dos líneas: `Range("B2").Select` y después `Selection.something`.
+4. Borra las líneas que deshacen trabajo hecho un momento antes. La grabadora escribe cada clic, incluidos los que corrigieron un error, y esas líneas son lo primero que el objetivo espera que quites.
+5. Junta un `Select` y su línea `Selection` en una sola. `Range("B2").Select` seguido de `Selection.Font.Bold = True` se vuelve `Range("B2").Font.Bold = True`. La macro deja de mover el cursor y corre más rápido.
+6. Cambia los literales para volver general la macro: una dirección, un índice de color, una cadena de formato de número, un nombre de hoja.
+7. Pon un apóstrofo al inicio de una línea para comentarla, y así puedes probar sin borrar.
+8. Presiona F8 para recorrerla línea por línea y ver cómo se redibuja la hoja. Presiona F5 para correr todo el `Sub`.
+9. Pon el cursor en una línea y presiona F9 para poner un punto de interrupción. La línea se pinta de rojo oscuro y F5 se detiene ahí.
+10. Presiona Alt+Q para cerrar el editor y volver a Excel.
+11. Guarda con Ctrl+S. El archivo tiene que seguir siendo `.xlsm`.
 
 <!-- ES-FIN MO201-3.6.3 -->
 
@@ -3360,7 +4603,25 @@ The contextual tab is captioned **Chart Design** on this build, and the ribbon r
 
 <!-- ES-INICIO MO201-4.1.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona el rango que contiene las dos series, encabezados incluidos. Las dos series deben diferir en magnitud, por ejemplo Unidades en decenas e Ingresos en miles.
+2. Ve a la pestaña **Insertar**, grupo **Gráficos**, y haz clic en **[Insert Combo Chart]**. No uses [Recommended Charts].
+3. Al final de la galería haz clic en **[Create Custom Combo Chart...]**. Se abre el cuadro de diálogo **[Insert Chart]** en la pestaña **[All Charts]** con **Gráficos combinados** ya seleccionado.
+4. Bajo el encabezado "[Choose the chart type and axis for your data series]", localiza la fila de la segunda serie.
+5. Abre la lista **[Chart Type]** de esa fila y elige **[Line]** o **[Line with Markers]**.
+6. En la misma fila, marca la casilla **[Secondary Axis]**. Los dos cambios se hacen antes de que se cierre el cuadro de diálogo, en una sola operación.
+7. Haz clic en **Aceptar**. El gráfico ahora lleva un eje de valores a la izquierda y otro a la derecha.
+8. Ponle título al segundo eje: con el gráfico seleccionado, ve a la pestaña contextual **Diseño de gráfico**, grupo **[Chart Layouts]**, haz clic en **[Add Chart Element]**, coloca el puntero en **Títulos de eje** y haz clic en **[Secondary Vertical]**.
+
+Para mover al eje secundario una serie que ya existe, sin rehacer el gráfico:
+
+1. Con el gráfico seleccionado, ve a la pestaña contextual **[Format]**, grupo **[Current Selection]**.
+2. Abre la lista **Elementos de gráfico** y elige la serie por su nombre. Esta es la forma que puntúa para seleccionar una serie delgada en la que no puedes hacer clic.
+3. Haz clic en **[Format Selection]**.
+4. En el panel **[Format Data Series]**, **[Series Options]**, bajo **[Plot Series On]**, selecciona **[Secondary Axis]**.
+
+En esta versión la pestaña contextual aparece rotulada **Chart Design**, que el glosario traduce como **Diseño de gráfico**, y los recursos de la cinta traen además la etiqueta más antigua **Design**. Los objetivos de gráficos del Associate usan **Chart Design** en todo el documento; trata **Design** como la misma pestaña y consulta "Still to confirm".
 
 <!-- ES-FIN MO201-4.1.1 -->
 
@@ -3395,7 +4656,26 @@ Type-specific modifications the exam asks for:
 
 <!-- ES-INICIO MO201-4.1.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Selecciona los datos de origen, encabezados incluidos. El gráfico de proyección solar y el de rectángulos necesitan una columna por nivel de jerarquía, el nivel más externo al final, con celdas en blanco donde un nivel no aplica. El de embudo necesita una sola serie ya ordenada de mayor a menor.
+2. Ve a la pestaña **Insertar**, grupo **Gráficos**, y abre la galería a la que pertenece el tipo:
+   - **[Insert Statistic Chart]** para **Gráficos de histograma**, **Diagrama de pareto** y **Gráfico de cajas y bigotes** (Certiport lo escribe Box & Whisker; la entrada de la galería dice Box and Whisker, **TO CONFIRM** el ampersand).
+   - **[Insert Hierarchy Chart]** para **Gráfico de rectángulos** y **Gráfico de proyección solar**.
+   - La galería de **[Waterfall, Funnel, Stock, Surface and Radar]** para **Gráficos de cascada** y **Gráficos de embudo** (**TO CONFIRM** el texto completo del botón).
+   - **[Insert Combo Chart]** para **Gráficos combinados**.
+   - **[Maps]**, luego **[Filled Map]**, para **Gráfico de mapa**. El mapa necesita conexión a internet porque resuelve los nombres de lugar a través de Bing, y el MO-211 quitó este tipo de gráfico de la lista de objetivos de 365.
+3. Haz clic en la miniatura. El gráfico aparece en la hoja actual.
+
+La ruta por el cuadro de diálogo llega a todos estos tipos y es la respuesta más segura cuando la tarea nombra un subtipo que no encuentras en una galería: selecciona los datos, abre el cuadro de diálogo **[Insert Chart]** como en Associate 5.1.1, ve a la pestaña **[All Charts]**, elige la categoría en la lista de la izquierda, elige el subtipo en las miniaturas de arriba y haz clic en **Aceptar**. El mismo cuadro de diálogo se abre desde **[All Chart Types...]**, al final de cualquier galería de gráficos.
+
+Para convertir en uno de estos tipos un gráfico que ya existe: haz clic una vez en el gráfico, pestaña **Diseño de gráfico**, grupo **[Type]**, **[Change Chart Type...]**, pestaña **[All Charts]**, elige la categoría y el subtipo nuevos, **Aceptar**.
+
+Modificaciones por tipo que pide el examen:
+
+- *Intervalos del histograma:* haz clic en el eje horizontal, presiona Ctrl+1 y, en el panel **[Format Axis]**, **[Axis Options]**, elige **[By Category]**, **[Automatic]**, **[Bin width]** o **[Number of bins]**, más las dos casillas del intervalo de desbordamiento y del intervalo de subdesbordamiento (**TO CONFIRM** esos dos textos).
+- *Totales en cascada:* haz clic una vez en la serie para seleccionar todas las columnas, haz clic otra vez en esa columna para seleccionarla sola, haz clic con el botón derecho sobre ella y haz clic en **[Set as Total]**. La columna baja a la línea base.
+- *Pareto:* es un subtipo de histograma dentro de la galería **[Insert Statistic Chart]**, no una categoría aparte, y agrega por su cuenta la línea de porcentaje acumulado y su eje secundario.
 
 <!-- ES-FIN MO201-4.1.2 -->
 
@@ -3419,7 +4699,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-4.2.1 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en una sola celda, en cualquier punto dentro de los datos de origen. No selecciones la columna completa ni la hoja completa. Excel se extiende por su cuenta al bloque que la rodea y le atina cuando hay una fila de encabezado y ninguna fila en blanco.
+2. Ve a la pestaña **Insertar**, grupo **Tablas**, y haz clic en **Tabla dinámica**. Si el botón abre un menú, haz clic en **[From Table/Range]**.
+3. En el cuadro de diálogo **[PivotTable from table or range]** (Office 2019 lo titula **[Create PivotTable]**), revisa que el cuadro **[Table/Range]** muestre el bloque completo, incluida la fila de encabezado, por ejemplo `Data!$A$1:$F$61`. Corrígelo aquí si no es así.
+4. Bajo "[Choose where you want the PivotTable to be placed]", selecciona **[New Worksheet]**, o selecciona **[Existing Worksheet]** y haz clic en la celda que va a quedar en la esquina superior izquierda para que su dirección aparezca en el cuadro **[Location]**.
+5. Haz clic en **Aceptar**. Aparece el marco de una tabla dinámica vacía con el panel **[PivotTable Fields]** a la derecha.
+6. En el panel [PivotTable Fields], **arrastra** cada nombre de campo al área que le toca: **[Filters]**, **[Columns]**, **[Rows]**, **[Values]**. Arrastra incluso cuando el destino predeterminado sea el correcto. Marcar la casilla manda los campos de texto a [Rows] y los numéricos a [Values], y la tarea del examen normalmente nombra un área que no es la predeterminada.
+7. Ponle nombre a la tabla dinámica: pestaña contextual **Analizar tabla dinámica**, grupo **Tabla dinámica**, haz clic dentro del cuadro **[PivotTable Name:]**, escribe el nombre y presiona Entrar.
 
 <!-- ES-FIN MO201-4.2.1 -->
 
@@ -3455,7 +4743,27 @@ For which fields are offered at all:
 
 <!-- ES-INICIO MO201-4.2.2 -->
 
-_Pendiente._
+Aquí es donde quedan escritos completos **Configuración de campo** y **Configuración de campo de valor**; el 4.2.6 regresa al mismo cuadro de diálogo para el formato de número.
+
+**Ruta de examen**
+
+1. Haz clic en cualquier celda del área **[Values]** del informe. El campo que queda debajo del puntero se vuelve el campo activo.
+2. Ve a la pestaña **Analizar tabla dinámica**, grupo **[Active Field]**, y haz clic en **Configuración de campo**. Con un campo de valor activo, esto abre el cuadro de diálogo **Configuración de campo de valor** (**TO CONFIRM** que el título del cuadro de diálogo diga exactamente eso; la entrada del menú contextual sí lo dice).
+3. En la pestaña **Resumir valores por**, elige la función en la lista "[Summarize value field by]": [Sum], [Count], [Average], [Max], [Min], [Product], [Count Numbers], [StdDev], [StdDevp], [Var], [Varp].
+4. SIN cerrar el cuadro de diálogo, ve a la pestaña **Mostrar valores como**. Abre la lista "[Show values as]" y elige el cálculo, por ejemplo **[% of Grand Total]**, **[% of Column Total]**, **[% of Parent Row Total]**, **[Difference From]**, **[Running Total In]**. [Difference From] y [Running Total In] habilitan las listas **[Base field]** y **[Base item]** de abajo; defínelas.
+5. Todavía sin cerrar, haz clic dentro del cuadro **[Custom Name]** y corrige el texto. Cambiar la función reescribe este cuadro por su cuenta, así que [Sum of Units] se vuelve [Average of Units]; lo que escribas aquí manda sobre eso.
+6. Sin salir del mismo cuadro de diálogo, haz clic en el botón **[Number Format]**. Se abre una versión recortada de **Formato de celdas**, que solo muestra la pestaña **Número**. Elige la **Categoría**, ajusta las **Posiciones decimales** y haz clic en **Aceptar**.
+7. Haz clic en **Aceptar**. La función, el cálculo, el texto y el formato de número quedaron definidos en una sola pasada por un solo cuadro de diálogo.
+
+Para un campo de fila o de columna, en lugar de un campo de valor:
+
+1. Haz clic en una celda de ese campo, pestaña **Analizar tabla dinámica**, grupo **[Active Field]**, **Configuración de campo**.
+2. Se abre el cuadro de diálogo **Configuración de campo** con dos pestañas, **[Subtotals & Filters]** y **[Layout & Print]**. Pon los subtotales en **[Automatic]**, **[None]** o **Personalizada** con la lista de funciones, y define el diseño compacto, de esquema o tabular solo para ese campo.
+
+Para controlar qué campos se ofrecen:
+
+1. Pestaña **Analizar tabla dinámica**, grupo **[Show]**. Activa o desactiva **[Field List]**, **[+/- Buttons]** y **[Field Headers]** (**TO CONFIRM** estos tres textos).
+2. Pestaña **Analizar tabla dinámica**, grupo **Tabla dinámica**, **[Options]** abre el cuadro de diálogo **[PivotTable Options]**, donde "[For empty cells show]" y "[For error values show]" están en la pestaña **[Layout & Format]**.
 
 <!-- ES-FIN MO201-4.2.2 -->
 
@@ -3488,7 +4796,24 @@ For a date field, use a timeline instead:
 
 <!-- ES-INICIO MO201-4.2.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda dentro de la tabla dinámica.
+2. Ve a la pestaña **Analizar tabla dinámica**, grupo **Filtro**, y haz clic en **[Insert Slicer]**.
+3. En el cuadro de diálogo **[Insert Slicers]**, marca la casilla de cada campo que nombre la tarea. Marca más de uno para obtener varias segmentaciones de datos en una sola operación.
+4. Haz clic en **Aceptar**. Aparece en la hoja un objeto de segmentación de datos por cada campo marcado, uno encima de otro.
+5. Posición y tamaño: haz clic en una segmentación de datos, ve a la pestaña contextual **Segmentación de datos**, grupo **[Size]**, y escribe el **[Height]** y el **[Width]**. No arrastres si la tarea da medidas.
+6. Acomoda los botones: pestaña **Segmentación de datos**, grupo **[Buttons]**, ajusta **[Columns]** para repartir los botones en más de una columna, y ajusta el **[Height]** y el **[Width]** del botón.
+7. Cambia el texto del encabezado: pestaña **Segmentación de datos**, grupo **Segmentación de datos**, haz clic dentro del cuadro **[Slicer Caption:]** y escribe (**TO CONFIRM** el texto del cuadro).
+8. Todo lo demás del objeto: pestaña **Segmentación de datos**, grupo **Segmentación de datos**, **[Slicer Settings...]**. El cuadro de diálogo trae el nombre, el título, una casilla "[Display header]", el orden de los elementos ascendente o descendente, y las dos casillas para los elementos sin datos (**TO CONFIRM** los últimos tres textos).
+9. Manejar varias tablas dinámicas desde una sola segmentación de datos: selecciona la segmentación, pestaña **Segmentación de datos**, grupo **Segmentación de datos**, **[Report Connections]** (Office 2019 lo llama PivotTable Connections, **TO CONFIRM** el texto en 365), marca cada tabla dinámica en el cuadro de diálogo y haz clic en **Aceptar**. Las tablas dinámicas tienen que compartir la misma PivotCache, lo que significa que las dos se construyeron desde el mismo origen sin que se le pidiera a Excel una segunda caché.
+10. Filtrar: haz clic en un botón. Para varios, haz clic en el botón **[Multi Select]** del encabezado de la segmentación, o mantén Ctrl mientras haces clic.
+
+Para un campo de fecha, usa en su lugar una escala de tiempo:
+
+1. Haz clic dentro de la tabla dinámica, pestaña **Analizar tabla dinámica**, grupo **Filtro**, haz clic en **Escala de tiempo**.
+2. En el cuadro de diálogo **[Insert Timelines]** marca el campo de fecha y haz clic en **Aceptar**.
+3. Usa la lista de nivel de la esquina superior derecha del objeto de escala de tiempo para cambiar entre **[Years]**, **[Quarters]**, **[Months]** y **[Days]**, y luego arrastra sobre la barra para elegir el tramo.
 
 <!-- ES-FIN MO201-4.2.3 -->
 
@@ -3529,7 +4854,32 @@ To undo any of the three: click a grouped item, **PivotTable Analyze** tab, **Gr
 
 <!-- ES-INICIO MO201-4.2.4 -->
 
-_Pendiente._
+**Ruta de examen, fechas**
+
+1. Haz clic en cualquier celda que contenga un elemento de fecha dentro del área [Rows] o [Columns]. Haz clic en el elemento, no en el encabezado del campo.
+2. Ve a la pestaña **Analizar tabla dinámica**, grupo **Agrupar**, y haz clic en **[Group Field]**.
+3. Se abre el cuadro de diálogo **[Grouping]**. **[Starting at]** y **[Ending at]** vienen llenos con los datos y con sus casillas marcadas. Desmarca una casilla para escribir tu propio límite.
+4. En la lista **[By]** haz clic en los niveles que nombre la tarea. La lista funciona como interruptor, así que hacer clic en [Months], luego en [Quarters] y luego en [Years] deja los tres resaltados; no hace falta Ctrl.
+5. Haz clic en **Aceptar**.
+6. Lee el panel **[PivotTable Fields]**. Excel agregó un campo nuevo por cada nivel arriba del original, llamados **[Quarters]** y **[Years]**, y dejó el campo original con los meses. Arrástralos al orden que pida la tarea.
+7. Para bloques de días en lugar de niveles de calendario: en la lista **[By]** selecciona solo **[Days]** y pon **[Number of days]** en el tamaño del bloque, por ejemplo 7. Los días agrupados por número de días no se pueden combinar con [Months], [Quarters] ni [Years].
+
+**Ruta de examen, números**
+
+1. Haz clic en una celda que contenga un elemento numérico en el área [Rows].
+2. Pestaña **Analizar tabla dinámica**, grupo **Agrupar**, **[Group Field]**.
+3. En el cuadro de diálogo **[Grouping]** ajusta **[Starting at]**, **[Ending at]** y **[By]**, donde [By] es el ancho del intervalo, por ejemplo 500.
+4. Haz clic en **Aceptar**. El campo ahora muestra bandas escritas como `0-499`, `500-999`.
+
+**Ruta de examen, selección**
+
+1. Haz clic en el primer elemento de fila, luego Ctrl+clic en cada uno de los demás que van en el mismo grupo.
+2. Pestaña **Analizar tabla dinámica**, grupo **Agrupar**, haz clic en **[Group Selection]**.
+3. Excel crea un elemento llamado [Group1] y agrega un segundo campo al panel, con el nombre del original y un 2 al final.
+4. Haz clic en la etiqueta [Group1] dentro de la cuadrícula, escribe el nombre real y presiona Entrar.
+5. Repite con los grupos que falten.
+
+Para deshacer cualquiera de las tres: haz clic en un elemento agrupado, pestaña **Analizar tabla dinámica**, grupo **Agrupar**, **Desagrupar**.
 
 <!-- ES-FIN MO201-4.2.4 -->
 
@@ -3558,7 +4908,20 @@ To document them: **PivotTable Analyze** tab, **Calculations** group, **Fields, 
 
 <!-- ES-INICIO MO201-4.2.5 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda dentro de la tabla dinámica.
+2. Ve a la pestaña **Analizar tabla dinámica**, grupo **[Calculations]**, y haz clic en **[Fields, Items, & Sets]**.
+3. En el menú haz clic en **Campo calculado...**.
+4. Se abre el cuadro de diálogo **[Insert Calculated Field]**. Escribe el nombre del campo en el cuadro **[Name]**, por ejemplo `Revenue`.
+5. Haz clic dentro del cuadro **Fórmula**. Contiene `= 0`. Borra el cero y deja el signo de igual.
+6. Arma la fórmula desde la lista **[Fields]**, en la parte inferior del cuadro de diálogo, en lugar de escribirla: haz clic en el campo, haz clic en **[Insert Field]**, escribe el operador, haz clic en el siguiente campo, haz clic en **[Insert Field]**. El cuadro termina diciendo `= Units * Price`. Un campo calculado solo conoce nombres de campo; rechaza referencias de celda y rangos.
+7. Haz clic en **[Add]**. El nombre pasa a la lista [Name].
+8. Haz clic en **Aceptar**. El campo nuevo aparece en la parte inferior del panel [PivotTable Fields] y queda en [Values] como **[Sum of Revenue]**.
+
+Para cambiar uno: el mismo cuadro de diálogo, elige el campo en la lista desplegable **[Name]**, edita el cuadro Fórmula, haz clic en **[Modify]** y haz clic en **Aceptar**. Para quitar uno: elígelo en la lista [Name] y haz clic en **[Delete]**.
+
+Para documentarlos: pestaña **Analizar tabla dinámica**, grupo **[Calculations]**, **[Fields, Items, & Sets]**, **[List Formulas]**. Excel escribe cada campo calculado y cada elemento calculado, con su fórmula y su orden de resolución, en una hoja de cálculo nueva.
 
 <!-- ES-FIN MO201-4.2.5 -->
 
@@ -3587,7 +4950,20 @@ To stop a refresh from throwing the formatting away: **PivotTable Analyze** tab,
 
 <!-- ES-INICIO MO201-4.2.6 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic en cualquier celda dentro de la tabla dinámica.
+2. Ve a la pestaña contextual **[Design]**, la que está junto a Analizar tabla dinámica.
+3. Grupo **[PivotTable Styles]**: haz clic en la flecha **[More]** de la esquina inferior derecha de la galería para abrirla por completo, pasa el puntero para ver la vista previa y haz clic en el estilo que nombre la tarea, por ejemplo PivotStyleMedium9.
+4. Grupo **[PivotTable Style Options]**, en la misma pestaña: marca o desmarca **[Row Headers]**, **[Column Headers]**, **Filas con bandas** y **Columnas con bandas**. Estas cuatro no hacen nada hasta que se aplica un estilo, así que aplica el estilo primero.
+5. Grupo **[Layout]**, en la misma pestaña, haz clic en **[Report Layout]** y elige **[Show in Compact Form]**, **[Show in Outline Form]** o **[Show in Tabular Form]**. El mismo menú trae **[Repeat All Item Labels]** y **[Do Not Repeat Item Labels]**, que es lo que llena las celdas vacías a lo largo de un informe tabular.
+6. Grupo **[Layout]**, haz clic en **[Subtotals]**: **[Do Not Show Subtotals]**, **[Show all Subtotals at Bottom of Group]**, **[Show all Subtotals at Top of Group]**.
+7. Grupo **[Layout]**, haz clic en **[Grand Totals]**: **[Off for Rows and Columns]**, **[On for Rows and Columns]**, **[On for Rows Only]**, **[On for Columns Only]**.
+8. Grupo **[Layout]**, haz clic en **[Blank Rows]** y luego en **[Insert Blank Line after Each Item]**.
+
+Para los números en sí, que es la mitad de este objetivo donde los candidatos pierden puntos: haz clic en una celda del área [Values], ve a la pestaña **Analizar tabla dinámica**, grupo **[Active Field]**, **Configuración de campo**, haz clic en el botón **[Number Format]**, define la **Categoría** y las **Posiciones decimales** en el cuadro **Formato de celdas** recortado, haz clic en **Aceptar** y haz clic otra vez en **Aceptar** (4.2.2). El formato ahora le pertenece al campo, no a un bloque de celdas.
+
+Para que una actualización no se lleve el formato: pestaña **Analizar tabla dinámica**, grupo **Tabla dinámica**, **[Options]**, pestaña **[Layout & Format]**, marca "[Preserve cell formatting on update]" y desmarca "[Autofit column widths on update]" (**TO CONFIRM** los dos textos), **Aceptar**.
 
 <!-- ES-FIN MO201-4.2.6 -->
 
@@ -3618,7 +4994,22 @@ To move it onto its own sheet: select the chart, **Chart Design** contextual tab
 
 <!-- ES-INICIO MO201-4.3.1 -->
 
-_Pendiente._
+**Ruta de examen, desde una tabla dinámica que ya existe**
+
+1. Haz clic en cualquier celda dentro de la tabla dinámica.
+2. Ve a la pestaña **Analizar tabla dinámica**, grupo **[Tools]**, y haz clic en **Gráfico dinámico**.
+3. Se abre el cuadro de diálogo **[Insert Chart]**. Elige la categoría en la lista de la izquierda y el subtipo en las miniaturas de arriba.
+4. Haz clic en **Aceptar**. El gráfico queda en la misma hoja, conectado a la tabla dinámica, con botones de campo en las esquinas.
+
+**Ruta de examen, desde datos en bruto y sin tabla dinámica todavía**
+
+1. Haz clic en una celda dentro de los datos de origen.
+2. Pestaña **Insertar**, grupo **Gráficos**, haz clic en la flecha que está debajo de **Gráfico dinámico**.
+3. Haz clic en **[PivotChart & PivotTable]**.
+4. Confirma el rango y el destino en el cuadro de diálogo y haz clic en **Aceptar**. Excel construye la tabla dinámica y el gráfico juntos, y abre el panel **[PivotChart Fields]**.
+5. Arrastra los campos a **[Filters]**, **[Legend (Series)]**, **[Axis (Categories)]** y **[Values]**. En un gráfico dinámico el panel nombra así las áreas, no Rows y Columns.
+
+Para moverlo a su propia hoja: selecciona el gráfico, pestaña contextual **Diseño de gráfico**, grupo **[Location]**, haz clic en **[Move Chart]** (**TO CONFIRM** el texto en un gráfico dinámico; en un gráfico normal está verificado en Associate 5.1.2), selecciona **[New sheet]**, escribe el nombre de la hoja y haz clic en **Aceptar**.
 
 <!-- ES-FIN MO201-4.3.1 -->
 
@@ -3643,7 +5034,16 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-4.3.2 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic una vez en el gráfico dinámico para seleccionar el objeto.
+2. *Botones de campo:* pestaña **[PivotChart Analyze]**, grupo **[Show/Hide]**, haz clic en **[Field Buttons]**. El menú trae los cuatro tipos por separado (**[Show Report Filter Field Buttons]**, **[Show Legend Field Buttons]**, **[Show Axis Field Buttons]**, **[Show Value Field Buttons]**) más **[Hide All]** (**TO CONFIRM** los cinco textos). Desactiva solo los que nombre la tarea: apagarlos todos de un golpe con [Hide All] es una respuesta distinta de apagar un solo tipo.
+3. *Filtrar desde el gráfico mismo:* haz clic en el botón de campo del eje o en el botón de campo de la leyenda que están sobre el gráfico y usa su menú de filtro. Es el menú de filtro de la propia tabla dinámica, así que el informe cambia junto con el gráfico.
+4. *Cambiar el tipo:* pestaña contextual **Diseño de gráfico**, grupo **[Type]**, **[Change Chart Type...]**, pestaña **[All Charts]**, elige el tipo, **Aceptar**. El **Gráfico XY (dispersión)**, el **Gráfico de burbujas** y el **Gráfico de cotizaciones** no están disponibles para un gráfico dinámico; si la tarea pide uno de esos, está pidiendo un gráfico normal.
+5. *Intercambiar el eje y la leyenda:* pestaña **Diseño de gráfico**, grupo **Datos**, haz clic en **Cambiar fila o columna**. En un gráfico dinámico esto intercambia las áreas [Rows] y [Columns] de la tabla dinámica que está debajo, así que la lista de campos también se mueve. Esa es la diferencia con un gráfico normal y es justo lo que se revisa.
+6. *Agregar o quitar un campo:* usa el panel **[PivotChart Fields]** y arrastra entre **[Filters]**, **[Legend (Series)]**, **[Axis (Categories)]** y **[Values]**.
+7. *Agregar elementos:* pestaña **Diseño de gráfico**, grupo **[Chart Layouts]**, **[Add Chart Element]**, y luego **Título del gráfico**, **Títulos de eje**, **Leyenda** o **Etiquetas de datos**, y elige la posición en el submenú (Associate 5.2.3).
+8. *Actualizar y borrar:* pestaña **[PivotChart Analyze]**, grupo **Datos**, **Actualizar**; grupo **[Actions]**, **[Clear]**, que vacía el gráfico y el informe al mismo tiempo.
 
 <!-- ES-FIN MO201-4.3.2 -->
 
@@ -3667,7 +5067,15 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-4.3.3 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Haz clic una vez en el gráfico dinámico.
+2. Ve a la pestaña contextual **Diseño de gráfico**, grupo **Estilos de gráfico**. Haz clic en la flecha **[More]** de la esquina inferior derecha de la galería para abrirla por completo, pasa el puntero para ver la vista previa y haz clic en el estilo.
+3. En el mismo grupo, haz clic en **[Change Colors]** y elige una paleta de [Colorful] o de [Monochromatic] (**TO CONFIRM** el texto del botón en un gráfico dinámico; en un gráfico normal está verificado en Associate 5.3.2).
+4. Grupo **[Chart Layouts]**, en la misma pestaña, haz clic en **Diseño rápido** y elige un diseño. El diseño rápido decide qué elementos están presentes; el estilo decide cómo se ven. Una tarea que nombre los dos quiere los dos, en ese orden, porque cambiar el diseño puede regresar elementos que el estilo había ocultado.
+5. Para dar formato a un solo elemento en lugar de a todo el gráfico: pestaña contextual **[Format]**, grupo **[Current Selection]**, abre la lista **Elementos de gráfico**, elige el elemento por su nombre y haz clic en **[Format Selection]**. El panel de formato se abre en ese elemento.
+6. Formato de forma: pestaña **[Format]**, grupo **[Shape Styles]**, usa la galería o **[Shape Fill]**, **[Shape Outline]**, **[Shape Effects]**.
+7. Formato de texto: pestaña **[Format]**, grupo **[WordArt Styles]**, usa la galería o **[Text Fill]**, **[Text Outline]**, **[Text Effects]**.
 
 <!-- ES-FIN MO201-4.3.3 -->
 
@@ -3690,7 +5098,14 @@ _Pendiente._
 
 <!-- ES-INICIO MO201-4.3.4 -->
 
-_Pendiente._
+**Ruta de examen**
+
+1. Dale al gráfico algo por donde profundizar: en el panel **[PivotChart Fields]**, arrastra un segundo campo a **[Axis (Categories)]**, debajo del primero. El eje ahora tiene dos niveles, por ejemplo Región y luego Mesero.
+2. Contraer o expandir el nivel completo: haz clic en el gráfico, ve a la pestaña **[PivotChart Analyze]**, grupo **[Active Field]**, revisa que el cuadro **[Active Field:]** nombre el campo del eje y luego haz clic en **[Collapse Field]** o en **[Expand Field]**.
+3. Contraer o expandir un solo elemento: usa los botones chicos de más y de menos que están sobre el eje de categorías del gráfico. Si no aparecen, actívalos desde la pestaña **[PivotChart Analyze]**, grupo **[Show/Hide]**, **[+/- Buttons]** (**TO CONFIRM** el texto).
+4. Profundizar hasta las filas de origen que están detrás de un solo número: cámbiate a la tabla dinámica y haz doble clic en la celda del valor. Excel escribe una hoja de cálculo nueva que contiene solo las filas de origen que produjeron esa celda, con formato de tabla de Excel.
+5. Profundizar desde el gráfico con [Quick Explore]: haz clic en un solo punto de datos, haz clic en el icono de lupa que aparece junto a él y elige el campo en el que quieres profundizar (**TO CONFIRM** el nombre de herramienta que aparece en la información en pantalla).
+6. Para permitir o impedir el paso 4 en todo el informe: pestaña **Analizar tabla dinámica**, grupo **Tabla dinámica**, **[Options]**, cuadro de diálogo **[PivotTable Options]**, pestaña **Datos**, la casilla "[Enable show details]" (**TO CONFIRM** el texto), **Aceptar**.
 
 <!-- ES-FIN MO201-4.3.4 -->
 

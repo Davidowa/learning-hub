@@ -1,0 +1,584 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 9
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 09 · Sesiones 17 y 18 · Los datos que llegan de fuera
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Los datos no nacen en tu libro. Cómo meterlos, cómo comprobar que están limpios y
+        cómo sacar las filas de las que trata la pregunta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 17 y 18 de 34]
+      notes: |
+        Sesiones 17 y 18 del temario, CLO06 y CLO09. La sesión 17 es obtener y
+        transformar, ordenar por varias columnas, quitar duplicados e inspeccionar el
+        libro; la sesión 18 son los filtros. Se cubren de lleno: Associate 1.1.2, 1.4.5,
+        3.3.1, 3.3.2 y la mitad del Inspector de documento de 1.5.4, más Expert 2.2.5.
+        COBERTURA.md agrega Associate 1.1.1, Expert 2.2.2, Expert 2.1.1 y Expert 1.1.4.
+        El objetivo MO-210 1.1.2, que solo existe en 365 e importa desde orígenes en
+        línea, depende de cómo esté armado el laboratorio y se nombra en la diapositiva
+        de comparación en lugar de enseñarse.
+        Todas las rutas de estas diapositivas salen de procedures.en.md. Ejercicios 14 y 15.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Cómo entran
+          desc: Desde [From Text/CSV], el asistente heredado para un .txt y Relleno rápido para la columna que llegó pegada
+        - title: Comprobar que están limpios
+          desc: Quitar duplicados, ordenar por niveles y la regla que impide que se escriba el valor equivocado
+        - title: Encontrar las filas
+          desc: Filtro automático por valor, por criterio, por color y por icono, y las tres formas de quitarlo
+        - title: Entregar el archivo
+          desc: Archivo, [Info]. Propiedades del libro, el Inspector de documento y las versiones que Excel guardó sin avisar
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Importar un .csv con [Get & Transform]
+          sub: Fijando la codificación, el delimitador y la detección de tipos antes de que aterrice una sola fila
+        - head: Correr el asistente heredado sobre un .txt
+          sub: Delimitado contra ancho fijo, el calificador de texto y la columna que fuerzas a [Text]
+        - head: Quitar duplicados con las columnas correctas
+          sub: Marcar las siete columnas y marcar una son dos preguntas distintas con dos respuestas distintas
+        - head: Ordenar por más de un nivel
+          sub: En el cuadro Ordenar, donde los niveles quedan escritos para quien lea el archivo después
+        - head: Filtrar, inspeccionar y entregar el libro
+          sub: Filtro automático, propiedades del libro, el Inspector de documento y la lista de versiones
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: done
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importación, filtros, tablas, gráficos y las funciones de búsqueda
+          state: now
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Los datos llegan de otro lado
+      lede: >-
+        Alguien te manda un .csv. Con doble clic la hoja se llena en un segundo, y en ese
+        segundo se toman tres decisiones por ti.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Abrir un archivo no es importarlo
+      lead: >-
+        Un .csv es un archivo de texto. Nada adentro dice con qué tabla de bytes se
+        escribió, qué carácter separa los campos, ni si 00734 es un número o un código.
+        Con doble clic Excel contesta las tres por su cuenta. Al importarlo las respuestas
+        son tuyas, y Excel las conserva.
+      panel:
+        label: La señal
+        title: Una consulta en [Queries and Connections], o nada
+        note: >-
+          La ruta de importación deja una consulta con nombre y aterriza los datos como
+          tabla. La ruta de abrir no deja ninguna de las dos. Eso es lo primero que se
+          mira cuando ya no te acuerdas de cuál tomaste.
+      steps:
+        - text: Señalas el archivo y lees la vista previa
+        - text: Fijas origen, delimitador y detección
+        - text: Aterriza como tabla con una consulta detrás
+          loop: ↺ y Actualizar repite cada decisión sobre el archivo del mes que entra
+
+  - compare:
+      eyebrow: Bloque 01 · Las dos rutas
+      title: Las dos llenan la hoja, solo una cuenta
+      before:
+        label: Califica · pestaña Datos, [From Text/CSV]
+        file: ruta.txt
+        lang: text
+        code: |
+          Datos > [Get & Transform Data] > [From Text/CSV]
+          Elige Students_data.csv, [Import]
+          [File Origin]:  Windows (ANSI)
+          [Delimiter]:    [Comma]
+          [Data Type Detection]: [Do not detect]
+          Flecha de [Load] > [Load To...]
+          [Import Data] > [Existing worksheet]: =$A$1
+      after:
+        label: No califica · el doble clic
+        file: ruta.txt
+        lang: text
+        code: |
+          Doble clic en Students_data.csv
+          Excel adivina la codificación
+          Excel adivina el separador
+          Excel adivina el tipo de cada columna
+          Una hoja, sin consulta, sin diálogo
+          Nada registrado, nada que actualizar
+      note: >-
+        La ruta corta es la que todo el mundo usa en el trabajo y casi siempre acierta.
+        Vale la pena nombrarla en voz alta porque no gana nada el día del examen. La tarea
+        está escrita alrededor de las tres listas de la ventana de vista previa, y el
+        doble clic nunca las enseña.
+
+  - table:
+      eyebrow: Bloque 01 · La ventana de vista previa
+      title: Tres listas, y qué decide cada una
+      headers: ["Lista", "Qué estás eligiendo", "Cuándo duele"]
+      rows:
+        - ["[File Origin]", "La tabla de bytes del archivo", "Texto con acentos"]
+        - ["[Delimiter]", "El carácter que termina un campo", "Punto y coma"]
+        - ["[Data Type Detection]", "200 filas, todo el archivo o nada", "Códigos e IDs"]
+        - ["[Transform Data]", "Abre Power Query en vez de cargar", "Cualquier limpieza"]
+        - ["[Load To...]", "Tabla, tabla dinámica o solo conexión", "Siempre"]
+
+  - code_output:
+      eyebrow: Medido · Students_data.csv
+      title: La lista [File Origin] no es adorno
+      filename: Students_data.csv
+      lang: text
+      output_label: Lo que aterriza en las celdas
+      source: |
+        La ñ de España se guarda como un solo byte, F1. Esa
+        es la tabla Windows-1252. UTF-8 escribe esa misma
+        letra con dos bytes, C3 B1.
+
+        Windows (ANSI)          lee F1 como ñ
+        65001 : Unicode (UTF-8) encuentra F1 solo, que no
+                                es una secuencia válida, y
+                                pone ahí una marca de
+                                reemplazo
+      output: |
+        [File Origin]: Windows (ANSI)
+        Iñaki    España    Bilbao
+        Björn    Suecia    Västerås
+        [File Origin]: 65001 UTF-8
+        I?aki    Espa?a    Bilbao
+        Bj?rn    Suecia    V?ster?s
+
+  - steps:
+      eyebrow: Bloque 01 · Un .txt lleva otra ruta
+      title: El asistente heredado, y dónde se enciende
+      items:
+        - label: '01'
+          title: Enciende el asistente
+          desc: >-
+            Archivo, Opciones de Excel, panel [Data], marca [From Text (Legacy)], [OK]. En
+            una instalación nueva viene apagado, así que este es el paso cero y no forma
+            parte de la importación.
+        - label: '02'
+          title: Llega hasta él
+          desc: >-
+            Haz clic en la celda de destino, luego Datos, [Get & Transform Data],
+            [Get Data], [Legacy Wizards], [From Text (Legacy)].
+        - label: '03'
+          title: Paso 1 de 3
+          desc: >-
+            [Original data type], delimitado o de ancho fijo. Fija [Start import at row],
+            abre [File origin] y elige la codificación.
+        - label: '04'
+          title: Paso 2 de 3
+          desc: >-
+            Marca todos los delimitadores que use el archivo. Pon [Text qualifier] en la
+            comilla doble cuando los campos vengan entrecomillados. Mira cómo se parte la
+            vista previa.
+        - label: '05'
+          title: Paso 3 de 3
+          desc: >-
+            Haz clic en cada columna de la vista previa y fija su [Column data format].
+            [Text] es lo que conserva un cero a la izquierda. [Finish], y luego elige
+            dónde va.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras en que una importación miente
+      items:
+        - label: Error 01
+          title: El código de producto sin ceros
+          desc: >-
+            00734 llega como 734 porque la columna se quedó en [General]. Ponla en [Text]
+            en el paso 3 del asistente, o elige [Do not detect data types] en la ventana
+            de vista previa.
+        - label: Error 02
+          title: Dar clic en [Load] y no en [Load To...]
+          desc: >-
+            [Load] a secas suelta la tabla en una hoja nueva y no pregunta nada. Funciona.
+            También deja sin mostrar que sabías a dónde más podían haber ido los datos.
+        - label: Error 03
+          title: El [File Origin] equivocado, descubierto tarde
+          desc: >-
+            España con una marca de reemplazo en medio no es un problema de formato y no
+            hay reemplazo que lo arregle limpio. Vuelve a importar con la codificación
+            correcta.
+        - label: Error 04
+          title: Pegar desde el Bloc de notas
+          desc: >-
+            Llega al mismo asistente por la puerta equivocada. La tarea está escrita sobre
+            la importación, y un pegado no deja consulta ni registro de las decisiones.
+
+  - method:
+      eyebrow: Bloque 01 · Dos rellenos, dos objetivos
+      title: Autorrellenar continúa, Relleno rápido deduce
+      statement: Relleno rápido lee la columna de al lado, saca el patrón de lo que escribiste y escribe constantes. No aparece ni una fórmula en ningún lado.
+      points:
+        - label: La tecla
+          text: Ctrl+E rellena la columna por patrón desde donde esté el cursor. Esa sola tecla es todo el objetivo.
+        - label: La condición
+          text: La columna nueva tiene que estar pegada a la columna de origen, y los datos necesitan fila de encabezados. Relleno rápido no busca más lejos.
+        - label: La señal
+          text: Haz clic en una celda rellenada. La barra de fórmulas muestra una constante. Una cadena de IZQUIERDA y [FIND] mostraría una fórmula, y responde a otro objetivo.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Comprobar que los datos están limpios
+      lede: >-
+        Dos filas que se ven idénticas, un ordenamiento que despedaza los registros, y una
+        columna donde cualquiera puede seguir escribiendo lo que se le ocurra.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · Quitar duplicados
+      title: El comando que borra filas y no deja copia
+      items:
+        - label: '01'
+          title: Copia la hoja primero
+          desc: >-
+            Clic derecho en la pestaña de la hoja, [Move or Copy], marca [Create a copy],
+            [OK]. Este comando borra filas y un guardado lo vuelve permanente.
+        - label: '02'
+          title: Una celda dentro de la lista
+          desc: >-
+            Excel se extiende al bloque completo por su cuenta. Seleccionar una parte es
+            como se terminan borrando filas de media tabla.
+        - label: '03'
+          title: Datos, [Data Tools], Quitar duplicados
+          desc: >-
+            En el cuadro de diálogo marca [My data has headers] y observa cómo la lista
+            [Columns] cambia de [Column A] a los nombres reales de los encabezados.
+        - label: '04'
+          title: Marca solo las columnas que definen
+          desc: >-
+            Dos filas son duplicadas solo cuando coincide cada columna marcada. Todas es
+            la prueba más estricta, una sola es la más floja.
+        - label: '05'
+          title: Lee el mensaje antes de aceptar
+          desc: >-
+            Informa cuántos valores duplicados encontró y cuántos valores únicos quedan.
+            Ese mensaje es el único registro de lo que pasó.
+
+  - trace:
+      eyebrow: Medido · las 26 filas de Students_data.csv
+      title: Mismo comando, mismo archivo, cinco alumnos de diferencia
+      headers: ["Columnas marcadas", "Quitadas", "Quedan"]
+      rows:
+        - ["Las siete", "2", "24"]
+        - ["Name y Last name", "2", "24"]
+        - ["University of origin", "2", "24"]
+        - ["Country of origin", "7", "19"]
+      verdict: >-
+        Kim Jong y Francois Lacroix están dos veces en el archivo, fila completa contra
+        fila completa. Marca solo Country of origin y desaparecen cinco alumnos más cuyo
+        único delito es que alguien de su país ya está en la lista.
+
+  - steps:
+      eyebrow: Bloque 02 · Ordenar
+      title: Un cuadro de diálogo, un nivel por criterio
+      items:
+        - label: '01'
+          title: Una celda, no una columna
+          desc: >-
+            Haz clic en una sola celda dentro del rango. Preseleccionar una columna y
+            ordenarla es como los nombres dejan de corresponder con las calificaciones.
+        - label: '02'
+          title: Datos, Ordenar y filtrar, Ordenar
+          desc: >-
+            Marca [My data has headers] para que la fila de encabezados se quede en su
+            lugar y las listas muestren nombres de columna en vez de letras.
+        - label: '03'
+          title: Llena el primer nivel
+          desc: >-
+            [Sort by] elige la columna, [Sort On] elige [Cell Values], [Cell Color],
+            [Font Color] o [Conditional Formatting Icon], [Order] elige la dirección.
+        - label: '04'
+          title: "[Add Level], y luego [Then by]"
+          desc: >-
+            Cada criterio que nombre la tarea lleva su propio nivel. Las flechas de arriba
+            del cuadro mueven un nivel, y el orden de los niveles es la prioridad.
+        - label: '05'
+          title: "[Options] para lo demás"
+          desc: >-
+            Distinguir mayúsculas y ordenar de izquierda a derecha viven detrás del botón
+            [Options], no en el cuadro principal.
+
+  - table:
+      eyebrow: Bloque 02 · Ejercicio 14, el segundo ordenamiento
+      title: Tres niveles, escritos como los lee el cuadro
+      headers: ["Nivel", "[Sort by]", "[Sort On]", "[Order]"]
+      rows:
+        - ["[Sort by]", "Last name", "[Cell Values]", "[A to Z]"]
+        - ["[Then by]", "Country of origin", "[Cell Values]", "[A to Z]"]
+        - ["[Then by]", "Average", "[Cell Values]", "Preguntar"]
+        - ["Prueba", "Reabre el cuadro", "Tres niveles", "En orden"]
+
+  - steps:
+      eyebrow: Bloque 02 · Validación de datos
+      title: Tres pestañas, una sola visita al cuadro
+      items:
+        - label: '01'
+          title: Selecciona primero las celdas
+          desc: >-
+            La regla es de la selección. Datos, [Data Tools], Validación de datos, y la
+            mitad de arriba del botón partido abre el cuadro.
+        - label: '02'
+          title: Configuración
+          desc: >-
+            Permitir da Número entero, Decimal, [List], Fecha, [Time], Longitud del texto
+            o Personalizada. Llena la lista [Data] y las casillas que produce.
+        - label: '03'
+          title: Mensaje de entrada
+          desc: >-
+            Sin cerrar el cuadro. [Title] y Mensaje de entrada se vuelven el globo que
+            aparece cuando se selecciona la celda.
+        - label: '04'
+          title: Mensaje de error
+          desc: >-
+            Sigue sin cerrarlo. [Style] elige [Stop], [Warning] o [Information]. [Stop]
+            rechaza la entrada, [Warning] pregunta, [Information] solo avisa.
+        - label: '05'
+          title: "[Circle Invalid Data]"
+          desc: >-
+            Para valores escritos antes de que existiera la regla. Flecha de Validación de
+            datos, [Circle Invalid Data], y aparecen óvalos rojos alrededor de cada
+            infractor.
+
+  - figure:
+      eyebrow: Bloque 02 · El cuadro de diálogo
+      title: Tres pestañas arriba, y Borrar todo abajo
+      image: img/en/data-validation-dialog.png
+      caption: >-
+        Captura de la interfaz en inglés. Abierto sobre una celda sin validar, así que
+        Permitir dice [Any value] y todo lo de abajo está en gris. Cambia Permitir y la
+        lista [Data] despierta, aparecen las casillas que necesita, y las otras dos
+        pestañas quedan a un clic. Borrar todo es como se quita una regla, y
+        [Apply these changes] empuja una edición a todas las celdas que ya comparten
+        la regla.
+      alt: >-
+        El cuadro de diálogo Validación de datos de Excel en su pestaña Configuración, con
+        las pestañas Mensaje de entrada y Mensaje de error a un lado.
+
+  - code:
+      eyebrow: Bloque 02 · La regla Personalizada del Ejercicio 14
+      title: Una regla escrita como fórmula que devuelve VERDADERO
+      filename: validacion.xlsx
+      lang: excel
+      source: |
+        Permitir:  Personalizada
+        Fórmula:   =B2<=A2*0.1
+
+        A2 es el sueldo, B2 es el bono.
+        Escribe la fórmula para la celda superior
+        izquierda de la selección. Excel la recorre
+        por el resto igual que se recorre una fórmula
+        copiada, así que B3 recibe =B3<=A3*0.1 sin
+        que tú lo escribas.
+      annotations:
+        - label: Por qué Personalizada
+          text: Permitir tiene otras siete entradas. Solo esta puede comparar contra otra celda.
+        - label: Cómo se extiende
+          text: Escríbela para la celda superior izquierda de la selección. Excel la recorre por el resto.
+        - label: Las otras cuatro
+          text: Longitud del texto 5, sueldo de 6,000 a 20,000, fecha igual a hoy, departamento desde una lista.
+        - label: Si falla
+          text: Una referencia apuntada a la fila equivocada topa cada bono contra un solo sueldo.
+          accent: true
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Encontrar las filas, y luego entregar el archivo
+      lede: >-
+        El filtro esconde filas sin borrarlas, y Archivo, [Info] guarda tres cosas de tu
+        libro que no pusiste ahí a propósito.
+      block: 3
+
+  - tiers:
+      eyebrow: Bloque 03 · Filtro automático
+      title: Cuatro formas de recortar la misma lista
+      items:
+        - key: Por valor
+          title: La lista de casillas
+          desc: Quita [(Select All)] y marca solo lo que nombre la tarea. La casilla [Search] arma una selección larga por pasadas.
+        - key: Por regla
+          title: "[Text], [Number] y [Date Filters]"
+          desc: Excel ofrece la familia que corresponde al tipo de la columna. [Greater Than], [Between], [Top 10], [Begins With], [Contains].
+        - key: Por formato
+          title: Color e icono
+          desc: "[Filter by Color] lee el relleno, el color de letra o el icono. Solo existe cuando la columna carga uno."
+        - key: Cómo se quita
+          title: Tres comandos distintos
+          desc: "[Clear Filter From] en una columna, [Clear] en la pestaña Datos para todas, Filtro otra vez para quitar las flechas."
+
+  - table:
+      eyebrow: Medido · las 408 ventas del Ejercicio 15
+      title: Cinco filtros, y las filas que deja cada uno
+      headers: ["Qué se pide", "Dónde vive", "Filas"]
+      rows:
+        - ["Trimestre 1 de 2018", "[Date Filters], [Between]", "90"]
+        - ["Septiembre de 2018", "[Date Filters], [All Dates in the Period]", "35"]
+        - ["Brand empieza con PH", "[Text Filters], [Begins With]", "131"]
+        - ["Celdas amarillas en Product", "[Filter by Color], [Cell Color]", "5"]
+        - ["Top 10 de Total Sale", "[Number Filters], [Top 10]", "10"]
+
+  - steps:
+      eyebrow: Bloque 03 · Archivo, [Info]
+      title: Tres cosas que sabe el panel de backstage
+      items:
+        - label: '01'
+          title: "[Properties]"
+          desc: >-
+            Haz clic en un valor para editarlo ahí mismo. [Show All Properties] destapa
+            [Company], [Manager] y el resto. [Properties], [Advanced Properties] abre las
+            pestañas [Summary] y [Custom].
+        - label: '02'
+          title: "[Inspect Document]"
+          desc: >-
+            Comprobar si hay problemas, [Inspect Document]. Marca solo las categorías que
+            nombre la tarea, haz clic en [Inspect], y Quitar todos solo donde lo hayas
+            querido. No se puede deshacer.
+        - label: '03'
+          title: "[Manage Workbook]"
+          desc: >-
+            Así se llama en la máquina del profesor, [Version History] en otras. Cada
+            versión autoguardada con su marca de tiempo, y [Restore].
+        - label: '04'
+          title: "[Recover Unsaved Workbooks]"
+          desc: >-
+            Hasta abajo de Archivo, [Open], [Recent], y también dentro de
+            [Manage Workbook]. Abre la carpeta [Unsaved Files] con los borradores .xlsb.
+        - label: '05'
+          title: Fija el intervalo
+          desc: >-
+            Archivo, Opciones de Excel, [Save]. Ahí se fija cada cuántos minutos se guarda
+            la información de autorrecuperación, y si se conserva la última versión al
+            cerrar sin guardar.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro maneras de entregar el archivo equivocado
+      items:
+        - label: Error 01
+          title: Vaciar el autor a mano
+          desc: >-
+            Vaciar la casilla [Author] del panel quita un campo. El Inspector de documento
+            trata de los campos que no se te ocurrió mirar, que es el punto entero.
+        - label: Error 02
+          title: Correr [Inspect Document] sin guardar
+          desc: >-
+            Las eliminaciones son permanentes y no hay manera de deshacerlas. Excel ofrece
+            guardar primero por algo, y esa oferta es fácil de pasar de largo.
+        - label: Error 03
+          title: Quitar todas las categorías encontradas
+          desc: >-
+            Quitar todos en [Hidden Worksheets] borra hojas que el libro necesita. Marca
+            solo lo que nombre la tarea, y luego [Reinspect] para probar que el resto
+            sigue intacto.
+        - label: Error 04
+          title: Filtrar y luego leer el total
+          desc: >-
+            Una SUMA simple debajo de una lista filtrada sigue sumando las filas
+            escondidas. La cuenta de la barra de estado, abajo a la izquierda, es el
+            número que respeta el filtro.
+
+  - quiz:
+      eyebrow: Revisión rápida
+      question: La tarea pide dejar un alumno por país. ¿Qué marcas en Quitar duplicados?
+      options:
+        - Todas las columnas, porque es lo más seguro
+        - Solo Country of origin, y se van 7 filas
+        - Name y Last name, y luego ordenar por país
+        - Nada. Usa un filtro, así no se borra ninguna fila
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Students_data.csv, del archivo a la respuesta
+      brief: >-
+        Importen el archivo con Datos, [From Text/CSV], con la codificación, el delimitador
+        y la detección puestos a mano. Conviertan el resultado en rango, quiten los alumnos
+        duplicados, ordenen por tres niveles y pongan una regla de validación en la hoja
+        que nombra el ejercicio.
+      blocks:
+        - label: Entregable
+          text: Un libro, con el panel [Queries and Connections] mostrando la consulta de la que salió
+        - label: Restricción
+          text: Ninguna fila se borra a mano. Si Quitar duplicados no reportó la cuenta, háganlo otra vez.
+        - label: La prueba
+          text: Veintiséis filas entran, veinticuatro salen, y el mensaje dijo 2 valores duplicados encontrados
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Importar contesta tres preguntas
+          desc: >-
+            Codificación, delimitador y detección de tipos. El doble clic las contesta por
+            ti con la configuración regional de la máquina, y acierta lo bastante seguido
+            como para que nadie revise
+        - title: Las columnas marcadas son la pregunta
+          desc: >-
+            Quitar duplicados borra lo que tú definiste como duplicado. Sobre las mismas
+            26 filas, las siete columnas dejan 24 alumnos y una sola columna deja 19
+        - title: Un filtro esconde, no borra
+          desc: >-
+            Los números de fila se ponen azules y se saltan. La barra de estado cuenta lo
+            que sobrevivió, y todo lo que no viste sigue en el archivo cuando lo mandas
+
+  - homework:
+      eyebrow: Tarea
+      title: Ejercicio 14, entrega y calificación
+      brief: >-
+        Las tres hojas del Excel 14. Duplicados sobre la columna Name, luego sobre la fila
+        completa, luego sobre nombres y modelos de auto juntos. La importación y los dos
+        ordenamientos. Las cinco reglas de validación, incluida la del bono topado a la
+        décima parte del sueldo.
+      meta:
+        - [Entrega, Antes de la semana 10]
+        - [Formato, Blackboard · un .xlsx]
+        - [Peso, Parte del 30 % dentro del parcial 2]
+      rubric:
+        - ["Importación", "25 %", "Consulta presente, codificación y delimitador puestos a mano, convertido en rango"]
+        - ["Duplicados", "25 %", "Tres secciones, cada una sobre las columnas que nombra la instrucción"]
+        - ["Ordenamiento", "20 %", "La copia de la hoja lleva tres niveles en el cuadro Ordenar"]
+        - ["Validación", "30 %", "Cinco reglas, cada una con su mensaje de entrada y su mensaje de error"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima sesión el rango deja de ser rango. Tablas de Excel, referencias
+        estructuradas, la fila de totales que sobrevive a un filtro, y los primeros
+        gráficos.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

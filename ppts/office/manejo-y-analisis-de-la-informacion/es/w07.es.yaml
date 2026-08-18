@@ -1,0 +1,511 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 7
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 07 · Sesiones 13 y 14 · Condiciones compuestas
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Operadores y comodines, luego las tres funciones que combinan pruebas, y después un
+        SI dentro de otro y las dos herramientas que te leen el anidado de regreso.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 13 y 14 de 34]
+      notes: |
+        La sesión 13 es operadores y comodines más Y y O. La sesión 14 es el SI anidado.
+        COBERTURA.md agrega aquí cinco objetivos, todos del dominio 3 de Expert: NO,
+        SI.CONJUNTO y CAMBIAR en 3.1.1, Evaluar fórmula en 3.5.4, y las reglas de
+        comprobación de errores en 3.5.3, esta última movida de la sesión 6 porque la
+        sesión 6 ya estaba llena. Los ejercicios 8, 10 y 12 son de esta semana, y el
+        ejercicio 12 es el único archivo del paquete que hasta hoy no tenía semana propia.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Operadores y comodines
+          desc: Qué corre antes que qué, y los tres símbolos que solo algunos argumentos leen
+        - title: Y, O y NO
+          desc: Una tabla de verdad de cuatro renglones, y cómo una función entra en otra
+        - title: Anidado
+          desc: SI anidado, luego SI.CONJUNTO y CAMBIAR, y las dos herramientas que los depuran
+        - title: Tu turno
+          desc: Los ejercicios 8, 10 y 12, y el mismo caso escrito de tres maneras distintas
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Predecir en qué orden corre una fórmula
+          sub: Ocho niveles de precedencia, con la comparación siempre al final y la referencia siempre primero
+        - head: Escribir un criterio que use comodines
+          sub: Y nombrar los lugares que los leen, que no son los que uno se imaginaría
+        - head: Combinar pruebas con Y, O y NO
+          sub: Los cuatro renglones de la tabla de verdad, no solo los dos que se ven obvios
+        - head: Anidar una función desde el cuadro de diálogo
+          sub: Con el Cuadro de nombres, que se vuelve lista de funciones mientras hay un diálogo abierto
+        - head: Armar niveles con SI anidado, SI.CONJUNTO o CAMBIAR
+          sub: Y decir cuál de las tres pide en realidad el caso que tiene enfrente
+        - head: Depurar un anidado en lugar de reescribirlo
+          sub: Evaluar fórmula paso a paso, y las reglas de comprobación de errores detrás de los triángulos
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidado y la familia SI.CONJUNTO
+          state: now
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: todo
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué corre antes que qué
+      lede: >-
+        La semana 3 te dio la mitad aritmética del orden. Esta es la completa, y la mitad
+        que faltaba es la que decide cómo se lee una condición.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Completo y en orden
+      title: Ocho niveles, de arriba abajo
+      headers: [Familia, Miembros, Cuándo corre]
+      rows:
+        - ["Referencia", "dos puntos, coma, un espacio", "Primero, antes que nada"]
+        - ["Signo y porcentaje", "el menos de -5, luego 50%", "Segundo y tercero"]
+        - ["Exponente", "^", "Cuarto"]
+        - ["Multiplicar y dividir", "* y /", "Quinto, de izquierda a derecha"]
+        - ["Sumar y restar", "+ y -", "Sexto, de izquierda a derecha"]
+        - ["Unir, luego comparar", "& y luego = <> > < >= <=", "Séptimo y octavo, al final"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un comodín no es un operador
+      lead: >-
+        Un operador se pone entre dos valores y produce un tercero. Un comodín va dentro de
+        un texto y no significa nada hasta que algún argumento decide leerlo como patrón. La
+        mayoría no lo hace. Por eso el mismo asterisco encuentra cuarenta filas en un lugar y
+        no encuentra nada tres celdas más allá.
+      panel:
+        label: La regla que hay que cargar
+        title: Los comodines van en criterios, no en comparaciones
+        note: >-
+          El signo de igual nunca los lee. La prueba lógica de un SI tampoco. Los leen
+          [Find and Replace], los [Text Filters], los criterios del filtro avanzado y el
+          argumento de criterio de la familia de agregación condicional, que es la semana 8.
+      steps:
+        - text: El criterio es un texto entre comillas
+        - text: La función decide si lo lee como patrón
+        - text: Todo lo demás lo compara letra por letra
+          loop: ↺ así la misma cadena se comporta de dos maneras
+
+  - table:
+      eyebrow: Bloque 01 · Tres símbolos
+      title: Qué representa cada comodín
+      headers: [Símbolo, Qué encuentra, Ejemplo]
+      rows:
+        - ["*", "Cualquier cadena, incluso vacía", "Mar* encuentra Marta y Mario"]
+        - ["?", "Exactamente un carácter, ni uno más", "A?a encuentra Ana y no Anita"]
+        - ["~", "Toma el siguiente símbolo literal", "~* encuentra un asterisco real"]
+
+  - table:
+      eyebrow: Bloque 01 · Dónde se leen
+      title: La misma cadena, dos comportamientos
+      headers: [Dónde lo escribes, Comodines, Qué quiere decir]
+      rows:
+        - ["[Find and Replace]", "se leen", "Ctrl+F responde por patrón"]
+        - ["[Text Filters]", "se leen", "[Contains] ya es un comodín"]
+        - ["Argumentos de criterio", "se leen", "CONTAR.SI y familia, semana 8"]
+        - ["Filtro avanzado", "se leen", "La semana 15 arma los criterios"]
+        - ["Comparación con =", "se ignoran", "Compara letra por letra"]
+        - ["Prueba lógica de un SI", "se ignoran", "Y todas las ramas de un SI"]
+
+  - code:
+      eyebrow: Bloque 01 · La cadena de criterio
+      title: Seis criterios sobre la misma columna
+      filename: comodines.xlsx
+      lang: excel
+      source: |
+        =CONTAR.SI(B2:B41,"Mar*")
+        =CONTAR.SI(B2:B41,"*ez")
+        =CONTAR.SI(B2:B41,"A?a")
+        =CONTAR.SI(B2:B41,"???")
+        =CONTAR.SI(B2:B41,"~*")
+        =CONTAR.SI(B2:B41,"*"&E1&"*")
+      annotations:
+        - label: El vehículo
+          text: CONTAR.SI está aquí para cargar el criterio. Su propia ruta calificada por el diálogo es la semana que entra.
+        - label: Línea 4
+          text: Tres signos de interrogación son exactamente tres caracteres, ni más ni menos. Las celdas vacías no cuentan.
+        - label: Línea 5
+          text: La tilde toma el asterisco tal cual, así que esto cuenta las celdas que de verdad tienen uno.
+        - label: Línea 6
+          text: El ampersand arma el criterio desde una celda, que es como se hace una caja de búsqueda.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Tres funciones, cuatro renglones
+      lede: >-
+        Excel nunca tuvo un operador Y. Y, O y NO son funciones, toman pruebas como
+        argumentos, y entre las tres tienen cuatro resultados.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Leído del diálogo
+      title: Qué toma cada una y qué contesta
+      headers: [Función, Cuadros de argumento, Devuelve VERDADERO cuando]
+      rows:
+        - ["Y", "[Logical1], [Logical2], y así", "Todos los argumentos son VERDADERO"]
+        - ["O", "[Logical1], [Logical2], y así", "Al menos uno es VERDADERO"]
+        - ["NO", "[Logical], un solo cuadro", "Su único argumento es FALSO"]
+
+  - trace:
+      eyebrow: Bloque 02 · La tabla de verdad completa
+      title: Cuatro renglones, y no hay un quinto
+      headers: ["A", "B", "Y(A,B)", "O(A,B)", "NO(A)"]
+      rows:
+        - ["VERDADERO", "VERDADERO", "VERDADERO", "VERDADERO", "FALSO"]
+        - ["VERDADERO", "FALSO", "FALSO", "VERDADERO", "FALSO"]
+        - ["FALSO", "VERDADERO", "FALSO", "VERDADERO", "VERDADERO"]
+        - ["FALSO", "FALSO", "FALSO", "FALSO", "VERDADERO"]
+      verdict: El ejercicio 10 escribe dieciséis renglones porque agrega una tercera condición. La forma no cambia, solo la cuenta.
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta que califica
+      title: Anidar una función dentro de otra
+      items:
+        - label: '01'
+          title: Arma primero la de afuera
+          desc: Fórmulas, [Logical], SI, y llena los cuadros hasta el que tiene que recibir el anidado
+        - label: '02'
+          title: Deja ese cuadro vacío
+          desc: El argumento que espera a la función interna no se toca. No escribas nada ahí.
+        - label: '03'
+          title: Mira el Cuadro de nombres
+          desc: En el extremo izquierdo de la barra de fórmulas deja de mostrar la referencia y se vuelve una lista de funciones
+        - label: '04'
+          title: Llena el diálogo interno
+          desc: No des clic en [OK]. Para salir, da clic en el nombre de la función externa dentro de la barra de fórmulas.
+        - label: '05'
+          title: Un solo [OK], en el nivel externo
+          desc: Ese único [OK] confirma todo el anidado, con los paréntesis contados por Excel
+
+  - code:
+      eyebrow: Bloque 02 · Pruebas dentro de una prueba
+      title: Y, O y NO en fórmulas que funcionan
+      filename: logica.xlsx
+      lang: excel
+      source: |
+        =SI(Y(B2>=10,C2="Sí"),"Bono","No")
+        =SI(O(B2>=10,C2="Sí"),"Bono","No")
+        =SI(NO(C2="Sí"),"Seguimiento","")
+        =SI(Y(B2>=10,B2<=20),"En rango","Fuera")
+        =Y(B2>=10,C2="Sí")
+      annotations:
+        - label: Líneas 1 y 2
+          text: Un carácter de diferencia y un reporte completamente distinto. Lee la frase antes de elegir.
+        - label: Línea 4
+          text: Un intervalo necesita una prueba en cada extremo. En Excel no hay ENTRE y no hay forma más corta de escribirlo.
+        - label: Línea 5
+          text: Sola, la función devuelve VERDADERO o FALSO, que es lo que pide una regla por fórmula.
+        - label: Si falla
+          text: >-
+            Y sobre un rango contesta una vez para el bloque, no por fila. Toma pruebas, no
+            columnas.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro maneras de arruinar una prueba compuesta
+      items:
+        - label: Error 01
+          title: Escribir Y como operador
+          desc: >-
+            La frase en español pone la y entre las dos pruebas, así que la gente la teclea
+            ahí. Excel la lee como un nombre que no conoce y contesta con un error.
+        - label: Error 02
+          title: Un rango donde va una prueba
+          desc: >-
+            Y de B2 a B41 mayor que diez da una sola respuesta para todo el bloque. Cada
+            argumento tiene que ser una comparación que se resuelva sola.
+        - label: Error 03
+          title: La y que en realidad era O
+          desc: >-
+            Clientes de Puebla y Oaxaca es O, porque ninguna fila está en las dos. Lee la
+            frase por las filas que debe conservar, no por la palabra que usa.
+        - label: Error 04
+          title: Negar lo que ya es negativo
+          desc: >-
+            NO alrededor de una prueba de distinto se cancela solo. Escribe la prueba en
+            positivo y deja que NO haga el giro, o quita NO y voltea el operador.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Un SI dentro de otro
+      lede: >-
+        Dos respuestas nunca iban a alcanzar. Una escala de calificaciones tiene cuatro, y
+        la manera de sacar cuatro de una función que ofrece dos es meter la siguiente
+        pregunta en la segunda respuesta.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · La escalera
+      title: Los mismos niveles, y uno está mal
+      filename: niveles.xlsx
+      lang: excel
+      source: |
+        =SI(B2>=90,"A",
+          SI(B2>=80,"B",
+            SI(B2>=70,"C","F")))
+
+        =SI(B2>=70,"C",
+          SI(B2>=80,"B",
+            SI(B2>=90,"A","F")))
+      annotations:
+        - label: Léelo como escalera
+          text: Cada SI es la rama falsa del de arriba, así que gana el primer VERDADERO de arriba abajo.
+        - label: El segundo está mal
+          text: Un puntaje de 95 lo atrapa la primera prueba y sale como C. Nada se marca en la columna.
+        - label: La regla que sigue
+          text: Con mayor o igual, los niveles se escriben de arriba hacia abajo. Hay exactamente un orden que funciona.
+        - label: Si falla
+          text: >-
+            Los paréntesis de cierre caen todos al final, uno por cada SI. Alt+Enter en la
+            barra de fórmulas los hace contables.
+
+  - code_output:
+      eyebrow: Medido · cuatro puntajes, dos órdenes
+      title: El orden equivocado no levanta nada
+      filename: niveles.xlsx
+      lang: excel
+      output_label: Lo que muestra la columna
+      source: |
+        =SI(B2>=90,"A",SI(B2>=80,"B",SI(B2>=70,"C","F")))
+
+        =SI(B2>=70,"C",SI(B2>=80,"B",SI(B2>=90,"A","F")))
+      output: |
+        B2    de arriba   de abajo
+        95    A           C
+        85    B           C
+        75    C           C
+        65    F           F
+
+  - compare:
+      eyebrow: Bloque 03 · Los mismos niveles, dos funciones
+      title: Tres SI anidados contra un SI.CONJUNTO
+      before:
+        label: SI anidado, tres niveles
+        file: niveles.xlsx
+        lang: excel
+        code: |
+          =SI(B2>=90,"A",
+            SI(B2>=80,"B",
+              SI(B2>=70,"C","F")))
+      after:
+        label: SI.CONJUNTO, cuatro pares
+        file: niveles.xlsx
+        lang: excel
+        code: |
+          =SI.CONJUNTO(B2>=90,"A",
+                       B2>=80,"B",
+                       B2>=70,"C",
+                       VERDADERO,"F")
+      note: >-
+        SI.CONJUNTO lee los pares en orden y se detiene en el primer VERDADERO, que es
+        exactamente lo que hace la escalera con menos paréntesis. El último par es el
+        VERDADERO literal, y siempre coincide, así que carga el valor por omisión.
+        SI.CONJUNTO existe desde Office 2019. Una versión anterior contesta con un error
+        de nombre, que es lo que muestra el ejercicio 16 cuando sus fórmulas regresan
+        como _xlfn.IFS.
+
+  - code:
+      eyebrow: Bloque 03 · La tercera manera
+      title: CAMBIAR, cuando la prueba es solo igualdad
+      filename: cambiar.xlsx
+      lang: excel
+      source: |
+        =CAMBIAR(C2,"N","Norte","S","Sur","E","Este","Oeste")
+
+        =SI.CONJUNTO(C2="N","Norte",C2="S","Sur",C2="E","Este",
+             VERDADERO,"Oeste")
+      annotations:
+        - label: Una expresión, luego pares
+          text: El primer argumento se resuelve una sola vez y luego se compara contra cada valor por turno.
+        - label: El argumento impar
+          text: Si no queda pareja, el último argumento suelto es el valor por omisión. Aquí es Oeste.
+        - label: Cuál de las tres
+          text: CAMBIAR para igualdad contra una lista, SI.CONJUNTO cuando hay comparación, SI anidado cuando no hay ninguna.
+        - label: De dónde salieron
+          text: Las dos son adiciones de Expert 3.1.1. El ejercicio 12 pone SI.CONJUNTO junto al SI anidado.
+
+  - steps:
+      eyebrow: Bloque 03 · Evaluar fórmula
+      title: Ver a Excel resolver el anidado
+      items:
+        - label: '01'
+          title: Una celda a la vez
+          desc: Fórmulas, Auditoría de fórmulas, Evaluar fórmula. Lee la celda seleccionada y nada más.
+        - label: '02'
+          title: Lee el subrayado
+          desc: En [Evaluation] aparece la fórmula con la parte que Excel va a resolver enseguida subrayada
+        - label: '03'
+          title: Da clic en [Evaluate]
+          desc: La parte subrayada se reemplaza por su resultado en cursivas y el subrayado avanza
+        - label: '04'
+          title: "[Step In] y [Step Out]"
+          desc: Cuando la parte subrayada es otra fórmula, [Step In] la abre indentada abajo. Se queda en gris si la referencia se repite.
+        - label: '05'
+          title: Cerrar, no [OK]
+          desc: No hay [OK]. Nada cambia en la hoja, porque el diálogo es un instrumento y no una edición.
+
+  - method:
+      eyebrow: Bloque 03 · La ruta rápida, con su advertencia
+      title: F9 muestra el valor y se lo puede quedar
+      statement: Selecciona un fragmento dentro de la barra de fórmulas y presiona F9. Excel reemplaza la selección por su valor en el momento, y presionar Enter ahí lo escribe en la fórmula para siempre.
+      points:
+        - label: Por qué vale la pena enseñarla
+          text: >-
+            Es inmediata, no necesita diálogo, y todo analista que trabaja la usa. Sobre un
+            anidado de tres niveles contesta la única duda que tenías en unos dos segundos.
+        - label: Lo que no puede hacer
+          text: >-
+            F9 evalúa lo que está dentro de esta celda. Un reactivo que te pide entrar a una
+            referencia que guarda otra fórmula no tiene respuesta por F9.
+        - label: La regla que trae pegada
+          text: >-
+            Esc, nunca Enter. Enter deja el número fijo y la fórmula desaparece, sin aviso y
+            sin nada que deshacer una vez guardado el archivo.
+
+  - steps:
+      eyebrow: Bloque 03 · Comprobación de errores
+      title: Los triángulos y las reglas que hay detrás
+      items:
+        - label: '01'
+          title: Auditoría de fórmulas, Comprobación de errores
+          desc: Es un botón dividido. La cara corre el barrido por la hoja y abre en la primera celda marcada.
+        - label: '02'
+          title: Lee lo que muestra
+          desc: La celda, la fórmula debajo, el tipo de error como encabezado y una frase de explicación
+        - label: '03'
+          title: Cuatro botones a la derecha
+          desc: >-
+            [Help on this Error], [Show Calculation Steps], [Ignore Error] y
+            [Edit in Formula Bar]
+        - label: '04'
+          title: "[Show Calculation Steps]"
+          desc: Entrega la celda directo a Evaluar fórmula, que es el puente entre estas dos herramientas
+        - label: '05'
+          title: Opciones, luego Fórmulas
+          desc: Ahí están las reglas. Office 2019 lista nueve y la versión 365 agrega tres más.
+
+  - table:
+      eyebrow: Bloque 03 · Cinco reglas que conviene conocer
+      title: Qué te está diciendo el triángulo verde
+      headers: [Regla, Qué marca, Por qué importa esta semana]
+      rows:
+        - ["[Numbers as text]", "Un número guardado como texto", "Toda comparación contesta mal"]
+        - ["[Inconsistent formula]", "Una celda de la columna difiere", "Un anidado pegado una fila corto"]
+        - ["[Omitted cells]", "Un total que se salta un vecino", "El número queda bajo sin avisar"]
+        - ["[Empty reference]", "Una prueba que apunta a nada", "SI contesta FALSO y no dice nada"]
+        - ["[Formula error]", "Cualquier cosa que devuelve error", "Donde suele romperse un anidado"]
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Por aquí pasan puntajes de 95 y de 65. ¿Qué sale?
+      filename: prueba.xlsx
+      lang: excel
+      source: |
+        =SI(B2>=70,"C",SI(B2>=80,"B",
+              SI(B2>=90,"A","F")))
+      options:
+        - "A para el primero y F para el segundo"
+        - "C para el primero y F para el segundo"
+        - "C para los dos"
+        - "Un error, porque las pruebas se traslapan"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Un caso, escrito de tres maneras
+      brief: >-
+        Tomen los niveles del ejercicio 8 y ármenlos tres veces en columnas paralelas, como
+        SI anidado, como SI.CONJUNTO y, donde el caso lo permita, como CAMBIAR. Luego rompan
+        uno a propósito invirtiendo el orden de las pruebas, y usen Evaluar fórmula para
+        mostrarle al grupo el paso exacto donde se toma la rama equivocada.
+      blocks:
+        - label: Entregable
+          text: Una hoja con las tres columnas lado a lado y la columna rota conservada, no borrada
+        - label: Restricción
+          text: >-
+            Las tres columnas tienen que coincidir en cada fila. Donde CAMBIAR no pueda
+            expresar el caso, escriban un renglón diciendo por qué en lugar de forzarlo.
+        - label: La comprobación
+          text: >-
+            Tomen una captura de Evaluar fórmula en el paso donde se elige la rama
+            equivocada, y digan en voz alta qué parte subrayó Excel primero.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: El comodín necesita lector
+          desc: >-
+            El mismo asterisco es un patrón dentro de un criterio y tres caracteres normales
+            dentro de una comparación, y nada te avisa cuál te tocó
+        - title: El orden es todo el anidado
+          desc: >-
+            Una escalera escrita desde el extremo equivocado devuelve una columna entera de
+            respuestas malas sin ningún error, y por eso hay que probarla en los límites
+        - title: Depúrala, no la reescribas
+          desc: >-
+            Evaluar fórmula muestra el orden que Excel usa de verdad, y F9 contesta más
+            rápido mientras salgas con Esc y nunca con Enter
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        Los ejercicios 10 y 12, más una adición propia. En la hoja del ejercicio 10 agreguen
+        tres criterios con comodines sobre una columna que el ejercicio no toca, y escriban
+        un renglón junto a cada uno diciendo qué filas debe conservar antes de contarlas.
+      meta:
+        - [Entrega, Antes de la semana 8]
+        - [Formato, Blackboard · un archivo .xlsx]
+        - [Peso, Parte del 30 % dentro del parcial 2]
+      rubric:
+        - ["Tabla de verdad", "25 %", "Los dieciséis renglones del ejercicio 10, con Y, O y NO"]
+        - ["Comodines", "25 %", "Tres criterios propios, cada uno con sus filas esperadas"]
+        - ["SI.CONJUNTO contra SI", "30 %", "Las dos columnas coinciden en cada fila del ejercicio 12"]
+        - ["La depuración", "20 %", "Evaluar fórmula usado en una fórmula, con el paso nombrado"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima semana, las funciones que leen una columna entera y contestan una vez.
+        Primero un criterio, luego varios, y el orden de argumentos que cambia entre ellas.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

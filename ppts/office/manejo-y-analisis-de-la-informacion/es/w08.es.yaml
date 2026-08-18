@@ -1,0 +1,500 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 8
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 08 · Sesiones 15 y 16 · Agregados condicionales
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        Funciones que leen una columna entera y responden una sola vez. Primero un criterio,
+        luego tantos como pida el reporte, y el orden de argumentos que se voltea entre las dos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 15 y 16 de 34]
+      notes: |
+        Dos sesiones completas para la familia plural que nombra el programa, más las tres
+        formas singulares que COBERTURA.md agrega antes de ellas. Esta es una de las pocas
+        semanas del periodo con holgura real, y por eso la presentación también cierra el
+        hueco de material que señala el documento de cobertura: el ejercicio 11 practica
+        solo SUMAR.SI.CONJUNTO, CONTAR.SI.CONJUNTO y PROMEDIO.SI.CONJUNTO, así que
+        MAX.SI.CONJUNTO y MIN.SI.CONJUNTO tienen su propia diapositiva y entran al
+        laboratorio. Todos los números de las diapositivas medidas salen de la tablita
+        impresa en la diapositiva misma, así que se comprueban sin abrir ningún archivo.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Un criterio
+          desc: SUMAR.SI, CONTAR.SI y PROMEDIO.SI, y dónde pone cada una el rango que agrega
+        - title: Varios criterios
+          desc: Las cinco funciones plurales, los pares de argumentos y el orden que se voltea
+        - title: El lenguaje del criterio
+          desc: Operadores como texto, referencias unidas con ampersand, y las dos que nadie practica
+        - title: Tu turno
+          desc: Los ejercicios 9 y 11, y las dos funciones que el 11 deja fuera
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Sumar, contar y promediar con una condición
+          sub: SUMAR.SI, CONTAR.SI y PROMEDIO.SI, desde la [Function Library] y no tecleadas
+        - head: Hacer lo mismo con varias condiciones
+          sub: Las cinco funciones .CONJUNTO, llenadas en pares de argumentos
+        - head: Saber dónde va el rango que se agrega
+          sub: Al final en las singulares y al principio en las plurales, sin ningún aviso
+        - head: Escribir un criterio que Excel entienda
+          sub: Números sin comillas, texto y operadores con comillas, y el ampersand para unir
+        - head: Llenar un resumen entero con una fórmula
+          sub: Con las referencias mixtas de la semana 3 trabajando por el lado y por arriba
+        - head: Reconocer una respuesta mala que no marca error
+          sub: Rangos de distinta altura, argumentos volteados y el vacío que se lee como cero
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: done
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidado y la familia SI.CONJUNTO
+          state: now
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: todo
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Un criterio, una respuesta
+      lede: >-
+        Todo lo anterior escribía un resultado por renglón. Estas funciones leen todos los
+        renglones y escriben un solo número, que es de lo que está hecho un reporte.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Una respuesta para la columna, no una por renglón
+      lead: >-
+        SI corre una vez por renglón y escribe una vez por renglón. SUMAR.SI corre una vez,
+        lee la columna completa y escribe un solo número. Esa es otra forma de fórmula, y es
+        la forma con la que se arma un reporte, una tabla de totales donde cada celda le hace
+        su propia pregunta a los mismos registros.
+      panel:
+        label: Qué cambia con la forma
+        title: La respuesta no vive junto a los datos
+        note: >-
+          Estas fórmulas viven en un bloque de resumen, o en otra hoja, apuntando de regreso
+          a los registros. Como apuntan en lugar de estar al lado, los rangos hay que fijarlos
+          antes de arrastrar la fórmula por toda la tabla.
+      steps:
+        - text: SI mira este renglón y responde por este renglón
+        - text: SUMAR.SI mira todos los renglones y responde una vez
+        - text: La respuesta cae donde está el reporte
+          loop: ↺ y una sola fórmula llena una tabla entera
+
+  - table:
+      eyebrow: Bloque 01 · Leído del cuadro de diálogo
+      title: Las tres formas singulares
+      headers: [Función, Cuadros de argumento, Qué regresa]
+      rows:
+        - ["SUMAR.SI", "[Range], [Criteria], [Sum_range]", "El total de los que coinciden"]
+        - ["CONTAR.SI", "[Range], [Criteria]", "Cuántos renglones coincidieron"]
+        - ["PROMEDIO.SI", "[Range], [Criteria], [Average_range]", "El promedio de los que coinciden"]
+
+  - steps:
+      eyebrow: Bloque 01 · La ruta que califica
+      title: Dónde se esconde la familia en la cinta
+      items:
+        - label: '01'
+          title: Selecciona la celda de la respuesta
+          desc: Una celda para toda la columna. Es la primera fórmula del curso que no se arrastra junto a sus datos.
+        - label: '02'
+          title: Fórmulas, [More Functions]
+          desc: Las seis que empiezan con CONTAR, PROMEDIO, MAX y MIN están en [Statistical]
+        - label: '03'
+          title: La suma está en otro lado
+          desc: SUMAR.SI y SUMAR.SI.CONJUNTO viven en [Math & Trig], separadas del resto de su propia familia
+        - label: '04'
+          title: Llena [Range], luego [Criteria]
+          desc: El cuadro enseña el valor de cada argumento a la derecha de su casilla conforme te mueves entre ellas
+        - label: '05'
+          title: Lee [Formula result]
+          desc: Hasta abajo del cuadro, antes de [OK]. Es el único lugar donde aparece la respuesta antes de confirmarla.
+
+  - code:
+      eyebrow: Bloque 01 · Seis fórmulas, una columna de registros
+      title: Qué está haciendo cada argumento
+      filename: spa.xlsx
+      lang: excel
+      source: |
+        =SUMAR.SI(C2:C521,"Masaje",E2:E521)
+        =SUMAR.SI(E2:E521,">500")
+        =CONTAR.SI(C2:C521,"Masaje")
+        =CONTAR.SI(E2:E521,">"&H1)
+        =PROMEDIO.SI(C2:C521,"Masaje",E2:E521)
+        =PROMEDIO.SI(E2:E521,"<>")
+      annotations:
+        - label: Línea 2
+          text: Sin [Sum_range], SUMAR.SI suma el mismo rango que probó. Solo es correcto cuando son la misma columna.
+        - label: Línea 4
+          text: Un operador se une a una celda con ampersand antes de que la función lo llegue a ver.
+        - label: Línea 6
+          text: Distinto de nada. Así se evita que los renglones vacíos jalen el promedio hacia abajo.
+        - label: Si falla
+          text: >-
+            PROMEDIO.SI sin un solo renglón que coincida contesta #¡DIV/0!, así que el reporte
+            enseña un error en lugar de un cero.
+
+  - code_output:
+      eyebrow: Medido · seis renglones, en la diapositiva
+      title: Los mismos datos leídos de seis maneras
+      filename: singular.xlsx
+      lang: excel
+      output_label: Los datos, y luego las respuestas
+      source: |
+        =SUMAR.SI(A2:A7,"Norte",B2:B7)
+        =SUMAR.SI(B2:B7,">500")
+        =CONTAR.SI(A2:A7,"Norte")
+        =CONTAR.SI(B2:B7,">500")
+        =PROMEDIO.SI(A2:A7,"Norte",B2:B7)
+        =PROMEDIO.SI(B2:B7,">500")
+      output: |
+        A2:A7  Norte Sur   Norte
+               Este  Norte Sur
+        B2:B7  800 400 200 900 600 300
+        SUMAR.SI Norte          1600
+        SUMAR.SI >500           2300
+        CONTAR.SI Norte            3
+        CONTAR.SI >500             3
+        PROMEDIO.SI Norte     533.33
+        PROMEDIO.SI >500      766.67
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro respuestas malas que no marcan error
+      items:
+        - label: Error 01
+          title: "[Range] y [Sum_range] volteados"
+          desc: >-
+            SUMAR.SI prueba el primer rango y suma el tercero. Dale los montos a probar
+            y las categorías a sumar y regresa cero, sin error por ningún lado.
+        - label: Error 02
+          title: Una comparación sin comillas
+          desc: >-
+            Mayor que quinientos es un criterio, no un valor, así que viaja como texto
+            entre comillas. Solo un número suelto o una referencia sola funcionan solos.
+        - label: Error 03
+          title: Rangos de distinta altura
+          desc: >-
+            Renglones 2 a 521 probados contra renglones 2 a 500 sumados. Excel los alinea
+            desde arriba y responde sobre los renglones equivocados sin decir nada.
+        - label: Error 04
+          title: Leer un resultado vacío como cero
+          desc: >-
+            Sin renglones que coincidan, SUMAR.SI regresa cero y PROMEDIO.SI regresa error.
+            Uno de los dos parece dato. Revisa la cuenta antes de creerle a cualquiera.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Tantos criterios como pida el reporte
+      lede: >-
+        Agrégale CONJUNTO al nombre y los argumentos se reacomodan. Es la misma familia, y el
+        rango que estás agregando se va del final de la lista al principio.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Leído del cuadro de diálogo
+      title: Las cinco formas plurales
+      headers: ["Función", "El primer cuadro", "Luego, en pares"]
+      rows:
+        - ["SUMAR.SI.CONJUNTO", "[Sum_range]", "[Criteria_range1], [Criteria1], etc."]
+        - ["CONTAR.SI.CONJUNTO", "[Criteria_range1]", "[Criteria1], y luego más pares"]
+        - ["PROMEDIO.SI.CONJUNTO", "[Average_range]", "[Criteria_range1], [Criteria1], etc."]
+        - ["MAX.SI.CONJUNTO", "[Max_range]", "[Criteria_range1], [Criteria1], etc."]
+        - ["MIN.SI.CONJUNTO", "[Min_range]", "[Criteria_range1], [Criteria1], etc."]
+
+  - compare:
+      eyebrow: Bloque 02 · La trampa que pone la familia
+      title: El mismo total, en orden contrario
+      before:
+        label: SUMAR.SI, el rango que se suma va al final
+        file: pedidos.xlsx
+        lang: excel
+        code: |
+          =SUMAR.SI(A2:A521,
+                    "Norte",
+                    E2:E521)
+      after:
+        label: SUMAR.SI.CONJUNTO, el rango que se suma va primero
+        file: pedidos.xlsx
+        lang: excel
+        code: |
+          =SUMAR.SI.CONJUNTO(E2:E521,
+                             A2:A521,"Norte",
+                             C2:C521,"Masaje")
+      note: >-
+        SUMAR.SI prueba primero y suma al final. SUMAR.SI.CONJUNTO suma primero y después
+        prueba en pares, así que se le puede colgar una segunda condición sin mover nada de
+        lo que ya estaba. PROMEDIO.SI y PROMEDIO.SI.CONJUNTO se voltean exactamente igual, y
+        CONTAR.SI.CONJUNTO no tiene rango que agregar porque contar no lo necesita.
+
+  - method:
+      eyebrow: Otra vez el cuadro de diálogo
+      title: El orden solo se ve en un lugar
+      statement: Las funciones plurales ponen primero el rango que se agrega y las singulares lo ponen al final. Nada en la celda terminada te dice cuál de las dos escribiste.
+      points:
+        - label: La ruta que califica
+          text: >-
+            Fórmulas, [More Functions], y luego la función por su nombre. Cada casilla trae
+            su nombre, su descripción abajo y su valor a la derecha conforme la llenas, así
+            que el cambio se ve antes de confirmar nada.
+        - label: La ruta rápida
+          text: >-
+            Tecléala y lee el [ScreenTip] amarillo debajo de la celda. Te dice en qué
+            argumento vas y nunca qué debe ir ahí, que es justo el dato que esta familia
+            está evaluando.
+        - label: Lo que cuesta el error
+          text: >-
+            Un par volteado regresa cero, no un error. Un cero en una columna de totales
+            se lee como respuesta real, y se va a copiar a un reporte antes de que alguien
+            se dé cuenta.
+
+  - steps:
+      eyebrow: Bloque 02 · La ruta que califica
+      title: SUMAR.SI.CONJUNTO, desde el primer cuadro
+      items:
+        - label: '01'
+          title: "[Sum_range] va primero"
+          desc: Fórmulas, [Math & Trig], SUMAR.SI.CONJUNTO. La primera casilla es la columna de números que quieres totalizar.
+        - label: '02'
+          title: Un par por cada condición
+          desc: "[Criteria_range1] y [Criteria1], luego rango 2 y criterio 2, y el cuadro crece conforme lo llenas"
+        - label: '03'
+          title: Todos los rangos a la misma altura
+          desc: Los rangos de criterios y el rango que se suma tienen que cubrir los mismos renglones, o la respuesta sale mal en silencio
+        - label: '04'
+          title: Los operadores viajan como texto
+          desc: Mayor que, menor que y distinto de van entre comillas, unidos a una celda con ampersand
+        - label: '05'
+          title: F4, y luego llena la tabla
+          desc: Fija los rangos de registros antes de arrastrar la fórmula por el lado y por arriba del reporte
+
+  - code:
+      eyebrow: Bloque 02 · Cinco fórmulas sobre una tabla
+      title: De una condición a una tabla entera
+      filename: transporte.xlsx
+      lang: excel
+      source: |
+        =SUMAR.SI.CONJUNTO(E2:E26,B2:B26,"Norte",C2:C26,"marzo")
+        =CONTAR.SI.CONJUNTO(B2:B26,"Norte",C2:C26,"marzo")
+        =PROMEDIO.SI.CONJUNTO(E2:E26,B2:B26,"Norte",E2:E26,">0")
+        =SUMAR.SI.CONJUNTO($E$2:$E$26,$B$2:$B$26,$G2,$C$2:$C$26,H$1)
+        =CONTAR.SI.CONJUNTO(B2:B26,"Norte")
+      annotations:
+        - label: Línea 3
+          text: La misma columna puede ser la que se promedia y una de las que se prueban.
+        - label: Línea 4
+          text: Sucursal por el lado, mes por arriba, referencias de la semana 3. Una fórmula llena la tabla.
+        - label: Línea 5
+          text: Un solo par es válido, y más seguro. Agregar una segunda condición después no cambia nada más.
+        - label: Si falla
+          text: >-
+            Un cero donde debería ir un total casi siempre quiere decir que un rango
+            empieza en el renglón de los encabezados.
+
+  - code_output:
+      eyebrow: Medido · seis renglones, en la diapositiva
+      title: Dos condiciones, y solo dos renglones cumplen las dos
+      filename: plural.xlsx
+      lang: excel
+      output_label: Los datos, y luego las respuestas
+      source: |
+        =SUMAR.SI.CONJUNTO(E2:E7,B2:B7,"Norte",C2:C7,"marzo")
+        =CONTAR.SI.CONJUNTO(B2:B7,"Norte",C2:C7,"marzo")
+        =PROMEDIO.SI.CONJUNTO(E2:E7,B2:B7,"Norte",C2:C7,"marzo")
+        =MAX.SI.CONJUNTO(E2:E7,C2:C7,"marzo")
+        =MIN.SI.CONJUNTO(E2:E7,C2:C7,"marzo")
+      output: |
+        Norte marzo 800 | Sur   marzo 400
+        Norte abril 200 | Norte marzo 600
+        Este  marzo 900 | Sur   abril 300
+        SUMAR.SI.CONJUNTO Norte marzo   1400
+        CONTAR.SI.CONJUNTO Norte marzo     2
+        PROMEDIO.SI.CONJUNTO Norte marzo 700
+        MAX.SI.CONJUNTO marzo            900
+        MIN.SI.CONJUNTO marzo            400
+
+  - trace:
+      eyebrow: Bloque 02 · Cómo recorre los renglones CONTAR.SI.CONJUNTO
+      title: Dos de tres no es coincidencia
+      headers: ["Renglón", "Región", "Mes", "Norte y marzo"]
+      rows:
+        - ["2", "Norte", "marzo", "cuenta"]
+        - ["3", "Sur", "marzo", "no, región"]
+        - ["4", "Norte", "abril", "no, mes"]
+        - ["5", "Norte", "marzo", "cuenta"]
+        - ["6", "Este", "marzo", "no, región"]
+        - ["7", "Sur", "abril", "ninguna"]
+      verdict: Cada criterio se cumple en el mismo renglón. Dos de tres cuenta como ninguno.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El lenguaje de los criterios
+      lede: >-
+        Un criterio es un lenguaje pequeño y aparte, y casi todas las respuestas malas de esta
+        familia salen de escribirle una frase que no habla.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Seis formas de criterio
+      title: Qué acepta Excel en una casilla [Criteria]
+      headers: [Tipo, Qué quiere decir, Cómo se escribe]
+      rows:
+        - ["Un número", "Igual a ese número", "1000, sin comillas"]
+        - ["Texto", "Igual a ese texto", "Norte, entre comillas"]
+        - ["Una comparación", "El operador viaja con él", "Mayor a 500 y no cero, con comillas"]
+        - ["De una celda", "El operador unido a una referencia", "El operador, ampersand y luego H1"]
+        - ["No vacío", "Cualquier celda con algo dentro", "Solo el par de distinto de"]
+        - ["Un patrón", "Los comodines de la semana 7", "Mar* y A?a, los dos con comillas"]
+
+  - code:
+      eyebrow: Bloque 03 · Criterios armados desde la hoja
+      title: El ampersand es toda la técnica
+      filename: criterios.xlsx
+      lang: excel
+      source: |
+        =CONTAR.SI(E2:E26,">"&H1)
+        =SUMAR.SI.CONJUNTO(E2:E26,D2:D26,">="&H1,D2:D26,"<="&H2)
+        =CONTAR.SI.CONJUNTO(B2:B26,G2,C2:C26,H1)
+        =SUMAR.SI(B2:B26,"*"&G2&"*",E2:E26)
+        =CONTAR.SI(E2:E26,">"&PROMEDIO(E2:E26))
+      annotations:
+        - label: El patrón que hay que memorizar
+          text: El operador entre comillas, luego el ampersand, luego la referencia.
+        - label: Línea 2
+          text: Un rango de fechas son dos criterios sobre una columna, uno por cada extremo.
+        - label: Línea 3
+          text: Sin ampersand y sin comillas. Solo los operadores necesitan la unión.
+        - label: Línea 5
+          text: El criterio puede llevar una función adentro. El anidado de la semana pasada, dentro de un argumento.
+
+  - code:
+      eyebrow: Bloque 03 · Las dos que no tienen ejercicio
+      title: MAX.SI.CONJUNTO y MIN.SI.CONJUNTO se portan igual
+      filename: extremos.xlsx
+      lang: excel
+      source: |
+        =MAX.SI.CONJUNTO(E2:E26,B2:B26,"Norte")
+        =MIN.SI.CONJUNTO(E2:E26,B2:B26,"Norte")
+        =MAX.SI.CONJUNTO(E2:E26,B2:B26,"Norte",C2:C26,"marzo")
+        =MAX(E2:E26)
+        =MAX.SI.CONJUNTO(E2:E26,B2:B26,"Ninguna")
+      annotations:
+        - label: Nada nuevo que aprender
+          text: "[Max_range] primero, luego los pares, igual que SUMAR.SI.CONJUNTO. Saber la forma plural es saberse estas dos."
+        - label: Línea 4
+          text: La semana 4 pedía el máximo de una columna entera. Este bloque le hace la misma pregunta a un pedazo de ella.
+        - label: Línea 5
+          text: Sin renglones que coincidan regresa cero, no un error, que es lo contrario de lo que hace PROMEDIO.SI.CONJUNTO.
+        - label: Un hueco del paquete
+          text: El ejercicio 11 practica solo las tres primeras plurales. Estas dos no tienen ejercicio, y por eso el laboratorio las agrega.
+
+  - quiz:
+      eyebrow: Revisión rápida
+      question: La columna B tiene regiones y la columna E tiene montos. ¿Qué regresa?
+      filename: repaso.xlsx
+      lang: excel
+      source: |
+        =SUMAR.SI(E2:E26,"Norte",B2:B26)
+      options:
+        - "El total de los montos de los renglones de Norte"
+        - "Cero, porque ningún monto es igual a Norte"
+        - "Un error de nombre, porque los rangos están al revés"
+        - "Cuántos renglones tienen la región Norte"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El ejercicio 11, y las dos que deja fuera
+      brief: >-
+        Trabajen el ejercicio 11 hasta el reporte por sucursal y mes, y luego extiéndanlo.
+        Agreguen dos renglones al bloque de resumen, el depósito más grande y el más chico
+        de cada sucursal y cada mes, con MAX.SI.CONJUNTO y MIN.SI.CONJUNTO. Escriban las
+        cuatro fórmulas de la tabla una sola vez, con las referencias fijas, y llenen el
+        bloque completo desde ahí.
+      blocks:
+        - label: Entregable
+          text: El libro del ejercicio 11 con los dos renglones extra y una fórmula por renglón
+        - label: Restricción
+          text: >-
+            Cada criterio que nombre una sucursal o un mes apunta a la etiqueta del
+            reporte, no a un texto tecleado dentro de la fórmula
+        - label: La comprobación
+          text: >-
+            Agreguen un registro al final de los datos, dentro de los rangos, y cada celda
+            del resumen se tiene que mover sola. La que no se mueva está apuntando corto.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Esta semana cambió la forma
+          desc: >-
+            Ahora una fórmula lee una columna entera y responde una vez, y por eso las
+            referencias se fijan antes de arrastrar nada a ningún lado
+        - title: El CONJUNTO mueve el primer argumento
+          desc: >-
+            La singular pone al final el rango que se agrega y la plural lo pone primero,
+            y el único lugar donde se ve esa diferencia es el cuadro de diálogo
+        - title: Un criterio es texto
+          desc: >-
+            Los números van sin comillas, el texto y los operadores entre comillas, y una
+            referencia se une a un operador con ampersand y nada más
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        El ejercicio 9 y el ejercicio 11, más un bloque de resumen propio sobre el conjunto
+        de datos que limpiaron en la semana 4. El bloque lleva al menos dos condiciones por
+        celda, al menos un criterio armado desde una celda con ampersand, y un renglón que
+        use MAX.SI.CONJUNTO o MIN.SI.CONJUNTO.
+      meta:
+        - [Entrega, Antes de la semana 9]
+        - [Formato, Blackboard · un archivo .xlsx]
+        - [Peso, Parte del 30 % del segundo parcial]
+      rubric:
+        - ["Formas singulares", "25 %", "SUMAR.SI, CONTAR.SI y PROMEDIO.SI contestan lo que pide el ejercicio 9"]
+        - ["Formas plurales", "30 %", "La tabla del reporte se llena con una fórmula por renglón"]
+        - ["Criterios", "25 %", "Al menos un criterio se arma desde una celda, no tecleado"]
+        - ["Los extremos", "20 %", "MAX.SI.CONJUNTO o MIN.SI.CONJUNTO presente, y correcto sobre un pedazo"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima semana los datos dejan de venir dados. Importar, limpiar, quitar
+        duplicados, ordenar por varias columnas y filtrar lo que quede.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]

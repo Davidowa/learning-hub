@@ -1,0 +1,527 @@
+meta:
+  course: Manejo y Análisis de la Información
+  code: TIA501
+  lang: es
+  language: excel
+  week: 3
+  footer: MANEJO Y ANÁLISIS DE LA INFORMACIÓN · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Semana 03 · Sesiones 5 y 6 · Estructura y referencias
+      title: Manejo y Análisis de la Información
+      subtitle: >-
+        El libro crece en hojas y se abre la barra de fórmulas. Todo lo que el resto del
+        semestre calcula se apoya en lo que dejan puesto estas dos sesiones.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, TIA501 · Empresariales]
+        - [Sesiones, 5 y 6 de 34]
+      notes: >-
+        Fuentes. Sesiones 5 y 6 del temario de diciembre. Ocho adiciones de COBERTURA.md,
+        semana 3. Rutas de procedures.en.md, objetivos 1.2.1, 1.2.2, 1.3.2, 1.4.6, 2.1.3,
+        2.3.1, 4.1.1, Expert 1.2.4, 2.1.2, 3.5.1 y 3.5.2. Todos los resultados de las
+        láminas de fórmulas se corrieron en el Excel del profesor, versión 16.0, interfaz
+        en inglés con idioma de instalación español de México.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El libro como estructura
+          desc: Hojas, agrupación, filas y columnas, tamaños y la serie que hay detrás del arrastre
+        - title: Buscar y nombrar
+          desc: Buscar con las opciones abiertas, Ir a Especial y un nombre definido que carga un ámbito
+        - title: Fórmulas
+          desc: Qué guarda Excel, la precedencia, las cuatro formas de referencia y las flechas de auditoría
+        - title: Tu turno
+          desc: Ejercicios 2 y 5, hojas ordenadas, rangos con nombre y una fórmula que llena una cuadrícula
+
+  - objectives:
+      eyebrow: Objetivos de la sesión
+      title: Al terminar las dos sesiones el alumno podrá…
+      items:
+        - head: Ordenar las hojas y darles formato de una sola vez
+          sub: Agregar, renombrar, copiar, ocultar y agrupar las etiquetas para que una edición caiga en todas
+        - head: Insertar filas sin romper una fórmula
+          sub: "Y leer el #¡REF! que aparece cuando la fórmula apuntaba a lo que borraste"
+        - head: Llenar una serie que el controlador de relleno no produce
+          sub: Multiplicar en vez de sumar, días hábiles, un valor de paro, una tendencia y tu propia lista
+        - head: Definir un nombre con su ámbito
+          sub: Con una referencia absoluta, y navegar hasta él, que es otro objetivo aparte
+        - head: Escribir una fórmula que se llena en dos sentidos
+          sub: Relativa, absoluta y mixta, y el ciclo de F4 que camina entre ellas
+        - head: Ver de dónde saca sus números una fórmula
+          sub: Rastrear precedentes y dependientes, y mantener una celda en la Ventana Inspección
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta semana en el semestre
+      phases:
+        - label: A · Semanas 1–2
+          title: Word, y luego la cinta
+          desc: Documentos largos, y la primera pasada por la cuadrícula de Excel
+          state: done
+        - label: B · Semanas 3–4
+          title: Hojas y funciones
+          desc: Nombres, referencias, precedencia, estadística, texto y fechas
+          state: now
+        - label: C · Semanas 5–8
+          title: Lógica condicional
+          desc: Formato por regla, SI, comodines, anidamiento y la familia SI.CONJUNTO
+          state: todo
+        - label: D · Semanas 9–13
+          title: Datos, tablas y búsqueda
+          desc: Importar, filtros, tablas, gráficos y las funciones de búsqueda
+          state: todo
+        - label: E · Semanas 14–17
+          title: Resumir y entregar
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01 · Sesión 5
+      title: El libro como estructura
+      lede: >-
+        Hojas, filas, columnas y tamaños. Nada de esto calcula nada, y toda fórmula que el
+        curso escriba de aquí en adelante depende de que esté bien puesto.
+      block: 1
+
+  - steps:
+      eyebrow: Bloque 01 · Administrar hojas
+      title: La barra de etiquetas, cinco comandos
+      items:
+        - label: '01'
+          title: Agregar
+          desc: El signo más al final de la barra de etiquetas, o Inicio, Celdas, Insertar, [Insert Sheet].
+        - label: '02'
+          title: Renombrar
+          desc: Doble clic en la etiqueta, o clic derecho y [Rename]. Dos hojas de un mismo libro no pueden llamarse igual.
+        - label: '03'
+          title: Mover o copiar
+          desc: Clic derecho, [Move or Copy]. El cuadro trae [To book], [Before sheet] y la casilla [Create a copy].
+        - label: '04'
+          title: Ocultar y mostrar
+          desc: Clic derecho, [Hide]. [Unhide] abre la lista de lo que está oculto. Un libro conserva al menos una hoja visible.
+        - label: '05'
+          title: Color de etiqueta
+          desc: Clic derecho, [Tab Color]. Se guarda en el archivo, y es lo más barato para marcar las hojas que el lector abre primero.
+
+  - concept:
+      eyebrow: Bloque 01 · Agrupar hojas
+      title: Una edición, todas las hojas seleccionadas
+      lead: >-
+        Haz clic en la primera etiqueta y luego Ctrl+clic o Shift+clic en las demás. La
+        barra de título agrega la palabra [Group]. De ahí en adelante todo lo que escribas,
+        formatees o borres cae en todas las hojas del grupo a la vez. Clic derecho y
+        [Ungroup Sheets] para salir.
+      panel:
+        label: De dónde sale el objetivo
+        title: MO-210 lo pide y MO-200 no
+        note: >-
+          Dar formato a varias hojas agrupándolas es objetivo solo del examen Associate de
+          365. Se comporta igual en Office 2019, así que COBERTURA lo pone en la sesión que
+          ya copia y mueve hojas.
+      steps:
+        - text: Ctrl+clic en las etiquetas que comparten el cambio
+        - text: Haz la edición una sola vez
+        - text: Desagrupa antes de tocar cualquier otra cosa
+          loop: ↺ olvidar el paso tres es como termina un total suelto en doce hojas
+
+  - steps:
+      eyebrow: Bloque 01 · Objetivo 2.1.3
+      title: Filas y columnas, y qué se mueve
+      items:
+        - label: '01'
+          title: Primero cuenta
+          desc: Excel inserta exactamente tantas filas como tengas seleccionadas. Tres filas arriba de la 5 son seleccionar las filas 5, 6 y 7.
+        - label: '02'
+          title: Selecciona encabezados completos
+          desc: Arrastra sobre los números de fila o sobre las letras de columna. Un rango parcial te manda a otro objetivo.
+        - label: '03'
+          title: La flecha, no el botón
+          desc: Inicio, Celdas, la flecha de Insertar, y luego [Insert Sheet Rows] o Insertar columnas de hoja.
+        - label: '04'
+          title: La brochita
+          desc: Las filas nuevas heredan el formato de la de arriba. El botón [Insert Options] que aparece ofrece [Clear Formatting].
+        - label: '05'
+          title: "Después de borrar, busca el #¡REF!"
+          desc: Borra la columna A debajo de =A1*2 y la fórmula queda escrita como =#¡REF!*2. Medido, y no se deshace solo.
+
+  - table:
+      eyebrow: Bloque 01 · Objetivo 1.3.2
+      title: Alto y ancho, y la trampa de las unidades
+      headers: [Lo que quieres, Dónde está, El detalle]
+      rows:
+        - ["Alto de fila", "Inicio, Celdas, Formato, [Row Height]", "La unidad son puntos"]
+        - ["Ancho de columna", "Formato, [Column Width]", "La unidad son caracteres"]
+        - ["Ajustar al contenido", "Formato, [AutoFit Column Width]", "Arrastrar no da un número exacto"]
+        - ["Toda la hoja", "Formato, [Default Width]", "Marca 8.09 en la máquina del lab"]
+        - ["Comprobarlo", "Abre de nuevo el mismo cuadro", "En blanco es que las filas difieren"]
+
+  - steps:
+      eyebrow: Bloque 01 · Objetivo Expert 2.1.2
+      title: Dentro del cuadro que el controlador no abre
+      items:
+        - label: '01'
+          title: "[Linear] o [Growth]"
+          desc: "[Linear] suma el incremento y [Growth] multiplica por él. Comprobado en la máquina del profesor, desde 2 con incremento 3 la serie va 2, 6, 18, 54."
+        - label: '02'
+          title: "[Date unit]"
+          desc: "[Day], [Weekday], [Month] o [Year]. [Weekday] se salta sábado y domingo, cosa que ningún arrastre hace por ti."
+        - label: '03'
+          title: "[Stop value]"
+          desc: Con uno puesto, selecciona una sola celda y deja que Excel decida hasta dónde tiene que llegar la serie.
+        - label: '04'
+          title: "[Trend]"
+          desc: Ajusta una recta a los valores ya seleccionados, y una curva con [Growth]. Comprobado, 1, 3, 5 se extiende a 7, 9, 11.
+        - label: '05'
+          title: "[Custom lists]"
+          desc: Archivo, Opciones, Avanzadas, [Edit Custom Lists]. Escribe las entradas o usa [Import list from cells], y el controlador sigue tu orden.
+
+  - divider:
+      eyebrow: Bloque 02 · Sesión 6
+      title: Buscar, y nombrar
+      lede: >-
+        Dos objetivos que el temario nunca menciona, y uno que menciona a medias. Los tres
+        son baratos de enseñar y caros de no tener cuando el conjunto de datos crece.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · Objetivo 1.2.1
+      title: Buscar, con las opciones abiertas
+      items:
+        - label: '01'
+          title: Haz clic en una celda
+          desc: Una selección de varias celdas confina la búsqueda a esa selección sin decírtelo, y nada te avisa.
+        - label: '02'
+          title: Inicio, Edición, [Find & Select], [Find]
+          desc: Ctrl+F llega al mismo cuadro y lo deja plegado, que es donde se pierden los puntos.
+        - label: '03'
+          title: "[Options]"
+          desc: Este clic es el objetivo. El cuadro plegado no puede expresar ni una sola de las cosas que siguen.
+        - label: '04'
+          title: "[Within], [Search], [Look in]"
+          desc: "[Within] en Hoja o en Libro. [Look in] en Fórmulas encuentra texto dentro de una fórmula, en [Values] solo lo que se ve."
+        - label: '05'
+          title: "[Find All]"
+          desc: El cuadro crece con una lista de Libro, Hoja, Nombre, Celda, Valor y Fórmula. Ctrl+A dentro de ella selecciona todos los resultados.
+
+  - table:
+      eyebrow: Bloque 02 · Objetivo 1.2.2
+      title: Ir a, y el cuadro Especial que trae detrás
+      headers: [Lo que necesitas, En el cuadro, Por qué no el Cuadro de nombres]
+      rows:
+        - ["Un rango con nombre", "La lista Ir a, elígelo", "Esta parte sí la hace"]
+        - ["Una celda lejana", "Caja [Reference], Sheet3!B47", "Esta también"]
+        - ["Toda celda vacía", "Especial, [Blanks]", "No tiene entrada para eso"]
+        - ["Toda fórmula", "Especial, Fórmulas", "[Numbers], [Text], [Logicals], [Errors]"]
+        - ["Toda regla", "Especial, [Conditional formats]", "Vuelve en las semanas 5 y 9"]
+
+  - steps:
+      eyebrow: Bloque 02 · Objetivo 2.3.1
+      title: Un nombre carga más que una etiqueta
+      items:
+        - label: '01'
+          title: Selecciona y luego [Define Name]
+          desc: Pestaña Fórmulas, grupo Nombres definidos, [Define Name]. Se abre el cuadro [New Name].
+        - label: '02'
+          title: "[Name]"
+          desc: Empieza con letra, guion bajo o barra invertida. Sin espacios. Ni una dirección de celda, ni una C o una R solas.
+        - label: '03'
+          title: "[Scope]"
+          desc: Libro, para que el nombre sirva desde cualquier hoja, o una hoja, para que sirva solo ahí. La tarea dirá cuál.
+        - label: '04'
+          title: "[Refers to]"
+          desc: Tiene que ser absoluta, =Sheet1!$A$1:$A$20. La flecha de contraer de la derecha te deja volver a seleccionar en la hoja.
+        - label: '05'
+          title: Varios de un jalón
+          desc: Selecciona el bloque con su fila de encabezados, [Create from Selection], marca [Top row]. Los espacios de los encabezados se vuelven guiones bajos.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro maneras de arruinar un nombre definido
+      items:
+        - label: Error 01
+          title: Un espacio en el nombre
+          desc: >-
+            Excel lo rechaza y el cuadro no cierra. Ventas 2026 no es un nombre,
+            Ventas_2026 sí lo es, y [Create from Selection] hace ese cambio por ti.
+        - label: Error 02
+          title: Un nombre que se lee como dirección
+          desc: >-
+            A1, R1C1 y las letras sueltas C y R quedan rechazadas, porque Excel ya
+            interpreta las cuatro como referencias a una celda.
+        - label: Error 03
+          title: Un ámbito que nadie pensó
+          desc: >-
+            Un nombre con ámbito de hoja es invisible desde cualquier otra hoja y no
+            aparece en la lista Ir a si su hoja no está activa. La ruta del Cuadro de
+            nombres nunca pregunta.
+        - label: Error 04
+          title: "Un nombre que apunta a #¡REF!"
+          desc: >-
+            El Administrador de nombres lo enseña sin más. El libro del Ejercicio 18 trae
+            seis de ellos, sobras de un ejercicio viejo, y te los vas a topar en la
+            semana 11.
+
+  - divider:
+      eyebrow: Bloque 03 · Sesión 6
+      title: Sobre qué se para la barra de fórmulas
+      lede: >-
+        Cuatro clases de valor, un orden de operaciones que no es el de la escuela, y
+        cuatro maneras de escribir la misma dirección.
+      block: 3
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido en la máquina del lab
+      title: Un número, y un número escrito como texto
+      filename: types.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A1  05/03/2024   una fecha real
+        A2  142          escrito como texto
+        A3  142          escrito como número
+        A4  VERDADERO    un valor lógico
+        A5  =1/0         un valor de error
+
+        =[ISNUMBER](A1)
+        =[ISTEXT](A2)
+        =A2+1
+        =SUMA(A2:A3)
+        =CONTAR(A1:A3)
+        =VERDADERO+VERDADERO
+      output: |
+        [ISNUMBER](A1)       VERDADERO
+        [ISTEXT](A2)         VERDADERO
+        A2+1                 143
+        SUMA(A2:A3)          142
+        CONTAR(A1:A3)        2
+        VERDADERO+VERDADERO  2
+
+  - concept:
+      eyebrow: Bloque 03 · Leyendo las dos líneas de arriba
+      title: El signo más convierte y SUMA no
+      lead: >-
+        A2 guarda los caracteres 1, 4 y 2, no el número ciento cuarenta y dos. Escribe
+        A2+1 y el signo más convierte el texto y responde 143. Apunta SUMA a esas mismas
+        dos celdas y responde 142, porque SUMA se salta el texto. Al reporte le falta un
+        renglón.
+      panel:
+        label: De dónde sale
+        title: Una fecha es un número con formato
+        note: >-
+          05/03/2024 se guarda como 45356, y por eso DÍA y MES pueden leerla y por eso
+          CONTAR la contó. Quítale el formato a una fecha y lo que queda atrás es el
+          número de serie.
+      steps:
+        - text: Mira la alineación antes de confiar en una columna
+        - text: Los números van a la derecha y el texto a la izquierda
+        - text: Una columna de números alineada a la derecha no prueba nada
+          loop: ↺ alguien pudo alinearla a mano, así que compruébalo con [ISNUMBER]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido en la máquina del lab
+      title: Precedencia, y dos resultados que sorprenden
+      filename: precedence.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        =2+3*4
+        =(2+3)*4
+        =-2^2
+        =2^3^2
+        =10/2*5
+        =50%*4
+        ="A"&1+2
+      output: |
+        2+3*4        14
+        (2+3)*4      20
+        -2^2         4
+        2^3^2        64
+        10/2*5       25
+        50%*4        2
+        "A"&1+2      A3
+
+  - table:
+      eyebrow: Bloque 03 · El orden que usa Excel
+      title: Qué se resuelve antes que qué
+      headers: [Nivel, Operadores, Qué significa aquí]
+      rows:
+        - ["1", "Los dos puntos, el espacio y la coma", "Rango, intersección, unión"]
+        - ["2", "El signo menos de un negativo", "Por eso -2^2 da 4"]
+        - ["3", "% y luego ^", "50% es 0.5 antes de multiplicar"]
+        - ["4", "* y /", "De izquierda a derecha si empatan"]
+        - ["5", "+ y -", "De izquierda a derecha si empatan"]
+        - ["6", "& y luego las comparaciones", "La concatenación corre tras la suma"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido en la máquina del lab
+      title: Los siete valores de error, hechos a propósito
+      filename: errors.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        =A1/A2
+        ="a"+1
+        =SUM(A1)
+        =[NA]()
+        =[SQRT](-1)
+        =A1:A2 C1:C2
+        =A1*2
+      output: |
+        #¡DIV/0!  A2 tiene un cero
+        #¡VALOR!  texto donde va un número
+        #¿NOMBRE? Excel no conoce SUM
+        #N/D      declarado no disponible
+        #¡NUM!    no hay raíz de un negativo
+        #¡NULO!   rangos que no se cruzan
+        #¡REF!    tras borrar la columna A
+
+  - trace:
+      eyebrow: Bloque 03 · Objetivo 4.1.1
+      title: Qué hace F4, una pulsación a la vez
+      headers: [Pulsaciones, Referencia, Columna, Fila]
+      rows:
+        - ["ninguna", "B2", "se mueve", "se mueve"]
+        - ["una", "$B$2", "fija", "fija"]
+        - ["dos", "B$2", "se mueve", "fija"]
+        - ["tres", "$B2", "fija", "se mueve"]
+        - ["cuatro", "B2", "se mueve", "se mueve"]
+      verdict: >-
+        Pulsa F4 con el punto de inserción tocando la referencia. Cuatro pulsaciones
+        recorren el ciclo completo y te dejan donde empezaste.
+
+  - code:
+      eyebrow: Bloque 03 · Una fórmula, dieciséis celdas
+      title: La cuadrícula de multiplicar
+      filename: grid.xlsx
+      lang: excel
+      source: |
+        Se escribe una vez en G2 y se rellena a la derecha y abajo.
+
+          =$F2*G$1
+
+        Lo que acaban guardando las cuatro esquinas del bloque.
+
+          G2   =$F2*G$1
+          J2   =$F2*J$1
+          G5   =$F5*G$1
+          J5   =$F5*J$1
+      annotations:
+        - label: El signo en la F
+          text: Va en la letra de columna, así nunca sale de la columna F al rellenar a la derecha.
+        - label: El signo en el 1
+          text: Va en el número de fila, así nunca sale de la fila 1 al rellenar hacia abajo.
+        - label: Cómo comprobarlo
+          text: Haz clic en J5 y lee la barra de fórmulas. Los dos signos tienen que seguir ahí.
+        - label: Si falla
+          text: >-
+            Escrita =$F$2*$G$1, las dieciséis celdas devuelven 2 y nada te avisa. Escrita
+            =F2*G1, solo la primera queda bien.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 03 · Objetivo 1.4.6 y Expert 1.2.4
+      title: Dos interruptores en la pestaña Fórmulas
+      headers: [Comando, Dónde vive, Qué hace]
+      rows:
+        - ["Mostrar fórmulas", "Fórmulas, Auditoría de fórmulas", "Cada celda enseña su fórmula"]
+        - ["Ctrl+acento grave", "La tecla a la izquierda del 1", "El mismo interruptor, se pulsa sin querer"]
+        - ["Opciones de cálculo", "Fórmulas, Cálculo", "[Automatic], [Manual] o salvo tablas"]
+        - ["[Calculate Now]", "F9, o el mismo grupo", "Recalcula todos los libros abiertos"]
+        - ["[Calculate Sheet]", "Shift+F9", "Solo la hoja activa"]
+
+  - steps:
+      eyebrow: Bloque 03 · Objetivos Expert 3.5.1 y 3.5.2
+      title: Ver de dónde salió un número
+      items:
+        - label: '01'
+          title: Rastrear precedentes
+          desc: Salen flechas azules de cada celda que la fórmula lee, con un punto en el extremo del origen. Otro clic da el nivel siguiente.
+        - label: '02'
+          title: Rastrear dependientes
+          desc: Mismo grupo. Las flechas salen hacia cada celda que lee a esta, que es lo que revisas antes de borrar nada.
+        - label: '03'
+          title: Quitar flechas
+          desc: Haz clic en la flecha del botón. Quitar flechas, [Remove Precedent Arrows] y [Remove Dependent Arrows]. El reactivo revisa que la hoja quede limpia.
+        - label: '04'
+          title: Ventana Inspección
+          desc: "[Add Watch], selecciona la celda, [Add]. El panel lista Libro, Hoja, Nombre, Celda, Valor y Fórmula, y aguanta el salto entre hojas."
+        - label: '05'
+          title: Seleccionar en vez de dibujar
+          desc: Ctrl+G, Especial, [Precedents], y luego [Direct only] o [All levels]. Selecciona y no dibuja nada, así que reprueba un reactivo que pide rastrear.
+
+  - quiz:
+      eyebrow: Comprobación rápida
+      question: Una fórmula tiene que llenar a la derecha y hacia abajo una cuadrícula. ¿Cuál referencia sobrevive?
+      options:
+        - "=F2*G1, porque el relleno ajusta las dos partes solo"
+        - "=$F$2*$G$1, porque nada de lo que trae se puede mover"
+        - "=$F2*G$1, un signo en la columna y otro en la fila"
+        - "=F$2*$G1, que fija las dos partes que deben moverse"
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Ejercicios 2 y 5, en un solo libro
+      brief: >-
+        En el Ejercicio 2 organicen el libro. Renombren y coloreen las hojas, agrúpenlas
+        para poner un mismo encabezado en todas de una vez, y definan cada rango que van a
+        necesitar después con su ámbito elegido a propósito. En el Ejercicio 5 escriban las
+        fórmulas de precedencia y luego armen la cuadrícula de multiplicar a partir de una
+        sola fórmula rellenada en dos sentidos.
+      blocks:
+        - label: Entregable
+          text: Un .xlsx con las hojas ordenadas, los nombres definidos y la cuadrícula rellenada
+        - label: Restricción
+          text: Ningún nombre creado desde el Cuadro de nombres. Todos desde [Define Name], con su [Scope] y su [Refers to] elegidos
+        - label: La prueba
+          text: Rastreen precedentes en la esquina lejana de la cuadrícula, cuenten dos generaciones de flechas y luego quítenlas
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres cosas para llevarse
+      items:
+        - title: Un nombre carga un ámbito
+          desc: >-
+            [Define Name] lo pide y el Cuadro de nombres nunca, y por eso la ruta rápida
+            no puede responder un reactivo que nombra una hoja
+        - title: Las mixtas llenan en dos sentidos
+          desc: >-
+            Un signo en la columna y otro en la fila es lo que deja a una sola fórmula
+            cubrir una cuadrícula. Dos signos dan dieciséis copias del mismo número
+        - title: SUMA se salta lo que el más convierte
+          desc: >-
+            El texto que parece número responde 143 a A2+1 y no aporta nada a SUMA. Revisa
+            la alineación y luego compruébalo con [ISNUMBER]
+
+  - homework:
+      eyebrow: Tarea
+      title: Entrega y criterios de calificación
+      brief: >-
+        Entreguen el libro del laboratorio, más una hoja propia que demuestre que abrieron
+        las herramientas de auditoría. Pongan una fórmula de tres niveles, dejen las
+        flechas de precedentes visibles en una captura y agreguen una celda a la Ventana
+        Inspección antes de guardar.
+      meta:
+        - [Entrega, Antes de la semana 4]
+        - [Formato, Blackboard · archivo .xlsx]
+        - [Peso, Parte del 30 % del primer parcial]
+      rubric:
+        - ["Estructura", "25 %", "Hojas renombradas, con color y un encabezado puesto por agrupación"]
+        - ["Nombres", "25 %", "Cada nombre con un ámbito deliberado y una referencia absoluta"]
+        - ["Referencias", "30 %", "La cuadrícula sale de una sola fórmula rellenada con referencias mixtas"]
+        - ["Auditoría", "20 %", "Dos generaciones de flechas de precedentes, y una celda inspeccionada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        La próxima semana se abre la biblioteca de funciones, las estadísticas, las de
+        texto y las de fecha, y el formato de número que cambia la vista sin tocar el valor.
+      meta:
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
+        - [Repositorio, github.com/davidowa/learning-hub]
