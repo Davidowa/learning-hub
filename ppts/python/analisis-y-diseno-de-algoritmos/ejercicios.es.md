@@ -1,8 +1,8 @@
 # Ejercicios · Análisis y Diseño de Algoritmos · COM101
 
-Este juego acompaña las diecisiete sesiones del curso y está pensado para el grupo de primer semestre de Ingeniería. Cada semana trae tres ejercicios: Reconocer se contesta leyendo código y prediciendo lo que imprime, Aplicar pide escribir un programa contra una especificación que ya trae sus datos y su resultado esperado, e Integrar amarra el tema de la semana con lo de las semanas anteriores. La dificultad sube dentro de la semana y también a lo largo del semestre, así que el Reconocer de la semana 12 pide más que el Integrar de la semana 4. Todos los problemas ocurren en el mismo lugar: la celda de maquinado C-3, sus cuatro estaciones, los bujes de bronce de 12.00 mm que produce y el banco de metrología donde se miden. Se entrega por Blackboard un archivo `.py` por ejercicio, salvo donde el enunciado pida papel, con la salida tal como la produjo tu programa.
+Este juego acompaña las diecisiete sesiones del curso y está pensado para el grupo de primer semestre de Ingeniería. Cada semana trae tres ejercicios: Reconocer se contesta leyendo código y prediciendo lo que imprime, Aplicar pide escribir un programa contra una especificación que ya trae sus datos y su resultado esperado, e Integrar amarra el tema de la semana con lo de las semanas anteriores. La dificultad sube dentro de la semana y también a lo largo del semestre, así que el Reconocer de la semana 12 pide más que el Integrar de la semana 4. Todos los problemas ocurren en el mismo lugar: el área de originación de Financiera Altamar, sus cuatro mesas de crédito MC-01 a MC-04, el crédito de nómina que colocan y el corte donde control interno revisa el precio de cada solicitud autorizada. Se entrega por Blackboard un archivo `.py` por ejercicio, salvo donde el enunciado pida papel, con la salida tal como la produjo tu programa.
 
-La banda de tolerancia del buje es la misma todo el semestre: nominal 12.00 mm, límite inferior 11.95 mm, límite superior 12.05 mm. Los dos límites se escriben como constantes al principio del programa y no se calculan dentro de una condición.
+La banda de precio del producto es la misma todo el semestre: tasa de política 18.00 % anual, límite inferior 17.50 %, límite superior 18.50 %. Los dos límites se escriben como constantes al principio del programa y no se calculan dentro de una condición.
 
 ---
 
@@ -10,41 +10,41 @@ La banda de tolerancia del buje es la misma todo el semestre: nominal 12.00 mm, 
 
 ### 01.1 · Reconocer
 
-**Los seis turnos de la celda C-3**
+**Las seis semanas de la mesa MC-01**
 
-La celda de maquinado C-3 produce bujes de bronce. Estas son las piezas buenas de los seis turnos de la semana pasada, en dos listas emparejadas. Sin ejecutar nada, escribe las cuatro líneas que imprime este programa.
+La mesa MC-01 coloca crédito de nómina. Estas son las solicitudes que aprobó en las seis semanas del bimestre pasado, en dos listas emparejadas. Sin ejecutar nada, escribe las cuatro líneas que imprime este programa.
 
 ```python
-turnos = ["T1", "T2", "T3", "T4", "T5", "T6"]
-piezas = [1240, 1385, 1120, 1510, 1295, 1440]
+semanas = ["S01", "S02", "S03", "S04", "S05", "S06"]
+aprobadas = [1240, 1385, 1120, 1510, 1295, 1440]
 
-total = sum(piezas)
-promedio = total / len(piezas)
-mejor = turnos[piezas.index(max(piezas))]
+total = sum(aprobadas)
+promedio = total / len(aprobadas)
+mejor = semanas[aprobadas.index(max(aprobadas))]
 
-print(turnos[0], piezas[0])
+print(semanas[0], aprobadas[0])
 print(total)
 print(promedio)
 print(mejor)
 ```
 
-Después contesta dos cosas. A qué turno corresponde `piezas[3]` y en qué fila estaría ese dato en la hoja de cálculo de donde salió, si la fila 1 son los encabezados. Y qué ocurre si agregas `print(piezas[6])` al final del programa.
+Después contesta dos cosas. A qué semana corresponde `aprobadas[3]` y en qué fila estaría ese dato en la hoja de cálculo de donde salió, si la fila 1 son los encabezados. Y qué ocurre si agregas `print(aprobadas[6])` al final del programa.
 
 ### 01.2 · Aplicar
 
-**El resumen de la semana, formateado**
+**El resumen del bimestre, formateado**
 
-Escribe el programa que resume esos mismos seis turnos e imprime cuatro renglones alineados: piezas de la semana con separador de miles, promedio por turno con un decimal, el mejor turno con su cifra, y cuántas piezas quedó ese turno por encima del promedio.
+Escribe el programa que resume esas mismas seis semanas e imprime cuatro renglones alineados: solicitudes aprobadas del bimestre con separador de miles, promedio por semana con un decimal, la mejor semana con su cifra, y cuántas solicitudes quedó esa semana por encima del promedio.
 
-Las cifras que tiene que dar son 7,990 piezas en la semana, 1,331.7 de promedio y el turno T4 con 1,510, que está 178.3 piezas arriba del promedio. Ningún número se escribe a mano dentro del `print`: los cuatro salen de las dos listas.
+Las cifras que tiene que dar son 7,990 solicitudes en el bimestre, 1,331.7 de promedio y la semana S04 con 1,510, que está 178.3 solicitudes arriba del promedio. Ningún número se escribe a mano dentro del `print`: los cuatro salen de las dos listas.
 
 ### 01.3 · Integrar
 
 **El dato que se recapturó**
 
-Metrología avisa que el turno T3 se capturó mal. No fueron 1120 piezas sino 1320. Corrige el dato en el programa de 01.2, vuelve a correrlo y reporta las tres cifras nuevas al lado de las anteriores.
+Control interno avisa que la semana S03 se capturó mal. No fueron 1120 solicitudes sino 1320. Corrige el dato en el programa de 01.2, vuelve a correrlo y reporta las tres cifras nuevas al lado de las anteriores.
 
-El programa imprime también el folio del lote que estaban midiendo, `00847`, guardado en una variable de texto.
+El programa imprime también el folio del corte que estaban revisando, `00847`, guardado en una variable de texto.
 
 Contesta después tres cosas, cada una en un renglón. Qué hubiera pasado con ese cambio en una hoja de cálculo y cuál de los cuatro quiebres de la sesión explica la diferencia. Qué se ve en la celda si alguien captura ese folio con formato de número. Y con cuál de los cuatro quiebres tiene que ver eso.
 
@@ -54,55 +54,55 @@ Contesta después tres cosas, cada una en un renglón. Qué hubiera pasado con e
 
 ### 02.1 · Reconocer
 
-**La traza del veredicto de un buje**
+**La traza del veredicto de precio**
 
-El buje nominal mide 12.00 mm y la banda de tolerancia va de 11.95 a 12.05 mm. Este es el pseudocódigo que sigue el banco de metrología con cada pieza que le llega.
+El crédito de nómina se coloca a una tasa de política de 18.00 % anual, y la banda autorizada va de 17.50 a 18.50 %. Este es el pseudocódigo que sigue control interno con cada solicitud autorizada que le llega.
 
 ```text
 INICIO
-    LEER diametro
+    LEER tasa
 
-    SI diametro > 12.05 ENTONCES
-        veredicto = "Rechazo por exceso"
-    SI NO SI diametro < 11.95 ENTONCES
-        veredicto = "Rechazo por defecto"
+    SI tasa > 18.50 ENTONCES
+        veredicto = "Sobreprecio fuera de politica"
+    SI NO SI tasa < 17.50 ENTONCES
+        veredicto = "Descuento fuera de politica"
     SI NO
-        veredicto = "Aceptada"
+        veredicto = "Dentro de politica"
 
     ESCRIBIR veredicto
 FIN
 ```
 
-Escribe la traza completa para tres piezas: una de 12.08 mm, una de 11.94 mm y una de 12.05 mm exactos. En cada una anota qué condiciones se evaluaron, cuáles ni se leyeron y con qué veredicto termina.
+Escribe la traza completa para tres solicitudes: una de 18.80 %, una de 17.40 % y una de 18.50 % exactos. En cada una anota qué condiciones se evaluaron, cuáles ni se leyeron y con qué veredicto termina.
 
-Después el operador reordena las ramas de esta forma y afirma que el algoritmo hace lo mismo.
+Después el ejecutivo de la mesa reordena las ramas de esta forma y afirma que el algoritmo hace lo mismo.
 
 ```text
-SI diametro >= 11.95 ENTONCES
-    veredicto = "Aceptada"
-SI NO SI diametro > 12.05 ENTONCES
-    veredicto = "Rechazo por exceso"
+SI tasa >= 17.50 ENTONCES
+    veredicto = "Dentro de politica"
+SI NO SI tasa > 18.50 ENTONCES
+    veredicto = "Sobreprecio fuera de politica"
 SI NO
-    veredicto = "Rechazo por defecto"
+    veredicto = "Descuento fuera de politica"
 ```
 
-Traza la pieza de 12.08 mm contra esta segunda versión y di con qué veredicto sale. Explica en dos renglones por qué esta versión cumple las cinco propiedades de un algoritmo y aun así no se puede usar en el banco.
+Traza la solicitud de 18.80 % contra esta segunda versión y di con qué veredicto sale. Explica en dos renglones por qué esta versión cumple las cinco propiedades de un algoritmo y aun así no se puede usar en el corte.
 
 ### 02.2 · Aplicar
 
-**El arranque de la celda, en papel**
+**La liberación del desembolso, en papel**
 
-Escribe el algoritmo de la verificación previa al arranque de la celda C-3, en pseudocódigo y en diagrama de flujo. La secuencia revisa tres cosas en este orden: que la guarda esté cerrada, que el paro de emergencia esté liberado y que la temperatura del husillo esté por debajo de 68 °C. Si las tres se cumplen, arma la celda. Si alguna falla, nombra cuál falló y deja la celda enclavada.
+Escribe el algoritmo de la verificación previa al desembolso de un crédito de nómina, en pseudocódigo y en diagrama de flujo. La secuencia revisa tres cosas en este orden: que el expediente esté completo, que el cliente no traiga adeudo vencido y que el score de buró llegue al menos a 620. Si las tres se cumplen, libera el desembolso. Si alguna falla, nombra cuál falló y deja la solicitud en espera.
 
-Entrega el pseudocódigo con las palabras del curso, el diagrama con los cuatro símbolos, y la traza esperada de dos casos: guarda cerrada, paro liberado y 61 °C; y guarda cerrada, paro liberado y 71 °C. Sin computadora.
+Entrega el pseudocódigo con las palabras del curso, el diagrama con los cuatro símbolos, y la traza esperada de dos casos: expediente completo, sin adeudo vencido y score de 688; y expediente completo, sin adeudo vencido y score de 601. Sin computadora.
 
 ### 02.3 · Integrar
 
 **Una instrucción que no es un algoritmo**
 
-En el pizarrón del área de inspección está escrito: «si la pieza se ve fuera de medida, mándala a reproceso».
+En el correo que circula en la mesa está escrito: «si la solicitud salió muy cara, mándala a comité».
 
-Aplícale la prueba de las dos personas y explica en dos renglones cuál de las cinco propiedades se rompe y por qué. Después reescríbela como algoritmo, con la banda de 11.95 a 12.05 mm y tres salidas: reproceso si la pieza salió sobrada, chatarra si salió corta y liberar si está dentro.
+Aplícale la prueba de las dos personas y explica en dos renglones cuál de las cinco propiedades se rompe y por qué. Después reescríbela como algoritmo, con la banda de 17.50 a 18.50 % y tres salidas: comité de precio si la tasa salió arriba, cancelación por margen si salió abajo y desembolso si quedó dentro.
 
 Identifica por escrito cuáles son los datos de entrada y cuál es la salida. Agrega al final un caso límite que tu primera versión no cubría y di qué le tuviste que cambiar para cubrirlo.
 
@@ -114,43 +114,43 @@ Identifica por escrito cuáles son los datos de entrada y cuál es la salida. Ag
 
 **Tres líneas que se pisan y cuatro archivos que no corren**
 
-Primero, la traza. Escribe cuánto vale `piezas` después de cada línea y qué imprime el programa.
+Primero, la traza. Escribe cuánto vale `solicitudes` después de cada línea y qué imprime el programa.
 
 ```python
-piezas = 1240
-piezas = piezas + 85
-piezas = piezas * 2
+solicitudes = 1240
+solicitudes = solicitudes + 85
+solicitudes = solicitudes * 2
 
-print(piezas)
+print(solicitudes)
 ```
 
 Después, cuatro fragmentos, cada uno guardado en su propio archivo. Para cada uno di si corre. Cuando no corra, di cuál de las cinco reglas de la sesión se rompió, qué tipo de error se lanza y en qué línea lo va a reclamar Python.
 
 ```python
 # A
-lecturas = [1496, 1502]
-print(Suma(lecturas))
+montos = [96500, 148200]
+print(Suma(montos))
 
 # B
-lecturas = [1496, 1502]
-print("promedio:, lecturas)
+montos = [96500, 148200]
+print("promedio:, montos)
 
 # C
-total = 1496 + 1502
+total = 96500 + 148200
 print(total
 
 # D
-total = 2998
+total = 244700
 Print(total)
 ```
 
 ### 03.2 · Aplicar
 
-**El primer programa del tacómetro**
+**El primer programa de la mesa**
 
-El tacómetro del transportador de la celda registró cinco lecturas en el turno: 1496, 1502, 1488, 1511 y 1494 rpm. Escribe un programa con la anatomía completa de la sesión: un comentario arriba que diga de dónde salen los datos, la importación de `mean` desde `statistics`, la lista de lecturas y tres `print` que muestren el número de muestras, el promedio y la lectura mayor, cada uno con su etiqueta.
+La mesa MC-01 autorizó cinco créditos el 8 de enero: 96,500, 148,200, 73,400, 151,100 y 118,900 pesos. Escribe un programa con la anatomía completa de la sesión: un comentario arriba que diga de dónde salen los datos, la importación de `mean` desde `statistics`, la lista de montos y tres `print` que muestren cuántos créditos son, el monto promedio y el monto mayor, cada uno con su etiqueta.
 
-El promedio da 1498.2 rpm y la lectura mayor 1511 rpm.
+El promedio da 117,620 pesos y el monto mayor 151,100 pesos.
 
 Después rompe tu propio programa de tres formas, una a la vez: quita el paréntesis que cierra un `print`, cambia `print` por `Print` y borra una comilla. Entrega una tabla de tres renglones con el mensaje exacto que dio cada uno, incluida la línea que señaló.
 
@@ -158,9 +158,9 @@ Después rompe tu propio programa de tres formas, una a la vez: quita el parént
 
 **El pseudocódigo de la semana 2, dicho en Python**
 
-Traduce a Python el pseudocódigo del veredicto de 02.1, con el diámetro guardado en una variable arriba del programa y el resultado impreso con su etiqueta. La traducción es casi línea por línea: cambian cinco palabras y aparecen los dos puntos.
+Traduce a Python el pseudocódigo del veredicto de 02.1, con la tasa guardada en una variable arriba del programa y el resultado impreso con su etiqueta. La traducción es casi línea por línea: cambian cinco palabras y aparecen los dos puntos.
 
-Córrelo tres veces, con 12.05, con 11.94 y con 12.00, y pega las tres salidas. Contesta además dos cosas: por qué la corrida de 12.00 imprime `12.0` y no `12.00`, y qué veredicto daría una pieza de 12.08 mm si intercambias las dos primeras ramas.
+Córrelo tres veces, con 18.50, con 17.40 y con 18.00, y pega las tres salidas. Contesta además dos cosas: por qué la corrida de 18.00 imprime `18.0` y no `18.00`, y qué veredicto daría una solicitud de 18.80 % si intercambias las dos primeras ramas.
 
 ---
 
@@ -168,49 +168,49 @@ Córrelo tres veces, con 12.05, con 11.94 y con 12.00, y pega las tres salidas. 
 
 ### 04.1 · Reconocer
 
-**Ocho líneas de aritmética de charolas**
+**Ocho líneas de aritmética de paquetes**
 
-Las piezas terminadas se acomodan en charolas de 24. Sin ejecutar nada, escribe las ocho líneas que imprime este programa.
+Las solicitudes se reparten en paquetes de 24 para la revisión documental. Sin ejecutar nada, escribe las ocho líneas que imprime este programa.
 
 ```python
-piezas = 1240
-por_charola = 24
+solicitudes = 1240
+por_paquete = 24
 
-print(piezas / por_charola)
-print(piezas // por_charola)
-print(piezas % por_charola)
-print("12" + "05")
-print(int("12") + int("05"))
-print(12.00 + 0.05 == 12.05)
+print(solicitudes / por_paquete)
+print(solicitudes // por_paquete)
+print(solicitudes % por_paquete)
+print("18" + "50")
+print(int("18") + int("50"))
+print(18.00 + 0.50 == 18.50)
 print(0.05 * 3 == 0.15)
 print(0.05 * 3)
 ```
 
-Después contesta dos cosas. Qué significan, en charolas y en piezas, los resultados de la segunda y la tercera línea. Y por qué la sexta línea da un resultado y la séptima da el contrario, si las dos comparan decimales que en papel salen exactos.
+Después contesta dos cosas. Qué significan, en paquetes y en solicitudes, los resultados de la segunda y la tercera línea. Y por qué la sexta línea da un resultado y la séptima da el contrario, si las dos suman ajustes de tasa que en papel salen exactos.
 
 ### 04.2 · Aplicar
 
-**El turno de EST-01, con cada dato en su tipo**
+**El corte de MC-01, con cada dato en su tipo**
 
-La estación EST-01 cerró el turno del 8 de enero de 2026 con 1240 piezas producidas, 37 rechazadas y 86.4 kWh de consumo. La estación quedó activa y no registró ningún paro.
+La mesa MC-01 cerró el corte del 8 de enero de 2026 con 1240 solicitudes recibidas, 37 rechazadas y 86.4 horas-analista invertidas. La mesa quedó activa y no registró ninguna incidencia.
 
-Declara ocho variables con el tipo que le corresponde a cada dato, incluidas la bandera de estación activa y el último paro, que no existe. Calcula la tasa de rechazo en por ciento y el consumo por pieza en kWh, redondeados a dos y a cuatro decimales. Imprime las dos métricas con su etiqueta y su unidad, y después el `type` de cinco variables para comprobar qué entendió Python.
+Declara ocho variables con el tipo que le corresponde a cada dato, incluidas la bandera de mesa activa y la última incidencia, que no existe. Calcula la tasa de rechazo en por ciento y las horas-analista por solicitud, redondeadas a dos y a cuatro decimales. Imprime las dos métricas con su etiqueta y su unidad, y después el `type` de cinco variables para comprobar qué entendió Python.
 
-La tasa de rechazo da 2.98 % y el consumo por pieza 0.0697 kWh. Ningún nombre de variable puede ser de una sola letra.
+La tasa de rechazo da 2.98 % y las horas por solicitud 0.0697. Ningún nombre de variable puede ser de una sola letra.
 
 ### 04.3 · Integrar
 
 **Dos paréntesis que cambian la respuesta**
 
-Con los mismos datos de EST-01, alguien quiere saber cuánta energía cuesta cada pieza buena y escribe esto.
+Con los mismos datos de MC-01, alguien quiere saber cuánto tiempo de análisis cuesta cada solicitud aprobada y escribe esto.
 
 ```python
-por_pieza = consumo_kwh / piezas - rechazos
+por_solicitud = horas_analista / solicitudes - rechazadas
 ```
 
-Escribe las dos versiones, la de arriba y la que sí contesta la pregunta, imprime las dos redondeadas a cuatro decimales y di en un renglón qué calcula cada una. Una da un número negativo y la otra 0.0718 kWh.
+Escribe las dos versiones, la de arriba y la que sí contesta la pregunta, imprime las dos redondeadas a cuatro decimales y di en un renglón qué calcula cada una. Una da un número negativo y la otra 0.0718 horas por solicitud aprobada.
 
-En el mismo programa resuelve dos cosas más. Cuántas charolas llenas de 24 salen de las piezas buenas y cuántas piezas quedan sueltas, con división entera y residuo. Y qué le pasa al folio del lote, `"00847"`, cuando lo conviertes a entero y lo regresas a texto: imprime los tres valores en una sola línea y explica en un renglón qué se perdió en el camino.
+En el mismo programa resuelve dos cosas más. Cuántos paquetes llenos de 24 salen de las solicitudes aprobadas y cuántas quedan sueltas, con división entera y residuo. Y qué le pasa al folio del corte, `"00847"`, cuando lo conviertes a entero y lo regresas a texto: imprime los tres valores en una sola línea y explica en un renglón qué se perdió en el camino.
 
 ---
 
@@ -223,40 +223,40 @@ En el mismo programa resuelve dos cosas más. Cuántas charolas llenas de 24 sal
 Sin ejecutar nada, escribe exactamente lo que imprime cada línea, con sus comas, sus decimales y sus espacios.
 
 ```python
-piezas = 1240
-consumo = 86.4
+solicitudes = 1240
+horas = 86.4
 tasa = 37 / 1240
 
-print(f"Piezas: {piezas:,}")
-print(f"Consumo: {consumo:,.2f} kWh")
+print(f"Solicitudes: {solicitudes:,}")
+print(f"Horas: {horas:,.2f} h")
 print(f"Rechazo: {tasa:.1%}")
 print(f"Rechazo: {tasa:.2%}")
-print(f"{'EST-01':<10}{piezas:>8}")
+print(f"{'MC-01':<10}{solicitudes:>8}")
 print(f"Tasa cruda: {tasa}")
-print("Consumo: {consumo:.2f} kWh")
+print("Horas: {horas:.2f} h")
 ```
 
 Después explica en un renglón por qué las líneas tercera y cuarta muestran el mismo dato con dos cifras distintas, y en otro qué le falta a la última línea para hacer lo que aparenta.
 
 ### 05.2 · Aplicar
 
-**La captura del turno**
+**La captura del corte**
 
-Escribe el programa que captura un turno desde el teclado y devuelve el reporte de la estación. Pide cuatro datos, cada uno con su mensaje: la estación, las piezas producidas, las piezas rechazadas y el consumo del turno en kWh. Convierte lo que haga falta antes de operar con ello.
+Escribe el programa que captura un corte desde el teclado y devuelve el reporte de la mesa. Pide cuatro datos, cada uno con su mensaje: la mesa, las solicitudes recibidas, las solicitudes rechazadas y las horas-analista del corte. Convierte lo que haga falta antes de operar con ello.
 
-El reporte son cinco renglones con etiqueta: estación, piezas con separador de miles, rechazos, tasa de rechazo con dos decimales de por ciento y consumo por pieza con cuatro decimales.
+El reporte son cinco renglones con etiqueta: mesa, solicitudes con separador de miles, rechazadas, tasa de rechazo con dos decimales de por ciento y horas por solicitud con cuatro decimales.
 
-Prueba con EST-01, 1240, 37 y 86.4. Tiene que dar 2.98 % y 0.0697 kWh. Entrega la sesión completa, con lo que escribiste en la misma línea del mensaje.
+Prueba con MC-01, 1240, 37 y 86.4. Tiene que dar 2.98 % y 0.0697 h. Entrega la sesión completa, con lo que escribiste en la misma línea del mensaje.
 
 ### 05.3 · Integrar
 
-**El reporte que se manda a producción**
+**El reporte que se manda a dirección comercial**
 
-Amplía el programa anterior para que además calcule el tiempo de ciclo y la energía por pieza buena. El turno dura ocho horas, o sea 28800 segundos, y esa constante va escrita con nombre arriba del programa. El tiempo de ciclo es el turno entre las piezas producidas. La energía por pieza buena son los kWh convertidos a watt hora, repartidos entre las piezas que no se rechazaron.
+Amplía el programa anterior para que además calcule el tiempo por solicitud y los minutos de análisis por solicitud aprobada. La jornada de la mesa dura ocho horas, o sea 28800 segundos, y esa constante va escrita con nombre arriba del programa. El tiempo por solicitud es la jornada entre las solicitudes recibidas. Los minutos por solicitud aprobada son las horas-analista convertidas a minutos, repartidas entre las solicitudes que no se rechazaron.
 
 Las cinco cifras del reporte van alineadas en columna, con el nombre a la izquierda en veintidós espacios y el número a la derecha en diez, cada uno con su formato y su unidad.
 
-Prueba con EST-03, 1512 piezas, 68 rechazos y 112.8 kWh. Tiene que dar 1,444 piezas buenas, 4.50 % de rechazo, 19.05 segundos de ciclo y 78.1 Wh por pieza buena. Entrega la sesión completa.
+Prueba con MC-03, 1512 solicitudes, 68 rechazadas y 112.8 horas-analista. Tiene que dar 1,444 solicitudes aprobadas, 4.50 % de rechazo, 19.05 segundos por solicitud y 4.69 minutos por solicitud aprobada. Entrega la sesión completa.
 
 ---
 
@@ -264,57 +264,57 @@ Prueba con EST-03, 1512 piezas, 68 rechazos y 112.8 kWh. Tiene que dar 1,444 pie
 
 ### 06.1 · Reconocer
 
-**La pieza que cae justo en el límite**
+**La solicitud que cae justo en el límite**
 
-Dos programas, cada uno con una pieza distinta. Sin ejecutar nada, di qué imprime cada uno y por qué.
+Dos programas, cada uno con una solicitud distinta. Sin ejecutar nada, di qué imprime cada uno y por qué.
 
 ```python
 # Primero
-diametro = 12.05
+tasa = 18.50
 
-if diametro > 12.05:
-    veredicto = "Rechazo por exceso"
+if tasa > 18.50:
+    veredicto = "Sobreprecio fuera de politica"
 else:
-    veredicto = "Aceptada"
+    veredicto = "Dentro de politica"
 
-print(diametro, veredicto)
+print(tasa, veredicto)
 ```
 
 ```python
 # Segundo
-diametro = 12.08
+tasa = 18.80
 
-if diametro >= 11.95:
-    veredicto = "Aceptada"
-elif diametro > 12.05:
-    veredicto = "Rechazo por exceso"
+if tasa >= 17.50:
+    veredicto = "Dentro de politica"
+elif tasa > 18.50:
+    veredicto = "Sobreprecio fuera de politica"
 else:
-    veredicto = "Rechazo por defecto"
+    veredicto = "Descuento fuera de politica"
 
-print(diametro, veredicto)
+print(tasa, veredicto)
 ```
 
-El segundo programa acepta una pieza que mide 12.08 mm, tres centésimas arriba del límite superior. Explica en dos renglones por qué la segunda rama nunca se alcanza y escribe el orden correcto de las tres condiciones.
+El segundo programa aprueba como buena una solicitud colocada a 18.80 %, treinta puntos base arriba del límite superior. Explica en dos renglones por qué la segunda rama nunca se alcanza y escribe el orden correcto de las tres condiciones.
 
 ### 06.2 · Aplicar
 
-**El clasificador del banco de metrología**
+**El clasificador de precio del corte**
 
-Escribe el programa que pide por teclado el folio de una pieza y su diámetro medido, y le da uno de tres veredictos: rechazo por exceso si pasa de 12.05 mm, rechazo por defecto si no llega a 11.95 mm, y aceptada en cualquier otro caso. Los dos límites van como constantes con nombre arriba del programa.
+Escribe el programa que pide por teclado el folio de una solicitud y su tasa otorgada, y le da uno de tres veredictos: sobreprecio fuera de política si pasa de 18.50 %, descuento fuera de política si no llega a 17.50 %, y dentro de política en cualquier otro caso. Los dos límites van como constantes con nombre arriba del programa.
 
-La salida es un solo renglón con el folio, el diámetro a dos decimales y el veredicto.
+La salida es un solo renglón con el folio, la tasa a dos decimales y el veredicto.
 
-Prueba con cinco piezas y entrega las cinco corridas: 12.06, 11.94, 12.05, 11.95 y 12.00. Las dos que caen exactamente en el límite tienen que salir aceptadas.
+Prueba con cinco solicitudes y entrega las cinco corridas: 18.60, 17.40, 18.50, 17.50 y 18.00. Las dos que caen exactamente en el límite tienen que salir dentro de política.
 
 ### 06.3 · Integrar
 
 **Cinco destinos y un dato imposible**
 
-Producción decide que tres categorías no alcanzan. Una pieza sobrada se puede rectificar mientras no pase de 12.15 mm; arriba de ahí ya no hay material que quitar. Una pieza corta se puede liberar con concesión mientras no baje de 11.85 mm; abajo de ahí es chatarra.
+Dirección comercial decide que tres categorías no alcanzan. Un sobreprecio se puede autorizar en comité mientras no pase de 19.50 %; arriba de ahí el producto deja de ser vendible y la solicitud se cancela. Un descuento se puede autorizar con el visto bueno de dirección mientras no baje de 16.50 %; abajo de ahí el crédito no cubre su costo de fondeo y se cancela por margen.
 
-Escribe el clasificador de cinco categorías con esos cinco destinos, más una validación que rechace un dato imposible antes de clasificar nada: cualquier lectura menor o igual a cero, o mayor a 20 mm, sale como dato inválido y manda a revisar el micrómetro. Las cinco fronteras van como constantes con nombre.
+Escribe el clasificador de cinco categorías con esos cinco destinos, más una validación que rechace un dato imposible antes de clasificar nada: cualquier tasa menor o igual a cero, o mayor a 60 %, sale como dato inválido y manda a revisar la captura. Las cinco fronteras van como constantes con nombre.
 
-Prueba con estas once lecturas y entrega la tabla completa: 12.30, 12.15, 12.06, 12.05, 12.00, 11.95, 11.90, 11.85, 11.80, -3.00 y 25.00. Documenta al final, en una tabla de cinco renglones, qué veredicto le toca al valor exacto de cada frontera y por qué elegiste `>` o `>=` en cada una.
+Prueba con estas once tasas y entrega la tabla completa: 20.00, 19.50, 18.60, 18.50, 18.00, 17.50, 17.20, 16.50, 16.20, -3.00 y 75.00. Documenta al final, en una tabla de cinco renglones, qué veredicto le toca al valor exacto de cada frontera y por qué elegiste `>` o `>=` en cada una.
 
 ---
 
@@ -327,67 +327,67 @@ Prueba con estas once lecturas y entrega la tabla completa: 12.30, 12.15, 12.06,
 Sin ejecutar nada, escribe las cinco líneas que imprime este programa y explica cada una en un renglón.
 
 ```python
-estacion = "EST-03"
+mesa = "MC-03"
 
-if estacion == "EST-01" or "EST-03":
-    print("Estacion critica")
+if mesa == "MC-01" or "MC-03":
+    print("Mesa critica")
 else:
-    print("Estacion normal")
+    print("Mesa normal")
 
-lectura_a = [12.01, 11.98, 12.06]
-lectura_b = [12.01, 11.98, 12.06]
+tasas_a = [18.10, 17.80, 18.60]
+tasas_b = [18.10, 17.80, 18.60]
 
-print(lectura_a == lectura_b)
-print(lectura_a is lectura_b)
+print(tasas_a == tasas_b)
+print(tasas_a is tasas_b)
 
-piezas = 0
-rechazos = 0
+solicitudes = 0
+rechazadas = 0
 
-if piezas > 0 and rechazos / piezas > 0.03:
-    print("Detener la estacion")
+if solicitudes > 0 and rechazadas / solicitudes > 0.03:
+    print("Bloquear la mesa")
 else:
     print("Sin datos suficientes")
 
-ultimo_paro = None
-print(ultimo_paro is None)
+ultima_incidencia = None
+print(ultima_incidencia is None)
 ```
 
-Contesta además dos cosas. Qué imprimiría la primera condición si la estación fuera EST-04, y cómo se escribe correctamente. Y por qué el `and` de la tercera condición evita un `ZeroDivisionError` que con `or` sí habría reventado.
+Contesta además dos cosas. Qué imprimiría la primera condición si la mesa fuera MC-04, y cómo se escribe correctamente. Y por qué el `and` de la tercera condición evita un `ZeroDivisionError` que con `or` sí habría reventado.
 
 ### 07.2 · Aplicar
 
-**La política de liberación de lote**
+**La política de liberación del corte**
 
-Un lote se libera cuando se cumplen tres cosas a la vez: la estación no está en mantenimiento, el lote trae al menos 500 piezas y la tasa de rechazo no pasa de 3 %. Si no se libera, hay dos caminos: si la estación es de las críticas, que son EST-01 y EST-03, se retiene y se marca como estación crítica que no cumplió; si no, se retiene para inspección al cien por ciento.
+Un corte se libera cuando se cumplen tres cosas a la vez: la mesa no está en auditoría, el corte trae al menos 500 solicitudes y la tasa de rechazo no pasa de 3 %. Si no se libera, hay dos caminos: si la mesa es de las críticas, que son MC-01 y MC-03, se retiene y se marca como mesa crítica que no cumplió; si no, se retiene para revisión expediente por expediente.
 
-Escribe el programa que pide por teclado la estación, las piezas del lote, las rechazadas y si está en mantenimiento, y decide. La lista de estaciones críticas y los dos umbrales van como constantes arriba. La pertenencia se pregunta con `in`, no con una fila de `or`.
+Escribe el programa que pide por teclado la mesa, las solicitudes del corte, las rechazadas y si está en auditoría, y decide. La lista de mesas críticas y los dos umbrales van como constantes arriba. La pertenencia se pregunta con `in`, no con una fila de `or`.
 
-Prueba estos cinco casos y entrega las cinco corridas: EST-01 con 1240 y 37 sin mantenimiento; EST-03 con 1512 y 68 sin mantenimiento; EST-04 con 760 y 9 sin mantenimiento; EST-02 con 420 y 5 sin mantenimiento; y EST-01 con 1240 y 37 en mantenimiento.
+Prueba estos cinco casos y entrega las cinco corridas: MC-01 con 1240 y 37 sin auditoría; MC-03 con 1512 y 68 sin auditoría; MC-04 con 760 y 9 sin auditoría; MC-02 con 420 y 5 sin auditoría; y MC-01 con 1240 y 37 en auditoría.
 
 ### 07.3 · Integrar
 
 **El anidado que en realidad era un and**
 
-El paro automático del husillo llegó del proveedor escrito así, con cuatro ramas.
+La regla de bloqueo automático de una mesa llegó del proveedor del sistema de originación escrita así, con cuatro ramas.
 
 ```python
-if temperatura > 68.0:
-    if vibracion > 4.5:
-        accion = "Detener la estacion"
+if mora > 3.0:
+    if sobreprecio > 0.50:
+        accion = "Bloquear la mesa"
     else:
-        accion = "Seguir operando"
+        accion = "Seguir colocando"
 else:
-    if vibracion > 4.5:
-        accion = "Seguir operando"
+    if sobreprecio > 0.50:
+        accion = "Seguir colocando"
     else:
-        accion = "Seguir operando"
+        accion = "Seguir colocando"
 ```
 
-Escribe un programa que pida la temperatura del husillo y la vibración por teclado, calcule la acción con esa versión anidada y con la versión colapsada en una sola condición, e imprima las dos junto con un `True` o `False` que diga si coinciden.
+Escribe un programa que pida por teclado la mora de la cartera de la mesa en por ciento y su sobreprecio promedio en puntos de tasa, calcule la acción con esa versión anidada y con la versión colapsada en una sola condición, e imprima las dos junto con un `True` o `False` que diga si coinciden.
 
-Corre los cuatro casos de la tabla de verdad y entrega las cuatro salidas: 70.2 con 5.1; 70.2 con 3.8; 64.0 con 5.1; y 64.0 con 3.8.
+Corre los cuatro casos de la tabla de verdad y entrega las cuatro salidas: 4.2 con 0.80; 4.2 con 0.30; 2.4 con 0.80; y 2.4 con 0.30.
 
-Cierra con dos renglones. El primero explica por qué este anidado sí se podía colapsar. El segundo describe un caso de la misma celda donde el anidado no se puede colapsar, y dice qué tienen que tener sus ramas internas para que eso ocurra.
+Cierra con dos renglones. El primero explica por qué este anidado sí se podía colapsar. El segundo describe un caso de la misma área donde el anidado no se puede colapsar, y dice qué tienen que tener sus ramas internas para que eso ocurra.
 
 ---
 
@@ -395,65 +395,65 @@ Cierra con dos renglones. El primero explica por qué este anidado sí se podía
 
 ### 08.1 · Reconocer
 
-**Un for de tres en tres y un tanque que no alcanza**
+**Un for de seis en seis y un presupuesto que no alcanza**
 
 Sin ejecutar nada, escribe todo lo que imprime este programa y cuántas líneas son.
 
 ```python
-for velocidad in range(38, 56, 4):
-    print(velocidad)
+for plazo in range(12, 48, 6):
+    print(plazo)
 
-refrigerante = 50.0
-consumo_turno = 7.5
-turnos = 0
+presupuesto = 50000.0
+gasto_semana = 7500.0
+semanas = 0
 
-while refrigerante > 0:
-    refrigerante -= consumo_turno
-    turnos += 1
+while presupuesto > 0:
+    presupuesto -= gasto_semana
+    semanas += 1
 
-print(turnos, refrigerante)
+print(semanas, presupuesto)
 ```
 
-Después contesta tres cosas. Por qué el `for` no imprime el 56 aunque aparezca en el `range`. Cuántos turnos completos aguanta de verdad el tanque de refrigerante y por qué el número impreso no es ese. Y qué pasaría si borras la línea que resta el consumo.
+Después contesta tres cosas. Por qué el `for` no imprime el 48 aunque aparezca en el `range`. Cuántas semanas completas aguanta de verdad el presupuesto de promoción y por qué el número impreso no es ese. Y qué pasaría si borras la línea que resta el gasto.
 
 ### 08.2 · Aplicar
 
-**Las cuatro estaciones, en un solo recorrido**
+**Las cuatro mesas, en un solo recorrido**
 
-Estos son los datos del turno del 8 de enero, en cuatro listas emparejadas.
+Estos son los datos del corte del 8 de enero, en cuatro listas emparejadas.
 
 ```python
-estaciones = ["EST-01", "EST-02", "EST-03", "EST-04"]
-piezas = [1240, 984, 1512, 760]
-rechazos = [37, 12, 68, 9]
-consumo = [86.4, 61.5, 112.8, 48.2]
+mesas = ["MC-01", "MC-02", "MC-03", "MC-04"]
+solicitudes = [1240, 984, 1512, 760]
+rechazadas = [37, 12, 68, 9]
+horas = [86.4, 61.5, 112.8, 48.2]
 ```
 
-Escribe el programa que las recorre una sola vez y produce la tabla del turno: un encabezado y un renglón por estación con la estación, las piezas con separador de miles, la tasa de rechazo con dos decimales de por ciento y los kWh por pieza con cuatro decimales, todo alineado en columnas.
+Escribe el programa que las recorre una sola vez y produce la tabla del corte: un encabezado y un renglón por mesa con la mesa, las solicitudes con separador de miles, la tasa de rechazo con dos decimales de por ciento y las horas-analista por solicitud con cuatro decimales, todo alineado en columnas.
 
-El último renglón es el de la celda completa, con 4,496 piezas, 2.80 % de rechazo y 0.0687 kWh por pieza. Ese renglón se calcula sumando y dividiendo los totales, no promediando las cuatro tasas.
+El último renglón es el del área completa, con 4,496 solicitudes, 2.80 % de rechazo y 0.0687 horas por solicitud. Ese renglón se calcula sumando y dividiendo los totales, no promediando las cuatro tasas.
 
-El ciclo tiene que seguir funcionando si mañana se agrega una quinta estación a las cuatro listas, sin tocar una sola línea de adentro.
+El ciclo tiene que seguir funcionando si mañana se agrega una quinta mesa a las cuatro listas, sin tocar una sola línea de adentro.
 
 ### 08.3 · Integrar
 
-**Repaso del primer parcial: el lote L-2601 completo**
+**Repaso del primer parcial: el corte C-2601 completo**
 
-Este ejercicio cruza lo que entra al parcial: tipos, formato, selección y repetición. Estas son las doce piezas del lote L-2601 con su diámetro medido.
+Este ejercicio cruza lo que entra al parcial: tipos, formato, selección y repetición. Estas son las doce solicitudes del corte C-2601 con su tasa otorgada.
 
 ```python
-piezas = ["BJ-1001", "BJ-1002", "BJ-1003", "BJ-1004",
-          "BJ-1005", "BJ-1006", "BJ-1007", "BJ-1008",
-          "BJ-1009", "BJ-1010", "BJ-1011", "BJ-1012"]
-diametros = [12.01, 11.98, 12.06, 12.00, 11.94, 12.03,
-             11.99, 12.05, 11.96, 12.02, 12.08, 11.97]
+solicitudes = ["SOL-1001", "SOL-1002", "SOL-1003", "SOL-1004",
+               "SOL-1005", "SOL-1006", "SOL-1007", "SOL-1008",
+               "SOL-1009", "SOL-1010", "SOL-1011", "SOL-1012"]
+tasas = [18.10, 17.80, 18.60, 18.00, 17.40, 18.30,
+         17.90, 18.50, 17.60, 18.20, 18.80, 17.70]
 ```
 
-Escribe el programa que recorre las dos listas emparejadas e imprime un renglón por pieza con su folio, su diámetro a dos decimales y su veredicto, usando las tres categorías de la semana 6 y las constantes de la banda.
+Escribe el programa que recorre las dos listas emparejadas e imprime un renglón por solicitud con su folio, su tasa a dos decimales y su veredicto, usando las tres categorías de la semana 6 y las constantes de la banda.
 
-Al terminar el recorrido imprime dos renglones más: el diámetro promedio del lote a cuatro decimales, y cuántas piezas quedaron fuera de tolerancia de las doce, con el porcentaje a un decimal. El promedio da 12.0075 mm y salen 3 de 12.
+Al terminar el recorrido imprime dos renglones más: la tasa promedio del corte a cuatro decimales, y cuántas solicitudes quedaron fuera de política de las doce, con el porcentaje a un decimal. El promedio da 18.0750 % y salen 3 de 12.
 
-Cierra contestando en dos renglones por qué la pieza BJ-1008, que mide 12.05, no cuenta como fuera de tolerancia, y qué habría pasado con ese conteo si el programa usara `>=` en lugar de `>` en la primera condición.
+Cierra contestando en dos renglones por qué la solicitud SOL-1008, colocada a 18.50 %, no cuenta como fuera de política, y qué habría pasado con ese conteo si el programa usara `>=` en lugar de `>` en la primera condición.
 
 ---
 
@@ -467,30 +467,30 @@ Dos programas. Sin ejecutar nada, di qué imprime cada uno.
 
 ```python
 # Primero
-consumos = [86.4, 61.5, 112.8, 48.2]
+horas = [86.4, 61.5, 112.8, 48.2]
 
-for consumo in consumos:
+for hora in horas:
     total = 0.0
-    total += consumo
+    total += hora
 
 print(total)
 ```
 
 ```python
 # Segundo
-estaciones = ["EST-01", "EST-02", "EST-03", "EST-04"]
-piezas = [1240, 984, 1512, 760]
-rechazos = [37, 12, 68, 9]
+mesas = ["MC-01", "MC-02", "MC-03", "MC-04"]
+solicitudes = [1240, 984, 1512, 760]
+rechazadas = [37, 12, 68, 9]
 
-for i in range(len(estaciones)):
-    if piezas[i] < 1000:
+for i in range(len(mesas)):
+    if solicitudes[i] < 1000:
         continue
 
-    if rechazos[i] / piezas[i] > 0.03:
-        print("Primera fuera de control:", estaciones[i])
+    if rechazadas[i] / solicitudes[i] > 0.03:
+        print("Primera fuera de control:", mesas[i])
         break
 else:
-    print("Ninguna estacion rebasa el limite")
+    print("Ninguna mesa rebasa el limite")
 ```
 
 Del primero, di cuál era el resultado esperado, cuál sale y qué única línea hay que mover. Del segundo, escribe la traza de las cuatro vueltas diciendo qué pasa en cada una, y explica por qué el `else` del `for` no se ejecuta y en qué caso sí lo haría.
@@ -499,32 +499,32 @@ Del primero, di cuál era el resultado esperado, cuál sale y qué única línea
 
 **Tres preguntas, un solo recorrido**
 
-Con las cuatro listas del turno de 08.2, escribe el programa que contesta tres preguntas distintas en un mismo `for`, con las tres variables declaradas antes del ciclo.
+Con las cuatro listas del corte de 08.2, escribe el programa que contesta tres preguntas distintas en un mismo `for`, con las tres variables declaradas antes del ciclo.
 
-Cuánta energía consumió la celda completa, que es un acumulador. Cuántas estaciones rebasaron la meta de 3 % de rechazo, que es un contador. Y si existe al menos una estación que gaste más de 0.070 kWh por pieza, que es una bandera.
+Cuántas horas-analista consumió el área completa, que es un acumulador. Cuántas mesas rebasaron la meta de 3 % de rechazo, que es un contador. Y si existe al menos una mesa que gaste más de 0.070 horas por solicitud, que es una bandera.
 
-Las tres respuestas se imprimen con etiqueta: 308.9 kWh, 1 estación fuera de meta y la bandera en `True`. Las dos metas van como constantes con nombre.
+Las tres respuestas se imprimen con etiqueta: 308.9 horas, 1 mesa fuera de meta y la bandera en `True`. Las dos metas van como constantes con nombre.
 
 Cierra explicando en un renglón por qué la segunda pregunta no se puede contestar con un acumulador y la primera no se puede contestar con un contador.
 
 ### 09.3 · Integrar
 
-**La proyección de producción, estación por turno**
+**La proyección de capacidad, mesa por turno**
 
-Ingeniería industrial quiere la proyección de piezas de cada estación en cada uno de los tres turnos del día. Estas son las velocidades y las duraciones.
+Planeación quiere la capacidad de dictamen de cada mesa en cada uno de los tres turnos de atención del día. Estas son las velocidades del motor de decisión y las duraciones.
 
 ```python
-estaciones = ["EST-01", "EST-02", "EST-03", "EST-04"]
-piezas_por_hora = [155, 123, 189, 95]
+mesas = ["MC-01", "MC-02", "MC-03", "MC-04"]
+solicitudes_por_hora = [155, 123, 189, 95]
 turnos = ["T1", "T2", "T3"]
 horas = [8, 8, 6]
 ```
 
-Escribe el programa con dos ciclos anidados que imprima un renglón por combinación, con la estación, el turno y la proyección con separador de miles, alineados. Antes de correrlo, escribe en tu cuaderno cuántos renglones deberían salir; si no coincide con lo que imprime, el anidado está mal.
+Escribe el programa con dos ciclos anidados que imprima un renglón por combinación, con la mesa, el turno y la proyección con separador de miles, alineados. Antes de correrlo, escribe en tu cuaderno cuántos renglones deberían salir; si no coincide con lo que imprime, el anidado está mal.
 
-Al terminar imprime dos renglones de resumen: la producción proyectada de la celda, que da 12,364 piezas, y cuántas combinaciones pasan de 1000 piezas, que son 5.
+Al terminar imprime dos renglones de resumen: la capacidad proyectada del área, que da 12,364 solicitudes, y cuántas combinaciones pasan de 1000 solicitudes, que son 5.
 
-Las variables de los dos ciclos tienen que llamarse distinto y decir qué recorren. Cierra explicando en dos renglones cuántas vueltas daría este programa si la planta tuviera 40 estaciones y 3 turnos, y a partir de qué tamaño empezarías a preocuparte.
+Las variables de los dos ciclos tienen que llamarse distinto y decir qué recorren. Cierra explicando en dos renglones cuántas vueltas daría este programa si la financiera tuviera 40 mesas y 3 turnos, y a partir de qué tamaño empezarías a preocuparte.
 
 ---
 
@@ -537,17 +537,17 @@ Las variables de los dos ciclos tienen que llamarse distinto y decir qué recorr
 Sin ejecutar nada, di qué imprime cada una de las tres líneas finales de este programa.
 
 ```python
-def tasa_rechazo(piezas, rechazos):
-    rechazos / piezas
+def tasa_rechazo(solicitudes, rechazadas):
+    rechazadas / solicitudes
 
 
-def energia_por_pieza(consumo_kwh, piezas):
-    unitario = consumo_kwh * 1000 / piezas
+def minutos_por_solicitud(horas, solicitudes):
+    unitario = horas * 60 / solicitudes
     return unitario
 
 
 print(tasa_rechazo(1240, 37))
-print(energia_por_pieza(86.4, 1240))
+print(minutos_por_solicitud(86.4, 1240))
 print(unitario)
 ```
 
@@ -555,27 +555,27 @@ Contesta después tres cosas, cada una en un renglón. Qué le falta a la primer
 
 ### 10.2 · Aplicar
 
-**Dos cálculos del turno, empaquetados**
+**Dos cálculos del corte, empaquetados**
 
-Escribe dos funciones con su docstring de un renglón. La primera, `tasa_rechazo(piezas, rechazos)`, devuelve la fracción de piezas rechazadas. La segunda, `dentro_de_tolerancia(diametro)`, devuelve verdadero o falso según la banda de 11.95 a 12.05 mm, que vive en dos constantes fuera de la función.
+Escribe dos funciones con su docstring de un renglón. La primera, `tasa_rechazo(solicitudes, rechazadas)`, devuelve la fracción de solicitudes rechazadas. La segunda, `dentro_de_politica(tasa)`, devuelve verdadero o falso según la banda de 17.50 a 18.50 %, que vive en dos constantes fuera de la función.
 
 Ninguna de las dos puede imprimir nada. Solo reciben y devuelven.
 
-Pruébalas con seis llamadas y pega la salida: la tasa de EST-01 con 1240 y 37, la de EST-03 con 1512 y 68, la de un lote de 760 piezas sin ningún rechazo, y la tolerancia de 12.00, de 12.05 y de 12.06. Las tres tasas redondeadas a cuatro decimales dan 0.0298, 0.045 y 0.0.
+Pruébalas con seis llamadas y pega la salida: la tasa de MC-01 con 1240 y 37, la de MC-03 con 1512 y 68, la de un corte de 760 solicitudes sin ningún rechazo, y la política de 18.00, de 18.50 y de 18.60. Las tres tasas redondeadas a cuatro decimales dan 0.0298, 0.045 y 0.0.
 
-Cierra explicando en un renglón por qué el caso de 12.05 es el que hay que probar siempre y qué habría pasado si la función usara `<` en lugar de `<=`.
+Cierra explicando en un renglón por qué el caso de 18.50 es el que hay que probar siempre y qué habría pasado si la función usara `<` en lugar de `<=`.
 
 ### 10.3 · Integrar
 
-**El lote L-2601, resuelto con funciones**
+**El corte C-2601, resuelto con funciones**
 
 Vuelve a resolver el ejercicio 08.3, ahora con cuatro funciones y sin repetir una sola condición.
 
-`dentro_de_tolerancia(diametro)` contesta si la pieza está en banda. `veredicto(diametro)` devuelve aceptada, reproceso o chatarra, y por dentro llama a la primera en lugar de volver a comparar. `piezas_aceptadas(diametros)` cuenta cuántas mediciones de una lista caen dentro. `diametro_promedio(diametros)` devuelve el promedio.
+`dentro_de_politica(tasa)` contesta si la solicitud está en banda. `veredicto(tasa)` devuelve dentro de política, sobreprecio o descuento, y por dentro llama a la primera en lugar de volver a comparar. `solicitudes_en_politica(tasas)` cuenta cuántas tasas de una lista caen dentro. `tasa_promedio(tasas)` devuelve el promedio.
 
-Ninguna función imprime. El programa principal recorre las doce piezas del lote, imprime el renglón de cada una y cierra con tres líneas: medidas, aceptadas y promedio. Salen 12 medidas, 9 aceptadas y 12.0075 mm.
+Ninguna función imprime. El programa principal recorre las doce solicitudes del corte, imprime el renglón de cada una y cierra con tres líneas: revisadas, dentro de política y tasa promedio. Salen 12 revisadas, 9 dentro de política y 18.0750 %.
 
-Cierra con dos renglones. Bórrale al cuerpo de `dentro_de_tolerancia` la comparación con el límite inferior y di cuál de tus cuatro pruebas lo detecta; si ninguna lo detecta, agrega la que falta y dilo.
+Cierra con dos renglones. Bórrale al cuerpo de `dentro_de_politica` la comparación con el límite inferior y di cuál de tus cuatro pruebas lo detecta; si ninguna lo detecta, agrega la que falta y dilo.
 
 ---
 
@@ -588,38 +588,38 @@ Cierra con dos renglones. Bórrale al cuerpo de `dentro_de_tolerancia` la compar
 Sin ejecutar nada, escribe los tres números que imprime este programa, redondeados a dos decimales, y di a qué parámetro llegó el 5.0 en cada llamada.
 
 ```python
-def energia_por_pieza(consumo_kwh, piezas, factor=1000, perdidas=0.0):
-    return consumo_kwh * factor / piezas + perdidas
+def minutos_por_solicitud(horas, solicitudes, factor=60, extras=0.0):
+    return horas * factor / solicitudes + extras
 
 
-print(energia_por_pieza(86.4, 1240))
-print(energia_por_pieza(86.4, 1240, 5.0))
-print(energia_por_pieza(86.4, 1240, perdidas=5.0))
+print(minutos_por_solicitud(86.4, 1240))
+print(minutos_por_solicitud(86.4, 1240, 5.0))
+print(minutos_por_solicitud(86.4, 1240, extras=5.0))
 ```
 
-La segunda llamada devuelve un número que no se parece en nada a los otros dos. Explica en dos renglones qué pasó, por qué Python no marcó ningún error, y qué le pasaría a la definición si movieras `factor=1000` antes de `piezas`.
+La segunda llamada devuelve un número que no se parece en nada a los otros dos. Explica en dos renglones qué pasó, por qué Python no marcó ningún error, y qué le pasaría a la definición si movieras `factor=60` antes de `solicitudes`.
 
 ### 11.2 · Aplicar
 
-**Una función que sirve para más de un buje**
+**Una función que sirve para más de un producto**
 
-La celda también maquina bujes de 8.00 mm con la misma tolerancia, y a veces produce una corrida especial con tolerancia abierta de 0.10 mm. Escribe `fuera_de_tolerancia(diametro, nominal=12.00, tolerancia=0.05)`, con su docstring, que calcule los dos límites por dentro y devuelva verdadero cuando la pieza se sale.
+El área también coloca crédito automotriz a una tasa de política de 14.00 % con la misma banda, y a veces corre una campaña con banda abierta de 1.00 punto. Escribe `fuera_de_politica(tasa, nominal=18.00, banda=0.50)`, con su docstring, que calcule los dos límites por dentro y devuelva verdadero cuando la solicitud se sale.
 
-Pruébala con cinco llamadas: 12.06 con los valores por omisión; 12.05 con los valores por omisión; 12.06 con nominal y tolerancia dados por posición; 12.06 pasando solo la tolerancia por nombre; y 8.02 pasando solo el nominal por nombre.
+Pruébala con cinco llamadas: 18.60 con los valores por omisión; 18.50 con los valores por omisión; 18.60 con nominal y banda dados por posición; 18.60 pasando solo la banda por nombre; y 14.20 pasando solo el nominal por nombre.
 
-Agrega al final dos líneas que comprueben, antes de confiar en la función, que `12.00 - 0.05` da exactamente 11.95 y que `12.00 + 0.05` da exactamente 12.05. Explica en un renglón por qué esa comprobación no sobra, aunque en este caso las dos salgan verdaderas.
+Agrega al final dos líneas que comprueben, antes de confiar en la función, que `18.00 - 0.50` da exactamente 17.50 y que `18.00 + 0.50` da exactamente 18.50. Explica en un renglón por qué esa comprobación no sobra, aunque en este caso las dos salgan verdaderas.
 
 ### 11.3 · Integrar
 
-**Lo que el promedio del lote no dice**
+**Lo que el promedio del corte no dice**
 
-Con las doce mediciones del lote L-2601, escribe el programa que importa `mean`, `median` y una tercera función del módulo `statistics` que no vimos en clase, y que sirva para medir qué tan dispersas están las lecturas. Busca esa tercera función en docs.python.org y cita la página.
+Con las doce tasas del corte C-2601, escribe el programa que importa `mean`, `median` y una tercera función del módulo `statistics` que no vimos en clase, y que sirva para medir qué tan dispersas están las tasas otorgadas. Busca esa tercera función en docs.python.org y cita la página.
 
-El programa imprime siete renglones: número de mediciones, promedio, mediana y dispersión a cuatro decimales, la menor y la mayor a dos, y el índice de capacidad, que es el ancho de la banda de tolerancia entre seis veces la dispersión. Da 12.0075 de promedio, 12.0050 de mediana, 0.0406 de dispersión y un índice de 0.41.
+El programa imprime siete renglones: número de solicitudes, promedio, mediana y dispersión a cuatro decimales, la tasa menor y la mayor a dos, y el índice de capacidad, que es el ancho de la banda de política entre seis veces la dispersión. Da 18.0750 de promedio, 18.0500 de mediana, 0.4065 de dispersión y un índice de 0.41.
 
-Al final, repite el promedio y la mediana sobre una lista de trece valores, la misma más una lectura de 12.90 mm que alguien capturó con el micrómetro mal ajustado. Uno de los dos números se mueve mucho más que el otro.
+Al final, repite el promedio y la mediana sobre una lista de trece valores, la misma más una tasa de 27.00 % que alguien capturó tecleando el plazo en el campo de la tasa. Uno de los dos números se mueve mucho más que el otro.
 
-Cierra con tres renglones: qué significa un índice de capacidad de 0.41 para el proceso, qué le dirías al jefe de producción con esa cifra, y cuál de las dos medidas de centro reportarías cuando sospechas de una lectura mal tomada.
+Cierra con tres renglones: qué significa un índice de capacidad de 0.41 para la política de precio, qué le dirías al director comercial con esa cifra, y cuál de las dos medidas de centro reportarías cuando sospechas de una captura mal hecha.
 
 ---
 
@@ -629,51 +629,51 @@ Cierra con tres renglones: qué significa un índice de capacidad de 0.41 para e
 
 **Un método que ordena y borra el respaldo**
 
-Sin ejecutar nada, escribe las ocho líneas que imprime este programa y qué pasa en la última.
+Sin ejecutar nada, escribe las siete líneas que imprime este programa y qué pasa en la última.
 
 ```python
-diametros = [12.01, 11.98, 12.06, 12.00, 11.94]
+tasas = [18.10, 17.80, 18.60, 18.00, 17.40]
 
-print(diametros[0], diametros[-1])
-print(diametros[1:3])
-print(sorted(diametros))
-print(diametros)
+print(tasas[0], tasas[-1])
+print(tasas[1:3])
+print(sorted(tasas))
+print(tasas)
 
-ordenados = diametros.sort()
-print(ordenados)
-print(diametros)
+ordenadas = tasas.sort()
+print(ordenadas)
+print(tasas)
 
-respaldo = diametros
-copia = diametros.copy()
-diametros.append(12.10)
+respaldo = tasas
+copia = tasas.copy()
+tasas.append(19.00)
 
 print(len(respaldo), len(copia))
-print(diametros[6])
+print(tasas[6])
 ```
 
-Contesta además tres cosas. Por qué `diametros[1:3]` devuelve dos valores y no tres. Por qué `respaldo` y `copia` terminan con distinto número de elementos, si las dos se crearon en el mismo momento. Y qué habría pasado con los datos si en lugar de `ordenados = diametros.sort()` alguien escribe `diametros = diametros.sort()`.
+Contesta además tres cosas. Por qué `tasas[1:3]` devuelve dos valores y no tres. Por qué `respaldo` y `copia` terminan con distinto número de elementos, si las dos se crearon en el mismo momento. Y qué habría pasado con los datos si en lugar de `ordenadas = tasas.sort()` alguien escribe `tasas = tasas.sort()`.
 
 ### 12.2 · Aplicar
 
-**Cuatro preguntas sobre la columna de diámetros**
+**Cuatro preguntas sobre la columna de tasas**
 
-Con las doce mediciones del lote L-2601, escribe el programa que imprime la lista al principio, contesta cuatro preguntas y vuelve a imprimir la lista al final, que tiene que salir idéntica.
+Con las doce tasas del corte C-2601, escribe el programa que imprime la lista al principio, contesta cuatro preguntas y vuelve a imprimir la lista al final, que tiene que salir idéntica.
 
-La medición mayor y la menor. Las tres mediciones más altas, ordenadas de mayor a menor. En qué posición está la lectura de 11.94 y a qué folio corresponde, sabiendo que la primera pieza es la BJ-1001. Y las últimas tres mediciones del lote, con una rebanada.
+La tasa mayor y la menor. Las tres tasas más altas, ordenadas de mayor a menor. En qué posición está la tasa de 17.40 y a qué folio corresponde, sabiendo que la primera solicitud es la SOL-1001. Y las últimas tres tasas del corte, con una rebanada.
 
-Las tres más altas son 12.08, 12.06 y 12.05. La lectura de 11.94 está en la posición 4 y le toca la pieza BJ-1005.
+Las tres más altas son 18.80, 18.60 y 18.50. La tasa de 17.40 está en la posición 4 y le toca la solicitud SOL-1005.
 
 ### 12.3 · Integrar
 
-**Las piezas fuera de banda, sin tocar el original**
+**Las solicitudes fuera de banda, sin tocar el original**
 
-Escribe el programa que recorre las doce mediciones y arma una lista nueva con las que se salen de la banda, sin modificar la lista original. Después la ordena de mayor a menor y la imprime.
+Escribe el programa que recorre las doce tasas y arma una lista nueva con las que se salen de la banda, sin modificar la lista original. Después la ordena de mayor a menor y la imprime.
 
-La banda va en una tupla de tres valores, `(12.00, 11.95, 12.05)`, que es nominal, límite inferior y límite superior. Todas las comparaciones leen esa tupla por posición.
+La banda va en una tupla de tres valores, `(18.00, 17.50, 18.50)`, que es tasa de política, límite inferior y límite superior. Todas las comparaciones leen esa tupla por posición.
 
-El reporte son cinco renglones: la banda con sus tres cifras, cuántas mediciones se revisaron, cuántas se salieron, la lista de las que se salieron ordenada de mayor a menor, y la lista original completa para comprobar que quedó intacta. Salen 3 de 12, y la lista de fuera de banda es 12.08, 12.06 y 11.94.
+El reporte son cinco renglones: la banda con sus tres cifras, cuántas solicitudes se revisaron, cuántas se salieron, la lista de las que se salieron ordenada de mayor a menor, y la lista original completa para comprobar que quedó intacta. Salen 3 de 12, y la lista de fuera de banda es 18.80, 18.60 y 17.40.
 
-Cierra con una línea que intente cambiar el límite superior de la tupla a 12.10 y pega el error completo que lanza. Explica en un renglón por qué conviene que la banda esté en una tupla y no en una lista.
+Cierra con una línea que intente cambiar el límite superior de la tupla a 19.00 y pega el error completo que lanza. Explica en un renglón por qué conviene que la banda esté en una tupla y no en una lista.
 
 ---
 
@@ -681,69 +681,69 @@ Cierra con una línea que intente cambiar el límite superior de la tupla a 12.1
 
 ### 13.1 · Reconocer
 
-**Un catálogo que crece y un código que no existe**
+**Un catálogo que crece y un motivo que no existe**
 
-Sin ejecutar nada, escribe las nueve líneas que imprime este programa y qué pasa en la última.
+Sin ejecutar nada, escribe las ocho líneas que imprime este programa y qué pasa en la última.
 
 ```python
-defectos = {"D01": "Diametro fuera de tolerancia",
-            "D02": "Rugosidad excesiva",
-            "D03": "Rebaba en el chaflan"}
+motivos = {"M01": "Score de buro insuficiente",
+           "M02": "Capacidad de pago rebasada",
+           "M03": "Documentacion incompleta"}
 
-defectos["D02"] = "Rugosidad arriba de Ra 1.6"
-defectos["D04"] = "Golpe en la cara frontal"
+motivos["M02"] = "Capacidad de pago arriba del 35 %"
+motivos["M04"] = "Antiguedad laboral insuficiente"
 
-print(len(defectos))
-print(defectos["D02"])
-print(defectos.get("D09"))
-print(defectos.get("D09", "Codigo no catalogado"))
+print(len(motivos))
+print(motivos["M02"])
+print(motivos.get("M09"))
+print(motivos.get("M09", "Motivo no catalogado"))
 
-turno_a = {"D01", "D02", "D01", "D03"}
-turno_b = {"D02", "D03", "D05"}
+corte_a = {"M01", "M02", "M01", "M03"}
+corte_b = {"M02", "M03", "M05"}
 
-print(len(turno_a))
-print(sorted(turno_a & turno_b))
-print(sorted(turno_a - turno_b))
-print(sorted(turno_a ^ turno_b))
-print(defectos["D09"])
+print(len(corte_a))
+print(sorted(corte_a & corte_b))
+print(sorted(corte_a - corte_b))
+print(sorted(corte_a ^ corte_b))
+print(motivos["M09"])
 ```
 
-Contesta además dos cosas. Por qué el diccionario termina con cuatro entradas si se le asignaron dos códigos después de crearlo. Y por qué `turno_a` tiene tres elementos si la lista de la que salió trae cuatro.
+Contesta además dos cosas. Por qué el diccionario termina con cuatro entradas si se le asignaron dos códigos después de crearlo. Y por qué `corte_a` tiene tres elementos si la lista de la que salió trae cuatro.
 
 ### 13.2 · Aplicar
 
-**El catálogo de defectos de la celda**
+**El catálogo de motivos de rechazo**
 
-Arma el diccionario de los seis códigos de defecto que maneja la celda: D01 diámetro fuera de tolerancia, D02 rugosidad arriba de Ra 1.6, D03 rebaba en el chaflán, D04 golpe en la cara frontal, D05 concentricidad fuera de norma y D06 marca de herramienta.
+Arma el diccionario de los seis códigos de motivo que maneja el área: M01 score de buró insuficiente, M02 capacidad de pago arriba del 35 %, M03 documentación incompleta, M04 antigüedad laboral insuficiente, M05 ingreso no comprobable y M06 cliente ya tiene crédito vigente.
 
-El turno reportó estos ocho códigos, en este orden: D01, D03, D01, D05, D01, D02, D03 y D09.
+El corte reportó estos ocho códigos, en este orden: M01, M03, M01, M05, M01, M02, M03 y M09.
 
-Escribe el programa que imprime el catálogo completo recorriéndolo con `items`, después tres cifras con etiqueta (códigos catalogados, piezas reportadas y códigos distintos reportados), y al final la lista de los códigos distintos ordenada, cada uno con su descripción.
+Escribe el programa que imprime el catálogo completo recorriéndolo con `items`, después tres cifras con etiqueta (motivos catalogados, rechazos reportados y motivos distintos reportados), y al final la lista de los motivos distintos ordenada, cada uno con su descripción.
 
-La consulta de la descripción tiene que usar `get` con un valor por omisión, porque D09 no está en el catálogo y el programa no se puede detener ahí. Salen 6 códigos catalogados, 8 piezas reportadas y 5 códigos distintos.
+La consulta de la descripción tiene que usar `get` con un valor por omisión, porque M09 no está en el catálogo y el programa no se puede detener ahí. Salen 6 motivos catalogados, 8 rechazos reportados y 5 motivos distintos.
 
 ### 13.3 · Integrar
 
-**Repaso del segundo parcial: el tablero del turno**
+**Repaso del segundo parcial: el tablero del corte**
 
 Este ejercicio cruza lo que entra al parcial: repetición, funciones y colecciones. Los datos son estos.
 
 ```python
-estaciones = ["EST-01", "EST-02", "EST-03", "EST-04"]
-consumo = [86.4, 61.5, 112.8, 48.2]
-piezas = [1240, 984, 1512, 760]
+mesas = ["MC-01", "MC-02", "MC-03", "MC-04"]
+horas = [86.4, 61.5, 112.8, 48.2]
+solicitudes = [1240, 984, 1512, 760]
 
-reportados_a = ["D01", "D03", "D01", "D05", "D01", "D02", "D03"]
-reportados_b = ["D02", "D02", "D06", "D03", "D01"]
+reportados_a = ["M01", "M03", "M01", "M05", "M01", "M02", "M03"]
+reportados_b = ["M02", "M02", "M06", "M03", "M01"]
 ```
 
-Primero, arma con un ciclo el diccionario que va de estación a consumo. No se escribe a mano. Imprímelo con `items`, saca el total con `values` y encuentra la estación más cara recorriendo el diccionario, no a ojo. El total da 308.9 kWh y la estación más cara es EST-03 con 112.8.
+Primero, arma con un ciclo el diccionario que va de mesa a horas-analista. No se escribe a mano. Imprímelo con `items`, saca el total con `values` y encuentra la mesa más cara recorriendo el diccionario, no a ojo. El total da 308.9 horas y la mesa más cara es MC-03 con 112.8.
 
-Segundo, cuenta cuántas veces aparece cada código del turno A usando un diccionario como contador, con `get` y un valor por omisión de cero. Imprímelo ordenado por código.
+Segundo, cuenta cuántas veces aparece cada motivo del corte A usando un diccionario como contador, con `get` y un valor por omisión de cero. Imprímelo ordenado por código.
 
-Tercero, compara los códigos de los dos turnos con operaciones de conjuntos, nunca con un ciclo y un `if`: los que aparecieron en los dos, los que solo están en el turno A, los que aparecieron nuevos en el turno B y los que están en uno pero no en ambos.
+Tercero, compara los motivos de los dos cortes con operaciones de conjuntos, nunca con un ciclo y un `if`: los que aparecieron en los dos, los que solo están en el corte A, los que aparecieron nuevos en el corte B y los que están en uno pero no en ambos.
 
-Cierra con dos renglones: qué decisión de mantenimiento tomarías con el código que apareció nuevo en el turno B, y por qué el conteo del turno A no se podía hacer con un conjunto.
+Cierra con dos renglones: qué decisión de originación tomarías con el motivo que apareció nuevo en el corte B, y por qué el conteo del corte A no se podía hacer con un conjunto.
 
 ---
 
@@ -753,40 +753,40 @@ Cierra con dos renglones: qué decisión de mantenimiento tomarías con el códi
 
 **Lo que devuelve un CSV, y de qué tipo**
 
-Las cuatro semanas que quedan trabajan sobre el mismo archivo. Créalo con el nombre `mediciones.csv`, guardado en la misma carpeta que tus programas y codificado en UTF-8. Son 30 renglones del banco de metrología de la celda C-3, exportados tal como salieron del sistema, con tres días de mediciones y tres lotes.
+Las cuatro semanas que quedan trabajan sobre el mismo archivo. Créalo con el nombre `solicitudes.csv`, guardado en la misma carpeta que tus programas y codificado en UTF-8. Son 30 renglones de solicitudes autorizadas de Financiera Altamar, exportados tal como salieron del sistema de originación, con tres días de operación y tres cortes.
 
 ```text
-fecha,estacion,lote,diametro_mm,ciclo_s,energia_kj
-2026-01-08,EST-01,L-2601,12.01,44,"1,240 kJ"
-2026-01-08,EST-02,L-2601,11.98,39,980 kJ
-2026-01-08, EST-01,L-2601,12.06,46,"1,310 kJ"
-2026-01-08,EST-03,L-2601,12.00,51,"1,505 kJ"
-2026-01-08,est-01,L-2601,11.94,,"1,190 kJ"
-2026-01-08,EST-04,L-2601,12.03,38,760 kJ
-2026-01-09,EST-01,L-2602,11.99,45,"1,260 kJ"
-2026-01-09,EST-02,L-2602,12.05,41,"1,020 kJ"
-2026-01-09,EST-03,L-2602,12.08,52,"1,540 kJ"
-2026-01-09,EST-01 ,L-2602,12.02,43,"1,225 kJ"
-2026-01-09,EST-04,L-2602,11.96,,745 kJ
-2026-01-09,EST-03,L-2602,11.97,50,"1,480 kJ"
-2026-01-12,EST-01,L-2603,12.04,44,"1,255 kJ"
-2026-01-12,est-02,L-2603,12.07,40,"1,005 kJ"
-2026-01-12,EST-03,L-2603,11.95,49,"1,460 kJ"
-2026-01-12,EST-04,L-2603,12.00,37,735 kJ
-2026-01-12,EST-01,L-2603,11.93,47,"1,330 kJ"
-2026-01-12,EST-02,L-2603,12.01,,995 kJ
-2026-01-08,EST-02,L-2601,12.02,40,"1,010 kJ"
-2026-01-08,EST-03,L-2601,12.09,53,"1,575 kJ"
-2026-01-09,EST-01,L-2602,11.99,45,"1,260 kJ"
-2026-01-09,EST-04,L-2602,12.03,39,755 kJ
-2026-01-12,EST-03,L-2603,12.02,48,"1,435 kJ"
-2026-01-12,EST-04,L-2603,11.98,38,742 kJ
-2026-01-08,EST-04,L-2601,12.05,37,730 kJ
-2026-01-09,EST-02,L-2602,11.95,42,"1,035 kJ"
-2026-01-12,EST-01,L-2603,12.04,44,"1,255 kJ"
-2026-01-08,EST-03 ,L-2601,11.91,54,"1,610 kJ"
-2026-01-09,EST-03,L-2602,12.06,51,"1,520 kJ"
-2026-01-12,EST-02,L-2603,11.97,41,"1,015 kJ"
+fecha,mesa,corte,tasa_pct,horas_resp,comision_mxn
+2026-01-08,MC-01,C-2601,18.10,44,"$1,240"
+2026-01-08,MC-02,C-2601,17.80,39,$980
+2026-01-08, MC-01,C-2601,18.60,46,"$1,310"
+2026-01-08,MC-03,C-2601,18.00,51,"$1,505"
+2026-01-08,mc-01,C-2601,17.40,,"$1,190"
+2026-01-08,MC-04,C-2601,18.30,38,$760
+2026-01-09,MC-01,C-2602,17.90,45,"$1,260"
+2026-01-09,MC-02,C-2602,18.50,41,"$1,020"
+2026-01-09,MC-03,C-2602,18.80,52,"$1,540"
+2026-01-09,MC-01 ,C-2602,18.20,43,"$1,225"
+2026-01-09,MC-04,C-2602,17.60,,$745
+2026-01-09,MC-03,C-2602,17.70,50,"$1,480"
+2026-01-12,MC-01,C-2603,18.40,44,"$1,255"
+2026-01-12,mc-02,C-2603,18.70,40,"$1,005"
+2026-01-12,MC-03,C-2603,17.50,49,"$1,460"
+2026-01-12,MC-04,C-2603,18.00,37,$735
+2026-01-12,MC-01,C-2603,17.30,47,"$1,330"
+2026-01-12,MC-02,C-2603,18.10,,$995
+2026-01-08,MC-02,C-2601,18.20,40,"$1,010"
+2026-01-08,MC-03,C-2601,18.90,53,"$1,575"
+2026-01-09,MC-01,C-2602,17.90,45,"$1,260"
+2026-01-09,MC-04,C-2602,18.30,39,$755
+2026-01-12,MC-03,C-2603,18.20,48,"$1,435"
+2026-01-12,MC-04,C-2603,17.80,38,$742
+2026-01-08,MC-04,C-2601,18.50,37,$730
+2026-01-09,MC-02,C-2602,17.50,42,"$1,035"
+2026-01-12,MC-01,C-2603,18.40,44,"$1,255"
+2026-01-08,MC-03 ,C-2601,17.10,54,"$1,610"
+2026-01-09,MC-03,C-2602,18.60,51,"$1,520"
+2026-01-12,MC-02,C-2603,17.70,41,"$1,015"
 ```
 
 Sin ejecutar nada, escribe las seis líneas que imprime este programa.
@@ -797,28 +797,28 @@ from pathlib import Path
 
 DATOS = Path(__file__).resolve().parent
 
-with (DATOS / "mediciones.csv").open(encoding="utf-8") as f:
+with (DATOS / "solicitudes.csv").open(encoding="utf-8") as f:
     filas = list(csv.DictReader(f))
 
 print(len(filas))
-print(filas[0]["estacion"], filas[0]["diametro_mm"])
-print(type(filas[0]["diametro_mm"]))
-print(filas[0]["diametro_mm"] + filas[1]["diametro_mm"])
-print(filas[4]["ciclo_s"] == "")
-print(filas[2]["estacion"] == "EST-01")
+print(filas[0]["mesa"], filas[0]["tasa_pct"])
+print(type(filas[0]["tasa_pct"]))
+print(filas[0]["tasa_pct"] + filas[1]["tasa_pct"])
+print(filas[4]["horas_resp"] == "")
+print(filas[2]["mesa"] == "MC-01")
 ```
 
-Contesta después tres cosas, cada una en un renglón. Por qué la cuarta línea no lanza ningún error a pesar de estar sumando mal. Por qué la sexta línea da falso si en el archivo ese renglón dice EST-01. Y qué le pasaría al archivo si esa misma apertura llevara `"w"` en lugar del modo por omisión.
+Contesta después tres cosas, cada una en un renglón. Por qué la cuarta línea no lanza ningún error a pesar de estar sumando mal. Por qué la sexta línea da falso si en el archivo ese renglón dice MC-01. Y qué le pasaría al archivo si esa misma apertura llevara `"w"` en lugar del modo por omisión.
 
 ### 14.2 · Aplicar
 
-**El resumen por estación, leyendo por nombre de columna**
+**El resumen por mesa, leyendo por nombre de columna**
 
-Escribe el programa que lee `mediciones.csv` con `DictReader` y produce el resumen del banco. Necesitas tres funciones cortas, cada una con su docstring: una que convierta la energía a decimal quitándole la coma de miles y la unidad, una que convierta el tiempo de ciclo a entero y devuelva la ausencia de dato como `None` cuando la celda viene vacía, y una que normalice el nombre de la estación quitándole los espacios de los extremos y dejando una sola forma de escribirlo.
+Escribe el programa que lee `solicitudes.csv` con `DictReader` y produce el resumen del corte. Necesitas tres funciones cortas, cada una con su docstring: una que convierta la comisión a decimal quitándole el signo de pesos y la coma de miles, una que convierta las horas de respuesta a entero y devuelva la ausencia de dato como `None` cuando la celda viene vacía, y una que normalice el nombre de la mesa quitándole los espacios de los extremos y dejando una sola forma de escribirlo.
 
-El programa imprime primero cuatro renglones de diagnóstico: renglones leídos, renglones sin tiempo de ciclo, formas distintas de escribir la estación y estaciones que quedan después de normalizar. Son 30 renglones, 3 sin tiempo de ciclo, y las 9 formas se reducen a 4 estaciones.
+El programa imprime primero cuatro renglones de diagnóstico: renglones leídos, renglones sin horas de respuesta, formas distintas de escribir la mesa y mesas que quedan después de normalizar. Son 30 renglones, 3 sin horas de respuesta, y las 9 formas se reducen a 4 mesas.
 
-Después imprime la tabla por estación, ordenada por nombre, con piezas medidas, energía total en kJ y diámetro promedio a cuatro decimales, más el renglón de la celda completa. Con el archivo tal como viene, la celda suma 34,977 kJ en 30 mediciones.
+Después imprime la tabla por mesa, ordenada por nombre, con solicitudes autorizadas, comisión total en pesos y tasa promedio a cuatro decimales, más el renglón del área completa. Con el archivo tal como viene, el área suma 34,977 pesos de comisión en 30 solicitudes.
 
 Las rutas se arman desde la ubicación del archivo, nunca escritas a mano.
 
@@ -826,15 +826,15 @@ Las rutas se arman desde la ubicación del archivo, nunca escritas a mano.
 
 **Limpiar, decidir y escribir el archivo de salida**
 
-Ahora el mismo archivo se procesa con criterio de ingeniería y el resultado se guarda.
+Ahora el mismo archivo se procesa con criterio de control interno y el resultado se guarda.
 
-El programa quita los renglones exactamente duplicados comparando el renglón completo y no una sola columna, normaliza la estación, convierte la energía, y marca cada pieza como fuera de tolerancia cuando su diámetro se sale de la banda. Los renglones que no traen tiempo de ciclo se conservan, porque su diámetro sí se midió y esa es la variable que decide si la pieza sirve; el programa reporta cuántos son y deja escrita la decisión.
+El programa quita los renglones exactamente duplicados comparando el renglón completo y no una sola columna, normaliza la mesa, convierte la comisión, y marca cada solicitud como fuera de política cuando su tasa se sale de la banda. Los renglones que no traen horas de respuesta se conservan, porque su tasa sí quedó capturada y esa es la variable que decide si el precio cumple; el programa reporta cuántos son y deja escrita la decisión.
 
-Imprime seis cifras de bitácora: 30 renglones en el archivo, 2 duplicados exactos quitados, 28 renglones que quedaron, 3 renglones sin tiempo de ciclo conservados, 8 piezas fuera de tolerancia y 32,462 kJ de energía de la celda.
+Imprime seis cifras de bitácora: 30 renglones en el archivo, 2 duplicados exactos quitados, 28 renglones que quedaron, 3 renglones sin horas de respuesta conservados, 8 solicitudes fuera de política y 32,462 pesos de comisión del área.
 
-Después escribe un archivo nuevo llamado `resumen_estacion.csv`, con encabezado `estacion,piezas,fuera_tolerancia,energia_kj` y un renglón por estación ordenada por nombre. Al escribir un CSV en Windows hay que pasar el parámetro que evita el renglón en blanco entre cada dato. Al final el programa imprime el contenido del archivo que acaba de escribir.
+Después escribe un archivo nuevo llamado `resumen_mesa.csv`, con encabezado `mesa,solicitudes,fuera_politica,comision_mxn` y un renglón por mesa ordenada por nombre. Al escribir un CSV en Windows hay que pasar el parámetro que evita el renglón en blanco entre cada dato. Al final el programa imprime el contenido del archivo que acaba de escribir.
 
-Esa energía es 2,515 kJ menor que la del ejercicio anterior. Explica en dos renglones de dónde sale la diferencia exacta y por qué un duplicado infla el total pero casi no mueve el diámetro promedio.
+Esa comisión es 2,515 pesos menor que la del ejercicio anterior. Explica en dos renglones de dónde sale la diferencia exacta y por qué un duplicado infla la comisión pero casi no mueve la tasa promedio.
 
 ---
 
@@ -844,7 +844,7 @@ Esa energía es 2,515 kJ menor que la del ejercicio anterior. Explica en dos ren
 
 **Lo que pandas infirió del archivo, y por qué**
 
-Sin ejecutar nada, di qué imprime cada una de las siete instrucciones de este programa, que corre sobre el mismo `mediciones.csv`.
+Sin ejecutar nada, di qué imprime cada una de las siete instrucciones de este programa, que corre sobre el mismo `solicitudes.csv`.
 
 ```python
 import pandas as pd
@@ -852,61 +852,60 @@ from pathlib import Path
 
 DATOS = Path(__file__).resolve().parent
 
-mediciones = pd.read_csv(DATOS / "mediciones.csv")
+solicitudes = pd.read_csv(DATOS / "solicitudes.csv")
 
-print(mediciones.shape)
-print(mediciones.dtypes)
-print(mediciones["ciclo_s"].isna().sum())
-print(mediciones.duplicated().sum())
-print(mediciones["estacion"].nunique())
-print(mediciones["estacion"].value_counts())
-print(mediciones["diametro_mm"].describe().round(3))
+print(solicitudes.shape)
+print(solicitudes.dtypes)
+print(solicitudes["horas_resp"].isna().sum())
+print(solicitudes.duplicated().sum())
+print(solicitudes["mesa"].nunique())
+print(solicitudes["mesa"].value_counts())
+print(solicitudes["tasa_pct"].describe().round(3))
 ```
 
-Contesta después cuatro cosas, cada una en un renglón. Por qué `ciclo_s` salió decimal y no entero, si en el archivo todos los tiempos son números redondos de segundos. Por qué `energia_kj` salió texto. Por qué en la salida de `value_counts` hay dos renglones que se ven idénticos y aun así son entradas distintas. Y qué columnas resume `describe` y cuáles no.
+Contesta después cuatro cosas, cada una en un renglón. Por qué `horas_resp` salió decimal y no entero, si en el archivo todas las horas son números redondos. Por qué `comision_mxn` salió texto. Por qué en la salida de `value_counts` hay dos renglones que se ven idénticos y aun así son entradas distintas. Y qué columnas resume `describe` y cuáles no.
 
 ### 15.2 · Aplicar
 
 **Las cuatro reparaciones, con su bitácora**
 
-Escribe el programa que carga `mediciones.csv` con pandas y lo deja listo para analizar, imprimiendo el conteo antes y después de cada reparación.
+Escribe el programa que carga `solicitudes.csv` con pandas y lo deja listo para analizar, imprimiendo el conteo antes y después de cada reparación.
 
-El orden es este: reportar el estado inicial, quitar duplicados, normalizar la estación con métodos de texto, quitarle la coma de miles y la unidad a la energía y convertirla a decimal, y convertir la fecha a tipo fecha. Imprime los tipos de las seis columnas cuando termines.
+El orden es este: reportar el estado inicial, quitar duplicados, normalizar la mesa con métodos de texto, quitarle el signo de pesos y la coma de miles a la comisión y convertirla a decimal, y convertir la fecha a tipo fecha. Imprime los tipos de las seis columnas cuando termines.
 
-Los números que tiene que reportar son 30 renglones al cargar, 2 duplicados, 9 formas de escribir la estación, 3 renglones sin tiempo de ciclo, 28 renglones sin duplicados y 4 estaciones reales.
+Los números que tiene que reportar son 30 renglones al cargar, 2 duplicados, 9 formas de escribir la mesa, 3 renglones sin horas de respuesta, 28 renglones sin duplicados y 4 mesas reales.
 
-Después agrega la columna `veredicto`, que vale «Dentro de tolerancia» en todos lados y «Fuera de tolerancia» donde el diámetro se sale de la banda, escrita en un solo paso con `loc`. Salen 20 dentro y 8 fuera.
+Después agrega la columna `veredicto`, que vale «Dentro de política» en todos lados y «Fuera de política» donde la tasa se sale de la banda, escrita en un solo paso con `loc`. Salen 20 dentro y 8 fuera.
 
-Cierra con cuatro cifras más: cuántas piezas de EST-03 quedaron fuera de tolerancia, que son 4; cuántas mediciones son de EST-01 o EST-02, que son 14 y se piden con `isin`; la energía total, que da 32,462 kJ; y el ciclo promedio, que da 44.36 segundos. Reporta también con cuántos renglones te quedarías si descartaras los tres sin tiempo de ciclo, y explica en dos renglones por qué en este archivo conviene conservarlos.
+Cierra con cuatro cifras más: cuántas solicitudes de MC-03 quedaron fuera de política, que son 4; cuántas solicitudes son de MC-01 o MC-02, que son 14 y se piden con `isin`; la comisión total, que da 32,462 pesos; y las horas de respuesta promedio, que dan 44.36. Reporta también con cuántos renglones te quedarías si descartaras los tres sin horas de respuesta, y explica en dos renglones por qué en este archivo conviene conservarlos.
 
 Las condiciones combinadas usan los símbolos y sus paréntesis, nunca las palabras.
 
 ### 15.3 · Integrar
 
-**El tablero de la celda, la rejilla por lote y la unión auditada**
+**El tablero del área, la rejilla por corte y la unión auditada**
 
 Encierra toda la limpieza de 15.2 en una función `cargar_limpio()` con su docstring, para no volver a escribirla en lo que queda del semestre.
 
-Primero, agrupa por estación y pide cuatro resúmenes en una sola instrucción: piezas medidas, energía, ciclo promedio y diámetro promedio, redondeados a tres decimales y ordenados por energía de mayor a menor. EST-03 encabeza con 12,125 kJ en 8 piezas.
+Primero, agrupa por mesa y pide cuatro resúmenes en una sola instrucción: solicitudes autorizadas, comisión, horas de respuesta promedio y tasa promedio, redondeados a tres decimales y ordenados por comisión de mayor a menor. MC-03 encabeza con 12,125 pesos en 8 solicitudes.
 
-Segundo, imprime cuántas piezas fuera de tolerancia aportó cada estación. Fíjate en cuántos renglones trae esa tabla y explica en un renglón por qué no son cuatro.
+Segundo, imprime cuántas solicitudes fuera de política aportó cada mesa. Fíjate en cuántos renglones trae esa tabla y explica en un renglón por qué no son cuatro.
 
-Tercero, arma la rejilla de estación contra lote con la energía sumada, rellenando con cero lo que no tenga registro y agregando los totales de fila y de columna. La celda más cara es el lote L-2601 en EST-03 con 4,690 kJ y el total general da 32,462.
+Tercero, arma la rejilla de mesa contra corte con la comisión sumada, rellenando con cero lo que no tenga registro y agregando los totales de fila y de columna. La celda más rentable es el corte C-2601 en MC-03 con 4,690 pesos y el total general da 32,462.
 
 Cuarto, construye este catálogo como DataFrame desde un diccionario de columnas y únelo con el tablero.
 
 ```python
 catalogo = pd.DataFrame({
-    "estacion": ["EST-01", "EST-02", "EST-03", "EST-04", "EST-05"],
-    "maquina": ["Torno CNC", "Fresadora CNC", "Rectificadora",
-                "Banco de pruebas", "Taladro radial"],
-    "ciclo_meta_s": [42, 40, 48, 36, 30],
+    "mesa": ["MC-01", "MC-02", "MC-03", "MC-04", "MC-05"],
+    "plaza": ["Monterrey", "Guadalajara", "Leon", "Puebla", "Merida"],
+    "horas_meta": [42, 40, 48, 36, 30],
 })
 ```
 
-Audita la unión en las dos direcciones antes de confiar en ella. Tienen que salir 28 renglones en ambos lados, 1 solo del catálogo y 0 solo de las mediciones. Explica en dos renglones qué significa cada uno de esos tres números para la planta.
+Audita la unión en las dos direcciones antes de confiar en ella. Tienen que salir 28 renglones en ambos lados, 1 solo del catálogo y 0 solo de las solicitudes. Explica en dos renglones qué significa cada uno de esos tres números para la financiera.
 
-Cierra con el tablero de desvío de ciclo: estación, máquina, piezas, ciclo real, ciclo meta y desvío como fracción, redondeado a tres decimales. EST-01 corre 6.7 % arriba de su meta y EST-02 apenas 1.2 %. Escribe en dos renglones qué le reportarías a mantenimiento con esas cifras.
+Cierra con el tablero de desvío de tiempo de respuesta: mesa, plaza, solicitudes, horas reales, horas meta y desvío como fracción, redondeado a tres decimales. MC-01 corre 6.7 % arriba de su meta y MC-02 apenas 1.2 %. Escribe en dos renglones qué le reportarías a la dirección de operaciones con esas cifras.
 
 ---
 
@@ -916,34 +915,34 @@ Cierra con el tablero de desvío de ciclo: estación, máquina, piezas, ciclo re
 
 **La barra que dice promedio cuando el asunto dice total**
 
-Alguien de producción armó esta gráfica con el archivo ya limpio y la mandó por correo con el asunto «energía del turno por estación».
+Alguien de la mesa armó esta gráfica con el archivo ya limpio y la mandó por correo con el asunto «comisión del corte por mesa».
 
 ```python
-sns.barplot(data=mediciones, x="estacion", y="energia_kj", ax=ax)
+sns.barplot(data=solicitudes, x="mesa", y="comision_mxn", ax=ax)
 ```
 
-Sin ejecutar nada, contesta qué número está mostrando cada barra, cuánto vale esa barra para EST-01 y cuánto valdría si mostrara lo que dice el asunto, y qué habría que agregarle a la llamada para que muestre el total.
+Sin ejecutar nada, contesta qué número está mostrando cada barra, cuánto vale esa barra para MC-01 y cuánto valdría si mostrara lo que dice el asunto, y qué habría que agregarle a la llamada para que muestre el total.
 
-Después escribe el programa corto que imprime las tres tablas que sostienen tu respuesta: la suma, el promedio y el conteo de energía por estación; el promedio, la desviación, el mínimo y el máximo del diámetro por estación, ordenado por desviación; y cuántas piezas fuera de tolerancia aportó cada una.
+Después escribe el programa corto que imprime las tres tablas que sostienen tu respuesta: la suma, el promedio y el conteo de comisión por mesa; el promedio, la dispersión, el mínimo y el máximo de la tasa por mesa, ordenado por dispersión; y cuántas solicitudes fuera de política aportó cada una.
 
 Cierra eligiendo la gráfica correcta para cada una de estas cuatro preguntas, con un renglón de justificación cada una.
 
-- Cómo se compara la energía de las cuatro estaciones.
-- Cómo se repartieron los diámetros medidos dentro de cada estación.
-- Cómo se movió el diámetro promedio de la celda a lo largo de los tres días.
-- Si las piezas de ciclo más largo son también las que más se salen de medida.
+- Cómo se compara la comisión de las cuatro mesas.
+- Cómo se repartieron las tasas otorgadas dentro de cada mesa.
+- Cómo se movió la tasa promedio del área a lo largo de los tres días.
+- Si las solicitudes que más tardan en dictaminarse son también las que más se salen de la banda de precio.
 
 ### 16.2 · Aplicar
 
-**La energía de la celda, en una gráfica que viaja sola**
+**La comisión del área, en una gráfica que viaja sola**
 
-Con el archivo limpio, agrupa la energía por estación y produce una gráfica de barras guardada como `energia_estacion.png` a 150 puntos por pulgada.
+Con el archivo limpio, agrupa la comisión por mesa y produce una gráfica de barras guardada como `comision_mesa.png` a 150 puntos por pulgada.
 
-La gráfica lleva cinco cosas: el título con el hallazgo y no con el nombre de los ejes, la etiqueta del eje vertical con su unidad, el eje vertical empezando en cero, el eje vertical formateado en miles para que nadie cuente dígitos, y la fuente al pie. La barra de la estación pico va en azul fuerte y las otras tres en azul claro.
+La gráfica lleva cinco cosas: el título con el hallazgo y no con el nombre de los ejes, la etiqueta del eje vertical con su unidad, el eje vertical empezando en cero, el eje vertical formateado en miles para que nadie cuente dígitos, y la fuente al pie. La barra de la mesa pico va en azul fuerte y las otras tres en azul claro.
 
-EST-03 concentra el 37.4 % de la energía de la celda con 12,125 kJ, y ese porcentaje se calcula dentro del programa, no se escribe a mano en el título.
+MC-03 concentra el 37.4 % de la comisión del área con 12,125 pesos, y ese porcentaje se calcula dentro del programa, no se escribe a mano en el título.
 
-El programa imprime la serie por estación y una línea que compruebe que el archivo se generó. Cierra la figura al terminar.
+El programa imprime la serie por mesa y una línea que compruebe que el archivo se generó. Cierra la figura al terminar.
 
 Escribe además el texto alternativo de la gráfica, de dos o tres renglones, donde cada cifra que menciones se pueda verificar contra la serie impresa.
 
@@ -953,15 +952,15 @@ Escribe además el texto alternativo de la gráfica, de dos o tres renglones, do
 
 Configura el tema de seaborn una sola vez al principio y produce tres imágenes con el archivo limpio.
 
-La primera es una gráfica de barras de la energía por estación, con el estimador correcto y sin la barra de error que dibuja por omisión. Se guarda como `barras_energia.png`.
+La primera es una gráfica de barras de la comisión por mesa, con el estimador correcto y sin la barra de error que dibuja por omisión. Se guarda como `barras_comision.png`.
 
-La segunda es una caja y bigotes de los diámetros medidos por estación, con las estaciones ordenadas por dispersión de menor a mayor y dos líneas horizontales punteadas en 11.95 y 12.05 que marquen la banda. Se guarda como `caja_estacion.png`.
+La segunda es una caja y bigotes de las tasas otorgadas por mesa, con las mesas ordenadas por dispersión de menor a mayor y dos líneas horizontales punteadas en 17.50 y 18.50 que marquen la banda. Se guarda como `caja_mesa.png`.
 
-La tercera es un mapa de calor de la rejilla de estación contra lote, con la energía en miles de kJ, el valor escrito dentro de cada celda y un decimal. Se guarda como `mapa_estacion_lote.png`.
+La tercera es un mapa de calor de la rejilla de mesa contra corte, con la comisión en miles de pesos, el valor escrito dentro de cada celda y un decimal. Se guarda como `mapa_mesa_corte.png`.
 
-Las tres llevan título con el hallazgo. El programa imprime la tabla de promedio, mediana, desviación y conteo del diámetro por estación ordenada por desviación, y la rejilla en miles.
+Las tres llevan título con el hallazgo. El programa imprime la tabla de promedio, mediana, dispersión y conteo de la tasa por mesa ordenada por dispersión, y la rejilla en miles.
 
-En esa tabla, EST-01 tiene el promedio más cercano al nominal de las cuatro estaciones y aun así es la segunda que más piezas se sale de banda. Escribe en tres renglones la conclusión que sale de poner las tres gráficas juntas, con al menos tres cifras verificables, y di cuál de las tres mandarías a mantenimiento si solo pudieras mandar una.
+En esa tabla, MC-01 tiene el promedio más cercano a la tasa de política de las cuatro mesas y aun así es la segunda que más solicitudes se sale de banda. Escribe en tres renglones la conclusión que sale de poner las tres gráficas juntas, con al menos tres cifras verificables, y di cuál de las tres mandarías a la dirección de operaciones si solo pudieras mandar una.
 
 ---
 
@@ -979,26 +978,26 @@ from pathlib import Path
 
 DATOS = Path(__file__).resolve().parent
 
-mediciones = pd.read_csv(DATOS / "mediciones.csv")
+solicitudes = pd.read_csv(DATOS / "solicitudes.csv")
 
-promedios = mediciones.groupby("estacion")["diametro_mm"].mean()
+promedios = solicitudes.groupby("mesa")["tasa_pct"].mean()
 print(len(promedios))
 
-mediciones[mediciones["estacion"] == "EST-03"]["veredicto"] = "Revisar"
-print("veredicto" in mediciones.columns)
+solicitudes[solicitudes["mesa"] == "MC-03"]["veredicto"] = "Revisar"
+print("veredicto" in solicitudes.columns)
 
-diametros = [12.01, 11.98, 12.06]
-diametros = diametros.sort()
-print(diametros)
+tasas = [18.10, 17.80, 18.60]
+tasas = tasas.sort()
+print(tasas)
 
-for consumo in [86.4, 61.5, 112.8, 48.2]:
+for hora in [86.4, 61.5, 112.8, 48.2]:
     total = 0.0
-    total += consumo
+    total += hora
 print(total)
 
-print(mediciones["energia_kj"][0] + mediciones["energia_kj"][1])
+print(solicitudes["comision_mxn"][0] + solicitudes["comision_mxn"][1])
 
-print(mediciones["diametro_mm"][1])
+print(solicitudes["tasa_pct"][1])
 ```
 
 Sin ejecutar nada, escribe las seis líneas que imprime y, por cada una, nombra el error de la lista del semestre, di cuál era el resultado correcto y explica en un renglón por qué el programa no se detuvo. La última línea imprime un número que sí existe en el archivo y aun así contesta la pregunta equivocada; di cuál era la pregunta.
@@ -1009,11 +1008,11 @@ Sin ejecutar nada, escribe las seis líneas que imprime y, por cada una, nombra 
 
 Escribe el programa que va del archivo crudo a una conclusión, en este orden y sin saltarse ningún paso: inspeccionar, limpiar, agrupar y concluir.
 
-La inspección imprime cuatro cifras: renglones, duplicados, formas de escribir la estación y renglones sin tiempo de ciclo. La limpieza quita duplicados, normaliza la estación, convierte la energía y marca el veredicto de cada pieza.
+La inspección imprime cuatro cifras: renglones, duplicados, formas de escribir la mesa y renglones sin horas de respuesta. La limpieza quita duplicados, normaliza la mesa, convierte la comisión y marca el veredicto de cada solicitud.
 
-El tablero por estación trae seis columnas: piezas, energía, diámetro promedio, dispersión, piezas fuera de tolerancia y tasa de fuera de tolerancia, ordenado por energía de mayor a menor. La columna de piezas fuera tiene que valer cero en la estación que no aportó ninguna, no quedarse vacía.
+El tablero por mesa trae seis columnas: solicitudes, comisión, tasa promedio, dispersión, solicitudes fuera de política y proporción de fuera de política, ordenado por comisión de mayor a menor. La columna de solicitudes fuera tiene que valer cero en la mesa que no aportó ninguna, no quedarse vacía.
 
-La última línea es la conclusión, y se arma dentro del programa a partir del tablero, no se escribe a mano: cuál estación tiene la tasa más alta, qué porcentaje de la energía de la celda consume y qué porcentaje de las piezas fuera de tolerancia concentra. Salen 37.4 % de la energía y 50 % de las piezas fuera.
+La última línea es la conclusión, y se arma dentro del programa a partir del tablero, no se escribe a mano: cuál mesa tiene la proporción más alta, qué porcentaje de la comisión del área deja y qué porcentaje de las solicitudes fuera de política concentra. Salen 37.4 % de la comisión y 50 % de las solicitudes fuera.
 
 ### 17.3 · Integrar
 
@@ -1021,12 +1020,12 @@ La última línea es la conclusión, y se arma dentro del programa a partir del 
 
 Encierra la limpieza en `cargar_limpio()` y la marca del veredicto en su propia función, las dos con docstring.
 
-Primero, reporta la tasa de piezas fuera de tolerancia con el archivo sin limpiar y con el archivo limpio: 8 de 30 contra 8 de 28. Explica en dos renglones por qué el numerador no cambia y el denominador sí, y cuál de las dos cifras reportarías a calidad.
+Primero, reporta la proporción de solicitudes fuera de política con el archivo sin limpiar y con el archivo limpio: 8 de 30 contra 8 de 28. Explica en dos renglones por qué el numerador no cambia y el denominador sí, y cuál de las dos cifras reportarías a control interno.
 
-Segundo, imprime el tablero por estación con piezas, energía, diámetro promedio y dispersión, ordenado por dispersión de mayor a menor.
+Segundo, imprime el tablero por mesa con solicitudes, comisión, tasa promedio y dispersión, ordenado por dispersión de mayor a menor.
 
-Tercero, audita la unión con el catálogo de cinco estaciones de 15.3 y reporta los tres conteos del indicador.
+Tercero, audita la unión con el catálogo de cinco mesas de 15.3 y reporta los tres conteos del indicador.
 
-Cuarto, produce una sola gráfica de caja y bigotes de los diámetros por estación, ordenada por dispersión, con las dos líneas de la banda, título con el hallazgo y fuente al pie, guardada como `dispersion_estacion.png`.
+Cuarto, produce una sola gráfica de caja y bigotes de las tasas por mesa, ordenada por dispersión, con las dos líneas de la banda, título con el hallazgo y fuente al pie, guardada como `dispersion_mesa.png`.
 
-El hallazgo verificable es que EST-03 es la única estación cuyo cuartil superior, 12.065 mm, rebasa el límite de 12.05 mm. Cierra con tres renglones: qué le pedirías a mantenimiento, con qué dos cifras lo sostienes, y qué dato te falta en este archivo para poder afirmar la causa.
+El hallazgo verificable es que MC-03 es la única mesa cuyo cuartil superior, 18.65 %, rebasa el límite de 18.50 %. Cierra con tres renglones: qué le pedirías a la dirección de operaciones, con qué dos cifras lo sostienes, y qué dato te falta en este archivo para poder afirmar la causa.
