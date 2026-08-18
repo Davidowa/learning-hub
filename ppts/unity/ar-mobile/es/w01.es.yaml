@@ -1,0 +1,398 @@
+meta:
+  course: Desarrollo de AR móvil
+  code: UNITY
+  lang: es
+  language: unity
+  week: 1
+  footer: DESARROLLO DE AR MÓVIL · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 01 · Diseño de AR · Casos de uso y límites
+      title: Desarrollo de AR móvil
+      subtitle: >-
+        Antes de escribir código, dos preguntas. Qué alcanza a rastrear el teléfono, y si la
+        idea de verdad necesita una cámara.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Fundamentos]
+        - [Sesión, 1 de 5]
+        - [Basado en, Unity Learn · Mobile AR Development]
+      notes: |
+        Estas cinco sesiones acompañan la ruta de Unity Learn Mobile AR Development,
+        learn.unity.com/pathway/mobile-ar-development. El alumno la trabaja por su cuenta.
+        Estos decks son la hora de salón que va al lado, con ejemplos propios.
+
+        Los datos de las láminas se verificaron contra el manual de AR Foundation 6.0, el
+        del Google ARCore XR Plug-in 6.0 y el del Apple ARKit XR Plug-in 6.0. Nada está
+        copiado de Unity Learn.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué rastrea el teléfono
+          desc: Una pose por frame, sacada de la cámara y los sensores, y lo que se construye encima
+        - title: Juzgar una idea
+          desc: La prueba que pasa un caso de uso antes de ganarse la cámara y la batería
+        - title: Dos proveedores
+          desc: Qué trae ARCore, qué trae ARKit y qué no trae ninguno de los dos
+        - title: Preguntar, no suponer
+          desc: Leer la capacidad del subsistema que corre, en vez de creerle a un foro
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Describir qué rastrea una sesión de AR
+          sub: La pose del dispositivo en seis grados de libertad, y los trackables que se levantan sobre ella
+        - head: Juzgar una idea de AR en una página
+          sub: Contra tres preguntas que separan un caso de uso de una demostración
+        - head: Leer una tabla de capacidades
+          sub: Y decir qué tiene ARCore, qué tiene ARKit y qué no tiene ninguno de los dos
+        - head: Consultar el soporte en ejecución
+          sub: A través del descriptor del subsistema, en lugar de confiar en lo que mostró un video
+        - head: Escribir el brief de un caso de uso
+          sub: Con el trackable del que depende, el dispositivo donde corre y la falla que acepta
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta sesión entre las cinco
+      phases:
+        - label: 01 · Sesión 1
+          title: Diseño de AR
+          desc: Casos de uso, y qué puede rastrear de verdad una plataforma
+          state: now
+        - label: 02 · Sesión 2
+          title: Compilar a Android
+          desc: Paquetes, Player Settings, ARCore y el pipeline
+          state: todo
+        - label: 03 · Sesión 3
+          title: Blancos rastreables
+          desc: Planos, imágenes, raycasts y colocación
+          state: todo
+        - label: 04 · Sesión 4
+          title: Visual Scripting
+          desc: Interacciones armadas como grafos, no como scripts
+          state: todo
+        - label: 05 · Sesión 5
+          title: Optimización móvil
+          desc: Assets, batching y el presupuesto por frame
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué está haciendo en realidad el teléfono
+      lede: Una estimación de dónde está el equipo, y una conjetura sobre las superficies alrededor. Lo demás es dibujar.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El teléfono no ve el cuarto, lo estima
+      lead: >-
+        La cámara entrega imágenes al sistema de rastreo. El sistema escoge puntos que se ven
+        iguales de un frame al siguiente, observa cómo se mueven y mezcla el acelerómetro con
+        el giroscopio. De ahí sale una respuesta por frame, dónde está el equipo y hacia
+        dónde apunta. Las superficies vienen después, y se infieren de esos puntos en lugar
+        de medirse.
+      panel:
+        label: Lo que compra, y lo que cuesta
+        title: El rastreo es una estimación, no una medición
+        note: >-
+          Una pared blanca y lisa no le da al rastreador de dónde agarrarse, así que la
+          estimación se va de lado. La luz escasa hace lo mismo. Ninguna se arregla con
+          código.
+      steps:
+        - text: La cámara entrega un frame
+        - text: Los feature points se emparejan entre frames
+        - text: Los sensores de movimiento tapan los huecos
+        - text: Sale una pose, seis números
+        - text: Los planos se infieren de los puntos
+          loop: ↺ y las cinco cosas pueden estar mal al mismo tiempo
+
+  - diagram:
+      eyebrow: El ciclo
+      title: Del frame de la cámara a una superficie donde poner algo
+      blocks:
+        - label: '01'
+          title: Cámara y sensores
+          desc: Imágenes a treinta o sesenta por segundo, más lecturas del acelerómetro y el giroscopio
+        - label: '02'
+          title: Pose por frame
+          desc: Posición y rotación del equipo en un espacio de sesión que empieza donde empezaste
+        - label: '03'
+          title: Trackables
+          desc: Planos, feature points e imágenes que la sesión encontró y sigue corrigiendo
+          dark: true
+      note: >-
+        Las flechas van en un solo sentido. Tu contenido lee los trackables, y nada de lo que
+        haga mejora la pose. Por eso una escena que se ve mal casi siempre es un problema de
+        cuarto y no de código.
+
+  - table:
+      eyebrow: Bloque 01 · El inventario
+      title: Qué te da una sesión, y qué necesita cada cosa
+      headers: [Trackable, Qué es, Qué pide del cuarto]
+      rows:
+        - ["Pose", "Posición y rotación, por frame", "Textura y luz"]
+        - ["Feature points", "Puntos dispersos ya emparejados", "Detalle donde agarrarse"]
+        - ["Planos", "Regiones planas hechas de puntos", "Superficie con patrón"]
+        - ["Imágenes", "Un blanco 2D de tu biblioteca", "Contraste y nada repetido"]
+        - ["Anclas", "Una pose que la sesión corrige", "Nada extra"]
+        - ["Luz", "Intensidad y color del ambiente", "Nada extra"]
+
+  - stat:
+      eyebrow: Se recalcula en cada frame
+      value: 6 DoF
+      text: Tres números para la posición, tres para la rotación, y toda la sesión descansa en ellos
+      note: >-
+        Si se pierden los seis, el contenido se resbala de la mesa mientras el usuario mira.
+        Ningún ajuste del editor los devuelve, y ningún código vuelve rastreable una pared
+        vacía. Es el número que conviene memorizar esta semana.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Elegir un caso de uso
+      lede: La cámara cuesta batería, atención y un cuarto donde el usuario tiene que pararse. La idea paga las tres.
+      block: 2
+
+  - method:
+      eyebrow: La prueba
+      title: Tres preguntas que una idea de AR tiene que contestar
+      statement: >-
+        Si una foto, una lista o un video hacen mejor el mismo trabajo, entonces la respuesta
+        es una foto, una lista o un video.
+      points:
+        - label: Pregunta 01
+          text: ¿El contenido tiene que estar en el cuarto? Si su posición no significa nada, la idea no necesita AR.
+        - label: Pregunta 02
+          text: ¿El usuario tiene espacio para moverse? El asiento de un autobús no es un lugar donde alguien escanee el piso.
+        - label: Pregunta 03
+          text: ¿Qué pasa cuando el rastreo falla? Contestar nada no es una respuesta, es un error esperando usuario.
+
+  - tiers:
+      eyebrow: Bloque 02 · Formas
+      title: Cuatro formas que suele tomar una idea de AR
+      items:
+        - key: COLOCAR
+          title: Poner un objeto en el cuarto
+          desc: Muebles, maquinaria, una maqueta. La posición carga el significado, así que la cámara se gana su lugar.
+        - key: ROTULAR
+          title: Anotar algo real
+          desc: Un número de parte sobre una válvula, un nombre sobre una pieza. Antes hace falta un blanco que la app reconozca.
+        - key: MEDIR
+          title: Leer el cuarto de regreso
+          desc: Distancias, áreas, holguras. Aquí fallan las promesas de exactitud, así que declara tu tolerancia.
+        - key: JUGAR
+          title: Meter el cuarto a un juego
+          desc: El piso se vuelve el tablero. Barato de prototipar, y el más difícil de los cuatro para sostener el interés.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores de diseño
+      title: Cuatro maneras de volver una buena idea una mala app
+      items:
+        - label: Error 01
+          title: Diseñar para un teléfono que nadie trae
+          desc: >-
+            La demostración corrió en un equipo de gama alta con sensor de profundidad. Tus
+            alumnos traen lo que traen. Nombra el dispositivo objetivo en la primera página.
+        - label: Error 02
+          title: Suponer algo que viste en un video
+          desc: >-
+            El mallado del cuarto, el rastreo de cuerpo y el de objetos se ven igual en un
+            clip. Una sola plataforma los da, y no es la que este curso compila.
+        - label: Error 03
+          title: No tener estado de falla
+          desc: >-
+            El rastreo se va a perder. Si el diseño no tiene pantalla para ese momento, la
+            app se queda con una silla flotando y el usuario la cierra.
+        - label: Error 04
+          title: Contenido que pudo ser una foto
+          desc: >-
+            Si el objeto nunca toca el cuarto, el cuarto nunca hizo falta. Entrega la foto y
+            gasta el semestre en algo que sí pida cámara.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Lo que la plataforma no va a hacer
+      lede: Dos proveedores, dos conjuntos de funciones, y una tabla que conviene leer antes de prometer nada.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · Proveedores
+      title: Dónde se separan ARCore y ARKit
+      headers: [Función, ARCore en Android, ARKit en iOS]
+      rows:
+        - ["Planos", "Disponible", "Disponible"]
+        - ["Imágenes", "Disponible", "Disponible"]
+        - ["Oclusión", "Disponible", "Disponible"]
+        - ["Mallado", "No disponible", "Disponible"]
+        - ["Objetos", "No disponible", "Disponible"]
+        - ["Cuerpo", "No disponible", "Disponible"]
+
+  - concept:
+      eyebrow: El hábito
+      title: Pregúntale al subsistema, no le creas a la tabla
+      lead: >-
+        Una tabla como la anterior se echa a perder. Las versiones de los paquetes avanzan,
+        los proveedores ganan funciones, y dos teléfonos de la misma plataforma no coinciden.
+        El subsistema que se cargó en ejecución sí sabe qué puede hacer, y lo dice si le
+        preguntas. Cada manager de trackables en AR Foundation expone un descriptor con las
+        banderas de capacidad del proveedor que de verdad arrancó.
+      panel:
+        label: Dónde vive la respuesta
+        title: ARPlaneManager.descriptor
+        note: >-
+          XRPlaneSubsystemDescriptor trae cinco banderas. Planos horizontales, planos
+          verticales, planos arbitrarios, vértices de frontera y clasificación.
+      steps:
+        - text: Toma el manager de la escena
+        - text: Lee el descriptor con AR ya corriendo
+        - text: Ramifica por la bandera, no por la plataforma
+        - text: Dile al usuario qué no va a servir
+          loop: ↺ y regístralo, para que el próximo reporte ya traiga la respuesta
+
+  - code:
+      eyebrow: Bloque 03 · Capacidad
+      title: Preguntarle al proveedor qué soporta
+      filename: PlaneSupport.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class PlaneSupport : MonoBehaviour
+        {
+            [SerializeField] ARPlaneManager planes;
+            public void ReportOnce()
+            {
+                var d = planes.descriptor;
+                bool h = d.supportsHorizontalPlaneDetection;
+                bool v = d.supportsVerticalPlaneDetection;
+                Debug.Log($"h={h} v={v}");
+            }
+        }
+      annotations:
+        - label: descriptor
+          text: >-
+            Describe al proveedor que se cargó en este equipo, no a la plataforma para la
+            que compilaste.
+        - label: Cinco banderas
+          text: >-
+            El mismo descriptor reporta planos arbitrarios, vértices de frontera y
+            clasificación de planos.
+        - label: Cuándo llamarlo
+          text: >-
+            Desde Awake no. No hay nada que describir hasta que la sesión arranca.
+        - label: Riesgo
+          text: >-
+            Si lo lees demasiado pronto obtienes una referencia nula, y un equipo que sirve
+            parece no soportado.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: La misma compilación en dos equipos distintos
+      filename: Availability.cs
+      lang: csharp
+      output_label: Dos equipos
+      source: |
+        using System.Collections;
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class Availability : MonoBehaviour
+        {
+            IEnumerator Start()
+            {
+                yield return ARSession.CheckAvailability();
+                Debug.Log($"state {ARSession.state}");
+            }
+        }
+      output: |
+        teléfono con ARCore
+        state Ready
+
+        tableta sin ARCore
+        state Unsupported
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Una idea necesita una malla de triángulos del cuarto, en Android. ¿Qué significa eso?
+      options:
+        - ARCore no da mallado, así que esa parte de la idea no sale en Android
+        - El mallado es de Unity, así que AR Foundation lo da en toda plataforma
+        - Cualquier teléfono con sensor de profundidad obtiene mallado por AR Foundation
+        - Sirve en cuanto actives el mallado en XR Plug-in Management
+
+  - trace:
+      eyebrow: Respuesta
+      title: Profundidad y mallado son dos funciones distintas
+      headers: [Afirmación, Dónde verificarlo, Veredicto]
+      rows:
+        - ["Mallado en ARCore", "Manual del plug-in", "No disponible"]
+        - ["Mallado en ARKit", "Manual del plug-in", "Disponible"]
+        - ["Oclusión en ARCore", "Página de oclusión", "Disponible"]
+        - ["Malla por oclusión", "Funciones de AR Foundation", "Otra función"]
+      verdict: >-
+        ARCore te da una imagen de profundidad, suficiente para esconder una silla virtual
+        detrás de una real. No entrega una malla de triángulos del cuarto. Una idea que
+        necesita esa malla necesita iOS, o se vuelve otra idea antes de que alguien escriba
+        código.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una página para una idea, en parejas
+      brief: >-
+        Escojan un caso de uso de su propia carrera. Una mesa de laboratorio, una máquina del
+        taller, un letrero del campus. Escriban una página que nombre el trackable del que
+        depende, el equipo donde va a correr, y qué ve el usuario en el momento en que se
+        pierde el rastreo.
+      blocks:
+        - label: Restricción
+          text: Todavía nada de Unity. Papel o un documento. Si la idea sólo sirve en video, anótenlo.
+        - label: Entregable
+          text: Una página con tres encabezados. El trackable, el equipo y el estado de falla.
+        - label: Criterio
+          text: Que un compañero nombre la función de AR que la idea necesita sin preguntarles.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Cuatro ideas para llevarse
+      items:
+        - title: El rastreo es una estimación
+          desc: Seis números por frame, sacados de imágenes y sensores, y todos pueden irse de lado
+        - title: El cuarto decide
+          desc: Textura, luz y una superficie con patrón. Ningún ajuste del editor reemplaza a los tres
+        - title: La capacidad se pregunta corriendo
+          desc: El descriptor de cada manager reporta lo que el proveedor cargado puede hacer de verdad
+        - title: El caso de uso se gana la cámara
+          desc: Si la posición del contenido no significa nada, una foto hace el trabajo por menos
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Instala las herramientas antes de compilar
+      brief: >-
+        Instala Unity 6 con Android Build Support y sus dos módulos hijos, las herramientas
+        SDK y NDK y OpenJDK. Trae un teléfono Android compatible con ARCore, y un cable que
+        lleve datos y no sólo corriente.
+      meta:
+        - [Entrega, Antes de la sesión 2]
+        - [Formato, Una captura de los módulos instalados]
+        - [Trae, Un teléfono cargado y un cable de datos]
+      rubric:
+        - ["Editor", "Obligatorio", "Unity 6 con Android Build Support instalado"]
+        - ["Equipo", "Obligatorio", "Un teléfono con ARCore y depuración USB activada"]
+        - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Mobile AR Development en Unity Learn es la ruta que estos decks acompañan, en
+        learn.unity.com/pathway/mobile-ar-development. Se espera que la trabajes completa.
+      meta:
+        - [Ruta, Unity Learn · Mobile AR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

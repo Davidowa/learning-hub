@@ -1,0 +1,449 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 3
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 03 · Componentes, física y prefabs
+      title: Fundamentos de Unity
+      subtitle: >-
+        Un objeto de Unity no hace nada por sí mismo. Todo lo que hace llega como componente,
+        y dos de ellos lo entregan al motor de física.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 3 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Sesión acompañante de la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Cierra el área Scene Building Essentials
+        con su parte de física y abre el área GameObjects, en componentes y prefabs. La parte
+        de scripting de GameObjects espera hasta la sesión 4.
+
+        La escena sigue siendo Bay.unity de la sesión 2. Las cajas reciben un Rigidbody, la
+        rampa por fin se usa, y la puerta del andén cuenta lo que llega.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Objetos hechos de partes
+          desc: >-
+            Área de la ruta · GameObjects, la parte de componentes. Por qué un contenedor
+            vacío más sus partes le gana a un objeto grande que lo sabe todo.
+        - title: Entregarlo a la física
+          desc: >-
+            Área de la ruta · Scene Building Essentials, la parte de física. Rigidbody,
+            colliders, triggers y el paso fijo sobre el que de verdad corre el motor.
+        - title: Prefabs
+          desc: >-
+            Área de la ruta · GameObjects, la parte de prefabs. Un asset, muchas instancias,
+            y el override que se niega en silencio a seguir al asset.
+        - title: La puerta cuenta
+          desc: >-
+            La escena de clase recibe un trigger al pie de la rampa, y la consola dice
+            cuántas cajas llegaron y cuánto tardó la primera.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Leer un objeto como lista de componentes
+          sub: Y decir con cuál componente nace todo GameObject
+        - head: Agregar un Rigidbody a propósito
+          sub: Sabiendo que el Transform deja de ser tuyo en cuanto lo haces
+        - head: Predecir si dos objetos van a chocar
+          sub: Según cuál de ellos lleva Rigidbody y cuál collider es trigger
+        - head: Usar el paso fijo en un argumento
+          sub: Cincuenta pasos de física por segundo, y una caída de dos metros en treinta y dos
+        - head: Hacer un prefab y editarlo en Prefab Mode
+          sub: Para que un cambio llegue a todas las cajas de la escena a la vez
+        - head: Reconocer un override antes de que confunda
+          sub: El valor en negritas, la barra azul del margen y qué le hace Revert
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: done
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: now
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: todo
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Un objeto es una bolsa de componentes
+      lede: >-
+        No existe ninguna clase caja en Unity. Existe un objeto vacío que carga cinco partes,
+        y las partes son lo que lo vuelve una caja.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · Concepto clave
+      title: Composición, no un árbol genealógico de clases
+      lead: >-
+        Un GameObject guarda un nombre, un Transform y una lista de componentes. Nada más.
+        Hacer que la caja rebote es agregar un componente y no escribir una subclase de
+        Crate, y por eso dos objetos sin nada en común pueden compartir exactamente una
+        conducta. También significa que el Inspector es la verdad sobre lo que hace un objeto.
+      panel:
+        label: La única parte que no se quita
+        title: Todo GameObject tiene un Transform
+        note: >-
+          Incluso un vacío que sólo sirve de carpeta en el Hierarchy. La opción Remove
+          Component aparece deshabilitada, porque algo en una escena tiene que estar en algún
+          lugar.
+      steps:
+        - text: El GameObject es un contenedor con nombre
+        - text: Cada componente agrega una capacidad
+        - text: El Inspector los lista de arriba abajo
+          loop: ↺ y el orden de la lista no cambia nada en ejecución
+
+  - diagram:
+      eyebrow: Bloque 01 · La caja
+      title: Cuatro componentes, cuatro trabajos distintos
+      blocks:
+        - label: Transform
+          title: Dónde está
+          desc: Posición, rotación y escala. Nunca se puede quitar.
+        - label: Mesh Renderer
+          title: Cómo se ve
+          desc: Dibuja la malla y guarda la lista de materiales.
+        - label: Box Collider
+          title: Su forma al tocar
+          desc: El volumen que prueba la física. Invisible al correr.
+        - label: Rigidbody
+          title: Quién lo mueve
+          desc: Entrega el Transform al motor de física.
+          dark: true
+      note: >-
+        El collider y el renderer están separados a propósito. Una caja puede ser visible e
+        intocable, o invisible y sólida, y las dos cosas sirven.
+
+  - table:
+      eyebrow: Bloque 01 · El Inspector
+      title: Qué carga la caja de clase, renglón por renglón
+      headers: [Componente, Qué agrega, Se puede quitar]
+      rows:
+        - ["Transform", "Posición, rotación, escala", "No"]
+        - ["Mesh Filter", "Cuál malla se dibuja", "Sí"]
+        - ["Mesh Renderer", "La dibuja, guarda materiales", "Sí"]
+        - ["Box Collider", "Una forma que la física toca", "Sí"]
+        - ["Rigidbody", "Masa, drag y gravedad", "Sí"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Entregar el objeto a la física
+      lede: >-
+        Agrega un Rigidbody y dejas de ser quien decide dónde está el objeto. De ahí en
+        adelante pides, con fuerzas, y el motor contesta.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Mecanismo
+      title: El motor corre con su reloj, no con los cuadros
+      lead: >-
+        El dibujado ocurre tan rápido como la máquina alcance. La física no. Avanza en pasos
+        fijos de 0.02 segundos, cincuenta por segundo, sin importar qué haga la tasa de
+        cuadros, así que la misma caída tarda lo mismo en una laptop y en una máquina del
+        laboratorio. Por eso también el código de física va en FixedUpdate y no en Update.
+      panel:
+        label: Project Settings · Time
+        title: Fixed Timestep vale 0.02 segundos
+        note: >-
+          Partirlo a la mitad duplica el trabajo de física por segundo. Es una perilla para
+          una simulación que tiembla, no para una escena que corre lento.
+      steps:
+        - text: La gravedad es -9.81 en Y, en metros por segundo al cuadrado
+        - text: El motor integra una vez cada 0.02 segundos
+        - text: Un cuadro puede cubrir cero pasos o tres
+          loop: ↺ y Time.deltaTime es el cuadro, Time.fixedDeltaTime es el paso
+
+  - stat:
+      eyebrow: Medido en la rampa de clase
+      value: 32 pasos
+      text: Lo que le cuesta al motor de física una caída de dos metros, antes de dibujar nada
+      note: >-
+        La teoría dice raíz de 2h entre g, que son 0.639 segundos. A 0.02 segundos por paso
+        eso da 31.9 pasos, y el primer contacto se reporta en el paso 32. La tasa de cuadros
+        nunca entra en la cuenta, que es justo el punto de tener un paso fijo.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Cronometrar la caída de una caja
+      filename: DropTimer.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        float start;
+
+        void Start() => start = Time.time;
+
+        void OnCollisionEnter(Collision hit)
+        {
+            float t = Time.time - start;
+            int steps = (int)(t / Time.fixedDeltaTime);
+            Debug.Log($"altura de caída 2.00 m");
+            Debug.Log($"primer contacto {t:F2} s");
+            Debug.Log($"pasos fijos {steps}");
+        }
+      output: |
+        altura de caída 2.00 m
+        primer contacto 0.64 s
+        pasos fijos 32
+
+  - table:
+      eyebrow: Bloque 02 · La regla de los pares
+      title: Cuáles pares reportan un golpe y cuáles se quedan callados
+      headers: [Un lado, El otro lado, Qué obtienes]
+      rows:
+        - ["Rigidbody", "Collider simple", "Colisión, llegan mensajes"]
+        - ["Rigidbody", "Rigidbody", "Colisión, se empujan los dos"]
+        - ["Collider simple", "Collider simple", "Nada de nada"]
+        - ["Rigidbody", "Is Trigger marcado", "Mensajes de trigger, sin empuje"]
+        - ["Cuerpo kinematic", "Is Trigger marcado", "Mensajes de trigger, sin empuje"]
+
+  - code:
+      eyebrow: Bloque 02 · La puerta del andén
+      title: Un trigger que cuenta lo que llega
+      filename: BayDoor.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class BayDoor : MonoBehaviour
+        {
+            [SerializeField] int crates;
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (other.attachedRigidbody == null) return;
+                crates++;
+                Debug.Log($"caja {crates} en la puerta");
+            }
+        }
+      annotations:
+        - label: En la puerta
+          text: >-
+            Un Box Collider con Is Trigger marcado, atravesado al pie de la rampa.
+        - label: attachedRigidbody
+          text: >-
+            El cuerpo al que pertenece el collider. Null en el escenario, así que el piso se
+            ignora.
+        - label: SerializeField
+          text: >-
+            Privado, y aun así visible en el Inspector. La sesión 4 le dedica un bloque.
+        - label: Riesgo
+          text: >-
+            Que ningún lado lleve Rigidbody significa que OnTriggerEnter nunca se llama, y
+            nada en la consola lo dice.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro fallas de física sin mensaje de error
+      items:
+        - label: Error 01
+          title: Is Trigger quedó marcado
+          desc: >-
+            La caja atraviesa la rampa. El collider sigue ahí, sólo que reporta el contacto
+            en vez de resistirlo, y la escena se ve descompuesta más que equivocada.
+        - label: Error 02
+          title: Ningún Rigidbody en ningún lado
+          desc: >-
+            Dos colliders simples nunca se hablan. Sin colisión, sin trigger, sin
+            advertencia. Lo primero que hay que revisar es la tabla de pares, no el código.
+        - label: Error 03
+          title: Mover un cuerpo por su Transform
+          desc: >-
+            Escribir transform.position sobre un Rigidbody lo teletransporta más allá de
+            colliders delgados y pelea con el solver. Usa MovePosition, o una fuerza, o
+            vuélvelo kinematic.
+        - label: Error 04
+          title: El componente que no está
+          desc: >-
+            GetComponent regresa null y la consola dice MissingComponentException, con el
+            nombre del objeto y el componente que esperaba encontrarle.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Prefabs, y el override que espera agazapado
+      lede: >-
+        Tres cajas en la escena deberían ser una decisión y no tres. Los prefabs son el cómo,
+        y los overrides son cómo sale mal.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · Concepto clave
+      title: El asset es el original, la escena guarda copias
+      lead: >-
+        Un prefab es un asset bajo Assets. Arrastrarlo a la escena crea una instancia, y la
+        instancia recuerda de qué asset vino. Cambia el asset en Prefab Mode y todas las
+        instancias lo siguen. Cambia una instancia en la escena y esa propiedad deja de
+        escuchar, para siempre, hasta que alguien la revierta.
+      panel:
+        label: Cómo lo muestra el editor
+        title: Un valor con override va en negritas y con barra azul
+        note: >-
+          La barra va en el margen izquierdo del renglón del Inspector. Es la única
+          advertencia de que esa caja ya no recibe órdenes del prefab.
+      steps:
+        - text: Arrastra un objeto del Hierarchy a la ventana Project
+        - text: Doble clic al asset para abrir Prefab Mode
+        - text: Edita ahí y todas las instancias lo siguen
+          loop: ↺ salvo que esa instancia ya haya sobrescrito el valor
+
+  - steps:
+      eyebrow: Bloque 03 · El flujo
+      title: De una caja a un prefab en cinco movimientos
+      items:
+        - label: '01'
+          title: Déjala lista
+          desc: Una caja con su collider, su Rigidbody y su material ya correctos
+        - label: '02'
+          title: Sácala
+          desc: A Assets/Prefabs. El renglón del Hierarchy se pone azul, que quiere decir ligado
+        - label: '03'
+          title: Borra las demás
+          desc: Se van las otras dos cajas y llegan tres instancias nuevas del asset
+        - label: '04'
+          title: Edita en Prefab Mode
+          desc: Doble clic al asset. La barra de arriba te avisa que saliste de la escena
+        - label: '05'
+          title: Revisa las instancias
+          desc: De vuelta en la escena las tres deberían traer el cambio. Las que no, lo sobrescribieron
+
+  - table:
+      eyebrow: Bloque 03 · Dónde cae un cambio
+      title: Cuatro maneras de cambiar un prefab, y quién se entera
+      headers: [Qué haces, Dónde cae, Otras instancias]
+      rows:
+        - ["Editar en Prefab Mode", "En el asset", "Todas lo siguen"]
+        - ["Editar una instancia", "Un override en esa", "Se quedan igual"]
+        - ["Overrides · Apply All", "Se empuja al asset", "Lo siguen, salvo override"]
+        - ["Overrides · Revert All", "Se descarta", "La instancia vuelve a coincidir"]
+
+  - trace:
+      eyebrow: Bloque 03 · Traza medida
+      title: Una edición del asset, tres cajas, tres finales
+      headers: [Caja, Masa antes, Qué se hizo, Masa después]
+      rows:
+        - ["Caja A", "8", "Nada", "12"]
+        - ["Caja B", "8", "Le escribieron 20", "20"]
+        - ["Caja C", "8", "Nada", "12"]
+      verdict: >-
+        La masa se cambió a 12 una sola vez, en Prefab Mode. A y C lo siguen porque nunca
+        tuvieron opinión. B escribió su propio valor antes, así que esa propiedad dejó de
+        escuchar y se quedó en 20. Nada se rompió y nada le avisó a nadie. Revert sobre B es
+        el único camino de regreso, y se lleva el override completo.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Una caja atraviesa la rampa en vez de resbalar sobre ella. ¿Qué es lo primero que hay que revisar?
+      options:
+        - Que la masa de la caja alcance para registrarse
+        - Que Is Trigger esté sin marcar en el collider de la rampa
+        - Que la rampa también tenga un Rigidbody
+        - Que el paso fijo sea bastante chico para esa velocidad
+
+  - method:
+      eyebrow: Respuesta
+      title: La segunda, y cuesta unos cuatro segundos
+      statement: >-
+        Un collider trigger reporta el contacto y no resiste nada. La caja pasa como si la
+        rampa estuviera pintada, lo que se lee como motor descompuesto y es una sola casilla.
+      points:
+        - label: Por qué no la masa
+          text: >-
+            La masa cambia cómo responde un cuerpo a las fuerzas, no si algo lo detiene. Una
+            caja de masa 0.1 cae sobre una rampa sólida igual que una de masa 800.
+        - label: Por qué no un cuerpo en la rampa
+          text: >-
+            El escenario está pensado como collider simple. Darle un Rigidbody a la rampa
+            hace que la rampa también caiga, que es otro error y más entretenido.
+        - label: Cuándo sí es el paso fijo
+          text: >-
+            Sólo para algo chico y rápido, donde el objeto cruza el collider completo dentro
+            de un paso. Una caja en una rampa no es ninguna de las dos cosas.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Soltar tres cajas y contarlas, en parejas
+      brief: >-
+        Dale un Rigidbody a la caja, vuélvela prefab, pon tres instancias arriba de la rampa
+        y un trigger cruzando el pie con BayDoor.cs encima. Después cambia la masa una sola
+        vez en Prefab Mode y reporta cuáles instancias lo siguieron.
+      blocks:
+        - label: Entregable
+          text: La salida de consola de las tres cajas, más la masa de cada instancia al final
+        - label: Restricción
+          text: >-
+            Un prefab y tres instancias. Editar una caja directo en el Hierarchy es lo que
+            este laboratorio busca atrapar.
+        - label: La prueba
+          text: >-
+            Sobrescribe a propósito la masa de una instancia antes de editar el asset, y
+            explica en un renglón por qué esa instancia no siguió.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La conducta llega en componentes
+          desc: >-
+            El objeto es un contenedor vacío con un Transform. Lo que hace es la lista de
+            abajo, que es por lo que el Inspector dice más que un diagrama de clases
+        - title: La física tiene su propio reloj
+          desc: >-
+            Cincuenta pasos por segundo, gravedad en -9.81, y una caída de dos metros
+            aterriza en el paso 32 sin importar qué haga la tasa de cuadros
+        - title: El override es la trampa
+          desc: >-
+            Editar una instancia desprende una propiedad del asset en silencio. Negritas y
+            una barra azul son toda la advertencia que vas a recibir
+
+  - homework:
+      eyebrow: Tarea
+      title: El prefab y las áreas de la ruta que hay detrás
+      brief: >-
+        Termina la escena de la caída y trabaja la parte de física de Scene Building
+        Essentials y las partes de prefabs y componentes de GameObjects en tu cuenta de Unity
+        Learn. La sesión 4 abre los scripts, así que la escena tiene que correr antes.
+      meta:
+        - [Entrega, Antes de la sesión 4]
+        - [Formato, "Blackboard · escena, prefab y salida de consola"]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Prefab", "Obligatorio", "Un asset y tres instancias ligadas en la escena"]
+        - ["Física", "Obligatorio", "Las cajas caen en la rampa y llegan a la puerta"]
+        - ["Lectura", "Obligatorio", "Un renglón que explique la instancia que no siguió"]
+        - ["Ruta", "Obligatorio", "Las dos áreas de la sesión marcadas en Unity Learn"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials, y se espera que la trabajes por tu cuenta.
+        La siguiente sesión, el código deja de ser un comprobante y empieza a decidir cosas.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

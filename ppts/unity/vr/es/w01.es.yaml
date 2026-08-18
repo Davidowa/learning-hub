@@ -1,0 +1,378 @@
+meta:
+  course: Desarrollo de VR
+  code: UNITY
+  lang: es
+  language: unity
+  week: 1
+  footer: DESARROLLO DE VR · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 01 · Diseño de VR para principiantes · Juzgar un build
+      title: Desarrollo de VR
+      subtitle: >-
+        Un build se juzga desde adentro del visor. Esta sesión es la pasada que haces con
+        el visor puesto, y la nota que sale de ahí.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Principiante]
+        - [Sesión, 1 de 5]
+        - [Basado en, Unity Learn · VR Development]
+      notes: |
+        Estas cinco sesiones acompañan la ruta de Unity Learn VR Development, en
+        learn.unity.com/pathway/vr-development. La ruta pone la lista de habilidades y el
+        orden. Nada de estas diapositivas reproduce el texto, los ejercicios ni los
+        recursos de Unity. La escena, los números y el código se escribieron para este
+        curso, y se espera que el alumno recorra la ruta oficial por su cuenta.
+
+        El ejemplo que corre por las cinco sesiones es el banco de bandas, el mismo que el
+        curso de algoritmos usa en papel, rearmado como escena de entrenamiento en VR. Un
+        motor, una puerta de guarda, un paro de emergencia, un torquímetro y una carátula
+        de tacómetro.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué se le juzga a un build
+          desc: Cuatro cosas que el visor enseña y una ventana de Play mode no
+        - title: Dónde empieza el malestar
+          desc: El desacuerdo que lo provoca, y las tres respuestas que lo quitan
+        - title: La pasada de revisión
+          desc: Cinco pasos con el visor puesto, y una página escrita después
+        - title: Te toca
+          desc: Dos parejas, una escena del banco, una página de hallazgos cada quien
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Revisar un build desde adentro
+          sub: Con una pasada que tiene orden, para que dos personas que revisan la misma escena escriban notas comparables
+        - head: Nombrar el mecanismo detrás de la náusea
+          sub: Ojos que reportan un movimiento que el oído interno nunca sintió, y las tres respuestas de diseño
+        - head: Separar una opinión de una instrucción
+          sub: Una nota dice dónde estabas parado, qué hiciste, qué pasó y qué cambiarías
+        - head: Medir una cosa por pasada
+          sub: Alcance, altura de los ojos o distancia de lectura, porque un número sobrevive el camino al escritorio
+        - head: Decir qué decide el hardware
+          sub: Y llevarlo a la sesión 2, donde el visor deja de ser una abstracción
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco sesiones junto a una ruta de seis semanas
+      phases:
+        - label: '01 · Sesión 1'
+          title: Juzgar un build
+          desc: Presencia, comodidad y la nota que escribes
+          state: now
+        - label: '02 · Sesión 2'
+          title: Visor y build
+          desc: Elegir hardware, y los ajustes de Android
+          state: todo
+        - label: '03 · Sesión 3'
+          title: Toolkit de interacción
+          desc: Origin, interactores e interactables
+          state: todo
+        - label: '04 · Sesión 4'
+          title: Tu propio código
+          desc: Interactables propios y eventos de selección
+          state: todo
+        - label: '05 · Sesión 5'
+          title: El presupuesto del cuadro
+          desc: Medir milisegundos en el dispositivo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué se le juzga a un build
+      lede: Cuatro cosas que el visor te enseña de golpe, y ninguna sobrevive el viaje a un monitor.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El monitor muestra la escena, no la experiencia
+      lead: >-
+        Play mode te dice que los objetos quedaron donde los pusiste. No te dice que el
+        torquímetro está 40 cm arriba del alcance de alguien sentado, que la puerta de
+        guarda abre sobre la cara del usuario, ni que la etiqueta del motor es una mancha
+        a un brazo de distancia.
+      panel:
+        label: La pregunta con la que arranca una revisión
+        title: ¿Qué mostró el visor que el Editor escondía?
+        note: >-
+          Si la respuesta es nada, la revisión no ocurrió. Ponte el build antes de escribir
+          una sola palabra sobre él.
+      steps:
+        - text: Pon el build en el dispositivo y póntelo
+        - text: Haz la tarea para la que se construyó la escena
+        - text: Escribe qué se rompió, en el orden en que se rompió
+        - text: Cambia una cosa, y vuelve a ponértelo
+          loop: ↺ una cosa es una, o no vas a saber cuál cambio sirvió
+
+  - table:
+      eyebrow: Bloque 01 · La brecha
+      title: Cinco revisiones, y qué reporta cada superficie
+      headers: [Revisión, En el monitor, En el visor]
+      rows:
+        - ["Escala", "El banco se ve bien", "Queda a la altura de la rodilla"]
+        - ["Alcance", "Todo cabe en el cuadro", "El torquímetro queda tras el hombro"]
+        - ["Texto", "Legible al 100 por ciento", "Una mancha a un brazo de distancia"]
+        - ["Giro", "Suave", "La gente busca la pared"]
+        - ["Respuesta", "El log imprime", "Nada le contesta a la mano"]
+
+  - diagram:
+      eyebrow: Bloque 01 · El ciclo
+      title: Una revisión es un ciclo, no un veredicto
+      blocks:
+        - label: '01'
+          title: Ponte el build
+          desc: En el dispositivo que usa el salón, con la tarea en mente
+        - label: '02'
+          title: Anota las fallas
+          desc: En el orden en que pasaron, y dónde estabas parado
+        - label: '03'
+          title: Cambia una cosa
+          desc: Vuelve a ponértelo y ve si la nota sigue en pie
+          dark: true
+      note: >-
+        El ciclo es lo que hace que la revisión valga la hora. Un veredicto, por bien
+        argumentado que esté, cierra la conversación y no cambia nada en la escena.
+
+  - tiers:
+      eyebrow: Bloque 01 · Los cuatro criterios
+      title: Qué estás buscando en realidad ahí adentro
+      items:
+        - key: Presencia
+          title: Si el espacio se sostiene
+          desc: Piso a la altura correcta, manos donde las esperas, escala que corresponde al cuerpo
+        - key: Comodidad
+          title: Si se puede usar dos veces
+          desc: Girar, moverse y arrancar. Una escena que cuesta una acostada ya falló
+        - key: Legible
+          title: Si se puede leer
+          desc: Etiquetas, carátulas y menús a la distancia a la que la tarea los pone
+        - key: Agencia
+          title: Si te contesta
+          desc: Cada alcance, presión y agarre devuelve algo dentro del mismo cuadro
+
+  - stat:
+      eyebrow: La ruta junto a la que va este curso
+      value: 6 semanas
+      text: Lo que Unity declara que toma completar su ruta VR Development
+      note: >-
+        Estas cinco sesiones no la sustituyen. Son lo que pasa en el salón mientras la
+        recorres, y la ruta es donde viven los tutoriales y los proyectos. Su dirección
+        está en la última diapositiva de cada sesión.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Dónde empieza el malestar
+      lede: No es cosa de acostumbrarse. Es un desacuerdo entre dos sentidos, y la escena lo provoca.
+      block: 2
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Los ojos reportan un movimiento que el oído nunca sintió
+      lead: >-
+        Empujas la palanca y la vista se desliza por el cuarto. El oído interno, que es
+        quien resuelve las discusiones sobre movimiento, reporta que nada se movió. Cada
+        opción de comodidad es un intento de quitar ese desacuerdo.
+      panel:
+        label: La regla que sigue la escena del banco
+        title: Ningún script mueve la cámara
+        note: >-
+          Mueve el XR Origin y la cámara lo sigue, todavía manejada por la cabeza. Mueve la
+          cámara y le quitaste la cabeza al usuario.
+      steps:
+        - text: La cabeza maneja la cámara, siempre
+        - text: La locomoción mueve el origin debajo de ella
+        - text: El giro ocurre en pasos fijos
+        - text: Nada acelera la vista
+          loop: ↺ y cada una de estas es un ajuste, no una opinión
+
+  - table:
+      eyebrow: Bloque 02 · Causa y respuesta
+      title: Cinco fuentes, y qué hace la escena en su lugar
+      headers: [Fuente, Qué siente el usuario, Qué hace la escena]
+      rows:
+        - ["Palanca", "El piso se desliza, el cuerpo no", "Teletransporte a un punto marcado"]
+        - ["Giro libre", "El cuarto pasa de largo", "Snap turn, un paso por presión"]
+        - ["Aceleración", "Un jalón al arrancar", "Velocidad constante, sin rampa"]
+        - ["Cámara en script", "La cabeza no es suya", "Mover el XR Origin"]
+        - ["UI en la cara", "No se le puede dejar de ver", "Un panel fijo en el mundo"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro errores de diseño que regresan como quejas
+      items:
+        - label: Error 01
+          title: Mover la cámara desde un script
+          desc: >-
+            La cabeza sigue manejando la pose de la cámara, así que tu traslación pelea con
+            el tracking y la vista tiembla. La locomoción va en el XR Origin.
+        - label: Error 02
+          title: Un menú soldado a la cabeza
+          desc: >-
+            Lo que cuelga de la cámara no se puede dejar de ver, y los ojos nunca alcanzan a
+            converger en ello. Deja el panel en el mundo y que el usuario voltee.
+        - label: Error 03
+          title: Texto medido para un monitor
+          desc: >-
+            Una etiqueta que se lee al 100 por ciento en una pantalla de 27 pulgadas es una
+            mancha a 60 cm dentro del visor. Dimensiona el texto por la distancia a la que
+            la tarea lo pone, y después pruébalo puesto.
+        - label: Error 04
+          title: Un agarre que no devuelve nada
+          desc: >-
+            Si el torquímetro no se mueve, no suena, no se ilumina ni opone resistencia, la
+            mano no tiene cómo saber que funcionó. El usuario agarra otra vez, y ahora hay
+            dos problemas.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: La pasada, y la nota
+      lede: Una revisión que cambia un build se escribe con una forma. Esta es la forma.
+      block: 3
+
+  - method:
+      eyebrow: Criterio
+      title: Una pasada, cinco pasos, una página
+      statement: >-
+        Una nota que cambia un build dice dónde estabas parado, qué hiciste, qué pasó y qué
+        cambiarías. A la que le falta una de las cuatro es un sentimiento con hora.
+      points:
+        - label: Dónde
+          text: El lugar en la escena, no el nombre del nivel. Parado en el extremo del motor.
+        - label: Qué pasó
+          text: Lo observable. La mano se cerró en el aire, el panel atravesó la pared.
+        - label: El cambio
+          text: Una edición, chica como para que la siguiente pasada diga si sirvió.
+
+  - steps:
+      eyebrow: Bloque 03 · La pasada
+      title: Cinco pasos, en este orden
+      items:
+        - label: '01'
+          title: Póntelo en frío
+          desc: Sin notas y sin pluma. Una corrida de la tarea de principio a fin.
+        - label: '02'
+          title: Córrela otra vez
+          desc: Detente en cada lugar donde la primera corrida salió mal.
+        - label: '03'
+          title: Mide una cosa
+          desc: Alcance, altura de los ojos o distancia de lectura. Un número viaja.
+        - label: '04'
+          title: Escribe la nota
+          desc: Dónde, qué hiciste, qué pasó, qué cambiarías.
+        - label: '05'
+          title: Cambia una cosa
+          desc: Una. Y la pasada vuelve a empezar en el paso uno.
+
+  - table:
+      eyebrow: Bloque 03 · La rúbrica
+      title: Cuatro criterios, y qué te pide escribir cada uno
+      headers: [Criterio, Qué miras, Qué anotas]
+      rows:
+        - ["Presencia", "Escala y altura del piso", "Dónde se rompió la ilusión"]
+        - ["Comodidad", "Girar y moverse", "El minuto en que empezó"]
+        - ["Legibilidad", "Texto y carátulas", "La distancia a la que lo leíste"]
+        - ["Agencia", "Qué le contesta a la mano", "La acción sin respuesta"]
+        - ["Tarea", "Si el trabajo se puede hacer", "El paso que se atoró"]
+
+  - concept:
+      eyebrow: Bloque 03 · La nota
+      title: Dos notas sobre el mismo torquímetro
+      lead: >-
+        La primera nota es cierta e inútil. La segunda manda a alguien a un transform y a un
+        número. Las dos las escribieron personas que usaron el mismo build, y solo una va a
+        estar en la siguiente versión de la escena.
+      panel:
+        label: Escritas la misma tarde
+        title: Una es opinión, la otra es instrucción
+        note: >-
+          Agarrar se sentía raro, contra, parado en el extremo del motor el torquímetro
+          quedaba arriba de mi hombro y tuve que ponerme de pie para alcanzarlo.
+      steps:
+        - text: 'Dónde: parado en el extremo del motor'
+        - text: 'Qué hice: alcancé el torquímetro'
+        - text: 'Qué pasó: la mano se cerró en el aire'
+        - text: 'Cambio: bajar el dado 12 cm'
+          loop: ↺ cuatro renglones, y el siguiente build puede actuar sobre los cuatro
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Un probador dice que la escena lo mareó. ¿Cuál nota sirve para actuar?
+      options:
+        - Mareado a los dos minutos, la escena necesita trabajo de comodidad
+        - Mareado en el extremo del motor, parado, tras cuatro giros de palanca
+        - La escena es incómoda y debería usar teletransporte
+        - Tres de los cinco probadores reportaron algo de malestar
+
+  - trace:
+      eyebrow: Respuesta
+      title: Solo una de las cuatro manda a alguien a un ajuste
+      headers: [Nota, Dónde, Qué se hizo, Accionable]
+      rows:
+        - ["A", "no dice", "no dice", "No"]
+        - ["B", "extremo del motor", "4 giros de palanca", "Sí"]
+        - ["C", "no dice", "un remedio, no un dato", "No"]
+        - ["D", "no dice", "un conteo", "Guarda el conteo"]
+      verdict: >-
+        B nombra un lugar, una acción y un número, así que la siguiente pasada puede cambiar
+        el proveedor de giro y repetirla. C brinca directo al remedio y esconde qué salió
+        mal, que es el tipo de nota más caro: se puede implementar y aun así no atinar.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Dos parejas, una escena del banco
+      brief: >-
+        Tomen el build del banco en el visor del salón. Uno se lo pone y va narrando en voz
+        alta, el otro escribe lo que oye. Cambien después de la primera pasada, y vuelvan a
+        correrla. Entregan una página cada quien, no una página entre los dos.
+      blocks:
+        - label: Restricción
+          text: Quien escribe no sugiere nada durante la pasada. Escribe lo que oye.
+        - label: Entregable
+          text: Una página, cuatro criterios y al menos un número medido con su unidad.
+        - label: Criterio
+          text: Que alguien que nunca usó el build pueda abrir la escena y encontrar el objeto del que hablas.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El visor es el instrumento
+          desc: Play mode reporta posiciones. Alcance, escala, comodidad y legibilidad solo existen sobre una cabeza.
+        - title: El malestar tiene mecanismo
+          desc: Un desacuerdo entre la vista y el oído interno, provocado por la escena y corregido en ella.
+        - title: Nota sin lugar es sentimiento
+          desc: Dónde, qué hiciste, qué pasó, qué cambiarías. Cuatro renglones, y el build se mueve.
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Una página sobre una experiencia de VR ajena
+      brief: >-
+        Usa durante una tarea cualquier título de VR al que tengas acceso, y revísalo con los
+        cuatro criterios de esta sesión. Trae la página a la sesión 2, porque las decisiones
+        de hardware de ahí se discuten mejor cuando ya sentiste algo fallar.
+      meta:
+        - [Entrega, Antes de la sesión 2]
+        - [Formato, Blackboard · una página en PDF]
+        - [Peso, Parte del promedio de tareas]
+      rubric:
+        - ["Cuatro criterios", "40 %", "Cada uno tiene su renglón, incluidos los que salieron bien"]
+        - ["Una medición", "30 %", "Un número con unidad y dónde se tomó"]
+        - ["Un cambio", "30 %", "Una sola edición, chica como para probarla en una pasada"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Estas sesiones acompañan la ruta de Unity Learn VR Development, en
+        learn.unity.com/pathway/vr-development. Recórrela por tu cuenta.
+      meta:
+        - [Ruta, Unity Learn · VR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

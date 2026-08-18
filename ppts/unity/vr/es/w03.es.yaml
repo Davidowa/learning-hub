@@ -1,0 +1,449 @@
+meta:
+  course: Desarrollo de VR
+  code: UNITY
+  lang: es
+  language: unity
+  week: 3
+  footer: DESARROLLO DE VR · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 03 · Desarrollo de VR para principiantes · El toolkit de interacción
+      title: Desarrollo de VR
+      subtitle: >-
+        Tres componentes hacen que una escena se pueda alcanzar. Esta sesión es qué son,
+        cómo se encuentran, y el piso sobre el que están parados los tres.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Principiante]
+        - [Sesión, 3 de 5]
+        - [Basado en, Unity Learn · VR Development]
+      notes: |
+        Sesión acompañante de la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. Los nombres de componentes, los namespaces
+        y los modos de tracking origin salen del manual y la referencia de API del XR
+        Interaction Toolkit 3.5. La escena, los scripts y las fallas se escribieron para
+        este curso, y nada de aquí reproduce los ejemplos de Unity.
+
+        La escena del banco a esta altura tiene piso, mesa de trabajo, un motor con puerta
+        de guarda, un paro de emergencia, un torquímetro y una carátula de tacómetro. Hoy
+        solo el torquímetro se puede agarrar. El botón de paro recibe su propio componente
+        en la sesión 4.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Las tres partes
+          desc: Un origin, un manager y un interactor, y cómo se encuentran
+        - title: Qué le contesta a una mano
+          desc: Interactables, los eventos que levantan y dónde va tu método
+        - title: El piso donde estás parado
+          desc: Tracking origin mode, teletransporte y girar sin náusea
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Armar una escena que alcanza
+          sub: Un XR Interaction Manager, un XR Origin y un interactor por mano, y nada más
+        - head: Explicar cómo funciona el registro
+          sub: Los componentes buscan a su manager en OnEnable, y por eso el orden de carga aparece como bugs
+        - head: Ligar un método a un evento de selección
+          sub: En el inspector o en código, y decir qué te cuesta después cada camino
+        - head: Elegir el tracking origin mode
+          sub: Floor cuando el runtime conoce el piso, Device cuando tienes que teclear la altura
+        - head: Configurar teletransporte y snap turn
+          sub: Los dos proveedores de locomoción que este curso permite en la escena del banco, y por qué esos dos
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco sesiones junto a una ruta de seis semanas
+      phases:
+        - label: '01 · Sesión 1'
+          title: Juzgar un build
+          desc: Presencia, comodidad y la nota que escribes
+          state: done
+        - label: '02 · Sesión 2'
+          title: Visor y build
+          desc: Elegir hardware, y los ajustes de Android
+          state: done
+        - label: '03 · Sesión 3'
+          title: Toolkit de interacción
+          desc: Origin, interactores e interactables
+          state: now
+        - label: '04 · Sesión 4'
+          title: Tu propio código
+          desc: Interactables propios y eventos de selección
+          state: todo
+        - label: '05 · Sesión 5'
+          title: El presupuesto del cuadro
+          desc: Medir milisegundos en el dispositivo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Las tres partes de una escena que alcanza
+      lede: Un origin que carga la cabeza y las manos, objetos que se pueden alcanzar, y algo en medio que mantiene separados a los dos.
+      block: 1
+
+  - diagram:
+      eyebrow: Bloque 01 · El intermediario
+      title: Aquí nadie le habla a nadie de forma directa
+      blocks:
+        - label: Interactor
+          title: La mano
+          desc: Near-Far, poke, gaze o teleport, uno o más por control
+        - label: Manager
+          title: XR Interaction Manager
+          desc: Tiene el registro, empareja manos con objetos y levanta los eventos
+          dark: true
+        - label: Interactable
+          title: El torquímetro
+          desc: Un collider, un componente y una lista de métodos por llamar
+      note: >-
+        Las flechas van en los dos sentidos y pasan por el medio. Esa indirección es lo que
+        te deja cambiar un rayo por un poke sin editar un solo objeto del banco.
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El registro ocurre en OnEnable, no en el inspector
+      lead: >-
+        Un interactor y un interactable nunca guardan una referencia el uno del otro. Cada
+        quien se registra con el manager cuando se habilita y se da de baja cuando se
+        deshabilita. De ahí en adelante el manager hace el emparejamiento.
+      panel:
+        label: Dónde muerde el orden de carga
+        title: El manager se puede crear solo, sin avisar
+        note: >-
+          Si un componente no encuentra manager, puede crear uno por omisión, cosa cómoda
+          hasta que una escena aditiva trae un segundo manager y medio banco se registra en
+          el equivocado.
+      steps:
+        - text: Habilita el objeto y entra al registro
+        - text: Deshabilítalo y se sale otra vez
+        - text: El manager empareja cada cuadro
+        - text: Tu código cuelga de los eventos
+          loop: ↺ y un objeto deshabilitado en la carga nunca se anuncia
+
+  - table:
+      eyebrow: Bloque 01 · La lista de partes
+      title: Cinco componentes, y para qué sirve cada uno
+      headers: [Componente, Qué hace, Dónde vive]
+      rows:
+        - ["XR Interaction Manager", "Tiene el registro", "Un objeto vacío"]
+        - ["XR Origin", "Carga cabeza y manos", "La raíz del rig"]
+        - ["Near-Far Interactor", "Alcanza cerca y lejos", "Uno por mano"]
+        - ["XR Grab Interactable", "Hace que un objeto se levante", "En el torquímetro"]
+        - ["Input Action Manager", "Habilita las acciones", "Junto al origin"]
+
+  - code:
+      eyebrow: Bloque 01 · El registro, impreso
+      title: Ver al banco anunciarse solo
+      filename: BenchRegistry.cs
+      lang: csharp
+      source: |
+        [SerializeField] XRInteractionManager manager;
+
+        void OnEnable()
+        {
+            manager.interactableRegistered += Added;
+        }
+
+        void OnDisable()
+        {
+            manager.interactableRegistered -= Added;
+        }
+      annotations:
+        - label: Dónde va
+          text: >-
+            En un MonoBehaviour en la raíz del banco. Asignado en el inspector, para que no
+            tome el manager de otra escena.
+        - label: El evento
+          text: >-
+            Lo levanta el manager cuando un interactable se habilita. Es un evento de C#
+            común, no un UnityEvent.
+        - label: Simetría
+          text: >-
+            Cada += tiene su -= en el OnDisable. En eso consiste la disciplina de
+            suscribirse a algo.
+        - label: Riesgo
+          text: >-
+            Sin el OnDisable, el manejador corre una vez por cada habilitación que no lo
+            devolvió.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Qué imprime el banco al cargar
+      filename: BenchRegistry.cs
+      lang: csharp
+      output_label: Consola, al entrar a Play mode
+      source: |
+        void Added(InteractableRegisteredEventArgs a)
+        {
+            var t = a.interactableObject.transform;
+            Debug.Log($"registrado {t.name}");
+        }
+      output: |
+        registrado Wrench
+        registrado EStop
+        registrado GuardDoor
+        registrado Tachometer
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Qué le contesta a una mano
+      lede: Un interactable es un objeto que aceptó que lo molesten, y una lista de métodos que llamar cuando eso pasa.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Las cuatro manos
+      title: Cuatro formas de alcanzar, y para qué es cada una
+      headers: [Interactor, Qué alcanza, Dónde se gana su lugar]
+      rows:
+        - ["Near-Far", "De cerca y a distancia", "El torquímetro y el estante"]
+        - ["Poke", "Una yema del dedo", "El botón de paro y el panel"]
+        - ["Gaze", "Lo que se está mirando", "Manos ocupadas, o sin controles"]
+        - ["Teleport", "Un pedazo de piso marcado", "Llegar al otro extremo"]
+
+  - code:
+      eyebrow: Bloque 02 · Tu método
+      title: El método que llama el torquímetro
+      filename: WrenchLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.Interaction.Toolkit;
+        using UnityEngine.XR.Interaction.Toolkit.Interactables;
+
+        public class WrenchLog : MonoBehaviour
+        {
+            [SerializeField] Renderer dial;
+            public void Held(SelectEnterEventArgs a)
+            {
+                var by = a.interactorObject.transform.name;
+                Debug.Log($"torquímetro en {by}");
+                dial.material.color = Color.green;
+            }
+        }
+      annotations:
+        - label: public, un argumento
+          text: >-
+            El inspector solo lista métodos públicos que reciben un argumento del tipo del
+            propio evento.
+        - label: El argumento
+          text: >-
+            Trae qué mano lo hizo. Lee lo que necesites dentro de la llamada y no te quedes
+            con el objeto después.
+        - label: Dos usings
+          text: >-
+            Los args viven en el namespace del Toolkit, y los componentes un nivel abajo,
+            en Interactables.
+        - label: Riesgo
+          text: >-
+            Tocar .material clona el material de este objeto. La sesión 5 mide lo que eso
+            cuesta.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: El mismo torquímetro, con una mano o la otra
+      filename: WrenchLog.cs
+      lang: csharp
+      output_label: Consola, en el dispositivo
+      source: |
+        public void Held(SelectEnterEventArgs a)
+        {
+            var by = a.interactorObject.transform.name;
+            Debug.Log($"torquímetro en {by}");
+        }
+      output: |
+        torquímetro en HandR
+        torquímetro en HandL
+        torquímetro en HandR
+
+  - table:
+      eyebrow: Bloque 02 · Dos formas de cablearlo
+      title: El inspector o el script, y qué cuesta cada uno
+      headers: [Pregunta, Cableado en el inspector, Cableado en código]
+      rows:
+        - ["Quién lo ve", "Quien abra la escena", "Solo quien lea el código"]
+        - ["Buscar quién llama", "No sale en una búsqueda", "Se encuentra por nombre"]
+        - ["Ante un rename", "La liga se rompe", "El compilador lo atrapa"]
+        - ["Configuración", "Se arrastra una vez", "Necesita una referencia"]
+        - ["Bueno para", "Sonido, efectos, casos únicos", "Reglas y estado"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro razones por las que un objeto no contesta
+      items:
+        - label: Error 01
+          title: El interactable sin collider
+          desc: >-
+            El componente está y el objeto está registrado, y la mano lo sigue atravesando.
+            Nada puede seleccionar lo que no tiene collider con el que ser encontrado.
+        - label: Error 02
+          title: Las acciones nunca se habilitaron
+          desc: >-
+            No hay Input Action Manager en la escena, así que los controles rastrean y ningún
+            botón reporta nada. Todo se ve correcto y nada responde.
+        - label: Error 03
+          title: Un segundo interaction manager
+          desc: >-
+            Una escena aditiva trae el suyo, medio banco se registra ahí, y los objetos dejan
+            de contestarle a la mano que claramente está dentro de ellos.
+        - label: Error 04
+          title: Suscrito dos veces, nunca quitado
+          desc: >-
+            El objeto se deshabilitó y se volvió a habilitar. La lista de listeners creció y
+            el sonido ahora suena tres veces en un solo agarre.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El piso donde estás parado
+      lede: Antes de poder alcanzar cualquier cosa, la escena tiene que ponerse de acuerdo con el cuarto sobre dónde está el piso.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El origin se mueve, la cámara nunca
+      lead: >-
+        El XR Origin es el objeto que se teletransporta, gira y sube. La cámara que cuelga de
+        él la maneja la cabeza y nada más. Dónde queda el piso dentro de ese rig es asunto
+        del tracking origin mode.
+      panel:
+        label: Qué decide el modo
+        title: Si tecleas a mano la altura de los ojos
+        note: >-
+          En modo Floor el runtime sabe dónde está el piso real y deja el offset en cero. En
+          modo Device no lo sabe, así que el offset es un número que eliges y pruebas.
+      steps:
+        - text: Modo Floor, el runtime pone el piso
+        - text: Modo Device, tú pones la altura
+        - text: Not Specified, decide el runtime
+        - text: La locomoción siempre mueve el origin
+          loop: ↺ y un usuario sentado en modo Floor sigue quedando debajo del banco
+
+  - table:
+      eyebrow: Bloque 03 · Los tres modos
+      title: Tres tracking origin modes, y qué asume cada uno
+      headers: [Modo, Dónde está el cero, Qué tienes que hacer]
+      rows:
+        - ["Floor", "En el piso real", "Nada, el offset queda en cero"]
+        - ["Device", "Donde empezó la cabeza", "Teclear el offset Y de la cámara"]
+        - ["Not Specified", "Lo que escoja el runtime", "Probar en cada dispositivo"]
+
+  - stat:
+      eyebrow: Medido en la escena del banco
+      value: 1.36 m
+      text: El offset Y de la cámara que usa esta escena cuando corre en modo Device
+      note: >-
+        No es un estándar, es el valor que dejó el tacómetro a la altura de los ojos de las
+        tres personas que probaron la escena. Quien arme una versión sentada del banco va a
+        medir otro, y esa medición es el trabajo.
+
+  - steps:
+      eyebrow: Bloque 03 · Locomoción
+      title: Cinco paradas hacia una escena que se puede cruzar
+      items:
+        - label: '01'
+          title: Importa los samples
+          desc: Los starter assets traen un rig con los interactores ya puestos.
+        - label: '02'
+          title: Agrega los proveedores
+          desc: Teletransporte y snap turn, en el objeto de locomoción.
+        - label: '03'
+          title: Marca el piso
+          desc: Un área de teletransporte en la parte caminable, y en ningún otro lado.
+        - label: '04'
+          title: Ancla las estaciones
+          desc: Un teleport anchor en el extremo del motor, viendo al banco.
+        - label: '05'
+          title: Ajusta el giro
+          desc: Un paso fijo por presión, con un retardo corto antes de que ocurra.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: El objeto del banco se deshabilita y se habilita dos veces. ¿Qué registra el siguiente agarre?
+      filename: WrenchLog.cs
+      lang: csharp
+      source: |
+        void OnEnable()
+        {
+            grab.selectEntered.AddListener(Held);
+        }
+      options:
+        - Un renglón, un UnityEvent guarda cada listener una sola vez
+        - Tres renglones, uno por cada habilitación que no devolvió su listener
+        - Nada, porque deshabilitar el objeto soltó el listener
+        - Un error, porque el mismo método no se puede agregar dos veces
+
+  - trace:
+      eyebrow: Respuesta
+      title: La lista de listeners, contada en cada paso
+      headers: [Paso, Listeners después, Renglones en un agarre]
+      rows:
+        - ["Habilita, primera vez", "1", "1"]
+        - ["Deshabilita", "1, sigue puesto", "0, el objeto está apagado"]
+        - ["Habilita, segunda vez", "2", "2"]
+        - ["Habilita, tercera vez", "3", "3"]
+      verdict: >-
+        AddListener agrega, no revisa. El deshabilitar nunca quitó nada porque nadie se lo
+        pidió, así que la cuenta solo sube. Un RemoveListener en OnDisable deja esto en un
+        renglón por el resto de la vida del proyecto.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: El torquímetro, y llegar al otro extremo
+      brief: >-
+        Partiendo de tu build de la sesión 2, haz que el torquímetro se pueda agarrar con
+        cualquier mano, registra qué mano lo tomó, marca el piso caminable y pon un teleport
+        anchor en el extremo del motor del banco. Después póntelo y haz la pasada de revisión
+        de la sesión 1.
+      blocks:
+        - label: Restricción
+          text: Solo snap turn. Nada de locomoción con palanca en esta escena, por lo dicho en la sesión 1.
+        - label: Entregable
+          text: La escena, el log del dispositivo y cuatro renglones de la pasada de revisión.
+        - label: Criterio
+          text: Que el torquímetro se levante desde un teleport anchor sin inclinarse ni estirarse.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El manager está entre todo
+          desc: Interactores e interactables solo conocen el registro al que entraron cuando se habilitaron.
+        - title: Cada suscripción se quita
+          desc: La lista de listeners es el bug más callado del toolkit, y nunca deja de crecer.
+        - title: El modo decide quién mide
+          desc: Floor le pregunta al runtime, Device te pregunta a ti, y Not Specified le pregunta al dispositivo.
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: El botón de paro, cableado sin una línea de código
+      brief: >-
+        Agrega un poke interactor a una mano y haz que el paro de emergencia le responda solo
+        con cableado del inspector, un sonido y un cambio de color. Escribe media página
+        sobre lo que ese arreglo no puede hacer, porque la sesión 4 trata justo de ese hueco.
+      meta:
+        - [Entrega, Antes de la sesión 4]
+        - [Formato, Blackboard · escena y PDF]
+        - [Peso, Parte del promedio de tareas]
+      rubric:
+        - ["Responde", "40 %", "El paro contesta un poke en el dispositivo, no solo en Play mode"]
+        - ["Cableado limpio", "30 %", "Un interactable, un collider, sin listeners duplicados"]
+        - ["El hueco", "30 %", "Media página sobre lo que el inspector solo no pudo expresar"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Acompaña la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development, que recorres por tu cuenta.
+      meta:
+        - [Ruta, Unity Learn · VR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

@@ -1,0 +1,473 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 5
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 05 · Cámaras, audio 3D y sprites
+      title: Fundamentos de Unity
+      subtitle: >-
+        Lo que el jugador ve, lo que el jugador oye, y qué hace una imagen plana en una
+        escena medida en metros.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 5 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Sesión acompañante de la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Cubre tres áreas de la ruta a la vez,
+        Beginner Unity Cameras, Audio Essentials y Level 2 2D Art, que es la del Sprite
+        Editor.
+
+        La escena sigue siendo Bay.unity. La cámara se encuadra sobre la rampa, la puerta
+        recibe un timbre que se apaga con la distancia, y una hoja de 512 por 128 se vuelve
+        cuatro sprites.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: La cámara
+          desc: >-
+            Área de la ruta · Beginner Unity Cameras. El frustum, los campos que le dan forma
+            y los cuatro ajustes que hacen que una escena se dibuje como rectángulo negro.
+        - title: Sonido con posición
+          desc: >-
+            Área de la ruta · Audio Essentials. Un listener, muchas fuentes, y el deslizador
+            que decide si un sonido es del cuarto o de los audífonos del jugador.
+        - title: Sprites y la hoja
+          desc: >-
+            Área de la ruta · 2D Art. Ajustes de importación, Pixels Per Unit, y cortar una
+            imagen en cuatro con el Sprite Editor.
+        - title: El andén, visto y oído
+          desc: >-
+            La escena de clase recibe una cámara encuadrada, un timbre que se apaga conforme
+            te alejas y un sprite de 1.28 unidades de alto por una razón que puedes calcular.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Describir el frustum en una frase
+          sub: Y calcular qué tan alta es la vista a cierta distancia de la cámara
+        - head: Poner los campos de la cámara a propósito
+          sub: Clear Flags, Culling Mask, Projection, Field of View y los dos clipping planes
+        - head: Diagnosticar una cámara que no muestra nada
+          sub: Cuatro causas distintas, cada una con algo distinto que revisar
+        - head: Convertir un sonido 2D en uno 3D
+          sub: Con Spatial Blend en 1 y unas distancias mínima y máxima acordes al cuarto
+        - head: Mantener exactamente un AudioListener
+          sub: Y reconocer la advertencia que imprime la consola cuando hay dos
+        - head: Cortar una hoja de sprites en cuadros
+          sub: Grid By Cell Size, y los Pixels Per Unit que deciden su tamaño en la escena
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: done
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: done
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: now
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: La cámara, y la caja que alcanza a ver
+      lede: >-
+        La vista Game no es una ventana a la escena. Es la opinión de una cámara sobre ella,
+        limitada por una pirámide truncada con un extremo cercano y uno lejano.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · Concepto clave
+      title: Todo lo que la cámara dibuja cae dentro de un frustum
+      lead: >-
+        El frustum es una pirámide con la punta en la cámara y la parte de arriba rebanada.
+        El Field of View fija qué tanto abre, los clipping planes la cortan en los dos
+        extremos, y lo de afuera no se dibuja. Casi toda cámara que no muestra nada apunta a
+        algo que cae fuera de uno de esos cuatro límites.
+      panel:
+        label: La cuenta que vale la pena recordar
+        title: El alto es 2 d por la tangente de medio Field of View
+        note: >-
+          Con una cámara de 60 grados la vista mide de alto 1.155 veces la distancia. A diez
+          metros son 11.55 metros, y el ancho sale del aspecto.
+      steps:
+        - text: El Field of View abre la pirámide, en grados
+        - text: El plano cercano corta lo que está demasiado cerca
+        - text: El plano lejano corta lo que está demasiado lejos
+          loop: ↺ y el Culling Mask quita capas enteras antes de todo eso
+
+  - table:
+      eyebrow: Bloque 01 · El Inspector
+      title: Seis campos de la cámara, y qué decide cada uno
+      headers: [Campo, Qué decide, De fábrica]
+      rows:
+        - ["Clear Flags", "Qué llena los pixeles vacíos", "Skybox"]
+        - ["Culling Mask", "Qué capas se dibujan", "Everything"]
+        - ["Projection", "Perspectiva u ortográfica", "Perspective"]
+        - ["Field of View", "El ángulo vertical en grados", "60"]
+        - ["Clipping Planes", "Lo más cerca y lo más lejos", "0.3 y 1000"]
+        - ["Depth", "Cuál cámara dibuja encima", "0 en la cámara principal"]
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Qué tan grande es la vista a diez metros
+      filename: FrustumProbe.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        Camera cam = Camera.main;
+        float d = 10f;
+        float half = cam.fieldOfView * 0.5f * Mathf.Deg2Rad;
+        float h = 2f * d * Mathf.Tan(half);
+
+        Debug.Log($"fov {cam.fieldOfView} a {d:F1} m");
+        Debug.Log($"alto {h:F2} m");
+        Debug.Log($"ancho {h * cam.aspect:F2} m");
+        Debug.Log($"aspecto {cam.aspect:F2}");
+      output: |
+        fov 60 a 10.0 m
+        alto 11.55 m
+        ancho 20.53 m
+        aspecto 1.78
+
+  - stat:
+      eyebrow: Medido en la cámara de clase
+      value: 11.55 m
+      text: Qué tan alto es el mundo visible a diez metros de una cámara de 60 grados
+      note: >-
+        La rampa mide 12 metros de largo, así que encuadrarla de frente desde diez metros no
+        deja casi margen. O la cámara se echa para atrás, o el Field of View abre, y lo
+        segundo deforma las cajas de las orillas. Ese es el canje que hace toda cámara.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro cámaras que no dibujan nada útil
+      items:
+        - label: Error 01
+          title: El plano cercano puesto en 0.001
+          desc: >-
+            La precisión de profundidad se reparte entre el cercano y el lejano, así que un
+            plano cercano diminuto hace que las superficies lejanas parpadeen entre ellas.
+            Déjalo en 0.3 salvo que algo exija otra cosa.
+        - label: Error 02
+          title: La cámara dentro del piso
+          desc: >-
+            La geometría más cercana que el plano cercano se recorta, así que ves de frente a
+            través del piso hacia lo que haya abajo. La vista Scene muestra la cámara bien.
+        - label: Error 03
+          title: Una capa fuera del mask
+          desc: >-
+            El objeto está en el Hierarchy, tiene luz, está frente a la cámara y no se dibuja.
+            El Culling Mask es el único lugar que lo explica.
+        - label: Error 04
+          title: Dos cámaras en el mismo depth
+          desc: >-
+            Las dos dibujan, en un orden que nadie prometió, y la imagen parpadea entre
+            ellas. Dale a una un depth más alto y el pleito se acaba.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Sonido que sabe dónde está
+      lede: >-
+        Un listener, tantas fuentes como quieras, y un solo deslizador que decide si un
+        sonido tiene lugar en el cuarto.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Mecanismo
+      title: El listener es el oído, y hay uno solo
+      lead: >-
+        Un AudioListener viene de fábrica en la Main Camera. Es el punto desde el que se mide
+        todo sonido 3D, así que mover la cámara cambia lo que suena fuerte. Las fuentes son
+        componentes sobre objetos. Spatial Blend en 0 quiere decir que el clip suena igual
+        desde donde estés parado; en 1 se atenúa y se panea según su distancia y su dirección
+        respecto al listener.
+      panel:
+        label: Lo que dice la consola al agregar un segundo
+        title: There are 2 audio listeners in the scene
+        note: >-
+          La advertencia nombra la cantidad, no los objetos. La causa habitual son dos
+          cámaras en la escena, porque cada cámara llega con un listener ya puesto.
+      steps:
+        - text: Un AudioListener, normalmente en la cámara
+        - text: Un AudioSource por cada cosa que hace ruido
+        - text: Spatial Blend decide entre 2D y 3D
+          loop: ↺ y la música se queda en 0 a propósito
+
+  - table:
+      eyebrow: Bloque 02 · El Audio Source
+      title: Seis campos que vuelven un clip un sonido en un cuarto
+      headers: [Campo, Qué hace, De fábrica]
+      rows:
+        - ["Play On Awake", "Arranca con la escena", "Marcado"]
+        - ["Loop", "Vuelve a empezar al final", "Sin marcar"]
+        - ["Spatial Blend", "0 es 2D, 1 es 3D completo", "0"]
+        - ["Min Distance", "Adentro, volumen completo", "1"]
+        - ["Max Distance", "Donde termina el desvanecido", "500"]
+        - ["Volume Rolloff", "La forma del desvanecido", "Logarithmic"]
+
+  - steps:
+      eyebrow: Bloque 02 · Conectar el timbre
+      title: Cinco movimientos de un clip a un sonido en el andén
+      items:
+        - label: '01'
+          title: Importar
+          desc: Suelta el .wav en Assets/Audio. Unity lo importa como AudioClip
+        - label: '02'
+          title: Agregar la fuente
+          desc: Un Audio Source en la puerta, con Play On Awake sin marcar para que espere
+        - label: '03'
+          title: Blend a 1
+          desc: Spatial Blend hasta 3D. Nada más de esta lista importa antes de eso
+        - label: '04'
+          title: Poner las distancias
+          desc: Min 1 y Max 20 para un cuarto de este tamaño. El 500 de fábrica no se apaga adentro
+        - label: '05'
+          title: Alejarse
+          desc: Mueve la cámara en Play mode. Si el volumen no baja, el blend sigue en 0
+
+  - code:
+      eyebrow: Bloque 02 · El timbre
+      title: Tocar un clip cuando llega una caja
+      filename: DoorChime.cs
+      lang: csharp
+      source: |
+        [RequireComponent(typeof(AudioSource))]
+        public class DoorChime : MonoBehaviour
+        {
+            [SerializeField] AudioClip chime;
+            AudioSource speaker;
+
+            void Awake() => speaker = GetComponent<AudioSource>();
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (other.attachedRigidbody != null)
+                    speaker.PlayOneShot(chime);
+            }
+        }
+      annotations:
+        - label: RequireComponent
+          text: >-
+            Unity agrega el Audio Source junto con el script y bloquea su borrado. La línea
+            using UnityEngine de arriba sigue ahí.
+        - label: PlayOneShot
+          text: >-
+            Copias encimadas de un mismo clip, así que dos cajas que llegan juntas suenan.
+        - label: Awake
+          text: >-
+            GetComponent corre una vez aquí, no una por caja y nunca una por cuadro.
+        - label: Riesgo
+          text: >-
+            Dejar Play On Awake marcado hace que el timbre suene también en cuanto carga la
+            escena, antes de que se mueva ninguna caja.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Lo que cuesta un segundo listener
+      filename: Console
+      lang: csharp
+      output_label: Consola, al entrar a Play mode
+      source: |
+        // Dos cámaras en la escena, cada una con
+        // el AudioListener que trae de fábrica.
+      output: |
+        There are 2 audio listeners in
+        the scene. Please ensure there
+        is always exactly one audio
+        listener in the scene.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Imágenes planas en un mundo de metros
+      lede: >-
+        Un sprite es una imagen con una regla pegada, y la regla dice cuántos de sus pixeles
+        hacen una unidad de la escena.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · Concepto clave
+      title: Pixels Per Unit es el único puente entre los dos
+      lead: >-
+        Una imagen sabe de pixeles. Una escena sabe de unidades, y una unidad es un metro.
+        Pixels Per Unit es el tipo de cambio, y con el valor de fábrica de 100 un sprite de
+        128 pixeles de alto mide 1.28 unidades en la escena. Escalar el Transform para
+        corregir un tamaño que salió mal es el hábito que hay que evitar, porque el número
+        que se corrige está en los ajustes de importación.
+      panel:
+        label: El número que hay que anotar
+        title: El alto en unidades es pixeles entre PPU
+        note: >-
+          Cambia Pixels Per Unit a 128 y la misma imagen mide exactamente 1 unidad de alto,
+          sin tocar un solo Transform.
+      steps:
+        - text: La hoja mide 512 por 128 pixeles
+        - text: Cortada por tamaño de celda da cuatro cuadros de 128
+        - text: A 100 por unidad cada uno mide 1.28 unidades
+          loop: ↺ y la escala del Transform se queda en 1
+
+  - steps:
+      eyebrow: Bloque 03 · El Sprite Editor
+      title: Cinco movimientos de una imagen a cuatro sprites
+      items:
+        - label: '01'
+          title: Texture Type
+          desc: Ponlo en Sprite, 2D and UI. Antes de eso las opciones de sprite no aparecen
+        - label: '02'
+          title: Sprite Mode
+          desc: Multiple, que es lo que permite que un archivo tenga más de un sprite
+        - label: '03'
+          title: Abrir el editor
+          desc: El botón Sprite Editor de los ajustes de importación, no un menú de otro lado
+        - label: '04'
+          title: Cortar
+          desc: Grid By Cell Size, 128 por 128, sin offset y sin padding. Después Slice
+        - label: '05'
+          title: Aplicar
+          desc: La barra de arriba de la ventana. Cerrarla sin eso tira el corte
+
+  - table:
+      eyebrow: Bloque 03 · Ajustes de importación
+      title: Seis ajustes que deciden cómo se porta un sprite
+      headers: [Ajuste, Qué controla, Nota]
+      rows:
+        - ["Texture Type", "Si es un sprite o no", "Sprite, 2D and UI"]
+        - ["Sprite Mode", "Un sprite o varios", "Multiple, para una hoja"]
+        - ["Pixels Per Unit", "Pixeles por unidad de mundo", "100 de fábrica"]
+        - ["Filter Mode", "Cómo se ve al escalarse", "Point para pixel art"]
+        - ["Pivot", "El punto sobre el que gira", "Al centro de fábrica"]
+        - ["Compression", "Tamaño contra calidad", "Se nota en el color plano"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Un cuadro de la hoja, en pixeles y en metros
+      filename: SpriteProbe.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        Sprite s = GetComponent<SpriteRenderer>().sprite;
+
+        Debug.Log($"nombre {s.name}");
+        Debug.Log($"rect {s.rect.width} x {s.rect.height}");
+        Debug.Log($"ppu {s.pixelsPerUnit}");
+        Debug.Log($"mundo {s.bounds.size}");
+      output: |
+        nombre tokens_2
+        rect 128 x 128
+        ppu 100
+        mundo (1.28, 1.28, 0.00)
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: El timbre suena igual de fuerte desde el otro lado del cuarto que desde la puerta. ¿Qué está mal?
+      options:
+        - El Max Distance es 500, así que nunca se apaga en un cuarto de este tamaño
+        - Spatial Blend sigue en 0, así que la distancia no forma parte del sonido
+        - El AudioListener está en la cámara en vez de estar en el jugador
+        - El clip se importó en mono en lugar de estéreo
+
+  - method:
+      eyebrow: Respuesta
+      title: La segunda, y la primera es el problema que sigue
+      statement: >-
+        Con Spatial Blend en 0 la fuente es un sonido 2D y todos los campos de distancia del
+        componente se ignoran. Arreglar el blend es lo que hace que los otros cinco existan.
+      points:
+        - label: Después, las distancias
+          text: >-
+            Con Spatial Blend en 1 y el Max Distance de fábrica en 500, un cuarto de 20
+            metros usa cuatro por ciento de la curva, así que sigue sonando casi plano.
+        - label: El listener
+          text: >-
+            En la cámara es el lugar habitual, y es correcto para una vista en primera
+            persona. Está mal sólo cuando la cámara queda lejos del personaje que sigue.
+        - label: Mono contra estéreo
+          text: >-
+            Un clip estéreo carga su propio izquierdo y derecho, lo que pelea con el paneo.
+            Los efectos que se van a posicionar se importan en mono a propósito.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Encuadrar, oír y cortar, en parejas
+      brief: >-
+        Encuadra la cámara sobre la rampa desde diez metros y anota el Field of View que
+        necesitaste. Dale a la puerta un timbre 3D con Min 1 y Max 20. Después corta la hoja
+        de cuatro cuadros y pon uno en la escena con escala 1 en el Transform.
+      blocks:
+        - label: Entregable
+          text: La escena, más tres números, Field of View, Max Distance y alto del sprite
+        - label: Restricción
+          text: >-
+            El sprite se dimensiona con Pixels Per Unit, no con el Transform. La escala se
+            queda en 1 y el número de los ajustes de importación hace el trabajo.
+        - label: La prueba
+          text: >-
+            Agrega una segunda cámara a propósito, lee la consola y después borra su
+            AudioListener y no la cámara. Ese es el arreglo en un proyecto real.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La cámara ve una caja
+          desc: >-
+            Un frustum limitado por el Field of View y los dos clipping planes. Una cámara
+            que no muestra nada suele apuntar fuera de alguno de esos límites
+        - title: Spatial Blend va primero
+          desc: >-
+            En 0 los campos de distancia no hacen nada. Ponlo en 1 y después ajusta el mínimo
+            y el máximo al tamaño del cuarto donde está el sonido
+        - title: Pixels Per Unit da el tamaño
+          desc: >-
+            Los pixeles entre la tasa dan unidades, así que una imagen que entra del tamaño
+            equivocado se corrige en la importación y no en el Transform
+
+  - homework:
+      eyebrow: Tarea
+      title: Tres áreas de la ruta en una semana
+      brief: >-
+        Termina la cámara, el timbre y la hoja cortada, y trabaja Beginner Unity Cameras,
+        Audio Essentials y el área de 2D Art en tu cuenta de Unity Learn. La sesión 6
+        convierte el proyecto en algo que corre sin el editor.
+      meta:
+        - [Entrega, Antes de la sesión 6]
+        - [Formato, "Blackboard · la escena, la hoja cortada y tres números"]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Cámara", "Obligatorio", "La rampa queda encuadrada y los números anotados"]
+        - ["Audio", "Obligatorio", "El timbre se apaga con la distancia y hay un listener"]
+        - ["Sprite", "Obligatorio", "Cuatro cuadros cortados, puestos con escala 1"]
+        - ["Ruta", "Obligatorio", "Las tres áreas marcadas en Unity Learn"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials, y se espera que la trabajes por tu cuenta.
+        La siguiente sesión, el proyecto sale del editor.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

@@ -1,0 +1,415 @@
+meta:
+  course: Desarrollo de AR móvil
+  code: UNITY
+  lang: es
+  language: unity
+  week: 2
+  footer: DESARROLLO DE AR MÓVIL · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 02 · Desarrollo · Compilar a Android con ARCore
+      title: Desarrollo de AR móvil
+      subtitle: >-
+        Los paquetes, los ajustes, y el renderer feature que decide si el teléfono te muestra
+        el cuarto o una pared de color.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Fundamentos]
+        - [Sesión, 2 de 5]
+        - [Basado en, Unity Learn · Mobile AR Development]
+      notes: |
+        Esta sesión es el único lugar del curso que se casa con una plataforma. Android y
+        ARCore, porque es lo que hay en el salón. Los decks de diseño e interacción se
+        quedan neutrales a propósito.
+
+        Tomado del manual de AR Foundation 6.0 (project setup, scene setup, URP), del
+        manual del Google ARCore XR Plug-in 6.0 (project configuration) y del manual de
+        Unity 6 (Build Profiles, Render Pipeline Converter). Nada está copiado de Unity
+        Learn, que el alumno trabaja por su cuenta.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El proyecto que ve
+          desc: Cinco paquetes, un proveedor y los dos GameObjects sin los cuales no corre nada
+        - title: Ajustes de Android
+          desc: Los valores que deciden si la app se instala, y por qué existe cada uno
+        - title: La pantalla de un color
+          desc: Compila, rastrea, y la imagen de la cámara no aparece. La falla más común
+        - title: Distinguir las fallas
+          desc: Color plano, magenta y pantalla negra son tres problemas con tres arreglos
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Armar una escena de AR desde cero
+          sub: Paquetes, proveedor, AR Session y XR Origin, en ese orden
+        - head: Fijar los ajustes de Android
+          sub: Nivel de API, backend de scripting, arquitectura y API gráfica, y decir por qué cada uno
+        - head: Correr Project Validation
+          sub: Y usar sus botones Fix en lugar de cazar los ajustes uno por uno
+        - head: Diagnosticar una pantalla de un color
+          sub: Nombrando el renderer feature que dibuja la imagen de la cámara bajo el pipeline
+        - head: Distinguir tres pantallas rotas
+          sub: Color plano, materiales magenta y pantalla negra no tienen nada en común
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta sesión entre las cinco
+      phases:
+        - label: 01 · Sesión 1
+          title: Diseño de AR
+          desc: Casos de uso, y qué puede rastrear de verdad una plataforma
+          state: done
+        - label: 02 · Sesión 2
+          title: Compilar a Android
+          desc: Paquetes, Player Settings, ARCore y el pipeline
+          state: now
+        - label: 03 · Sesión 3
+          title: Blancos rastreables
+          desc: Planos, imágenes, raycasts y colocación
+          state: todo
+        - label: 04 · Sesión 4
+          title: Visual Scripting
+          desc: Interacciones armadas como grafos, no como scripts
+          state: todo
+        - label: 05 · Sesión 5
+          title: Optimización móvil
+          desc: Assets, batching y el presupuesto por frame
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El proyecto que ve
+      lede: Cinco paquetes, un proveedor y dos GameObjects. Todo lo que sigue da por hecho que ya están puestos.
+      block: 1
+
+  - table:
+      eyebrow: Bloque 01 · Paquetes
+      title: Para qué sirve cada paquete
+      headers: [Paquete, Identificador, Qué te da]
+      rows:
+        - ["AR Foundation", "com.unity.xr.arfoundation", "Managers y trackables"]
+        - ["ARCore XR Plug-in", "com.unity.xr.arcore", "El proveedor de Android"]
+        - ["XR Plug-in Management", "com.unity.xr.management", "Un proveedor por plataforma"]
+        - ["Universal RP", "com.unity.render-pipelines.universal", "El renderer que dibuja"]
+        - ["Visual Scripting", "com.unity.visualscripting", "Grafos en vez de scripts"]
+        - ["Input System", "com.unity.inputsystem", "Touch en la API actual"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un proyecto, un proveedor por plataforma
+      lead: >-
+        AR Foundation es una interfaz. Sabe de planos, de imágenes y de anclas, y no sabe
+        nada de Android. El trabajo lo hace un paquete proveedor, y XR Plug-in Management es
+        el conmutador que decide cuál se carga para cada plataforma de destino. Marca ARCore
+        en la pestaña de Android y la misma escena que corre aquí corre en iOS el día que
+        alguien marque ARKit en la de iOS.
+      panel:
+        label: Dónde se prende
+        title: Project Settings, XR Plug-in Management
+        note: >-
+          AR Foundation 6.0 pide Unity 6000.0 o más nuevo, y los plug-ins de ARCore y ARKit
+          en la misma versión. Mantén los tres parejos.
+      steps:
+        - text: Abre la pestaña de Android
+        - text: Marca ARCore en Plug-in Providers
+        - text: Unity jala el paquete del proveedor
+        - text: En tu escena no cambia nada
+          loop: ↺ que es justo para lo que sirve la interfaz
+
+  - steps:
+      eyebrow: Bloque 01 · Armado
+      title: De un proyecto vacío a una escena de AR corriendo
+      items:
+        - label: '01'
+          title: Proyecto nuevo
+          desc: Unity 6, plantilla Universal 3D, para que URP ya venga configurado
+        - label: '02'
+          title: Agrega paquetes
+          desc: Window, luego Package Manager, Unity Registry, los cinco de la tabla
+        - label: '03'
+          title: Prende ARCore
+          desc: Project Settings, XR Plug-in Management, pestaña de Android
+        - label: '04'
+          title: Arma la escena
+          desc: GameObject, XR, AR Session y luego XR Origin (Mobile AR)
+        - label: '05'
+          title: Borra la cámara vieja
+          desc: El XR Origin trae su propia Main Camera bajo un Camera Offset
+
+  - diagram:
+      eyebrow: Bloque 01 · La escena
+      title: Los dos GameObjects sin los que una escena de AR no corre
+      blocks:
+        - label: '01'
+          title: AR Session
+          desc: Uno por escena. Habilita AR en la plataforma y es dueño del ciclo de vida de la sesión.
+        - label: '02'
+          title: XR Origin (Mobile AR)
+          desc: Convierte el espacio rastreado en espacio de escena. Trae el Camera Offset y la cámara.
+        - label: '03'
+          title: Los managers
+          desc: Los de planos, imágenes y raycasts viven en el origin, y cada uno produce trackables.
+          dark: true
+      note: >-
+        Si falta cualquiera de los dos primeros, AR no funciona. La falla es callada, y ahí
+        está el problema. La app abre, la cámara nunca aparece, y la consola no dice una sola
+        palabra sobre por qué.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Ajustes que deciden si se instala
+      lede: Seis valores en Player Settings, y cada uno es un rechazo en alguna parte si le pegas mal.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · Android
+      title: Los seis ajustes, y dónde vive cada uno
+      headers: [Ajuste, Valor, Dónde vive]
+      rows:
+        - ["Minimum API Level", "Android 7.0, nivel 24", "Player > Other Settings"]
+        - ["Scripting Backend", "IL2CPP", "Player > Other Settings"]
+        - ["Target Architectures", "ARM64", "Player > Other Settings"]
+        - ["Auto Graphics API", "Apagado", "Player > Rendering"]
+        - ["Graphics APIs", "OpenGLES3, sin Vulkan", "Player > Rendering"]
+        - ["ARCore Requirement", "Required u Optional", "XR Plug-in Management"]
+
+  - concept:
+      eyebrow: Bloque 02 · Mecanismo
+      title: Por qué esos seis valores y no otros
+      lead: >-
+        Ninguno es adorno. El nivel de API 24 es el piso que pide el propio ARCore en una app
+        que requiere AR. ARM64 es lo que espera la tienda, e IL2CPP es el único backend de
+        scripting que lo produce. Vulkan sale de la lista porque la documentación del plug-in
+        de ARCore pide quitarlo y dejar OpenGLES3, y Auto Graphics API tiene que estar
+        apagado antes de que te dejen editar esa lista.
+      panel:
+        label: El ajuste que se olvida
+        title: ARCore Requirement, Required u Optional
+        note: >-
+          Required deja la app fuera de los teléfonos sin ARCore y permite suponer que AR
+          existe. Optional se publica en todos y la revisión es tu trabajo.
+      steps:
+        - text: API 24 es el piso del propio ARCore
+        - text: IL2CPP es lo que produce ARM64
+        - text: Auto Graphics API apagado, luego editas
+        - text: Entra OpenGLES3, sale Vulkan
+          loop: ↺ y Project Validation revisa los cuatro por ti
+
+  - steps:
+      eyebrow: Bloque 02 · Compilación
+      title: De los ajustes a una app en el teléfono
+      items:
+        - label: '01'
+          title: Valida
+          desc: Project Settings, XR Plug-in Management, Project Validation, Android
+        - label: '02'
+          title: Presiona Fix
+          desc: Cada error trae un botón que escribe el ajuste por ti
+        - label: '03'
+          title: Cambia de plataforma
+          desc: File, Build Profiles, Android, Switch Platform, y espera la reimportación
+        - label: '04'
+          title: Development Build
+          desc: Márcalo junto con Autoconnect Profiler, que la sesión 5 va a necesitar
+        - label: '05'
+          title: Build And Run
+          desc: Teléfono despierto, depuración USB prendida, y un cable que lleve datos
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Tres líneas que vale la pena registrar al compilar
+      filename: BuildReport.cs
+      lang: csharp
+      output_label: Log del equipo
+      source: |
+        using UnityEngine;
+        using UnityEngine.Rendering;
+        using UnityEngine.XR.ARFoundation;
+
+        public class BuildReport : MonoBehaviour
+        {
+            void Start()
+            {
+                var rp = GraphicsSettings.currentRenderPipeline;
+                Debug.Log($"urp {rp != null}");
+                Debug.Log($"api {SystemInfo.graphicsDeviceType}");
+                Debug.Log($"session {ARSession.state}");
+            }
+        }
+      output: |
+        urp True
+        api OpenGLES3
+        session SessionInitializing
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Corre, y es un solo color plano
+      lede: La falla de configuración más común que hay en AR, y la consola no dice absolutamente nada.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · La falla
+      title: Alguien tiene que dibujar la imagen de la cámara
+      lead: >-
+        La app se instala, la sesión llega a rastrear, tu cubo aparece, y todos los demás
+        píxeles son del mismo color. Bajo el Universal Render Pipeline, el componente AR
+        Camera Background no dibuja la imagen por sí mismo. Le pasa ese trabajo a un renderer
+        feature del asset Universal Renderer. Sin nada en esa lista, nadie dibuja la cámara,
+        y lo que llena la pantalla es el Background de la cámara.
+      panel:
+        label: Cómo confirmarlo en una compilación
+        title: Pon en rojo el Background de la cámara
+        note: >-
+          Si el teléfono regresa en rojo, nadie está dibujando el passthrough y el renderer
+          feature no está puesto.
+      steps:
+        - text: Project Settings, luego Graphics
+        - text: Abre el asset de URP al que apunta
+        - text: Busca su Renderer List
+        - text: Abre el Universal Renderer
+        - text: Add Renderer Feature, AR Background
+          loop: ↺ recompila, y el cuarto aparece detrás del cubo
+
+  - table:
+      eyebrow: Bloque 03 · Diagnóstico
+      title: Tres pantallas rotas que se parecen y no lo son
+      headers: [Qué ves, Qué significa, Dónde se arregla]
+      rows:
+        - ["Un solo color", "Nunca se dibujó la cámara", "Renderer feature de URP"]
+        - ["Objetos magenta", "Materiales aún built-in", "Render Pipeline Converter"]
+        - ["Pantalla negra", "Permiso de cámara negado", "Permisos de la app"]
+        - ["Nada se mueve", "No hay AR Session", "GameObject > XR > AR Session"]
+        - ["Contenido hundido", "Objetos fuera del XR Origin", "Cuélgalos del XR Origin"]
+
+  - concept:
+      eyebrow: Bloque 03 · El vecino
+      title: Magenta es otro problema con otro arreglo
+      lead: >-
+        Magenta es el color con el que Unity pinta un material cuyo shader no corre bajo el
+        pipeline activo. Quiere decir que el material se hizo para el pipeline built-in y
+        nunca se convirtió, así que no tiene nada que ver con la imagen de la cámara, y
+        agregar renderer features no lo cambia ni un píxel. Las dos fallas llegan juntas lo
+        bastante seguido como para arreglar una y creer que arreglaste las dos.
+      panel:
+        label: El que convierte materiales
+        title: Window, Rendering, Render Pipeline Converter
+        note: >-
+          Pon Built-in como origen y Universal como destino, escoge la conversión de
+          materiales, inicializa el convertidor y luego convierte los assets.
+      steps:
+        - text: Color plano quiere decir sin passthrough
+        - text: Magenta quiere decir shader sin convertir
+        - text: Uno es un renderer feature
+        - text: El otro es un material
+          loop: ↺ y un proyecto puede estar mostrándote los dos a la vez
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores de compilación
+      title: Cuatro maneras de perder una hora en la primera compilación
+      items:
+        - label: Error 01
+          title: Dos cámaras en la escena
+          desc: >-
+            La Main Camera de la plantilla se queda al lado de la que trajo el XR Origin. Dos
+            audio listeners avisan en la consola, y renderiza la cámara equivocada.
+        - label: Error 02
+          title: Vulkan sigue en la lista
+          desc: >-
+            Nunca se apagó Auto Graphics API, así que Vulkan quedó arriba de OpenGLES3 y la
+            documentación del plug-in de ARCore pide sacarlo.
+        - label: Error 03
+          title: Backend Mono con ARM64 marcado
+          desc: >-
+            La compilación falla antes de compilar. ARM64 pide IL2CPP, y los dos ajustes
+            están a dos renglones uno del otro en el mismo panel.
+        - label: Error 04
+          title: Compilar sin cambiar de plataforma
+          desc: >-
+            Build Profiles sigue apuntando a Windows, así que la salida es un ejecutable de
+            escritorio y el teléfono nunca entró en la jugada.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Compila, el rastreo sirve, el cubo se dibuja, y el resto de la pantalla es un gris. ¿Qué falta?
+      options:
+        - El AR Background Renderer Feature en el asset Universal Renderer
+        - El AR Session, así que el rastreo nunca arrancó siquiera
+        - ARCore, que este teléfono todavía tiene que instalar de la tienda
+        - Los materiales, que nunca se convirtieron al pipeline
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cuatro revisiones que lo reducen a un asset
+      headers: [Revisión, Qué miras, Resultado]
+      rows:
+        - ["Rastreo", "El contenido no se mueve", "Sí"]
+        - ["Se dibuja", "El cubo está en pantalla", "Sí"]
+        - ["Magenta", "El cubo es gris", "No"]
+        - ["Imagen de cámara", "El cuarto detrás", "No"]
+      verdict: >-
+        El contenido se dibuja y el material está bien, así que el pipeline funciona. Sólo
+        falta el passthrough, y eso lo reduce a una lista en un asset. Si el cubo también
+        hubiera salido magenta, la respuesta sería el convertidor, y el renderer feature
+        seguiría faltando por debajo.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Tu teléfono, tu compilación, en parejas
+      brief: >-
+        Lleven un proyecto vacío de Unity 6 hasta una app de AR corriendo en su propio
+        teléfono Android. Un cubo a un metro de la cámara basta como contenido. Después
+        rómpanlo a propósito quitando el renderer feature, recompilen y fotografíen la
+        pantalla.
+      blocks:
+        - label: Restricción
+          text: Sin escena de ejemplo y sin proyecto descargado. Armen la escena ustedes, desde los dos GameObjects.
+        - label: Entregable
+          text: Dos fotos del teléfono. La compilación que sirve, y la misma sin el renderer feature.
+        - label: Criterio
+          text: Que puedan decir en voz alta en qué asset vive el feature, sin abrir el editor.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Cuatro ideas para llevarse
+      items:
+        - title: El proveedor hace el trabajo
+          desc: AR Foundation es la interfaz, ARCore la implementación, y el conmutador es XR Plug-in Management
+        - title: Dos GameObjects, sin excepción
+          desc: AR Session y XR Origin. Si falta cualquiera, la app corre y AR calladito no
+        - title: El passthrough es un pase de render
+          desc: Bajo el pipeline la imagen la dibuja un renderer feature, y si falta no se dibuja nada
+        - title: Color plano y magenta no se parecen
+          desc: Uno es la imagen de la cámara, el otro un shader. Arreglar uno no hace nada por el otro
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Guarda el proyecto, es el de la sesión tres
+      brief: >-
+        Sube el proyecto que sirve a tu repositorio, con la carpeta Library ignorada. Agrega
+        un README corto con tu versión de Unity, tu versión de AR Foundation y el teléfono al
+        que compilaste. La sesión tres le agrega detección de planos a este mismo proyecto.
+      meta:
+        - [Entrega, Antes de la sesión 3]
+        - [Formato, Una liga al repositorio]
+        - [Trae, El teléfono y el cable]
+      rubric:
+        - ["Compila", "Obligatorio", "El proyecto compila y corre en tu propio equipo"]
+        - ["Ignorado", "Obligatorio", "Ninguna carpeta Library o Temp subida al repositorio"]
+        - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Mobile AR Development en Unity Learn es la ruta que estos decks acompañan, en
+        learn.unity.com/pathway/mobile-ar-development. Se espera que la trabajes completa.
+      meta:
+        - [Ruta, Unity Learn · Mobile AR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

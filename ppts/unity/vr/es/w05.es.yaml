@@ -1,0 +1,444 @@
+meta:
+  course: Desarrollo de VR
+  code: UNITY
+  lang: es
+  language: unity
+  week: 5
+  footer: DESARROLLO DE VR · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 05 · Desarrollo de VR intermedio · El presupuesto del cuadro
+      title: Desarrollo de VR
+      subtitle: >-
+        A 72 Hz un cuadro recibe cerca de 13.9 milisegundos. Esta sesión es cómo averiguar
+        en qué se están yendo los tuyos.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Principiante]
+        - [Sesión, 5 de 5]
+        - [Basado en, Unity Learn · VR Development]
+      notes: |
+        Sesión acompañante de la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. El contador del profiler, los ajustes de
+        frame timing y los comandos de adb salen del manual de Unity. Nada de aquí
+        reproduce el texto ni los ejercicios de Unity.
+
+        Conviene decir lo honesto desde temprano. Las cifras en milisegundos de estas
+        diapositivas salieron de esta escena del banco, en el visor de este salón. Son la
+        forma de un resultado, no una meta. Los únicos números que significan algo son los
+        del alumno, y por eso el bloque de en medio se dedica completo a conseguirlos.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: De dónde sale el número
+          desc: Uno entre la tasa de refresco, y por qué los dos procesadores lo reciben todo
+        - title: Conseguir el de verdad
+          desc: Tres instrumentos, y por qué la respuesta del Editor no cuenta
+        - title: Cambiar una cosa
+          desc: Qué intentar cuando ya sabes qué lado del cuadro se pasó
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Calcular el presupuesto a partir de la tasa de refresco
+          sub: Y decir por qué 72 Hz y 90 Hz son dos proyectos distintos, no dos ajustes
+        - head: Decir por qué el número del Editor no cuenta
+          sub: Otro procesador, otra graphics API y ningún límite térmico
+        - head: Leer un contador de cuadro dentro de tu propio build
+          sub: Con un profiler recorder sobre el hilo principal, impreso solo cuando se pasa
+        - head: Perfilar un build corriendo, por el cable
+          sub: Development build, autoconnect y el reenvío de puerto que los pone a hablar
+        - head: Cambiar una cosa y probar que sirvió
+          sub: Porque dos cambios a la vez te dan el total y nada sobre cada uno
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco sesiones junto a una ruta de seis semanas
+      phases:
+        - label: '01 · Sesión 1'
+          title: Juzgar un build
+          desc: Presencia, comodidad y la nota que escribes
+          state: done
+        - label: '02 · Sesión 2'
+          title: Visor y build
+          desc: Elegir hardware, y los ajustes de Android
+          state: done
+        - label: '03 · Sesión 3'
+          title: Toolkit de interacción
+          desc: Origin, interactores e interactables
+          state: done
+        - label: '04 · Sesión 4'
+          title: Tu propio código
+          desc: Interactables propios y eventos de selección
+          state: done
+        - label: '05 · Sesión 5'
+          title: El presupuesto del cuadro
+          desc: Medir milisegundos en el dispositivo
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: De dónde sale el número
+      lede: La tasa de refresco no es un ajuste de calidad. Es una fecha límite, y llega esté o no terminado el cuadro.
+      block: 1
+
+  - stat:
+      eyebrow: A 72 Hz, en el visor del salón
+      value: 13.9 ms
+      text: Todo lo que un cuadro tiene que hacer, de la entrada a la imagen que ven los ojos
+      note: >-
+        Un segundo entre setenta y dos. Si no llegas, el runtime muestra algo de todas
+        formas, armado con el cuadro anterior, y la cabeza ya se movió. Ese es el malestar de
+        la sesión 1 llegando como problema de ingeniería.
+
+  - table:
+      eyebrow: Bloque 01 · Aritmética
+      title: Cuatro tasas, cuatro fechas límite
+      headers: [Tasa de refresco, Por cuadro, Qué cambia]
+      rows:
+        - ["72 Hz", "13.9 ms", "El presupuesto de este banco"]
+        - ["80 Hz", "12.5 ms", "1.4 ms de trabajo tiene que irse"]
+        - ["90 Hz", "11.1 ms", "Un quinto del presupuesto, ido"]
+        - ["120 Hz", "8.3 ms", "Otra escena, no otro ajuste"]
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Los dos procesadores reciben el cuadro entero
+      lead: >-
+        El CPU y el GPU trabajan al mismo tiempo, sobre cuadros distintos, así que cada uno
+        tiene el presupuesto completo para su parte. La mala noticia está en la palabra dos,
+        porque 9 ms de CPU y 15 de GPU siguen siendo un cuadro tarde.
+      panel:
+        label: Para qué sirve la primera medición
+        title: Averiguar cuál de los dos se pasó
+        note: >-
+          Hasta que lo sepas, cada optimización es una adivinanza. La mitad del trabajo de
+          este bloque existe solo para contestar esa pregunta.
+      steps:
+        - text: El CPU prepara el cuadro
+        - text: El GPU lo dibuja, en paralelo
+        - text: Los dos terminan dentro del presupuesto
+        - text: Se mide el más lento
+          loop: ↺ y el arreglo de uno no le hace nada al otro
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El Editor mide una máquina que nadie va a traer puesta
+      lead: >-
+        Play mode corre sobre un procesador de escritorio con ventilador, un GPU dedicado,
+        otra graphics API y sin límite de potencia. Una escena que ahí reporta cuatro
+        milisegundos puede no llegar a la fecha límite en el visor, y en silencio.
+      panel:
+        label: Qué es lo que de verdad cambia
+        title: Procesador, graphics API, memoria y calor
+        note: >-
+          El build además pasa por IL2CPP y no por la ruta de scripting del Editor, así que
+          ni el C# es el mismo C# para cuando llega al dispositivo.
+      steps:
+        - text: Otro procesador y otro GPU
+        - text: Vulkan en el dispositivo, Direct3D en el Editor
+        - text: Sobrecarga del Editor en cada cuadro
+        - text: Un límite térmico que llega tarde
+          loop: ↺ y el último solo aparece a los diez minutos con el visor puesto
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Conseguir el número que cuenta
+      lede: Tres instrumentos, un cable, y un build al que hay que avisarle que se le permite ser medido.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · El camino
+      title: Cinco paradas hacia un build perfilado
+      items:
+        - label: '01'
+          title: Development Build
+          desc: Márcalo, junto con Autoconnect Profiler, en el build profile.
+        - label: '02'
+          title: Build And Run
+          desc: Al visor por el cable, despierto y autorizado.
+        - label: '03'
+          title: Reenvía el puerto
+          desc: adb forward, para que el Editor y el build se encuentren.
+        - label: '04'
+          title: Conecta el Profiler
+          desc: Escoge el Android player en la lista de destinos, no Editor.
+        - label: '05'
+          title: Graba con el visor puesto
+          desc: Haz la tarea. Los cuadros interesantes no son los ociosos.
+
+  - code_output:
+      eyebrow: Bloque 02 · El cable
+      title: Los dos comandos que ponen a hablar al Editor y al build
+      filename: adb.txt
+      lang: csharp
+      output_label: Terminal
+      source: |
+        // del Editor al Android player
+        adb forward tcp:34999 localabstract:Unity-<bundle id>
+
+        // del Android player de regreso al Editor
+        adb reverse tcp:34998 tcp:34999
+      output: |
+        > adb devices
+        <serial>      device
+        > adb forward tcp:34999 ...
+        34999
+        > adb reverse tcp:34998 ...
+        (reverse no imprime nada)
+
+  - code:
+      eyebrow: Bloque 02 · Dentro de tu propio build
+      title: Un contador que solo habla cuando llegas tarde
+      filename: FrameBudget.cs
+      lang: csharp
+      source: |
+        [SerializeField] float hz = 72f;
+        ProfilerRecorder cpu;
+
+        void OnEnable()
+        {
+            cpu = ProfilerRecorder.StartNew(
+                ProfilerCategory.Internal,
+                "CPU Main Thread Frame Time");
+        }
+
+        void OnDisable() => cpu.Dispose();
+      annotations:
+        - label: Dónde va
+          text: >-
+            En un MonoBehaviour, con using Unity.Profiling arriba del archivo.
+        - label: El contador
+          text: >-
+            El tiempo de cuadro del hilo principal, reportado en nanosegundos, y por eso la
+            siguiente diapositiva multiplica por una millonésima.
+        - label: Por qué hz es campo
+          text: >-
+            Es el número que lees del visor, no uno que el script adivine. Si cambias la
+            tasa de la pantalla, cambia esto.
+        - label: Riesgo
+          text: >-
+            Un recorder que nunca se libera sigue recolectando. OnDisable no es opcional.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Una corrida del banco, solo los cuadros tarde
+      filename: FrameBudget.cs
+      lang: csharp
+      output_label: adb logcat, 600 cuadros
+      source: |
+        void Update()
+        {
+            float ms = cpu.LastValue * 1e-6f;
+            float budget = 1000f / hz;
+            if (ms > budget)
+                Debug.Log($"tarde {ms:F1} de {budget:F1} ms");
+        }
+      output: |
+        tarde 14.2 de 13.9 ms
+        tarde 15.6 de 13.9 ms
+        tarde 21.4 de 13.9 ms
+        tarde 14.9 de 13.9 ms
+
+  - stat:
+      eyebrow: La misma corrida, contada
+      value: 4 de 600
+      text: Cuadros por encima de la fecha límite, en una escena cuyo promedio fue de 8.1 ms
+      note: >-
+        El promedio decía que el banco iba cómodo. Los cuatro cuadros tarde son lo que el
+        usuario sí notó, y tres de ellos cayeron en el mismo segundo, cuando se levantó el
+        torquímetro y se clonó su material.
+
+  - table:
+      eyebrow: Bloque 02 · Los instrumentos
+      title: Tres formas de leer un cuadro, y para qué sirve cada una
+      headers: [Instrumento, Qué te da, Cuándo usarlo]
+      rows:
+        - ["Profiler window", "Cada hilo, cuadro por cuadro", "Encontrar qué está lento"]
+        - ["ProfilerRecorder", "Un contador, en tu build", "Vigilar mientras juegas"]
+        - ["Frame Timing Stats", "Tiempo de CPU y de GPU", "Decidir qué lado se pasó"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro maneras en que una medición te miente
+      items:
+        - label: Error 01
+          title: Medir en Play mode
+          desc: >-
+            Un procesador de escritorio con ventilador no es el dispositivo. El número es
+            real y pertenece a una máquina que nadie va a traer puesta.
+        - label: Error 02
+          title: Leer el promedio
+          desc: >-
+            Una media de 8 ms esconde cuatro cuadros en 21. El usuario siente los cuatro, y
+            la media es justo el número que no los va a mencionar.
+        - label: Error 03
+          title: Frame timing apagado en release
+          desc: >-
+            Los tiempos están siempre encendidos en un development build y apagados por
+            omisión en uno de release, así que el mismo código no reporta nada y parece roto.
+        - label: Error 04
+          title: Un profiler que reporta tarde
+          desc: >-
+            Los resultados de tiempo llegan varios cuadros después del cuadro que describen.
+            Alinéalos con lo que hiciste y vas a culpar a la acción equivocada.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Cambiar una cosa
+      lede: La medición te dijo qué lado se pasó. Ahora el trabajo es cambiar una cosa, y probarlo.
+      block: 3
+
+  - method:
+      eyebrow: Criterio
+      title: Un cambio, una medición, un renglón escrito
+      statement: >-
+        Mide, cambia exactamente una cosa, vuelve a medir sobre la misma tarea y escribe los
+        dos números junto al cambio. Dos cambios a la vez te dan un total y ninguna forma de
+        atribuirlo.
+      points:
+        - label: La misma tarea
+          text: La misma caminata, el mismo agarre, en el mismo orden. Otra tarea es otro número.
+        - label: El mismo tipo de build
+          text: Development build las dos veces. Comparar uno contra un release no prueba nada.
+        - label: Escríbelo
+          text: Antes, después y qué cambió. Tres números por renglón, y el registro dura más que el semestre.
+
+  - tiers:
+      eyebrow: Bloque 03 · Cuando el CPU se pasa
+      title: Cuatro cosas que vale la pena intentar, en este orden
+      items:
+        - key: Draws
+          title: Menos objetos enviados
+          desc: Batching, y preguntarse si las cabezas de los tornillos del fondo tienen que ser mallas separadas
+        - key: Scripts
+          title: Trabajo que corre cada cuadro
+          desc: Una consulta que pudo ser un evento, un Find que pudo ser un campo
+        - key: Basura
+          title: Reservar memoria dentro del ciclo
+          desc: Cadenas nuevas, listas nuevas y materiales clonados, que regresan después como una pausa
+        - key: Física
+          title: Colliders que no hacen nada
+          desc: Mesh colliders donde bastaba una caja, en objetos que nadie toca nunca
+
+  - compare:
+      eyebrow: Bloque 03 · Un cambio, medido
+      title: La etiqueta del tacómetro, antes y después
+      before:
+        label: Cada cuadro, pase lo que pase
+        file: Tachometer.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              var t = GameObject.Find("Tachometer");
+              t.GetComponent<Text>().text = "rpm " + rpm;
+          }
+      after:
+        label: Solo cuando cambia la lectura
+        file: Tachometer.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              if (rpm == shown) return;
+              shown = rpm;
+              label.text = "rpm " + rpm;
+          }
+      note: >-
+        La búsqueda corre 72 veces por segundo para encontrar un objeto que no se ha movido
+        desde que cargó la escena, y la cadena se rearma haya girado o no la aguja. En este
+        banco el cambio bajó el hilo principal de 8.1 ms a 7.4 ms, medido en el dispositivo.
+
+  - table:
+      eyebrow: Bloque 03 · Qué lado, qué palanca
+      title: La medición apunta a una lista, no a un arreglo
+      headers: [Lado que se pasó, Qué mirar primero, Después]
+      rows:
+        - ["CPU hilo principal", "Scripts y draw calls", "Reservas de memoria"]
+        - ["CPU hilo de render", "Número de draw calls", "Batching"]
+        - ["GPU", "Resolución y overdraw", "Costo del shader"]
+        - ["Ninguno, aún tarde", "Throttling térmico", "Úsalo más tiempo"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Play mode reporta 4.1 ms y el visor sigue tirando cuadros. ¿Qué te dice eso?
+      options:
+        - El build está roto, la misma escena no puede costar más en el dispositivo
+        - Nada sobre el visor, porque se midió otra máquina
+        - El GPU tiene que ser el problema, ya que el número de CPU salió bien
+        - Que 4.1 ms ya se pasa del presupuesto a 72 Hz
+
+  - trace:
+      eyebrow: Respuesta
+      title: La misma escena, la misma tarea, tres mediciones
+      headers: [Dónde se midió, Hilo principal, Veredicto]
+      rows:
+        - ["Editor, Play mode", "4.1 ms", "No dice nada"]
+        - ["Equipo, primera corrida", "14.2 ms", "Se pasa por 0.3 ms"]
+        - ["Equipo, tras un cambio", "11.8 ms", "Adentro, con holgura"]
+        - ["Equipo, a los diez minutos", "13.6 ms", "El calor se llevó la holgura"]
+      verdict: >-
+        El primer renglón no es una versión chica del segundo, es otra máquina. El último es
+        el que se olvida: una escena que cabe con el visor frío puede dejar de caber cuando
+        se calienta, y eso solo lo enseña una corrida larga.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Mide el banco, cambia una cosa, vuelve a medir
+      brief: >-
+        Perfila tu escena del banco en el dispositivo mientras haces dos veces la misma
+        tarea, caminar al extremo del motor, levantar el torquímetro y presionar el paro.
+        Encuentra el peor cuadro, haz un cambio que puedas nombrar en una frase y repite la
+        tarea idéntica.
+      blocks:
+        - label: Restricción
+          text: Un cambio. Si no lo puedes decir en una frase, es más de un cambio.
+        - label: Entregable
+          text: Dos logs, el peor cuadro de cada uno, y la frase que nombra qué cambiaste.
+        - label: Criterio
+          text: Que la segunda corrida sea la misma tarea, no una más fácil, y que lo digas.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La tasa fija una fecha límite
+          desc: A 72 Hz son cerca de 13.9 ms, y el CPU y el GPU tienen que terminar dentro.
+        - title: Solo cuenta el número del visor
+          desc: El Editor mide una máquina con ventilador, GPU de escritorio y sin límite térmico.
+        - title: El promedio es el número malo
+          desc: Cuatro cuadros de 21 ms son lo que el usuario sintió, y una media de 8 nunca los menciona.
+
+  - homework:
+      eyebrow: Para el cierre del curso
+      title: El banco, perfilado y por escrito
+      brief: >-
+        Entrega la escena del banco, los dos logs de perfilado y una página que nombre el peor
+        cuadro, el cambio que hiciste y el número que movió. Después termina la ruta de Unity
+        Learn si aún no lo has hecho, porque la insignia la dan ellos y no yo.
+      meta:
+        - [Entrega, Fin de semestre]
+        - [Formato, Blackboard · proyecto y PDF]
+        - [Peso, Parte del promedio de tareas]
+      rubric:
+        - ["Medido en el equipo", "40 %", "Los dos logs del visor, misma tarea y mismo tipo de build"]
+        - ["Un cambio", "30 %", "Nombrado en una frase, con el número antes y después"]
+        - ["Lectura honesta", "30 %", "El peor cuadro, no el promedio, y qué lo causó"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Se espera que termines la ruta de Unity Learn VR Development, en
+        learn.unity.com/pathway/vr-development. Ahí viven los proyectos.
+      meta:
+        - [Ruta, Unity Learn · VR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

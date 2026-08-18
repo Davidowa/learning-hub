@@ -1,0 +1,452 @@
+meta:
+  course: Desarrollo de VR
+  code: UNITY
+  lang: es
+  language: unity
+  week: 4
+  footer: DESARROLLO DE VR · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 04 · Desarrollo de VR intermedio · Interacciones propias
+      title: Desarrollo de VR
+      subtitle: >-
+        El inspector se acaba cuando el objeto tiene una regla propia. Hoy el paro de
+        emergencia recibe un componente y un estado.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Principiante]
+        - [Sesión, 4 de 5]
+        - [Basado en, Unity Learn · VR Development]
+      notes: |
+        Sesión acompañante de la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. Los nombres de clase, las firmas de los
+        métodos y el atributo salen de la referencia de API del XR Interaction Toolkit 3.5.
+        El paro de emergencia, el arranque del motor y cada línea de los scripts de aquí se
+        escribieron para este curso. Nada reproduce los ejemplos de Unity.
+
+        La regla de enclavamiento es la del curso de algoritmos, semana 8. La máquina solo
+        se arma con la puerta de guarda cerrada, el paro liberado y el eje por debajo de 50
+        rpm. Aquí es la misma regla, cableada a un botón que sí se puede presionar.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Dos puertas al toolkit
+          desc: Un método que el inspector llama, o un componente que hereda el comportamiento
+        - title: Un paro que se traba
+          desc: Estado que sobrevive a soltar el botón, y una reposición que no es el botón
+        - title: Trabajo de cada cuadro
+          desc: La fase de actualización, y la única regla sobre qué puedes reservar ahí
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Elegir entre un evento y un override
+          sub: Uno es cableado para un solo objeto, el otro es comportamiento que hereda cada copia
+        - head: Escribir un interactable propio
+          sub: Heredando de XRBaseInteractable, con la llamada a base que mantiene vivos los eventos
+        - head: Sostener estado a lo largo de una interacción
+          sub: Un enclavamiento que sigue cerrado después de que el dedo se va, y una reposición deliberada
+        - head: Hacer el trabajo por cuadro en el lugar correcto
+          sub: ProcessInteractable y su fase de actualización, en vez del Update de un MonoBehaviour
+        - head: Leer los argumentos del evento sin riesgo
+          sub: Valen durante la llamada y no un cuadro después, cosa que la documentación dice con todas sus letras
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco sesiones junto a una ruta de seis semanas
+      phases:
+        - label: '01 · Sesión 1'
+          title: Juzgar un build
+          desc: Presencia, comodidad y la nota que escribes
+          state: done
+        - label: '02 · Sesión 2'
+          title: Visor y build
+          desc: Elegir hardware, y los ajustes de Android
+          state: done
+        - label: '03 · Sesión 3'
+          title: Toolkit de interacción
+          desc: Origin, interactores e interactables
+          state: done
+        - label: '04 · Sesión 4'
+          title: Tu propio código
+          desc: Interactables propios y eventos de selección
+          state: now
+        - label: '05 · Sesión 5'
+          title: El presupuesto del cuadro
+          desc: Medir milisegundos en el dispositivo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Dos puertas al mismo evento
+      lede: El inspector es una puerta para un objeto. La herencia es una puerta para cada copia que llegue a existir.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El cableado describe un objeto, la clase describe una especie
+      lead: >-
+        Un UnityEvent arrastrado en el inspector dice qué hace este botón de paro. Un
+        componente que hereda del interactable base dice qué es un paro de emergencia, y
+        cada copia llega sabiéndolo.
+      panel:
+        label: La pregunta que lo decide
+        title: ¿Lo repetirías en la siguiente copia?
+        note: >-
+          Si sí, es comportamiento y va en una clase. Si es un sonido en un objeto de una
+          escena, el inspector es más rápido y honesto al respecto.
+      steps:
+        - text: El cableado vive en el archivo de escena
+        - text: El comportamiento vive en la clase
+        - text: El cableado es por objeto, siempre
+        - text: El comportamiento llega con el prefab
+          loop: ↺ y el archivo de escena es el peor lugar para revisar una regla
+
+  - table:
+      eyebrow: Bloque 01 · Elegir
+      title: El mismo select, alcanzado de dos formas
+      headers: [Pregunta, Evento del inspector, Clase propia]
+      rows:
+        - ["Aplica a", "Este objeto", "Cada instancia"]
+        - ["Vive en", "La escena o el prefab", "Un archivo .cs"]
+        - ["Se revisa", "Abriendo la escena", "En un diff"]
+        - ["Estado propio", "Ninguno", "Campos, y reglas"]
+        - ["Mejor para", "Sonido, efectos, casos únicos", "Enclavamientos, máquinas"]
+
+  - code:
+      eyebrow: Bloque 01 · El más chico que corre
+      title: Un interactable propio, en diez líneas
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        using UnityEngine.XR.Interaction.Toolkit;
+        using UnityEngine.XR.Interaction.Toolkit.Interactables;
+
+        [CanSelectMultiple(false)]
+        public class EmergencyStop : XRBaseInteractable
+        {
+            public bool Latched { get; private set; }
+            protected override void OnSelectEntered(
+                SelectEnterEventArgs args)
+            {
+                base.OnSelectEntered(args);
+                Latched = true;
+            }
+        }
+      annotations:
+        - label: El atributo
+          text: >-
+            Una mano a la vez. Dos manos sobre un paro de emergencia no debería ser algo
+            expresable.
+        - label: La firma
+          text: >-
+            Partida en dos renglones solo porque es larga. Es un método, protected, que
+            sobrescribe al de la base.
+        - label: La llamada a base
+          text: >-
+            Es lo que levanta selectEntered para quien escuche desde el inspector. Quítala y
+            se callan.
+        - label: Riesgo
+          text: >-
+            args vale solo durante esta llamada. Copia el valor que necesites, no guardes el
+            objeto.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Qué imprime una presión, con y sin la base
+      filename: EmergencyStop.cs
+      lang: csharp
+      output_label: Consola, un poke
+      source: |
+        base.OnSelectEntered(args);   // presente, y luego quitada
+        Latched = true;
+        Debug.Log($"trabado {Latched}");
+      output: |
+        -- con la llamada a base --
+        trabado True
+        sonido del panel
+        -- sin ella --
+        trabado True
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Un botón que se queda oprimido
+      lede: El dedo se va y la máquina sigue abajo. Esa frase es toda la diferencia entre un botón y un enclavamiento.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · La regla
+      title: El enclavamiento, y la reposición de otro lado
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        [SerializeField] MotorDrive motor;
+
+        public bool Latched { get; private set; }
+
+        protected override void OnSelectEntered(
+            SelectEnterEventArgs args)
+        {
+            base.OnSelectEntered(args);
+            if (Latched) return;
+            Latched = true;
+            motor.Stop();
+        }
+
+        public void ClearFromPanel() => Latched = false;
+      annotations:
+        - label: La guarda
+          text: >-
+            Una segunda presión sobre un paro trabado no hace nada. La máquina ya está
+            abajo.
+        - label: Sin salida
+          text: >-
+            Aquí no hay OnSelectExited a propósito. Soltar el botón es justo lo que no debe
+            liberar el enclavamiento.
+        - label: La salida
+          text: >-
+            ClearFromPanel lo llama el tablero del otro lado del cuarto, así que reponer es
+            una caminata.
+        - label: Riesgo
+          text: >-
+            Haz ClearFromPanel público y olvida desde dónde se llama, y alguien lo cablea al
+            propio paro.
+          accent: true
+
+  - trace:
+      eyebrow: Bloque 02 · Traza medida
+      title: Cuatro pasos, y el estado después de cada uno
+      headers: [Paso, Latched, Motor, Eventos levantados]
+      rows:
+        - ["Poke al paro", "true", "detenido", "select enter"]
+        - ["Levantar el dedo", "true", "detenido", "select exit"]
+        - ["Otro poke", "true", "detenido", "enter, exit"]
+        - ["Reposición", "false", "en reposo", "ninguno"]
+      verdict: >-
+        El renglón interesante es el segundo. El toolkit levanta el evento de salida tal
+        como debe, y el componente lo ignora, que es el diseño. Un enclavamiento que se
+        libera al soltar es un timbre, y a un motor nadie le pone un timbre.
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Los mismos cuatro pasos, en el dispositivo
+      filename: EmergencyStop.cs
+      lang: csharp
+      output_label: adb logcat, cuatro eventos
+      source: |
+        Debug.Log($"enter trabado={Latched}");
+        Debug.Log($"exit  trabado={Latched}");
+        Debug.Log($"panel trabado={Latched}");
+      output: |
+        enter trabado=True
+        exit  trabado=True
+        enter trabado=True
+        exit  trabado=True
+        panel trabado=False
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Trabajo que ocurre cada cuadro
+      lede: Unas interacciones son un momento y otras son un movimiento. Las segundas necesitan un lugar donde correr, y no es Update.
+      block: 3
+
+  - concept:
+      eyebrow: Concepto clave
+      title: El toolkit te da un lugar dentro de su propio cuadro
+      lead: >-
+        El interaction manager mueve sus componentes a través de fases de actualización con
+        nombre, así que el hover, la selección y el trabajo que haces en respuesta ocurren en
+        un orden conocido. Update corre fuera de ese orden.
+      panel:
+        label: Para qué sirve revisar la fase
+        title: El método se llama más de una vez por cuadro
+        note: >-
+          Revisa la fase y sal temprano de las que no quieres, o la carátula gira al doble de
+          la velocidad que tecleaste.
+      steps:
+        - text: El manager corre sus fases en orden
+        - text: Tu override se llama en cada una
+        - text: Actúas en la fase que elegiste
+        - text: Todo lo demás sale temprano
+          loop: ↺ y la fase que quieres para el movimiento es la dinámica
+
+  - code:
+      eyebrow: Bloque 03 · Por cuadro, en orden
+      title: La carátula que gira mientras se sostiene
+      filename: TorqueDial.cs
+      lang: csharp
+      source: |
+        public override void ProcessInteractable(
+            XRInteractionUpdateOrder.UpdatePhase phase)
+        {
+            base.ProcessInteractable(phase);
+            if (phase != XRInteractionUpdateOrder.UpdatePhase.Dynamic)
+                return;
+            if (!isSelected)
+                return;
+            dial.Rotate(0f, 0f, spin * Time.deltaTime);
+        }
+      annotations:
+        - label: La fase
+          text: >-
+            Dynamic es la que corre junto con el resto del movimiento del cuadro, que es lo
+            que es una carátula girando.
+        - label: isSelected
+          text: >-
+            Verdadero mientras algún interactor selecciona este objeto. Viene de la clase
+            base, ya mantenido.
+        - label: deltaTime
+          text: >-
+            Grados por segundo, no grados por cuadro. En un visor la tasa de cuadros es lo
+            que no puedes suponer.
+        - label: Riesgo
+          text: >-
+            Nada de reservar memoria aquí. Una lista nueva por cuadro se vuelve una pausa que
+            vas a sentir.
+          accent: true
+
+  - compare:
+      eyebrow: Bloque 03 · El mismo comportamiento, dos costos
+      title: Consultar por una presión contra que te avisen
+      before:
+        label: Consultado en Update
+        file: MotorPoll.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              if (stop.isSelected)
+                  motor.Stop();
+          }
+      after:
+        label: Avisado por el evento
+        file: EmergencyStop.cs
+        lang: csharp
+        code: |
+          protected override void OnSelectEntered(
+              SelectEnterEventArgs args)
+          {
+              base.OnSelectEntered(args);
+              motor.Stop();
+          }
+      note: >-
+        La consulta pregunta 72 veces por segundo por algo que pasa dos veces en una hora, y
+        no distingue una presión nueva de un dedo que sigue ahí. El override corre una vez,
+        en el momento en que empieza la presión, y sabe qué mano lo hizo.
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro formas de que un interactable propio falle
+      items:
+        - label: Error 01
+          title: El override que olvidó su base
+          desc: >-
+            Tu código corre y el cableado del inspector queda muerto. Sonidos, resaltados y
+            cada listener que el artista agregó dejan de dispararse, y la consola no dice por
+            qué.
+        - label: Error 02
+          title: Quedarse con los argumentos
+          desc: >-
+            La documentación dice que los args valen solo durante la llamada. Guarda el
+            objeto, léelo al cuadro siguiente, y estarás leyendo algo que ya se reutilizó.
+        - label: Error 03
+          title: Trabajo por cuadro en Update
+          desc: >-
+            Corre fuera de las fases de interacción, así que la carátula lee el estado de
+            selección del cuadro anterior y el movimiento llega tarde por exactamente uno.
+        - label: Error 04
+          title: Suponer que hay una sola mano
+          desc: >-
+            interactorsSelecting es una lista. Un torquímetro sostenido con dos manos tiene
+            dos entradas, y el código escrito para firstInteractorSelecting solo ve una.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: ¿Qué rompe este override por dejar fuera un renglón?
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        protected override void OnSelectEntered(
+            SelectEnterEventArgs args)
+        {
+            Latched = true;
+        }
+      options:
+        - Nada, el método de la clase base viene vacío
+        - Los eventos dejan de dispararse y los listeners del inspector se callan
+        - No compila, porque un override tiene que llamar a su base
+        - El interactable se da de baja del manager
+
+  - trace:
+      eyebrow: Respuesta
+      title: Qué ve cada listener cuando falta la base
+      headers: [Listener, Con base, Sin base]
+      rows:
+        - ["Campo Latched", "se asigna", "se asigna"]
+        - ["Evento selectEntered", "se levanta", "callado"]
+        - ["Resaltado del mesh", "encendido", "nada"]
+        - ["Sonido del panel", "suena", "nada"]
+      verdict: >-
+        El campo se asigna de cualquier forma, y eso es lo que hace cara esta falla: el
+        componente parece funcionar y todo lo que alguien más le colgó se detuvo en silencio.
+        Compila, corre, y el bug llega por correo del artista.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La puerta de guarda, en parejas
+      brief: >-
+        Escriban un interactable GuardDoor que gire sobre su bisagra mientras se sostiene y
+        reporte si está cerrada, y después hagan que el motor se niegue a arrancar mientras la
+        puerta no esté cerrada y el paro no esté liberado. Dos componentes, un enclavamiento,
+        nada de lógica en el inspector.
+      blocks:
+        - label: Restricción
+          text: Sin GameObject.Find y sin reservar memoria dentro de ProcessInteractable.
+        - label: Entregable
+          text: Los dos scripts, y un log de los cuatro estados del enclavamiento desde el dispositivo.
+        - label: Criterio
+          text: Que alguien pueda leer la regla solo en la clase, sin abrir tu escena.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El cableado es por objeto
+          desc: Si la siguiente copia necesitara el mismo arrastre, la regla va en el código.
+        - title: La llamada a base son los eventos
+          desc: Sáltala y tu código sigue corriendo mientras el listener de los demás se calla.
+        - title: Los argumentos viven una llamada
+          desc: Lee lo que necesites y cópialo. El objeto que te dieron se reutiliza después.
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: El enclavamiento, y un error deliberado
+      brief: >-
+        Terminen la puerta de guarda y el enclavamiento, después rompan uno de los dos a
+        propósito como describe el error 01, registren lo que dice la consola y arréglenlo.
+        Traigan los dos logs, porque la sesión 5 trata de medir cosas que no se anuncian solas.
+      meta:
+        - [Entrega, Antes de la sesión 5]
+        - [Formato, Blackboard · scripts y PDF]
+        - [Peso, Parte del promedio de tareas]
+      rubric:
+        - ["El enclavamiento", "40 %", "Tres condiciones, revisadas en un solo lugar y legibles en la clase"]
+        - ["El interactable propio", "40 %", "Hereda, llama a su base y sostiene su propio estado"]
+        - ["La corrida rota", "20 %", "Los dos logs, y una frase sobre qué significó el silencio"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Esta sesión va junto a la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. Esa la recorres tú.
+      meta:
+        - [Ruta, Unity Learn · VR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

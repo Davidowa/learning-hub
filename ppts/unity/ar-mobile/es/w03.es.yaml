@@ -1,0 +1,479 @@
+meta:
+  course: Desarrollo de AR móvil
+  code: UNITY
+  lang: es
+  language: unity
+  week: 3
+  footer: DESARROLLO DE AR MÓVIL · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 03 · Desarrollo · Blancos rastreables y colocación
+      title: Desarrollo de AR móvil
+      subtitle: >-
+        Planos, imágenes impresas y raycasts. Las tres formas en que una sesión te entrega un
+        lugar real donde poner algo que no lo es.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Fundamentos]
+        - [Sesión, 3 de 5]
+        - [Basado en, Unity Learn · Mobile AR Development]
+      notes: |
+        Todo lo de hoy funciona igual en ARCore y en ARKit, así que la sesión se queda
+        neutral. Lo específico de Android fue la sesión dos.
+
+        Tomado del manual de AR Foundation 6.0, de sus páginas de plane detection, image
+        tracking y ray casts, y de la documentación del paquete Input System para el touch.
+        Nada está copiado de Unity Learn, que el alumno trabaja aparte.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué es un trackable
+          desc: Un identificador, una pose y un estado, y un solo evento que reporta los tres
+        - title: Colocar sobre un plano
+          desc: Un raycast que no necesita collider, y un tap que se vuelve posición en el mundo
+        - title: Blancos impresos
+          desc: Una biblioteca de imágenes, y la medida que todo el mundo captura mal
+        - title: Cuando no funciona
+          desc: Pisos vacíos, teléfonos rápidos y referencias guardadas, con su síntoma cada uno
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Explicar el ciclo de vida de un trackable
+          sub: added, updated y removed, y por qué un plano fusionado llega como removed
+        - head: Suscribirse a trackablesChanged
+          sub: El evento que levanta todo manager de AR Foundation 6, en código o en el Inspector
+        - head: Colocar un objeto con un raycast
+          sub: Desde un punto de pantalla, contra PlaneWithinPolygon, sin un solo collider
+        - head: Armar una biblioteca de imágenes
+          sub: Y capturar el tamaño físico con que el papel salió de la impresora
+        - head: Leer una falla de regreso a su causa
+          sub: Un piso vacío, un giro rápido o un plano guardado se ven distinto en pantalla
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta sesión entre las cinco
+      phases:
+        - label: 01 · Sesión 1
+          title: Diseño de AR
+          desc: Casos de uso, y qué puede rastrear de verdad una plataforma
+          state: done
+        - label: 02 · Sesión 2
+          title: Compilar a Android
+          desc: Paquetes, Player Settings, ARCore y el pipeline
+          state: done
+        - label: 03 · Sesión 3
+          title: Blancos rastreables
+          desc: Planos, imágenes, raycasts y colocación
+          state: now
+        - label: 04 · Sesión 4
+          title: Visual Scripting
+          desc: Interacciones armadas como grafos, no como scripts
+          state: todo
+        - label: 05 · Sesión 5
+          title: Optimización móvil
+          desc: Assets, batching y el presupuesto por frame
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Todo lo que encuentra es un trackable
+      lede: Una sola forma de objeto, un solo evento, y el mismo código para planos, imágenes y nubes de puntos.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un trackable es un id, una pose y un estado
+      lead: >-
+        Cada plano, imagen y nube de puntos que una sesión encuentra carga un TrackableId que
+        no cambia mientras la sesión lo siga reconociendo. Ese identificador es lo que
+        permite al manager decirte tres cosas distintas. Este es nuevo, este se movió o
+        creció, este ya no está. AR Foundation convierte cada uno en un GameObject y mantiene
+        su transform al paso del proveedor.
+      panel:
+        label: Un evento para todos los managers
+        title: trackablesChanged, desde AR Foundation 6
+        note: >-
+          Reemplazó a los eventos por manager, planesChanged y trackedImagesChanged entre
+          ellos, y se conecta en el Inspector como cualquier UnityEvent.
+      steps:
+        - text: added, la sesión acaba de encontrarlo
+        - text: updated, cambió su pose o su forma
+        - text: removed, ya no está ahí
+        - text: y un plano fusionado llega como removed
+          loop: ↺ así que nunca guardes un plano, pregúntale al manager
+
+  - diagram:
+      eyebrow: Bloque 01 · Ciclo de vida
+      title: Las tres cosas que le pasan a un trackable
+      blocks:
+        - label: '01'
+          title: added
+          desc: El proveedor encontró algo nuevo, y AR Foundation le crea un GameObject.
+        - label: '02'
+          title: updated
+          desc: Mismo identificador, otra pose u otra frontera. El transform se mueve y la malla se rehace.
+        - label: '03'
+          title: removed
+          desc: Se fue, o se fundió en un plano mayor. Lo que le hayas emparentado se va con él.
+          dark: true
+      note: >-
+        La fusión es la que sorprende. Dos parches chicos de piso que resultan ser un mismo
+        piso quedan como un solo plano, y el menor de los dos se elimina mientras el
+        contenido que estaba parado ahí desaparece.
+
+  - table:
+      eyebrow: Bloque 01 · Managers
+      title: Cinco managers, y qué produce cada uno
+      headers: [Manager, Produce, Qué pide del cuarto]
+      rows:
+        - ["AR Plane Manager", "Trackables ARPlane", "Superficie con textura"]
+        - ["AR Point Cloud Manager", "Feature points", "Detalle en cualquier lado"]
+        - ["AR Raycast Manager", "Resultados ARRaycastHit", "Un trackable al cual pegar"]
+        - ["AR Tracked Image Manager", "ARTrackedImage", "Una biblioteca"]
+        - ["AR Anchor Manager", "Trackables ARAnchor", "Una pose que valga fijar"]
+
+  - code:
+      eyebrow: Bloque 01 · El evento
+      title: Escuchar una vez, para todos los planos
+      filename: PlaneLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class PlaneLog : MonoBehaviour
+        {
+            [SerializeField] ARPlaneManager planes;
+
+            void OnEnable() =>
+                planes.trackablesChanged.AddListener(OnChanged);
+
+            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
+            {
+                Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
+            }
+        }
+      annotations:
+        - label: Un evento
+          text: >-
+            La misma firma sirve para imágenes y nubes de puntos. Sólo cambia el argumento
+            de tipo.
+        - label: Tres listas
+          text: >-
+            added, updated y removed llegan juntas en una llamada, y un handler cubre el
+            ciclo entero.
+        - label: En el Inspector
+          text: >-
+            trackablesChanged es un UnityEvent, así que un handler público se conecta sin
+            AddListener.
+        - label: Riesgo
+          text: >-
+            Agrega el listener en OnEnable y quítalo en OnDisable, o la escena recargada
+            trae dos.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Cómo se ve el log mientras se escanea un piso
+      filename: PlaneLog.cs
+      lang: csharp
+      output_label: Escaneando un piso
+      source: |
+        void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
+        {
+            Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
+        }
+      output: |
+        +1 ~0
+        +0 ~1
+        +0 ~1
+        +1 ~1
+        +0 ~2
+        +0 ~2
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Poner un objeto en un piso real
+      lede: Un raycast que le pregunta a la sesión y no al motor de física, y que no necesita collider para contestar.
+      block: 2
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Este raycast no necesita collider
+      lead: >-
+        Physics.Raycast necesita un collider en la escena. ARRaycastManager.Raycast no. Le
+        pide al proveedor que cruce un rayo con lo que la sesión está rastreando, así que un
+        plano es blanco válido desde que se reporta, sin que nadie le genere un mesh
+        collider. Le pasas un punto de pantalla, una lista para los resultados y una máscara
+        que nombra qué clases de trackable pueden contestar.
+      panel:
+        label: La máscara que más importa
+        title: TrackableType.PlaneWithinPolygon
+        note: >-
+          Dentro del polígono quiere decir dentro de la frontera detectada. La otra opción
+          deja que un tap caiga más allá del piso, sobre el plano infinito de atrás.
+      steps:
+        - text: Toma el punto de pantalla del tap
+        - text: Pide al manager que llene una lista
+        - text: Usa el primer hit de la lista
+        - text: Lee su pose, posición y rotación
+          loop: ↺ y reusa la misma lista en cada tap
+
+  - code:
+      eyebrow: Bloque 02 · Colocación, parte 1
+      title: Los campos que necesita la colocación
+      filename: TapToPlace.cs
+      lang: csharp
+      source: |
+        using System.Collections.Generic;
+        using UnityEngine;
+        using UnityEngine.InputSystem;
+        using UnityEngine.XR.ARFoundation;
+        using UnityEngine.XR.ARSubsystems;
+
+        public class TapToPlace : MonoBehaviour
+        {
+            [SerializeField] ARRaycastManager raycasts;
+            [SerializeField] GameObject marker;
+
+            static readonly List<ARRaycastHit> hits = new();
+      annotations:
+        - label: Dos namespaces
+          text: >-
+            ARFoundation trae los managers, ARSubsystems trae TrackableType.
+        - label: Una lista, reusada
+          text: >-
+            Raycast llena la lista que le des. Una nueva por tap es trabajo para nada.
+        - label: Serializado, no buscado
+          text: >-
+            Arrastra el manager desde el XR Origin, en vez de andarlo buscando.
+        - label: Riesgo
+          text: >-
+            Un campo marker vacío falla en silencio en el teléfono, donde no puedes ver el
+            nulo.
+          accent: true
+
+  - code:
+      eyebrow: Bloque 02 · Colocación, parte 2
+      title: El tap, el raycast y el objeto
+      filename: TapToPlace.cs
+      lang: csharp
+      source: |
+        // dentro de TapToPlace
+        void Update()
+        {
+            var touch = Touchscreen.current?.primaryTouch;
+            if (touch == null) return;
+            if (!touch.press.wasPressedThisFrame) return;
+
+            Vector2 p = touch.position.ReadValue();
+            var mask = TrackableType.PlaneWithinPolygon;
+            if (!raycasts.Raycast(p, hits, mask)) return;
+
+            Pose pose = hits[0].pose;
+            Instantiate(marker, pose.position, pose.rotation);
+        }
+      annotations:
+        - label: La revisión de nulo
+          text: >-
+            Touchscreen.current es nulo en el editor si no hay dispositivo conectado.
+        - label: Punto de pantalla
+          text: >-
+            Píxeles, no unidades de mundo. El manager arma el rayo desde la cámara de AR.
+        - label: La pose
+          text: >-
+            Posición y rotación llegan juntas, así que el objeto cae acostado en la
+            superficie.
+        - label: Riesgo
+          text: >-
+            Con un false la lista conserva lo viejo, así que léela sólo después de un true.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro razones por las que nunca aparece un plano
+      items:
+        - label: Error 01
+          title: Un piso blanco y vacío
+          desc: >-
+            Nada que emparejar entre frames, así que no hay feature points ni plano. Avienta
+            una hoja de periódico al piso y aparece en segundos.
+        - label: Error 02
+          title: Mover el teléfono muy rápido
+          desc: >-
+            El barrido borronea y destruye los puntos que el rastreador seguía. Muévete
+            despacio, y de lado en vez de girar sobre tu propio eje.
+        - label: Error 03
+          title: Guardar una referencia a un plano
+          desc: >-
+            Los planos se fusionan y desaparecen. Un campo que guarda uno queda como
+            referencia perdida, y el contenido parado ahí se va con él.
+        - label: Error 04
+          title: Colocar contenido sin ancla
+          desc: >-
+            Sin ancla el objeto conserva las coordenadas que le diste mientras la sesión
+            corrige el mundo alrededor en silencio, y se va de lado.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Blancos impresos
+      lede: Una imagen que la app ya conoce, una biblioteca donde vive, y una medida que decide la escala de todo.
+      block: 3
+
+  - steps:
+      eyebrow: Bloque 03 · Flujo
+      title: De una hoja impresa a una imagen rastreada
+      items:
+        - label: '01'
+          title: Importa
+          desc: Mete la foto del blanco al proyecto como textura
+        - label: '02'
+          title: Crea la biblioteca
+          desc: Assets, Create, XR, Reference Image Library
+        - label: '03'
+          title: Agrega la imagen
+          desc: Una entrada por blanco, con su textura asignada
+        - label: '04'
+          title: Specify Size
+          desc: Márcalo y captura el ancho impreso en metros
+        - label: '05'
+          title: Asígnala
+          desc: Suelta la biblioteca en el AR Tracked Image Manager
+
+  - table:
+      eyebrow: Bloque 03 · Blancos
+      title: Qué separa a un blanco que sirve de uno que no
+      headers: [Propiedad, Qué funciona, Por qué]
+      rows:
+        - ["Contraste", "Alto, incluso en gris", "El rastreador no ve color"]
+        - ["Detalle", "Cargado y sin repetir", "Lo repetido empata mal"]
+        - ["Forma", "Plana y rígida", "Un póster curvo deja de empatar"]
+        - ["Tamaño físico", "Medido, en metros", "De ahí sale la distancia"]
+        - ["Acabado", "Papel mate", "El brillo devuelve el cuarto"]
+
+  - stat:
+      eyebrow: La medida que nadie mide
+      value: 0.210 m
+      text: El ancho de una hoja A4, que es el número que el campo Specify Size está pidiendo
+      note: >-
+        Captura lo que mide el papel, no lo que sugiere el archivo de imagen. Si le pegas mal
+        por un factor, la distancia estimada sale mal por el mismo factor, y el contenido que
+        va sobre la página flota encima de la mesa o se hunde en ella.
+
+  - code:
+      eyebrow: Bloque 03 · Rastreo de imágenes
+      title: Reaccionar a un blanco que la sesión reconoció
+      filename: ImageLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class ImageLog : MonoBehaviour
+        {
+            // conectado a trackablesChanged en el Inspector
+            public void OnChanged(
+                ARTrackablesChangedEventArgs<ARTrackedImage> e)
+            {
+                foreach (var img in e.added)
+                    Debug.Log($"hallada {img.referenceImage.name}");
+            }
+        }
+      annotations:
+        - label: El mismo evento
+          text: >-
+            Del ejemplo de planos sólo cambió el argumento de tipo.
+        - label: referenceImage
+          text: >-
+            La imagen rastreada sabe con qué entrada de la biblioteca empató.
+        - label: Campo de prefab
+          text: >-
+            El manager puede instanciar un prefab por imagen, que le viene bien a una demo.
+        - label: Riesgo
+          text: >-
+            El GameObject sobrevive cuando el blanco sale del cuadro. Revisa trackingState.
+          accent: true
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: La biblioteca dice que el blanco mide 0.210 m de ancho. Se imprimió a 0.105 m. ¿Qué pasa?
+      options:
+        - El contenido cae como al doble de distancia, y al doble de tamaño
+        - No se reconoce la imagen, porque el tamaño tiene que empatar con el impreso
+        - Nada, el campo de tamaño es sólo una pista que se usa en el editor
+        - El rastreo sirve, pero la rotación del blanco regresa espejeada
+
+  - trace:
+      eyebrow: Respuesta
+      title: Un número mal, y todo lo que cuelga de él
+      headers: [Cantidad, Capturado, Real, Resultado]
+      rows:
+        - ["Ancho del blanco", "0.210 m", "0.105 m", "Dos a uno"]
+        - ["Distancia", "Derivada", "La mitad", "El doble"]
+        - ["Escala", "De autor", "Sin cambio", "Se ve al doble"]
+        - ["Rotación", "Correcta", "Correcta", "Sin efecto"]
+      verdict: >-
+        El rastreador no puede medir tu papel. Le cree a la biblioteca y deriva la distancia
+        del ancho aparente, así que imprimir a la mitad duplica la distancia estimada. Mide
+        la hoja con una regla en cuanto salga de la impresora.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Dos maneras de colocar un objeto, en parejas
+      brief: >-
+        Agreguen detección de planos y tap para colocar al proyecto de la sesión dos, después
+        impriman una imagen de blanco y coloquen el mismo prefab sobre ella. Midan el ancho
+        impreso con una regla antes de capturarlo en la biblioteca.
+      blocks:
+        - label: Restricción
+          text: Un solo prefab, colocado de las dos maneras. Sin segunda escena y sin segundo proyecto.
+        - label: Entregable
+          text: Un video corto de la pantalla del teléfono con las dos colocaciones, una tras otra.
+        - label: Criterio
+          text: Que el objeto sobre el blanco impreso tenga el tamaño que buscaban, medido contra la hoja.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Cuatro ideas para llevarse
+      items:
+        - title: Un evento, todos los managers
+          desc: trackablesChanged carga added, updated y removed para planos, imágenes y nubes por igual
+        - title: Una fusión se ve como un borrado
+          desc: Dos parches que resultan ser un piso dejan un trackable y una referencia perdida
+        - title: El raycast le pregunta a la sesión
+          desc: No se genera collider, así que un plano es blanco válido desde que el proveedor lo reporta
+        - title: El tamaño impreso fija la escala
+          desc: La distancia sale del ancho aparente, así que un blanco mal medido mueve todo con él
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La misma interacción, sin el script
+      brief: >-
+        Conserva la escena de tap para colocar. La sesión cuatro rearma exactamente esta
+        interacción como un grafo, así que trae el proyecto funcionando y trae el script,
+        porque los dos van a estar lado a lado en la pantalla.
+      meta:
+        - [Entrega, Antes de la sesión 4]
+        - [Formato, El repositorio actualizado]
+        - [Trae, El teléfono y un blanco impreso]
+      rubric:
+        - ["Colocación", "Obligatorio", "Tocar un plano detectado coloca el prefab encima"]
+        - ["Blanco impreso", "Obligatorio", "El blanco se reconoce y su tamaño está medido"]
+        - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Mobile AR Development en Unity Learn es la ruta que estos decks acompañan, en
+        learn.unity.com/pathway/mobile-ar-development. Se espera que la trabajes completa.
+      meta:
+        - [Ruta, Unity Learn · Mobile AR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

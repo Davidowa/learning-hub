@@ -1,0 +1,423 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 2
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 02 · Objetos, transformaciones y materiales
+      title: Fundamentos de Unity
+      subtitle: >-
+        La escena deja de estar vacía. Tres números colocan cada objeto en ella, y uno de los
+        tres cambia sin ruido la manera en que el objeto se comporta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 2 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Sesión acompañante de la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Cubre las tres primeras partes del área
+        Scene Building Essentials: creación, transformación y apariencia. La física llega en
+        la sesión 3.
+
+        La escena es Assets/Scenes/Bay.unity, del proyecto StoreRoom de la sesión 1. Hoy se
+        construye un piso, una rampa girada -18 grados en X y tres cajas.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Poner cosas en una escena
+          desc: >-
+            Área de la ruta · Scene Building Essentials, la parte de creación. Qué te da el
+            menú GameObject, con qué llega cada primitiva y cómo dejar legible el Hierarchy.
+        - title: Posición, rotación, escala
+          desc: >-
+            Área de la ruta · Scene Building Essentials, la parte de transformación. Espacio
+            local contra espacio de mundo, y qué le hace un padre girado a un hijo quieto.
+        - title: Materiales y luz
+          desc: >-
+            Área de la ruta · Scene Building Essentials, la parte de apariencia. Material,
+            shader y textura, y las cinco razones por las que un objeto se ve mal.
+        - title: El almacén
+          desc: >-
+            La escena de clase recibe su piso, su rampa y sus tres cajas, con los números
+            anotados para que la sesión 3 pueda soltarlas y cronometrar la caída.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Agregar un objeto y saber con qué llegó
+          sub: Un cubo llega con Mesh Filter, Mesh Renderer y Box Collider
+        - head: Leer el Transform como tres cosas distintas
+          sub: Posición en metros, rotación en grados, escala como multiplicador
+        - head: Distinguir el espacio local del de mundo
+          sub: Y predecir la posición de mundo de un hijo bajo un padre girado
+        - head: Armar un Hierarchy que otro pueda leer
+          sub: Padres vacíos en el origen, nombrados por lo que contienen
+        - head: Crear un material y aplicarlo
+          sub: Y decir por qué editarlo cambia todos los objetos que lo comparten
+        - head: Diagnosticar un objeto que se ve mal
+          sub: Magenta, gris plano, negro o invisible, cada uno con causa distinta
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: done
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: now
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: todo
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Qué es una escena y qué se le mete
+      lede: >-
+        Una escena es un archivo. El Hierarchy es su índice, y todo lo que arrastras a la
+        vista es un renglón escrito en ese archivo.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · Mecanismo
+      title: La escena es un archivo de texto, y eso explica bastante
+      lead: >-
+        Bay.unity no es una imagen. Es un archivo de texto que lista cada objeto, cada
+        componente que trae y cada valor de ese componente. Guardar la escena escribe ese
+        archivo, así que Ctrl S es lo que hace que tu trabajo exista. Dos personas que editan
+        la misma escena editan el mismo archivo, y por eso la sesión 3 cierra con prefabs.
+      panel:
+        label: Lo que se sigue de ahí
+        title: Cada valor que escribes cae en un archivo
+        note: >-
+          Una caja que desapareció entre sesiones nunca se guardó. El editor mantiene en
+          memoria los cambios sin guardar y le pone un asterisco al nombre de la escena.
+      steps:
+        - text: El Hierarchy muestra lo que contiene el archivo
+        - text: El Inspector muestra los renglones de un objeto
+        - text: Guardar escribe el archivo en Assets/Scenes
+          loop: ↺ y dos personas en una escena es una fusión que nadie gana
+
+  - table:
+      eyebrow: Bloque 01 · El menú GameObject
+      title: Con qué llega cada primitiva, antes de que la toques
+      headers: [Elemento del menú, Componentes, Collider]
+      rows:
+        - ["Create Empty", "Transform, y nada más", "Ninguno"]
+        - ["3D Object · Cube", "Mesh Filter, Mesh Renderer", "Box Collider"]
+        - ["3D Object · Sphere", "Mesh Filter, Mesh Renderer", "Sphere Collider"]
+        - ["3D Object · Plane", "Mesh Filter, Mesh Renderer", "Mesh Collider"]
+        - ["Light · Directional", "Light", "Ninguno"]
+        - ["Audio · Source", "Audio Source", "Ninguno"]
+
+  - steps:
+      eyebrow: Bloque 01 · La escena de clase
+      title: El almacén, armado en cinco objetos
+      items:
+        - label: '01'
+          title: Piso
+          desc: Un Plane en el origen, escalado 2 en X y en Z, lo que da 20 por 20 metros
+        - label: '02'
+          title: Rampa
+          desc: Un Cube escalado 4 por 0.2 por 12, girado -18 en X, con y igual a 1
+        - label: '03'
+          title: Cajas
+          desc: Tres Cubes escalados 0.6, separados 1 metro sobre la parte alta de la rampa
+        - label: '04'
+          title: Luz
+          desc: La Directional Light que ya trae la plantilla 3D, girada 50 en X
+        - label: '05'
+          title: Padres
+          desc: Dos objetos vacíos llamados Environment y Crates, los dos en el origen
+
+  - stat:
+      eyebrow: La convención que todo lo demás supone
+      value: 1 unidad = 1 m
+      text: Nada la obliga, y todos los valores de fábrica del motor están hechos para ella
+      note: >-
+        La gravedad es -9.81 en Y, y ese número está en metros por segundo al cuadrado.
+        Modela una caja diez veces más grande y sigue cayendo a -9.81, así que baja flotando
+        como globo y la física se ve mal sin un solo valor equivocado en el Inspector.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Posición, rotación, escala
+      lede: >-
+        Tres renglones del Inspector, y el segundo se mide contra el padre y no contra el
+        mundo.
+      block: 2
+
+  - concept:
+      eyebrow: Bloque 02 · Concepto clave
+      title: El Inspector muestra valores locales, no de mundo
+      lead: >-
+        El Transform del Inspector siempre es relativo al padre. Sin padre, el padre es el
+        mundo y los dos coinciden, que es por lo que la diferencia se queda invisible la
+        primera hora. Emparenta una caja a la rampa y el Inspector sigue leyendo los mismos
+        números mientras la caja está en otro lado.
+      panel:
+        label: El orden en que el motor las aplica
+        title: Escalar, luego girar, luego trasladar
+        note: >-
+          Invertir ese orden en tu cabeza es la razón por la que un objeto girado parece
+          escalarse sobre el eje equivocado. Se escala sobre sus ejes, y sus ejes giraron.
+      steps:
+        - text: La posición se mide desde el origen del padre
+        - text: La rotación son grados sobre los ejes del padre
+        - text: La escala multiplica, y también multiplica el collider
+          loop: ↺ y sin padre, el padre es el mundo
+
+  - code:
+      eyebrow: Bloque 02 · Leer los números
+      title: Las dos propiedades que el Inspector esconde
+      filename: WhereAmI.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class WhereAmI : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"local {transform.localPosition}");
+                Debug.Log($"mundo {transform.position}");
+                Debug.Log($"padre {transform.parent.name}");
+            }
+        }
+      annotations:
+        - label: localPosition
+          text: >-
+            Los tres números que muestra el Inspector. Medidos desde el padre.
+        - label: position
+          text: >-
+            La posición de mundo, con la que trabajan la cámara y el motor de física.
+        - label: Sesión 4
+          text: >-
+            Cada línea de aquí se explica entonces. Hoy es un instrumento de medición.
+        - label: Riesgo
+          text: >-
+            Sin padre, transform.parent es null y la tercera línea lanza una
+            NullReferenceException antes de que se lean las otras dos.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Una caja que nunca se movió, en dos lugares a la vez
+      filename: WhereAmI.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        Debug.Log($"local {transform.localPosition}");
+        Debug.Log($"mundo {transform.position}");
+        Debug.Log($"padre {transform.parent.name}");
+      output: |
+        local (0.00, 0.50, 0.00)
+        mundo (0.00, 1.48, -0.15)
+        padre Ramp
+
+  - trace:
+      eyebrow: Bloque 02 · Traza medida
+      title: La misma caja, emparentada en tres etapas
+      headers: [Etapa, Local, y de mundo, z de mundo]
+      rows:
+        - ["Sin padre", "0, 0.5, 0", "0.50", "0.00"]
+        - ["Padre en y = 1", "0, 0.5, 0", "1.50", "0.00"]
+        - ["Padre girado -18", "0, 0.5, 0", "1.48", "-0.15"]
+      verdict: >-
+        Los números locales nunca cambian. En el tercer renglón el padre está girado -18
+        grados en X, así que el medio metro de altura de la caja se vuelve 0.5 por el coseno
+        de 18, que es 0.4755, y gana 0.5 por el seno de -18, que es -0.1545, en Z. La caja se
+        movió porque su padre giró, y el Inspector no tenía cómo decirlo.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro transformaciones que te pelean
+      items:
+        - label: Error 01
+          title: Escala no uniforme en el padre
+          desc: >-
+            Escala un padre 1 por 3 por 1 y cada hijo girado se deforma. La malla se corta,
+            el collider no la sigue con honestidad y nada en el Inspector se ve mal.
+        - label: Error 02
+          title: Reset sobre un hijo
+          desc: >-
+            Transform · Reset pone los valores locales en cero, así que el hijo salta al
+            origen del padre y no al origen del mundo que tenías en mente.
+        - label: Error 03
+          title: Una rotación que dice 359.99
+          desc: >-
+            El Inspector muestra ángulos de Euler y el motor guarda un cuaternión. Los
+            valores se corren una centésima de grado, que es cosmético hasta que comparas dos.
+        - label: Error 04
+          title: Escalar en vez de mover
+          desc: >-
+            Un Plane mide 10 por 10 metros en escala 1, así que un piso de 20 metros es
+            escala 2 y no posición 20. Escribir el tamaño en el renglón equivocado es el
+            primer error más común.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Por qué se ve así
+      lede: >-
+        Un material es un asset, compartido por todo lo que lo usa, y la luz es lo que hace
+        visible cualquier cosa.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · Concepto clave
+      title: Shader, material, textura, en ese orden
+      lead: >-
+        El shader es el programa que decide cómo responde una superficie a la luz. El
+        material es un juego de valores para un shader, guardado como asset. La textura es
+        uno de esos valores, una imagen conectada a una ranura. Un renderer apunta a un
+        material, así que diez cajas con el mismo material se recolorean de una vez, o por
+        accidente.
+      panel:
+        label: Lo que decide el pipeline
+        title: Un proyecto URP pide materiales URP
+        note: >-
+          Un material hecho para el pipeline integrado se dibuja en magenta brillante bajo el
+          Universal Render Pipeline, porque el shader que nombra no está ahí para correr.
+      steps:
+        - text: El shader es el programa
+        - text: El material son los ajustes para él
+        - text: La textura es un ajuste entre muchos
+          loop: ↺ y el renderer nunca apunta a otra cosa que al material
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Tocar .material saca una copia a tus espaldas
+      filename: Recolour.cs
+      lang: csharp
+      output_label: Consola, en Play mode
+      source: |
+        Renderer r = GetComponent<Renderer>();
+        Debug.Log(r.sharedMaterial.name);
+
+        r.material.color = Color.red;
+        Debug.Log(r.material.name);
+      output: |
+        CrateWood
+        CrateWood (Instance)
+
+  - table:
+      eyebrow: Bloque 03 · Diagnóstico
+      title: Cinco maneras de verse mal, y qué significa cada una
+      headers: [En pantalla, Causa, Arreglo]
+      rows:
+        - ["Magenta brillante", "Falta el shader en este pipeline", "Usar un material URP"]
+        - ["Gris plano", "No le llega luz", "Agregar una Directional Light"]
+        - ["Casi negro", "La luz apunta a otro lado", "Girar la luz en X"]
+        - ["Brillo de espejo", "Smoothness cerca de 1", "Bajarlo a más o menos 0.2"]
+        - ["Nada de nada", "Mesh Renderer sin marcar", "Marcarlo en el Inspector"]
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Pusiste en rojo el material de una caja en ejecución con .material. ¿Qué les pasó a las otras dos?
+      options:
+        - Las tres se pusieron rojas, porque comparten el asset del material
+        - Sólo esa, porque .material le hizo una copia privada
+        - Ninguna cambió hasta que se guardó la escena
+        - Las tres se pusieron rojas y el cambio sobrevivió al Stop
+
+  - method:
+      eyebrow: Respuesta
+      title: La segunda, y la copia tiene costo
+      statement: >-
+        Leer .material clona el material para ese renderer y te entrega el clon. Sólo esa
+        caja cambia, y el clon vive hasta que el objeto se destruye.
+      points:
+        - label: Usa sharedMaterial
+          text: >-
+            Cuando sí quieres que cambien todas. Escribe sobre el asset, y en el editor esa
+            edición sobrevive al Stop.
+        - label: Usa material
+          text: >-
+            Cuando un objeto tiene que ser distinto. Cuenta con un material extra en memoria
+            por cada renderer que lo pida.
+        - label: La señal
+          text: >-
+            El nombre gana la palabra Instance entre paréntesis. Si ves eso en el Inspector
+            durante Play mode, algo de tu código tocó .material.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Construir el almacén, en parejas
+      brief: >-
+        Arma los cinco objetos de la escena de clase con los números del bloque 1, cuelga las
+        tres cajas de un vacío llamado Crates y dales un material hecho por ti. Después gira
+        ese padre 30 grados en Y y anota dónde queda cada caja.
+      blocks:
+        - label: Entregable
+          text: La escena guardada, más las tres posiciones de mundo antes y después del giro
+        - label: Restricción
+          text: >-
+            Los padres vacíos se quedan en posición cero, sin rotación y con escala 1, para
+            que los números de abajo sigan siendo legibles.
+        - label: La prueba
+          text: >-
+            Selecciona una caja y presiona F. Si la vista encuadra algo lejos de donde
+            esperabas, la razón es el padre y no la caja.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El Inspector habla en local
+          desc: >-
+            Tres números medidos desde el padre. Sin padre coinciden con el mundo, que es
+            justo por lo que la diferencia muerde la primera vez que emparentas algo
+        - title: La escala multiplica todo
+          desc: >-
+            La malla, el collider y los hijos. Una escala no uniforme en un padre girado
+            deforma las tres, y nada en la interfaz se queja
+        - title: Un material se comparte
+          desc: >-
+            Diez renderers pueden apuntar a un material. Editarlo cambia diez objetos, y
+            tocar .material en código crea en silencio un onceavo
+
+  - homework:
+      eyebrow: Tarea
+      title: La escena y el área de la ruta que hay detrás
+      brief: >-
+        Termina la escena del almacén y trabaja las partes de creación, transformación y
+        apariencia del área Scene Building Essentials en tu cuenta de Unity Learn. Lleva la
+        escena a la sesión 3, porque las cajas están por caer.
+      meta:
+        - [Entrega, Antes de la sesión 3]
+        - [Formato, Blackboard · el archivo de escena y una captura]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Hierarchy", "Obligatorio", "Padres nombrados en el origen, cajas debajo"]
+        - ["Números", "Obligatorio", "La rampa va a -18 en X y el piso mide 20 por 20"]
+        - ["Material", "Obligatorio", "Un material creado por ti, no el de fábrica"]
+        - ["Ruta", "Obligatorio", "Las tres partes del área marcadas en Unity Learn"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials, y se espera que la trabajes por tu cuenta.
+        La siguiente sesión, las cajas caen y algo tiene que detenerlas.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

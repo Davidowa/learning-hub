@@ -1,0 +1,441 @@
+meta:
+  course: Desarrollo de AR móvil
+  code: UNITY
+  lang: es
+  language: unity
+  week: 4
+  footer: DESARROLLO DE AR MÓVIL · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 04 · Visual Scripting · Interacciones como grafos
+      title: Desarrollo de AR móvil
+      subtitle: >-
+        La misma colocación que escribiste la semana pasada, armada con nodos, y el ajuste
+        que decide cuáles nodos puedes ver.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Fundamentos]
+        - [Sesión, 4 de 5]
+        - [Basado en, Unity Learn · Mobile AR Development]
+      notes: |
+        La ruta enseña Visual Scripting, no sólo C#, así que el tema se lleva una sesión
+        completa y no una mención. Los grafos se dibujan aquí con tablas, pasos y diagramas,
+        porque la captura de pantalla de un grafo se lee como adorno en un proyector.
+
+        Tomado del manual de Visual Scripting 1.9 (tipos de grafo y de máquina, variables,
+        interfaz, configuración) y del manual de AR Foundation 6.0. Nada está copiado de
+        Unity Learn, que el alumno trabaja aparte.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué es un grafo
+          desc: Dos clases de conexión, dos tipos de grafo, y dónde puede vivir un valor
+        - title: La interacción
+          desc: Tap para colocar, rearmado con nodos, etapa por etapa y con lo que pide cada una
+        - title: Los nodos que faltan
+          desc: Por qué los tipos de AR no salen en el buscador, y el ajuste que los genera
+        - title: Grafos y C# juntos
+          desc: Un evento de un script hacia un grafo, y dónde conviene poner la frontera
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Distinguir flujo de control de flujo de datos
+          sub: Y explicar por qué un nodo con todos sus valores puestos aun así nunca corre
+        - head: Elegir Graph en lugar de Embed
+          sub: Sabiendo qué hace el menú de origen, y qué destruye cambiarlo
+        - head: Escoger el alcance de una variable
+          sub: Flow, Graph, Object, Scene, App o Saved, según cuánto tenga que durar el valor
+        - head: Armar una colocación como grafo
+          sub: Evento, pregunta y acción, en el orden que obligan las conexiones
+        - head: Regenerar la biblioteca de nodos
+          sub: Para que los tipos de AR Foundation salgan en el buscador y no falten en silencio
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde cae esta sesión entre las cinco
+      phases:
+        - label: 01 · Sesión 1
+          title: Diseño de AR
+          desc: Casos de uso, y qué puede rastrear de verdad una plataforma
+          state: done
+        - label: 02 · Sesión 2
+          title: Compilar a Android
+          desc: Paquetes, Player Settings, ARCore y el pipeline
+          state: done
+        - label: 03 · Sesión 3
+          title: Blancos rastreables
+          desc: Planos, imágenes, raycasts y colocación
+          state: done
+        - label: 04 · Sesión 4
+          title: Visual Scripting
+          desc: Interacciones armadas como grafos, no como scripts
+          state: now
+        - label: 05 · Sesión 5
+          title: Optimización móvil
+          desc: Assets, batching y el presupuesto por frame
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Un programa con los cables dibujados
+      lede: Dos clases de conexión hacen dos trabajos distintos, y confundirlas es lo que deja a un grafo sin hacer nada.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un nodo corre porque algo se lo ordenó
+      lead: >-
+        Una clase de conexión dice qué pasa después. Sale de la salida de un nodo y entra a la
+        entrada de otro, y es lo que vuelve secuencia a un grafo en lugar de montón. La otra
+        clase lleva un valor hacia un puerto que lo pide, un número, una posición, un
+        GameObject. Un nodo al que no le entra una conexión de control nunca corre, por más
+        valores que le hayas cableado.
+      panel:
+        label: De dónde salen los nodos
+        title: Clic derecho en el grafo, el buscador
+        note: >-
+          Lista todos los nodos que el proyecto conoce, agrupados por categoría. Lo que no
+          puede listar es aquello de lo que nunca le avisaron a la biblioteca.
+      steps:
+        - text: Un nodo de evento arranca el flujo
+        - text: Las conexiones de control ordenan el trabajo
+        - text: Las de datos alimentan los puertos
+        - text: Sin conexión de control, no hay ejecución
+          loop: ↺ y es lo primero que hay que revisar
+
+  - table:
+      eyebrow: Bloque 01 · Las piezas
+      title: Dos tipos de grafo, y los componentes que los corren
+      headers: [Pieza, Qué es, Para qué sirve]
+      rows:
+        - ["Script Graph", "Un flujo de nodos", "Una conducta, de inicio a fin"]
+        - ["State Graph", "Estados y transiciones", "Modos entre los que se mueve"]
+        - ["Script Machine", "Un componente", "Corre un Script Graph"]
+        - ["State Machine", "Un componente", "Corre un State Graph"]
+        - ["Variables", "Se agrega solo", "Guarda las variables Object"]
+
+  - diagram:
+      eyebrow: Bloque 01 · Dónde vive
+      title: Un componente, un asset, y los nodos de adentro
+      blocks:
+        - label: '01'
+          title: El GameObject
+          desc: Encima trae un Script Machine, y a su lado aparece solo un componente Variables.
+        - label: '02'
+          title: El asset del grafo
+          desc: Aquí viven los nodos. Apunta diez objetos a un asset y los diez corren lo mismo.
+        - label: '03'
+          title: Los nodos
+          desc: Primero un nodo de evento, luego lo que pida la conducta, en la ventana del grafo.
+          dark: true
+      note: >-
+        Este es el arreglo que sale con el origen puesto en Graph. Con Embed desaparece el
+        bloque de en medio y los nodos viven dentro del componente, lo cual es cómodo una vez
+        y un problema la segunda vez que necesitas la misma conducta.
+
+  - tiers:
+      eyebrow: Bloque 01 · Origen
+      title: El menú de la máquina, y la trampa que trae debajo
+      items:
+        - key: GRAPH
+          title: Un asset del proyecto
+          desc: Un archivo, muchas máquinas. Edítalo una vez y cambia con él cada GameObject que lo apunta.
+        - key: EMBED
+          title: Dentro del componente
+          desc: El grafo existe sólo en ese componente. Sirve cuando tiene que guardar referencias de esta escena.
+        - key: CAMBIO
+          title: Cambiar de Embed a Graph lo tira
+          desc: Cambiar el origen de Embed a Graph tira el grafo embebido. Copia los nodos antes de tocarlo.
+
+  - table:
+      eyebrow: Bloque 01 · Variables
+      title: Seis lugares donde vive un valor, y cuánto dura
+      headers: [Alcance, Vive en, Se va cuando]
+      rows:
+        - ["Flow", "Una cadena de nodos", "Termina la cadena"]
+        - ["Graph", "Un grafo", "Se destruye el grafo"]
+        - ["Object", "Un GameObject", "Se destruye el objeto"]
+        - ["Scene", "Una escena", "Se descarga la escena"]
+        - ["App", "Toda la aplicación", "Se cierra la app"]
+        - ["Saved", "PlayerPrefs en disco", "Tú lo borras"]
+
+  - divider:
+      eyebrow: Bloque 02
+      title: La interacción, etapa por etapa
+      lede: Tap para colocar otra vez, ahora sin script, y el orden de las etapas no es una sugerencia.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · El grafo
+      title: Cinco etapas de un tap que coloca algo
+      items:
+        - label: '01'
+          title: Corre el frame
+          desc: Un nodo de evento de ciclo de vida dispara una vez por frame
+        - label: '02'
+          title: ¿Hubo tap?
+          desc: Una rama que sólo sigue en el frame donde bajó un dedo
+        - label: '03'
+          title: Dónde en pantalla
+          desc: La posición del touch, en píxeles, no en unidades de mundo
+        - label: '04'
+          title: Pregunta a la sesión
+          desc: El raycast, contra planos, llenando una lista de hits
+        - label: '05'
+          title: Crea el objeto
+          desc: Instancia el prefab en la posición y rotación del primer hit
+
+  - table:
+      eyebrow: Bloque 02 · Nodo por nodo
+      title: Qué toma cada etapa y qué devuelve
+      headers: [Etapa, Toma, Devuelve]
+      rows:
+        - ["Evento de frame", "Nada", "Un pulso de control por frame"]
+        - ["Prueba de tap", "Nada", "True en el frame del toque"]
+        - ["Rama", "Un booleano", "Dos salidas de control"]
+        - ["Punto de pantalla", "Nada", "Una posición en píxeles"]
+        - ["Raycast", "Punto, lista, máscara", "True, y la lista llena"]
+        - ["Instanciar", "Prefab, posición, giro", "El GameObject nuevo"]
+
+  - diagram:
+      eyebrow: Bloque 02 · Forma
+      title: Todo grafo de interacción tiene los mismos tres carriles
+      blocks:
+        - label: '01'
+          title: Evento
+          desc: Algo pasó. Corrió un frame, bajó un dedo, llegó un evento propio.
+        - label: '02'
+          title: Pregunta
+          desc: ¿Hay un plano bajo ese punto? El raycast contesta con un booleano y una pose.
+        - label: '03'
+          title: Acción
+          desc: Crear, mover, sonar. Todo lo que tenga un efecto que alguien pueda ver u oír.
+          dark: true
+      note: >-
+        Para leer un grafo ajeno, encuentra primero esos tres carriles. Si un grafo no tiene
+        nodo de evento nunca va a correr, y si tiene dos son en realidad dos grafos
+        compartiendo una ventana.
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro maneras de que un grafo no haga nada
+      items:
+        - label: Error 01
+          title: El nodo no está en el buscador
+          desc: >-
+            El tipo existe, el paquete está instalado, y el nodo nunca se generó. El bloque
+            tres es entero sobre esto.
+        - label: Error 02
+          title: Un nodo sin cable de control
+          desc: >-
+            Todos los valores conectados y el nodo aun así no dispara, porque nadie río
+            arriba le pasa el control.
+        - label: Error 03
+          title: Todo dentro del evento de frame
+          desc: >-
+            Un raycast por frame cuesta lo que cuesta un raycast, sesenta veces por segundo.
+            Pon el trabajo detrás de la rama, no delante.
+        - label: Error 04
+          title: Duplicar un grafo embebido
+          desc: >-
+            Copiar el GameObject copia el grafo, así que ahora hay dos y el arreglo que hagas
+            cae en uno solo.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Los nodos que nunca estuvieron
+      lede: El raycast de AR que buscaste en el bloque dos no sale en el buscador, y que el paquete esté instalado no tiene que ver.
+      block: 3
+
+  - concept:
+      eyebrow: Bloque 03 · Mecanismo
+      title: El buscador sólo lista lo que conoce
+      lead: >-
+        Visual Scripting no lee todos los tipos del proyecto mientras escribes. Genera de
+        antemano las definiciones de nodo a partir de una lista de ensamblados y una lista de
+        tipos, y las dos son ajustes del proyecto. AR Foundation no está en ninguna por
+        defecto, así que los nodos del raycast nunca se generaron y el buscador no tiene qué
+        mostrarte. Agregar el ensamblado y regenerar es lo que los hace aparecer.
+      panel:
+        label: Dónde viven las dos listas
+        title: Project Settings, Visual Scripting
+        note: >-
+          Node Library guarda los ensamblados y Type Options guarda los tipos. Regenerate
+          Nodes es lo que aplica un cambio en cualquiera de las dos.
+      steps:
+        - text: Abre Project Settings, Visual Scripting
+        - text: Agrega el ensamblado a Node Library
+        - text: Agrega sus tipos a Type Options
+        - text: Presiona Regenerate Nodes, luego OK
+          loop: ↺ y otra vez tras cada cambio a cualquiera de las listas
+
+  - table:
+      eyebrow: Bloque 03 · La lista
+      title: Qué agregar antes de que aparezcan los nodos de AR
+      headers: [Agrega esto, Dónde va, Por qué]
+      rows:
+        - ["Unity.XR.ARFoundation", "Node Library", "Los managers y trackables"]
+        - ["Unity.XR.ARSubsystems", "Node Library", "TrackableType y los enums"]
+        - ["ARRaycastManager", "Type Options", "Para que sus métodos sean nodos"]
+        - ["ARRaycastHit", "Type Options", "Para poder leer la pose"]
+        - ["Regenerate Nodes", "La misma ventana", "Nada aplica hasta que lo hagas"]
+
+  - code:
+      eyebrow: Bloque 03 · El puente
+      title: Mandar un evento de C# hacia un grafo
+      filename: PlaneAnnouncer.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using Unity.VisualScripting;
+        using UnityEngine.XR.ARFoundation;
+
+        public class PlaneAnnouncer : MonoBehaviour
+        {
+            [SerializeField] GameObject graphTarget;
+            public void OnChanged(
+                ARTrackablesChangedEventArgs<ARPlane> e)
+            {
+                if (e.added.Count > 0)
+                    CustomEvent.Trigger(graphTarget, "PlaneFound");
+            }
+        }
+      annotations:
+        - label: Un namespace
+          text: >-
+            Unity.VisualScripting es lo que pone CustomEvent al alcance de un script.
+        - label: El destino
+          text: >-
+            El evento se entrega a un GameObject, así que el grafo que lo escucha vive ahí.
+        - label: El nombre
+          text: >-
+            Una cadena, comparada contra el nodo Custom Event. Nadie te revisa la
+            ortografía.
+        - label: Riesgo
+          text: >-
+            Renombra el evento de un lado y el grafo se calla, sin un error en ningún lado.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Un evento, y el grafo levantándolo
+      filename: PlaneAnnouncer.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        if (e.added.Count > 0)
+        {
+            Debug.Log("plano agregado, evento enviado");
+            CustomEvent.Trigger(graphTarget, "PlaneFound");
+        }
+      output: |
+        plano agregado, evento enviado
+        grafo despierta con PlaneFound
+        grafo, banner mostrado
+
+  - concept:
+      eyebrow: Bloque 03 · Criterio
+      title: Dónde va la frontera entre los dos
+      lead: >-
+        Los grafos se leen bien cuando describen qué pasa y en qué orden. Se leen mal cuando
+        cargan aritmética, manejo de cadenas o un recorrido sobre una lista, porque cada una
+        de esas cosas se vuelve una página de cajas que un script dice en un renglón. El
+        reparto útil es dejar que C# calcule y que el grafo secuencie, con un evento propio
+        como costura entre los dos.
+      panel:
+        label: La regla de dedo
+        title: Un grafo que no se lee de un tirón sobra
+        note: >-
+          Si la ventana tiene que desplazarse dos veces para seguir un flujo, pasa el centro
+          a un script y dispáralo con un evento.
+      steps:
+        - text: C# calcula, el grafo secuencia
+        - text: Un evento propio por costura
+        - text: Los nombres empatan por cadena, acuérdenlos
+        - text: Deja el grafo legible de una mirada
+          loop: ↺ y la costura es donde vas a depurar primero
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Un grafo tiene una variable AR Raycast Manager, y el nodo del raycast no está en el buscador. ¿Por qué?
+      options:
+        - El ensamblado no está en la biblioteca, así que nunca se generaron los nodos
+        - Visual Scripting no llama métodos de componentes, sólo de GameObjects
+        - El origen de la máquina es Embed, y un grafo embebido recibe menos nodos
+        - El AR Raycast Manager no expone métodos públicos que volver nodos
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cuatro revisiones, y sólo las dos últimas cuentan
+      headers: [Revisión, Dónde miras, Resultado]
+      rows:
+        - ["Paquete instalado", "Package Manager", "Sí"]
+        - ["El tipo compila", "Un script de prueba", "Sí"]
+        - ["Ensamblado listado", "Node Library", "No"]
+        - ["Nodos generados", "La misma ventana", "Nunca"]
+      verdict: >-
+        El paquete está y el compilador está contento, que es justo lo que vuelve confuso
+        este caso. El buscador no lee el proyecto, lee una lista generada, y esa lista se
+        escribió antes de que el ensamblado entrara.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: La misma colocación, dos veces, en parejas
+      brief: >-
+        Rearmen la conducta de tap para colocar de la sesión tres como un Script Graph en un
+        segundo GameObject, con la versión en script todavía en la escena y desactivada.
+        Después cambien cuál está activo y confirmen que las dos se portan igual en el
+        teléfono.
+      blocks:
+        - label: Restricción
+          text: El grafo secuencia. Cualquier aritmética va en un script y llega como evento.
+        - label: Entregable
+          text: Una grabación de las dos versiones corriendo, y una nota de con cuál se quedarían.
+        - label: Criterio
+          text: Que el grafo quepa en una ventana sin desplazarse, y un compañero pueda leerlo en voz alta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Cuatro ideas para llevarse
+      items:
+        - title: Primero control, luego datos
+          desc: Un nodo corre porque le llegó una conexión de control, no porque sus entradas estén llenas
+        - title: Graph le gana a Embed
+          desc: Un asset se reusa y sobrevive a un GameObject duplicado, y salir de Embed pierde trabajo
+        - title: El buscador lee una lista generada
+          desc: Node Library y Type Options deciden qué existe, y nada aplica hasta que regeneras
+        - title: C# calcula, el grafo secuencia
+          desc: La costura es un evento propio, empatado por una cadena que nadie te revisa
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: Trae una escena que pese demasiado
+      brief: >-
+        Agrégale a tu escena contenido suficiente para que deje de sentirse suave en el
+        teléfono. Más objetos, texturas más grandes, más luces. La sesión cinco la mide y le
+        quita el costo de encima, así que una escena que ya corre a sesenta no nos sirve.
+      meta:
+        - [Entrega, Antes de la sesión 5]
+        - [Formato, El repositorio actualizado]
+        - [Trae, El teléfono y el cable]
+      rubric:
+        - ["Grafo", "Obligatorio", "Tap para colocar corre como Script Graph en el equipo"]
+        - ["Costura", "Obligatorio", "Al menos un evento propio cruzando de C# al grafo"]
+        - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Mobile AR Development en Unity Learn es la ruta que estos decks acompañan, en
+        learn.unity.com/pathway/mobile-ar-development. Se espera que la trabajes completa.
+      meta:
+        - [Ruta, Unity Learn · Mobile AR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

@@ -1,0 +1,476 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 4
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 04 · Leer y escribir C# en Unity
+      title: Fundamentos de Unity
+      subtitle: >-
+        Nada de tu código llama a Update. Lo llama el motor, por su nombre, y en cuanto eso
+        queda claro el resto del archivo deja de parecer magia.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 4 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Sesión acompañante de la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Cubre las áreas Level 1 Code Comprehension
+        y Level 1 Application Scripting, y cierra la parte de scripting del área GameObjects
+        que la sesión 3 dejó abierta.
+
+        Los scripts pertenecen al proyecto StoreRoom. Spinner.cs gira un letrero sobre la
+        puerta, BayDoor.cs cuenta cajas y cierra en tres.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Leer el script de alguien más
+          desc: >-
+            Área de la ruta · Level 1 Code Comprehension. Quién llama a estos métodos, cuándo
+            corre cada uno y cómo contestar qué hace un archivo sin correrlo.
+        - title: Escribir la lógica
+          desc: >-
+            Área de la ruta · Level 1 Application Scripting, las partes de lógica y API.
+            Campos que el Inspector ve, condiciones, contadores y las llamadas que sí usas.
+        - title: Estilo y la consola
+          desc: >-
+            Área de la ruta · Level 1 Application Scripting, la parte de estilo. Nombres, un
+            trabajo por archivo y cómo leer los tres errores que verás esta semana.
+        - title: La puerta decide
+          desc: >-
+            Área de la ruta · GameObjects, la parte de scripting. El trigger de la sesión 3
+            recibe una capacidad, un estado y una razón para dejar de contar.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Decir quién llama a Start y a Update
+          sub: Y por qué nada de tu propio código nombra a ninguno de los dos
+        - head: Elegir entre Update y FixedUpdate
+          sub: Según si la línea toca un Rigidbody o toca el cuadro
+        - head: Multiplicar por Time.deltaTime y decir por qué
+          sub: Para que el mismo script mueva lo mismo a 30 y a 60 cuadros
+        - head: Exponer un valor al Inspector a propósito
+          sub: Con SerializeField sobre un campo privado en vez de hacerlo público
+        - head: Leer un error de compilación hasta su línea
+          sub: CS1002, CS0103 y CS0246, cada uno con un arreglo distinto
+        - head: Explicar una NullReferenceException en un renglón
+          sub: Una referencia que nunca se asignó, nombrada por el método que la usó
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: done
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: done
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: now
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Leer un script antes de escribir uno
+      lede: >-
+        Un script de Unity es una clase que hereda de MonoBehaviour y contesta cuando el
+        motor llama. Todo lo demás se sigue de esa frase.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · Mecanismo
+      title: El motor llama a tus métodos por su nombre
+      lead: >-
+        Cuando se crea un MonoBehaviour, Unity revisa la clase buscando métodos con nombres
+        que conoce, Start, Update, OnTriggerEnter y unos cuarenta más, y se queda con los que
+        encontró. Nadie registra nada. Por eso un error de dedo en Update no cuesta ningún
+        error de compilación, porque el método sigue siendo C# válido y el motor no lo busca.
+      panel:
+        label: La falla que esto explica
+        title: Un método llamado Updatee nunca corre
+        note: >-
+          Sin error de compilación, sin advertencia en consola, sin pista en el Inspector. El
+          objeto se queda ahí. La ortografía es lo primero que se revisa cuando nada pasa.
+      steps:
+        - text: Escribes una clase que hereda de MonoBehaviour
+        - text: La arrastras a un GameObject como componente
+        - text: El motor encuentra los nombres que conoce
+          loop: ↺ y nunca va a encontrar un nombre que escribiste mal
+
+  - code:
+      eyebrow: Bloque 01 · Anatomía
+      title: Cada parte del script útil más pequeño
+      filename: Spinner.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class Spinner : MonoBehaviour
+        {
+            [SerializeField] float degreesPerSecond = 90f;
+
+            void Update()
+            {
+                float step = degreesPerSecond * Time.deltaTime;
+                transform.Rotate(0f, step, 0f);
+            }
+        }
+      annotations:
+        - label: using UnityEngine
+          text: >-
+            Ahí viven MonoBehaviour, Time y Debug. Sin esa línea ninguno se resuelve.
+        - label: El nombre de la clase
+          text: >-
+            Tiene que coincidir con el del archivo, Spinner.cs, o el componente no se agrega.
+        - label: transform
+          text: >-
+            Una propiedad que MonoBehaviour ya te da. Es el Transform de este objeto.
+        - label: Riesgo
+          text: >-
+            Quita Time.deltaTime y el letrero gira 90 grados por cuadro, que son 5400 grados
+            por segundo en una máquina que sostiene 60.
+          accent: true
+
+  - table:
+      eyebrow: Bloque 01 · Las llamadas
+      title: Seis mensajes que manda el motor, y cuándo llega cada uno
+      headers: [Mensaje, Cuándo corre, Qué va ahí]
+      rows:
+        - ["Awake", "Al cargar el objeto", "Conectar referencias"]
+        - ["Start", "Antes del primer cuadro", "Valores que otros ponen"]
+        - ["Update", "Una vez por cuadro", "Entrada, timers, animación"]
+        - ["FixedUpdate", "Cada 0.02 segundos", "Fuerzas sobre un Rigidbody"]
+        - ["OnTriggerEnter", "Al entrar a un trigger", "Contar, puertas, recoger"]
+        - ["OnDestroy", "Cuando el objeto se va", "Soltar lo que tenía"]
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: El mismo script en dos máquinas, un segundo cada una
+      filename: Drift.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        void Update()
+        {
+            frames++;
+            naive  += 0.05f;
+            scaled += 3f * Time.deltaTime;
+        }
+      output: |
+        60 fps  frames 60
+          naive 3.00   scaled 3.00
+        30 fps  frames 30
+          naive 1.50   scaled 3.00
+
+  - concept:
+      eyebrow: Bloque 01 · Concepto clave
+      title: Un cuadro no es una unidad de tiempo
+      lead: >-
+        La línea ingenua suma 0.05 por cuadro, que resulta ser 3 por segundo en una máquina
+        que sostiene 60. En una que sostiene 30 son 1.5 por segundo, y el mismo script ahora
+        va a la mitad de rápido por razones que nadie escribió. Time.deltaTime son los
+        segundos que tardó el último cuadro, así que multiplicar convierte por cuadro en por
+        segundo.
+      panel:
+        label: La regla que se sigue de ahí
+        title: Por segundo en el campo, por cuadro en la línea
+        note: >-
+          Nombra el campo degreesPerSecond y multiplica por Time.deltaTime una sola vez, en
+          el punto de uso. Un campo llamado speed y sin unidad es donde se esconde el error.
+      steps:
+        - text: Update corre tan seguido como la máquina alcance
+        - text: Time.deltaTime es cuánto tardó el último cuadro
+        - text: Multiplica por él cualquier cosa por segundo
+          loop: ↺ y en FixedUpdate el paso es Time.fixedDeltaTime
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Escribir la lógica
+      lede: >-
+        Un contador, una condición y una bandera. La puerta de la sesión 3 recibe una
+        capacidad y una razón para dejar de poner atención.
+      block: 2
+
+  - code:
+      eyebrow: Bloque 02 · Application scripting
+      title: La puerta que cuenta y luego se detiene
+      filename: BayDoor.cs
+      lang: csharp
+      source: |
+        public class BayDoor : MonoBehaviour
+        {
+            [SerializeField] int capacity = 3;
+            int crates;
+            bool closed;
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (closed || other.attachedRigidbody == null) return;
+                crates++;
+                closed = crates >= capacity;
+                Debug.Log($"{crates}/{capacity} closed={closed}");
+            }
+        }
+      annotations:
+        - label: El return temprano
+          text: >-
+            Dos razones para no hacer nada, las dos atendidas en un renglón antes de contar.
+        - label: La bandera
+          text: >-
+            A closed se le asigna el resultado de una comparación. No hace falta un if.
+        - label: capacity
+          text: >-
+            Serializado, así que el número se ajusta en el Inspector y no en el archivo.
+        - label: Riesgo
+          text: >-
+            Cambia el 3 por 5 en el código y el Inspector sigue diciendo 3. Gana el valor
+            serializado, y sólo Reset sobre el componente lo limpia.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Tres cajas rampa abajo, un renglón cada una
+      filename: BayDoor.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        crates++;
+        closed = crates >= capacity;
+        Debug.Log($"{crates}/{capacity} closed={closed}");
+      output: |
+        1/3 closed=False
+        2/3 closed=False
+        3/3 closed=True
+
+  - trace:
+      eyebrow: Bloque 02 · Traza medida
+      title: El estado de la puerta después de cada llegada
+      headers: [Llegada, crates, closed, Contada]
+      rows:
+        - ["Caja 1", "1", "False", "Sí"]
+        - ["Caja 2", "2", "False", "Sí"]
+        - ["Caja 3", "3", "True", "Sí"]
+        - ["Caja 4", "3", "True", "No"]
+      verdict: >-
+        Llega la cuarta caja, la primera condición ya es verdadera y el método regresa antes
+        de que el contador se mueva. No se imprime nada, que es la conducta correcta y
+        también la que los alumnos reportan como error. Quita la revisión de closed y la
+        puerta cuenta hasta diecisiete sin ningún problema.
+
+  - table:
+      eyebrow: Bloque 02 · El Inspector
+      title: Tres maneras de declarar un campo, y qué cuesta cada una
+      headers: [Declaración, En el Inspector, Alcanzable desde fuera]
+      rows:
+        - ["public float x", "Visible y editable", "Sí, por cualquier script"]
+        - ["[SerializeField]", "Visible y editable", "No, sigue privado"]
+        - ["private float x", "Oculto", "No"]
+        - ["[HideInInspector]", "Oculto, se sigue guardando", "Sí, si es público"]
+
+  - pitfalls:
+      eyebrow: Bloque 02 · Errores comunes
+      title: Cuatro fallas de scripting que gastan una tarde
+      items:
+        - label: Error 01
+          title: Gana el valor del Inspector
+          desc: >-
+            En cuanto un campo se serializa, el número de la escena le gana al del archivo.
+            Editar el código no cambia nada, y el código es donde sigues buscando.
+        - label: Error 02
+          title: El deltaTime que falta
+          desc: >-
+            El letrero gira bien en tu máquina y se desboca en la del laboratorio. Mismo
+            script, otra tasa de cuadros, y ningún error al cual señalar.
+        - label: Error 03
+          title: GetComponent en Update
+          desc: >-
+            Recorre la lista de componentes del objeto en cada cuadro. Llámalo una vez en
+            Awake, guarda el resultado en un campo y el costo por cuadro se va con él.
+        - label: Error 04
+          title: La referencia que nadie arrastró
+          desc: >-
+            Un campo serializado que quedó en None lanza NullReferenceException en el primer
+            cuadro que lo usa, y la consola nombra el método, no la ranura vacía.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Estilo, y leer la consola
+      lede: >-
+        El compilador te dice el archivo, la línea y la columna. Aprender a creerle es casi
+        todo lo que este bloque busca.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · La consola
+      title: Tres errores de compilación que verás esta semana
+      headers: [Código, Qué dice, Qué suele ser]
+      rows:
+        - ["CS1002", "; expected", "Un punto y coma que falta arriba"]
+        - ["CS0103", "The name does not exist", "Error de dedo, o un campo que falta"]
+        - ["CS0246", "Type or namespace not found", "Falta una directiva using"]
+        - ["CS0029", "Cannot convert type", "Un int metido en una ranura float"]
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Cómo se ve una referencia sin asignar
+      filename: BayDoor.cs
+      lang: csharp
+      output_label: Consola, en ejecución
+      source: |
+        [SerializeField] AudioSource chime;
+
+        void OnTriggerEnter(Collider other)
+        {
+            chime.Play();
+        }
+      output: |
+        NullReferenceException: Object
+        reference not set to an
+        instance of an object
+        BayDoor.OnTriggerEnter
+        (UnityEngine.Collider other)
+
+  - method:
+      eyebrow: Bloque 03 · Estilo de código
+      title: Cuatro hábitos que hacen legible un script en un mes
+      statement: >-
+        El estilo no es decoración. Cada regla de abajo existe porque alguien abrió un
+        archivo seis semanas después y no pudo saber para qué era.
+      points:
+        - label: Nombra la unidad
+          text: >-
+            degreesPerSecond, no speed. El nombre carga la unidad, así que la multiplicación
+            por Time.deltaTime está obviamente bien u obviamente ausente.
+        - label: Un trabajo por archivo
+          text: >-
+            La puerta cuenta. No además toca música, mueve la cámara y guarda la partida. Dos
+            componentes en un objeto le ganan a un componente que hace dos cosas.
+        - label: Privado por defecto
+          text: >-
+            Serializa lo que un diseñador tenga que ajustar. Lo demás se queda privado,
+            porque un campo público es una promesa de la que otro script ya puede depender.
+        - label: Registra lo que puedas revisar
+          text: >-
+            Un mensaje con los números adentro, no la palabra aquí. La consola es el único
+            instrumento que tienes hasta que el depurador llegue en un curso posterior.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Una máquina sostiene 60 cuadros por segundo. ¿Cuánto avanza este objeto en un segundo?
+      filename: Mover.cs
+      lang: csharp
+      source: |
+        void Update()
+        {
+            transform.Translate(0f, 0f, 2f);
+        }
+      options:
+        - Dos metros, porque el vector dice 2
+        - Ciento veinte metros, dos por cada cuadro
+        - Dos metros por segundo, sólo si el objeto trae un Rigidbody
+        - Nada se mueve, porque Translate necesita Time.deltaTime para compilar
+
+  - code_output:
+      eyebrow: Respuesta · Medido
+      title: Dos metros por cuadro, contados durante un segundo
+      filename: Mover.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        void Update()
+        {
+            frames++;
+            transform.Translate(0f, 0f, 2f);
+        }
+
+        void OnDisable()
+        {
+            Debug.Log($"frames {frames}");
+            Debug.Log($"z {transform.position.z:F1}");
+        }
+      output: |
+        frames 60
+        z 120.0
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Darle voz a la puerta, en parejas
+      brief: >-
+        Agrega Spinner.cs a un letrero sobre la puerta y BayDoor.cs al trigger. Pon la
+        capacidad en 3 desde el Inspector, echa cuatro cajas rampa abajo y pega la salida de
+        consola. Después rómpelo a propósito de las dos maneras de la lámina de errores.
+      blocks:
+        - label: Entregable
+          text: La consola de las cuatro cajas, más una captura de cada una de las dos fallas
+        - label: Restricción
+          text: >-
+            Cada número ajustable es un campo serializado con su unidad en el nombre. Sin
+            literales enterrados a media función.
+        - label: La prueba
+          text: >-
+            Cambia el nombre de Update a Updatee y vuelve a correrlo. Anota exactamente lo
+            que el editor te dice, que es nada, y por qué eso concuerda con el bloque 1.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El motor te llama a ti
+          desc: >-
+            Tus métodos se encuentran por nombre y los llama el motor, que es por lo que un
+            error de dedo produce silencio y no un error
+        - title: Multiplica por Time.deltaTime
+          desc: >-
+            Un cuadro no es una unidad de tiempo. Todo lo medido por segundo se multiplica
+            por lo que duró el cuadro, una vez, en el punto donde se usa
+        - title: El Inspector le gana al archivo
+          desc: >-
+            Un campo serializado conserva el valor guardado en la escena o en el prefab.
+            Cambiar el inicializador en el código no cambia nada que puedas ver
+
+  - homework:
+      eyebrow: Tarea
+      title: Las dos áreas de scripting de la ruta
+      brief: >-
+        Termina los dos scripts y trabaja Level 1 Code Comprehension y Level 1 Application
+        Scripting en tu cuenta de Unity Learn, junto con la parte de scripting de GameObjects.
+        La sesión 5 mete una cámara y una bocina a la misma escena.
+      meta:
+        - [Entrega, Antes de la sesión 5]
+        - [Formato, "Blackboard · los dos archivos .cs y la salida de consola"]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Spinner", "Obligatorio", "Gira a un ritmo que no cambia con la tasa de cuadros"]
+        - ["BayDoor", "Obligatorio", "Cuenta hasta la capacidad y después deja de contar"]
+        - ["Lectura", "Obligatorio", "Un renglón sobre por qué la cuarta caja no imprime"]
+        - ["Ruta", "Obligatorio", "Las dos áreas de scripting marcadas en Unity Learn"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials, y se espera que la trabajes por tu cuenta.
+        La siguiente sesión, el jugador por fin tiene ojos y oídos.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

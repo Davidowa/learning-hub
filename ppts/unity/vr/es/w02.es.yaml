@@ -1,0 +1,378 @@
+meta:
+  course: Desarrollo de VR
+  code: UNITY
+  lang: es
+  language: unity
+  week: 2
+  footer: DESARROLLO DE VR · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 02 · Hardware y despliegue · El primer build
+      title: Desarrollo de VR
+      subtitle: >-
+        El visor deja de ser una abstracción. Cuatro decisiones de hardware, y después los
+        ajustes que producen un build de Android.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Principiante]
+        - [Sesión, 2 de 5]
+        - [Basado en, Unity Learn · VR Development]
+      notes: |
+        Sesión acompañante de la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. La ruta es agnóstica del visor y el primer
+        bloque de aquí también. El segundo y el tercero apuntan a Meta Quest y Android,
+        porque ese es el hardware que tiene este salón. Nada de aquí reproduce el texto ni
+        los ejercicios de Unity.
+
+        Los ajustes de build citados en el bloque 2 son los que Unity aplica por omisión al
+        crear un build profile de Meta Quest. Vale la pena citarlos porque son la respuesta
+        a en qué debería estar esto, escrita por quienes escribieron el exportador.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Cuatro decisiones de hardware
+          desc: Qué exige el proyecto, y el equipo más barato que lo cumple
+        - title: Qué hace que un build sea XR
+          desc: El plug-in, el profile y seis ajustes con su razón cada uno
+        - title: Build And Run
+          desc: Hasta el visor, y después leer qué recibió el dispositivo
+        - title: Cuando falla
+          desc: Cuatro fallas con el texto exacto que ponen en tu pantalla
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Convertir una meta de proyecto en un requisito de hardware
+          sub: Standalone o con cable, inside out o outside in, controles o manos, y qué tan rápido
+        - head: Convertir una tasa de refresco en un presupuesto de cuadro
+          sub: Uno entre la tasa, que es el número al que la sesión 5 le dedica la hora completa
+        - head: Habilitar un proveedor de XR para Android
+          sub: En Project Settings, en la pestaña Android, que no es la misma que la de escritorio
+        - head: Leer los valores por omisión del profile de Meta Quest
+          sub: Seis ajustes, y de qué te protege cada uno
+        - head: Poner un build en el visor y leerlo de regreso
+          sub: Con un script que imprime lo que reporta el dispositivo, porque las suposiciones no sobreviven
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Cinco sesiones junto a una ruta de seis semanas
+      phases:
+        - label: '01 · Sesión 1'
+          title: Juzgar un build
+          desc: Presencia, comodidad y la nota que escribes
+          state: done
+        - label: '02 · Sesión 2'
+          title: Visor y build
+          desc: Elegir hardware, y los ajustes de Android
+          state: now
+        - label: '03 · Sesión 3'
+          title: Toolkit de interacción
+          desc: Origin, interactores e interactables
+          state: todo
+        - label: '04 · Sesión 4'
+          title: Tu propio código
+          desc: Interactables propios y eventos de selección
+          state: todo
+        - label: '05 · Sesión 5'
+          title: El presupuesto del cuadro
+          desc: Medir milisegundos en el dispositivo
+          state: todo
+
+  - divider:
+      eyebrow: Bloque 01
+      title: Cuatro decisiones sobre hardware
+      lede: La ruta es agnóstica del equipo a propósito. Eso solo funciona si puedes decir qué necesita tu proyecto antes de nombrar un visor.
+      block: 1
+
+  - concept:
+      eyebrow: Concepto clave
+      title: Un visor standalone es un teléfono con correa
+      lead: >-
+        No hay torre debajo del escritorio. El procesador, la memoria, la batería y el calor
+        viven en tu cara, y el CPU y el GPU comparten un mismo sobre térmico. La sesión 5
+        completa se desprende de eso.
+      panel:
+        label: Qué compra en realidad la decisión
+        title: El cable compra watts, standalone compra el cuarto
+        note: >-
+          Un cable quita el límite de potencia y agrega un tropiezo, una máquina anfitriona
+          por alumno y un radio de dos metros.
+      steps:
+        - text: Standalone corre un build de Android
+        - text: Con cable corre un build de escritorio
+        - text: La escena es la misma en los dos casos
+        - text: El presupuesto no
+          loop: ↺ por eso el destino se elige antes de vestir la escena
+
+  - tiers:
+      eyebrow: Bloque 01 · Las decisiones
+      title: Cuatro preguntas, hechas en este orden
+      items:
+        - key: Dónde
+          title: Standalone o con cable
+          desc: Dónde se dibuja el cuadro, lo que fija el presupuesto de potencia y el cuarto que necesitas
+        - key: Tracking
+          title: Inside out o outside in
+          desc: Cámaras en el visor, o sensores fijos en el cuarto que hay que instalar antes
+        - key: Entrada
+          title: Controles, manos o ambos
+          desc: Una mano rastreada no tiene botones ni háptica, así que la interacción tiene que sobrevivir a eso
+        - key: Pantalla
+          title: Tasa de refresco, y su precio
+          desc: Más tasa es un cuadro más corto. Estás comprando una fecha límite, no una función
+
+  - table:
+      eyebrow: Bloque 01 · Aritmética
+      title: La tasa de refresco es una fecha límite en milisegundos
+      headers: [Tasa de refresco, Por cuadro, Qué te cuesta]
+      rows:
+        - ["72 Hz", "13.9 ms", "El presupuesto de este curso"]
+        - ["80 Hz", "12.5 ms", "1.4 ms menos que a 72 Hz"]
+        - ["90 Hz", "11.1 ms", "Un quinto del presupuesto"]
+        - ["120 Hz", "8.3 ms", "Para una escena diseñada así"]
+
+  - diagram:
+      eyebrow: Bloque 01 · El orden
+      title: El equipo es la última decisión, no la primera
+      blocks:
+        - label: '01'
+          title: La tarea
+          desc: Qué tiene que hacer el usuario, de pie o sentado, y por cuánto tiempo
+        - label: '02'
+          title: La restricción
+          desc: Qué le exige esa tarea al tracking, la entrada, la comodidad y el espacio
+        - label: '03'
+          title: El equipo
+          desc: El hardware más barato que aún cumple la restricción
+          dark: true
+      note: >-
+        Al revés, el proyecto hereda todos los límites del visor que estaba en el clóset,
+        sin registro de cuáles límites importaban.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Qué hace que un build sea un build de XR
+      lede: Un build de Android y un build de XR para Android se distinguen por una casilla y un plug-in. Si falta, la app se instala de todas formas.
+      block: 2
+
+  - steps:
+      eyebrow: Bloque 02 · El camino
+      title: Cinco paradas en el Editor
+      items:
+        - label: '01'
+          title: Package Manager
+          desc: Agrega el XR Interaction Toolkit y el plug-in de OpenXR.
+        - label: '02'
+          title: XR Plug-in Management
+          desc: En Project Settings. Marca OpenXR en la pestaña Android.
+        - label: '03'
+          title: La feature de Meta
+          desc: Habilita el grupo de features de Meta Quest bajo OpenXR.
+        - label: '04'
+          title: Build profile
+          desc: Crea un profile de Meta Quest. Preconfigura lo que sigue.
+        - label: '05'
+          title: Build And Run
+          desc: Con el visor conectado, despierto y autorizado.
+
+  - table:
+      eyebrow: Bloque 02 · Tomado del profile
+      title: Seis ajustes, y qué protege cada uno
+      headers: [Ajuste, Por omisión, Por qué ese valor]
+      rows:
+        - ["Graphics API", "Vulkan", "Lo que espera el runtime de Quest"]
+        - ["Scripting backend", "IL2CPP", "C# compilado por adelantado"]
+        - ["Architecture", "ARM64", "El procesador del visor"]
+        - ["Minimum API level", "Android 10, API 29", "Lo más viejo donde se instala"]
+        - ["Target API level", "Android 12L, API 32", "Contra lo que se compila"]
+        - ["Stereo rendering", "Instancing", "Una pasada dibuja los dos ojos"]
+
+  - concept:
+      eyebrow: Bloque 02 · Uno de los seis
+      title: Por qué la ruta estéreo dice Instancing
+      lead: >-
+        Un cuadro de VR son dos imágenes. Multi pass recorre la escena dos veces, una por
+        ojo, y el CPU paga cada draw call dos veces. Single pass instanced la recorre una
+        vez, con draws instanciados que llenan los dos ojos.
+      panel:
+        label: Qué te pide a cambio
+        title: Un shader propio tiene que saber del ojo
+        note: >-
+          Los shaders escritos para un ojo muestrean la textura equivocada bajo instancing.
+          Para eso existen las macros de estéreo de Unity, y un shader que las omite dibuja
+          en un solo ojo.
+      steps:
+        - text: Multi pass dibuja la escena dos veces
+        - text: Instancing la dibuja una vez, para dos ojos
+        - text: El ahorro está sobre todo en el CPU
+        - text: Los shaders propios necesitan las macros
+          loop: ↺ y un render tuerto es el síntoma de que faltaron
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Compilar, correr y leerlo de regreso
+      lede: Que el build termine no te dice nada sobre lo que recibió el dispositivo. Imprímelo y míralo.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · El script de reporte
+      title: Pregúntale al dispositivo qué cree que es
+      filename: DeviceReport.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class DeviceReport : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"os    {Application.platform}");
+                Debug.Log($"gfx   {SystemInfo.graphicsDeviceType}");
+                Debug.Log($"edit  {Application.isEditor}");
+            }
+        }
+      annotations:
+        - label: Dónde va
+          text: >-
+            En un GameObject vacío de la primera escena, para que corra antes de que algo
+            más pueda fallar.
+        - label: Application.platform
+          text: >-
+            Devuelve Android en el visor y WindowsEditor en Play mode. Dos valores distintos
+            del mismo build.
+        - label: graphicsDeviceType
+          text: >-
+            La API que de verdad se creó, no la que está hasta arriba de la lista en Player
+            Settings.
+        - label: Riesgo
+          text: >-
+            Un Debug.Log por cuadro te cuesta milisegundos reales en el dispositivo. Este
+            corre una vez, en Start.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: El mismo build, leído en dos lugares
+      filename: DeviceReport.cs
+      lang: csharp
+      output_label: Play mode, y después adb logcat
+      source: |
+        Debug.Log($"os    {Application.platform}");
+        Debug.Log($"gfx   {SystemInfo.graphicsDeviceType}");
+        Debug.Log($"edit  {Application.isEditor}");
+      output: |
+        -- play mode --
+        os    WindowsEditor
+        gfx   Direct3D11
+        edit  True
+        -- en el visor --
+        os    Android
+        gfx   Vulkan
+        edit  False
+
+  - pitfalls:
+      eyebrow: Bloque 03 · Errores comunes
+      title: Cuatro fallas, con lo que ponen en pantalla
+      items:
+        - label: Error 01
+          title: La app abre como panel plano
+          desc: >-
+            OpenXR está marcado en la pestaña de escritorio y no en la de Android, así que el
+            build salió sin proveedor de XR. Android entonces lo corre como una app 2D común.
+        - label: Error 02
+          title: adb devices dice unauthorized
+          desc: >-
+            El aviso de Allow USB debugging está esperando dentro del visor. Póntelo,
+            contéstalo, marca la casilla de siempre permitir y vuelve a listar los equipos.
+        - label: Error 03
+          title: INSTALL_FAILED_UPDATE_INCOMPATIBLE
+          desc: >-
+            Ya hay en el dispositivo un build con el mismo package name, firmado con otra
+            llave. Desinstala ese desde el visor y vuelve a compilar.
+        - label: Error 04
+          title: Corre, y la cabeza no se mueve
+          desc: >-
+            La cámara de la escena no es la que cuelga del XR Origin, así que nada maneja su
+            pose. Dos cámaras, y la equivocada trae el tag MainCamera.
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: El build se instala y abre como ventana plana en el visor. ¿Dónde miras primero?
+      options:
+        - Player Settings, porque la arquitectura de destino está mal
+        - XR Plug-in Management, pestaña Android, con OpenXR sin marcar
+        - La escena, porque le falta el XR Origin
+        - El Package Manager, porque el toolkit no está instalado
+
+  - trace:
+      eyebrow: Respuesta
+      title: Cuatro candidatos, y qué habría hecho cada uno
+      headers: [Candidato, Síntoma que provoca, Coincide]
+      rows:
+        - ["Architecture", "Se niega a instalar", "No"]
+        - ["Sin XR en Android", "Corre plano, sin estéreo", "Sí"]
+        - ["Sin XR Origin", "Estéreo, cabeza fija", "No"]
+        - ["Sin toolkit", "Errores de compilación", "No"]
+      verdict: >-
+        Solo una de las cuatro produce una aplicación que funciona, se instala y sale plana.
+        Ese es el valor de conocer el síntoma que provoca cada ajuste: la falla nombra el
+        ajuste antes de que abras una sola ventana.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Una escena vacía en el visor
+      brief: >-
+        Hagan un proyecto nuevo, agreguen el toolkit y el plug-in de OpenXR, creen el build
+        profile de Meta Quest, pongan el script de reporte en un objeto vacío y compilen al
+        dispositivo. En la escena, nada más que un piso. Lo que importa es la tubería, no el
+        contenido.
+      blocks:
+        - label: Restricción
+          text: No copien la carpeta del proyecto de nadie. Las fallas son la lección aquí.
+        - label: Entregable
+          text: Las tres líneas del log desde el visor, pegadas como texto, y la pantalla del build profile.
+        - label: Criterio
+          text: Que gfx diga Vulkan y edit diga False, que juntos prueban que corrió en el dispositivo.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: El equipo se elige al final
+          desc: La tarea fija la restricción y la restricción escoge el hardware, en ese orden.
+        - title: La tasa de refresco es un plazo
+          desc: 72 Hz dejan cerca de 13.9 ms por cuadro, y la sesión 5 se trata de gastarlos.
+        - title: Que corra no es que funcione
+          desc: Imprime lo que reporta el dispositivo. Plataforma, graphics API e isEditor toman un renglón cada uno.
+
+  - homework:
+      eyebrow: Para la próxima sesión
+      title: La tubería, dos veces, desde un proyecto limpio
+      brief: >-
+        Repite el laboratorio desde un proyecto vacío y sin apuntes, y anota cada paso que
+        tuviste que buscar. Esa lista es lo que de verdad no sabías, y es más corta de lo que
+        se siente mientras la haces.
+      meta:
+        - [Entrega, Antes de la sesión 3]
+        - [Formato, Blackboard · PDF y el texto del log]
+        - [Peso, Parte del promedio de tareas]
+      rubric:
+        - ["Corrió en el equipo", "50 %", "Las tres líneas del log, del visor y no de Play mode"]
+        - ["La lista de consultas", "30 %", "Cada paso que tuviste que buscar, y dónde lo buscaste"]
+        - ["Una falla", "20 %", "Algo que se rompió, su mensaje exacto y qué lo arregló"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Esta sesión acompaña la ruta de Unity Learn VR Development,
+        learn.unity.com/pathway/vr-development. Recórrela por tu cuenta.
+      meta:
+        - [Ruta, Unity Learn · VR Development]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

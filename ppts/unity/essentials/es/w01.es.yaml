@@ -1,0 +1,448 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 1
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 01 · El Hub, el proyecto y el editor
+      title: Fundamentos de Unity
+      subtitle: >-
+        Antes de que algo se mueva en pantalla, la máquina necesita el editor correcto y tú
+        necesitas saber cuál ventana contesta cuál pregunta.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 1 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Estas seis sesiones acompañan la ruta de Unity Learn llamada Unity Essentials, nivel
+        Foundational, que Unity calcula en dos semanas de trabajo a ritmo propio. La ruta
+        está en learn.unity.com/pathway/unity-essentials y todo el grupo está inscrito.
+
+        Nada de aquí reproduce el material de Unity. La ruta aporta la lista de habilidades
+        y el orden en que se aprenden; las escenas, los números y el código de estas láminas
+        se escribieron para esta clase. Conviene decirlo en voz alta en la primera lámina.
+
+        El proyecto de clase es un almacén llamado StoreRoom, con una sola escena, Bay.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: El Hub y la versión
+          desc: >-
+            Área de la ruta · Creating and Managing Unity Projects. Instalar el editor, los
+            módulos que pide cada plataforma y por qué todo el grupo se queda en una versión.
+        - title: Un proyecto en disco
+          desc: >-
+            Área de la ruta · Creating and Managing Unity Projects. Las carpetas que crea
+            Unity, las tres que son el proyecto y las que reconstruye sin avisar.
+        - title: Las cinco ventanas
+          desc: >-
+            Área de la ruta · Unity Editor Essentials. Project, Hierarchy, Scene, Game e
+            Inspector, y la pregunta que contesta cada una.
+        - title: Moverse en 3D y en 2D
+          desc: >-
+            Área de la ruta · Unity Editor Essentials. Orbitar, desplazar, acercar, encuadrar
+            y volar, y qué cambia en cuanto se activa el botón 2D.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Instalar una versión del editor a propósito
+          sub: Y leer 6000.3.7f1 como cuatro datos distintos
+        - head: Agregar el módulo que pide una plataforma
+          sub: Antes de que falle el build, y no la noche en que hay que entregarlo
+        - head: Decir cuáles carpetas son el proyecto
+          sub: Assets, Packages y ProjectSettings, y por qué el resto se reconstruye
+        - head: Nombrar la ventana que contesta una pregunta
+          sub: Qué existe, qué está en la escena, dónde queda, de qué está hecho
+        - head: Mover la cámara de escena sin andar buscando
+          sub: Orbitar, desplazar, acercar, encuadrar la selección y volar con el mouse
+        - head: Distinguir la cámara de escena de la del juego
+          sub: Y explicar por qué un cambio hecho en Play mode no sobrevive al Stop
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: now
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: todo
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: todo
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: todo
+
+  - concept:
+      eyebrow: Cómo se usa este curso
+      title: Estas láminas van al lado de la ruta, no delante de ella
+      lead: >-
+        Las habilidades, y el orden en que llegan, vienen de la ruta Unity Essentials de
+        Unity Learn. Estás inscrito en ella y se espera que la trabajes por tu cuenta. Lo que
+        pasa en este salón es la otra mitad, la parte que un video no puede dar, que es ver
+        algo romperse enfrente de ti y que alguien te diga por qué.
+      panel:
+        label: Lo que agrega este curso
+        title: Las fallas, en el salón, con nombre
+        note: >-
+          Cada mensaje de error de estas láminas le costó una tarde a alguien. La ruta te
+          enseña el camino que funciona. Esta sesión también te enseña los otros.
+      steps:
+        - text: La ruta da la lista de habilidades y el orden
+        - text: Los ejemplos, los números y las escenas se escribieron para esta clase
+        - text: Nada de estas láminas está copiado de Unity Learn
+          loop: ↺ y el enlace a la ruta va en la última lámina de cada sesión
+
+  - divider:
+      eyebrow: Bloque 01
+      title: El Hub, la versión y los módulos
+      lede: >-
+        Un proyecto de Unity queda amarrado a la versión del editor que lo abrió la última
+        vez, así que la versión es una decisión y no un detalle.
+      block: 1
+
+  - steps:
+      eyebrow: Bloque 01 · La cadena de versión
+      title: Qué te está diciendo en realidad 6000.3.7f1
+      items:
+        - label: '6000'
+          title: La línea del año
+          desc: Unity 6 numera sus entregas desde 6000, así que una lista de versiones ordena después de 2023
+        - label: '3'
+          title: El menor
+          desc: Aquí llegan las funciones nuevas. Un proyecto puede subir de menor y ya no puede regresar
+        - label: '7'
+          title: El parche
+          desc: Sólo correcciones. Moverse entre parches del mismo menor es la dirección segura
+        - label: f1
+          title: El tipo de entrega
+          desc: f es una entrega liberada. a y b son alfa y beta, y ninguna tiene lugar en clase
+
+  - steps:
+      eyebrow: Bloque 01 · Orden de instalación
+      title: Cinco movimientos, en este orden, una vez por máquina
+      items:
+        - label: '01'
+          title: Instalar el Hub
+          desc: El Hub no es el editor. Es el lanzador que instala y conserva las versiones
+        - label: '02'
+          title: Iniciar sesión
+          desc: Una cuenta de Unity y una licencia personal. Sin ella el editor abre y se detiene
+        - label: '03'
+          title: Agregar la versión
+          desc: Installs, luego Install Editor. El grupo instala 6000.3.7f1 y nada más
+        - label: '04'
+          title: Marcar los módulos
+          desc: El build support se elige aquí. Agregarlo después vuelve a correr el instalador
+        - label: '05'
+          title: Proyecto nuevo
+          desc: Plantilla 3D, un nombre sin espacios y una ruta que no sea carpeta sincronizada
+
+  - table:
+      eyebrow: Bloque 01 · En disco
+      title: Qué trae un proyecto nuevo y qué va al control de versiones
+      headers: [Carpeta, Qué guarda, En el repositorio]
+      rows:
+        - ["Assets", "Lo que haces o importas, con .meta", "Sí"]
+        - ["Packages", "manifest.json y las versiones", "Sí"]
+        - ["ProjectSettings", "Física, tags, layers, calidad", "Sí"]
+        - ["Library", "Assets importados, se reconstruye", "No"]
+        - ["Logs", "Bitácoras del editor y del build", "No"]
+        - ["Temp", "Existe sólo con el editor abierto", "No"]
+
+  - stat:
+      eyebrow: Medido en un proyecto nuevo
+      value: 3 de 7
+      text: Las carpetas que son el proyecto. Las otras cuatro se reconstruyen a partir de ellas
+      note: >-
+        Assets, Packages y ProjectSettings van al repositorio. Library, Logs, Temp y
+        UserSettings no, y una carpeta obj se les une la primera vez que compila un script.
+        Borra Library de un proyecto que funciona y el editor la reconstruye al abrirlo.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro maneras de arruinar la primera hora
+      items:
+        - label: Error 01
+          title: Abrir con un editor más nuevo
+          desc: >-
+            El Hub avisa una vez y la actualización va en un solo sentido. Los archivos
+            .unity y .prefab se reescriben, y la máquina que sigue en la versión anterior
+            ya no puede abrirlos.
+        - label: Error 02
+          title: Subir la carpeta Library
+          desc: >-
+            Es un caché. Subirla produce pull requests de un gigabyte, conflictos que nadie
+            puede leer y ninguna ventaja, porque un clon la reconstruye de todos modos.
+        - label: Error 03
+          title: El proyecto dentro de OneDrive
+          desc: >-
+            OneDrive y Dropbox bloquean archivos mientras el importador escribe miles de
+            ellos. El síntoma es una barra de importación que nunca termina y assets que se
+            vuelven a importar en cada apertura.
+        - label: Error 04
+          title: El módulo de plataforma que falta
+          desc: >-
+            La plataforma sigue apareciendo en la ventana Build Profiles, con un aviso de
+            instalación donde debería estar el botón Build. Se descubre la noche de la entrega.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Cinco ventanas, cinco preguntas
+      lede: >-
+        El editor no son cinco paneles de opciones. Cada ventana contesta exactamente una
+        pregunta, y saber cuál te ahorra el deambular.
+      block: 2
+
+  - diagram:
+      eyebrow: Bloque 02 · El acomodo
+      title: Cuál ventana contesta cuál pregunta
+      blocks:
+        - label: Project
+          title: Qué existe
+          desc: Los archivos en disco, bajo Assets. Nada de esto está en la escena.
+        - label: Hierarchy
+          title: Qué está en juego
+          desc: Los objetos de la escena abierta, y quién cuelga de quién.
+        - label: Scene
+          title: Dónde queda
+          desc: La vista por la que vuelas y editas. No es el juego corriendo.
+        - label: Inspector
+          title: De qué está hecho
+          desc: Los componentes del objeto seleccionado, con sus valores.
+          dark: true
+      note: >-
+        La quinta ventana es Game, y es la única que muestra lo que vería un jugador, porque
+        dibuja a través de la cámara de la escena y no a través de tu vista.
+
+  - concept:
+      eyebrow: Bloque 02 · Mecanismo
+      title: Play mode es un cajón de arena, y el editor lo tira
+      lead: >-
+        Presionar Play no ejecuta el archivo de la escena. El editor carga la escena en
+        memoria, la corre ahí y al Stop vuelve a leer el archivo del disco. Cada valor que
+        moviste con el botón de Play encendido se va con ella. Es una ventaja, porque deja
+        romper cosas sin consecuencias, y es la primera hora que un alumno pierde en el curso.
+      panel:
+        label: Hazlo visible antes de que te cueste
+        title: Preferences · Colors · Playmode tint
+        note: >-
+          Elige un tinte que no puedas pasar por alto. El editor cambia de color mientras
+          Play mode está encendido, así que la pregunta se contesta mirando y no recordando.
+      steps:
+        - text: Play carga la escena en memoria
+        - text: Editas la copia, no el archivo
+        - text: Stop vuelve a leer el archivo del disco
+          loop: ↺ y la copia, con tus dos horas de ajuste, ya no está
+
+  - steps:
+      eyebrow: Bloque 02 · Navegación en Scene
+      title: Cinco movimientos que cubren casi todo
+      items:
+        - label: Orbitar
+          title: Alt y arrastrar con el izquierdo
+          desc: Gira la vista alrededor del punto que estás mirando, que es lo que quieres
+        - label: Desplazar
+          title: Arrastrar con el centro
+          desc: Corre la vista de lado. La herramienta mano, atajo Q, lo hace con el izquierdo
+        - label: Acercar
+          title: Rueda del mouse
+          desc: Mueve la cámara de escena sobre su propio eje frontal, no cambia el lente
+        - label: Encuadrar
+          title: Tecla F
+          desc: Ajusta el objeto seleccionado a la vista. El único atajo que vale la pena hoy
+        - label: Volar
+          title: Botón derecho y WASD
+          desc: Movimiento en primera persona, Q y E para bajar y subir, Shift para ir más rápido
+
+  - table:
+      eyebrow: Bloque 02 · La barra de herramientas
+      title: Las herramientas de transformación y qué edita cada gizmo
+      headers: [Tecla, Herramienta, Qué cambia]
+      rows:
+        - ["Q", "Hand", "Sólo tu vista, no la escena"]
+        - ["W", "Move", "Posición, un eje por flecha"]
+        - ["E", "Rotate", "Rotación, en ángulos de Euler"]
+        - ["R", "Scale", "Escala, la malla y el collider"]
+        - ["T", "Rect", "Un rectángulo 2D, para sprites"]
+        - ["Y", "Transform", "Las tres en un solo gizmo"]
+
+  - table:
+      eyebrow: Bloque 02 · El botón 2D
+      title: Qué cambia cuando se activa el botón 2D
+      headers: [Aspecto, En 3D, En 2D]
+      rows:
+        - ["Cámara de escena", "Perspectiva, encoge con distancia", "Ortográfica, plana"]
+        - ["Orbitar", "Alt y arrastrar gira la vista", "Apagado, la vista queda de frente"]
+        - ["Plano de trabajo", "Los tres ejes", "X y Y, Z para ordenar"]
+        - ["Al frente", "Distancia a la cámara", "Sorting Layer, luego Order"]
+
+  - divider:
+      eyebrow: Bloque 03
+      title: El primer proyecto, y la prueba de que es el correcto
+      lede: >-
+        Cuatro líneas de C# que imprimen qué editor es y qué escena está abierta. La sesión 4
+        explica cada palabra. Hoy es un comprobante.
+      block: 3
+
+  - code:
+      eyebrow: Bloque 03 · Primer script
+      title: Un comprobante de la instalación
+      filename: SceneCheck.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.SceneManagement;
+
+        public class SceneCheck : MonoBehaviour
+        {
+            void Start()
+            {
+                Scene open = SceneManager.GetActiveScene();
+                Debug.Log($"editor  {Application.unityVersion}");
+                Debug.Log($"escena  {open.name}");
+                Debug.Log($"objetos {open.rootCount}");
+            }
+        }
+      annotations:
+        - label: Dónde va
+          text: >-
+            Assets/Scripts/SceneCheck.cs. El nombre del archivo tiene que coincidir con el
+            de la clase.
+        - label: Start
+          text: >-
+            Unity lo llama una vez, antes del primer cuadro. Nada de tu código lo llama.
+        - label: rootCount
+          text: >-
+            Objetos en la raíz del Hierarchy. Una escena 3D nueva trae dos, cámara y luz.
+        - label: Riesgo
+          text: >-
+            Cambia el nombre del archivo y la consola dice The associated script cannot be
+            loaded, con una ranura vacía en el Inspector.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 03 · Medido
+      title: Lo que imprime la consola en una instalación limpia
+      filename: SceneCheck.cs
+      lang: csharp
+      output_label: Consola
+      source: |
+        Scene open = SceneManager.GetActiveScene();
+        Debug.Log($"editor  {Application.unityVersion}");
+        Debug.Log($"escena  {open.name}");
+        Debug.Log($"objetos {open.rootCount}");
+      output: |
+        editor  6000.3.7f1
+        escena  Bay
+        objetos 2
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Moviste una caja con el botón de Play encendido y luego presionaste Stop. ¿Dónde quedó el movimiento?
+      options:
+        - En el archivo de la escena, porque el Inspector mostró la posición nueva
+        - En ningún lado, porque Stop vuelve a leer la escena del disco
+        - En la carpeta Library, y regresa en el siguiente Play
+        - Guardado, pero sólo si el proyecto estaba en control de versiones
+
+  - method:
+      eyebrow: Respuesta
+      title: La segunda, y la pérdida es silenciosa
+      statement: >-
+        Nada te avisa. El Inspector mostraba la posición nueva porque el objeto en memoria de
+        verdad la tenía, y al Stop el editor volvió a leer el archivo que nunca se enteró.
+      points:
+        - label: Por qué pasa
+          text: >-
+            Play mode edita una copia de la escena. El archivo en disco es el original, y es
+            lo que regresa en cuanto sueltas el botón de Play.
+        - label: Qué hacer en su lugar
+          text: >-
+            Ajusta durante el Play, anota los números, detén y vuelve a escribirlos. Copy
+            Component y Paste Component Values también sobreviven al Stop.
+        - label: La señal
+          text: >-
+            El playmode tint. Si el editor está de otro color, todo lo que escribas es
+            temporal, y eso vale la pena revisarlo antes de una sesión larga de ajuste.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Instalar, crear y comprobarlo
+      brief: >-
+        Instala 6000.3.7f1 desde el Hub con Windows Build Support marcado, crea un proyecto
+        3D llamado StoreRoom sin espacios en la ruta, guarda la escena vacía como Bay.unity
+        en Assets/Scenes y agrega SceneCheck.cs a la Main Camera.
+      blocks:
+        - label: Entregable
+          text: Una captura de la consola con las tres líneas y tu versión del editor visible
+        - label: Restricción
+          text: >-
+            La ruta no puede quedar dentro de OneDrive, Dropbox ni una unidad de red. Disco
+            local, sin espacios y sin acentos.
+        - label: La prueba
+          text: >-
+            Cierra el editor, borra la carpeta Library y vuelve a abrir el proyecto. Tiene
+            que regresar sola. Si no, el primer sospechoso es la ruta.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La versión es parte del proyecto
+          desc: >-
+            Un proyecto recuerda qué lo abrió, y la actualización va en un solo sentido. Una
+            versión para todo el grupo es una decisión, no burocracia
+        - title: Tres carpetas son el proyecto
+          desc: >-
+            Assets, Packages y ProjectSettings. Lo demás es un caché que Unity reconstruye,
+            que es por lo que un clon de esas tres abre y corre
+        - title: Play mode es una copia
+          desc: >-
+            El editor corre la escena desde memoria y vuelve a leer el archivo al Stop, así
+            que el ajuste hecho durante Play es ajuste tirado
+
+  - homework:
+      eyebrow: Tarea
+      title: La instalación y las primeras áreas de la ruta
+      brief: >-
+        Termina la instalación en tu propia máquina y trabaja las dos áreas de la ruta que
+        cubre esta sesión, Creating and Managing Unity Projects y Unity Editor Essentials, en
+        tu cuenta de Unity Learn. Trae el proyecto abierto y corriendo a la sesión 2.
+      meta:
+        - [Entrega, Antes de la sesión 2]
+        - [Formato, Blackboard · una captura y el listado de carpetas]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Versión del editor", "Obligatorio", "6000.3.7f1, la misma que el resto del grupo"]
+        - ["Estructura", "Obligatorio", "Assets/Scenes/Bay.unity existe y abre"]
+        - ["Comprobante", "Obligatorio", "Las tres líneas, con la versión entre ellas"]
+        - ["Ruta", "Obligatorio", "Las dos áreas de la sesión marcadas en Unity Learn"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Se espera que la trabajes por tu cuenta. La
+        siguiente sesión, la escena deja de estar vacía.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]

@@ -1,0 +1,443 @@
+meta:
+  course: Fundamentos de Unity
+  code: UNITY
+  lang: es
+  language: unity
+  week: 6
+  footer: FUNDAMENTOS DE UNITY · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Ingeniería · 2026
+      unit: Sesión 06 · Compilar, entregar y el mapa completo
+      title: Fundamentos de Unity
+      subtitle: >-
+        Un proyecto que sólo corre en tu máquina con el editor abierto no está terminado. Hoy
+        se vuelve una carpeta que alguien más puede abrir con doble clic.
+      meta:
+        - [Profesor, David Escobar-Castillejos]
+        - [Clave, UNITY · Foundational]
+        - [Sesión, 6 de 6]
+        - [Basado en, Unity Learn · Unity Essentials]
+      notes: |
+        Sesión acompañante de la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials. Cubre el área Publishing y después mapea
+        las diez áreas sobre las seis sesiones de este curso.
+
+        La plataforma de compilación de la clase es Windows, desde el proyecto StoreRoom.
+        Todo lo que se compila hoy sale de Bay.unity y de los scripts de las sesiones 3 a 5.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Tres bloques de trabajo
+      cards:
+        - title: Qué es un build
+          desc: >-
+            Área de la ruta · Publishing. El player, tus datos, la lista de escenas y los
+            cuatro ajustes que deciden qué termina dentro de la carpeta.
+        - title: Leer la salida
+          desc: >-
+            Área de la ruta · Publishing. Qué escribió Unity junto al ejecutable, y dónde
+            guarda un juego compilado la consola que ya no tienes.
+        - title: Las diez áreas, mapeadas
+          desc: >-
+            Las diez áreas de la ruta contra las seis sesiones, para que veas junto a qué
+            parte de la ruta estuvo parada cada sesión.
+        - title: La entrega
+          desc: >-
+            Un build del almacén que corre en una máquina sin Unity instalado, más la ruta
+            terminada en tu cuenta de Unity Learn.
+
+  - objectives:
+      eyebrow: Objetivos de aprendizaje
+      title: Al terminar la sesión el alumno podrá…
+      items:
+        - head: Decir qué contiene de verdad un build
+          sub: Un player compilado, las escenas de la lista y todo lo que ellas refieren
+        - head: Agregar escenas a la lista en el orden correcto
+          sub: Porque la primera entrada es con la que abre el player
+        - head: Compilar para Windows desde Build Profiles
+          sub: File · Build Profiles, con el módulo de la plataforma ya instalado
+        - head: Leer la carpeta que produjo Unity
+          sub: El ejecutable, la carpeta de datos y la biblioteca del player al lado
+        - head: Encontrar el log de un juego sin consola
+          sub: Bajo AppData LocalLow, en una carpeta nombrada por tu compañía y producto
+        - head: Mapear la ruta sobre las seis sesiones
+          sub: Y nombrar cuáles áreas te faltan por terminar en Unity Learn
+
+  - roadmap:
+      eyebrow: Mapa del curso
+      title: Dónde queda esta sesión dentro de las seis
+      phases:
+        - label: 01 · Sesión 1
+          title: El editor
+          desc: Instalar, el proyecto en disco, las ventanas y cómo moverse
+          state: done
+        - label: 02 · Sesiones 2 y 3
+          title: La escena
+          desc: Objetos, transformaciones, materiales, física, componentes y prefabs
+          state: done
+        - label: 03 · Sesiones 4 y 5
+          title: Conducta y sentidos
+          desc: Leer y escribir scripts, cámaras, audio y sprites
+          state: done
+        - label: 04 · Sesión 6
+          title: Publicación
+          desc: Convertir el proyecto en algo que corre sin el editor
+          state: now
+
+  - divider:
+      eyebrow: Bloque 01
+      title: De qué está hecho un build
+      lede: >-
+        El editor es un programa que corre tu proyecto. Un build es otro programa, con tu
+        proyecto horneado adentro, y no tiene editor al cual recurrir.
+      block: 1
+
+  - concept:
+      eyebrow: Bloque 01 · Mecanismo
+      title: El player es genérico, tus datos no
+      lead: >-
+        Unity entrega un player compilado por cada plataforma. Compilar copia ese player,
+        compila tus scripts y escribe tus escenas y assets a su lado, en un formato que el
+        player lee rápido. Nada del editor va incluido. Por eso un build puede fallar con
+        código que el editor aceptó sin problema, y por eso lo que no está en la lista de
+        escenas no existe para el player.
+      panel:
+        label: Qué decide la inclusión
+        title: La lista de escenas, y lo que esas escenas refieren
+        note: >-
+          Un asset al que nadie refiere se queda fuera. Un prefab que un script sólo menciona
+          por nombre también se queda fuera, y ese error sólo aparece en el build.
+      steps:
+        - text: Se copia el player de la plataforma
+        - text: Tus scripts se compilan dentro de él
+        - text: Se empacan las escenas listadas y sus assets
+          loop: ↺ y la primera escena de la lista es donde arranca el player
+
+  - table:
+      eyebrow: Bloque 01 · File · Build Profiles
+      title: Cinco ajustes que deciden lo que obtienes
+      headers: [Ajuste, Qué decide, Nota]
+      rows:
+        - ["Platform", "Cuál player se copia", "Necesita el módulo instalado"]
+        - ["Scene List", "Qué se entrega, y en qué orden", "La entrada cero carga primero"]
+        - ["Development Build", "Profiler y una marca de agua", "Apagado para lo que entregas"]
+        - ["Compression Method", "Tamaño contra tiempo de carga", "El de fábrica sirve en clase"]
+        - ["Player Settings", "Compañía, producto, ícono", "Nombran la salida y el log"]
+
+  - steps:
+      eyebrow: Bloque 01 · El build
+      title: Cinco movimientos de una escena a una carpeta
+      items:
+        - label: '01'
+          title: Abrir la ventana
+          desc: File y luego Build Profiles. La plataforma con módulo instalado se selecciona
+        - label: '02'
+          title: Agregar la escena
+          desc: Bay.unity entra a la lista de escenas. Nada fuera de la lista se compila
+        - label: '03'
+          title: Nombrar el producto
+          desc: Player Settings, compañía y producto. Los dos acaban en rutas que vas a leer
+        - label: '04'
+          title: Compilar
+          desc: Elige una carpeta vacía fuera de Assets. Builds/Windows es la convención
+        - label: '05'
+          title: Correrlo en otro lado
+          desc: Copia la carpeta completa a otra máquina. Un archivo que falte y no arranca
+
+  - code_output:
+      eyebrow: Bloque 01 · Medido
+      title: Cargar una escena que nunca entró a la lista
+      filename: LevelLoader.cs
+      lang: csharp
+      output_label: Player.log
+      source: |
+        using UnityEngine.SceneManagement;
+
+        void Restart()
+        {
+            SceneManager.LoadScene("Bay");
+        }
+      output: |
+        Scene 'Bay' couldn't be loaded
+        because it has not been added
+        to the build settings or the
+        AssetBundle has not been
+        loaded.
+
+  - pitfalls:
+      eyebrow: Bloque 01 · Errores comunes
+      title: Cuatro builds que fallan la última noche
+      items:
+        - label: Error 01
+          title: La escena fuera de la lista
+          desc: >-
+            El build sale bien. El player abre con lo que esté en el índice cero, que puede
+            ser una escena vacía, y el reporte dice que el juego no hace nada.
+        - label: Error 02
+          title: El módulo que nunca se instaló
+          desc: >-
+            La plataforma aparece en la lista y el botón Build no está. Arreglarlo significa
+            el Hub, una descarga y una espera, y por eso la sesión 1 marcó la casilla.
+        - label: Error 03
+          title: Código de editor en el runtime
+          desc: >-
+            Cualquier cosa de UnityEditor compila en el editor y detiene el build. O la
+            llamada se va detrás de un bloque if UNITY_EDITOR o el script se mueve a una
+            carpeta Editor.
+        - label: Error 04
+          title: Compilar dentro de Assets
+          desc: >-
+            El importador intenta importar tu propio build, el proyecto crece cada vez, y el
+            siguiente build incluye al anterior. Compila fuera del proyecto.
+
+  - divider:
+      eyebrow: Bloque 02
+      title: Leer lo que produjo Unity
+      lede: >-
+        Cinco cosas caen en la carpeta y cada una tiene un trabajo. Borrar la que parece de
+        sobra es como un build deja de abrir.
+      block: 2
+
+  - table:
+      eyebrow: Bloque 02 · La carpeta de salida
+      title: Qué guarda la carpeta de un build de Windows
+      headers: [Elemento, Qué es, Se entrega]
+      rows:
+        - ["StoreRoom.exe", "El player, nombrado por producto", "Sí"]
+        - ["StoreRoom_Data", "Escenas, assets y ajustes", "Sí"]
+        - ["UnityPlayer.dll", "El motor mismo", "Sí"]
+        - ["MonoBleedingEdge", "El runtime de Mono, si se usa", "Sí, con ese backend"]
+        - ["UnityCrashHandler64", "Junta un reporte de caída", "Sí"]
+
+  - concept:
+      eyebrow: Bloque 02 · Mecanismo
+      title: Un juego compilado sí escribe un log, en otro lado
+      lead: >-
+        En un build no hay ventana de consola, y Debug.Log no dejó de funcionar. El player
+        escribe en Player.log, bajo la carpeta AppData LocalLow del usuario, en un directorio
+        nombrado con la compañía y el producto de Player Settings. Ese archivo es todo el
+        diagnóstico de un build que falla donde no puedes abrir el editor.
+      panel:
+        label: Dónde buscar en Windows
+        title: AppData · LocalLow · Compañía · Producto
+        note: >-
+          El archivo es Player.log, y la corrida anterior se conserva a su lado. Nombrar bien
+          la compañía en la sesión 1 es lo que hace encontrable esta carpeta.
+      steps:
+        - text: Debug.Log sigue corriendo en un build
+        - text: Escribe en Player.log, no en una ventana
+        - text: La ruta sale de tus Player Settings
+          loop: ↺ y un development build agrega el Profiler encima
+
+  - code:
+      eyebrow: Bloque 02 · El sello
+      title: Cuatro líneas que identifican un build
+      filename: BuildStamp.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class BuildStamp : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"producto {Application.productName}");
+                Debug.Log($"version {Application.version}");
+                Debug.Log($"plataforma {Application.platform}");
+                Debug.Log($"dev {Debug.isDebugBuild}");
+            }
+        }
+      annotations:
+        - label: Para qué molestarse
+          text: >-
+            Un reporte de error sin versión es un reporte sobre un build que nadie identifica.
+        - label: Application.version
+          text: >-
+            El campo Version de Player Settings. Es una cadena que tú pones, no un contador.
+        - label: isDebugBuild
+          text: >-
+            Verdadero cuando Development Build quedó marcado. Sirve para apagar trucos.
+        - label: Riesgo
+          text: >-
+            Entregar un development build. La marca de agua se queda en pantalla y el puerto
+            del Profiler queda abierto en la máquina que lo corre.
+          accent: true
+
+  - code_output:
+      eyebrow: Bloque 02 · Medido
+      title: Las mismas cuatro líneas, leídas del archivo de log
+      filename: Player.log
+      lang: csharp
+      output_label: Player.log, primera corrida
+      source: |
+        Debug.Log($"producto {Application.productName}");
+        Debug.Log($"version {Application.version}");
+        Debug.Log($"plataforma {Application.platform}");
+        Debug.Log($"dev {Debug.isDebugBuild}");
+      output: |
+        producto StoreRoom
+        version 0.1.0
+        plataforma WindowsPlayer
+        dev False
+
+  - stat:
+      eyebrow: La consola que tiene un juego compilado
+      value: Player.log
+      text: Se escribe en cada corrida, bajo AppData LocalLow, con tu compañía y tu producto
+      note: >-
+        Es lo primero que hay que pedir cuando un compañero dice que el build no sirve. El
+        archivo nombra la escena que falta, la referencia nula y el asset que no cargó, con
+        las mismas palabras de la consola del editor, en una máquina que no tiene editor.
+
+  - divider:
+      eyebrow: Bloque 03
+      title: Las diez áreas, y dónde se enseñó cada una
+      lede: >-
+        La ruta puso la lista y el orden. Aquí está el mapa de regreso, para que veas junto a
+        cuál de sus áreas estuvo parada cada sesión.
+      block: 3
+
+  - table:
+      eyebrow: Bloque 03 · El mapa
+      title: Seis sesiones contra las diez áreas de la ruta
+      headers: [Sesión, Áreas de la ruta que acompañó]
+      rows:
+        - ["Sesión 1", "Creating and Managing Unity Projects · Unity Editor Essentials"]
+        - ["Sesión 2", "Scene Building Essentials, creación, transformación, apariencia"]
+        - ["Sesión 3", "Scene Building, física · GameObjects, componentes y prefabs"]
+        - ["Sesión 4", "Level 1 Code Comprehension · Level 1 Application Scripting"]
+        - ["Sesión 5", "Beginner Unity Cameras · Audio Essentials · 2D Art"]
+        - ["Sesión 6", "Publishing, y las diez áreas vistas como un solo mapa"]
+
+  - method:
+      eyebrow: Bloque 03 · El arreglo
+      title: Qué hace la ruta y qué hace este salón
+      statement: >-
+        Estas seis sesiones acompañan la ruta Unity Essentials de Unity Learn. No la
+        reemplazan, no la reproducen, y terminarlas no es terminarla a ella.
+      points:
+        - label: Lo que da la ruta
+          text: >-
+            Las habilidades, el orden, los proyectos guiados y el registro de haberla
+            terminado en tu cuenta. Ese registro es la parte que un empleador puede revisar.
+        - label: Lo que da este salón
+          text: >-
+            El mecanismo debajo de cada clic, las fallas con sus síntomas exactos, y un
+            proyecto llevado por las seis sesiones con números que mediste tú.
+        - label: Lo que le debes
+          text: >-
+            Trabaja la ruta en learn.unity.com/pathway/unity-essentials. Todo lo de estas
+            láminas supone que la estás haciendo en paralelo y no en lugar de ella.
+
+  - tiers:
+      eyebrow: Bloque 03 · Antes de entregar
+      title: Cuatro revisiones que atrapan casi todo lo que sale mal
+      items:
+        - key: Escenas
+          title: La lista está bien
+          desc: Bay.unity está en la lista y va en el índice cero, así que el player abre con ella
+        - key: Build
+          title: Development sin marcar
+          desc: Sin marca de agua en pantalla, sin Profiler esperando conexión en el puerto
+        - key: Carpeta
+          title: Viaja la carpeta completa
+          desc: El ejecutable solo no es el juego. La carpeta de datos de al lado es la mitad
+        - key: Máquina
+          title: Corrió en otro lado
+          desc: Probado en una máquina sin Unity instalado, que es la única prueba real
+
+  - quiz:
+      eyebrow: Verificación rápida
+      question: Tu build abre en una pantalla gris vacía y el log no nombra ningún error. ¿Cuál es el primer sospechoso?
+      options:
+        - La tarjeta de video de la otra máquina es muy vieja para el player
+        - La lista de escenas, porque la entrada cero no es la escena que querías
+        - El compression method, que dejó la escena fuera del archivo
+        - El nombre de compañía en Player Settings, que el player no pudo leer
+
+  - method:
+      eyebrow: Respuesta
+      title: La segunda, y el build fue un éxito
+      statement: >-
+        Nada falló. El player cargó la escena del índice cero exactamente como se le indicó,
+        y esa escena es la vacía con la que se creó el proyecto.
+      points:
+        - label: Cómo confirmarlo
+          text: >-
+            Abre la ventana Build Profiles y lee la lista, no el proyecto. Una escena puede
+            estar abierta en el editor, guardada, y aun así ausente del build.
+        - label: Por qué el log calla
+          text: >-
+            Cargar la escena equivocada no es un error. El log habla sólo cuando se pide una
+            escena por nombre y no está en la lista, que es la lámina anterior.
+        - label: El hábito
+          text: >-
+            Agrega la escena a la lista el día que la creas, no la noche de la entrega, y pon
+            la correcta en el índice cero desde el principio.
+
+  - lab:
+      eyebrow: Laboratorio
+      title: Entregar el almacén, en parejas
+      brief: >-
+        Compila el proyecto StoreRoom para Windows en Builds/Windows, con Bay.unity en el
+        índice cero, Development Build sin marcar y BuildStamp.cs en la escena. Córrelo en una
+        máquina sin Unity instalado y trae las primeras cuatro líneas de su Player.log.
+      blocks:
+        - label: Entregable
+          text: La carpeta del build comprimida, más las cuatro líneas copiadas de Player.log
+        - label: Restricción
+          text: >-
+            La carpeta del build vive fuera de Assets, y el zip lleva la carpeta completa, no
+            solamente el ejecutable.
+        - label: La prueba
+          text: >-
+            Cambia el nombre de la carpeta de datos y córrelo otra vez. Lee lo que pasa y
+            después regresa el nombre. Esa falla es lo que ve tu lector con un zip a medias.
+
+  - takeaways:
+      eyebrow: Resumen
+      title: Tres ideas para llevarse
+      items:
+        - title: La lista decide el build
+          desc: >-
+            Las escenas que no están no existen para el player, y la entrada cero es donde
+            abre el juego. Casi toda falla silenciosa es uno de esos dos hechos
+        - title: El log no desapareció
+          desc: >-
+            Debug.Log escribe en Player.log bajo AppData LocalLow, nombrado por tu compañía y
+            tu producto, que es la única consola que tiene un juego entregado
+        - title: La ruta es la otra mitad
+          desc: >-
+            Estas seis sesiones acompañan Unity Essentials en Unity Learn. Terminar el curso
+            es terminar también la ruta en tu propia cuenta
+
+  - homework:
+      eyebrow: Tarea
+      title: El build y la ruta terminada
+      brief: >-
+        Entrega el build de Windows comprimido con sus líneas de Player.log, y termina todas
+        las áreas de la ruta Unity Essentials de Unity Learn en tu cuenta. El registro de la
+        ruta, no estas láminas, es lo que declara en público que hiciste este trabajo.
+      meta:
+        - [Entrega, Fin del semestre]
+        - [Formato, "Blackboard · un zip, más el registro de la ruta"]
+        - [Peso, Parte de la evaluación práctica]
+      rubric:
+        - ["Build", "Obligatorio", "Corre en una máquina sin Unity instalado"]
+        - ["Lista de escenas", "Obligatorio", "Bay.unity en el índice cero, sin marca de agua"]
+        - ["Log", "Obligatorio", "Las cuatro líneas del sello, copiadas de Player.log"]
+        - ["Ruta", "Obligatorio", "Las diez áreas de la ruta marcadas como terminadas"]
+
+  - closing:
+      title: Preguntas
+      subtitle: >-
+        Este curso acompaña la ruta Unity Essentials de Unity Learn, nivel Foundational, en
+        learn.unity.com/pathway/unity-essentials, y se espera que la trabajes por tu cuenta.
+        Ahí es donde vive el registro de este trabajo.
+      meta:
+        - [Ruta, Unity Learn · Unity Essentials]
+        - [Correo, descobarc@up.edu.mx]
+        - [Mensajería, Google Chat institucional]
