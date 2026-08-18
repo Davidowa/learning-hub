@@ -141,6 +141,46 @@ def _table_height(problems, n, kw):
                         f'footer rule at {K.FOOTER_RULE_Y}"{extra}')
 
 
+def _trace_height(problems, n, kw):
+    """Check that a trace's rows, and the verdict under them, clear the rule.
+
+    deck.trace stacks rows and then drops the verdict below the last one without
+    ever asking whether the stack still fits. Nothing downstream catches it: the
+    cells are their own small boxes and stay inside the safe area, and `lint`
+    reads anything starting below the rule as footer chrome, so a verdict sitting
+    on the footer measures as if it were the footer. The arithmetic below is the
+    same walk deck.trace does, run against the source.
+
+    A cell that wraps costs 0.40 in, which is what usually pushes a six-row trace
+    over: the trace in COM102 w01.2 fit on every count except that step 5 read
+    "while 3 < 3 es falso" and took two lines.
+    """
+    headers, rows = kw['headers'], kw['rows'][:8]
+    w = K.CONTENT_W / len(headers)
+    size = fit_size(kw.get('title', ''), K.SANS, K.T.title, K.TITLE_W, 2, bold=True, floor=30)
+    lines = wrap_lines(kw.get('title', ''), K.SANS, size, K.TITLE_W, True)
+    dy = max(0.0, (lines - 1) * size * 1.2 * K.LS.title / 72.0)
+    y = 2.70 + dy + 0.52 + 0.20
+    tall = []
+    for r, row in enumerate(rows, 1):
+        hs = max(wrap_lines(str(c), K.MONO, K.T.sub, w - 0.3) for c in row)
+        y += 0.30 + 0.40 * hs + 0.14
+        if hs > 1:
+            tall.append(r)
+    bottom = y + 1.00 if kw.get('verdict') else y - 0.14
+    # Same rounding buy-back as DIAGRAM_SLACK, and for the same reason. The
+    # verdict's accent bar is the last 0.75 in of the block and the text sits
+    # 0.03 in inside it, so a block ending 0.02 in under the rule puts the bar on
+    # the rule and nothing else: the four traces this first flagged all render
+    # correctly. A block 0.10 in over does show, which is the COM102 w01.2 case,
+    # and it is still caught.
+    if bottom > K.FOOTER_RULE_Y + 0.05:
+        what = 'the verdict ends' if kw.get('verdict') else 'the rows end'
+        extra = f', rows {tall} wrap' if tall else ''
+        problems.append(f'slide {n:02d} trace: {len(rows)} rows, {what} at {bottom:.2f}", '
+                        f'footer rule at {K.FOOTER_RULE_Y}"{extra}')
+
+
 # YAML 1.1 resolves a bare NULL, yes, no, on, off, true, false or a bare number to a
 # non-string. Every one of these is a value the deck renders as text, so the coercion is
 # invisible in the source and wrong on the slide -- or fatal: deck._card calls .upper() on
@@ -225,6 +265,8 @@ def check(path: str) -> tuple[list[str], int]:
         # cannot see because each cell is its own small box inside the safe area.
         if layout == 'table' and kw.get('headers') and kw.get('rows'):
             _table_height(problems, n, kw)
+        if layout == 'trace' and kw.get('headers') and kw.get('rows'):
+            _trace_height(problems, n, kw)
         if layout == 'diagram':
             _diagram(problems, n, kw)
 

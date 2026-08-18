@@ -34,7 +34,22 @@ def check(path: str) -> list[str]:
             right = x + w
 
             if not sh.has_text_frame or not sh.text_frame.text.strip():
-                continue          # zebra bands and rules bleed past the margin on purpose
+                # Zebra bands and rules bleed past the margin on purpose, so an
+                # empty shape is not measured sideways. It still has to respect
+                # the footer rule downwards: a code card whose type has bottomed
+                # out at the 18 pt floor keeps growing, and the card runs under
+                # the rule while its last line of type stops just above it. Every
+                # text check therefore passes and the deck reads clean, which is
+                # how twenty-seven overflowing cards once shipped.
+                #
+                # Only a panel is checked. A rule is 0.01 in tall, the progress
+                # dashes are 0.05, and a full-bleed background starts at the top
+                # edge, so none of them can trip this.
+                bottom = y + sh.height / 914400
+                if sh.height / 914400 > 0.5 and y > 0.10 and bottom > K.FOOTER_RULE_Y + 0.02:
+                    problems.append(f'{n:02d}  panel runs to {bottom:.2f}" and crosses '
+                                    f'the footer rule at {K.FOOTER_RULE_Y}"')
+                continue
 
             if right > SAFE_RIGHT + 0.01:
                 problems.append(f'{n:02d}  text box runs to {right:.2f}" '
@@ -73,6 +88,7 @@ def check(path: str) -> list[str]:
                     problems.append(f'{n:02d}  code line overflows its card '
                                     f'({used:.2f}" in {w - 0.07:.2f}", '
                                     f'{len(text)} chars): "{snippet}"')
+
     return problems
 
 
