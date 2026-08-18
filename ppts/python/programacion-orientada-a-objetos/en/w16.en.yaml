@@ -134,11 +134,16 @@ slides:
             connection.commit()
       annotations:
         - label: Line 6
-          text: The with closes the connection on the way out, exactly as it does with an open file
+          text: >-
+            It manages the transaction, not the connection: leaving without an exception
+            commits, leaving through one rolls back. The commit on line 13 is redundant,
+            and is written anyway to keep the intent in the code.
         - label: Line 11
           text: The question marks are placeholders. The values travel separately, in a tuple.
         - label: Risk
-          text: Without commit, whatever was inserted is lost on closing. The with does not do it for you.
+          text: >-
+            The with does not close the connection, unlike a file. close is still needed,
+            and closing without committing does discard what is pending.
           accent: true
 
   - code_output:
@@ -254,14 +259,17 @@ slides:
 
   - trace:
       eyebrow: Answer
-      title: It prints (0,), and the with is not to blame
+      title: It prints (1,), and the reason surprises half the room
       headers: ["Step", "Statement", "In memory", "On disk"]
       rows:
         - ["1", "connect(path)", "transaction open", "empty"]
         - ["2", "execute(INSERT)", "1 row pending", "empty"]
-        - ["3", "leaving the with", "discarded", "empty"]
-        - ["4", "SELECT COUNT(*)", "0", "empty"]
-      verdict: The sqlite3 with closes the transaction, it does not confirm it. Without an explicit call to commit, whatever was inserted is discarded on the way out of the block.
+        - ["3", "leaving the with", "commits", "1 row"]
+        - ["4", "SELECT COUNT(*)", "1", "1 row"]
+      verdict: >-
+        The sqlite3 with manages the transaction: it commits when the block ends without
+        an exception and rolls back when it does not. What it never does is close the
+        connection, which is what most people assume because with a file it does.
 
   - lab:
       eyebrow: Lab
@@ -281,8 +289,8 @@ slides:
       items:
         - title: A table answers, a file only stores
           desc: The difference shows up once you have to search, filter or sort without reading it all
-        - title: Without commit there is nothing on disk
-          desc: The with closes the connection, and closing without confirming throws away everything pending
+        - title: The with commits, but does not close
+          desc: It manages the transaction and rolls back on an exception. The connection stays open and still has to be closed.
         - title: Values travel as parameters
           desc: The placeholder keeps data as data, and a quote loses its power to change the query
 

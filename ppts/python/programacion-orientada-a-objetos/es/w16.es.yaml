@@ -134,11 +134,16 @@ slides:
             conexion.commit()
       annotations:
         - label: Línea 6
-          text: El with cierra la conexión al salir, igual que hace con un archivo abierto
+          text: >-
+            Administra la transacción, no la conexión: al salir sin excepción confirma, y
+            si la hubo revierte. El commit de la línea 13 sobra, y se escribe igual para
+            dejar la intención en el código.
         - label: Línea 11
           text: Los signos de interrogación son marcadores. Los valores viajan aparte, en una tupla.
         - label: Riesgo
-          text: Sin commit, lo insertado se pierde al cerrar. El with no lo hace por ti.
+          text: >-
+            El with no cierra la conexión, a diferencia de un archivo. Sigue haciendo falta
+            close, y cerrar sin confirmar sí descarta lo pendiente.
           accent: true
 
   - code_output:
@@ -254,14 +259,17 @@ slides:
 
   - trace:
       eyebrow: Respuesta
-      title: Imprime (0,), y el with no es el culpable
+      title: Imprime (1,), y la razón sorprende a medio salón
       headers: ["Paso", "Instrucción", "En memoria", "En disco"]
       rows:
         - ["1", "connect(ruta)", "transacción abierta", "vacío"]
         - ["2", "execute(INSERT)", "1 fila pendiente", "vacío"]
-        - ["3", "sale del with", "se descarta", "vacío"]
-        - ["4", "SELECT COUNT(*)", "0", "vacío"]
-      verdict: El with de sqlite3 cierra la transacción, no la confirma. Sin una llamada explícita a commit, lo insertado se descarta al salir del bloque.
+        - ["3", "sale del with", "confirma", "1 fila"]
+        - ["4", "SELECT COUNT(*)", "1", "1 fila"]
+      verdict: >-
+        El with de sqlite3 administra la transacción: confirma al salir sin excepción y
+        revierte si la hubo. Lo que no hace es cerrar la conexión, que es justo lo que
+        casi todos suponen porque con un archivo sí la cierra.
 
   - lab:
       eyebrow: Laboratorio
@@ -281,8 +289,8 @@ slides:
       items:
         - title: Una tabla contesta, un archivo solo guarda
           desc: La diferencia aparece cuando hay que buscar, filtrar u ordenar sin leerlo todo
-        - title: Sin commit no hay nada en disco
-          desc: El with cierra la conexión, y cerrar sin confirmar descarta todo lo que estaba pendiente
+        - title: El with confirma, pero no cierra
+          desc: Administra la transacción y revierte si hay excepción. La conexión sigue abierta y todavía hay que cerrarla.
         - title: Los valores viajan como parámetros
           desc: El marcador mantiene el dato como dato, y una comilla deja de poder cambiar la consulta
 
