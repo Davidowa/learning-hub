@@ -1,0 +1,422 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 2
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 02 · Objects, transforms and materials
+      title: Unity Essentials
+      subtitle: >-
+        The scene stops being empty. Three numbers place every object in it, and one of the
+        three quietly changes how the object behaves.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 2 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        Companion session to the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. This session covers the first three
+        parts of the pathway area Scene Building Essentials: creation, transformation and
+        appearance. Physics arrives in session 3.
+
+        The scene is Assets/Scenes/Bay.unity in the StoreRoom project from session 1. Built
+        this session: a floor, a ramp rotated -18 degrees on X, and three crates.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Putting things in a scene
+          desc: >-
+            Pathway area · Scene Building Essentials, the creation part. What the GameObject
+            menu gives you, what each primitive arrives with, and how to keep a Hierarchy
+            readable.
+        - title: Position, rotation, scale
+          desc: >-
+            Pathway area · Scene Building Essentials, the transformation part. Local against
+            world space, and what a rotated parent does to a child that never moved.
+        - title: Materials and light
+          desc: >-
+            Pathway area · Scene Building Essentials, the appearance part. Material, shader
+            and texture, and the five reasons an object looks wrong on screen.
+        - title: The store room
+          desc: >-
+            The class scene gets its floor, its ramp and its three crates, with the numbers
+            written down so session 3 can drop them and time the fall.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Add an object and know what came with it
+          sub: A cube arrives with a Mesh Filter, a Mesh Renderer and a Box Collider
+        - head: Read the Transform as three separate things
+          sub: Position in metres, rotation in degrees, scale as a multiplier
+        - head: Tell local space from world space
+          sub: And predict the world position of a child under a rotated parent
+        - head: Build a Hierarchy somebody else can read
+          sub: Empty parents at the origin, named for what they hold
+        - head: Make and apply a material
+          sub: And say why editing it changes every object that shares it
+        - head: Diagnose an object that looks wrong
+          sub: Magenta, flat grey, black or invisible, each with a different cause
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: done
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: now
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: todo
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What a scene is, and what goes in it
+      lede: >-
+        A scene is a file. The Hierarchy is its table of contents, and everything you drag
+        into the view is a line written into that file.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · Mechanism
+      title: The scene is a text file, and that explains a lot
+      lead: >-
+        Bay.unity is not a picture. It is a text file listing every object, every component
+        on it and every value in that component. Saving the scene writes that file, and Ctrl
+        S is therefore the thing that makes your work exist. Two people editing the same
+        scene edit the same file, which is why session 3 spends its last block on prefabs.
+      panel:
+        label: What follows from that
+        title: Every value you type lands in a file
+        note: >-
+          A crate that vanished between sessions was never saved. The editor keeps unsaved
+          changes in memory and marks the scene name with an asterisk in the title bar.
+      steps:
+        - text: The Hierarchy shows what the file contains
+        - text: The Inspector shows one object's lines of it
+        - text: Saving writes the file to Assets/Scenes
+          loop: ↺ and two people on one scene file is a merge nobody wins
+
+  - table:
+      eyebrow: Block 01 · The GameObject menu
+      title: What each primitive arrives with, before you touch it
+      headers: [Menu item, Components, Collider]
+      rows:
+        - ["Create Empty", "Transform, and nothing else", "None"]
+        - ["3D Object · Cube", "Mesh Filter, Mesh Renderer", "Box Collider"]
+        - ["3D Object · Sphere", "Mesh Filter, Mesh Renderer", "Sphere Collider"]
+        - ["3D Object · Plane", "Mesh Filter, Mesh Renderer", "Mesh Collider"]
+        - ["Light · Directional", "Light", "None"]
+        - ["Audio · Source", "Audio Source", "None"]
+
+  - steps:
+      eyebrow: Block 01 · The class scene
+      title: The store room, built in five objects
+      items:
+        - label: '01'
+          title: Floor
+          desc: A Plane at the origin, scaled 2 on X and Z, which makes it 20 by 20 metres
+        - label: '02'
+          title: Ramp
+          desc: A Cube scaled 4 by 0.2 by 12, rotated -18 on X, sitting at y equals 1
+        - label: '03'
+          title: Crates
+          desc: Three Cubes scaled 0.6, spaced 1 metre apart along the top of the ramp
+        - label: '04'
+          title: Light
+          desc: The Directional Light the 3D template already gave you, rotated 50 on X
+        - label: '05'
+          title: Parents
+          desc: Two empty objects named Environment and Crates, both left at the origin
+
+  - stat:
+      eyebrow: The convention everything else assumes
+      value: 1 unit = 1 m
+      text: Nothing enforces it, and every default in the engine is tuned for it
+      note: >-
+        Gravity is -9.81 on Y, and that number is metres per second squared. Model a crate
+        ten times too big and it still falls at -9.81, so it drifts down like a balloon and
+        the physics looks wrong without a single wrong value in the Inspector.
+
+  - divider:
+      eyebrow: Block 02
+      title: Position, rotation, scale
+      lede: >-
+        Three rows in the Inspector, and the second one is measured against the parent rather
+        than against the world.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · Key concept
+      title: The Inspector shows local values, not world ones
+      lead: >-
+        The Transform in the Inspector is always relative to the parent. With no parent, the
+        parent is the world and the two agree, which is why the difference stays invisible
+        for the first hour. Parent a crate to the ramp and the Inspector keeps reading the
+        old numbers while the crate is somewhere else entirely.
+      panel:
+        label: The order the engine applies them
+        title: Scale, then rotate, then translate
+        note: >-
+          Reversing that order in your head is why a rotated object seems to scale along the
+          wrong axis. It scales along its own axes, and its own axes turned with it.
+      steps:
+        - text: Position is measured from the parent's origin
+        - text: Rotation is degrees around the parent's axes
+        - text: Scale multiplies, and it multiplies the collider too
+          loop: ↺ and with no parent the parent is the world
+
+  - code:
+      eyebrow: Block 02 · Reading the numbers
+      title: The two properties the Inspector hides
+      filename: WhereAmI.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class WhereAmI : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"local {transform.localPosition}");
+                Debug.Log($"world {transform.position}");
+                Debug.Log($"parent {transform.parent.name}");
+            }
+        }
+      annotations:
+        - label: localPosition
+          text: >-
+            The three numbers the Inspector shows. Measured from the parent.
+        - label: position
+          text: >-
+            The world position, which is what the camera and the physics engine work with.
+        - label: Session 4
+          text: >-
+            Every line here is explained then. Today it is a measuring instrument.
+        - label: Risk
+          text: >-
+            With no parent, transform.parent is null and the third line throws a
+            NullReferenceException before the other two are read.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: A crate that never moved, in two places at once
+      filename: WhereAmI.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        Debug.Log($"local {transform.localPosition}");
+        Debug.Log($"world {transform.position}");
+        Debug.Log($"parent {transform.parent.name}");
+      output: |
+        local (0.00, 0.50, 0.00)
+        world (0.00, 1.48, -0.15)
+        parent Ramp
+
+  - trace:
+      eyebrow: Block 02 · Measured trace
+      title: The same crate, parented in three stages
+      headers: [Stage, Local, World y, World z]
+      rows:
+        - ["No parent", "0, 0.5, 0", "0.50", "0.00"]
+        - ["Parent at y = 1", "0, 0.5, 0", "1.50", "0.00"]
+        - ["Parent turned -18", "0, 0.5, 0", "1.48", "-0.15"]
+      verdict: >-
+        The local numbers never change. In the third row the parent is rotated -18 degrees on
+        X, so the crate's half metre of height becomes 0.5 times the cosine of 18, which is
+        0.4755, and it picks up 0.5 times the sine of -18, which is -0.1545, on Z. The crate
+        moved because its parent turned, and the Inspector had no way of saying so.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four transforms that fight you
+      items:
+        - label: Error 01
+          title: Non-uniform scale on a parent
+          desc: >-
+            Scale a parent 1 by 3 by 1 and every rotated child skews. The mesh shears, the
+            collider does not follow honestly, and nothing in the Inspector looks wrong.
+        - label: Error 02
+          title: Reset on a child
+          desc: >-
+            Transform · Reset sets the local values to zero, so the child jumps to the
+            parent's origin rather than to the world origin you had in mind.
+        - label: Error 03
+          title: Rotation that reads 359.99
+          desc: >-
+            The Inspector shows Euler angles, the engine stores a quaternion. Values drift
+            by a hundredth of a degree, which is cosmetic until you compare two of them.
+        - label: Error 04
+          title: Scaling instead of moving
+          desc: >-
+            A Plane is 10 by 10 metres at scale 1, so a 20 metre floor is scale 2, not
+            position 20. Typing the size into the wrong row is the most common first error.
+
+  - divider:
+      eyebrow: Block 03
+      title: Why it looks like that
+      lede: >-
+        A material is an asset, shared by everything that uses it, and light is what makes
+        any of it visible.
+      block: 3
+
+  - concept:
+      eyebrow: Block 03 · Key concept
+      title: Shader, material, texture, in that order
+      lead: >-
+        The shader is the program that decides how a surface answers light. The material is
+        a set of values for one shader, saved as an asset. The texture is one of those
+        values, an image plugged into a slot. A renderer points at a material, so ten crates
+        pointing at the same material are ten crates you can recolour at once, or by accident.
+      panel:
+        label: What the pipeline decides
+        title: A URP project needs URP materials
+        note: >-
+          A material built for the built-in pipeline renders bright magenta under the
+          Universal Render Pipeline, because the shader it names is not there to run.
+      steps:
+        - text: The shader is the program
+        - text: The material is the settings for it
+        - text: The texture is one setting among many
+          loop: ↺ and the renderer only ever points at the material
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: Touching .material makes a copy behind you
+      filename: Recolour.cs
+      lang: csharp
+      output_label: Console, in play mode
+      source: |
+        Renderer r = GetComponent<Renderer>();
+        Debug.Log(r.sharedMaterial.name);
+
+        r.material.color = Color.red;
+        Debug.Log(r.material.name);
+      output: |
+        CrateWood
+        CrateWood (Instance)
+
+  - table:
+      eyebrow: Block 03 · Diagnosis
+      title: Five ways an object looks wrong, and what each one means
+      headers: [On screen, Cause, Fix]
+      rows:
+        - ["Bright magenta", "Shader missing in this pipeline", "Use a URP material"]
+        - ["Flat grey", "No light reaching it", "Add a Directional Light"]
+        - ["Almost black", "The light points elsewhere", "Rotate the light on X"]
+        - ["Mirror shiny", "Smoothness near 1", "Bring it down to about 0.2"]
+        - ["Nothing at all", "Mesh Renderer unticked", "Tick it in the Inspector"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: You set one crate's material to red at run time with .material. What happened to the other two?
+      options:
+        - All three turned red, because they share the material asset
+        - Only that one, because .material made it a private copy
+        - Nothing turned red until the scene was saved
+        - All three turned red and the change survived pressing Stop
+
+  - method:
+      eyebrow: Answer
+      title: The second one, and the copy has a cost
+      statement: >-
+        Reading .material clones the material for that renderer and hands you the clone. Only
+        that crate changes, and the clone lives until the object is destroyed.
+      points:
+        - label: Use sharedMaterial
+          text: >-
+            When you do want all of them to change. It writes to the asset itself, and in
+            the editor that edit survives pressing Stop.
+        - label: Use material
+          text: >-
+            When one object needs to differ. Expect one extra material in memory per
+            renderer that asks for it.
+        - label: The tell
+          text: >-
+            The name gains the word Instance in brackets. If you see that in the Inspector
+            during play mode, something in your code touched .material.
+
+  - lab:
+      eyebrow: Lab
+      title: Build the store room, in pairs
+      brief: >-
+        Build the five objects of the class scene with the numbers from block 1, parent the
+        three crates under an empty called Crates, and give them a material you made yourself.
+        Then rotate that parent 30 degrees on Y and note where each crate ends up.
+      blocks:
+        - label: Deliverable
+          text: The saved scene, plus the three world positions before and after the rotation
+        - label: Constraint
+          text: >-
+            Empty parents stay at position zero with no rotation and scale 1, so the numbers
+            underneath them stay readable.
+        - label: The test
+          text: >-
+            Select a crate and press F. If the view frames something far from where you
+            expected, the parent is the reason, not the crate.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The Inspector speaks local
+          desc: >-
+            Three numbers measured from the parent. With no parent they match the world,
+            which is exactly why the difference bites the first time you parent something
+        - title: Scale multiplies everything
+          desc: >-
+            The mesh, the collider and the children. A non-uniform scale on a rotated parent
+            skews all three, and nothing in the interface complains
+        - title: A material is a shared asset
+          desc: >-
+            Ten renderers can point at one material. Editing it changes ten objects, and
+            touching .material in code silently makes an eleventh
+
+  - homework:
+      eyebrow: Homework
+      title: The scene, and the pathway area behind it
+      brief: >-
+        Finish the store room scene and work through the creation, transformation and
+        appearance parts of the pathway area Scene Building Essentials in your own Unity Learn
+        account. Bring the scene to session 3, because the crates are about to be dropped.
+      meta:
+        - [Due, Before session 3]
+        - [Format, Blackboard · the scene file and one screenshot]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Hierarchy", "Required", "Named parents at the origin, crates underneath"]
+        - ["Numbers", "Required", "The ramp is -18 on X and the floor is 20 by 20"]
+        - ["Material", "Required", "A material you created, not the default one"]
+        - ["Pathway", "Required", "The three parts of the area marked done on Unity Learn"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials, and you are expected to work through it
+        yourself. Next session, the crates fall and something has to catch them.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

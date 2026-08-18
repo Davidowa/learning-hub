@@ -1,0 +1,475 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 4
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 04 · Reading and writing C# in Unity
+      title: Unity Essentials
+      subtitle: >-
+        Nothing in your code calls Update. The engine does, by name, and once that is clear
+        the rest of the file stops looking like magic.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 4 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        Companion session to the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. It covers the pathway areas Level 1
+        Code Comprehension and Level 1 Application Scripting, and closes the scripting part
+        of the area GameObjects that session 3 left open.
+
+        The scripts belong to the StoreRoom project. Spinner.cs turns a sign over the bay,
+        BayDoor.cs counts crates and shuts at three.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Reading somebody's script
+          desc: >-
+            Pathway area · Level 1 Code Comprehension. Who calls these methods, when each one
+            runs, and how to answer what a file does without running it.
+        - title: Writing the logic
+          desc: >-
+            Pathway area · Level 1 Application Scripting, the logic and API parts. Fields the
+            Inspector can see, conditions, counters and the engine calls you actually use.
+        - title: Style and the console
+          desc: >-
+            Pathway area · Level 1 Application Scripting, the code style part. Naming, one
+            job per file, and reading the three errors that will meet you this week.
+        - title: The bay door decides
+          desc: >-
+            Pathway area · GameObjects, the scripting part. The trigger from session 3 gets a
+            capacity, a state and a reason to stop counting.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Say who calls Start and Update
+          sub: And why nothing in your own code ever names either of them
+        - head: Choose between Update and FixedUpdate
+          sub: By whether the line touches a Rigidbody or touches the frame
+        - head: Multiply by Time.deltaTime and say why
+          sub: So the same script moves the same distance at 30 and at 60 frames
+        - head: Expose a value to the Inspector on purpose
+          sub: With SerializeField on a private field rather than making it public
+        - head: Read a compiler error to its line
+          sub: CS1002, CS0103 and CS0246, each with a different fix
+        - head: Explain a NullReferenceException in one line
+          sub: A reference that was never assigned, named by the method that used it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: done
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: done
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: now
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Reading a script before writing one
+      lede: >-
+        A Unity script is a class that inherits from MonoBehaviour and answers when the engine
+        calls. Everything else follows from that sentence.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · Mechanism
+      title: The engine calls your methods by their names
+      lead: >-
+        When a MonoBehaviour is created, Unity looks through the class for methods with names
+        it knows, Start, Update, OnTriggerEnter and about forty others, and remembers the ones
+        it found. Nothing registers anything. That is why a typo in Update costs no error at
+        all: the method is perfectly valid C# and the engine simply never looks for it.
+      panel:
+        label: The failure this explains
+        title: A method called Updatee never runs
+        note: >-
+          No compiler error, no console warning, no clue in the Inspector. The object just
+          sits there. Spelling is the first thing to check when a script does nothing.
+      steps:
+        - text: You write a class that inherits MonoBehaviour
+        - text: You drag it onto a GameObject as a component
+        - text: The engine finds the names it knows
+          loop: ↺ and it will never find a name you spelled wrong
+
+  - code:
+      eyebrow: Block 01 · Anatomy
+      title: Every part of the smallest useful script
+      filename: Spinner.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class Spinner : MonoBehaviour
+        {
+            [SerializeField] float degreesPerSecond = 90f;
+
+            void Update()
+            {
+                float step = degreesPerSecond * Time.deltaTime;
+                transform.Rotate(0f, step, 0f);
+            }
+        }
+      annotations:
+        - label: using UnityEngine
+          text: >-
+            Where MonoBehaviour, Time and Debug live. Without it none of them resolve.
+        - label: The class name
+          text: >-
+            It has to match the file name, Spinner.cs, or the component will not attach.
+        - label: transform
+          text: >-
+            A property MonoBehaviour already gives you. It is this object's Transform.
+        - label: Risk
+          text: >-
+            Drop Time.deltaTime and the sign turns 90 degrees per frame, which is 5400
+            degrees a second on a machine holding 60.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · The calls
+      title: Six messages the engine sends, and when each one arrives
+      headers: [Message, When it runs, What belongs there]
+      rows:
+        - ["Awake", "As the object loads", "Wiring up references"]
+        - ["Start", "Before the first frame", "Values other objects set"]
+        - ["Update", "Once per frame", "Input, timers, animation"]
+        - ["FixedUpdate", "Every 0.02 seconds", "Forces on a Rigidbody"]
+        - ["OnTriggerEnter", "On entering a trigger", "Counting, doors, pickups"]
+        - ["OnDestroy", "As the object goes", "Letting go of what it held"]
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: The same script on two machines, one second each
+      filename: Drift.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        void Update()
+        {
+            frames++;
+            naive  += 0.05f;
+            scaled += 3f * Time.deltaTime;
+        }
+      output: |
+        60 fps  frames 60
+          naive 3.00   scaled 3.00
+        30 fps  frames 30
+          naive 1.50   scaled 3.00
+
+  - concept:
+      eyebrow: Block 01 · Key concept
+      title: A frame is not a unit of time
+      lead: >-
+        The naive line adds 0.05 per frame, which happens to be 3 per second on a machine
+        holding 60 frames. On a machine holding 30 it is 1.5 per second, and the same script
+        is now half as fast for reasons nobody wrote down. Time.deltaTime is the seconds the
+        last frame took, so multiplying by it turns per frame into per second.
+      panel:
+        label: The rule that follows
+        title: Per second in the field, per frame in the line
+        note: >-
+          Name the field degreesPerSecond and multiply by Time.deltaTime once, at the point
+          of use. A field named speed with no unit is where this bug hides.
+      steps:
+        - text: Update runs as often as the machine manages
+        - text: Time.deltaTime is how long the last frame took
+        - text: Multiply anything per second by it
+          loop: ↺ and in FixedUpdate the step is Time.fixedDeltaTime
+
+  - divider:
+      eyebrow: Block 02
+      title: Writing the logic
+      lede: >-
+        A counter, a condition and a flag. The bay door from session 3 gets a capacity and a
+        reason to stop paying attention.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Application scripting
+      title: The door that counts and then stops
+      filename: BayDoor.cs
+      lang: csharp
+      source: |
+        public class BayDoor : MonoBehaviour
+        {
+            [SerializeField] int capacity = 3;
+            int crates;
+            bool closed;
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (closed || other.attachedRigidbody == null) return;
+                crates++;
+                closed = crates >= capacity;
+                Debug.Log($"{crates}/{capacity} closed={closed}");
+            }
+        }
+      annotations:
+        - label: The early return
+          text: >-
+            Two reasons to do nothing, both handled on one line before any counting starts.
+        - label: The flag
+          text: >-
+            closed is assigned the result of a comparison. No if is needed to set a bool.
+        - label: capacity
+          text: >-
+            Serialized, so the number is tuned in the Inspector and not in the file.
+        - label: Risk
+          text: >-
+            Change 3 to 5 in the code and the Inspector still says 3. The serialized value
+            wins, and only Reset on the component clears it.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Three crates down the ramp, one line each
+      filename: BayDoor.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        crates++;
+        closed = crates >= capacity;
+        Debug.Log($"{crates}/{capacity} closed={closed}");
+      output: |
+        1/3 closed=False
+        2/3 closed=False
+        3/3 closed=True
+
+  - trace:
+      eyebrow: Block 02 · Measured trace
+      title: The state of the door after each arrival
+      headers: [Arrival, crates, closed, Counted]
+      rows:
+        - ["Crate 1", "1", "False", "Yes"]
+        - ["Crate 2", "2", "False", "Yes"]
+        - ["Crate 3", "3", "True", "Yes"]
+        - ["Crate 4", "3", "True", "No"]
+      verdict: >-
+        The fourth crate arrives, the first condition is already true and the method returns
+        before the counter moves. Nothing is printed, which is the correct behaviour and also
+        the one students report as a bug. Remove the closed check and the door counts to
+        seventeen quite happily.
+
+  - table:
+      eyebrow: Block 02 · The Inspector
+      title: Three ways to declare a field, and what each one costs
+      headers: [Declaration, In the Inspector, Reachable from outside]
+      rows:
+        - ["public float x", "Shown and editable", "Yes, by any script"]
+        - ["[SerializeField]", "Shown and editable", "No, still private"]
+        - ["private float x", "Hidden", "No"]
+        - ["[HideInInspector]", "Hidden, still saved", "Yes, if public"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four scripting failures that waste an afternoon
+      items:
+        - label: Error 01
+          title: The Inspector value wins
+          desc: >-
+            Once a field is serialized, the number in the scene overrides the one in the
+            file. Editing the code changes nothing, and the code is where you keep looking.
+        - label: Error 02
+          title: The missing deltaTime
+          desc: >-
+            The sign spins fine on your machine and rips on the lab machine. Same script,
+            different frame rate, and no error anywhere to point at.
+        - label: Error 03
+          title: GetComponent in Update
+          desc: >-
+            It searches the object's component list every frame. Call it once in Awake, keep
+            the result in a field, and the frame cost goes with it.
+        - label: Error 04
+          title: The reference nobody dragged in
+          desc: >-
+            A serialized field left as None throws NullReferenceException on the first frame
+            that uses it, and the console names the method, not the empty slot.
+
+  - divider:
+      eyebrow: Block 03
+      title: Style, and reading the console
+      lede: >-
+        The compiler tells you the file, the line and the column. Learning to believe it is
+        most of what this block is for.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · The console
+      title: Three compiler errors you will meet this week
+      headers: [Code, What it says, What it usually is]
+      rows:
+        - ["CS1002", "; expected", "A missing semicolon above"]
+        - ["CS0103", "The name does not exist", "A typo, or a missing field"]
+        - ["CS0246", "Type or namespace not found", "A missing using directive"]
+        - ["CS0029", "Cannot convert type", "An int put into a float slot"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: What an unassigned reference looks like
+      filename: BayDoor.cs
+      lang: csharp
+      output_label: Console, at run time
+      source: |
+        [SerializeField] AudioSource chime;
+
+        void OnTriggerEnter(Collider other)
+        {
+            chime.Play();
+        }
+      output: |
+        NullReferenceException: Object
+        reference not set to an
+        instance of an object
+        BayDoor.OnTriggerEnter
+        (UnityEngine.Collider other)
+
+  - method:
+      eyebrow: Block 03 · Code style
+      title: Four habits that make a script readable in a month
+      statement: >-
+        Style is not decoration. Every rule below exists because somebody opened a file six
+        weeks later and could not tell what it was for.
+      points:
+        - label: Name the unit
+          text: >-
+            degreesPerSecond, not speed. The name carries the unit, so the multiplication by
+            Time.deltaTime is obviously right or obviously missing.
+        - label: One job per file
+          text: >-
+            The door counts. It does not also play music, move the camera and save the game.
+            Two components on one object beat one component doing two things.
+        - label: Private by default
+          text: >-
+            Serialize what a designer has to tune. Everything else stays private, because a
+            public field is a promise that some other script may already be relying on.
+        - label: Log what you can check
+          text: >-
+            A message with the numbers in it, not the word here. The console is the only
+            instrument you have until the debugger arrives in a later course.
+
+  - quiz:
+      eyebrow: Quick check
+      question: A machine holds 60 frames a second. How far does this object travel in one second?
+      filename: Mover.cs
+      lang: csharp
+      source: |
+        void Update()
+        {
+            transform.Translate(0f, 0f, 2f);
+        }
+      options:
+        - Two metres, because the vector says 2
+        - A hundred and twenty metres, two per frame
+        - Two metres per second only if the object has a Rigidbody
+        - Nothing moves, because Translate needs Time.deltaTime to compile
+
+  - code_output:
+      eyebrow: Answer · Measured
+      title: Two metres per frame, counted over one second
+      filename: Mover.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        void Update()
+        {
+            frames++;
+            transform.Translate(0f, 0f, 2f);
+        }
+
+        void OnDisable()
+        {
+            Debug.Log($"frames {frames}");
+            Debug.Log($"z {transform.position.z:F1}");
+        }
+      output: |
+        frames 60
+        z 120.0
+
+  - lab:
+      eyebrow: Lab
+      title: Give the bay door a voice, in pairs
+      brief: >-
+        Add Spinner.cs to a sign over the door and BayDoor.cs to the trigger. Set the capacity
+        to 3 in the Inspector, run four crates down the ramp, and paste the console output.
+        Then break it on purpose in the two ways the pitfalls slide describes.
+      blocks:
+        - label: Deliverable
+          text: The console for four crates, plus a screenshot of each of the two failures
+        - label: Constraint
+          text: >-
+            Every tunable number is a serialized field with its unit in the name. No literals
+            buried in the middle of a method.
+        - label: The test
+          text: >-
+            Rename Update to Updatee and run it again. Write down exactly what the editor
+            tells you, which is nothing, and why that is consistent with block 1.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The engine calls you
+          desc: >-
+            Your methods are found by name and called by the engine, which is why a spelling
+            mistake produces silence rather than an error
+        - title: Multiply by Time.deltaTime
+          desc: >-
+            A frame is not a unit of time. Anything measured per second gets multiplied by
+            the length of the frame, once, at the point where it is used
+        - title: The Inspector overrides the file
+          desc: >-
+            A serialized field keeps the value stored in the scene or the prefab. Changing
+            the initializer in code changes nothing you can see
+
+  - homework:
+      eyebrow: Homework
+      title: The two scripting areas of the pathway
+      brief: >-
+        Finish both scripts and work through Level 1 Code Comprehension and Level 1
+        Application Scripting in your own Unity Learn account, along with the scripting part
+        of GameObjects. Session 5 puts a camera and a speaker into the same scene.
+      meta:
+        - [Due, Before session 5]
+        - [Format, "Blackboard · the two .cs files and the console output"]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Spinner", "Required", "Turns at a rate that does not change with frame rate"]
+        - ["BayDoor", "Required", "Counts to the capacity and then stops counting"]
+        - ["Reading", "Required", "One line explaining the fourth crate printing nothing"]
+        - ["Pathway", "Required", "Both scripting areas marked done on Unity Learn"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials, and you are expected to work through it
+        yourself. Next session, the player finally gets eyes and ears.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

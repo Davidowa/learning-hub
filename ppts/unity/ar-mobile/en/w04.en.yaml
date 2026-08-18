@@ -1,0 +1,441 @@
+meta:
+  course: Mobile AR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 4
+  footer: MOBILE AR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 04 · Visual Scripting · Interactions as graphs
+      title: Mobile AR Development
+      subtitle: >-
+        The same placement you wrote last week, built out of nodes, and the setting that
+        decides which nodes you are allowed to see.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 4 of 5]
+        - [Based on, Unity Learn · Mobile AR Development]
+      notes: |
+        The pathway teaches Visual Scripting, not only C#, so this topic gets a full session
+        rather than a mention. Graphs are drawn here with tables, steps and diagrams,
+        because a screenshot of a graph reads as decoration on a projector.
+
+        Sourced from the Visual Scripting 1.9 manual (graph and machine types, variables,
+        interface, configuration) and the AR Foundation 6.0 manual. Nothing is copied from
+        Unity Learn, which the students work through separately.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What a graph is
+          desc: Two kinds of connection, two graph types, and where a value is allowed to live
+        - title: The interaction
+          desc: Tap to place, rebuilt as nodes, stage by stage with what each one needs
+        - title: The missing nodes
+          desc: Why AR types are absent from the finder, and the setting that generates them
+        - title: Graphs and C# together
+          desc: One event from a script into a graph, and where the boundary should sit
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Tell control flow from data flow
+          sub: And explain why a node fed with values still never runs
+        - head: Choose Graph over Embed
+          sub: Knowing what the source dropdown does, and what switching it destroys
+        - head: Pick the right variable scope
+          sub: Flow, Graph, Object, Scene, App or Saved, by how long the value has to live
+        - head: Build a placement as a graph
+          sub: Event, question and action, in the order the connections force
+        - head: Regenerate the node library
+          sub: So AR Foundation types appear in the finder instead of silently missing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the five
+      phases:
+        - label: 01 · Session 1
+          title: AR design
+          desc: Use cases, and what a platform can really track
+          state: done
+        - label: 02 · Session 2
+          title: Build to Android
+          desc: Packages, player settings, ARCore and the pipeline
+          state: done
+        - label: 03 · Session 3
+          title: Trackable targets
+          desc: Planes, images, ray casts and placement
+          state: done
+        - label: 04 · Session 4
+          title: Visual Scripting
+          desc: Interactions built as graphs, not scripts
+          state: now
+        - label: 05 · Session 5
+          title: Mobile optimization
+          desc: Assets, batching and the frame budget
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: A program with the wires drawn
+      lede: Two kinds of connection do two different jobs, and confusing them is what makes a graph sit there doing nothing.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A node runs because something told it to
+      lead: >-
+        One kind of connection says what happens next. It leaves the output of one node and
+        enters the input of another, and it is what makes a graph a sequence rather than a
+        pile. The other kind carries a value into a port that needs one, a number, a
+        position, a GameObject. A node with no incoming control connection never runs, no
+        matter how many values are wired into it.
+      panel:
+        label: Where nodes come from
+        title: Right click in the graph, the fuzzy finder
+        note: >-
+          It lists every node the project knows about, grouped by category. What it cannot
+          list is anything the node library was never told about.
+      steps:
+        - text: An event node starts the flow
+        - text: Control connections order the work
+        - text: Data connections feed the ports
+        - text: No control connection, no execution
+          loop: ↺ and that is the first thing to check
+
+  - table:
+      eyebrow: Block 01 · The pieces
+      title: Two graph types, and the components that run them
+      headers: [Piece, What it is, What it is for]
+      rows:
+        - ["Script Graph", "A flow of nodes", "One behaviour, start to end"]
+        - ["State Graph", "States and transitions", "Modes an object moves between"]
+        - ["Script Machine", "A component", "Runs a Script Graph"]
+        - ["State Machine", "A component", "Runs a State Graph"]
+        - ["Variables", "Added for you", "Holds the Object variables"]
+
+  - diagram:
+      eyebrow: Block 01 · Where it lives
+      title: One component, one asset, and the nodes inside it
+      blocks:
+        - label: '01'
+          title: The GameObject
+          desc: A Script Machine sits on it, and a Variables component appears beside it on its own.
+        - label: '02'
+          title: The graph asset
+          desc: The nodes live here. Point ten objects at one asset and all ten run the same logic.
+        - label: '03'
+          title: The nodes
+          desc: An event node first, then whatever the behaviour needs, edited in the graph window.
+          dark: true
+      note: >-
+        This is the arrangement you get with the source set to Graph. With Embed the middle
+        block disappears and the nodes live inside the component, which is convenient once
+        and a problem the second time you need the same behaviour.
+
+  - tiers:
+      eyebrow: Block 01 · Source
+      title: The dropdown on the machine, and the trap under it
+      items:
+        - key: GRAPH
+          title: An asset in the project
+          desc: One file, many machines. Edit it once and every GameObject pointing at it changes with it.
+        - key: EMBED
+          title: Inside the component
+          desc: The graph exists only in that component. Useful when it has to hold references to this scene.
+        - key: SWITCH
+          title: Embed to Graph discards it
+          desc: Changing the source from Embed to Graph throws the embedded graph away. Copy the nodes out first.
+
+  - table:
+      eyebrow: Block 01 · Variables
+      title: Six places a value can live, and how long it lasts
+      headers: [Scope, Lives in, Gone when]
+      rows:
+        - ["Flow", "One chain of nodes", "The chain finishes"]
+        - ["Graph", "One graph", "The graph is destroyed"]
+        - ["Object", "One GameObject", "The object is destroyed"]
+        - ["Scene", "One scene", "The scene unloads"]
+        - ["App", "The whole application", "The app closes"]
+        - ["Saved", "PlayerPrefs on disk", "You delete it yourself"]
+
+  - divider:
+      eyebrow: Block 02
+      title: The interaction, stage by stage
+      lede: Tap to place again, this time without a script, and the order of the stages is not a suggestion.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The graph
+      title: Five stages of a tap that places something
+      items:
+        - label: '01'
+          title: The frame ticks
+          desc: A lifecycle event node fires once per frame and starts the flow
+        - label: '02'
+          title: Was there a tap
+          desc: A branch that only continues on the frame a finger went down
+        - label: '03'
+          title: Where on screen
+          desc: The touch position, in pixels, not in world units
+        - label: '04'
+          title: Ask the session
+          desc: The ray cast, against planes, filling a list of hits
+        - label: '05'
+          title: Create the object
+          desc: Instantiate the prefab at the position and rotation of the first hit
+
+  - table:
+      eyebrow: Block 02 · Node by node
+      title: What each stage takes and what it gives back
+      headers: [Stage, It takes, It gives]
+      rows:
+        - ["Frame event", "Nothing", "One control pulse per frame"]
+        - ["Tap test", "Nothing", "True on the frame of the press"]
+        - ["Branch", "A boolean", "Two control outputs"]
+        - ["Screen point", "Nothing", "A position in pixels"]
+        - ["Ray cast", "Point, list, mask", "True, and the list filled in"]
+        - ["Instantiate", "Prefab, position, angle", "The new GameObject"]
+
+  - diagram:
+      eyebrow: Block 02 · Shape
+      title: Every interaction graph has the same three lanes
+      blocks:
+        - label: '01'
+          title: Event
+          desc: Something happened. A frame ticked, a finger went down, a custom event arrived.
+        - label: '02'
+          title: Question
+          desc: Is there a plane under that point? The ray cast answers with a boolean and a pose.
+        - label: '03'
+          title: Action
+          desc: Create, move, play a sound. Everything with an effect somebody can see or hear.
+          dark: true
+      note: >-
+        Read an unfamiliar graph by finding those three lanes first. If a graph has no event
+        node it will never run, and if it has two event nodes it is really two graphs sharing
+        one window.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a graph does nothing at all
+      items:
+        - label: Mistake 01
+          title: The node is not in the finder
+          desc: >-
+            The type exists, the package is installed, and the node was never generated.
+            Block three is entirely about this one.
+        - label: Mistake 02
+          title: A node with no control wire
+          desc: >-
+            The values are all connected and the node still never fires, because nothing
+            upstream ever hands it control.
+        - label: Mistake 03
+          title: Everything inside the frame event
+          desc: >-
+            A ray cast every frame costs what a ray cast costs, sixty times a second. Put
+            the work behind the branch, not in front of it.
+        - label: Mistake 04
+          title: Duplicating an embedded graph
+          desc: >-
+            Copying the GameObject copies the graph, so now there are two of them and the
+            fix you make lands on only one.
+
+  - divider:
+      eyebrow: Block 03
+      title: The nodes that were never there
+      lede: The AR ray cast you looked for in block two is missing from the finder, and the package being installed has nothing to do with it.
+      block: 3
+
+  - concept:
+      eyebrow: Block 03 · Mechanism
+      title: The finder lists only what it knows
+      lead: >-
+        Visual Scripting does not read every type in the project as you type. It generates
+        node definitions ahead of time from a list of assemblies and a list of types, and
+        both lists are project settings. AR Foundation is on neither by default, so the ray
+        cast nodes were never generated and the finder has nothing to show you. Adding the
+        assembly and regenerating is what makes them appear.
+      panel:
+        label: Where the two lists live
+        title: Project Settings, Visual Scripting
+        note: >-
+          Node Library holds the assemblies and Type Options holds the types. Regenerate
+          Nodes is what applies a change to either one.
+      steps:
+        - text: Open Project Settings, Visual Scripting
+        - text: Add the assembly to Node Library
+        - text: Add its types to Type Options
+        - text: Press Regenerate Nodes, then OK
+          loop: ↺ and again after every change to either list
+
+  - table:
+      eyebrow: Block 03 · The list
+      title: What to add before AR nodes turn up
+      headers: [Add this, Where it goes, Why]
+      rows:
+        - ["Unity.XR.ARFoundation", "Node Library", "The managers and trackables"]
+        - ["Unity.XR.ARSubsystems", "Node Library", "TrackableType and the enums"]
+        - ["ARRaycastManager", "Type Options", "So its methods become nodes"]
+        - ["ARRaycastHit", "Type Options", "So the pose can be read"]
+        - ["Regenerate Nodes", "The same window", "Nothing applies until you do"]
+
+  - code:
+      eyebrow: Block 03 · The bridge
+      title: Sending one event from C# into a graph
+      filename: PlaneAnnouncer.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using Unity.VisualScripting;
+        using UnityEngine.XR.ARFoundation;
+
+        public class PlaneAnnouncer : MonoBehaviour
+        {
+            [SerializeField] GameObject graphTarget;
+            public void OnChanged(
+                ARTrackablesChangedEventArgs<ARPlane> e)
+            {
+                if (e.added.Count > 0)
+                    CustomEvent.Trigger(graphTarget, "PlaneFound");
+            }
+        }
+      annotations:
+        - label: One namespace
+          text: >-
+            Unity.VisualScripting is what puts CustomEvent in reach of a script.
+        - label: The target
+          text: >-
+            The event is delivered to one GameObject, so the graph listening for it has to
+            be on that object.
+        - label: The name
+          text: >-
+            A string, matched against the Custom Event node in the graph. Nothing checks the
+            spelling for you.
+        - label: Risk
+          text: >-
+            Rename the event on one side and the graph goes quiet, with no error anywhere.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: One event, and the graph picking it up
+      filename: PlaneAnnouncer.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        if (e.added.Count > 0)
+        {
+            Debug.Log("plane added, event sent");
+            CustomEvent.Trigger(graphTarget, "PlaneFound");
+        }
+      output: |
+        plane added, event sent
+        graph woke on PlaneFound
+        graph, banner shown
+
+  - concept:
+      eyebrow: Block 03 · Judgement
+      title: Where the boundary between the two belongs
+      lead: >-
+        Graphs read well when they describe what happens and in what order. They read badly
+        when they carry arithmetic, string handling or a loop over a list, because every one
+        of those becomes a page of boxes that a script says in a line. The useful split is to
+        let C# do the computing and let the graph do the sequencing, with a custom event as
+        the seam between them.
+      panel:
+        label: The rule of thumb
+        title: A graph you cannot read across is too big
+        note: >-
+          If the window has to scroll twice to follow one flow, move the middle of it into a
+          script and trigger it with one event.
+      steps:
+        - text: C# computes, the graph sequences
+        - text: One custom event per seam
+        - text: Names matched by string, so agree them
+        - text: Keep the graph readable at one glance
+          loop: ↺ and the seam is where you will debug first
+
+  - quiz:
+      eyebrow: Quick check
+      question: A graph has an AR Raycast Manager variable, and the ray cast node is nowhere in the finder. Why?
+      options:
+        - The assembly is not in the node library, so no nodes were ever generated
+        - Visual Scripting cannot call methods on components, only on GameObjects
+        - The machine source is Embed, and an embedded graph gets fewer nodes
+        - The AR Raycast Manager exposes no public methods to turn into nodes
+
+  - trace:
+      eyebrow: Answer
+      title: Four checks, and only the last two matter
+      headers: [Check, Where you look, Result]
+      rows:
+        - ["Package installed", "Package Manager", "Yes"]
+        - ["Type compiles", "A throwaway script", "Yes"]
+        - ["Assembly listed", "Node Library", "No"]
+        - ["Nodes generated", "Same window", "Never run"]
+      verdict: >-
+        The package is there and the compiler is happy, which is exactly what makes this one
+        confusing. The finder is not reading the project, it is reading a generated list, and
+        that list was written before the assembly was added to it.
+
+  - lab:
+      eyebrow: Lab
+      title: The same placement, twice, in pairs
+      brief: >-
+        Rebuild the tap to place behaviour from session three as a Script Graph on a second
+        GameObject, with the script version still in the scene and disabled. Then swap which
+        one is active and confirm both behave the same on the phone.
+      blocks:
+        - label: Constraint
+          text: The graph does the sequencing. Any arithmetic goes in a script and arrives as an event.
+        - label: Deliverable
+          text: A screen recording of both versions running, and a note on which one you would keep.
+        - label: Criterion
+          text: That the graph fits in one window without scrolling, and a classmate can read it aloud.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Four ideas to take away
+      items:
+        - title: Control before data
+          desc: A node runs because a control connection reached it, not because its inputs are filled
+        - title: Graph beats Embed by default
+          desc: An asset is reusable and survives a duplicated GameObject, and switching away from Embed loses work
+        - title: The finder reads a generated list
+          desc: Node Library and Type Options decide what exists, and nothing applies until you regenerate
+        - title: C# computes, the graph sequences
+          desc: A custom event is the seam, matched by a string that nothing spellchecks for you
+
+  - homework:
+      eyebrow: For the next session
+      title: Bring a scene that is too heavy
+      brief: >-
+        Add enough content to your scene that it stops feeling smooth on the phone. More
+        objects, larger textures, more lights. Session five measures it and takes the cost back
+        out again, so a scene that already runs at sixty gives us nothing to work on.
+      meta:
+        - [Due, Before session 5]
+        - [Format, The updated repository]
+        - [Bring, The phone and the cable]
+      rubric:
+        - ["Graph", "Required", "Tap to place works as a Script Graph on the device"]
+        - ["Seam", "Required", "At least one custom event crossing from C# into the graph"]
+        - ["Pathway", "Ongoing", "This week's units on Unity Learn, done in your own time"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Mobile AR Development on Unity Learn is the pathway these decks accompany, at
+        learn.unity.com/pathway/mobile-ar-development. You are expected to work through it.
+      meta:
+        - [Pathway, Unity Learn · Mobile AR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

@@ -1,0 +1,447 @@
+meta:
+  course: VR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 3
+  footer: VR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 03 · Beginner VR development · The interaction toolkit
+      title: VR Development
+      subtitle: >-
+        Three components make a scene reachable. This session is what they are, how they
+        find each other, and the floor they all stand on.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Beginner]
+        - [Session, 3 of 5]
+        - [Based on, Unity Learn · VR Development]
+      notes: |
+        Companion session to the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. Component names, namespaces and the
+        tracking origin modes are taken from the XR Interaction Toolkit 3.5 manual and
+        API reference. The scene, the scripts and the failures are written for this
+        course, and nothing here reproduces Unity's own examples.
+
+        The bench scene at this point: a floor, a workbench, a motor with a guard door,
+        an emergency stop, a torque wrench and a tachometer dial. Only the wrench is
+        grabbable today. The stop button gets its own component in session 4.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The three parts
+          desc: An origin, a manager and an interactor, and how they find each other
+        - title: What answers a hand
+          desc: Interactables, the events they raise, and where your method goes
+        - title: The floor you stand on
+          desc: Tracking origin mode, teleporting, and turning without the nausea
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Build a scene that reaches
+          sub: An XR Interaction Manager, an XR Origin and one interactor per hand, and no more
+        - head: Explain how registration works
+          sub: Components find their manager in OnEnable, which is why load order shows up as bugs
+        - head: Bind a method to a select event
+          sub: In the inspector or in code, and say what each way costs you later
+        - head: Choose the tracking origin mode
+          sub: Floor when the runtime knows the floor, Device when you have to type the height in
+        - head: Set up teleporting and snap turning
+          sub: The two locomotion providers this course allows in the bench scene, and why those two
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five sessions beside a six week pathway
+      phases:
+        - label: '01 · Session 1'
+          title: Judging a build
+          desc: Presence, comfort and the note you write
+          state: done
+        - label: '02 · Session 2'
+          title: Headset and build
+          desc: Choosing hardware, and Android settings
+          state: done
+        - label: '03 · Session 3'
+          title: Interaction toolkit
+          desc: Origin, interactors and interactables
+          state: now
+        - label: '04 · Session 4'
+          title: Your own code
+          desc: Custom interactables and select events
+          state: todo
+        - label: '05 · Session 5'
+          title: The frame budget
+          desc: Measuring milliseconds on the device
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The three parts of a reaching scene
+      lede: An origin that carries the head and the hands, objects that can be reached, and something in the middle that keeps the two apart.
+      block: 1
+
+  - diagram:
+      eyebrow: Block 01 · The mediator
+      title: Nothing here talks to anything directly
+      blocks:
+        - label: Interactor
+          title: The hand
+          desc: Near-Far, poke, gaze or teleport, one or more per controller
+        - label: Manager
+          title: XR Interaction Manager
+          desc: Holds the register, matches hands to objects and raises the events
+          dark: true
+        - label: Interactable
+          title: The wrench
+          desc: A collider, a component, and a list of methods to call
+      note: >-
+        The arrows go both ways through the middle. That indirection is what lets you swap
+        a ray for a poke without editing a single object on the bench.
+
+  - concept:
+      eyebrow: Key concept
+      title: Registration happens in OnEnable, not in the inspector
+      lead: >-
+        An interactor and an interactable never hold a reference to each other. Each registers
+        with the manager when it is enabled and unregisters when it is disabled. After that the
+        manager does the matching.
+      panel:
+        label: Where the load order bites
+        title: A manager can be created for you, quietly
+        note: >-
+          If a component finds no manager it can create a default one, which is convenient
+          until an additive scene brings a second manager and half the bench registers
+          with the wrong one.
+      steps:
+        - text: Enable the object, it joins the register
+        - text: Disable it, it leaves again
+        - text: The manager matches per frame
+        - text: Your code hangs off the events
+          loop: ↺ so an object disabled at load never announces itself at all
+
+  - table:
+      eyebrow: Block 01 · The parts list
+      title: Five components, and what each one is for
+      headers: [Component, What it does, Where it lives]
+      rows:
+        - ["XR Interaction Manager", "Holds the register", "One empty object"]
+        - ["XR Origin", "Carries head and hands", "The rig root"]
+        - ["Near-Far Interactor", "Reaches near and far", "One per hand"]
+        - ["XR Grab Interactable", "Makes an object liftable", "On the wrench"]
+        - ["Input Action Manager", "Enables the actions", "Beside the origin"]
+
+  - code:
+      eyebrow: Block 01 · The register, printed
+      title: Watching the bench announce itself
+      filename: BenchRegistry.cs
+      lang: csharp
+      source: |
+        [SerializeField] XRInteractionManager manager;
+
+        void OnEnable()
+        {
+            manager.interactableRegistered += Added;
+        }
+
+        void OnDisable()
+        {
+            manager.interactableRegistered -= Added;
+        }
+      annotations:
+        - label: Where it goes
+          text: >-
+            Inside a MonoBehaviour on the bench root. Assigned in the inspector, so it
+            cannot pick up a manager from another scene.
+        - label: The event
+          text: >-
+            The manager raises it every time an interactable enables itself. It is a plain
+            C# event, not a UnityEvent.
+        - label: Symmetry
+          text: >-
+            Every += has a -= in the matching OnDisable. This is the whole discipline of
+            subscribing to anything.
+        - label: Risk
+          text: >-
+            Drop the OnDisable and the handler runs once per enable that never gave its
+            listener back.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: What the bench prints on load
+      filename: BenchRegistry.cs
+      lang: csharp
+      output_label: Console, on entering play mode
+      source: |
+        void Added(InteractableRegisteredEventArgs a)
+        {
+            var t = a.interactableObject.transform;
+            Debug.Log($"registered {t.name}");
+        }
+      output: |
+        registered Wrench
+        registered EStop
+        registered GuardDoor
+        registered Tachometer
+
+  - divider:
+      eyebrow: Block 02
+      title: What answers a hand
+      lede: An interactable is an object that has agreed to be interfered with, and a list of methods to call when it is.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · The four hands
+      title: Four ways of reaching, and what each is for
+      headers: [Interactor, What it reaches, Where it earns its place]
+      rows:
+        - ["Near-Far", "Close by and at range", "The wrench and the far shelf"]
+        - ["Poke", "One fingertip", "The stop button and the panel"]
+        - ["Gaze", "Whatever is looked at", "Hands full, or no controllers"]
+        - ["Teleport", "A marked patch of floor", "Getting to the other end"]
+
+  - code:
+      eyebrow: Block 02 · Your method
+      title: The method the wrench calls when it is held
+      filename: WrenchLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.Interaction.Toolkit;
+        using UnityEngine.XR.Interaction.Toolkit.Interactables;
+
+        public class WrenchLog : MonoBehaviour
+        {
+            [SerializeField] Renderer dial;
+            public void Held(SelectEnterEventArgs a)
+            {
+                var by = a.interactorObject.transform.name;
+                Debug.Log($"wrench held by {by}");
+                dial.material.color = Color.green;
+            }
+        }
+      annotations:
+        - label: public, one argument
+          text: >-
+            The inspector only lists methods that are public and take one argument of the
+            event's own type.
+        - label: The argument
+          text: >-
+            It carries which hand did it. Read what you need inside the call and do not
+            keep the object afterwards.
+        - label: Two usings
+          text: >-
+            The event args sit in the Toolkit namespace, the components one level down in
+            Interactables.
+        - label: Risk
+          text: >-
+            Touching .material clones the material for this object. Session 5 measures what
+            that costs.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The same wrench, picked up with either hand
+      filename: WrenchLog.cs
+      lang: csharp
+      output_label: Console, on the device
+      source: |
+        public void Held(SelectEnterEventArgs a)
+        {
+            var by = a.interactorObject.transform.name;
+            Debug.Log($"wrench held by {by}");
+        }
+      output: |
+        wrench held by HandR
+        wrench held by HandL
+        wrench held by HandR
+
+  - table:
+      eyebrow: Block 02 · Two ways to wire it
+      title: The inspector or the script, and what each costs
+      headers: [Question, Wired in the inspector, Wired in code]
+      rows:
+        - ["Who can see it", "Anyone opening the scene", "Only a reader"]
+        - ["Search for callers", "Not in a text search", "Findable by name"]
+        - ["Survives a rename", "The binding breaks", "Compiler catches it"]
+        - ["Set up per object", "Drag it once", "Needs a reference"]
+        - ["Good for", "Sound, effects, one-offs", "Rules and state"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four reasons an object refuses to answer
+      items:
+        - label: Error 01
+          title: No collider on the interactable
+          desc: >-
+            The component is there and the object is registered, and the hand still passes
+            through it. Nothing can select what has no collider to be found by.
+        - label: Error 02
+          title: The input actions were never enabled
+          desc: >-
+            No Input Action Manager in the scene, so the controllers track and no button
+            reports anything. Everything looks correct and nothing responds.
+        - label: Error 03
+          title: A second interaction manager
+          desc: >-
+            An additive scene brings its own, half the bench registers there, and objects
+            stop answering the hand that is clearly inside them.
+        - label: Error 04
+          title: Subscribed twice, never removed
+          desc: >-
+            The object was disabled and enabled again. The listener list grew and the sound
+            now plays three times on one grab.
+
+  - divider:
+      eyebrow: Block 03
+      title: The floor you are standing on
+      lede: Before anything can be reached, the scene has to agree with the room about where the floor is.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: The origin moves, the camera never does
+      lead: >-
+        The XR Origin is the object that gets teleported, turned and lifted. The camera under it
+        is driven by the head and by nothing else. Where the floor sits inside that rig is the
+        tracking origin mode's business.
+      panel:
+        label: What the mode decides
+        title: Whether you type the eye height in by hand
+        note: >-
+          In Floor mode the runtime knows where the real floor is and zeroes the offset. In
+          Device mode it does not, so the offset is a number you choose and test.
+      steps:
+        - text: Floor mode, the runtime supplies the floor
+        - text: Device mode, you supply the height
+        - text: Not Specified, the runtime decides
+        - text: Locomotion always moves the origin
+          loop: ↺ and a seated user in Floor mode still sits below the bench
+
+  - table:
+      eyebrow: Block 03 · The three modes
+      title: Three tracking origin modes, and what each assumes
+      headers: [Mode, Where zero is, What you must do]
+      rows:
+        - ["Floor", "The real floor", "Nothing, the offset is zeroed"]
+        - ["Device", "Wherever the head began", "Type the camera Y offset"]
+        - ["Not Specified", "Whatever the runtime picks", "Test on every device"]
+
+  - stat:
+      eyebrow: Measured in the bench scene
+      value: 1.36 m
+      text: The camera Y offset this scene uses when it runs in Device mode
+      note: >-
+        It is not a standard, it is the value that put the tachometer at eye level for the
+        three people who tested the scene. Anyone building a seated version of the bench
+        will measure a different one, and that measurement is the work.
+
+  - steps:
+      eyebrow: Block 03 · Locomotion
+      title: Five stops to a scene you can cross
+      items:
+        - label: '01'
+          title: Import the samples
+          desc: The starter assets carry a rig with the interactors already on it.
+        - label: '02'
+          title: Add the providers
+          desc: Teleportation and snap turn, on the locomotion object.
+        - label: '03'
+          title: Mark the floor
+          desc: A teleportation area on the walkable part, and nowhere else.
+        - label: '04'
+          title: Anchor the stations
+          desc: A teleport anchor at the motor end, facing the bench.
+        - label: '05'
+          title: Set the turn
+          desc: A fixed step per press, with a short delay before it happens.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The bench object is disabled and enabled twice. What does the next grab log?
+      filename: WrenchLog.cs
+      lang: csharp
+      source: |
+        void OnEnable()
+        {
+            grab.selectEntered.AddListener(Held);
+        }
+      options:
+        - One line, a UnityEvent keeps each listener only once
+        - Three lines, one for every enable that never gave its listener back
+        - Nothing, because disabling the object dropped the listener
+        - An error, because the same method cannot be added twice
+
+  - trace:
+      eyebrow: Answer
+      title: The listener list, counted at every step
+      headers: [Step, Listeners after it, Lines on one grab]
+      rows:
+        - ["Enable, first time", "1", "1"]
+        - ["Disable", "1, still attached", "0, object is off"]
+        - ["Enable, second time", "2", "2"]
+        - ["Enable, third time", "3", "3"]
+      verdict: >-
+        AddListener appends, it does not check. The disable never removed anything because
+        nothing asked it to, so the count only goes up. One RemoveListener in OnDisable
+        keeps this at one line for the rest of the project's life.
+
+  - lab:
+      eyebrow: Lab
+      title: The wrench, and getting to the far end
+      brief: >-
+        Starting from your build of session 2, make the torque wrench grabbable with either
+        hand, log which hand took it, mark the walkable floor and put a teleport anchor at
+        the motor end of the bench. Then wear it and do the review pass from session 1.
+      blocks:
+        - label: Constraint
+          text: Snap turning only. No stick locomotion in this scene, for the reason in session 1.
+        - label: Deliverable
+          text: The scene, the log from the device, and four lines from the review pass.
+        - label: Criterion
+          text: That the wrench can be picked up from a teleport anchor without leaning or stretching.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The manager stands between everything
+          desc: Interactors and interactables know only the register they joined when they were enabled.
+        - title: Every subscription has a matching removal
+          desc: The listener list is the quietest bug in the toolkit, and it only ever grows.
+        - title: The mode decides who measures the floor
+          desc: Floor mode asks the runtime, Device mode asks you, and Not Specified asks the device.
+
+  - homework:
+      eyebrow: For the next session
+      title: The stop button, wired without a line of code
+      brief: >-
+        Add a poke interactor to one hand and make the emergency stop respond to it using
+        inspector wiring alone: a sound and a colour change. Write half a page on what that
+        arrangement cannot do, because session 4 is about exactly that gap.
+      meta:
+        - [Due, Before session 4]
+        - [Format, Blackboard · scene and PDF]
+        - [Weight, Part of the assignment average]
+      rubric:
+        - ["It responds", "40 %", "The stop answers a poke on the device, not only in play mode"]
+        - ["Wired cleanly", "30 %", "One interactable, one collider, no duplicated listeners"]
+        - ["The gap", "30 %", "Half a page on what the inspector alone could not express"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Companion to the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development, which you work through yourself.
+      meta:
+        - [Pathway, Unity Learn · VR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

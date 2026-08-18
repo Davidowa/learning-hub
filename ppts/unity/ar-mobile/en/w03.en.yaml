@@ -1,0 +1,478 @@
+meta:
+  course: Mobile AR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 3
+  footer: MOBILE AR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 03 · AR development · Trackable targets and placement
+      title: Mobile AR Development
+      subtitle: >-
+        Planes, printed images and ray casts. The three ways a session hands you somewhere
+        real to put something that is not.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 3 of 5]
+        - [Based on, Unity Learn · Mobile AR Development]
+      notes: |
+        Everything here works the same on ARCore and ARKit, so the session stays neutral. The
+        Android specifics were session two.
+
+        Sourced from the AR Foundation 6.0 manual, the plane detection, image tracking and
+        ray cast feature pages, and the Input System package documentation for touch.
+        Nothing is copied from Unity Learn, which the students work through separately.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What a trackable is
+          desc: An identifier, a pose and a state, and one event that reports all three
+        - title: Placing on a plane
+          desc: A ray cast that needs no collider, and a tap that turns into a world position
+        - title: Printed targets
+          desc: A reference image library, and the one measurement everybody enters wrong
+        - title: When it does not work
+          desc: Bare floors, fast phones and cached references, with the symptom for each
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Explain the trackable lifecycle
+          sub: Added, updated and removed, and why a merged plane arrives as removed
+        - head: Subscribe to trackablesChanged
+          sub: The one event every manager in AR Foundation 6 raises, in code or the Inspector
+        - head: Place an object with a ray cast
+          sub: From a screen point, against PlaneWithinPolygon, with no collider anywhere
+        - head: Build a reference image library
+          sub: And enter the physical size the paper actually came out of the printer at
+        - head: Read a failure back to its cause
+          sub: A bare floor, a fast pan or a cached plane each look different on screen
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the five
+      phases:
+        - label: 01 · Session 1
+          title: AR design
+          desc: Use cases, and what a platform can really track
+          state: done
+        - label: 02 · Session 2
+          title: Build to Android
+          desc: Packages, player settings, ARCore and the pipeline
+          state: done
+        - label: 03 · Session 3
+          title: Trackable targets
+          desc: Planes, images, ray casts and placement
+          state: now
+        - label: 04 · Session 4
+          title: Visual Scripting
+          desc: Interactions built as graphs, not scripts
+          state: todo
+        - label: 05 · Session 5
+          title: Mobile optimization
+          desc: Assets, batching and the frame budget
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Everything it finds is a trackable
+      lede: One shape of object, one event, and the same code for planes, images and point clouds.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A trackable is an id, a pose and a state
+      lead: >-
+        Every plane, image and point cloud a session finds carries a TrackableId that stays
+        the same for as long as the session recognises it. That identifier is what lets a
+        manager tell you three different things. This one is new, this one moved or grew,
+        this one is gone. AR Foundation turns each of them into a GameObject and keeps its
+        transform in step with the provider.
+      panel:
+        label: One event for every manager
+        title: trackablesChanged, since AR Foundation 6
+        note: >-
+          It replaced the per manager events, planesChanged and trackedImagesChanged among
+          them, and it can be wired in the Inspector like any UnityEvent.
+      steps:
+        - text: added, the session just found it
+        - text: updated, its pose or shape moved
+        - text: removed, it is not there any more
+        - text: and a merged plane arrives as removed
+          loop: ↺ so never cache a plane, ask the manager
+
+  - diagram:
+      eyebrow: Block 01 · Lifecycle
+      title: The three things that happen to a trackable
+      blocks:
+        - label: '01'
+          title: added
+          desc: The provider found something new, and AR Foundation creates a GameObject for it.
+        - label: '02'
+          title: updated
+          desc: Same identifier, new pose or new boundary. The transform moves and the mesh is rebuilt.
+        - label: '03'
+          title: removed
+          desc: Gone, or merged into a larger plane. Anything you parented to it goes with it.
+          dark: true
+      note: >-
+        The merge is the one that surprises people. Two small floor patches that turn out to
+        be one floor become one plane, and the smaller of the two is removed while the
+        content standing on it disappears.
+
+  - table:
+      eyebrow: Block 01 · Managers
+      title: Five managers, and what each one produces
+      headers: [Manager, Produces, Needs from the room]
+      rows:
+        - ["AR Plane Manager", "ARPlane trackables", "A textured surface"]
+        - ["AR Point Cloud Manager", "Feature points", "Detail anywhere"]
+        - ["AR Raycast Manager", "ARRaycastHit results", "A trackable to hit"]
+        - ["AR Tracked Image Manager", "ARTrackedImage", "A reference library"]
+        - ["AR Anchor Manager", "ARAnchor trackables", "A pose worth holding"]
+
+  - code:
+      eyebrow: Block 01 · The event
+      title: Listening once, for every plane
+      filename: PlaneLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class PlaneLog : MonoBehaviour
+        {
+            [SerializeField] ARPlaneManager planes;
+
+            void OnEnable() =>
+                planes.trackablesChanged.AddListener(OnChanged);
+
+            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
+            {
+                Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
+            }
+        }
+      annotations:
+        - label: One event
+          text: >-
+            The same signature works for images and point clouds. Only the type argument
+            changes.
+        - label: Three lists
+          text: >-
+            added, updated and removed arrive together in one call, so one handler covers
+            the whole lifecycle.
+        - label: In the Inspector
+          text: >-
+            trackablesChanged is a UnityEvent, so a public handler can be wired without
+            writing AddListener at all.
+        - label: Risk
+          text: >-
+            Add the listener in OnEnable and remove it in OnDisable, or a reloaded scene
+            gets two handlers.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: What the log looks like while a floor is scanned
+      filename: PlaneLog.cs
+      lang: csharp
+      output_label: Scanning a floor
+      source: |
+        void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
+        {
+            Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
+        }
+      output: |
+        +1 ~0
+        +0 ~1
+        +0 ~1
+        +1 ~1
+        +0 ~2
+        +0 ~2
+
+  - divider:
+      eyebrow: Block 02
+      title: Putting an object on a real floor
+      lede: A ray cast that asks the session rather than the physics engine, and needs no collider to answer.
+      block: 2
+
+  - concept:
+      eyebrow: Key concept
+      title: This ray cast does not need a collider
+      lead: >-
+        Physics.Raycast needs a collider in the scene. ARRaycastManager.Raycast does not. It
+        asks the provider to intersect a ray with what the session is tracking, so a plane
+        becomes a target the moment it is reported, with nobody generating a mesh collider
+        for it. You pass a screen point, a list for the results, and a mask naming which
+        kinds of trackable are allowed to answer.
+      panel:
+        label: The mask that matters most
+        title: TrackableType.PlaneWithinPolygon
+        note: >-
+          Within the polygon means the detected boundary. The other choice lets a tap land
+          past the edge of the floor, on the infinite plane behind it.
+      steps:
+        - text: Take the screen point of the tap
+        - text: Ask the manager to fill a list
+        - text: Use the first hit in the list
+        - text: Read its pose, position and rotation
+          loop: ↺ and reuse the same list on every tap
+
+  - code:
+      eyebrow: Block 02 · Placement, part 1
+      title: The fields the placement needs
+      filename: TapToPlace.cs
+      lang: csharp
+      source: |
+        using System.Collections.Generic;
+        using UnityEngine;
+        using UnityEngine.InputSystem;
+        using UnityEngine.XR.ARFoundation;
+        using UnityEngine.XR.ARSubsystems;
+
+        public class TapToPlace : MonoBehaviour
+        {
+            [SerializeField] ARRaycastManager raycasts;
+            [SerializeField] GameObject marker;
+
+            static readonly List<ARRaycastHit> hits = new();
+      annotations:
+        - label: Two namespaces
+          text: >-
+            ARFoundation holds the managers, ARSubsystems holds TrackableType.
+        - label: One list, reused
+          text: >-
+            Raycast fills the list you hand it. A new one per tap is work for nothing.
+        - label: Serialized, not found
+          text: >-
+            Drag the manager in from the XR Origin, rather than searching for it.
+        - label: Risk
+          text: >-
+            An empty marker field fails silently on the phone, where you cannot see the
+            null.
+          accent: true
+
+  - code:
+      eyebrow: Block 02 · Placement, part 2
+      title: The tap, the ray cast and the object
+      filename: TapToPlace.cs
+      lang: csharp
+      source: |
+        // inside TapToPlace
+        void Update()
+        {
+            var touch = Touchscreen.current?.primaryTouch;
+            if (touch == null) return;
+            if (!touch.press.wasPressedThisFrame) return;
+
+            Vector2 p = touch.position.ReadValue();
+            var mask = TrackableType.PlaneWithinPolygon;
+            if (!raycasts.Raycast(p, hits, mask)) return;
+
+            Pose pose = hits[0].pose;
+            Instantiate(marker, pose.position, pose.rotation);
+        }
+      annotations:
+        - label: The null check
+          text: >-
+            Touchscreen.current is null in the editor with no device attached.
+        - label: Screen point
+          text: >-
+            Pixels, not world units. The manager builds the ray from the AR camera.
+        - label: The pose
+          text: >-
+            Position and rotation arrive together, so the object lands lying on the surface.
+        - label: Risk
+          text: >-
+            On a false the list keeps its old contents, so read it only after a true.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four reasons a plane never turns up
+      items:
+        - label: Mistake 01
+          title: A bare white floor
+          desc: >-
+            Nothing to match between frames, so no feature points and no plane. Throw a
+            sheet of newspaper on the floor and it appears in seconds.
+        - label: Mistake 02
+          title: Panning the phone too fast
+          desc: >-
+            Motion blur destroys the features the tracker was following. Move slowly, and
+            sideways rather than in a rotation on the spot.
+        - label: Mistake 03
+          title: Caching an ARPlane reference
+          desc: >-
+            Planes merge and disappear. A field holding one becomes a missing reference,
+            and the content standing on it goes with it.
+        - label: Mistake 04
+          title: Placing content with no anchor
+          desc: >-
+            Without an anchor the object keeps the coordinates it was given while the
+            session quietly corrects the world around it, and it drifts.
+
+  - divider:
+      eyebrow: Block 03
+      title: Printed targets
+      lede: An image the app already knows, a library it lives in, and one measurement that decides the scale of everything.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · Workflow
+      title: From a printed sheet to a tracked image
+      items:
+        - label: '01'
+          title: Import
+          desc: Drop the target photograph into the project as a texture
+        - label: '02'
+          title: Create the library
+          desc: Assets, Create, XR, Reference Image Library
+        - label: '03'
+          title: Add the image
+          desc: One entry per target, with the texture assigned to it
+        - label: '04'
+          title: Specify Size
+          desc: Tick it and type the printed width in metres
+        - label: '05'
+          title: Assign it
+          desc: Drop the library onto the AR Tracked Image Manager
+
+  - table:
+      eyebrow: Block 03 · Targets
+      title: What separates a target that works from one that does not
+      headers: [Property, What works, Why]
+      rows:
+        - ["Contrast", "High, even in grey", "The tracker sees no colour"]
+        - ["Detail", "Busy, non repeating", "Repeats match the wrong place"]
+        - ["Shape", "Flat and rigid", "A curled poster stops matching"]
+        - ["Physical size", "Measured, in metres", "Distance is derived from it"]
+        - ["Finish", "Matte paper", "Gloss returns the room instead"]
+
+  - stat:
+      eyebrow: The number nobody measures
+      value: 0.210 m
+      text: The width of an A4 sheet, and the number the Specify Size field is asking for
+      note: >-
+        Type what the paper is, not what the image file suggests. Get it wrong by a factor
+        and the estimated distance is wrong by the same factor, so content that belongs on
+        the page floats above the table or sinks through it.
+
+  - code:
+      eyebrow: Block 03 · Image tracking
+      title: Reacting to a target the session recognised
+      filename: ImageLog.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.XR.ARFoundation;
+
+        public class ImageLog : MonoBehaviour
+        {
+            // wired to trackablesChanged in the Inspector
+            public void OnChanged(
+                ARTrackablesChangedEventArgs<ARTrackedImage> e)
+            {
+                foreach (var img in e.added)
+                    Debug.Log($"found {img.referenceImage.name}");
+            }
+        }
+      annotations:
+        - label: Same event
+          text: >-
+            Only the type argument changed from the plane example.
+        - label: referenceImage
+          text: >-
+            The tracked image knows which library entry it matched.
+        - label: Prefab field
+          text: >-
+            The manager can instantiate one prefab per image, which suits a demo.
+        - label: Risk
+          text: >-
+            The GameObject survives when the target leaves the frame. Check trackingState.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick check
+      question: The library says the target is 0.210 m wide. It was printed at 0.105 m. What happens?
+      options:
+        - Content lands at about twice the distance it should, and at twice the size
+        - The image is not recognised, because the size has to match the print
+        - Nothing, the size field is only a hint used inside the editor
+        - Tracking works, but the rotation of the target comes back mirrored
+
+  - trace:
+      eyebrow: Answer
+      title: One wrong number, and everything downstream of it
+      headers: [Quantity, Entered, Real, Result]
+      rows:
+        - ["Target width", "0.210 m", "0.105 m", "Two to one"]
+        - ["Distance", "Derived", "Half of it", "Twice as far"]
+        - ["Content scale", "Authored", "Unchanged", "Looks twice as big"]
+        - ["Rotation", "Correct", "Correct", "Unaffected"]
+      verdict: >-
+        The tracker cannot measure your paper. It believes the library and derives distance
+        from apparent width, so halving the print doubles the estimated distance. Measure the
+        sheet with a ruler once it leaves the printer.
+
+  - lab:
+      eyebrow: Lab
+      title: Two ways to place one object, in pairs
+      brief: >-
+        Add plane detection and tap to place to the project from session two, then print one
+        target image and place the same prefab on it. Measure the printed width with a ruler
+        before you type it into the library.
+      blocks:
+        - label: Constraint
+          text: One prefab, placed both ways. No second scene and no second project.
+        - label: Deliverable
+          text: A short video of the phone screen showing both placements, one after the other.
+        - label: Criterion
+          text: That the object on the printed target is the size you intended, measured against the page.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Four ideas to take away
+      items:
+        - title: One event, every manager
+          desc: trackablesChanged carries added, updated and removed for planes, images and point clouds alike
+        - title: A merge looks like a removal
+          desc: Two floor patches that turn out to be one floor leave one trackable and one missing reference
+        - title: The ray cast asks the session
+          desc: No collider is generated, so a plane is a valid target the moment the provider reports it
+        - title: The printed size sets the scale
+          desc: Distance is derived from apparent width, so a mismeasured target moves everything with it
+
+  - homework:
+      eyebrow: For the next session
+      title: The same interaction, without the script
+      brief: >-
+        Keep the tap to place scene. Session four rebuilds exactly this interaction as a visual
+        graph, so bring the project working and bring the script, because the two will sit
+        side by side on the screen.
+      meta:
+        - [Due, Before session 4]
+        - [Format, The updated repository]
+        - [Bring, The phone and one printed target]
+      rubric:
+        - ["Placement", "Required", "Tapping a detected plane places the prefab on it"]
+        - ["Image target", "Required", "The printed target is recognised and its size is measured"]
+        - ["Pathway", "Ongoing", "This week's units on Unity Learn, done in your own time"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Mobile AR Development on Unity Learn is the pathway these decks accompany, at
+        learn.unity.com/pathway/mobile-ar-development. You are expected to work through it.
+      meta:
+        - [Pathway, Unity Learn · Mobile AR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

@@ -1,0 +1,410 @@
+meta:
+  course: Mobile AR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 5
+  footer: MOBILE AR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 05 · Mobile optimization · Assets and the frame budget
+      title: Mobile AR Development
+      subtitle: >-
+        Sixteen point seven milliseconds, and the camera has already taken its share before
+        your scene is drawn at all.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 5 of 5]
+        - [Based on, Unity Learn · Mobile AR Development]
+      notes: |
+        Last session of the course. It only works if the students brought a scene that is
+        genuinely too heavy, which was the homework from session four.
+
+        Sourced from the Unity 6 manual on Android requirements and texture compression,
+        the URP asset and quality pages, the profiling pages, and the Adaptive Performance
+        documentation. Nothing is copied from Unity Learn, which the students work
+        through separately.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The frame budget
+          desc: What a frame costs before your scene starts, and how to choose the target rate
+        - title: The assets
+          desc: Textures, meshes, materials and lighting, with the arithmetic for each
+        - title: The application
+          desc: Batching, resolution and the settings you can change while the app is running
+        - title: Measuring it
+          desc: Profiling on the device, because the editor is not the machine that has to run it
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Convert a frame rate into a budget
+          sub: And say what an AR session has already spent out of it before your code runs
+        - head: Choose a texture compression format
+          sub: ASTC on Android, and the arithmetic that says what it saves on one texture
+        - head: Name what makes batching possible
+          sub: One shader variant, one mesh, or one static flag, depending on the method
+        - head: Profile on the device
+          sub: A development build with the profiler attached, and CPU read apart from GPU
+        - head: Decide which number to cut
+          sub: Because a GPU bound frame and a CPU bound frame want opposite changes
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the five
+      phases:
+        - label: 01 · Session 1
+          title: AR design
+          desc: Use cases, and what a platform can really track
+          state: done
+        - label: 02 · Session 2
+          title: Build to Android
+          desc: Packages, player settings, ARCore and the pipeline
+          state: done
+        - label: 03 · Session 3
+          title: Trackable targets
+          desc: Planes, images, ray casts and placement
+          state: done
+        - label: 04 · Session 4
+          title: Visual Scripting
+          desc: Interactions built as graphs, not scripts
+          state: done
+        - label: 05 · Session 5
+          title: Mobile optimization
+          desc: Assets, batching and the frame budget
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The budget, and who spent it first
+      lede: An AR frame carries work that is not yours and cannot be removed. What is left is what your scene may spend.
+      block: 1
+
+  - stat:
+      eyebrow: The whole budget at sixty
+      value: 16.7 ms
+      text: Everything the phone does in one frame, camera and tracking included, has to fit inside it
+      note: >-
+        At thirty frames a second it is 33.3 ms and the phone runs cooler for it. Choose the
+        number before anything else, because every decision in this session is measured against
+        whichever one you picked.
+
+  - concept:
+      eyebrow: Key concept
+      title: Some of the frame is already spent
+      lead: >-
+        An AR frame is not an ordinary frame. Before your scene is touched the camera has
+        delivered an image, the tracker has matched it against the last one, the provider has
+        updated its planes, and the passthrough has been drawn across the whole screen. None
+        of that is optional and none of it is free.
+      panel:
+        label: What to measure first
+        title: CPU time and GPU time, separately
+        note: >-
+          A frame slow on the CPU and a frame slow on the GPU want opposite fixes, and
+          guessing wrong costs a week of work.
+      steps:
+        - text: The camera image arrives
+        - text: Tracking updates the pose
+        - text: Trackables are added or moved
+        - text: The passthrough is drawn
+        - text: Then your scene gets its turn
+          loop: ↺ and a warm phone shrinks all five at once
+
+  - table:
+      eyebrow: Block 01 · Budgets
+      title: Pick the rate first, the budget follows from it
+      headers: [Target, Per frame, What it suits]
+      rows:
+        - ["30 fps", "33.3 ms", "Content heavy scenes, cooler"]
+        - ["60 fps", "16.7 ms", "Interaction that follows a hand"]
+        - ["90 fps", "11.1 ms", "Rare on a phone, and hot"]
+        - ["Your share", "About half", "A working ceiling for the scene"]
+        - ["Over budget", "Frames dropped", "The rate the user actually sees"]
+
+  - code:
+      eyebrow: Block 01 · The target
+      title: Asking for a frame rate, and meaning it
+      filename: FrameTarget.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class FrameTarget : MonoBehaviour
+        {
+            [SerializeField] int target = 30;
+            void Start()
+            {
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = target;
+                Debug.Log($"asked for {target} fps");
+            }
+        }
+      annotations:
+        - label: vSyncCount first
+          text: >-
+            With vertical sync on, the target is ignored. Turn it off before setting the
+            rate.
+        - label: Asked, not promised
+          text: >-
+            It is a ceiling, not a guarantee. The platform can cap it lower and often does.
+        - label: Thirty on purpose
+          text: >-
+            A steady thirty reads better than a sixty that collapses to forty after five
+            minutes of heat.
+        - label: Risk
+          text: >-
+            Set it once in Start. Setting it every frame is a cost you added to fix a cost.
+          accent: true
+
+  - diagram:
+      eyebrow: Block 01 · Where it goes
+      title: Three places a millisecond disappears into
+      blocks:
+        - label: '01'
+          title: Camera and tracking
+          desc: The provider's own work, before your first line runs. You do not get to make it cheaper.
+        - label: '02'
+          title: Your scene
+          desc: Scripts, physics, culling and the setup for every draw call. This part you control.
+        - label: '03'
+          title: The GPU
+          desc: Passthrough, overdraw, shadows and post processing, all at the screen resolution.
+          dark: true
+      note: >-
+        The first block is why an AR scene that runs at sixty on a desktop can miss thirty on
+        a phone with the same content. Budget against the third block on a phone, because
+        that is usually the one that runs out first.
+
+  - divider:
+      eyebrow: Block 02
+      title: The assets, with the arithmetic
+      lede: Textures, meshes, materials and lighting. Every one of them has a number you can work out before you profile.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Textures
+      title: Texture compression on Android
+      headers: [Setting, Value, Where it lives]
+      rows:
+        - ["Default format", "ASTC", "Player > Other Settings"]
+        - ["The other standard", "ETC2", "Same list, as a fallback"]
+        - ["Per build override", "Texture Compression", "Build Profiles"]
+        - ["Per texture size", "Max Size on the importer", "The texture Inspector"]
+        - ["Mip Maps", "Off for UI, on for world", "The texture Inspector"]
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: What compression saves on one 2048 texture
+      filename: TextureMath.cs
+      lang: csharp
+      output_label: On running
+      source: |
+        int w = 2048, h = 2048;
+        long raw = (long)w * h * 4;             // RGBA32
+        double astc = (double)w * h * 3.56 / 8; // ASTC 6x6
+
+        Debug.Log($"raw   {raw / 1048576.0:F2} MB");
+        Debug.Log($"astc  {astc / 1048576.0:F2} MB");
+        Debug.Log($"ratio {raw / astc:F1} to 1");
+      output: |
+        raw   16.00 MB
+        astc  1.78 MB
+        ratio 9.0 to 1
+
+  - table:
+      eyebrow: Block 02 · The rest
+      title: Four more asset costs worth an afternoon
+      headers: [Asset, What to check, Why it matters]
+      rows:
+        - ["Mesh detail", "Vertex count per object", "Every vertex is transformed"]
+        - ["Mesh import", "Read Write Enabled off", "On keeps a second CPU copy"]
+        - ["Materials", "One shader across many", "It is what lets batching work"]
+        - ["Materials", "GPU Instancing ticked", "For one mesh drawn many times"]
+        - ["Lighting", "Baked, not real time", "A real time shadow costs a pass"]
+        - ["Audio", "Compressed in memory", "Uncompressed clips are large"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four asset habits that cost the whole budget
+      items:
+        - label: Mistake 01
+          title: A 4096 texture on a small object
+          desc: >-
+            Sixty four megabytes of memory for something two centimetres across on screen.
+            Max Size on the importer is the fix, and it takes ten seconds.
+        - label: Mistake 02
+          title: Real time shadows from every light
+          desc: >-
+            Each shadow casting light adds a rendering pass over the scene. Bake what does
+            not move, which on a phone is nearly everything.
+        - label: Mistake 03
+          title: Read Write Enabled left on
+          desc: >-
+            The mesh is kept twice, once for the GPU and once for the CPU. It is on by
+            accident far more often than it is on for a reason.
+        - label: Mistake 04
+          title: Measuring inside the editor
+          desc: >-
+            The editor has a different CPU, a different GPU and no thermal limit. Numbers
+            taken there tell you nothing about the phone.
+
+  - divider:
+      eyebrow: Block 03
+      title: The application, and measuring it
+      lede: Batching, resolution and a profiler attached to the phone that actually has to run the thing.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Batching
+      title: Three ways to draw more for less processor time
+      headers: [Method, What it needs, What it saves]
+      rows:
+        - ["SRP Batcher", "One shader variant", "The setup between draws"]
+        - ["GPU Instancing", "Same mesh and material", "One call for many copies"]
+        - ["Static Batching", "Objects marked Static", "Draw calls, for memory"]
+        - ["Fewer objects", "Meshes merged by hand", "All three at once, for free"]
+
+  - steps:
+      eyebrow: Block 03 · Profiling
+      title: Getting real numbers off the phone
+      items:
+        - label: '01'
+          title: Development Build
+          desc: In Build Profiles, tick it and tick Autoconnect Profiler beneath it
+        - label: '02'
+          title: Build and Run
+          desc: Over the cable, so the connection is not fighting the campus network
+        - label: '03'
+          title: Open the Profiler
+          desc: Window, Analysis, Profiler, then pick the device from the list
+        - label: '04'
+          title: Read both times
+          desc: CPU and GPU separately, because they want different fixes
+        - label: '05'
+          title: Frame Debugger
+          desc: Window, Analysis, Frame Debugger, to count what is actually drawn
+
+  - code:
+      eyebrow: Block 03 · At runtime
+      title: Turning the resolution down on a weak device
+      filename: Quality.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.Rendering;
+        using UnityEngine.Rendering.Universal;
+
+        public class Quality : MonoBehaviour
+        {
+            void Start()
+            {
+                var rp = GraphicsSettings.currentRenderPipeline
+                         as UniversalRenderPipelineAsset;
+                bool small = SystemInfo.graphicsMemorySize <= 2048;
+                if (rp) rp.renderScale = small ? 0.7f : 0.9f;
+            }
+        }
+      annotations:
+        - label: renderScale
+          text: >-
+            The scene is rendered at a fraction of the screen and scaled up. The passthrough
+            is not affected.
+        - label: Cheap and effective
+          text: >-
+            Dropping to 0.7 renders about half the pixels, which is the largest single saving
+            available on a GPU bound frame.
+        - label: Also on the asset
+          text: >-
+            shadowDistance sits next to it, and cutting that is the second largest saving.
+        - label: Risk
+          text: >-
+            The asset is a project asset, so a change made at runtime in the editor stays
+            after you press stop.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick check
+      question: The Profiler reports 22 ms of GPU time and 9 ms of CPU time. What do you cut first?
+      options:
+        - Resolution, overdraw and shadows, because the GPU is the side over budget
+        - Script calls in Update, because nine milliseconds is already too much
+        - Draw calls, since batching helps whichever of the two is slower
+        - Nothing, because the two add up to less than a thirty frame budget
+
+  - trace:
+      eyebrow: Answer
+      title: The two numbers do not add up, they overlap
+      headers: [Measure, Value, At 60 fps, Verdict]
+      rows:
+        - ["CPU frame", "9 ms", "16.7 ms", "Inside"]
+        - ["GPU frame", "22 ms", "16.7 ms", "Over"]
+        - ["Frame shown", "22 ms", "16.7 ms", "About 45 fps"]
+        - ["Sum of both", "31 ms", "Not a number", "They overlap"]
+      verdict: >-
+        The frame takes as long as the slower of the two, not as long as both. Twenty two
+        milliseconds on the GPU is what the user feels, and its fixes are resolution,
+        overdraw and shadows. Nine milliseconds of script time is not this week's problem.
+
+  - lab:
+      eyebrow: Lab
+      title: Take five milliseconds back, in pairs
+      brief: >-
+        Profile the heavy scene you brought, on your own phone, and write down the CPU and
+        GPU numbers. Make exactly three changes, profile again, and report which of the three
+        did the work.
+      blocks:
+        - label: Constraint
+          text: Three changes only. Changing ten things at once tells you nothing about any of them.
+        - label: Deliverable
+          text: Two profiler screenshots and a table of three rows, the change and what it bought.
+        - label: Criterion
+          text: That you can say which of CPU and GPU was the limit, before and after.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Four ideas to take away
+      items:
+        - title: The budget is not all yours
+          desc: Camera, tracking and passthrough are spent before your scene is reached, on every frame
+        - title: Compression is arithmetic
+          desc: One 2048 texture is 16 MB raw and under 2 MB compressed, and that is per texture
+        - title: Batching needs sameness
+          desc: One shader variant, one mesh or one static flag. Without one of the three there is nothing to batch
+        - title: Measure on the phone
+          desc: A development build with the profiler attached, and CPU read separately from GPU
+
+  - homework:
+      eyebrow: Closing the course
+      title: The project, and the pathway certificate
+      brief: >-
+        Deliver the AR app you have been building since session two, with a short report of the
+        before and after profiler numbers. Finish the Unity Learn pathway on your own time,
+        because the credential comes from there and not from this course.
+      meta:
+        - [Due, End of term]
+        - [Format, Repository and a two page report]
+        - [Weight, The integrative project]
+      rubric:
+        - ["It runs", "Required", "Installs and tracks on a phone that is not yours"]
+        - ["It interacts", "Required", "Placement working, by script or by graph"]
+        - ["It is measured", "Required", "Profiler numbers before and after three changes"]
+        - ["Pathway", "Expected", "The official Unity Learn pathway, completed"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Mobile AR Development on Unity Learn is the pathway these decks accompany, at
+        learn.unity.com/pathway/mobile-ar-development. You are expected to work through it.
+      meta:
+        - [Pathway, Unity Learn · Mobile AR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

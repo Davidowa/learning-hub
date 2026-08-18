@@ -1,0 +1,444 @@
+meta:
+  course: VR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 5
+  footer: VR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 05 · Intermediate VR development · The frame budget
+      title: VR Development
+      subtitle: >-
+        At 72 Hz a frame gets about 13.9 milliseconds. This session is how to find out what
+        yours is actually spending.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Beginner]
+        - [Session, 5 of 5]
+        - [Based on, Unity Learn · VR Development]
+      notes: |
+        Companion session to the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. The profiler counter, the frame timing
+        settings and the adb commands come from the Unity manual. Nothing here reproduces
+        Unity's wording or exercises.
+
+        Say the honest thing early: the millisecond figures on these slides came off this
+        bench scene on this classroom headset. They are the shape of a result, not a
+        target. The student's own numbers are the only ones that mean anything, which is
+        why the whole middle block is about getting them.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Where the number comes from
+          desc: One divided by the refresh rate, and why both processors get all of it
+        - title: Getting the real one
+          desc: Three instruments, and the reason the Editor's answer does not count
+        - title: Changing one thing
+          desc: What to try once you know which side of the frame is over
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Compute the budget from the refresh rate
+          sub: And say why 72 Hz and 90 Hz are two different projects, not two settings
+        - head: Say why the Editor's number does not count
+          sub: A different processor, a different graphics API and no thermal limit at all
+        - head: Read a frame counter inside your own build
+          sub: With a profiler recorder on the main thread, printed only when it goes over
+        - head: Profile a running build over the cable
+          sub: Development build, autoconnect, and the port forward that makes the two talk
+        - head: Change one thing and prove it worked
+          sub: Because two changes at once tell you the total and nothing about either one
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five sessions beside a six week pathway
+      phases:
+        - label: '01 · Session 1'
+          title: Judging a build
+          desc: Presence, comfort and the note you write
+          state: done
+        - label: '02 · Session 2'
+          title: Headset and build
+          desc: Choosing hardware, and Android settings
+          state: done
+        - label: '03 · Session 3'
+          title: Interaction toolkit
+          desc: Origin, interactors and interactables
+          state: done
+        - label: '04 · Session 4'
+          title: Your own code
+          desc: Custom interactables and select events
+          state: done
+        - label: '05 · Session 5'
+          title: The frame budget
+          desc: Measuring milliseconds on the device
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Where the number comes from
+      lede: The refresh rate is not a quality setting. It is a deadline, and it arrives whether or not the frame is finished.
+      block: 1
+
+  - stat:
+      eyebrow: At 72 Hz, on the classroom headset
+      value: 13.9 ms
+      text: Everything a frame has to do, from input to the image the eyes see
+      note: >-
+        One second divided by seventy two. Miss it and the runtime shows something anyway,
+        built from the previous frame, and the head has moved since. That is the discomfort
+        of session 1 arriving as an engineering problem.
+
+  - table:
+      eyebrow: Block 01 · Arithmetic
+      title: Four rates, four deadlines
+      headers: [Refresh rate, Per frame, What changes]
+      rows:
+        - ["72 Hz", "13.9 ms", "The budget this bench uses"]
+        - ["80 Hz", "12.5 ms", "1.4 ms of the work has to go"]
+        - ["90 Hz", "11.1 ms", "A fifth of the budget, gone"]
+        - ["120 Hz", "8.3 ms", "A different scene, not a setting"]
+
+  - concept:
+      eyebrow: Key concept
+      title: Both processors get the whole frame, not half each
+      lead: >-
+        The CPU and the GPU work at the same time, on different frames, so each one has the full
+        budget for its part. The bad news is the word both: 9 ms of CPU and 15 of GPU is still a
+        late frame.
+      panel:
+        label: What the first measurement is for
+        title: Finding out which of the two is over
+        note: >-
+          Until you know that, every optimisation is a guess. Half the work in this block
+          exists only to answer that one question.
+      steps:
+        - text: The CPU prepares the frame
+        - text: The GPU draws it, in parallel
+        - text: Both have to finish inside the budget
+        - text: The slower one is what you measure
+          loop: ↺ and the fix for one of them does nothing for the other
+
+  - concept:
+      eyebrow: Key concept
+      title: The Editor measures a machine nobody will wear
+      lead: >-
+        Play mode runs on a desktop processor with a fan, a discrete GPU, a different graphics API
+        and no power limit. A scene reporting four milliseconds there can miss the deadline on the
+        headset, and quietly.
+      panel:
+        label: What actually differs
+        title: Processor, graphics API, memory and heat
+        note: >-
+          The build also runs through IL2CPP rather than the Editor's own scripting path,
+          so even the C# is not the same C# by the time it reaches the device.
+      steps:
+        - text: Different processor and GPU
+        - text: Vulkan on device, Direct3D in the Editor
+        - text: Editor overhead in every frame
+        - text: A thermal limit that arrives late
+          loop: ↺ and the last one only shows up after ten minutes of wearing it
+
+  - divider:
+      eyebrow: Block 02
+      title: Getting the number that counts
+      lede: Three instruments, one cable, and a build that has to be told it is allowed to be measured.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The path
+      title: Five stops to a profiled build
+      items:
+        - label: '01'
+          title: Development Build
+          desc: Tick it, with Autoconnect Profiler, in the build profile.
+        - label: '02'
+          title: Build And Run
+          desc: To the headset over the cable, awake and authorised.
+        - label: '03'
+          title: Forward the port
+          desc: adb forward, so the Editor and the build can find each other.
+        - label: '04'
+          title: Attach the Profiler
+          desc: Pick the Android player in the target list, not Editor.
+        - label: '05'
+          title: Record and wear it
+          desc: Do the task. The interesting frames are not the idle ones.
+
+  - code_output:
+      eyebrow: Block 02 · The cable
+      title: The two commands that make the Editor and the build talk
+      filename: adb.txt
+      lang: csharp
+      output_label: Terminal
+      source: |
+        // Editor to Android player
+        adb forward tcp:34999 localabstract:Unity-<bundle id>
+
+        // Android player back to the Editor
+        adb reverse tcp:34998 tcp:34999
+      output: |
+        > adb devices
+        <serial>      device
+        > adb forward tcp:34999 ...
+        34999
+        > adb reverse tcp:34998 ...
+        (reverse prints nothing)
+
+  - code:
+      eyebrow: Block 02 · Inside your own build
+      title: A counter that only speaks when you are late
+      filename: FrameBudget.cs
+      lang: csharp
+      source: |
+        [SerializeField] float hz = 72f;
+        ProfilerRecorder cpu;
+
+        void OnEnable()
+        {
+            cpu = ProfilerRecorder.StartNew(
+                ProfilerCategory.Internal,
+                "CPU Main Thread Frame Time");
+        }
+
+        void OnDisable() => cpu.Dispose();
+      annotations:
+        - label: Where it goes
+          text: >-
+            In a MonoBehaviour, with using Unity.Profiling at the top of the file.
+        - label: The counter
+          text: >-
+            The main thread's own frame time, reported in nanoseconds, which is why the
+            next slide multiplies by a millionth.
+        - label: Why hz is a field
+          text: >-
+            It is the number you read off the headset, not one the script guesses. Change
+            the display rate and change this.
+        - label: Risk
+          text: >-
+            A recorder that is never disposed keeps collecting. OnDisable is not
+            optional.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: One run of the bench task, printing only the late frames
+      filename: FrameBudget.cs
+      lang: csharp
+      output_label: adb logcat, 600 frames
+      source: |
+        void Update()
+        {
+            float ms = cpu.LastValue * 1e-6f;
+            float budget = 1000f / hz;
+            if (ms > budget)
+                Debug.Log($"over {ms:F1} of {budget:F1} ms");
+        }
+      output: |
+        over 14.2 of 13.9 ms
+        over 15.6 of 13.9 ms
+        over 21.4 of 13.9 ms
+        over 14.9 of 13.9 ms
+
+  - stat:
+      eyebrow: The same run, counted
+      value: 4 of 600
+      text: Frames over the deadline, in a scene whose average was 8.1 ms
+      note: >-
+        The average said the bench was comfortable. The four late frames are what the
+        wearer actually noticed, and three of them landed in the same second, when the
+        wrench was picked up and its material was cloned.
+
+  - table:
+      eyebrow: Block 02 · The instruments
+      title: Three ways to read a frame, and what each is good for
+      headers: [Instrument, What it gives you, When to reach for it]
+      rows:
+        - ["Profiler window", "Every thread, per frame", "Finding what is slow"]
+        - ["ProfilerRecorder", "One counter, in your build", "Watching while you play"]
+        - ["Frame Timing Stats", "CPU and GPU frame time", "Deciding which side is over"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a measurement lies to you
+      items:
+        - label: Error 01
+          title: Measuring in play mode
+          desc: >-
+            A desktop processor with a fan is not the device. The number is real and it
+            belongs to a machine nobody is going to wear.
+        - label: Error 02
+          title: Reading the average
+          desc: >-
+            A mean of 8 ms hides four frames at 21. The wearer feels the four, and the mean
+            is the one number that is guaranteed not to mention them.
+        - label: Error 03
+          title: Frame timing off in a release build
+          desc: >-
+            The timings are always on in a development build and off by default in a
+            release one, so the same code reports nothing and looks broken.
+        - label: Error 04
+          title: A profiler that reports late
+          desc: >-
+            The timing results arrive several frames after the frame they describe. Line
+            them up with what you did and you will blame the wrong action.
+
+  - divider:
+      eyebrow: Block 03
+      title: Changing one thing
+      lede: The measurement told you which side is over. Now the work is to change one thing, and to prove it.
+      block: 3
+
+  - method:
+      eyebrow: The method
+      title: One change, one measurement, one line written down
+      statement: >-
+        Measure, change exactly one thing, measure again on the same task, and write both
+        numbers next to the change. Two changes at once give you a total and no way to
+        attribute it.
+      points:
+        - label: Same task
+          text: The same walk, the same grab, in the same order. A different task is a different number.
+        - label: Same build type
+          text: Development build both times. Comparing one against a release build proves nothing.
+        - label: Write it down
+          text: Before, after, and what changed. Three numbers per line, and the log outlives the term.
+
+  - tiers:
+      eyebrow: Block 03 · When the CPU is over
+      title: Four things worth trying, in this order
+      items:
+        - key: Draws
+          title: Fewer objects submitted
+          desc: Batching, and asking whether the bolt heads at the far end have to be separate meshes
+        - key: Scripts
+          title: Work that runs per frame
+          desc: A poll that could have been an event, a Find that could have been a field
+        - key: Garbage
+          title: Allocation inside the loop
+          desc: New strings, new lists and cloned materials, which come back later as a pause
+        - key: Physics
+          title: Colliders doing nothing
+          desc: Mesh colliders where a box would do, on objects nothing ever touches
+
+  - compare:
+      eyebrow: Block 03 · One change, measured
+      title: The tachometer label, before and after
+      before:
+        label: Every frame, whatever happens
+        file: Tachometer.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              var t = GameObject.Find("Tachometer");
+              t.GetComponent<Text>().text = "rpm " + rpm;
+          }
+      after:
+        label: Only when the reading changes
+        file: Tachometer.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              if (rpm == shown) return;
+              shown = rpm;
+              label.text = "rpm " + rpm;
+          }
+      note: >-
+        The search runs 72 times a second to find an object that has not moved since the
+        scene loaded, and the string is rebuilt whether or not the needle moved. On this
+        bench the change took the main thread from 8.1 ms to 7.4 ms, measured on the device.
+
+  - table:
+      eyebrow: Block 03 · Which side, which lever
+      title: The measurement points at a list, not at a fix
+      headers: [Side that is over, First thing to look at, Second]
+      rows:
+        - ["CPU main thread", "Scripts and draw calls", "Allocation"]
+        - ["CPU render thread", "Number of draw calls", "Batching"]
+        - ["GPU", "Resolution and overdraw", "Shader cost"]
+        - ["Neither, still late", "Thermal throttling", "Wear it longer"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: Play mode reports 4.1 ms and the headset still drops frames. What does that tell you?
+      options:
+        - The build is broken, the same scene cannot cost more on the device
+        - Nothing about the headset, because a different machine was measured
+        - The GPU must be the problem, since the CPU number was fine
+        - That 4.1 ms is already over the budget at 72 Hz
+
+  - trace:
+      eyebrow: Answer
+      title: The same scene, the same task, three measurements
+      headers: [Where it was measured, Main thread, Verdict]
+      rows:
+        - ["Editor, play mode", "4.1 ms", "Tells you nothing"]
+        - ["Device, first run", "14.2 ms", "Over by 0.3 ms"]
+        - ["Device, after one change", "11.8 ms", "Inside, with room"]
+        - ["Device, after ten minutes", "13.6 ms", "Heat took the room back"]
+      verdict: >-
+        The first row is not a smaller version of the second, it is a different machine.
+        The last row is the one people forget: a scene that fits when the headset is cold
+        can stop fitting once it warms up, and only a long run will show you that.
+
+  - lab:
+      eyebrow: Lab
+      title: Measure the bench, change one thing, measure again
+      brief: >-
+        Profile your bench scene on the device while doing the same task twice: walk to the
+        motor end, pick up the wrench, press the stop. Find the worst frame, make one change
+        you can name in a sentence, and run the identical task again.
+      blocks:
+        - label: Constraint
+          text: One change. If you cannot say it in a sentence, it is more than one change.
+        - label: Deliverable
+          text: Two logs, the worst frame from each, and the sentence naming what you changed.
+        - label: Criterion
+          text: That the second run is the same task, not an easier one, and that you say so.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The refresh rate sets a deadline
+          desc: At 72 Hz it is about 13.9 ms, and both the CPU and the GPU have to finish inside it.
+        - title: Only the device's number counts
+          desc: The Editor measures a machine with a fan, a desktop GPU and no thermal limit.
+        - title: The average is the wrong number
+          desc: Four frames at 21 ms are what the wearer felt, and a mean of 8 will never mention them.
+
+  - homework:
+      eyebrow: For the end of the course
+      title: The bench, profiled and written up
+      brief: >-
+        Hand in the bench scene, the two profiling logs and one page that names the worst
+        frame, the change you made and the number it moved. Then finish the Unity Learn
+        pathway if you have not, because the badge is theirs to give and not mine.
+      meta:
+        - [Due, End of term]
+        - [Format, Blackboard · project and PDF]
+        - [Weight, Part of the assignment average]
+      rubric:
+        - ["Measured on device", "40 %", "Both logs from the headset, same task, same build type"]
+        - ["One change", "30 %", "Named in a sentence, with the number before and after"]
+        - ["Honest reading", "30 %", "The worst frame, not the average, and what caused it"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        You are expected to finish the Unity Learn pathway VR Development, at
+        learn.unity.com/pathway/vr-development. That is where the projects live.
+      meta:
+        - [Pathway, Unity Learn · VR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

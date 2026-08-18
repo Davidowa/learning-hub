@@ -1,0 +1,442 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 6
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 06 · Building, shipping and the whole map
+      title: Unity Essentials
+      subtitle: >-
+        A project that only runs on your machine with the editor open is not finished. Today
+        it becomes a folder somebody else can double click.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 6 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        Companion session to the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. It covers the pathway area Publishing
+        and then maps all ten areas onto the six sessions of this course.
+
+        The build target for the class is Windows, from the StoreRoom project. Everything
+        built today comes from Bay.unity and the scripts of sessions 3 to 5.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: What a build is
+          desc: >-
+            Pathway area · Publishing. The player, your data, the scene list, and the four
+            settings that decide what ends up inside the folder.
+        - title: Reading the output
+          desc: >-
+            Pathway area · Publishing. What Unity wrote next to the executable, and where a
+            built game keeps the console you no longer have.
+        - title: The ten areas, mapped
+          desc: >-
+            All ten pathway areas against the six sessions, so you can see which part of the
+            pathway each session was standing next to.
+        - title: The hand in
+          desc: >-
+            One build of the store room that runs on a machine with no Unity installed, plus
+            the pathway finished in your own Unity Learn account.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Say what a build actually contains
+          sub: A compiled player, the scenes in the list, and everything they refer to
+        - head: Add scenes to the list in the right order
+          sub: Because the first entry is the one the player opens on
+        - head: Build for Windows from the Build Profiles window
+          sub: File · Build Profiles, with the platform module already installed
+        - head: Read the folder Unity produced
+          sub: The executable, the data folder and the player library beside them
+        - head: Find the log of a game with no console
+          sub: Under AppData LocalLow, in a folder named by your company and product
+        - head: Map the pathway onto the six sessions
+          sub: And name which areas you still have to finish on Unity Learn
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: done
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: done
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: done
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: What a build is made of
+      lede: >-
+        The editor is a program that runs your project. A build is a different program, with
+        your project baked into it, and it has no editor to fall back on.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · Mechanism
+      title: The player is generic, your data is not
+      lead: >-
+        Unity ships a compiled player for each platform. Building copies that player, compiles
+        your scripts, and writes your scenes and assets next to it in a format the player can
+        read quickly. Nothing about the editor goes along. This is why a build can fail on
+        code the editor was perfectly happy with, and why what is not in the scene list does
+        not exist to the player at all.
+      panel:
+        label: What decides inclusion
+        title: The scene list, and what those scenes refer to
+        note: >-
+          An asset nothing refers to is left out. A prefab that only a script mentions by
+          name and never references is left out too, which is a bug that only appears in the build.
+      steps:
+        - text: The player for the platform is copied
+        - text: Your scripts are compiled into it
+        - text: The listed scenes and their assets are packed
+          loop: ↺ and the first scene in the list is where the player starts
+
+  - table:
+      eyebrow: Block 01 · File · Build Profiles
+      title: Five settings that decide what you get
+      headers: [Setting, What it decides, Note]
+      rows:
+        - ["Platform", "Which player is copied", "Needs the module installed"]
+        - ["Scene List", "What ships, and in order", "Entry zero loads first"]
+        - ["Development Build", "Profiler and a watermark", "Off for anything handed in"]
+        - ["Compression Method", "Size against load time", "The default suits the class"]
+        - ["Player Settings", "Company, product, icon", "They name the output and the log"]
+
+  - steps:
+      eyebrow: Block 01 · The build
+      title: Five moves from a scene to a folder
+      items:
+        - label: '01'
+          title: Open the window
+          desc: File then Build Profiles. The platform with the module installed is selectable
+        - label: '02'
+          title: Add the scene
+          desc: Bay.unity goes into the scene list. Nothing outside the list gets built
+        - label: '03'
+          title: Name the product
+          desc: Player Settings, company and product. Both end up in paths you will read later
+        - label: '04'
+          title: Build
+          desc: Choose an empty folder outside Assets. Builds/Windows is the class convention
+        - label: '05'
+          title: Run it elsewhere
+          desc: Copy the whole folder to another machine. One missing file and it will not start
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: Loading a scene that never made the list
+      filename: LevelLoader.cs
+      lang: csharp
+      output_label: Player.log
+      source: |
+        using UnityEngine.SceneManagement;
+
+        void Restart()
+        {
+            SceneManager.LoadScene("Bay");
+        }
+      output: |
+        Scene 'Bay' couldn't be loaded
+        because it has not been added
+        to the build settings or the
+        AssetBundle has not been
+        loaded.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four builds that fail on the last evening
+      items:
+        - label: Error 01
+          title: The scene left out of the list
+          desc: >-
+            The build succeeds. The player opens on whatever is at index zero, which may be
+            an empty scene, and the report reads that the game does nothing.
+        - label: Error 02
+          title: The module that was never installed
+          desc: >-
+            The platform is listed and the Build button is not there. Fixing it means the Hub,
+            a download and a wait, which is why session 1 ticked the box.
+        - label: Error 03
+          title: Editor code in a runtime script
+          desc: >-
+            Anything from UnityEditor compiles in the editor and stops the build. Either the
+            call goes behind an if UNITY_EDITOR block or the script moves to an Editor folder.
+        - label: Error 04
+          title: Building into the Assets folder
+          desc: >-
+            The importer then tries to import your own build, the project grows every time,
+            and the next build includes the previous one. Build outside the project.
+
+  - divider:
+      eyebrow: Block 02
+      title: Reading what Unity produced
+      lede: >-
+        Five things land in the folder and each of them has a job. Deleting the one that looks
+        redundant is how a build stops opening.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · The output folder
+      title: What a Windows build folder holds
+      headers: [Item, What it is, Ship it]
+      rows:
+        - ["StoreRoom.exe", "The player, named by product", "Yes"]
+        - ["StoreRoom_Data", "Scenes, assets and settings", "Yes"]
+        - ["UnityPlayer.dll", "The engine itself", "Yes"]
+        - ["MonoBleedingEdge", "The Mono runtime, if used", "Yes, with that backend"]
+        - ["UnityCrashHandler64", "Collects a crash report", "Yes"]
+
+  - concept:
+      eyebrow: Block 02 · Mechanism
+      title: A built game still writes a log, somewhere else
+      lead: >-
+        There is no console window in a build, and Debug.Log did not stop working. The player
+        writes to Player.log under the user's AppData LocalLow folder, in a directory named
+        with the company and product from Player Settings. That file is the whole diagnostic
+        story of a build that fails on a machine you cannot open the editor on.
+      panel:
+        label: Where to look on Windows
+        title: AppData · LocalLow · Company · Product
+        note: >-
+          The file is Player.log, and the previous run is kept beside it. Naming your company
+          field properly in session 1 is what makes this folder findable in session 6.
+      steps:
+        - text: Debug.Log still runs in a build
+        - text: It writes to Player.log, not to a window
+        - text: The path comes from your Player Settings
+          loop: ↺ and a development build adds the profiler on top
+
+  - code:
+      eyebrow: Block 02 · The stamp
+      title: Four lines that identify a build
+      filename: BuildStamp.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class BuildStamp : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"product {Application.productName}");
+                Debug.Log($"version {Application.version}");
+                Debug.Log($"platform {Application.platform}");
+                Debug.Log($"dev {Debug.isDebugBuild}");
+            }
+        }
+      annotations:
+        - label: Why bother
+          text: >-
+            A bug report with no version is a bug report about a build nobody can identify.
+        - label: Application.version
+          text: >-
+            The Version field in Player Settings. It is a string you set, not a build counter.
+        - label: isDebugBuild
+          text: >-
+            True when Development Build was ticked. Useful for turning cheats off in a release.
+        - label: Risk
+          text: >-
+            Handing in a development build. The watermark sits on the screen and the
+            profiler port stays open on the machine running it.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The same four lines, read out of the log file
+      filename: Player.log
+      lang: csharp
+      output_label: Player.log, first run
+      source: |
+        Debug.Log($"product {Application.productName}");
+        Debug.Log($"version {Application.version}");
+        Debug.Log($"platform {Application.platform}");
+        Debug.Log($"dev {Debug.isDebugBuild}");
+      output: |
+        product StoreRoom
+        version 0.1.0
+        platform WindowsPlayer
+        dev False
+
+  - stat:
+      eyebrow: The console a built game has
+      value: Player.log
+      text: Written on every run, under AppData LocalLow, named by your company and product
+      note: >-
+        This is the first thing to ask for when a classmate says the build does not work. The
+        file names the missing scene, the null reference and the asset that failed to load,
+        in the same words the editor console used, on a machine with no editor at all.
+
+  - divider:
+      eyebrow: Block 03
+      title: The ten areas, and where each one was taught
+      lede: >-
+        The pathway supplied the list and the order. Here is the map back, so you can see
+        which of its areas each session was standing beside.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · The map
+      title: Six sessions against the ten pathway areas
+      headers: [Session, Pathway areas it accompanied]
+      rows:
+        - ["Session 1", "Creating and Managing Unity Projects · Unity Editor Essentials"]
+        - ["Session 2", "Scene Building Essentials, creation, transformation, appearance"]
+        - ["Session 3", "Scene Building physics · GameObjects, components and prefabs"]
+        - ["Session 4", "Level 1 Code Comprehension · Level 1 Application Scripting"]
+        - ["Session 5", "Beginner Unity Cameras · Audio Essentials · 2D Art"]
+        - ["Session 6", "Publishing, and the ten areas seen as one map"]
+
+  - method:
+      eyebrow: Block 03 · The arrangement
+      title: What the pathway does, and what this room does
+      statement: >-
+        These six decks are a companion to the Unity Learn pathway Unity Essentials. They do
+        not replace it, they do not reproduce it, and finishing them is not finishing it.
+      points:
+        - label: What the pathway gives
+          text: >-
+            The skills, the order, the guided projects and the record of completion on your
+            own account. That record is the part an employer can check.
+        - label: What this room gives
+          text: >-
+            The mechanism under each click, the failures with their exact symptoms, and one
+            project carried through all six sessions with numbers you measured yourself.
+        - label: What you owe it
+          text: >-
+            Work through the pathway at learn.unity.com/pathway/unity-essentials. Everything
+            on these slides assumes you are doing that in parallel, not instead.
+
+  - tiers:
+      eyebrow: Block 03 · Before you hand it in
+      title: Four checks that catch most of what goes wrong
+      items:
+        - key: Scenes
+          title: The list is right
+          desc: Bay.unity is in the list and sits at index zero, so the player opens on it
+        - key: Build
+          title: Development is unticked
+          desc: No watermark on the screen, no profiler waiting for a connection on the port
+        - key: Folder
+          title: The whole folder travels
+          desc: The executable alone is not the game. The data folder beside it is half of it
+        - key: Machine
+          title: It ran somewhere else
+          desc: Tested on a machine with no Unity installed, which is the only real test
+
+  - quiz:
+      eyebrow: Quick check
+      question: Your build opens on an empty grey screen and the log names no error. What is the first suspect?
+      options:
+        - The graphics card on the other machine is too old for the player
+        - The scene list, because entry zero is not the scene you meant
+        - The compression method, which left the scene out of the archive
+        - The company name in Player Settings, which the player could not read
+
+  - method:
+      eyebrow: Answer
+      title: The second one, and the build was a success
+      statement: >-
+        Nothing failed. The player loaded the scene at index zero exactly as it was told to,
+        and that scene is the empty one the project was created with.
+      points:
+        - label: How to confirm it
+          text: >-
+            Open the Build Profiles window and read the list rather than the project. A scene
+            can be open in the editor, saved, and still absent from the build.
+        - label: Why the log is quiet
+          text: >-
+            Loading the wrong scene is not an error. The log only speaks when a scene is
+            asked for by name and is not in the list, which is the earlier slide.
+        - label: The habit
+          text: >-
+            Add the scene to the list the day you create it, not the evening the build is
+            due, and put the correct one at index zero from the start.
+
+  - lab:
+      eyebrow: Lab
+      title: Ship the store room, in pairs
+      brief: >-
+        Build the StoreRoom project for Windows into Builds/Windows, with Bay.unity at index
+        zero, Development Build unticked and BuildStamp.cs in the scene. Run it on a machine
+        with no Unity installed and bring back the first four lines of its Player.log.
+      blocks:
+        - label: Deliverable
+          text: The zipped build folder, plus the four stamp lines copied out of Player.log
+        - label: Constraint
+          text: >-
+            The build folder lives outside Assets, and the zip carries the whole folder, not
+            only the executable.
+        - label: The test
+          text: >-
+            Rename the data folder and run it again. Read what happens, then put the name
+            back. That failure is what a half uploaded zip looks like to your reader.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The list decides the build
+          desc: >-
+            Scenes not in it do not exist to the player, and entry zero is where the game
+            opens. Most silent build failures are one of those two facts
+        - title: The log did not go away
+          desc: >-
+            Debug.Log writes to Player.log under AppData LocalLow, named by your company and
+            product, which is the only console a shipped game has
+        - title: The pathway is the other half
+          desc: >-
+            These six sessions accompany Unity Essentials on Unity Learn. Finishing the
+            course means finishing the pathway on your own account as well
+
+  - homework:
+      eyebrow: Homework
+      title: The build, and the pathway completed
+      brief: >-
+        Hand in the zipped Windows build with its Player.log lines, and finish every area of
+        the Unity Learn pathway Unity Essentials in your own account. The pathway record, not
+        this deck, is what states publicly that you did this work.
+      meta:
+        - [Due, End of the term]
+        - [Format, "Blackboard · one zip, plus the pathway record"]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Build", "Required", "Runs on a machine with no Unity installed"]
+        - ["Scene list", "Required", "Bay.unity at index zero, no watermark on screen"]
+        - ["Log", "Required", "The four stamp lines, copied from Player.log"]
+        - ["Pathway", "Required", "All ten areas of the pathway marked done"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials, and you are expected to work through it
+        yourself. It is where the record of this work lives.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

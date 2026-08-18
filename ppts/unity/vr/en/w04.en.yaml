@@ -1,0 +1,450 @@
+meta:
+  course: VR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 4
+  footer: VR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 04 · Intermediate VR development · Custom interactions
+      title: VR Development
+      subtitle: >-
+        The inspector runs out when the object has a rule of its own. Today the emergency
+        stop gets a component and a state.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Beginner]
+        - [Session, 4 of 5]
+        - [Based on, Unity Learn · VR Development]
+      notes: |
+        Companion session to the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. Class names, method signatures and the
+        attribute come from the XR Interaction Toolkit 3.5 API reference. The emergency
+        stop, the motor drive and every line of the scripts here were written for this
+        course. Nothing reproduces Unity's own examples.
+
+        The interlock rule is the one from the algorithms course, week 8: the machine only
+        arms when the guard door is closed, the stop is released and the shaft is below
+        50 rpm. Here it is the same rule, wired to a button you can actually press.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Two doors into the toolkit
+          desc: A method the inspector calls, or a component that inherits the behaviour
+        - title: A stop that latches
+          desc: State that survives the release, and a reset that is not the button
+        - title: Work that happens every frame
+          desc: The update phase, and the one rule about what you may allocate in it
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Choose between an event and an override
+          sub: One is wiring for a single object, the other is behaviour every copy inherits
+        - head: Write an interactable of your own
+          sub: Inheriting from XRBaseInteractable, with the base call that keeps the events alive
+        - head: Hold state across an interaction
+          sub: A latch that stays closed after the finger leaves, and a reset that is deliberate
+        - head: Do per-frame work in the right place
+          sub: ProcessInteractable and its update phase, rather than a MonoBehaviour Update
+        - head: Read the event arguments safely
+          sub: They are valid during the call and not one frame after it, which the docs say plainly
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five sessions beside a six week pathway
+      phases:
+        - label: '01 · Session 1'
+          title: Judging a build
+          desc: Presence, comfort and the note you write
+          state: done
+        - label: '02 · Session 2'
+          title: Headset and build
+          desc: Choosing hardware, and Android settings
+          state: done
+        - label: '03 · Session 3'
+          title: Interaction toolkit
+          desc: Origin, interactors and interactables
+          state: done
+        - label: '04 · Session 4'
+          title: Your own code
+          desc: Custom interactables and select events
+          state: now
+        - label: '05 · Session 5'
+          title: The frame budget
+          desc: Measuring milliseconds on the device
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Two doors into the same event
+      lede: The inspector is a door for one object. Inheritance is a door for every copy of it that will ever exist.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Wiring describes an object, a class describes a kind
+      lead: >-
+        A UnityEvent dragged in the inspector says what this stop button does. A component that
+        inherits from the base interactable says what an emergency stop is, and every copy arrives
+        already knowing it.
+      panel:
+        label: The question that decides it
+        title: Would you have to repeat this on the next copy?
+        note: >-
+          If yes, it is behaviour and it belongs in a class. If it is one sound on one
+          object in one scene, the inspector is faster and honest about it.
+      steps:
+        - text: Wiring lives in the scene file
+        - text: Behaviour lives in the class
+        - text: Wiring is per object, always
+        - text: Behaviour arrives with the prefab
+          loop: ↺ and the scene file is the hardest place to review a rule
+
+  - table:
+      eyebrow: Block 01 · Choosing
+      title: The same select, reached two ways
+      headers: [Question, Inspector event, Your own class]
+      rows:
+        - ["Applies to", "This one object", "Every instance"]
+        - ["Lives in", "The scene or prefab", "A .cs file"]
+        - ["Reviewable", "By opening the scene", "In a diff"]
+        - ["State it can hold", "None of its own", "Fields, and rules"]
+        - ["Best for", "Sound, effects, one-offs", "Interlocks, machines"]
+
+  - code:
+      eyebrow: Block 01 · The smallest one that runs
+      title: An interactable of your own, in ten lines
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        using UnityEngine.XR.Interaction.Toolkit;
+        using UnityEngine.XR.Interaction.Toolkit.Interactables;
+
+        [CanSelectMultiple(false)]
+        public class EmergencyStop : XRBaseInteractable
+        {
+            public bool Latched { get; private set; }
+            protected override void OnSelectEntered(
+                SelectEnterEventArgs args)
+            {
+                base.OnSelectEntered(args);
+                Latched = true;
+            }
+        }
+      annotations:
+        - label: The attribute
+          text: >-
+            One hand at a time. Two hands on one emergency stop is not a thing that should
+            be expressible.
+        - label: The signature
+          text: >-
+            Split across two lines only because it is long. It is one method, protected and
+            overriding the base.
+        - label: The base call
+          text: >-
+            This is what raises selectEntered for everyone listening from the inspector.
+            Leave it out and they go quiet.
+        - label: Risk
+          text: >-
+            args is valid during this call only. Copy the value you need, do not keep the
+            object.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: What one press prints, with and without the base call
+      filename: EmergencyStop.cs
+      lang: csharp
+      output_label: Console, one poke
+      source: |
+        base.OnSelectEntered(args);   // present, then removed
+        Latched = true;
+        Debug.Log($"latched {Latched}");
+      output: |
+        -- with the base call --
+        latched True
+        panel sound played
+        -- without it --
+        latched True
+
+  - divider:
+      eyebrow: Block 02
+      title: A button that stays pressed
+      lede: The finger leaves and the machine stays down. That sentence is the whole difference between a button and an interlock.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · The rule
+      title: The latch, and the reset that is somewhere else
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        [SerializeField] MotorDrive motor;
+
+        public bool Latched { get; private set; }
+
+        protected override void OnSelectEntered(
+            SelectEnterEventArgs args)
+        {
+            base.OnSelectEntered(args);
+            if (Latched) return;
+            Latched = true;
+            motor.Stop();
+        }
+
+        public void ClearFromPanel() => Latched = false;
+      annotations:
+        - label: The guard
+          text: >-
+            A second press on a latched stop does nothing. The machine is already down and
+            nothing should be stopped twice.
+        - label: No exit handler
+          text: >-
+            There is no OnSelectExited here on purpose. Releasing the button is exactly
+            what must not clear the latch.
+        - label: The way out
+          text: >-
+            ClearFromPanel is called by the wall panel across the room, so the reset is a
+            walk and a decision.
+        - label: Risk
+          text: >-
+            Make ClearFromPanel public and forget where it is called from, and someone
+            wires it to the stop itself.
+          accent: true
+
+  - trace:
+      eyebrow: Block 02 · Measured trace
+      title: Four steps, and the state after each one
+      headers: [Step, Latched, Motor, Events raised]
+      rows:
+        - ["Poke the stop", "true", "stopped", "select enter"]
+        - ["Lift the finger", "true", "stopped", "select exit"]
+        - ["Poke it again", "true", "stopped", "enter, exit"]
+        - ["Panel reset", "false", "idle", "none"]
+      verdict: >-
+        The interesting row is the second. The toolkit raises the exit event exactly as it
+        should, and the component ignores it, which is the design. A latch that clears on
+        release is a doorbell, and nobody puts a doorbell on a motor.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: The same four steps, logged on the device
+      filename: EmergencyStop.cs
+      lang: csharp
+      output_label: adb logcat, four events
+      source: |
+        Debug.Log($"enter latched={Latched}");
+        Debug.Log($"exit  latched={Latched}");
+        Debug.Log($"panel latched={Latched}");
+      output: |
+        enter latched=True
+        exit  latched=True
+        enter latched=True
+        exit  latched=True
+        panel latched=False
+
+  - divider:
+      eyebrow: Block 03
+      title: Work that happens every frame
+      lede: Some interactions are a moment and some are a movement. The second kind needs a place to run, and it is not Update.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: The toolkit gives you a slot in its own frame
+      lead: >-
+        The interaction manager drives its components through named update phases, so hovering,
+        selecting and the work you do in response happen in a known order. Update runs outside
+        that order.
+      panel:
+        label: What the phase check is for
+        title: The method is called more than once per frame
+        note: >-
+          Test the phase and return early on the ones you do not want, or the dial turns
+          twice as fast as the number you typed.
+      steps:
+        - text: The manager runs its phases in order
+        - text: Your override is called in each one
+        - text: You act on the phase you chose
+        - text: Everything else returns early
+          loop: ↺ and the phase you want for movement is the dynamic one
+
+  - code:
+      eyebrow: Block 03 · Per frame, in order
+      title: The dial that turns while the wrench is held
+      filename: TorqueDial.cs
+      lang: csharp
+      source: |
+        public override void ProcessInteractable(
+            XRInteractionUpdateOrder.UpdatePhase phase)
+        {
+            base.ProcessInteractable(phase);
+            if (phase != XRInteractionUpdateOrder.UpdatePhase.Dynamic)
+                return;
+            if (!isSelected)
+                return;
+            dial.Rotate(0f, 0f, spin * Time.deltaTime);
+        }
+      annotations:
+        - label: The phase
+          text: >-
+            Dynamic is the one that runs with the rest of the frame's movement, which is
+            what a turning dial is.
+        - label: isSelected
+          text: >-
+            True while any interactor is selecting this object. It comes from the base
+            class, already maintained.
+        - label: deltaTime
+          text: >-
+            Degrees per second, not degrees per frame. On a headset the frame rate is the
+            one thing you cannot assume.
+        - label: Risk
+          text: >-
+            No allocation in here. A new list or a string built per frame becomes a
+            collection pause you will feel.
+          accent: true
+
+  - compare:
+      eyebrow: Block 03 · The same behaviour, two costs
+      title: Polling for a press against being told about it
+      before:
+        label: Polled in Update
+        file: MotorPoll.cs
+        lang: csharp
+        code: |
+          void Update()
+          {
+              if (stop.isSelected)
+                  motor.Stop();
+          }
+      after:
+        label: Told by the event
+        file: EmergencyStop.cs
+        lang: csharp
+        code: |
+          protected override void OnSelectEntered(
+              SelectEnterEventArgs args)
+          {
+              base.OnSelectEntered(args);
+              motor.Stop();
+          }
+      note: >-
+        The poll asks 72 times a second about something that happens twice in an hour, and
+        it cannot tell a fresh press from a finger still resting there. The override runs
+        once, at the moment the press begins, and knows which hand did it.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways a custom interactable goes wrong
+      items:
+        - label: Error 01
+          title: The override that forgot its base call
+          desc: >-
+            Your code runs and the inspector wiring is dead. Sounds, highlights and every
+            listener the artist added stop firing, and nothing in the console says why.
+        - label: Error 02
+          title: Keeping the event arguments
+          desc: >-
+            The documentation says the args are valid during the call only. Store the
+            object and read it next frame and you are reading something already reused.
+        - label: Error 03
+          title: Per-frame work in Update
+          desc: >-
+            It runs outside the interaction phases, so the dial reads the selection state
+            of the previous frame and the movement lags the hand by exactly one.
+        - label: Error 04
+          title: Assuming there is one hand
+          desc: >-
+            interactorsSelecting is a list. A wrench held with two hands has two entries,
+            and code written for firstInteractorSelecting only sees one of them.
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this override break by leaving out one line?
+      filename: EmergencyStop.cs
+      lang: csharp
+      source: |
+        protected override void OnSelectEntered(
+            SelectEnterEventArgs args)
+        {
+            Latched = true;
+        }
+      options:
+        - Nothing, the base method is empty in the base class
+        - The events stop firing, so every inspector listener goes silent
+        - It will not compile, an override has to call its base
+        - The interactable unregisters itself from the manager
+
+  - trace:
+      eyebrow: Answer
+      title: What each listener sees when the base call is missing
+      headers: [Listener, With base, Without base]
+      rows:
+        - ["Latched field", "set", "set"]
+        - ["selectEntered event", "raised", "silent"]
+        - ["Highlight on the mesh", "on", "nothing"]
+        - ["Panel click sound", "played", "nothing"]
+      verdict: >-
+        The field is set either way, which is what makes this one expensive: the component
+        appears to work and everything anyone else attached to it has quietly stopped. It
+        compiles, it runs, and the bug arrives by email from the artist.
+
+  - lab:
+      eyebrow: Lab
+      title: The guard door, in pairs
+      brief: >-
+        Write a GuardDoor interactable that swings on a hinge while it is held and reports
+        whether it is closed, then have the motor refuse to start unless the door is closed
+        and the stop is clear. Two components, one interlock, no logic in the inspector.
+      blocks:
+        - label: Constraint
+          text: No GameObject.Find and no allocation inside ProcessInteractable.
+        - label: Deliverable
+          text: The two scripts, and a log of the four states of the interlock from the device.
+        - label: Criterion
+          text: That someone can read the rule from the class alone, without opening your scene.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Wiring is per object, a class is per kind
+          desc: If the next copy would need the same drag, the rule belongs in code instead.
+        - title: The base call is the events
+          desc: Skip it and your own code still runs while everyone else's listener goes silent.
+        - title: The arguments live for one call
+          desc: Read what you need and copy it. The object you were handed gets reused after.
+
+  - homework:
+      eyebrow: For the next session
+      title: The interlock, and one deliberate mistake
+      brief: >-
+        Finish the guard door and the interlock, then break one of them on purpose in the
+        way error 01 describes, record what the console says, and put it right. Bring both
+        logs, because session 5 is about measuring things that do not announce themselves.
+      meta:
+        - [Due, Before session 5]
+        - [Format, Blackboard · scripts and PDF]
+        - [Weight, Part of the assignment average]
+      rubric:
+        - ["The interlock", "40 %", "Three conditions, checked in one place, readable in the class"]
+        - ["The custom interactable", "40 %", "Inherits, calls its base, holds its own state"]
+        - ["The broken run", "20 %", "Both logs, and one sentence on what the silence meant"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This deck sits beside the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. You work through that yourself.
+      meta:
+        - [Pathway, Unity Learn · VR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

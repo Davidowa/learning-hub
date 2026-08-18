@@ -1,0 +1,445 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 1
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 01 · The Hub, the project and the editor
+      title: Unity Essentials
+      subtitle: >-
+        Before anything moves on screen, the machine needs the right editor and you need to
+        know which window answers which question.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 1 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        These six sessions accompany the Unity Learn pathway Unity Essentials, level
+        Foundational, which Unity sizes at two weeks of self-paced work. The pathway is at
+        learn.unity.com/pathway/unity-essentials and every student is enrolled in it.
+
+        Nothing here reproduces Unity's material. The pathway supplies the list of skills
+        and the order they are learned in; the scenes, the numbers and the code on these
+        slides were written for this class. Say that out loud on the first slide.
+
+        The class project is a store room called StoreRoom, with one scene, Bay.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The Hub and the version
+          desc: >-
+            Pathway area · Creating and Managing Unity Projects. Installing the editor, the
+            modules a platform needs, and why the whole group pins one version.
+        - title: A project on disk
+          desc: >-
+            Pathway area · Creating and Managing Unity Projects. The folders Unity makes,
+            the three that are the project, and the ones it rebuilds without asking.
+        - title: The five windows
+          desc: >-
+            Pathway area · Unity Editor Essentials. Project, Hierarchy, Scene, Game and
+            Inspector, and the question each of them answers.
+        - title: Moving in 3D and 2D
+          desc: >-
+            Pathway area · Unity Editor Essentials. Orbit, pan, zoom, frame and flythrough,
+            and what changes the moment the 2D button goes down.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Install one editor version on purpose
+          sub: And read 6000.3.7f1 as four separate pieces of information
+        - head: Add the module a platform needs
+          sub: Before the build fails, rather than the evening the build is due
+        - head: Say which folders are the project
+          sub: Assets, Packages and ProjectSettings, and why the rest are rebuilt
+        - head: Name the window that answers a question
+          sub: What exists, what is in the scene, where it sits, what it is made of
+        - head: Move the scene camera without hunting
+          sub: Orbit, pan, zoom, frame the selection and fly through with the mouse held
+        - head: Tell the scene camera from the game camera
+          sub: And explain why a change made during play mode does not survive the stop
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: now
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: todo
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: todo
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: todo
+
+  - concept:
+      eyebrow: How to use this course
+      title: These slides stand next to the pathway, not in front of it
+      lead: >-
+        The skills, and the order they arrive in, come from the Unity Learn pathway Unity
+        Essentials. You are enrolled in it and you are expected to work through it on your
+        own account. What happens in this room is the other half, the part a video cannot
+        do, which is watching something break in front of you and being told why.
+      panel:
+        label: What this course adds
+        title: The failures, in the room, with names
+        note: >-
+          Every error message on these slides is one that has cost somebody an afternoon.
+          The pathway shows you the working path. This session also shows the other ones.
+      steps:
+        - text: The pathway gives the skill list and the order
+        - text: The examples, numbers and scenes here were written for this class
+        - text: Nothing on these slides is copied from Unity Learn
+          loop: ↺ and the pathway link is on the last slide of every deck
+
+  - divider:
+      eyebrow: Block 01
+      title: The Hub, the version and the modules
+      lede: >-
+        A Unity project is bound to the editor version that last opened it, so the version is
+        a decision, not a detail.
+      block: 1
+
+  - steps:
+      eyebrow: Block 01 · The version string
+      title: What 6000.3.7f1 is actually telling you
+      items:
+        - label: '6000'
+          title: The year line
+          desc: Unity 6 numbers its releases from 6000, so a list of versions sorts after 2023
+        - label: '3'
+          title: The minor
+          desc: Features arrive here. A project can move up a minor and cannot come back down
+        - label: '7'
+          title: The patch
+          desc: Fixes only. Moving between patches of the same minor is the safe direction
+        - label: f1
+          title: The build kind
+          desc: f is a released build. a and b are alpha and beta, and neither belongs in class
+
+  - steps:
+      eyebrow: Block 01 · Install order
+      title: Five moves, in this order, once per machine
+      items:
+        - label: '01'
+          title: Install the Hub
+          desc: The Hub is not the editor. It is the launcher that installs and keeps versions
+        - label: '02'
+          title: Sign in
+          desc: A Unity account and a personal licence. Without one the editor opens and stops
+        - label: '03'
+          title: Add the version
+          desc: Installs, then Install Editor. The group installs 6000.3.7f1 and nothing else
+        - label: '04'
+          title: Tick the modules
+          desc: Build support is chosen here. Adding it later means the installer runs again
+        - label: '05'
+          title: New project
+          desc: A 3D template, a name with no spaces, and a path that is not a synced folder
+
+  - table:
+      eyebrow: Block 01 · On disk
+      title: What a new project has, and what belongs in version control
+      headers: [Folder, What it holds, In the repository]
+      rows:
+        - ["Assets", "What you make or import, with .meta", "Yes"]
+        - ["Packages", "manifest.json and the versions", "Yes"]
+        - ["ProjectSettings", "Physics, tags, layers, quality", "Yes"]
+        - ["Library", "Imported assets, rebuilt", "No"]
+        - ["Logs", "Editor and build logs", "No"]
+        - ["Temp", "Only while the editor is open", "No"]
+
+  - stat:
+      eyebrow: Measured on a fresh project
+      value: 3 of 7
+      text: The folders that are the project. The other four are rebuilt from them
+      note: >-
+        Assets, Packages and ProjectSettings go into the repository. Library, Logs, Temp and
+        UserSettings do not, and an obj folder joins them the first time a script compiles.
+        Delete Library from a working project and the editor rebuilds it on the next open.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways the first hour goes wrong
+      items:
+        - label: Error 01
+          title: Opening with a newer editor
+          desc: >-
+            The Hub warns once and the upgrade goes one way. The .unity and .prefab files are
+            rewritten, and the machine still on the old version can no longer open them.
+        - label: Error 02
+          title: Committing the Library folder
+          desc: >-
+            It is a cache. Committing it makes pull requests of a gigabyte, conflicts nobody
+            can read, and no benefit at all, because a clone rebuilds it anyway.
+        - label: Error 03
+          title: The project inside a synced folder
+          desc: >-
+            OneDrive and Dropbox lock files while the importer writes thousands of them. The
+            symptom is an import bar that never finishes and assets that reimport every open.
+        - label: Error 04
+          title: The platform module that is missing
+          desc: >-
+            The platform still appears in the Build Profiles window, with an install prompt
+            where the Build button should be. Found the night the build was due.
+
+  - divider:
+      eyebrow: Block 02
+      title: Five windows, five questions
+      lede: >-
+        The editor is not five panels of settings. Each window answers exactly one question,
+        and knowing which one saves the wandering.
+      block: 2
+
+  - diagram:
+      eyebrow: Block 02 · The layout
+      title: Which window answers which question
+      blocks:
+        - label: Project
+          title: What exists
+          desc: The files on disk, under Assets. Nothing here is in the scene yet.
+        - label: Hierarchy
+          title: What is in play
+          desc: The objects of the open scene, and who is parented to whom.
+        - label: Scene
+          title: Where it sits
+          desc: The view you fly through and edit. Not the game running.
+        - label: Inspector
+          title: What it is made of
+          desc: The components of the selected object, with their values.
+          dark: true
+      note: >-
+        The fifth window is Game, and it is the only one that shows what a player would see,
+        because it renders through the camera in the scene rather than through your view.
+
+  - concept:
+      eyebrow: Block 02 · Mechanism
+      title: Play mode is a sandbox, and the editor throws it away
+      lead: >-
+        Pressing Play does not run the scene file. The editor loads the scene into memory,
+        runs it there, and on Stop reloads the file from disk. Every value you nudged while
+        the play button was down goes with it. This is a feature, since it lets you break
+        things safely, and it is the first hour a student loses in the course.
+      panel:
+        label: Make it visible before it costs you
+        title: Preferences · Colors · Playmode tint
+        note: >-
+          Set a tint you cannot miss. The editor then changes colour while play mode is on,
+          so the question is answered by looking rather than by remembering.
+      steps:
+        - text: Play loads the scene into memory
+        - text: You edit the copy, not the file
+        - text: Stop reloads the file from disk
+          loop: ↺ and the copy, with your two hours of tuning, is gone
+
+  - steps:
+      eyebrow: Block 02 · Scene navigation
+      title: Five moves that cover almost everything
+      items:
+        - label: Orbit
+          title: Alt and left drag
+          desc: Turns the view around the point you are looking at, which is what you want
+        - label: Pan
+          title: Middle drag
+          desc: Slides the view sideways. The hand tool, shortcut Q, does it with the left button
+        - label: Zoom
+          title: Scroll wheel
+          desc: Moves the scene camera along its own forward axis, not a lens change
+        - label: Frame
+          title: Press F
+          desc: Fits the selected object in the view. The one shortcut worth learning today
+        - label: Fly
+          title: Right button and WASD
+          desc: First person movement, Q and E for down and up, Shift to go faster
+
+  - table:
+      eyebrow: Block 02 · The toolbar
+      title: The transform tools, and what each gizmo edits
+      headers: [Key, Tool, What it changes]
+      rows:
+        - ["Q", "Hand", "Your view only, not the scene"]
+        - ["W", "Move", "Position, one axis per arrow"]
+        - ["E", "Rotate", "Rotation, as Euler angles"]
+        - ["R", "Scale", "Scale, mesh and collider both"]
+        - ["T", "Rect", "A 2D rectangle, for sprites"]
+        - ["Y", "Transform", "All three in one gizmo"]
+
+  - table:
+      eyebrow: Block 02 · The 2D button
+      title: What changes when the 2D button goes down
+      headers: [Aspect, In 3D, In 2D]
+      rows:
+        - ["Scene camera", "Perspective, shrinks with distance", "Orthographic, flat"]
+        - ["Orbit", "Alt and left drag turns the view", "Off, the view stays face on"]
+        - ["Working plane", "All three axes", "X and Y, Z used for sorting"]
+        - ["In front", "Distance to the camera", "Sorting Layer, then Order"]
+
+  - divider:
+      eyebrow: Block 03
+      title: The first project, and proof it is the right one
+      lede: >-
+        Four lines of C# that print what the editor is and what scene is open. Session 4
+        explains every word of it. Today it is a receipt.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · First script
+      title: A receipt for the install
+      filename: SceneCheck.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+        using UnityEngine.SceneManagement;
+
+        public class SceneCheck : MonoBehaviour
+        {
+            void Start()
+            {
+                Scene open = SceneManager.GetActiveScene();
+                Debug.Log($"editor  {Application.unityVersion}");
+                Debug.Log($"scene   {open.name}");
+                Debug.Log($"objects {open.rootCount}");
+            }
+        }
+      annotations:
+        - label: Where it goes
+          text: >-
+            Assets/Scripts/SceneCheck.cs. The file name has to match the class name.
+        - label: Start
+          text: >-
+            Unity calls it once, before the first frame. Nothing in your code calls it.
+        - label: rootCount
+          text: >-
+            Objects at the top of the Hierarchy. A new 3D scene has two, camera and light.
+        - label: Risk
+          text: >-
+            Rename the file and the console reads The associated script cannot be loaded,
+            with an empty slot in the Inspector.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: What the console prints on a clean install
+      filename: SceneCheck.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        Scene open = SceneManager.GetActiveScene();
+        Debug.Log($"editor  {Application.unityVersion}");
+        Debug.Log($"scene   {open.name}");
+        Debug.Log($"objects {open.rootCount}");
+      output: |
+        editor  6000.3.7f1
+        scene   Bay
+        objects 2
+
+  - quiz:
+      eyebrow: Quick check
+      question: You moved a crate while the play button was down, then pressed Stop. Where is the move?
+      options:
+        - In the scene file, because the Inspector showed the new position
+        - Gone, because Stop reloads the scene from disk
+        - In the Library folder, and it comes back on the next play
+        - Saved only if the project was in version control
+
+  - method:
+      eyebrow: Answer
+      title: The second one, and the loss is silent
+      statement: >-
+        Nothing warns you. The Inspector showed the new position because the object in memory
+        really had it, and on Stop the editor reloaded the file that never heard about it.
+      points:
+        - label: Why it happens
+          text: >-
+            Play mode edits a copy of the scene. The file on disk is the original, and it is
+            what comes back the moment the play button lets go.
+        - label: What to do instead
+          text: >-
+            Tune during play, write the numbers down, stop, and type them in again. Copy
+            Component and Paste Component Values also survive the stop.
+        - label: The tell
+          text: >-
+            The playmode tint. If the editor is a different colour, everything you type is
+            temporary, and that is worth checking before a long tuning session.
+
+  - lab:
+      eyebrow: Lab
+      title: Install, create and prove it
+      brief: >-
+        Install 6000.3.7f1 from the Hub with Windows Build Support ticked, create a 3D project
+        called StoreRoom with no spaces in the path, save the empty scene as Bay.unity under
+        Assets/Scenes and attach SceneCheck.cs to the Main Camera.
+      blocks:
+        - label: Deliverable
+          text: A screenshot of the console showing the four lines, with your editor version visible
+        - label: Constraint
+          text: >-
+            The path must not sit inside OneDrive, Dropbox or a network drive. Local disk,
+            no spaces, no accents.
+        - label: The test
+          text: >-
+            Close the editor, delete the Library folder, open the project again. It has to
+            come back on its own. If it does not, the path is the first suspect.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The version is part of the project
+          desc: >-
+            A project remembers what opened it, and the upgrade only goes one way. One
+            version for the whole group is a decision, not bureaucracy
+        - title: Three folders are the project
+          desc: >-
+            Assets, Packages and ProjectSettings. Everything else is a cache Unity rebuilds,
+            which is why a clone of those three opens and runs
+        - title: Play mode is a copy
+          desc: >-
+            The editor runs the scene from memory and reloads the file on Stop, so tuning
+            done during play is tuning thrown away
+
+  - homework:
+      eyebrow: Homework
+      title: The install, and the first pathway areas
+      brief: >-
+        Finish the install on your own machine and work through the two pathway areas this
+        session covers, Creating and Managing Unity Projects and Unity Editor Essentials, in
+        your own Unity Learn account. Bring the project open and running to session 2.
+      meta:
+        - [Due, Before session 2]
+        - [Format, Blackboard · one screenshot and the folder listing]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Editor version", "Required", "6000.3.7f1, the same as the rest of the group"]
+        - ["Project structure", "Required", "Assets/Scenes/Bay.unity exists and opens"]
+        - ["Console receipt", "Required", "The four lines, with the version among them"]
+        - ["Pathway", "Required", "Both areas of this session marked done on Unity Learn"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. You are expected to work through it
+        yourself. Next session, the scene stops being empty.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

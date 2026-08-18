@@ -1,0 +1,469 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 5
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 05 · Cameras, 3D audio and sprites
+      title: Unity Essentials
+      subtitle: >-
+        What the player sees, what the player hears, and what a flat image is doing in a
+        scene measured in metres.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 5 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        Companion session to the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. It covers three pathway areas at once:
+        Beginner Unity Cameras, Audio Essentials and Level 2 2D Art, which is the Sprite
+        Editor one.
+
+        The scene is still Bay.unity. The camera gets framed on the ramp, the door gets a
+        chime that fades with distance, and a 512 by 128 sheet becomes four sprites.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: The camera
+          desc: >-
+            Pathway area · Beginner Unity Cameras. The frustum, the fields that shape it, and
+            the four settings that make a scene render as a black rectangle.
+        - title: Sound with a position
+          desc: >-
+            Pathway area · Audio Essentials. One listener, many sources, and the slider that
+            decides whether a sound belongs to the room or to the player's headphones.
+        - title: Sprites and the sheet
+          desc: >-
+            Pathway area · 2D Art. Import settings, Pixels Per Unit, and slicing one image
+            into four with the Sprite Editor.
+        - title: The bay, seen and heard
+          desc: >-
+            The class scene gets a framed camera, a chime that fades as you walk away, and a
+            sprite that is exactly 1.28 units tall for a reason you can compute.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Describe the frustum in one sentence
+          sub: And compute how tall the view is at a given distance from the camera
+        - head: Set the camera fields on purpose
+          sub: Clear flags, culling mask, projection, field of view and the two clip planes
+        - head: Diagnose a camera that shows nothing
+          sub: Four separate causes, each with a different thing to look at
+        - head: Turn a 2D sound into a 3D one
+          sub: With Spatial Blend at 1 and a min and max distance that suit the room
+        - head: Keep exactly one AudioListener
+          sub: And recognise the warning the console prints when there are two
+        - head: Slice a sprite sheet into frames
+          sub: Grid by cell size, and the pixels per unit that decide its size in the scene
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: done
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: done
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: now
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The camera, and the box it can see
+      lede: >-
+        The Game view is not a window on the scene. It is one camera's opinion of it, bounded
+        by a truncated pyramid with a near end and a far end.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · Key concept
+      title: Everything the camera renders sits inside a frustum
+      lead: >-
+        The frustum is a pyramid with its tip at the camera and its top sliced off. The field
+        of view sets how wide it opens, the near and far clipping planes cut it at both ends,
+        and anything outside is not drawn at all. Most cameras that show nothing are not
+        broken. They are pointed at something that falls outside one of those four limits.
+      panel:
+        label: The arithmetic worth remembering
+        title: Height is 2 d tan of half the field of view
+        note: >-
+          With a 60 degree camera, the view is 1.155 times the distance in height. Ten metres
+          away, that is 11.55 metres, and the width follows from the aspect ratio.
+      steps:
+        - text: Field of view opens the pyramid, in degrees
+        - text: The near plane cuts off what is too close
+        - text: The far plane cuts off what is too distant
+          loop: ↺ and the culling mask removes whole layers before any of that
+
+  - table:
+      eyebrow: Block 01 · The Inspector
+      title: Six camera fields, and what each one decides
+      headers: [Field, What it decides, The default]
+      rows:
+        - ["Clear Flags", "What fills the empty pixels", "Skybox"]
+        - ["Culling Mask", "Which layers get drawn", "Everything"]
+        - ["Projection", "Perspective or orthographic", "Perspective"]
+        - ["Field of View", "The vertical angle in degrees", "60"]
+        - ["Clipping Planes", "Nearest and furthest drawn", "0.3 and 1000"]
+        - ["Depth", "Which camera draws on top", "0 on the main camera"]
+
+  - code_output:
+      eyebrow: Block 01 · Measured
+      title: How big the view is ten metres out
+      filename: FrustumProbe.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        Camera cam = Camera.main;
+        float d = 10f;
+        float half = cam.fieldOfView * 0.5f * Mathf.Deg2Rad;
+        float h = 2f * d * Mathf.Tan(half);
+
+        Debug.Log($"fov {cam.fieldOfView} at {d:F1} m");
+        Debug.Log($"height {h:F2} m");
+        Debug.Log($"width {h * cam.aspect:F2} m");
+        Debug.Log($"aspect {cam.aspect:F2}");
+      output: |
+        fov 60 at 10.0 m
+        height 11.55 m
+        width 20.53 m
+        aspect 1.78
+
+  - stat:
+      eyebrow: Measured on the class camera
+      value: 11.55 m
+      text: How tall the visible world is ten metres in front of a 60 degree camera
+      note: >-
+        The ramp is 12 metres long, so framing it head on from ten metres leaves almost
+        nothing to spare. Either the camera moves back, or the field of view opens, and the
+        second one distorts the crates at the edges. This is the trade a game camera makes.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four cameras that render nothing useful
+      items:
+        - label: Error 01
+          title: The near plane set to 0.001
+          desc: >-
+            Depth precision is spent between near and far, so a tiny near plane makes distant
+            surfaces flicker against each other. Keep it at 0.3 unless something demands otherwise.
+        - label: Error 02
+          title: The camera inside the floor
+          desc: >-
+            Geometry closer than the near plane is cut away, so you see straight through the
+            floor into whatever is below it. The Scene view shows a camera in the right place.
+        - label: Error 03
+          title: A layer left out of the mask
+          desc: >-
+            The object is in the Hierarchy, it is lit, it is in front of the camera and it is
+            not drawn. The culling mask is the only place that explains it.
+        - label: Error 04
+          title: Two cameras at the same depth
+          desc: >-
+            Both render, in an order nobody promised, and the image flickers between them.
+            Give one of them a higher depth and the argument is settled.
+
+  - divider:
+      eyebrow: Block 02
+      title: Sound that knows where it is
+      lede: >-
+        One listener, as many sources as you like, and a single slider that decides whether a
+        sound has a place in the room at all.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · Mechanism
+      title: The listener is the ear, and there is only one
+      lead: >-
+        An AudioListener sits on the Main Camera by default. It is the point every 3D sound is
+        measured from, so moving the camera changes what is loud. Sources are components on
+        objects. Spatial Blend at 0 means the clip plays the same wherever you stand; at 1 it
+        is attenuated and panned by its distance and direction from the listener.
+      panel:
+        label: What the console says when you add a second
+        title: There are 2 audio listeners in the scene
+        note: >-
+          The warning names the count, not the objects. Two cameras in the scene is the usual
+          cause, because every camera arrives with a listener already attached.
+      steps:
+        - text: One AudioListener, normally on the camera
+        - text: An AudioSource per thing that makes noise
+        - text: Spatial Blend decides 2D against 3D
+          loop: ↺ and music stays at 0 on purpose
+
+  - table:
+      eyebrow: Block 02 · The Audio Source
+      title: Six fields that turn a clip into a sound in a room
+      headers: [Field, What it does, The default]
+      rows:
+        - ["Play On Awake", "Starts with the scene", "Ticked"]
+        - ["Loop", "Restarts at the end", "Unticked"]
+        - ["Spatial Blend", "0 is 2D, 1 is fully 3D", "0"]
+        - ["Min Distance", "Inside it, full volume", "1"]
+        - ["Max Distance", "Where the fade stops", "500"]
+        - ["Volume Rolloff", "The shape of the fade", "Logarithmic"]
+
+  - steps:
+      eyebrow: Block 02 · Wiring the chime
+      title: Five moves from a clip to a sound in the bay
+      items:
+        - label: '01'
+          title: Import
+          desc: Drop the .wav into Assets/Audio. Unity imports it as an AudioClip
+        - label: '02'
+          title: Add the source
+          desc: An Audio Source on the door, with Play On Awake unticked so it waits
+        - label: '03'
+          title: Blend to 1
+          desc: Spatial Blend all the way to 3D. Nothing else in this list matters until then
+        - label: '04'
+          title: Set the distances
+          desc: Min 1 and Max 20 for a room this size. The default 500 never fades indoors
+        - label: '05'
+          title: Walk away
+          desc: Move the camera in play mode. If the volume does not drop, blend is still 0
+
+  - code:
+      eyebrow: Block 02 · The chime
+      title: Playing a clip when a crate arrives
+      filename: DoorChime.cs
+      lang: csharp
+      source: |
+        [RequireComponent(typeof(AudioSource))]
+        public class DoorChime : MonoBehaviour
+        {
+            [SerializeField] AudioClip chime;
+            AudioSource speaker;
+
+            void Awake() => speaker = GetComponent<AudioSource>();
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (other.attachedRigidbody != null)
+                    speaker.PlayOneShot(chime);
+            }
+        }
+      annotations:
+        - label: RequireComponent
+          text: >-
+            Unity adds the Audio Source with the script, and blocks its removal. The using
+            UnityEngine line above it is still there.
+        - label: PlayOneShot
+          text: >-
+            Overlapping copies of one clip, so two crates arriving together both sound.
+        - label: Awake
+          text: >-
+            GetComponent runs once here, not once per crate and never once per frame.
+        - label: Risk
+          text: >-
+            Play On Awake left ticked means the chime also fires the moment the scene loads,
+            before any crate has moved.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: What a second listener costs you
+      filename: Console
+      lang: csharp
+      output_label: Console, on entering play mode
+      source: |
+        // Two cameras in the scene, each with
+        // the AudioListener it was born with.
+      output: |
+        There are 2 audio listeners in
+        the scene. Please ensure there
+        is always exactly one audio
+        listener in the scene.
+
+  - divider:
+      eyebrow: Block 03
+      title: Flat images in a world of metres
+      lede: >-
+        A sprite is an image with a rule attached, and the rule says how many of its pixels
+        make one unit of the scene.
+      block: 3
+
+  - concept:
+      eyebrow: Block 03 · Key concept
+      title: Pixels Per Unit is the only bridge between the two
+      lead: >-
+        An image knows pixels. A scene knows units, and a unit is a metre. Pixels Per Unit is
+        the exchange rate, and at the default of 100 a sprite 128 pixels tall is 1.28 units
+        tall in the scene. Scaling the Transform to fix a size that came out wrong is the
+        habit to avoid, because the number to fix is in the import settings.
+      panel:
+        label: The number to write down
+        title: Sprite height in units is pixels over PPU
+        note: >-
+          Change Pixels Per Unit to 128 and the same image becomes exactly 1 unit tall,
+          without a single Transform being touched.
+      steps:
+        - text: The sheet is 512 by 128 pixels
+        - text: Sliced by cell size it gives four 128 squares
+        - text: At 100 per unit each one is 1.28 units
+          loop: ↺ and Transform scale stays at 1
+
+  - steps:
+      eyebrow: Block 03 · The Sprite Editor
+      title: Five moves from one image to four sprites
+      items:
+        - label: '01'
+          title: Texture Type
+          desc: Set it to Sprite, 2D and UI. Until then the sprite options are not shown
+        - label: '02'
+          title: Sprite Mode
+          desc: Multiple, which is what allows one file to hold more than one sprite
+        - label: '03'
+          title: Open the editor
+          desc: The Sprite Editor button in the import settings, not a menu somewhere else
+        - label: '04'
+          title: Slice
+          desc: Grid By Cell Size, 128 by 128, no offset and no padding. Then Slice
+        - label: '05'
+          title: Apply
+          desc: The bar at the top of the window. Closing without it throws the slicing away
+
+  - table:
+      eyebrow: Block 03 · Import settings
+      title: Six settings that decide how a sprite behaves
+      headers: [Setting, What it controls, Note]
+      rows:
+        - ["Texture Type", "Whether it is a sprite", "Sprite, 2D and UI"]
+        - ["Sprite Mode", "One sprite or many", "Multiple, for a sheet"]
+        - ["Pixels Per Unit", "Pixels to one world unit", "100 by default"]
+        - ["Filter Mode", "How it looks when scaled", "Point for pixel art"]
+        - ["Pivot", "The point it rotates about", "Centre by default"]
+        - ["Compression", "Size against quality", "Artefacts show on flat colour"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: One frame of the sheet, in pixels and in metres
+      filename: SpriteProbe.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        Sprite s = GetComponent<SpriteRenderer>().sprite;
+
+        Debug.Log($"name {s.name}");
+        Debug.Log($"rect {s.rect.width} x {s.rect.height}");
+        Debug.Log($"ppu {s.pixelsPerUnit}");
+        Debug.Log($"world {s.bounds.size}");
+      output: |
+        name tokens_2
+        rect 128 x 128
+        ppu 100
+        world (1.28, 1.28, 0.00)
+
+  - quiz:
+      eyebrow: Quick check
+      question: The chime is just as loud from across the room as from the door. What is wrong?
+      options:
+        - The Max Distance is 500, so it never fades in a room this size
+        - Spatial Blend is still 0, so distance is not part of the sound at all
+        - The AudioListener is on the camera instead of on the player
+        - The clip was imported in mono instead of stereo
+
+  - method:
+      eyebrow: Answer
+      title: The second one, and the first is the next problem
+      statement: >-
+        With Spatial Blend at 0 the source is a 2D sound and every distance field in the
+        component is ignored. Fixing the blend is what makes the other five fields exist.
+      points:
+        - label: Then the distances
+          text: >-
+            At Spatial Blend 1 with the default Max Distance of 500, a room 20 metres across
+            uses four per cent of the fade curve, so it still sounds nearly flat.
+        - label: The listener
+          text: >-
+            On the camera is the usual place, and it is correct for a first person view. It
+            is wrong only when the camera is far from the character it is following.
+        - label: Mono against stereo
+          text: >-
+            A stereo clip carries its own left and right, which fights the panning. Sound
+            effects meant to be positioned are imported as mono on purpose.
+
+  - lab:
+      eyebrow: Lab
+      title: Frame it, hear it, slice it, in pairs
+      brief: >-
+        Frame the camera on the ramp from ten metres and record the field of view you needed.
+        Give the door a 3D chime with Min 1 and Max 20. Then slice the four frame sheet and
+        put one frame in the scene at Transform scale 1.
+      blocks:
+        - label: Deliverable
+          text: The scene, plus three numbers, field of view, max distance and sprite height
+        - label: Constraint
+          text: >-
+            The sprite is sized through Pixels Per Unit, not through the Transform. Scale
+            stays at 1 and the number in the import settings does the work.
+        - label: The test
+          text: >-
+            Add a second camera on purpose, read the console, then delete its AudioListener
+            rather than the camera. That is the fix in a real project.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The camera sees a box
+          desc: >-
+            A frustum bounded by the field of view and the two clip planes. A camera that
+            shows nothing is usually pointed outside one of those bounds
+        - title: Spatial Blend comes first
+          desc: >-
+            At 0 the distance fields do nothing at all. Set it to 1, then set the min and
+            max to the size of the room the sound is in
+        - title: Pixels Per Unit sizes a sprite
+          desc: >-
+            Pixels divided by the rate gives units, so an image that comes in the wrong size
+            is fixed in the import settings and not in the Transform
+
+  - homework:
+      eyebrow: Homework
+      title: Three pathway areas in one week
+      brief: >-
+        Finish the camera, the chime and the sliced sheet, and work through Beginner Unity
+        Cameras, Audio Essentials and the 2D Art area in your own Unity Learn account.
+        Session 6 turns the project into something that runs without the editor.
+      meta:
+        - [Due, Before session 6]
+        - [Format, "Blackboard · the scene, the sliced sheet and three numbers"]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Camera", "Required", "The ramp is framed and the numbers are written down"]
+        - ["Audio", "Required", "The chime fades with distance and there is one listener"]
+        - ["Sprite", "Required", "Four frames sliced, placed at Transform scale 1"]
+        - ["Pathway", "Required", "The three areas marked done on Unity Learn"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials, and you are expected to work through it
+        yourself. Next session, the project leaves the editor.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

@@ -328,8 +328,66 @@ MYSQL = Palette(
                     dot='00758F', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
 )
 
+# Unity's dark canvas. Unity publishes black and white and nothing else, so unlike
+# every other palette here the identity cannot come from a hue: it has to come from
+# the surface. 1A1A1A is the brand black, and white on it is 16.4:1, the highest
+# contrast canvas in the file. It also separates on sight from the other three dark
+# surfaces already in use, NAVY 0B1B3A, the Excel green and the MySQL teal, because
+# it is the only neutral one.
+_UNITY_DARK = dict(
+    NAVY='1A1A1A',           # brand black, white text at 16.4:1
+    ON_NAVY='F7F8FA',        # 16.4:1
+    ON_NAVY_SOFT='C9CED6',   # 11.0:1
+    ON_NAVY_DIM='8A9199',    # 5.5:1
+)
+
+# Unity. This palette is built against a constraint the others do not have, and the
+# constraint is worth writing down because the obvious fix does not work.
+#
+# The brand is black and white. A black structure slot measures beautifully on paper,
+# 12.5:1 for 2B3038, but it lands 1.35:1 from INK, so an eyebrow set in it reads as
+# body text and stops marking structure at all. Lightening it does not escape either:
+# by 444C56 it is 1.61:1 from MUTED and collides with the secondary text instead. The
+# neutral ramp is already full.
+#
+# Going chromatic does not work either. Every slate and desaturated blue that clears
+# AA on paper lands within 1.0 to 1.3:1 of the C++ logo blue, which is the same trap
+# the MySQL note describes: two courses that read as one at a glance. 3E5C76 is 1.03:1
+# from 00599C, which is no separation at all.
+#
+# So the identity moves to the canvas, the way _OFFICE_DARK and _DB_DARK already do
+# it, and the structure slot takes the brand black at a value that still fills a chip
+# well: 33393F is 10.9:1 on paper and takes white at 11.7:1. On a chip or a bar that
+# is exactly right and unmistakably Unity. On an eyebrow it separates from INK by
+# weight and size rather than by hue, which is what a black brand gives you and is
+# the one compromise in this file made knowingly rather than by accident.
+#
+# Unity has no second brand colour, so the accent pair stays the academy's duck
+# orange, as it does for C++, VBA and C#. On a neutral charcoal canvas the orange is
+# the only chromatic thing on the slide, so "the accent means this is the risk" reads
+# harder here than in any other course.
+#
+# The syntax theme is C#, because Unity scripting is C#. Deck files set
+# `language: unity` for these colours and keep `lang: csharp` on each code slide so
+# the scanner still highlights C#.
+UNITY = Palette(
+    **{**_NEUTRAL, **_UNITY_DARK},
+    BLUE='33393F',       # brand black lifted, 10.9:1 on paper
+    BLUE_FILL='33393F',  # white text on it is 11.7:1
+    BLUE_DEEP='222629',  # the same black deeper, 14.4:1 on paper
+    ACCENT='E8871E',     # duck orange on the charcoal canvas, 6.6:1
+    ACCENT_LO='B4530A',  # duck orange on paper, 4.7:1
+    ON_NAVY_LINK='C9CED6',
+    DARK_CODE=dict(bg='1A1A1A', text='E6EDF7', kw='C9CED6', fn='A8AFB8', num='F0A868',
+                   str='E3B778', com='8A9199', cls='C9CED6', op='A8AFB8', self='F0A868',
+                   dot='E8871E', chrome='8A9199', rule='F7F8FA', header=None),
+    LIGHT_CODE=dict(bg='FFFFFF', text='0F172A', kw='33393F', fn='222629', num='B4530A',
+                    str='B4530A', com='5B6B84', cls='33393F', op='5B6B84', self='B4530A',
+                    dot='33393F', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
+)
+
 PALETTES = {'generic': GENERIC, 'python': PYTHON, 'cpp': CPP, 'csharp': CSHARP,
-            'vba': VBA, 'excel': EXCEL, 'mysql': MYSQL}
+            'vba': VBA, 'excel': EXCEL, 'mysql': MYSQL, 'unity': UNITY}
 
 
 def palette(name: str) -> Palette:

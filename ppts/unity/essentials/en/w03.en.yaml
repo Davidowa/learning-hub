@@ -1,0 +1,446 @@
+meta:
+  course: Unity Essentials
+  code: UNITY
+  lang: en
+  language: unity
+  week: 3
+  footer: UNITY ESSENTIALS · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 03 · Components, physics and prefabs
+      title: Unity Essentials
+      subtitle: >-
+        An object in Unity does nothing by itself. Everything it does arrives as a component,
+        and two of them hand it over to the physics engine.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Foundational]
+        - [Session, 3 of 6]
+        - [Based on, Unity Learn · Unity Essentials]
+      notes: |
+        Companion session to the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials. It closes the pathway area Scene
+        Building Essentials with its physics part and opens the area GameObjects, on
+        components and prefabs. The scripting part of GameObjects waits for session 4.
+
+        The scene is still Bay.unity from session 2. The crates get a Rigidbody, the ramp
+        gets used, and the door at the bottom counts what arrives.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Objects made of parts
+          desc: >-
+            Pathway area · GameObjects, the component part. Why an empty container plus
+            parts beats one big object that knows everything.
+        - title: Handing it to physics
+          desc: >-
+            Pathway area · Scene Building Essentials, the physics part. Rigidbody, colliders,
+            triggers, and the fixed step the engine actually runs on.
+        - title: Prefabs
+          desc: >-
+            Pathway area · GameObjects, the prefab part. One asset, many instances, and the
+            override that quietly refuses to follow the asset.
+        - title: The bay door counts
+          desc: >-
+            The class scene gets a trigger at the bottom of the ramp, and the console says
+            how many crates got there and how long the first one took.
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Read an object as a list of components
+          sub: And say which single component every GameObject is born with
+        - head: Add a Rigidbody on purpose
+          sub: Knowing that the Transform stops being yours the moment you do
+        - head: Predict whether two objects will collide
+          sub: From which of them carries a Rigidbody and which collider is a trigger
+        - head: Use the fixed timestep in an argument
+          sub: Fifty physics steps a second, and a fall of two metres inside thirty-two of them
+        - head: Make a prefab and edit it in Prefab Mode
+          sub: So one change reaches every crate in the scene at once
+        - head: Recognise an override before it confuses you
+          sub: The value in bold, the blue bar in the margin, and what Revert does to it
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this session sits in the six
+      phases:
+        - label: 01 · Session 1
+          title: The editor
+          desc: Installing, the project on disk, the windows and moving around
+          state: done
+        - label: 02 · Sessions 2 and 3
+          title: The scene
+          desc: Objects, transforms, materials, physics, components and prefabs
+          state: now
+        - label: 03 · Sessions 4 and 5
+          title: Behaviour and senses
+          desc: Reading and writing scripts, cameras, audio and sprites
+          state: todo
+        - label: 04 · Session 6
+          title: Publishing
+          desc: Turning the project into something that runs without the editor
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: An object is a bag of components
+      lede: >-
+        There is no crate class anywhere in Unity. There is an empty object carrying five
+        parts, and the parts are what make it a crate.
+      block: 1
+
+  - concept:
+      eyebrow: Block 01 · Key concept
+      title: Composition, not a family tree of classes
+      lead: >-
+        A GameObject holds a name, a Transform and a list of components. Nothing else. Making
+        the crate bounce means adding a component, not writing a subclass of Crate, and that
+        is why two objects with nothing in common can share exactly one behaviour. It also
+        means the Inspector is the truth about what an object does.
+      panel:
+        label: The one part that cannot be removed
+        title: Every GameObject has a Transform
+        note: >-
+          Even an empty used only as a folder in the Hierarchy. The Remove Component entry is
+          greyed out on it, because a thing in a scene has to be somewhere.
+      steps:
+        - text: The GameObject is a container with a name
+        - text: Each component adds one capability
+        - text: The Inspector lists them top to bottom
+          loop: ↺ and the order in the list changes nothing at run time
+
+  - diagram:
+      eyebrow: Block 01 · The crate
+      title: Four components, four separate jobs
+      blocks:
+        - label: Transform
+          title: Where it is
+          desc: Position, rotation and scale. Never removable.
+        - label: Mesh Renderer
+          title: How it looks
+          desc: Draws the mesh, and holds the material list.
+        - label: Box Collider
+          title: Its shape to touch
+          desc: The volume physics tests. Invisible when running.
+        - label: Rigidbody
+          title: Who moves it
+          desc: Hands the Transform to the physics engine.
+          dark: true
+      note: >-
+        The collider and the renderer are separate on purpose. A crate can be visible and
+        untouchable, or invisible and solid, and both of those are useful.
+
+  - table:
+      eyebrow: Block 01 · The Inspector
+      title: What the class crate carries, line by line
+      headers: [Component, What it adds, Removable]
+      rows:
+        - ["Transform", "Position, rotation, scale", "No"]
+        - ["Mesh Filter", "Which mesh gets drawn", "Yes"]
+        - ["Mesh Renderer", "Draws it, holds materials", "Yes"]
+        - ["Box Collider", "A shape physics can touch", "Yes"]
+        - ["Rigidbody", "Mass, drag, gravity", "Yes"]
+
+  - divider:
+      eyebrow: Block 02
+      title: Handing the object to physics
+      lede: >-
+        Add a Rigidbody and you stop being the one who decides where the object is. From then
+        on you ask, with forces, and the engine answers.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · Mechanism
+      title: The engine runs on its own clock, not on frames
+      lead: >-
+        Rendering happens as fast as the machine manages. Physics does not. It advances in
+        fixed steps of 0.02 seconds, fifty a second, whatever the frame rate is doing, so the
+        same fall takes the same time on a laptop and on a lab machine. That is also why
+        physics code belongs in FixedUpdate and not in Update.
+      panel:
+        label: Project Settings · Time
+        title: Fixed Timestep is 0.02 seconds
+        note: >-
+          Halving it doubles the physics work per second. It is a knob for a simulation that
+          jitters, not a knob for a scene that runs slowly.
+      steps:
+        - text: Gravity is -9.81 on Y, in metres per second squared
+        - text: The engine integrates once every 0.02 seconds
+        - text: A frame may cover zero steps or three
+          loop: ↺ and Time.deltaTime is the frame, Time.fixedDeltaTime is the step
+
+  - stat:
+      eyebrow: Measured on the class ramp
+      value: 32 steps
+      text: What a two metre drop costs the physics engine, before anything is drawn
+      note: >-
+        The theory says the square root of 2h over g, which is 0.639 seconds. At 0.02 seconds
+        a step that is 31.9 steps, and the first contact is reported on step 32. The frame
+        rate never enters the arithmetic, which is the whole point of a fixed step.
+
+  - code_output:
+      eyebrow: Block 02 · Measured
+      title: Timing the fall of one crate
+      filename: DropTimer.cs
+      lang: csharp
+      output_label: Console
+      source: |
+        float start;
+
+        void Start() => start = Time.time;
+
+        void OnCollisionEnter(Collision hit)
+        {
+            float t = Time.time - start;
+            int steps = (int)(t / Time.fixedDeltaTime);
+            Debug.Log($"drop height 2.00 m");
+            Debug.Log($"first contact {t:F2} s");
+            Debug.Log($"fixed steps {steps}");
+        }
+      output: |
+        drop height 2.00 m
+        first contact 0.64 s
+        fixed steps 32
+
+  - table:
+      eyebrow: Block 02 · The pairing rule
+      title: Which pairs report a hit, and which stay silent
+      headers: [One side, Other side, What you get]
+      rows:
+        - ["Rigidbody", "Plain collider", "Collision, messages fire"]
+        - ["Rigidbody", "Rigidbody", "Collision, both are pushed"]
+        - ["Plain collider", "Plain collider", "Nothing at all"]
+        - ["Rigidbody", "Is Trigger ticked", "Trigger messages, no push"]
+        - ["Kinematic body", "Is Trigger ticked", "Trigger messages, no push"]
+
+  - code:
+      eyebrow: Block 02 · The bay door
+      title: A trigger that counts what arrives
+      filename: BayDoor.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class BayDoor : MonoBehaviour
+        {
+            [SerializeField] int crates;
+
+            void OnTriggerEnter(Collider other)
+            {
+                if (other.attachedRigidbody == null) return;
+                crates++;
+                Debug.Log($"crate {crates} at the door");
+            }
+        }
+      annotations:
+        - label: On the door
+          text: >-
+            A Box Collider with Is Trigger ticked, sitting across the bottom of the ramp.
+        - label: attachedRigidbody
+          text: >-
+            The body the collider belongs to. Null for scenery, so the floor is ignored.
+        - label: SerializeField
+          text: >-
+            Private, and still shown in the Inspector. Session 4 spends a block on why.
+        - label: Risk
+          text: >-
+            Neither side carrying a Rigidbody means OnTriggerEnter is never called, and
+            nothing in the console says so.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four physics failures with no error message
+      items:
+        - label: Error 01
+          title: Is Trigger left ticked
+          desc: >-
+            The crate falls straight through the ramp. The collider is still there, it just
+            reports contact instead of resisting it, and the scene looks broken rather than wrong.
+        - label: Error 02
+          title: No Rigidbody anywhere
+          desc: >-
+            Two plain colliders never talk to each other. No collision, no trigger, no
+            warning. The pairing table is the first thing to check, not the code.
+        - label: Error 03
+          title: Moving a body by its Transform
+          desc: >-
+            Writing transform.position on a Rigidbody teleports it past thin colliders and
+            fights the solver. Use MovePosition, or a force, or make it kinematic.
+        - label: Error 04
+          title: The component that is not there
+          desc: >-
+            GetComponent returns null and the console reads MissingComponentException, with
+            the name of the object and the component it expected to find on it.
+
+  - divider:
+      eyebrow: Block 03
+      title: Prefabs, and the override that lies in wait
+      lede: >-
+        Three crates in the scene should be one decision, not three. Prefabs are how, and
+        the overrides are how it goes wrong.
+      block: 3
+
+  - concept:
+      eyebrow: Block 03 · Key concept
+      title: The asset is the original, the scene holds copies
+      lead: >-
+        A prefab is an asset under Assets. Dragging it into the scene makes an instance, and
+        the instance remembers which asset it came from. Change the asset in Prefab Mode and
+        every instance follows. Change one instance in the scene and that one property stops
+        listening, for good, until somebody reverts it.
+      panel:
+        label: How the editor shows it
+        title: An overridden value goes bold, with a blue bar
+        note: >-
+          The bar sits in the left margin of the Inspector row. It is the only warning you
+          get that this crate is no longer taking orders from the prefab.
+      steps:
+        - text: Drag an object from the Hierarchy into the Project window
+        - text: Double click the asset to open Prefab Mode
+        - text: Edit there and every instance follows
+          loop: ↺ unless that instance already overrode the value
+
+  - steps:
+      eyebrow: Block 03 · The workflow
+      title: From one crate to a prefab in five moves
+      items:
+        - label: '01'
+          title: Tidy it
+          desc: One crate with its collider, its Rigidbody and its material already correct
+        - label: '02'
+          title: Drag it out
+          desc: Into Assets/Prefabs. The Hierarchy entry turns blue, which means it is linked
+        - label: '03'
+          title: Delete the rest
+          desc: The other two crates go, and three fresh instances come from the asset
+        - label: '04'
+          title: Edit in Prefab Mode
+          desc: Double click the asset. The header bar tells you that you left the scene
+        - label: '05'
+          title: Check the instances
+          desc: Back in the scene, all three should carry the change. The ones that do not overrode it
+
+  - table:
+      eyebrow: Block 03 · Where a change lands
+      title: Four ways to change a prefab, and who hears about it
+      headers: [What you do, Where it lands, Other instances]
+      rows:
+        - ["Edit in Prefab Mode", "In the asset", "All of them follow"]
+        - ["Edit one instance", "An override on that one", "Unaffected"]
+        - ["Overrides · Apply All", "Pushed into the asset", "Follow, unless overridden"]
+        - ["Overrides · Revert All", "Dropped", "The instance matches again"]
+
+  - trace:
+      eyebrow: Block 03 · Measured trace
+      title: One asset edit, three crates, three different endings
+      headers: [Crate, Mass before, What was done, Mass after]
+      rows:
+        - ["Crate A", "8", "Nothing", "12"]
+        - ["Crate B", "8", "Typed 20 on it", "20"]
+        - ["Crate C", "8", "Nothing", "12"]
+      verdict: >-
+        The mass was changed to 12 once, in Prefab Mode. A and C follow because they never
+        had an opinion. B typed its own value earlier, so that property stopped listening and
+        stayed at 20. Nothing was broken and nothing warned anybody. Revert on B is the only
+        way back, and it takes the whole override with it.
+
+  - quiz:
+      eyebrow: Quick check
+      question: A crate falls through the ramp instead of sliding down it. What is the first thing to check?
+      options:
+        - That the crate's mass is high enough to register
+        - That Is Trigger is unticked on the ramp's collider
+        - That the ramp has a Rigidbody as well
+        - That the fixed timestep is small enough for the speed
+
+  - method:
+      eyebrow: Answer
+      title: The second one, and it costs about four seconds
+      statement: >-
+        A trigger collider reports contact and resists nothing. The crate passes through as if
+        the ramp were painted on, which reads as a broken engine and is a single tick box.
+      points:
+        - label: Why not mass
+          text: >-
+            Mass changes how a body responds to forces, not whether it is stopped. A crate of
+            mass 0.1 lands on a solid ramp exactly as a crate of mass 800 does.
+        - label: Why not a body on the ramp
+          text: >-
+            Scenery is meant to be a plain collider. Giving the ramp a Rigidbody makes the
+            ramp fall too, which is a different and more entertaining bug.
+        - label: When the timestep is the answer
+          text: >-
+            Only for something small and fast, where the object crosses the whole collider
+            inside one step. A crate on a ramp is neither.
+
+  - lab:
+      eyebrow: Lab
+      title: Drop three crates and count them, in pairs
+      brief: >-
+        Give the crate a Rigidbody, make it a prefab, put three instances at the top of the
+        ramp and a trigger across the bottom with BayDoor.cs on it. Then change the mass once
+        in Prefab Mode and report which instances followed.
+      blocks:
+        - label: Deliverable
+          text: The console output for three crates, plus the mass of each instance afterwards
+        - label: Constraint
+          text: >-
+            One prefab and three instances. Editing a crate directly in the Hierarchy is what
+            this lab is trying to catch.
+        - label: The test
+          text: >-
+            Deliberately override the mass on one instance before you edit the asset, and
+            explain in one line why that instance did not follow.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: Behaviour arrives as components
+          desc: >-
+            The object is an empty container with a Transform. What it does is the list
+            underneath, which is why the Inspector tells you more than any class diagram
+        - title: Physics has its own clock
+          desc: >-
+            Fifty steps a second, gravity at -9.81, and a two metre drop lands on step 32
+            whatever the frame rate does around it
+        - title: The override is the trap
+          desc: >-
+            Editing an instance detaches one property from the asset silently. Bold text and
+            a blue bar are the whole warning you are going to get
+
+  - homework:
+      eyebrow: Homework
+      title: The prefab, and the pathway areas behind it
+      brief: >-
+        Finish the drop scene and work through the physics part of Scene Building Essentials
+        and the prefab and component parts of GameObjects in your own Unity Learn account.
+        Session 4 opens the scripts, so the scene has to be running before then.
+      meta:
+        - [Due, Before session 4]
+        - [Format, "Blackboard · scene, prefab and console output"]
+        - [Weight, Part of the practical component]
+      rubric:
+        - ["Prefab", "Required", "One asset, three linked instances in the scene"]
+        - ["Physics", "Required", "The crates land on the ramp and reach the door"]
+        - ["Reading", "Required", "One line explaining the instance that did not follow"]
+        - ["Pathway", "Required", "Both areas of this session marked done on Unity Learn"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This course accompanies the Unity Learn pathway Unity Essentials, level Foundational,
+        at learn.unity.com/pathway/unity-essentials, and you are expected to work through it
+        yourself. Next session, the code stops being a receipt and starts deciding things.
+      meta:
+        - [Pathway, Unity Learn · Unity Essentials]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]

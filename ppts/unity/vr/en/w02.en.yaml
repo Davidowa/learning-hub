@@ -1,0 +1,377 @@
+meta:
+  course: VR Development
+  code: UNITY
+  lang: en
+  language: unity
+  week: 2
+  footer: VR DEVELOPMENT · UNITY LEARN
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: School of Engineering · 2026
+      unit: Session 02 · Hardware and deployment · The first build
+      title: VR Development
+      subtitle: >-
+        The headset stops being an abstraction. Four hardware decisions, then the settings
+        that make an Android build.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, UNITY · Beginner]
+        - [Session, 2 of 5]
+        - [Based on, Unity Learn · VR Development]
+      notes: |
+        Companion session to the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. The pathway is headset agnostic and so is
+        the first block here. The second and third blocks target Meta Quest and Android,
+        because that is the hardware this classroom owns. Nothing here reproduces Unity's
+        wording or exercises.
+
+        The build settings quoted in block 2 are the defaults Unity applies when you create
+        a Meta Quest build profile. They are worth quoting because they are the answer to
+        "what should this be set to", written by the people who wrote the exporter.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three working blocks
+      cards:
+        - title: Four hardware decisions
+          desc: What the project demands, and the cheapest device that meets it
+        - title: What makes an XR build
+          desc: The plug-in, the profile, and six settings with a reason each
+        - title: Build and run
+          desc: Onto the headset, then reading back what the device actually got
+        - title: When it fails
+          desc: Four failures with the exact text they put on your screen
+
+  - objectives:
+      eyebrow: Learning objectives
+      title: By the end of the session you will be able to…
+      items:
+        - head: Turn a project goal into a hardware requirement
+          sub: Standalone or tethered, inside out or outside in, controllers or hands, and how fast
+        - head: Convert a refresh rate into a frame budget
+          sub: One divided by the rate, which is the number session 5 spends the whole hour on
+        - head: Enable an XR provider for Android
+          sub: In Project Settings, on the Android tab, which is not the same tab as the desktop one
+        - head: Read the Meta Quest profile defaults
+          sub: Six settings, and what each of them is protecting you from
+        - head: Get a build onto the headset and read it back
+          sub: With a script that prints what the device reports, because assumptions do not survive
+
+  - roadmap:
+      eyebrow: Course map
+      title: Five sessions beside a six week pathway
+      phases:
+        - label: '01 · Session 1'
+          title: Judging a build
+          desc: Presence, comfort and the note you write
+          state: done
+        - label: '02 · Session 2'
+          title: Headset and build
+          desc: Choosing hardware, and Android settings
+          state: now
+        - label: '03 · Session 3'
+          title: Interaction toolkit
+          desc: Origin, interactors and interactables
+          state: todo
+        - label: '04 · Session 4'
+          title: Your own code
+          desc: Custom interactables and select events
+          state: todo
+        - label: '05 · Session 5'
+          title: The frame budget
+          desc: Measuring milliseconds on the device
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Four decisions about hardware
+      lede: The pathway is deliberately device agnostic. That only works if you can say what your project needs before you name a headset.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A standalone headset is a phone with a strap
+      lead: >-
+        There is no tower under the desk. The processor, the memory, the battery and the heat all
+        live on your face, and the CPU and the GPU share one thermal envelope. The whole of
+        session 5 follows from that.
+      panel:
+        label: What the choice actually buys
+        title: Tethered buys watts, standalone buys the room
+        note: >-
+          A cable removes the power limit and adds a tripping hazard, a host machine per
+          student and a two metre radius.
+      steps:
+        - text: Standalone runs an Android build
+        - text: Tethered runs a desktop build
+        - text: The scene is the same either way
+        - text: The budget is not
+          loop: ↺ which is why the target is chosen before the scene is dressed
+
+  - tiers:
+      eyebrow: Block 01 · The decisions
+      title: Four questions, asked in this order
+      items:
+        - key: Where
+          title: Standalone or tethered
+          desc: Where the frame is rendered, which fixes the power budget and the room you need
+        - key: Tracking
+          title: Inside out or outside in
+          desc: Cameras on the headset, or fixed sensors in the room that have to be set up first
+        - key: Input
+          title: Controllers, hands or both
+          desc: A tracked hand has no buttons and no haptics, so the interaction has to survive that
+        - key: Display
+          title: Refresh rate, and its price
+          desc: A higher rate is a shorter frame. You are buying a deadline, not a feature
+
+  - table:
+      eyebrow: Block 01 · Arithmetic
+      title: The refresh rate is a deadline in milliseconds
+      headers: [Refresh rate, Per frame, What it costs you]
+      rows:
+        - ["72 Hz", "13.9 ms", "The budget this course uses"]
+        - ["80 Hz", "12.5 ms", "1.4 ms less than at 72 Hz"]
+        - ["90 Hz", "11.1 ms", "A fifth of the budget gone"]
+        - ["120 Hz", "8.3 ms", "For a scene designed for it"]
+
+  - diagram:
+      eyebrow: Block 01 · The order
+      title: The device is the last decision, not the first
+      blocks:
+        - label: '01'
+          title: The task
+          desc: What the user has to do, standing or seated, and for how long
+        - label: '02'
+          title: The constraint
+          desc: What that task demands of tracking, input, comfort and space
+        - label: '03'
+          title: The device
+          desc: The cheapest hardware that still meets the constraint
+          dark: true
+      note: >-
+        Run it the other way round and the project inherits every limit of the headset that
+        happened to be in the cupboard, with no record of which limits mattered.
+
+  - divider:
+      eyebrow: Block 02
+      title: What makes a build an XR build
+      lede: An Android build and an Android XR build differ by one tick box and a plug-in. Miss it and the app still installs.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The path
+      title: Five stops in the Editor
+      items:
+        - label: '01'
+          title: Package Manager
+          desc: Add the XR Interaction Toolkit and the OpenXR plug-in.
+        - label: '02'
+          title: XR Plug-in Management
+          desc: Project Settings. Tick OpenXR on the Android tab.
+        - label: '03'
+          title: The Meta feature
+          desc: Enable the Meta Quest feature group under OpenXR.
+        - label: '04'
+          title: Build profile
+          desc: Create a Meta Quest profile. It presets what follows.
+        - label: '05'
+          title: Build And Run
+          desc: With the headset plugged in, awake and authorised.
+
+  - table:
+      eyebrow: Block 02 · Sourced from the profile
+      title: Six defaults, and what each one protects
+      headers: [Setting, The default, Why that value]
+      rows:
+        - ["Graphics API", "Vulkan", "What the Quest runtime expects on Android"]
+        - ["Scripting backend", "IL2CPP", "C# compiled ahead of time"]
+        - ["Architecture", "ARM64", "The processor in the headset"]
+        - ["Minimum API level", "Android 10, API 29", "The oldest it will install on"]
+        - ["Target API level", "Android 12L, API 32", "What it is compiled against"]
+        - ["Stereo rendering", "Instancing", "One pass draws both eyes"]
+
+  - concept:
+      eyebrow: Block 02 · One of the six
+      title: Why the stereo path says Instancing
+      lead: >-
+        A VR frame is two images. Multi pass walks the scene twice, once per eye, and the CPU pays
+        for every draw call twice. Single pass instanced walks it once, with instanced draws that
+        fill both eyes.
+      panel:
+        label: What it asks of you in return
+        title: A custom shader has to be told about the eye
+        note: >-
+          Shaders written for one eye sample the wrong texture under instancing. Unity's
+          stereo macros exist for exactly that, and a shader that skips them renders to one
+          eye only.
+      steps:
+        - text: Multi pass draws the scene twice
+        - text: Instancing draws it once, for two eyes
+        - text: The saving is mostly on the CPU
+        - text: Custom shaders need the stereo macros
+          loop: ↺ and a one eyed render is the symptom that they were left out
+
+  - divider:
+      eyebrow: Block 03
+      title: Build, run, and read it back
+      lede: The build succeeding tells you nothing about what the device got. Print it and look.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The report script
+      title: Ask the device what it thinks it is
+      filename: DeviceReport.cs
+      lang: csharp
+      source: |
+        using UnityEngine;
+
+        public class DeviceReport : MonoBehaviour
+        {
+            void Start()
+            {
+                Debug.Log($"os    {Application.platform}");
+                Debug.Log($"gfx   {SystemInfo.graphicsDeviceType}");
+                Debug.Log($"edit  {Application.isEditor}");
+            }
+        }
+      annotations:
+        - label: Where it goes
+          text: >-
+            On an empty GameObject in the first scene, so it runs before anything else can
+            fail.
+        - label: Application.platform
+          text: >-
+            Returns Android on the headset and WindowsEditor in play mode. Two different
+            values from one build.
+        - label: graphicsDeviceType
+          text: >-
+            The API that was actually created, not the one at the top of the list in Player
+            Settings.
+        - label: Risk
+          text: >-
+            A Debug.Log per frame costs you real milliseconds on device. This one runs once,
+            in Start.
+          accent: true
+
+  - code_output:
+      eyebrow: Block 03 · Measured
+      title: The same build, read in two places
+      filename: DeviceReport.cs
+      lang: csharp
+      output_label: Play mode, then adb logcat
+      source: |
+        Debug.Log($"os    {Application.platform}");
+        Debug.Log($"gfx   {SystemInfo.graphicsDeviceType}");
+        Debug.Log($"edit  {Application.isEditor}");
+      output: |
+        -- play mode --
+        os    WindowsEditor
+        gfx   Direct3D11
+        edit  True
+        -- on the headset --
+        os    Android
+        gfx   Vulkan
+        edit  False
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four failures, with what they put on screen
+      items:
+        - label: Error 01
+          title: The app opens as a flat panel
+          desc: >-
+            OpenXR is ticked on the desktop tab and not on the Android one, so the build
+            shipped without an XR provider. Android then runs it as an ordinary 2D app.
+        - label: Error 02
+          title: adb devices says unauthorized
+          desc: >-
+            The Allow USB debugging prompt is waiting inside the headset. Put it on, answer
+            it, tick the always allow box, then list the devices again.
+        - label: Error 03
+          title: INSTALL_FAILED_UPDATE_INCOMPATIBLE
+          desc: >-
+            A build with the same package name is already on the device and was signed with
+            a different key. Uninstall that one from the headset and build again.
+        - label: Error 04
+          title: It runs, and the head does not move
+          desc: >-
+            The camera in the scene is not the one under the XR Origin, so nothing is
+            driving its pose. Two cameras, and the wrong one is tagged MainCamera.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The build installs and opens as a flat window in the headset. Where do you look first?
+      options:
+        - Player Settings, because the target architecture is wrong
+        - XR Plug-in Management, Android tab, where OpenXR is unticked
+        - The scene, because the XR Origin is missing from it
+        - The Package Manager, because the toolkit is not installed
+
+  - trace:
+      eyebrow: Answer
+      title: Four candidates, and what each one would have done
+      headers: [Candidate, Symptom it causes, Matches]
+      rows:
+        - ["Architecture", "Install refused outright", "No"]
+        - ["No XR on Android", "Runs flat, no stereo", "Yes"]
+        - ["No XR Origin", "Stereo, head fixed", "No"]
+        - ["No toolkit", "Compile errors, no build", "No"]
+      verdict: >-
+        Only one of the four produces a working, installable, flat application. That is the
+        value of knowing the symptom each setting causes: the failure names the setting
+        before you have opened a single window.
+
+  - lab:
+      eyebrow: Lab
+      title: An empty scene onto the headset
+      brief: >-
+        Make a new project, add the toolkit and the OpenXR plug-in, create the Meta Quest
+        build profile, drop the report script on an empty object and build to the device.
+        Nothing in the scene but a floor. The point is the pipeline, not the content.
+      blocks:
+        - label: Constraint
+          text: Do not copy a project folder from anyone. The failures are the lesson here.
+        - label: Deliverable
+          text: The three logged lines from the headset, pasted as text, plus the build profile screen.
+        - label: Criterion
+          text: That gfx reads Vulkan and edit reads False, which together prove it ran on the device.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three ideas to take away
+      items:
+        - title: The device is chosen last
+          desc: The task sets the constraint and the constraint picks the hardware, in that order.
+        - title: A refresh rate is a deadline
+          desc: 72 Hz leaves about 13.9 ms per frame, and session 5 is about spending it.
+        - title: A build that runs is not a build that works
+          desc: Print what the device reports. Platform, graphics API and isEditor take one line each.
+
+  - homework:
+      eyebrow: For the next session
+      title: The pipeline, twice, from a clean project
+      brief: >-
+        Repeat the lab from an empty project without notes, then write down every step you
+        had to look up. That list is what you actually did not know, and it is shorter than
+        it feels while you are doing it.
+      meta:
+        - [Due, Before session 3]
+        - [Format, Blackboard · PDF and the log text]
+        - [Weight, Part of the assignment average]
+      rubric:
+        - ["It ran on device", "50 %", "The three logged lines, from the headset and not play mode"]
+        - ["The look-up list", "30 %", "Every step you had to check, with where you checked it"]
+        - ["One failure", "20 %", "One thing that broke, its exact message, and what fixed it"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        This deck accompanies the Unity Learn pathway VR Development,
+        learn.unity.com/pathway/vr-development. Work through it yourself.
+      meta:
+        - [Pathway, Unity Learn · VR Development]
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
