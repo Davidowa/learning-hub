@@ -35,6 +35,19 @@ unreachable. Enumerate on both:
 if (IsWindowVisible(h) && (cn.StartsWith("bosa_sdm") || cn == "NUIDialog")) { ... }
 ```
 
+The split runs deeper than the search. `NUIDialog` is a normal window and UI Automation
+reads it. `bosa_sdm_XL9` is owner drawn, and UI Automation reports exactly one element
+inside it, a `Pane`, with no buttons, no tabs and no names. `Paste Special` is `NUIDialog`
+and can be driven by name; `Format Cells`, `Go To`, `Go To Special` and `Custom Views` are
+`bosa_sdm_XL9` and cannot. The two ways in are below.
+
+**Enumerate the class and you get whichever Excel answers first.** With two instances
+running, `EnumWindows` for `XLMAIN` hands back a window that belongs to the other one, and
+the capture is a real screenshot of the wrong workbook. `Application.Hwnd` names the
+instance you are holding, so use it and never the first hit of a class search. This cost a
+frame here: a subtotal capture came back showing the previous script's data, three columns
+that the current sheet did not have.
+
 ## Reaching the control
 
 Use UI Automation and invoke the button by name. Two rules that are not obvious:
@@ -60,6 +73,35 @@ fall back to `ExpandCollapsePattern.Expand()` for anything that opens a gallery.
 For the backstage, invoke the element named `File Tab`, then `Options`, and from inside the
 Excel Options dialog invoke its pages by name: `Customize Ribbon`, `Trust Center`. That path
 is how the "switch the Developer tab on" screenshot exists.
+
+## Reaching a control UI Automation cannot see
+
+Inside `bosa_sdm_XL9` there is nothing to invoke by name, so the control has to be reached
+some other way. Two routes work and both are cheap.
+
+**Walk the tab strip with `Ctrl+Tab`.** `Ctrl+Shift+F` opens Format Cells on the Font tab, a
+known starting point, and each `Ctrl+Tab` moves one tab to the right in the order the strip
+shows: Number, Alignment, Font, Border, Fill, Protection. Six presses from Font come back
+round to Font. Capture after every press, hash the six files, and refuse the set unless all
+six differ. That check is the whole point of the exercise, because a tab press that does not
+land leaves the previous tab on the glass and writes it under the new name.
+
+**Click a point measured off the window rect.** The `Special...` button in the Go To dialog
+sits at about 17 per cent across and 91 per cent down. Read the rect with `GetWindowRect`,
+compute the point from the width and height, move the cursor there and send
+`mouse_event` down and up. Never hard code a screen coordinate: the dialog centres itself on
+whatever window opened it and moves with the monitor layout.
+
+```powershell
+$w = $r.Right - $r.Left; $h = $r.Bottom - $r.Top
+Click-Point ($r.Left + [int]($w * 0.17)) ($r.Top + [int]($h * 0.906))
+```
+
+Three dialogs that were listed as unreachable came out this way. `Paste Special` needs
+`Ctrl+Alt+V`, not `Ctrl+Shift+V`, which in modern Excel pastes straight away and opens
+nothing. `Go To Special` needs the computed click on `Special...`, since `Ctrl+G` only ever
+reaches Go To itself. `Custom Views` does refuse to open on an unsaved workbook, so
+`SaveAs` first and then invoke `Custom Views...` on the View tab, three dots included.
 
 ## The five failure modes
 
@@ -97,6 +139,31 @@ which does not block. Or run Excel inside a `Start-Job` and capture from the mai
 the job sits in the dialog. Dismiss with `{ESC}` and confirm the dialog is gone before the
 next COM call; invoking the dialog's own `Cancel` through UI Automation sometimes leaves it
 alive.
+
+## Three more, found later
+
+The five above were found while the catalogue was being taken. These three were found by
+opening all forty files one after another and looking at them, which is the only check that
+catches a picture of the right dialog under the wrong name.
+
+**A tab that did not take is indistinguishable from a tab that did, on disk.**
+`format-cells-border.png` and `format-cells-font.png` were byte for byte the same file. The
+border shot had been taken without confirming the tab changed, so the font tab was written
+twice under two names, and a deck had been showing the wrong picture ever since. Hash the
+set. Two identical files in a folder of dialog captures is always a bug.
+
+**A second shot of the same dialog looks like a different subject.** `subtotal-outline.png`
+was the Subtotal dialog again with different columns ticked, not the outline in the
+worksheet with its 1 2 3 buttons. Nothing about the file said so; the size and the shape
+matched the dialog it was named after. The fix was a different job entirely: apply
+`Range.Subtotal` through COM, collapse with `Outline.ShowLevels(2)`, and photograph the
+grid.
+
+**Another window can leak into the edge of the frame.** The bottom fifteen pixels of
+`name-manager.png` were a strip of somebody else's window, with a legible sentence in it.
+The dark guard misses this because fifteen rows of a six hundred row image do not move the
+average. Sample the outer rows separately, or crop a margin off every dialog capture as a
+matter of course.
 
 ## The guard that pays for itself
 

@@ -18,6 +18,24 @@ What CSV does not carry: cell formatting, conditional formatting rules, charts, 
 data validation lists and sheet protection. Several exercises teach exactly those, so for that part
 the .xlsx files are still the only copy. Read each file before retiring its workbook.
 
+## Pictures of the dialogs
+
+The `Exam routes used here` section of every file that has one now carries screenshots of the boxes
+its routes walk to: 91 figures across 34 files, 35 distinct images, all of them taken from the
+running product and kept in `ppts/img/en/`. A route gets a picture when the shot is of the window
+that route actually opens, and gets none when it is not; the ribbon galleries, Auto Fill, freeze
+panes and the Document Inspector have no shot and are left without one on purpose.
+
+Three captions disclose a near miss rather than hide it. `find-and-replace.png` was taken with the
+Replace tab in front, `insert-chart.png` opens on Recommended Charts, and `function-arguments-if.png`
+is the argument dialog loaded with IF, so where those sit on a route about the other tab or another
+function the caption says so and says what the reader will see in its place. The alternative was a
+gap, and a disclosed near miss teaches more than a gap does.
+
+Every image is English, because the machine that took them edits in English. The Spanish files will
+need their own set from a machine with the language pack, written to `ppts/img/es/`, and the routes
+here are where they go.
+
 ## Exercises
 
 | # | What it covers | Objectives | Data |

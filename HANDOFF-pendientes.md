@@ -1,28 +1,43 @@
 # Lo que queda, y el estado en que lo dejo
 
 Estado al cerrar: rama `main`, local y remoto en el mismo commit, árbol limpio salvo una
-carpeta que está fuera a propósito. Ocho cursos, 317 decks, 765 ejercicios, 40 capturas de
-Excel. Los cuatro chequeos del kit en cero sobre todo el repositorio.
+carpeta que está fuera a propósito. Ocho cursos, 317 decks, 765 ejercicios, 47 capturas de
+Excel y 91 figuras colocadas en los ejercicios. Los cuatro chequeos del kit en cero sobre
+todo el repositorio.
 
 Lo que sigue está en orden de lo que más rinde primero.
 
-## 1. Las imágenes no están en los ejercicios de Excel
+## 1. Las imágenes en los ejercicios de Excel · hecho
 
-Es lo más importante y es lo que el profesor pidió por nombre.
+Los 34 archivos de `labs/` que tienen sección `## Exam routes used here` llevan ya sus
+capturas: 91 figuras, 35 imágenes distintas, cada una dentro del bloque de la ruta que
+describe el cuadro. Los otros 15 archivos de tareas, `hw10` en adelante, no tienen esa
+sección y por eso no llevan figura; remiten a su ejercicio gemelo, que sí la tiene.
 
-`ppts/office/manejo-y-analisis-de-la-informacion/labs/` tiene 49 archivos markdown, 25
-ejercicios y 23 tareas más el README, y **ninguno referencia una sola imagen**. Hay 84 PNG
-en `ppts/img/en/`, 40 de ellos capturas reales de diálogos de Excel tomadas para esto.
+Una ruta lleva imagen cuando la captura es de la ventana que esa ruta abre, y no lleva
+ninguna cuando no lo es. Las galerías de la cinta, el controlador de relleno, inmovilizar
+paneles y el Inspector de documento no tienen captura y se quedaron sin ella a propósito.
+Doce capturas del catálogo no se usaron: siete son de macros y del entorno de VBA, que estos
+ejercicios no tocan, y las otras cinco no tienen ruta que las pida.
 
-Cada ejercicio tiene una sección `## Exam routes used here` escrita en texto. Ahí es donde
-va la imagen del cuadro que la ruta describe. La correspondencia es directa: un ejercicio que
-usa Formato de celdas lleva `format-cells-dialog.png`, uno de filtros avanzados lleva
-`advanced-filter.png`, uno de dinámicas lleva `create-pivottable.png` y
-`pivottable-fields-pane.png`.
+Tres pies de figura declaran una aproximación en vez de esconderla. `find-and-replace.png`
+se tomó con la pestaña Reemplazar al frente, `insert-chart.png` abre en Gráficos
+recomendados, y `function-arguments-if.png` es el cuadro de argumentos cargado con SI. Donde
+alguna de las tres acompaña a una ruta que habla de la otra pestaña o de otra función, el pie
+lo dice y dice qué verá el alumno en su lugar.
 
-Los nombres de archivo dicen qué contienen. Léelos antes de asignarlos y no inventes
-correspondencias: `go-to-dialog.png` es el cuadro Ir a, no Ir a Especial, y está nombrado así
-justamente porque la captura de Especial no se logró.
+**Lo que salió de revisar el catálogo imagen por imagen.** Tres archivos estaban mal y
+ninguno se notaba en un listado de carpeta:
+
+- `format-cells-border.png` era una copia byte a byte de `format-cells-font.png`. La captura
+  de la pestaña Bordes nunca se tomó, y un deck llevaba desde entonces la imagen equivocada.
+- `subtotal-outline.png` era una segunda toma del cuadro Subtotales, no el esquema en la hoja
+  con sus botones 1 2 3.
+- `name-manager.png` traía quince píxeles de otra ventana pegados al borde inferior, con una
+  frase legible dentro.
+
+Los tres se volvieron a tomar. De paso salieron cuatro capturas más, tres de ellas de la
+lista de imposibles del punto 4. Todo está escrito en `ppts/kit/SCREENSHOTS.md`.
 
 ## 2. Español de TIA501
 
@@ -55,19 +70,27 @@ siendo cierto.
 
 ## 4. Capturas que faltan
 
-Cinco, y `ppts/kit/SCREENSHOTS.md` documenta la técnica completa y por qué estas resisten.
+Quedan dos, no cinco. `go-to-special`, `custom-views` y `paste-special` ya están tomadas, y
+además hay una nueva, `format-cells-protection`, que salió del mismo barrido. El catálogo va
+en 47 capturas del producto, sin cuadros oscuros y sin duplicados.
 
-- `save-as-xlsm` y `from-text-csv-preview` dependen del cuadro común de archivos de Windows,
-  clase `#32770`. `PrintWindow` lo devuelve 92 a 95 por ciento oscuro y la ventana que
-  enumera bajo esa clase reporta un rectángulo de 1280x720 en el origen de la pantalla, que
-  no es donde está el diálogo.
-- `go-to-special`, `custom-views` y `paste-special` fallaron por causas más simples. El botón
-  `Special...` no se invocó, Vistas personalizadas probablemente pide el libro guardado, y
-  `Ctrl+Shift+V` en Excel moderno pega directo en vez de abrir el cuadro.
+Cómo cayeron las tres, por si vuelve a hacer falta. `Paste Special` quiere `Ctrl+Alt+V`, no
+`Ctrl+Shift+V`, que en el Excel moderno pega directo. `Go To Special` se alcanza con un clic
+calculado sobre el rectángulo de la ventana, porque el botón `Special...` es de dibujo propio
+y la automatización de interfaz no lo ve. `Custom Views` sí pedía el libro guardado, como
+estaba anotado aquí.
+
+Las dos que siguen resistiendo son `save-as-xlsm` y `from-text-csv-preview`, las dos del
+cuadro común de archivos de Windows, clase `#32770`. `PrintWindow` lo devuelve 92 a 95 por
+ciento oscuro y la ventana que enumera bajo esa clase reporta un rectángulo de 1280x720 en el
+origen de la pantalla, que no es donde está el diálogo. Ninguna ruta de `labs/` las necesita
+hoy.
 
 Y todas las capturas existentes son de **interfaz en inglés**, porque el idioma de edición de
 esa máquina lo es. Los decks en español necesitan las suyas desde una máquina con el paquete
-de idioma, con los mismos scripts, escritas a `ppts/img/es/`.
+de idioma, con los mismos scripts, escritas a `ppts/img/es/`. Los 91 lugares donde van ya
+están marcados: son las figuras de `labs/`, que al traducirse cambian de `img/en/` a
+`img/es/`.
 
 ## 5. La carpeta Excel, 124 archivos sin rastrear
 
