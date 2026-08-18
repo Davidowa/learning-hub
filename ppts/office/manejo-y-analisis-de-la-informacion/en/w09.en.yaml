@@ -1,0 +1,511 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 9
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 09 · Sessions 17 and 18 · Data that arrives from outside
+      title: Information Management and Analysis
+      subtitle: >-
+        The data does not start in your workbook. Getting it in, proving it is clean, and
+        pulling out the rows the question is actually about.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 17 and 18 of 34]
+      notes: |
+        Sessions 17 and 18 of the syllabus, CLO06 and CLO09. Session 17 is get and
+        transform, sorting by multiple columns, removing duplicates and inspecting the
+        workbook; session 18 is filters. Covered outright: Associate 1.1.2, 1.4.5,
+        3.3.1, 3.3.2 and the Document Inspector half of 1.5.4, plus Expert 2.2.5.
+        COBERTURA.md adds Associate 1.1.1, Expert 2.2.2, Expert 2.1.1 and Expert 1.1.4.
+        The 365 only objective MO-210 1.1.2, importing from online sources, depends on
+        the lab build and is named on the compare slide rather than taught.
+        Every route on these slides comes from procedures.en.md. Exercises 14 and 15.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Getting it in
+          desc: From Text/CSV, the legacy wizard for a .txt, and Flash Fill for the column that arrived glued together
+        - title: Proving it is clean
+          desc: Remove Duplicates, sorting on levels, and the rule that stops the wrong value being typed at all
+        - title: Finding the rows
+          desc: AutoFilter by value, by criteria, by colour and by icon, and the three ways to clear it
+        - title: Handing it over
+          desc: File, Info. Workbook properties, the Document Inspector and the versions Excel kept without asking
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Import a .csv through Get and Transform
+          sub: Setting the encoding, the delimiter and the type detection before a single row lands
+        - head: Run the legacy wizard on a .txt
+          sub: Delimited against fixed width, the text qualifier, and the column you force to Text
+        - head: Remove duplicates on the right columns
+          sub: Ticking all seven columns and ticking one are two different questions with two different answers
+        - head: Sort on more than one level
+          sub: In the Sort dialog, where the levels stay written down for whoever reads the file afterwards
+        - head: Filter, inspect and hand the workbook over
+          sub: AutoFilter, workbook properties, the Document Inspector and the version list
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: now
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The data arrives from somewhere else
+      lede: >-
+        Somebody sends you a .csv. Double-clicking it fills a sheet in one second, and that
+        second is where three decisions get made for you.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Opening a file is not importing it
+      lead: >-
+        A .csv is a text file. Nothing inside it says which byte table it was written with,
+        which character separates the fields, or whether 00734 is a number or a code.
+        Double-click it and Excel answers all three on its own. Import it and the answers
+        are yours, and Excel keeps them.
+      panel:
+        label: The tell
+        title: A query in Queries and Connections, or nothing at all
+        note: >-
+          The import route leaves a named query behind and lands the data as a table. The
+          open route leaves neither. That is the first thing to look at when you cannot
+          remember which one you took.
+      steps:
+        - text: You point at the file and read the preview
+        - text: You set origin, delimiter and detection
+        - text: It lands as a table with a query behind it
+          loop: ↺ and Refresh re-runs every choice on next month's file
+
+  - compare:
+      eyebrow: Block 01 · The two routes
+      title: Both fill the sheet, only one of them counts
+      before:
+        label: Graded · Data tab, From Text/CSV
+        file: route.txt
+        lang: text
+        code: |
+          Data > Get & Transform Data > From Text/CSV
+          Select Students_data.csv, Import
+          File Origin:  Windows (ANSI)
+          Delimiter:    Comma
+          Data Type Detection: Do not detect
+          Load arrow > Load To...
+          Import Data > Existing worksheet: =$A$1
+      after:
+        label: Not graded · the double-click
+        file: route.txt
+        lang: text
+        code: |
+          Double-click Students_data.csv
+          Excel guesses the encoding
+          Excel guesses the separator
+          Excel guesses every column type
+          One sheet, no query, no dialog
+          Nothing recorded, nothing to refresh
+      note: >-
+        The short route is what everybody uses at work and it is usually right. It is worth
+        naming out loud because it earns nothing on exam day. The task is written around the
+        three lists in the preview window, and the double-click never shows them.
+
+  - table:
+      eyebrow: Block 01 · The preview window
+      title: Three lists, and what each one decides
+      headers: [List, What you are choosing, When it bites]
+      rows:
+        - ["File Origin", "The byte table the file was written with", "Accented text"]
+        - ["Delimiter", "The character that ends a field", "Semicolon files"]
+        - ["Data Type Detection", "First 200 rows, whole file, or none", "Codes and IDs"]
+        - ["Transform Data", "Opens Power Query instead of loading", "Any cleaning"]
+        - ["Load To...", "Table, PivotTable, or connection only", "Every time"]
+
+  - code_output:
+      eyebrow: Measured · Students_data.csv
+      title: The File Origin list is not decoration
+      filename: Students_data.csv
+      lang: text
+      output_label: What lands in the cells
+      source: |
+        The ñ of España is stored as one byte, F1. That is
+        the Windows-1252 table. UTF-8 writes the same letter
+        as the two bytes C3 B1.
+
+        Windows (ANSI)          reads F1 as ñ
+        65001 : Unicode (UTF-8) finds F1 on its own, which
+                                is not a valid sequence, and
+                                puts a replacement mark there
+      output: |
+        File Origin: Windows (ANSI)
+        Iñaki    España    Bilbao
+        Björn    Suecia    Västerås
+        File Origin: 65001 UTF-8
+        I?aki    Espa?a    Bilbao
+        Bj?rn    Suecia    V?ster?s
+
+  - steps:
+      eyebrow: Block 01 · A .txt is a different route
+      title: The legacy wizard, and where to switch it on
+      items:
+        - label: '01'
+          title: Switch the wizard on
+          desc: File, Options, Data pane, tick From Text (Legacy), OK. On a fresh install it is off, so this is step zero and not part of the import.
+        - label: '02'
+          title: Reach it
+          desc: Click the landing cell, then Data, Get & Transform Data, Get Data, Legacy Wizards, From Text (Legacy).
+        - label: '03'
+          title: Step 1 of 3
+          desc: Original data type, Delimited or Fixed width. Set Start import at row, open File origin and pick the encoding.
+        - label: '04'
+          title: Step 2 of 3
+          desc: Tick every delimiter the file uses. Set Text qualifier to the double quote when fields are quoted. Watch the preview split.
+        - label: '05'
+          title: Step 3 of 3
+          desc: Click each column in the preview and set its Column data format. Text is what keeps a leading zero. Finish, then choose where it goes.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways an import lies to you
+      items:
+        - label: Error 01
+          title: The product code that lost its zeros
+          desc: >-
+            00734 arrives as 734 because the column was left on General. Set it to Text in
+            step 3 of the wizard, or choose Do not detect data types in the preview window.
+        - label: Error 02
+          title: Clicking Load instead of Load To
+          desc: >-
+            Plain Load drops the table on a new sheet and never asks. It works. It also
+            never shows that you knew where else the data could have gone.
+        - label: Error 03
+          title: The wrong File Origin, discovered later
+          desc: >-
+            España with a replacement mark in the middle is not a formatting problem and
+            no find and replace fixes it cleanly. Reimport with the right encoding.
+        - label: Error 04
+          title: Pasting from Notepad
+          desc: >-
+            It reaches the same wizard through the wrong door. The task is written about
+            the import, and a paste leaves no query and no record of the choices.
+
+  - method:
+      eyebrow: Block 01 · Two fills, two objectives
+      title: AutoFill continues, Flash Fill deduces
+      statement: Flash Fill reads the column beside it, works out the pattern from what you typed, and writes constants. Not one formula appears anywhere.
+      points:
+        - label: The key
+          text: Ctrl+E fills the column by pattern from wherever the cursor sits. That single key is the whole objective.
+        - label: The condition
+          text: The new column has to be immediately beside the source column, and the data needs a header row. Flash Fill does not look further away.
+        - label: The tell
+          text: Click a filled cell. The formula bar shows a constant. A LEFT and FIND chain would show a formula, and it answers a different objective.
+
+  - divider:
+      eyebrow: Block 02
+      title: Proving the data is clean
+      lede: >-
+        Two rows that look identical, a sort that tears the records apart, and a column
+        where anybody can still type whatever they like.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · Remove Duplicates
+      title: The command that deletes rows and keeps no copy
+      items:
+        - label: '01'
+          title: Copy the sheet first
+          desc: Right-click the sheet tab, Move or Copy, tick Create a copy, OK. This command deletes rows and a save makes it permanent.
+        - label: '02'
+          title: One cell inside the list
+          desc: Excel expands to the whole block on its own. Selecting part of it is how you delete rows out of half the table.
+        - label: '03'
+          title: Data, Data Tools, Remove Duplicates
+          desc: In the dialog, tick My data has headers and watch the Columns list swap from Column A to the real header names.
+        - label: '04'
+          title: Tick only the defining columns
+          desc: Two rows are duplicates only when every ticked column matches. All of them is the strictest test, one of them is the loosest.
+        - label: '05'
+          title: Read the message before OK
+          desc: It reports how many duplicate values were found and how many unique values remain. That message is the only record of what happened.
+
+  - trace:
+      eyebrow: Measured · the 26 rows of Students_data.csv
+      title: Same command, same file, five students of difference
+      headers: [Columns ticked, Removed, Left]
+      rows:
+        - ["All seven", "2", "24"]
+        - ["Name and Last name", "2", "24"]
+        - ["University of origin", "2", "24"]
+        - ["Country of origin", "7", "19"]
+      verdict: >-
+        Kim Jong and Francois Lacroix are in the file twice, whole row for whole row. Tick
+        Country of origin alone and five more students disappear whose only crime is that
+        somebody from their country is already on the list.
+
+  - steps:
+      eyebrow: Block 02 · Sorting
+      title: One dialog, one level per criterion
+      items:
+        - label: '01'
+          title: One cell, not one column
+          desc: Click a single cell inside the range. Preselecting one column and sorting it is how the names stop matching the grades.
+        - label: '02'
+          title: Data, Sort & Filter, Sort
+          desc: Tick My data has headers so the header row stays put and the lists show column names instead of letters.
+        - label: '03'
+          title: Fill the first level
+          desc: Sort by picks the column, Sort On picks Cell Values, Cell Color, Font Color or Conditional Formatting Icon, Order picks the direction.
+        - label: '04'
+          title: Add Level, then Then by
+          desc: Every criterion the task names gets its own level. The arrows at the top of the dialog move a level, and the order of the levels is the priority.
+        - label: '05'
+          title: Options for the rest
+          desc: Case sensitivity and left-to-right sorting live behind the Options button, not on the main dialog.
+
+  - table:
+      eyebrow: Block 02 · Exercise 14, the second sort
+      title: Three levels, written the way the dialog reads them
+      headers: [Level, Sort by, Sort On, Order]
+      rows:
+        - ["Sort by", "Last name", "Cell Values", "A to Z"]
+        - ["Then by", "Country of origin", "Cell Values", "A to Z"]
+        - ["Then by", "Average", "Cell Values", "Ask"]
+        - ["Proof", "Reopen the dialog", "Three levels", "In order"]
+
+  - steps:
+      eyebrow: Block 02 · Data validation
+      title: Three tabs, one visit to the dialog
+      items:
+        - label: '01'
+          title: Select the cells first
+          desc: The rule belongs to the selection. Data, Data Tools, Data Validation, and the top half of the split button opens the dialog.
+        - label: '02'
+          title: Settings
+          desc: Allow gives Whole number, Decimal, List, Date, Time, Text length or Custom. Fill the Data list and the boxes it produces.
+        - label: '03'
+          title: Input Message
+          desc: Without closing the dialog. Title and Input message become the balloon that appears when the cell is selected.
+        - label: '04'
+          title: Error Alert
+          desc: Still without closing. Style picks Stop, Warning or Information. Stop refuses the entry, Warning asks, Information only tells.
+        - label: '05'
+          title: Circle Invalid Data
+          desc: For values typed before the rule existed. Data Validation arrow, Circle Invalid Data, and red ovals appear around every offender.
+
+  - figure:
+      eyebrow: Block 02 · The dialog itself
+      title: Three tabs across the top, and Clear All at the bottom
+      image: img/en/data-validation-dialog.png
+      caption: >-
+        Opened on an unvalidated cell, so Allow reads Any value and everything under it is
+        greyed out. Change Allow and the Data list wakes up, the boxes it needs appear, and
+        the other two tabs are one click away. Clear All is how a rule is removed, and
+        Apply these changes pushes an edit onto every cell already sharing the rule.
+      alt: The Excel Data Validation dialog on its Settings tab, with the Input Message and Error Alert tabs beside it.
+
+  - code:
+      eyebrow: Block 02 · The Custom rule of Exercise 14
+      title: A rule written as a formula that returns TRUE
+      filename: validation.xlsx
+      lang: excel
+      source: |
+        Allow:   Custom
+        Formula: =B2<=A2*0.1
+
+        A2 is the salary, B2 is the bonus.
+        Write the formula for the top left cell
+        of the selection. Excel shifts it across
+        the rest exactly as a copied formula shifts,
+        so B3 gets =B3<=A3*0.1 without you typing it.
+      annotations:
+        - label: Why Custom
+          text: Allow has seven other entries. Only this one can compare against another cell.
+        - label: How it spreads
+          text: Write it for the top left cell of the selection. Excel shifts it across the rest.
+        - label: The other four
+          text: Text length 5, salary 6,000 to 20,000, date equal to today, department from a list.
+        - label: If it fails
+          text: A reference aimed at the wrong row caps every bonus against one salary.
+          accent: true
+
+  - divider:
+      eyebrow: Block 03
+      title: Finding the rows, then handing the file over
+      lede: >-
+        The filter hides rows without deleting them, and File, Info holds three things about
+        your workbook that you did not put there on purpose.
+      block: 3
+
+  - tiers:
+      eyebrow: Block 03 · AutoFilter
+      title: Four ways to cut the same list down
+      items:
+        - key: By value
+          title: The check box list
+          desc: Clear (Select All), then tick only what the task names. The Search box builds a long selection in passes.
+        - key: By rule
+          title: Text, Number and Date Filters
+          desc: Excel offers the family that matches the column type. Greater Than, Between, Top 10, Begins With, Contains.
+        - key: By format
+          title: Colour and icon
+          desc: Filter by Color reads the fill, the font colour or the icon. It only exists when the column carries one.
+        - key: Clearing
+          title: Three different commands
+          desc: Clear Filter From one column, Clear on the Data tab for all of them, Filter again to remove the arrows.
+
+  - table:
+      eyebrow: Measured · the 408 sales of Exercise 15
+      title: Five filters, and the rows each one leaves
+      headers: [What is asked, Where it lives, Rows]
+      rows:
+        - ["First quarter of 2018", "Date Filters, Between", "90"]
+        - ["September 2018", "Date Filters, All Dates in the Period", "35"]
+        - ["Brand begins with PH", "Text Filters, Begins With", "131"]
+        - ["Yellow cells in Product", "Filter by Color, Cell Color", "5"]
+        - ["Top ten Total Sale", "Number Filters, Top 10", "10"]
+
+  - steps:
+      eyebrow: Block 03 · File, Info
+      title: Three things the backstage pane knows
+      items:
+        - label: '01'
+          title: Properties
+          desc: Click a value to edit in place. Show All Properties exposes Company, Manager and the rest. Properties, Advanced Properties opens the Summary and Custom tabs.
+        - label: '02'
+          title: Inspect Document
+          desc: Check for Issues, Inspect Document. Tick only the categories the task names, click Inspect, and Remove All only where you meant to. It cannot be undone.
+        - label: '03'
+          title: Manage Workbook
+          desc: Named that on the professor's build, Version History on some others. Every autosaved version with its time stamp, and Restore.
+        - label: '04'
+          title: Recover Unsaved Workbooks
+          desc: At the bottom of File, Open, Recent, and also under Manage Workbook. It opens the Unsaved Files folder holding the .xlsb drafts.
+        - label: '05'
+          title: Set the interval
+          desc: File, Options, Save. Save AutoRecover information every N minutes, and keep the last version when closing without saving.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to hand over the wrong file
+      items:
+        - label: Error 01
+          title: Clearing the author by hand
+          desc: >-
+            Emptying the Author box in the panel removes one field. The Document Inspector
+            is about the fields you did not think to look at, which is the whole point.
+        - label: Error 02
+          title: Running Inspect Document without saving
+          desc: >-
+            The removals are permanent and there is no undo. Excel offers to save first
+            for a reason, and the offer is easy to click past.
+        - label: Error 03
+          title: Removing every category it found
+          desc: >-
+            Remove All on Hidden Worksheets deletes sheets that the workbook needs. Tick
+            only what the task names, then Reinspect to prove the rest is untouched.
+        - label: Error 04
+          title: Filtering and then reading the total
+          desc: >-
+            A plain SUM under a filtered list still adds the hidden rows. The status bar
+            count at the bottom left is the number that respects the filter.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The task says to leave one student per country. What do you tick in Remove Duplicates?
+      options:
+        - Every column, because that is the safest setting
+        - Only Country of origin, and 7 rows go
+        - Name and Last name, then sort by country
+        - Nothing. Use a filter instead, so no row is deleted
+
+  - lab:
+      eyebrow: Lab
+      title: Students_data.csv, from the file to the answer
+      brief: >-
+        Import the file through Data, From Text/CSV with the encoding, the delimiter and the
+        detection set by hand. Convert the result to a range, remove the duplicate students,
+        sort on three levels, and put a validation rule on the sheet the exercise names.
+      blocks:
+        - label: Deliverable
+          text: One workbook, with the Queries and Connections pane showing the query it came from
+        - label: Constraint
+          text: No row may be deleted by hand. If Remove Duplicates did not report the count, do it again.
+        - label: The test
+          text: Twenty-six rows in, twenty-four out, and the message said 2 duplicate values found
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Import answers three questions
+          desc: >-
+            Encoding, delimiter and type detection. The double-click answers them for you
+            with the machine locale, and it is right often enough that nobody checks
+        - title: The ticked columns are the question
+          desc: >-
+            Remove Duplicates deletes what you defined as a duplicate. On the same 26 rows,
+            all seven columns leave 24 students and one column leaves 19
+        - title: A filter hides, it does not delete
+          desc: >-
+            The row numbers turn blue and skip. The status bar counts what survived, and
+            everything you did not see is still in the file when you send it
+
+  - homework:
+      eyebrow: Assignment
+      title: Exercise 14, submission and grading
+      brief: >-
+        The three sheets of Excel 14. Duplicates on the Name column, then on the whole row,
+        then on names and car models together. The import and the two sorts. The five
+        validation rules, including the bonus capped at a tenth of the salary.
+      meta:
+        - [Due, Before week 10]
+        - [Format, Blackboard · one .xlsx]
+        - [Weight, Part of the 30 % inside midterm 2]
+      rubric:
+        - ["Import", "25 %", "Query present, encoding and delimiter set by hand, converted to a range"]
+        - ["Duplicates", "25 %", "Three sections, each on the columns the instruction names"]
+        - ["Sorting", "20 %", "The copy of the sheet carries three levels in the Sort dialog"]
+        - ["Validation", "30 %", "Five rules, each with its input message and its error alert"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the range stops being a range. Excel tables, structured references,
+        the total row that survives a filter, and the first charts.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

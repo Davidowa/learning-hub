@@ -1,0 +1,579 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 4
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 04 · Sessions 7 and 8 · Statistical, text and date
+      title: Information Management and Analysis
+      subtitle: >-
+        Sixteen functions in two sessions, and one dialog that all of them go through.
+        The week where a formula starts saying what it means.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 7 and 8 of 34]
+      notes: >-
+        Sources. Sessions 7 and 8 from the December syllabus. Six additions from
+        COBERTURA.md, week 4. Routes from procedures.en.md, objectives 4.1.2, 4.2.1,
+        4.2.2, 4.3.1, 4.3.2, 4.3.3, Expert 2.2.1, 3.3.1 and 3.3.2. Every result on the
+        code slides was run on the professor's Excel, build 16.0, English interface with
+        Spanish Mexico install language, on 18 August 2026.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Statistical and counting
+          desc: The Function Arguments dialog, the four aggregates, LARGE and SMALL, and the counting trio
+        - title: Text
+          desc: Cutting a string apart with LEFT, RIGHT and MID, and putting it back with CONCAT and TEXTJOIN
+        - title: Dates and formats
+          desc: A date is a number, TODAY moves and Ctrl+semicolon does not, and the codes only the dialog reaches
+        - title: Your turn
+          desc: Exercises 6 and 13, statistical work and sixty students with birth dates
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Insert a function through its own dialog
+          sub: Insert Function and Function Arguments, the route every other function objective reuses
+        - head: Choose among the three count functions
+          sub: And explain the range where the last two add up to more cells than exist
+        - head: Take a string apart and put it back together
+          sub: LEFT, RIGHT, MID and LEN, then CONCAT and TEXTJOIN with its delimiter
+        - head: Read a date as the number it is
+          sub: DAY, MONTH and YEAR over a serial, and the difference between TODAY and a stamp
+        - head: Write a custom number format
+          sub: The four sections, and the codes that have no button anywhere on the ribbon
+        - head: Use a defined name inside a formula
+          sub: Half of objective 4.1.2, the half that does not need a table
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: now
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: todo
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01 · Session 7
+      title: The dialog every function goes through
+      lede: >-
+        Typing a formula is faster and the exam cannot see you do it. What it can see is
+        the Function Arguments dialog, and after this week it never explains itself again.
+      block: 1
+
+  - steps:
+      eyebrow: Block 01 · Objective 4.2.1
+      title: Insert Function, then the arguments
+      items:
+        - label: '01'
+          title: The AutoSum list
+          desc: Formulas, Function Library, the arrow under AutoSum. Sum, Average, Max, Min and Count Numbers. The button face means Sum.
+        - label: '02'
+          title: Insert Function
+          desc: Same group. Pick a category, Math & Trig for SUM, Statistical for AVERAGE, MAX and MIN, or search by what you want.
+        - label: '03'
+          title: Function Arguments
+          desc: Click in Number1 and drag over the range. The collapse button at the right of the box moves the dialog out of the way.
+        - label: '04'
+          title: Read the result first
+          desc: Formula result appears at the bottom left before you commit. It is the only free check the dialog gives you.
+        - label: '05'
+          title: Shift+F3
+          desc: Opens Insert Function on an empty cell, and opens Function Arguments when the insertion point is already inside a function.
+
+  - code_output:
+      eyebrow: Block 01 · Measured on the lab build
+      title: Six answers from one column
+      filename: units.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        Units for five sellers sit in C2:C6.
+
+          =SUM(C2:C6)
+          =AVERAGE(C2:C6)
+          =MAX(C2:C6)
+          =MIN(C2:C6)
+          =LARGE(C2:C6,2)
+          =SMALL(C2:C6,2)
+      output: |
+        142  87  203  156  94
+
+        SUM             682
+        AVERAGE         136.4
+        MAX             203
+        MIN             87
+        LARGE(C..,2)    156
+        SMALL(C..,2)    94
+
+  - concept:
+      eyebrow: Block 01 · LARGE and SMALL
+      title: Second best is not a maximum
+      lead: >-
+        MAX gives the best number and nothing else. LARGE takes a second argument, k,
+        and returns the k-th largest, so a k of 1 is MAX and a k of 2 is the seller
+        nobody notices. SMALL works from the other end, and neither one has to sort the
+        data first.
+      panel:
+        label: A warning about the material
+        title: No exercise in the pack practises these two
+        note: >-
+          COBERTURA flags it. LARGE and SMALL are scheduled by the syllabus in session 7
+          and appear in none of the twenty-five exercises and none of the twenty-three
+          assignments, so they have to be practised here, in class.
+      steps:
+        - text: MAX answers the best
+        - text: LARGE with k of 2 answers the next one
+        - text: SMALL with k of 2 answers the second worst
+          loop: "↺ and a k past the end of the range returns #NUM!"
+
+  - code_output:
+      eyebrow: Block 01 · Objective 4.2.2
+      title: Three counts that do not add up
+      filename: counting.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        G1  5        a number
+        G2  text     a text string
+        G3  =""      a formula returning nothing
+        G4           truly empty, never touched
+
+          =COUNT(G1:G4)
+          =COUNTA(G1:G4)
+          =COUNTBLANK(G1:G4)
+      output: |
+        COUNT         1
+        COUNTA        3
+        COUNTBLANK    2
+
+        3 + 2 = 5, over four cells
+
+  - code:
+      eyebrow: Block 01 · Objective 4.1.2, first half
+      title: A formula that says what it computes
+      filename: names.xlsx
+      lang: excel
+      source: |
+        With C2:C6 defined as Units, from week 3.
+
+          =SUM(Units)
+          =AVERAGE(Units)
+          =MAX(Units)-MIN(Units)
+
+        Type Un and Formula AutoComplete offers the
+        name with a tag icon. Tab inserts it. F3
+        opens the Paste Name dialog instead.
+      annotations:
+        - label: Why it is worth the trouble
+          text: Six months on, =SUM(Units) still says what it adds. =SUM(C2:C6) does not.
+        - label: Where it is graded
+          text: When the item says use the defined name, an address earns nothing.
+        - label: The other half
+          text: It also covers structured references, Sales[Q1]. That half is week 10.
+        - label: If it fails
+          text: >-
+            A wrong Refers to gives a clean wrong answer. Read the formula bar, then check
+            it with Ctrl+F3.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02 · Session 8
+      title: Text is data too
+      lede: >-
+        A name, a code, an invoice number. Half of the cleaning work in this course is
+        cutting a string apart and joining it back the way somebody else needed it.
+      block: 2
+
+  - code_output:
+      eyebrow: Block 02 · Objectives 4.3.1 and 4.3.2
+      title: Cutting a string, and counting it
+      filename: text.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 holds  ana luz mendez
+
+          =LEFT(A2,3)
+          =RIGHT(A2,6)
+          =MID(A2,5,3)
+          =LEN(A2)
+          =LEN("Ana Luz ")
+          =LEN(TRIM("Ana Luz "))
+      output: |
+        LEFT(A2,3)         ana
+        RIGHT(A2,6)        mendez
+        MID(A2,5,3)        luz
+        LEN(A2)            14
+        LEN("Ana Luz ")    8
+        LEN(TRIM(...))     7
+
+  - concept:
+      eyebrow: Block 02 · Reading the last two lines
+      title: LEN is how you find the space nobody sees
+      lead: >-
+        Ana Luz has seven characters and LEN answered eight, because the cell carries a
+        trailing space. On screen the two are identical. In the lookups of week 13 one
+        matches and the other returns #N/A, and that is the week you learn to point LEN at
+        a column you believe is clean.
+      panel:
+        label: Counting from one
+        title: MID starts at 1 on the first character
+        note: >-
+          MID takes Text, Start_num and Num_chars. Start_num counts from 1, so the fifth
+          character of ana luz mendez is the l of luz. Off-by-one shows up on the last
+          row of a column, where the names are a different length.
+      steps:
+        - text: Point LEN at a cell you trust
+        - text: Compare it with the characters you can see
+        - text: One more means a space at the end
+          loop: ↺ TRIM removes it, and week 9 has a whole session on cleaning
+
+  - code_output:
+      eyebrow: Block 02 · Objective 4.3.2 and session 8
+      title: Case, and the function in the wrong list
+      filename: case.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 holds  ana luz mendez
+        A3 holds  BRUNO RAMIREZ
+
+          =UPPER(A2)
+          =LOWER(A3)
+          =PROPER(A2)
+      output: |
+        UPPER(A2)
+          ANA LUZ MENDEZ
+        LOWER(A3)
+          bruno ramirez
+        PROPER(A2)
+          Ana Luz Mendez
+
+  - code_output:
+      eyebrow: Block 02 · Objective 4.3.3
+      title: CONCAT, and the one with a delimiter
+      filename: join.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A2 ana luz mendez    B2 Centro    C2 142
+
+          =CONCAT(A2," ",B2)
+          =CONCAT(A2:C2)
+          =TEXTJOIN(", ",TRUE,A2,"",B2)
+          =TEXTJOIN(", ",FALSE,A2,"",B2)
+      output: |
+        CONCAT with a space
+          ana luz mendez Centro
+        CONCAT over a range
+          ana luz mendezCentro142
+        TEXTJOIN, Ignore_empty TRUE
+          ana luz mendez, Centro
+        TEXTJOIN, Ignore_empty FALSE
+          ana luz mendez, , Centro
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a text column goes wrong
+      items:
+        - label: Error 01
+          title: Flash Fill instead of the function
+          desc: >-
+            Type two results, press Ctrl+E, and the column fills. It is completely static.
+            Change a source value and the split does not follow, and an item that names
+            LEFT or MID earns nothing.
+        - label: Error 02
+          title: The ampersand instead of CONCAT
+          desc: >-
+            =A2&" "&B2 joins correctly and is not a function, so a task worded use the
+            CONCAT function is not answered by it.
+        - label: Error 03
+          title: Reaching for CONCATENATE
+          desc: >-
+            The retired predecessor still runs, and it cannot take a whole range in one
+            argument. The objective names CONCAT and TEXTJOIN, and only those two.
+        - label: Error 04
+          title: Ignore_empty left on FALSE
+          desc: >-
+            Measured. Over three cells with the middle one empty, TRUE gives one clean
+            separator and FALSE gives a doubled one, which is the tell in the marking.
+
+  - divider:
+      eyebrow: Block 03 · Session 8
+      title: Dates, and the picture over the number
+      lede: >-
+        Every date on the sheet is a whole number wearing a costume. Once that is clear,
+        both the date functions and the custom formats stop being surprising.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Session 8 and Expert 3.3.1
+      title: A date is a serial number
+      filename: dates.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        D2 holds the date 05/03/2024.
+
+          =DAY(D2)
+          =MONTH(D2)
+          =YEAR(D2)
+          =D2*1
+          =TODAY()
+          =YEAR(TODAY())-YEAR(D2)
+      output: |
+        DAY(D2)          5
+        MONTH(D2)        3
+        YEAR(D2)         2024
+        D2*1             45356
+        TODAY()          18/08/2026
+        years elapsed    2
+
+  - compare:
+      eyebrow: Block 03 · Expert objective 3.3.1
+      title: The stamp and the function
+      before:
+        label: Ctrl+semicolon, not graded
+        file: stamp.txt
+        lang: text
+        code: |
+          In the cell    18/08/2026
+          Formula bar    18/08/2026
+          Tomorrow       18/08/2026
+          Next year      18/08/2026
+      after:
+        label: TODAY, the graded answer
+        file: today.txt
+        lang: text
+        code: |
+          In the cell    18/08/2026
+          Formula bar    =TODAY()
+          Tomorrow       19/08/2026
+          Next year      it keeps moving
+      note: >-
+        The two are indistinguishable on the day you type them. An item worded insert a
+        value that shows the current date every time the workbook is opened is failed by
+        the keystroke and passed by the function. Ctrl+Shift+semicolon does the same for
+        the time, and NOW is its moving counterpart.
+
+  - code_output:
+      eyebrow: Block 03 · Measured on the lab build
+      title: TEXT returns text, and that is the catch
+      filename: textfn.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        C2 holds 142. D2 holds the date 05/03/2024.
+
+          =TEXT(C2,"0.00")
+          =ISNUMBER(TEXT(C2,"0.00"))
+          =TEXT(D2,"dddd")
+          =TEXT(D2,"mmmm")
+
+        B1 and B2 hold =TEXT(...) results.
+
+          =SUM(B1:B2)
+          =B1+B2
+      output: |
+        TEXT(C2,"0.00")     142.00
+        ISNUMBER of it      FALSE
+        TEXT(D2,"dddd")     martes
+        TEXT(D2,"mmmm")     marzo
+
+        SUM(B1:B2)          0
+        B1+B2               229
+
+  - concept:
+      eyebrow: Block 03 · Reading the two totals above
+      title: Zero, and then the right answer
+      lead: >-
+        B1 and B2 hold 142.00 and 87.00, as text. SUM over that range answers zero,
+        because SUM skips text. Add the same two cells with a plus sign and the answer
+        is 229, because the operator converts. If the number still has to be added up,
+        format the cell.
+      panel:
+        label: One more thing that machine told us
+        title: The day names came back in Spanish
+        note: >-
+          The interface is English and the install language is Spanish Mexico, so
+          TEXT(D2,"dddd") answers martes and not Tuesday. It is the install language that
+          decides, not the ribbon, and the lab machines have to be checked for this.
+      steps:
+        - text: Still has to be summed, format the cell
+        - text: The number is going into a sentence, use TEXT
+        - text: Never both on the same column
+          loop: ↺ the column that looks right and totals zero starts here
+
+  - table:
+      eyebrow: Block 03 · Expert objective 2.2.1
+      title: Codes with no button anywhere
+      headers: [Code, What 1234.5 becomes, What it buys you]
+      rows:
+        - ['#,##0.00 "kg"', "1,234.50 kg", "A unit, and it stays a number"]
+        - ['[Red](#,##0.00)', "(1,234.50) in red", "Negatives that read as negative"]
+        - ['0.0,,"M"', "12.3M from 12345678", "Millions, without dividing"]
+        - ['000-00-0000', "000-00-0042 from 42", "Leading zeros that survive"]
+        - ['# ??/??', "1/2 from 0.5", "Fractions with aligned bars"]
+        - [';;;', "nothing at all", "Hidden on screen, live in the bar"]
+
+  - figure:
+      eyebrow: Block 03 · Expert objective 2.2.1
+      title: Custom is the last entry, and it is the only one that takes a code
+      image: img/en/format-cells-dialog.png
+      caption: >-
+        The Number tab as it opens on General. Special and Custom sit at the bottom of the
+        Category list, and neither of them has a button anywhere on the ribbon.
+      alt: >-
+        The Format Cells dialog on its Number tab, showing the six tabs across the top, the
+        Category list from General down to Custom, and the Sample box on the right.
+      side:
+        label: What to look at
+        text: >-
+          Build the near miss with Number or Currency first, then click Custom. The Type box
+          arrives holding the code Excel just wrote, ready to be edited, and the Sample above
+          it previews the selected cell before you commit anything.
+
+  - steps:
+      eyebrow: Block 03 · Expert objective 2.2.1
+      title: The route into the Type box
+      items:
+        - label: '01'
+          title: Build the near miss first
+          desc: Ctrl+1, Number tab, category Number. Set the decimals, the 1000 separator and the negative style you want.
+        - label: '02'
+          title: Then click Custom
+          desc: At the bottom of the Category list. The Type box already holds the code Excel just built, ready to be edited.
+        - label: '03'
+          title: Four sections, in order
+          desc: Positive; negative; zero; text, separated by semicolons. Write two and the second covers everything negative.
+        - label: '04'
+          title: Read the Sample
+          desc: The box above the Type list previews the selected cell before you commit anything.
+        - label: '05'
+          title: Delete only your own
+          desc: Reopen Ctrl+1, Custom, select the code in the list and click Delete. Built-in codes have no Delete button.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways a number format misleads
+      items:
+        - label: Error 01
+          title: The year code is aaaa, not yyyy
+          desc: >-
+            Measured on the lab build. dd/mm/yyyy shows 05/03/yyyy with the letters
+            printed literally, and dd/mm/aaaa shows 05/03/2024, because the install
+            language is Spanish Mexico.
+        - label: Error 02
+          title: TEXT where a format was wanted
+          desc: >-
+            The column looks right and totals zero. A number format changes the picture, a
+            TEXT formula changes the value into a string.
+        - label: Error 03
+          title: Typing the format into the cell
+          desc: >-
+            Type 50% into a cell that already holds 50 and the stored value becomes 0.5.
+            The picture is right and every formula downstream is wrong.
+        - label: Error 04
+          title: Trusting a formatted date
+          desc: >-
+            Clear Formats on a date column leaves five-digit serial numbers behind. They
+            were always there, and the format was the only thing hiding them.
+
+  - quiz:
+      eyebrow: Quick check
+      question: Over the same four cells COUNTA answers 3 and COUNTBLANK answers 2. Why?
+      options:
+        - "One of the two counted the header row as well"
+        - "A cell holding a formula that returns nothing is counted by both"
+        - "COUNTBLANK counted the cell holding the number 5"
+        - "The ranges were selected wrongly, so they saw different cells"
+
+  - lab:
+      eyebrow: Lab
+      title: Exercises 6 and 13
+      brief: >-
+        Exercise 6 is the statistical work over the order list. Exercise 13 is sixty
+        students with birth dates, where the text and date functions and the custom number
+        formats all land on one file. Add what neither file asks for, a top three built
+        with LARGE and a bottom three built with SMALL.
+      blocks:
+        - label: Deliverable
+          text: Both workbooks on Blackboard, with every function inserted from the Function Library
+        - label: Constraint
+          text: One column has to carry a custom number format the ribbon cannot produce, and a comment saying which code
+        - label: The test
+          text: Point LEN at the name column. Any answer higher than the visible characters is a space you have to explain
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The three counts overlap
+          desc: >-
+            COUNT takes numbers, COUNTA takes anything, COUNTBLANK takes the empty and the
+            empty-looking, and the last two can add up past the size of the range
+        - title: A date is a number with a costume
+          desc: >-
+            45356 is 05/03/2024. That is why DAY and MONTH can read it, why subtraction
+            gives days, and why Clear Formats leaves a five-digit number behind
+        - title: TEXT and a format are not the same
+          desc: >-
+            One rewrites the value as a string that sums to zero, the other changes only
+            the picture. Choose by asking whether the number still has to be added up
+
+  - homework:
+      eyebrow: Assignment
+      title: WEEKDAY and WORKDAY, on your own
+      brief: >-
+        These two do not fit in session 8 and they are on the Expert objective list, so
+        they are a take-home with a commented solution. On the Exercise 13 file, work out
+        which weekday each student was born on, and then the fifth working day after each
+        birthday with a holidays range that you build yourself.
+      meta:
+        - [Due, Before week 5]
+        - [Format, Blackboard · .xlsx file]
+        - [Weight, Part of the 30 % inside midterm 1]
+      rubric:
+        - ["WEEKDAY", "30 %", "Return_type chosen on purpose, and the choice explained"]
+        - ["WORKDAY", "40 %", "The Holidays argument is filled and locked with F4"]
+        - ["Formatting", "20 %", "The results read as dates, not as serial numbers"]
+        - ["The check", "10 %", "A Friday plus one working day lands on the Monday"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week the sheet starts making decisions, conditional formatting, sparklines,
+        and the first IF.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

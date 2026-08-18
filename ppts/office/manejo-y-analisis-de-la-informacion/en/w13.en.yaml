@@ -1,0 +1,458 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 13
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 13 · Sessions 25 and 26 · Lookup and consolidation
+      title: Information Management and Analysis
+      subtitle: >-
+        Four functions that fetch a value from another table, and the one situation in
+        which each of them is the only one that works.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 25 and 26 of 34]
+      notes: |
+        Sessions 25 and 26 of the syllabus, CLO08. Session 25 is VLOOKUP in depth;
+        session 26 adds HLOOKUP and the guided practice that consolidates across
+        sheets. Covered outright: the VLOOKUP and HLOOKUP half of Expert 3.2.1.
+        COBERTURA.md adds INDEX and MATCH under the same objective, Expert 3.4.1
+        Consolidate, and Expert 1.1.2 references to other workbooks.
+        Every route comes from procedures.en.md. Exercises 20 and 21, and note that
+        exercise 21 forces INDEX and MATCH without ever naming them.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: VLOOKUP in depth
+          desc: The dialog, its four arguments, and the two that cost marks
+        - title: When VLOOKUP cannot
+          desc: HLOOKUP across the top row, INDEX and MATCH when the key sits on the right
+        - title: Bringing it together
+          desc: Consolidate by label, and a formula that reaches into another file
+        - title: Your turn
+          desc: 288 students with fees to fill in, then 2,585 hardware items
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Build a VLOOKUP from the dialog
+          sub: Formulas, Lookup & Reference, and F4 on the table array before anything else
+        - head: Choose between FALSE and TRUE
+          sub: And say out loud what an empty Range_lookup does, because it is not FALSE
+        - head: "Read #N/A instead of hiding it"
+          sub: The four things that produce it, and the one moment IFERROR is allowed to cover it
+        - head: Reach a column VLOOKUP cannot
+          sub: INDEX with MATCH nested in Row_num, in one pass through one dialog
+        - head: Summarise several ranges by label
+          sub: Data, Consolidate, with Top row and Left column ticked so it adds by name
+        - head: Link a formula to another file
+          sub: The bracket notation, and what Edit Links can and cannot put back
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: now
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: VLOOKUP, argument by argument
+      lede: >-
+        The function is four boxes. Two of them are where the marks are, and neither of
+        the two is the one everybody worries about.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A key, a block and an offset
+      lead: >-
+        A lookup is not a search. You hand Excel three things: a key, a rectangle to look
+        in, and how far right to walk once the key is found. Everything that goes wrong
+        with VLOOKUP goes wrong in one of those three, and the sheet almost never says so.
+      panel:
+        label: The working rule
+        title: The key lives in the first column of the block
+        note: >-
+          Not the first column of the sheet, and not the column you happen to have
+          selected. If the key is not in column one of Table_array, VLOOKUP is the wrong
+          function and no argument fixes it.
+      steps:
+        - text: Excel reads down column one of the block
+        - text: It stops on the row where the key matches
+        - text: It walks right by Col_index_num columns
+          loop: ↺ and returns whatever is sitting there, right or wrong
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: Five stops inside Function Arguments
+      items:
+        - label: '01'
+          title: Open the dialog
+          desc: Formulas tab, Function Library group, Lookup & Reference, then VLOOKUP
+        - label: '02'
+          title: Lookup_value
+          desc: The cell holding the key. Leave it relative so the formula can be filled down.
+        - label: '03'
+          title: Table_array
+          desc: Select from the key column rightwards, then press F4 to lock it to $A$2:$D$50
+        - label: '04'
+          title: Col_index_num
+          desc: A number counted from column one of Table_array, never from column A of the sheet
+        - label: '05'
+          title: Range_lookup
+          desc: FALSE for exact, TRUE for the banded match. Then OK, once.
+
+  - compare:
+      eyebrow: Block 01 · Same answer today, different score
+      title: Typed by hand against built in the dialog
+      before:
+        label: Typed straight into the cell
+        file: Students.xlsx
+        lang: excel
+        code: |
+          =VLOOKUP(A2,Fees!A2:B24,2)
+      after:
+        label: Built in Function Arguments
+        file: Students.xlsx
+        lang: excel
+        code: |
+          =VLOOKUP(A2,Fees!$A$2:$B$24,2,FALSE)
+      note: >-
+        Both return the right fee in row 2. The left one is dragged one row down the Fees
+        table with every fill and silently answers TRUE to a question nobody asked. The
+        dialog is what makes the F4 and the FALSE happen, and it is what the exam watches.
+
+  - code:
+      eyebrow: Block 01 · Exercise 20, four formulas
+      title: Exact, missing, banded and covered
+      filename: Excel 20 (BuscarV).xlsx
+      lang: excel
+      source: |
+        =VLOOKUP(B2,Fees!$A$2:$B$24,2,FALSE)
+
+        =VLOOKUP(B2,Fees!$A$2:$B$24,2)
+
+        =VLOOKUP(B2,$F$3:$G$7,2,TRUE)
+
+        =IFERROR(VLOOKUP(B2,Fees!$A$2:$B$24,2,FALSE),"Check")
+      annotations:
+        - label: Exact
+          text: >-
+            FALSE in Range_lookup. The program matches a row of Fees or the formula stops
+            at #N/A.
+        - label: The missing argument
+          text: >-
+            Range_lookup left empty. Empty means TRUE, so an unsorted table returns a
+            neighbour's fee, silently.
+        - label: Banded on purpose
+          text: >-
+            The score table holds the lower edge of each grade, so TRUE is right and the
+            table must be sorted ascending.
+        - label: Risk
+          text: >-
+            IFERROR hides #N/A. Wrap it once the lookup is proven, never before.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · The four boxes
+      title: What each argument is counted from
+      headers: [Argument, What you put in it, Where it is counted from]
+      rows:
+        - ["Lookup_value", "The cell holding the key", "Relative, so it fills down"]
+        - ["Table_array", "Key column and all to its right", "Locked with F4"]
+        - ["Col_index_num", "A number, never a letter", "Column 1 of Table_array"]
+        - ["Range_lookup", "FALSE, written out in full", "Empty is TRUE, not FALSE"]
+        - ["Row_index_num", "HLOOKUP takes this instead", "Row 1 of Table_array"]
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways a lookup lies quietly
+      items:
+        - label: Error 01
+          title: A table array that walks
+          desc: >-
+            Filling down with Fees!A2:B24 unlocked moves the block one row per fill. The
+            first answers are right, which is exactly why nobody checks the rest.
+        - label: Error 02
+          title: Counting from column A
+          desc: >-
+            Col_index_num counts inside Table_array. If the block starts at column C, the
+            value in column D is 2, not 4, and 4 returns #REF! or the wrong field.
+        - label: Error 03
+          title: Range_lookup left empty
+          desc: >-
+            Empty means TRUE, and TRUE over an unsorted table returns the row above the key.
+            The number looks plausible and nothing on screen is red.
+        - label: Error 04
+          title: IFERROR applied too early
+          desc: >-
+            #N/A is the only thing telling you the key is absent or the block is wrong.
+            Cover it before the formula is proven and the workbook stops complaining.
+
+  - divider:
+      eyebrow: Block 02
+      title: When VLOOKUP cannot
+      lede: >-
+        The key is not in the first column, or the table runs across instead of down. Two
+        of exercise 21's three inventories are built that way.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Exercise 21, one question, three tables
+      title: The layout decides the function
+      headers: [Table, How it is laid out, What works]
+      rows:
+        - ["Inventory 1", "Item, Description, Unit, Cost", "VLOOKUP"]
+        - ["Inventory 2", "Description first, Item second", "INDEX and MATCH"]
+        - ["Inventory 3", "Item codes run across row 3", "HLOOKUP"]
+
+  - code:
+      eyebrow: Block 02 · The same cost, fetched three ways
+      title: Down, across, and from the wrong side
+      filename: Excer 21 (HLookup).xlsx
+      lang: excel
+      source: |
+        =VLOOKUP($C4,$B$4:$E$2588,4,FALSE)
+
+        =HLOOKUP($C4,$W$3:$AJ$6,4,FALSE)
+
+        =INDEX($O$4:$O$2588,MATCH($C4,$M$4:$M$2588,0))
+      annotations:
+        - label: Down the first column
+          text: >-
+            Inventory 1 puts Item first, so VLOOKUP works and Cost is the fourth column of
+            the block.
+        - label: Across the top row
+          text: >-
+            Inventory 3 lays the codes across row 3. HLOOKUP searches that row and 4 walks
+            down to Cost.
+        - label: The key on the right
+          text: >-
+            Inventory 2 puts Description first. MATCH finds the position of the code in M,
+            INDEX reads O at that position.
+        - label: Risk
+          text: >-
+            MATCH takes one row or one column. Hand it a rectangle and it answers #N/A.
+          accent: true
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: INDEX, and the dialog before the dialog
+      items:
+        - label: '01'
+          title: INDEX from the library
+          desc: Formulas tab, Function Library group, Lookup & Reference, then INDEX
+        - label: '02'
+          title: Select Arguments
+          desc: Pick array,row_num,column_num. The other entry is for multi-area references.
+        - label: '03'
+          title: Array
+          desc: The column of values to return. Not the whole table, and no header row.
+        - label: '04'
+          title: Nest MATCH
+          desc: With the cursor in Row_num, pick MATCH from the Name Box at the left of the formula bar
+        - label: '05'
+          title: One OK
+          desc: Click the word INDEX in the formula bar to come back out, then OK at the INDEX level
+
+  - table:
+      eyebrow: Block 02 · MATCH returns a position, not a value
+      title: What Match_type asks of the array
+      headers: [Match_type, What it finds, What the array needs]
+      rows:
+        - ["0", "An exact match", "Any order at all"]
+        - ["1 or empty", "Largest value under the key", "Sorted ascending"]
+        - ["-1", "Smallest value over the key", "Sorted descending"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: What does this return for a program that is missing from the Fees table?
+      filename: Excel 20 (BuscarV).xlsx
+      lang: excel
+      source: |
+        =VLOOKUP(B2,Fees!$A$2:$B$24,2)
+      options:
+        - "#N/A, because the program was not found"
+        - "The fee of whichever program sorts just before it"
+        - "0, because Range_lookup was left empty"
+        - "#REF!, because the block holds only two columns"
+
+  - divider:
+      eyebrow: Block 03
+      title: Bringing it together
+      lede: >-
+        Two more ways to pull a number in from elsewhere: one that adds several ranges by
+        label, and one that reaches into a different file.
+      block: 3
+
+  - concept:
+      eyebrow: Block 03 · Why Consolidate exists
+      title: Adding by position and adding by name
+      lead: >-
+        A 3-D reference adds cell B2 of every sheet. That is right until one branch lists
+        its regions in a different order, and then the total is wrong with nothing on
+        screen to say so. It is the exact case the exam builds, and the reason the
+        Consolidate dialog has two check boxes nobody reads.
+      panel:
+        label: The whole point
+        title: Top row and Left column make it add by name
+        note: >-
+          With both ticked, Consolidate matches the labels instead of the cell positions,
+          so three sheets in three different orders still land in the right rows. Say this
+          out loud in class; it is the feature, not a detail of it.
+      steps:
+        - text: Every source range is added to the list separately
+        - text: The labels decide which row each number joins
+        - text: Create links to source data adds an outline
+          loop: ↺ and the summary follows the sources from then on
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: Data, Consolidate, five stops
+      items:
+        - label: '01'
+          title: One cell only
+          desc: Click the top-left cell of an empty area. Consolidate writes as far right and down as it needs.
+        - label: '02'
+          title: Data, Consolidate
+          desc: Data tab, Data Tools group. The Function list holds eleven entries, Sum first.
+        - label: '03'
+          title: Reference, then Add
+          desc: Drag a source range, click Add, repeat. A wrong one comes out with Delete.
+        - label: '04'
+          title: Use labels in
+          desc: Tick Top row and Left column when the sheets carry headers in different orders
+        - label: '05'
+          title: OK, not Close
+          desc: This dialog has OK and Close rather than OK and Cancel. Close leaves without consolidating.
+
+  - code:
+      eyebrow: Block 03 · A reference that leaves the file
+      title: The same link, before and after closing
+      filename: Budget.xlsx
+      lang: excel
+      source: |
+        =[Sales.xlsx]Q1!$B$4
+
+        ='C:\Reports\[Sales.xlsx]Q1'!$B$4
+
+        =SUM('C:\Reports\[Sales.xlsx]Q1'!$B$4:$B$40)
+      annotations:
+        - label: While the source is open
+          text: >-
+            Brackets around the file name, then the sheet. Excel writes it when you point.
+        - label: After the source closes
+          text: >-
+            Close the source and the same formula rewrites itself with the full path in
+            quotes.
+        - label: Managing it
+          text: >-
+            Data tab, Queries & Connections, Edit Links: Update Values, Change Source,
+            Check Status.
+        - label: Risk
+          text: >-
+            Break Link turns linked formulas into values, permanently. Recent builds
+            relabel it Workbook Links and open a pane instead; confirm on the lab machines.
+          accent: true
+
+  - method:
+      eyebrow: Block 03 · The rule that decides
+      title: Point at the cell, never type the path
+      statement: Excel has never once written a wrong external reference. Every broken link in this course was typed by a person.
+      points:
+        - label: Do
+          text: Open both files, type the equals sign, use View tab, Window group, Switch Windows, then click the cell.
+        - label: Do not
+          text: "Type the path, the brackets and the quotes by hand. One character out and the cell reads #REF!."
+        - label: Never
+          text: Copy the number across instead of linking. Right today, stale tomorrow, and nothing for Edit Links to list.
+
+  - lab:
+      eyebrow: Lab
+      title: Three tables, three functions, one inventory
+      brief: >-
+        Exercise 20 first: fill the fee column for all 288 students from the Fees sheet,
+        then the grade column from the score band table, which is the one place TRUE is the
+        right answer. Then exercise 21, where inventory 2 puts Description before Item and
+        inventory 3 lays the codes across row 3. Choose the function each table forces, and
+        write one line saying why the other two cannot do it.
+      blocks:
+        - label: Deliverable
+          text: One workbook carrying both exercises, uploaded to Blackboard
+        - label: Constraint
+          text: Every table array locked with F4, and every Range_lookup written out as FALSE or TRUE rather than left empty
+        - label: The test
+          text: Fill each formula two rows further than the data. If the answers stop tracking the right table, the block moved.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: F4 is not decoration
+          desc: >-
+            An unlocked table array walks down the sheet on every fill. The first rows are
+            right, the rest are wrong, and nothing anywhere on the sheet turns red
+        - title: Empty is not FALSE
+          desc: >-
+            A missing Range_lookup means TRUE, which is a banded match over a table nobody
+            sorted. It answers with a neighbour's value and calls it a result
+        - title: VLOOKUP is one shape of the problem
+          desc: >-
+            INDEX with MATCH reaches a column to the left, HLOOKUP reads across a row, and
+            XLOOKUP, where the lab machines have it, is not one of the four MO-201 names
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Finish both lookup exercises and add one sheet of your own that consolidates three
+        small ranges by label, with Top row and Left column ticked, plus one formula that
+        links to a second workbook you also hand in.
+      meta:
+        - [Due, Before week 14]
+        - [Format, Blackboard · two .xlsx files]
+        - [Weight, Part of the mark for assignments]
+      rubric:
+        - ["Exercise 20", "30 %", "Fees and grades filled, F4 and FALSE visible in the bar"]
+        - ["Exercise 21", "30 %", "The right function per table, with the reason written down"]
+        - ["Consolidate", "20 %", "Reopening the dialog brings the reference list back"]
+        - ["The link", "20 %", "The path appears in quotes once the source is closed"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the two ways to collapse a long list into the numbers somebody asked
+        for: subtotals with their outline, and the PivotTable.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

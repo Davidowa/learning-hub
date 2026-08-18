@@ -1,0 +1,475 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 16
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 16 · Sessions 31 and 32 · What-if analysis
+      title: Information Management and Analysis
+      subtitle: >-
+        Running a model backwards, sweeping it across a range of inputs, and storing
+        several named versions of the same sheet.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 31 and 32 of 34]
+      notes: |
+        Sessions 31 and 32 of the syllabus, CLO08, with project presentations on top.
+        Covered outright: Expert 3.4.2, Goal Seek and Scenario Manager.
+        COBERTURA.md adds Expert 3.4.4 PMT and Expert 3.4.3 NPER, and asks for the
+        Scenario Manager to be practised rather than described, since exercise 25
+        explains it and never uses it. Expert 1.2.4 comes back as Automatic Except
+        for Data Tables.
+        Exercise 25 ships as .docx with no workbook, so the three models are built
+        from scratch. Preparing the file in advance is the cheap fix.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Goal Seek
+          desc: One formula, one target, one input cell, and a status dialog worth reading
+        - title: Data tables
+          desc: One input down a column, two around a corner, and the formula Excel writes
+        - title: Scenarios and money
+          desc: Scenario Manager, PMT and NPER on a single credit model
+        - title: The project
+          desc: What is handed in this week, and how the presentation is graded
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Run a model backwards with Goal Seek
+          sub: Set cell, To value, By changing cell, and why only one of the three takes a reference
+        - head: Say why the changing cell holds a value
+          sub: Goal Seek refuses to overwrite a formula, and that refusal is protecting your model
+        - head: Sweep one input with a data table
+          sub: The cell that points at the result, and the rectangle you have to select first
+        - head: Build a two-variable table
+          sub: Row input cell and Column input cell, and which of the two axes is which
+        - head: Store and compare named scenarios
+          sub: Add, Scenario Values, Summary, and why three copies of a sheet are not scenarios
+        - head: Compute a payment and a term
+          sub: PMT and NPER on the same credit model, with the rate and the periods agreeing
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: done
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Running the model backwards
+      lede: >-
+        Every model so far went forwards, from inputs to a result. This week the result is
+        given and the input is the question.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A model is inputs, formulas and one result
+      lead: >-
+        What-if analysis works on the wiring between the numbers, not on the numbers. Goal
+        Seek walks that wiring backwards, a data table runs it once per input, and Scenario
+        Manager stores whole sets of inputs by name. All three need a result cell that is
+        computed from the input cells and not typed.
+      panel:
+        label: The working rule
+        title: If the result is typed, none of the three tools work
+        note: >-
+          Goal Seek reports that the cell must contain a formula, a data table returns the
+          same number in every row, and a scenario changes the inputs with nothing moving.
+          The tools are not broken; the model was never connected.
+      steps:
+        - text: Inputs sit in their own labelled cells
+        - text: Formulas read those cells, never literal numbers
+        - text: One cell holds the result being asked about
+          loop: ↺ and every tool this week hangs off that one cell
+
+  - code:
+      eyebrow: Block 01 · Exercise 25, the first model
+      title: Fifty thousand units of Churrumpin
+      filename: Churrumpin.xlsx
+      lang: excel
+      source: |
+        B9   =B2*B3
+        B10  =B2*B4
+        B12  =B9-B10-B11
+
+        B14  =B12*(1-B13)
+      annotations:
+        - label: Revenue and variable cost
+          text: >-
+            Units times price, units times unit cost. Both read the same Units cell, and
+            that is what makes the model answerable.
+        - label: Operating profit
+          text: >-
+            Revenue less variable cost less the 1,500,000 of fixed cost in B11.
+        - label: Net income
+          text: >-
+            What survives the 15 per cent rate. At 50,000 units it comes to 425,000.
+        - label: Risk
+          text: >-
+            Goal Seek changes one cell and it must hold a value. Point it at B9 and it
+            refuses, because B9 is a formula.
+          accent: true
+
+  - stat:
+      eyebrow: Block 01 · The answer nobody had to derive
+      value: '37,500'
+      text: >-
+        units is where net income stops being negative, on a product that was planned at
+        fifty thousand.
+      note: >-
+        The algebra is one line: the fixed cost divided by the forty pesos each unit
+        contributes. The point of the tool is that the same three boxes answer the same
+        question on a model nobody can rearrange, and on one where no closed form exists.
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: Five stops through Goal Seek
+      items:
+        - label: '01'
+          title: Check the two cells
+          desc: The target holds a formula and the input holds a value. Goal Seek refuses otherwise.
+        - label: '02'
+          title: Select the formula cell
+          desc: Set cell arrives already filled in with it. Confirm it is one single cell.
+        - label: '03'
+          title: Data, What-If Analysis
+          desc: Data tab, Forecast group, What-If Analysis, then Goal Seek
+        - label: '04'
+          title: To value
+          desc: A plain number. No equals sign and no cell reference; the box will not take one.
+        - label: '05'
+          title: Read the status
+          desc: Target value and Current value. OK keeps the new input, Cancel puts the sheet back.
+
+  - figure:
+      eyebrow: Block 01 · The dialog itself
+      title: Three boxes, one of them different
+      image: img/en/goal-seek-dialog.png
+      caption: >-
+        Set cell arrives holding whatever was selected. To value takes a plain number. By
+        changing cell takes one cell, and that cell has to hold a value.
+      alt: >-
+        The Excel Goal Seek dialog, with Set cell reading F16 and the To value and By
+        changing cell boxes empty.
+      side:
+        label: What the small arrows mean
+        text: >-
+          Set cell and By changing cell carry the collapse arrow that lets you click on the
+          sheet. To value does not, and that missing arrow is the product telling you it
+          will not take a reference.
+
+  - divider:
+      eyebrow: Block 02
+      title: One question, twenty answers at once
+      lede: >-
+        A data table runs the whole model once per input value and writes the results into
+        a rectangle you selected before it started.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · What the rectangle is
+      title: One cell in it points at the result
+      lead: >-
+        A data table is not a table of results you typed. It is a rectangle holding one
+        reference to the result cell, the input values to try down its first column or
+        across its first row, and a body Excel fills in by rerunning the model once for
+        every one of them.
+      panel:
+        label: The working rule
+        title: That cell holds a reference, never a value
+        note: >-
+          Write =B14 there, not 425,000. That reference is how Excel knows what it is
+          collecting, and a typed number gives a table of that same number repeated down
+          the column.
+      steps:
+        - text: Inputs down a column, or across a row, or both
+        - text: The reference sits above them, or in the corner
+        - text: Select the whole rectangle, that cell included
+          loop: ↺ and Data, What-If Analysis, Data Table
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: Five stops, and the one people skip
+      items:
+        - label: '01'
+          title: The model first
+          desc: One result cell, and the inputs it reads sitting in their own labelled cells
+        - label: '02'
+          title: Lay out the inputs
+          desc: Down a column for a column input, across a row for a row input, or both
+        - label: '03'
+          title: Write the reference
+          desc: One variable, one row above the first result cell. Two variables, in the corner where the axes meet.
+        - label: '04'
+          title: Select the rectangle
+          desc: The reference and the inputs and the empty body. This is the step people skip.
+        - label: '05'
+          title: Fill the boxes
+          desc: Row input cell, Column input cell, or both. Then OK, and every cell fills at once.
+
+  - code:
+      eyebrow: Block 02 · What Excel wrote into the body
+      title: The braces you cannot type
+      filename: Churrumpin.xlsx
+      lang: excel
+      source: |
+        One variable, the inputs down A10:A20
+        B9   =B14
+        B10  {=TABLE(,B2)}
+
+        Two variables, down H10:H20 and across I9:M9
+        H9   =B14
+        I10  {=TABLE(B3,B2)}
+      annotations:
+        - label: Where it goes
+          text: >-
+            One variable, a row above the first result. Two variables, the corner where the
+            axes meet.
+        - label: One variable
+          text: >-
+            An empty first argument and the column input cell second. The braces mean an
+            array.
+        - label: Two variables
+          text: >-
+            Row input first, column input second, and the corner now sits where the two
+            axes meet.
+        - label: Risk
+          text: >-
+            Deleting one cell of the block returns "You cannot change part of a data table".
+            Select the whole rectangle or nothing moves.
+          accent: true
+
+  - table:
+      eyebrow: Block 02 · Which box takes which cell
+      title: Where the inputs go and what they feed
+      headers: [The model has, Inputs laid out, Which box you fill]
+      rows:
+        - ["One variable", "Down a column", "Column input cell"]
+        - ["One variable", "Across a row", "Row input cell"]
+        - ["Two variables", "One row and one column", "Both boxes"]
+        - ["Two variables", "Corner between them", "Row first, column second"]
+
+  - method:
+      eyebrow: Block 02 · The setting from week 3 comes back
+      title: Why a large data table freezes the file
+      statement: A data table recalculates on every keystroke anywhere in the workbook, and a two-variable table is one whole model run per cell of the body.
+      points:
+        - label: Where it lives
+          text: Formulas tab, Calculation group, Calculation Options. The same menu from the session that opened the Formulas tab.
+        - label: The entry to pick
+          text: Automatic Except for Data Tables. Everything else stays live and only the tables wait to be told.
+        - label: What tells them
+          text: F9 recalculates the workbook, Shift+F9 the active sheet. Nothing is stale for longer than one keystroke.
+
+  - divider:
+      eyebrow: Block 03
+      title: Named versions, borrowed money, and the project
+      lede: >-
+        Scenario Manager holds several sets of inputs at once. PMT and NPER give the sheet
+        something worth holding sets of inputs about.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: Five stops through Scenario Manager
+      items:
+        - label: '01'
+          title: Open it empty
+          desc: Data, What-If Analysis, Scenario Manager. It reads No Scenarios defined.
+        - label: '02'
+          title: Add, and name it
+          desc: Names appear in the summary report, so use words a reader understands.
+        - label: '03'
+          title: Changing cells
+          desc: Ctrl+click for cells that are not adjacent. The practical ceiling is 32 of them.
+        - label: '04'
+          title: Values, then Add again
+          desc: One box per changing cell. Add goes into the next scenario without leaving the dialog.
+        - label: '05'
+          title: Summary
+          desc: Scenario summary or Scenario PivotTable report, plus the Result cells to compare
+
+  - figure:
+      eyebrow: Block 03 · The dialog itself
+      title: Empty, and saying so in words
+      image: img/en/scenario-manager.png
+      caption: >-
+        No Scenarios defined. Choose Add to add scenarios. Show, Delete, Edit and Summary
+        stay greyed until the first scenario exists.
+      alt: >-
+        The Excel Scenario Manager dialog on a sheet with no scenarios, with Add available
+        and the other buttons greyed out.
+      side:
+        label: What Summary asks for
+        text: >-
+          Summary lights up once a scenario exists and asks for Result cells, the formulas
+          being compared. Excel then writes a sheet named Scenario Summary, and that sheet
+          is what a grader opens.
+
+  - code:
+      eyebrow: Block 03 · Exercise 25, the second model
+      title: A payment, a term, and a decision
+      filename: Credit.xlsx
+      lang: excel
+      source: |
+        B5   =PMT(B2/12,B3*12,B4)
+
+        B6   =NPER(B2/12,-B5,B4)
+
+        B7   =IF(AND(B6<=36,-B5<=5000),"Approve","Reject")
+      annotations:
+        - label: Rate and term agree
+          text: >-
+            B2/12 and B3*12. The annual rate left undivided is the single most common wrong
+            answer in this objective.
+        - label: The sign convention
+          text: >-
+            A positive Pv returns a negative payment, which is Excel saying money leaves.
+            Decide once and keep it.
+        - label: The orders differ
+          text: >-
+            PMT takes Rate, Nper, Pv. NPER takes Rate, Pmt, Pv. The dialog earns its
+            seconds here.
+        - label: Risk
+          text: >-
+            NPER returning a negative number or #NUM! means Pmt and Pv carry the same sign.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways the analysis is not analysis
+      items:
+        - label: Error 01
+          title: A formula in the changing cell
+          desc: >-
+            Goal Seek stops and says the cell must contain a value. It is not a fault, it is
+            the tool refusing to overwrite the model with a number.
+        - label: Error 02
+          title: A reference typed into To value
+          desc: >-
+            That box takes a plain number only. Nothing warns you; the field simply will not
+            hold what you put in it, and the run never starts.
+        - label: Error 03
+          title: Three copies of the sheet
+          desc: >-
+            It reaches the same comparison and leaves no scenario for anyone to open.
+            Preventing exactly this mess is what Scenario Manager exists for.
+        - label: Error 04
+          title: The annual rate left undivided
+          desc: >-
+            PMT returns a payment that looks plausible and is far too large. Check that the
+            payment times the term exceeds the amount borrowed.
+
+  - table:
+      eyebrow: Block 03 · The final project
+      title: What is handed in and presented this week
+      headers: [Part, What it holds, Where it came from]
+      rows:
+        - ["The data", "One real data set of your own", "Weeks 9 and 10"]
+        - ["The model", "Inputs, formulas, one result", "This week"]
+        - ["The analysis", "Goal Seek and one data table", "This week"]
+        - ["The report", "A PivotTable and a chart", "Weeks 11 and 14"]
+        - ["The defence", "Your decisions, explained", "In class"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: Goal Seek reports a solution and the target cell reads 0.0000000012 rather than 0. Why?
+      options:
+        - "It stops at a tolerance rather than landing exactly on the value"
+        - "The changing cell was formatted with too few decimal places"
+        - "The model contains a circular reference somewhere upstream"
+        - "Iterative calculation was left switched off in Options"
+
+  - lab:
+      eyebrow: Lab
+      title: Three models, three tools
+      brief: >-
+        Exercise 25, all three cases. The cleaning product: net income at fifty thousand
+        units, the break-even volume with Goal Seek, and profit swept from thirty to seventy
+        thousand in steps of five thousand. The vehicle loan: PMT with data validation on
+        the rate and the term, then the same payment across a column of rates and a row of
+        prices. The currency case: a two-variable table over the buying and selling rates.
+        Add what the exercise leaves out, three named scenarios and a summary report.
+      blocks:
+        - label: Deliverable
+          text: One workbook with a sheet per case, uploaded to Blackboard with the project
+        - label: Constraint
+          text: Every formula references the input cells. A number written inside a formula makes the whole sheet unanswerable.
+        - label: The test
+          text: Change one input by hand. If the data table and the result cell do not both move, the model is not wired.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The tools work on the wiring
+          desc: >-
+            Not on the numbers. A result cell that was typed rather than computed makes all
+            three of this week's tools report nothing and change nothing
+        - title: The reference cell is the data table
+          desc: >-
+            One row above the first result for a single input, in the corner for two, and
+            the whole rectangle selected before the dialog opens
+        - title: Rate and periods have to agree
+          desc: >-
+            B2/12 with B3*12, every time. The undivided annual rate is the wrong answer that
+            looks most like a right one, in PMT and in NPER alike
+
+  - homework:
+      eyebrow: Assignment
+      title: The final project, delivered and presented
+      brief: >-
+        The workbook takes a real data set from your own area, computes what the problem
+        asks, and carries the analysis that supports one decision: a model with named
+        inputs, a Goal Seek result, a data table over one of those inputs, and a PivotTable
+        with a chart summarising the data behind it.
+      meta:
+        - [Due, "This week, in class"]
+        - [Format, Blackboard · one .xlsx file]
+        - [Weight, Part of the project component]
+      rubric:
+        - ["The model", "30 %", "Inputs in cells, formulas that read them, one result"]
+        - ["What-if", "30 %", "Goal Seek and a data table that both move on a change"]
+        - ["The report", "20 %", "A PivotTable and a chart drawn from the same data"]
+        - ["The defence", "20 %", "Each decision explained, including the ones rejected"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the last thing the workbook does: page setup, print area, views, and
+        the three checks before it leaves your screen.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,530 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 5
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 05 · Sessions 9 and 10 · Rules, sparklines and IF
+      title: Information Management and Analysis
+      subtitle: >-
+        Formatting that reads the cell instead of being applied to it, a chart that fits
+        inside one cell, and the first decision the sheet makes on its own.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 9 and 10 of 34]
+      notes: |
+        Sessions 9 and 10 of the syllabus. Session 9 is conditional formatting, icon
+        sets, sparklines and hyperlinks; session 10 opens IF. COBERTURA.md adds five
+        objectives to this week, four of which come out of the same menu: 2.4.3,
+        Expert 2.3.1, Expert 2.3.2, Expert 2.3.4 and Associate 2.1.1.
+        Exercises 3 and 7 practise almost all of it. The one gap the pack does not
+        cover is Expert 2.3.2, formula driven rules, which is why block 1 spends
+        real time there.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Rules that repaint
+          desc: The preset menu, then the six rule types, then a rule written as a formula
+        - title: The rest of session 9
+          desc: The Rules Manager, removal, sparklines, hyperlinks and Paste Special
+        - title: The first IF
+          desc: One condition, two answers, and the row that sits on the boundary
+        - title: Your turn
+          desc: Exercise 3 and Exercise 7, with one rule the pack does not give you
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Apply a preset conditional format
+          sub: Selecting the data only, and pointing the threshold at a cell rather than typing it
+        - head: Write your own rule from New Rule
+          sub: Including the formula type, which is what separates Expert from Associate here
+        - head: Manage the rules already on a sheet
+          sub: Priority, Stop If True, the Applies to range, and removal by scope
+        - head: Insert sparklines that can be compared
+          sub: One common scale across the rows, not one scale per row
+        - head: Paste by choosing an option
+          sub: Values, transpose, skip blanks and the arithmetic that only the dialog reaches
+        - head: Write an IF and defend its boundary
+          sub: Greater than and greater than or equal differ on exactly one row
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: now
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: Formatting that reads the cell
+      lede: >-
+        Colouring a cell by hand and colouring it with a rule look identical the moment
+        they are done. One of them survives the next change to the data.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A rule is stored on the range, not the cell
+      lead: >-
+        Direct formatting belongs to a cell. Conditional formatting belongs to a range,
+        and Excel evaluates it once per cell on every recalculation. So the range
+        selected when you wrote the rule decides what it paints, and the only way back
+        is the Applies to box.
+      panel:
+        label: The consequence
+        title: Select the data only, never the header
+        note: >-
+          A text header counts as larger than every number, so a Top 10 rule that
+          includes it gives the heading a colour and hides one real row. This is the
+          single most common way a correct rule formats the wrong cells.
+      steps:
+        - text: You select the range and write the rule
+        - text: Excel stores it against that range
+        - text: A value changes and the cell repaints
+          loop: ↺ and nobody had to remember what the colour meant
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: A preset threshold rule, in five moves
+      items:
+        - label: '01'
+          title: Select the data
+          desc: The rule is stored against this selection. Headers and totals stay out of it.
+        - label: '02'
+          title: Home, Styles, Conditional Formatting
+          desc: The menu holds the presets on top and New Rule, Clear Rules and Manage Rules underneath
+        - label: '03'
+          title: Highlight Cells Rules
+          desc: Greater Than, Less Than, Between, Equal To, Text that Contains, A Date Occurring, Duplicate Values
+        - label: '04'
+          title: Point at the threshold
+          desc: Click the collapse arrow and pick the cell that holds the number instead of typing it in
+        - label: '05'
+          title: Choose from the with list
+          desc: Light Red Fill with Dark Red Text and five more, or Custom Format for anything else
+
+  - method:
+      eyebrow: How this course is graded
+      title: Two routes to the same colour
+      statement: The certification does not grade the sheet you hand in. It grades the route you took to make it look that way.
+      points:
+        - label: The graded route
+          text: >-
+            Conditional Formatting, a preset or New Rule, the threshold pointing at a
+            cell, the format chosen from the with list. It survives the next change to
+            the data and it appears in the Rules Manager.
+        - label: The fast route
+          text: >-
+            Read the numbers, select the cells that qualify, apply a fill from the Home
+            tab. Identical on screen, about as quick on a short list, and worth nothing
+            on exam day.
+        - label: What the grader looks at
+          text: >-
+            Change one value so it crosses the threshold, then change it back. A rule
+            repaints itself. Hand formatting does not move.
+
+  - table:
+      eyebrow: Block 01 · The menu, entry by entry
+      title: What each line of the menu is for
+      headers: [Menu entry, What it makes, Whose objective]
+      rows:
+        - ["Highlight Cells Rules", "Seven preset threshold rules", "Associate 2.4.2"]
+        - ["Top/Bottom Rules", "Six preset rank rules", "Associate 2.4.2"]
+        - ["The three galleries", "Data bars, colour scales, icon sets", "Associate 2.4.2"]
+        - ["New Rule...", "Six rule types, filled in by you", "Expert 2.3.1 and 2.3.2"]
+        - ["Clear Rules", "Removal, by the scope you name", "Associate 2.4.3"]
+        - ["Manage Rules...", "Priority, Stop If True, ranges", "Expert 2.3.4"]
+
+  - steps:
+      eyebrow: Block 01 · New Rule
+      title: A rule written as a formula
+      items:
+        - label: '01'
+          title: Select from the top left
+          desc: The formula is written once, for the active cell, and Excel shifts it across the rest
+        - label: '02'
+          title: New Rule
+          desc: Sixth entry in the type list, Use a formula to determine which cells to format
+        - label: '03'
+          title: Press F2 first
+          desc: The formula box opens in point mode, where an arrow key inserts a reference instead of moving the cursor
+        - label: '04'
+          title: Return TRUE or FALSE
+          desc: Lock the column with a dollar sign when one column decides the whole row
+        - label: '05'
+          title: Format, then one OK
+          desc: Font tab, then Fill tab without closing. Four tabs only, since a rule cannot align or protect.
+
+  - figure:
+      eyebrow: Block 01 · Expert objectives 2.3.1 and 2.3.2
+      title: Six rule types, and the sixth is the Expert one
+      image: img/en/new-formatting-rule.png
+      caption: >-
+        Select a Rule Type on top, Edit the Rule Description underneath, and the description
+        half redraws itself completely each time the type above it changes.
+      alt: >-
+        The New Formatting Rule dialog, with the six rule types listed and the first one
+        selected, showing Format Style, Minimum and Maximum, Type, Value, Color and Preview.
+      side:
+        label: Read the list, not the boxes
+        text: >-
+          The first five are the preset menu with its numbers exposed. Use a formula to
+          determine which cells to format, at the bottom, is the one that has no preset
+          anywhere, and it is what separates Expert from Associate on this objective.
+
+  - code:
+      eyebrow: Block 01 · Patterns worth keeping
+      title: Seven rules, written for row 2
+      filename: rules.xlsx
+      lang: excel
+      source: |
+        =$E2="Overdue"
+        =MOD(ROW(),2)=0
+        =WEEKDAY(B$1,2)>5
+        =AND($C2>$B2,$B2<>"")
+        =AND($A2<>"",$D2="")
+        =COUNTIF($A:$A,$A2)>1
+        =AND($F2>=TODAY(),$F2<=TODAY()+30)
+      annotations:
+        - label: Line 1
+          text: One column decides the whole row. The dollar sign holds the column still while the row walks down.
+        - label: Line 2
+          text: Banded rows without a table. MOD and ROW do arithmetic on the address, not the data.
+        - label: Lines 4 to 7
+          text: AND arrives in week 7 and COUNTIF in week 8. Come back to this slide once you have them.
+        - label: If it fails
+          text: >-
+            TRUE on every row means a dollar sign is missing, or the wrong cell was
+            active.
+          accent: true
+
+  - divider:
+      eyebrow: Block 02
+      title: The rules you already have
+      lede: >-
+        Three rules on one range and only one colour showing. Nothing is broken, and the
+        dialog that explains it opens on the wrong setting by default.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The Rules Manager
+      title: Five things only this dialog can do
+      items:
+        - label: '01'
+          title: Show formatting rules for
+          desc: It opens on Current Selection, which hides every rule you are not standing in. Set it to This Worksheet.
+        - label: '02'
+          title: Move Up and Move Down
+          desc: Two rules setting the same property, the higher one wins. Two rules setting different properties, both apply.
+        - label: '03'
+          title: Stop If True
+          desc: Nothing below it is evaluated for the cells it matched. That is how a top priority exception survives a broad rule.
+        - label: '04'
+          title: Applies to
+          desc: Retype the range or drag on the sheet behind the dialog, and the rule keeps working on fewer cells
+        - label: '05'
+          title: Apply, then OK
+          desc: Apply commits without closing, so you can watch the sheet change and keep editing
+
+  - figure:
+      eyebrow: Block 02 · Expert objective 2.3.4
+      title: It opens on the setting that hides your rules
+      image: img/en/cf-rules-manager.png
+      caption: >-
+        Show formatting rules for reads Current Selection, so a sheet carrying three rules
+        can open exactly like this one and look empty.
+      alt: >-
+        The Conditional Formatting Rules Manager, with Show formatting rules for set to
+        Current Selection, an empty rule list, and the columns Rule, Format, Applies to and
+        Stop If True.
+      side:
+        label: The four columns
+        text: >-
+          Rule in priority order, the Format preview, the Applies to range you can retype,
+          and the Stop If True check box. Edit Rule, Delete Rule and the two arrows stay grey
+          until a rule is selected, and Apply commits without closing.
+
+  - table:
+      eyebrow: Block 02 · Removal
+      title: Four ways to take formatting off
+      headers: [Route, Where it lives, What it takes away]
+      rows:
+        - ["Clear Rules", "Conditional Formatting menu", "Every rule in the scope you name"]
+        - ["Delete Rule", "Manage Rules...", "One rule, the rest stay in order"]
+        - ["Applies to", "Manage Rules...", "Cells drop out, the rule survives"]
+        - ["Clear Formats", "Home, Editing, Clear", "Every format, rule or hand applied"]
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways to lose a rule you already had
+      items:
+        - label: Error 01
+          title: The header row inside the range
+          desc: >-
+            Text sorts above every number, so a Top 10 rule paints the heading and drops
+            a real row. Select data only, every time.
+        - label: Error 02
+          title: Believing Current Selection
+          desc: >-
+            The Rules Manager opens on it and shows nothing. The rules are still there.
+            Set the list to This Worksheet before deciding anything is gone.
+        - label: Error 03
+          title: Clear Formats instead of Clear Rules
+          desc: >-
+            It does remove the rule. It also removes every font, fill, border and number
+            format on the selection, and usually breaks a later step of the same task.
+        - label: Error 04
+          title: Colouring the cells by hand
+          desc: >-
+            Fastest thing in the room and it earns nothing. Ctrl+1 on a rule formatted
+            cell shows no fill, which is how the grader tells the two apart.
+
+  - concept:
+      eyebrow: Key concept
+      title: A sparkline is a cell background
+      lead: >-
+        A chart is an object that floats over the grid. A sparkline is drawn inside the
+        cell, behind whatever text the cell holds, so it moves, sorts, filters and prints
+        with the row it describes. That is the whole reason the objective exists as
+        something separate from the chart domain.
+      panel:
+        label: The check that settles it
+        title: The formula bar stays empty
+        note: >-
+          Click the cell. Nothing in the formula bar, and a Sparkline contextual tab on
+          the ribbon. A shrunken line chart would show selection handles and give you
+          Chart Design instead.
+      steps:
+        - text: Select the cells that will hold them
+        - text: Insert, Sparklines, Line or Column
+        - text: Data Range on the left, Location Range on the right
+          loop: ↺ same number of rows on both sides, or the dialog refuses
+
+  - steps:
+      eyebrow: Block 02 · Sparklines
+      title: The scale is the part being graded
+      items:
+        - label: '01'
+          title: Select the location first
+          desc: One cell per row of data, usually the empty column to the right of the numbers
+        - label: '02'
+          title: Insert, Sparklines
+          desc: Line, Column or Win/Loss. The Create Sparklines dialog opens with two boxes.
+        - label: '03'
+          title: Data Range, numbers only
+          desc: Headers and totals break the scale. The Location Range is already filled from step 1.
+        - label: '04'
+          title: Show group
+          desc: High Point, Low Point, Negative Points, First Point, Last Point, and Markers for Line only
+        - label: '05'
+          title: Axis, Same for All Sparklines
+          desc: Without it each row is scaled to itself and the rows cannot be compared, which is what the task is really asking
+
+  - table:
+      eyebrow: Block 02 · Objective 1.2.3
+      title: Ctrl+K opens it, four buttons change its face
+      headers: [Where it goes, The button in the Link to bar, What you fill in]
+      rows:
+        - ["A file or a URL", "Existing File or Web Page", "Address, and Current Folder"]
+        - ["Another sheet here", "Place in This Document", "Cell Reference or Defined Names"]
+        - ["A file not made yet", "Create New Document", "Name and path of the new file"]
+        - ["A new mail message", "E-mail Address", "E-mail address and Subject"]
+        - ["The hover proof", "ScreenTip...", "The text shown on hover"]
+        - ["The link gone", "Right-click, Remove Hyperlink", "Clear Hyperlinks keeps the blue"]
+
+  - steps:
+      eyebrow: Block 02 · Paste Special
+      title: Choosing an option, not pasting
+      items:
+        - label: '01'
+          title: Copy, never Cut
+          desc: Ctrl+X disables most of the Paste Special options, so a task that says paste values starts with Copy
+        - label: '02'
+          title: The arrow under Paste
+          desc: Not the button face. At the bottom of the gallery, Paste Special. Or Ctrl+Alt+V.
+        - label: '03'
+          title: The Paste section
+          desc: All, Formulas, Values, Formats, Validation, Column widths, Values and number formats, and five more
+        - label: '04'
+          title: Operation, Skip blanks, Transpose
+          desc: Add, Subtract, Multiply and Divide against what is already there. Nothing outside this dialog reaches them.
+        - label: '05'
+          title: OK, or Paste Link
+          desc: Paste Link leaves a live reference instead of a constant. Then Esc, to clear the marching border.
+
+  - divider:
+      eyebrow: Block 03
+      title: The first decision the sheet makes
+      lede: >-
+        Everything so far has described the data. IF is the first formula that chooses
+        between two answers, and the choice happens once per row without you.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: A logical test answers TRUE or FALSE
+      lead: >-
+        IF takes three arguments and only the first is a question. Logical_test is a
+        comparison, and a comparison always resolves to TRUE or FALSE before anything
+        else happens. Value_if_true and Value_if_false are the two answers you wrote in
+        advance, and Excel puts one of them in the cell.
+      panel:
+        label: Where the marks are
+        title: The boundary row is the whole item
+        note: >-
+          Greater than and greater than or equal give the same result on every row except
+          one. That row is where the exam puts its check, and it is the row you test
+          before you fill down.
+      steps:
+        - text: Excel reads the comparison for this row
+        - text: It resolves to TRUE or FALSE, nothing else
+        - text: The matching answer lands in the cell
+          loop: ↺ and the row below gets its own reading
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: IF through Function Arguments
+      items:
+        - label: '01'
+          title: Formulas, Logical, IF
+          desc: The Function Arguments dialog opens with the three boxes named and described
+        - label: '02'
+          title: Build the comparison
+          desc: Click into Logical_test, click cell B2 on the sheet, type the rest of the test
+        - label: '03'
+          title: Type the answers plain
+          desc: No quotation marks. The dialog adds them and shows the finished value to the right of the box.
+        - label: '04'
+          title: Read Formula result
+          desc: Bottom left of the dialog, before you commit. It is the only preview you get.
+        - label: '05'
+          title: F4, then fill down
+          desc: Lock any reference that must not move, then check one row on each side of the boundary
+
+  - code:
+      eyebrow: Block 03 · Five forms of the same function
+      title: What each argument is doing
+      filename: if.xlsx
+      lang: excel
+      source: |
+        =IF(B2>=70,"Pass","Fail")
+        =IF(B2>=$F$1,"Pass","Fail")
+        =IF(B2>=70,"Pass")
+        =IF(C2="","",C2*0.16)
+        =IF(B2>=70,B2*1.1,B2)
+      annotations:
+        - label: Line 2
+          text: The threshold points at a cell, so changing F1 moves every row. F4 locks it before the fill.
+        - label: Line 3
+          text: The third argument left out returns FALSE on screen. No report wants that word in it.
+        - label: Line 4
+          text: Two quotation marks with nothing between them looks blank and is not blank.
+        - label: If it fails
+          text: >-
+            Type Pass with no quotation marks. The dialog adds them, and typing your own
+            doubles them.
+          accent: true
+
+  - trace:
+      eyebrow: Block 03 · The boundary, measured
+      title: Three rows, and only one of them moves
+      headers: ["Score in B", ">= 70", "> 70", "Same result"]
+      rows:
+        - ["71", "Pass", "Pass", "yes"]
+        - ["70", "Pass", "Fail", "no"]
+        - ["69", "Fail", "Fail", "yes"]
+      verdict: One row in the whole column separates the two formulas, and that is the row the task will be checked on.
+
+  - lab:
+      eyebrow: Lab
+      title: Exercise 3 and Exercise 7, plus one rule
+      brief: >-
+        Work Exercise 3 end to end, then add the rule the pack does not give you. Over
+        the same table, write a formula rule that colours the entire row when one column
+        says the record is late, and prove in the Rules Manager that it is a single rule
+        over the whole range and not one rule per column.
+      blocks:
+        - label: Deliverable
+          text: The Exercise 3 workbook with the extra rule, and Exercise 7 with its IF column
+        - label: Constraint
+          text: >-
+            Every threshold points at a cell. No number typed inside a rule, so the sheet
+            can be re-run against a new limit without reopening a dialog.
+        - label: The check
+          text: >-
+            Change one value across the limit and back. Anything that does not repaint
+            was coloured by hand and does not count.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The rule belongs to the range
+          desc: >-
+            Which cells were selected when you wrote it decides which cells it paints,
+            and the only way back is the Applies to box
+        - title: A sparkline lives in the cell
+          desc: >-
+            Empty formula bar, Sparkline tab on the ribbon, and one common scale, or the
+            rows on the sheet cannot be compared with each other
+        - title: IF is graded on one row
+          desc: >-
+            Greater than and greater than or equal agree everywhere except the boundary,
+            so that is the row you test before filling down
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Take your own data set from week 4 and give it three rules that mean something,
+        one of them written as a formula. Add a sparkline column on a common scale, and
+        one IF that classifies each row. Write one line under the sheet saying what a
+        reader should conclude from the colours.
+      meta:
+        - [Due, Before week 6]
+        - [Format, Blackboard · one .xlsx file]
+        - [Weight, Part of the 30 % inside midterm 1]
+      rubric:
+        - ["Rules", "40 %", "Three rules, one of them a formula rule, all visible in the manager"]
+        - ["Sparklines", "20 %", "One common scale, so the rows can be read against each other"]
+        - ["IF", "25 %", "The boundary row is correct and the threshold points at a cell"]
+        - ["The sentence", "15 %", "One line that says what the colours are telling the reader"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, IF in depth and the sweep back over everything from week 2 onward,
+        because session 12 is the first midterm.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

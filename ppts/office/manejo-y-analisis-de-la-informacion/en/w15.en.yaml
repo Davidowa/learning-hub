@@ -1,0 +1,452 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 15
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 15 · Sessions 29 and 30 · Advanced filters
+      title: Information Management and Analysis
+      subtitle: >-
+        Filtering with a criteria range you wrote instead of menus you clicked, and the
+        objects that filter a report with buttons.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 29 and 30 of 34]
+      notes: |
+        Sessions 29 and 30 of the syllabus, CLO06. Both sessions are advanced filters,
+        which also carries the non-destructive branch of Expert 2.2.5.
+        COBERTURA.md adds Expert 4.2.3 slicers and timelines and the whole of Expert
+        4.3, PivotCharts, moved here because week 14 could not hold them.
+        Routes come from procedures.en.md. Exercises 24 and 23 version 2, and note
+        that exercise 23 ships in two versions and the official one has to be declared.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: The criteria range
+          desc: Same row is AND, a new row is OR, and the header has to be copied
+        - title: Running the filter
+          desc: Hidden in place or extracted out, and the unique records check box
+        - title: Buttons instead of lists
+          desc: Slicers, timelines and PivotCharts over 26,608 restaurant tickets
+        - title: Your turn
+          desc: Fifteen filters of rising difficulty over 27 employees
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Build a criteria range Excel accepts
+          sub: Copied headers, conditions underneath, and no stray blank row inside it
+        - head: Combine AND and OR without a menu
+          sub: Across a row for both, down a column for either, and the pairs that mix them
+        - head: Extract the result instead of hiding rows
+          sub: Copy to another location, and the header row that chooses which fields come out
+        - head: Write a criterion that is a formula
+          sub: Returns TRUE or FALSE, points at the first data row, and never carries a field name
+        - head: Filter a report with a slicer
+          sub: And with a timeline, and connect one slicer to more than one PivotTable
+        - head: Build a PivotChart and drill into it
+          sub: Field buttons, Switch Row/Column, and the sheet a double-click writes
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: done
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: The criteria range is the exercise
+      lede: >-
+        The dialog has three boxes and takes ten seconds. Everything hard about an
+        advanced filter happens in the small table you write above the list.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A filter that reads a range, not a menu
+      lead: >-
+        AutoFilter asks you to tick values in a list. An advanced filter reads its
+        conditions out of cells, so they can be written down, reviewed and reused. That is
+        also why it reaches what the menus cannot: several fields joined with OR, and a
+        criterion that is a whole formula.
+      panel:
+        label: What it needs first
+        title: A standard table, in one block, on one sheet
+        note: >-
+          One header row running left to right, one record per row, one field per column,
+          consistent types down each column, and no blank rows or columns anywhere inside
+          it. Break any of those and the filter reads a shorter list than you think.
+      steps:
+        - text: Copy the headers of the fields you will filter on
+        - text: Write the conditions in the rows underneath them
+        - text: Data, Sort & Filter, Advanced
+          loop: ↺ and change the cells to change the filter, without reopening anything
+
+  - table:
+      eyebrow: Block 01 · The geometry is the logic
+      title: Where you put it is what it means
+      headers: [Layout, What it means, Exercise 24 asks for]
+      rows:
+        - ["Same row", "Both must hold", "Centro and Accounting"]
+        - ["Next row down", "Either may hold", "Administration or Logistics"]
+        - ["Two rows, two fields", "One pair or the other", "Centro plus Accounting, or Azca plus Logistics"]
+        - ["One field twice", "Both ends of a range", "Salary over 4,000 and under 6,000"]
+
+  - code:
+      eyebrow: Block 01 · Written into the cells, not typed in a box
+      title: Wildcards and comparisons
+      filename: Excel24_instructions(Advanced Filters).xlsx
+      lang: excel
+      source: |
+        E*
+        ?E*
+        *A*
+        *8
+
+        >6000
+        <>Azcapotzalco
+        >=1991
+      annotations:
+        - label: The two wildcards
+          text: >-
+            An asterisk stands for any run of characters, a question mark for exactly one.
+        - label: Reading them
+          text: >-
+            E* begins with E, ?E* has E as its second character, *A* contains an A, *8
+            ends in 8.
+        - label: Comparisons
+          text: >-
+            Typed straight under the field header. No equals sign, no quotes, no formula.
+        - label: Risk
+          text: >-
+            A blank row inside the criteria range is a condition that matches everything,
+            so the filter returns the whole list and looks broken the other way round.
+          accent: true
+
+  - code:
+      eyebrow: Block 01 · The criterion that is a formula
+      title: Three rules, and all three are graded
+      filename: Excel24_instructions(Advanced Filters).xlsx
+      lang: excel
+      source: |
+        =$J4>AVERAGE($J$4:$J$29)
+
+        =AND(YEAR($F4)>=1991,YEAR($F4)<=1994)
+
+        =LEFT($B4,1)="E"
+      annotations:
+        - label: The header is the trap
+          text: >-
+            Over a computed criterion the header cell must not hold a field name. Leave it
+            blank or write f(x).
+        - label: Relative on purpose
+          text: >-
+            $J4 points at the first data row and stays relative down, so Excel walks the
+            list. What it is compared against is locked.
+        - label: What it must return
+          text: >-
+            TRUE or FALSE. Anything else is read as text and matches nothing at all.
+        - label: Risk
+          text: >-
+            The cell shows TRUE or FALSE for row 4 only, and looks wrong. It is not: the
+            filter re-evaluates it once per record.
+          accent: true
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways to get nothing back
+      items:
+        - label: Error 01
+          title: A blank row in the criteria
+          desc: >-
+            An empty row is a condition with nothing in it, so everything passes. The filter
+            appears to have done nothing, and it did exactly what you wrote.
+        - label: Error 02
+          title: Headers retyped by hand
+          desc: >-
+            A trailing space or a different spelling and the field is not recognised. Copy
+            the header cells from the list; never type them again.
+        - label: Error 03
+          title: A field name over a formula
+          desc: >-
+            Excel compares the text of the formula against the column instead of running
+            it. Nothing matches, nothing is highlighted, and no error appears.
+        - label: Error 04
+          title: Treating the extract as live
+          desc: >-
+            Copy to another location writes values, once. Change the list afterwards and
+            the extracted block does not move with it.
+
+  - divider:
+      eyebrow: Block 02
+      title: Running it, and what comes out
+      lede: >-
+        Three boxes and two option buttons. The option button you pick decides whether
+        anything exists afterwards for a grader to look at.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: Five stops in the Advanced Filter dialog
+      items:
+        - label: '01'
+          title: Click in the list
+          desc: Data tab, Sort & Filter group, Advanced. List range arrives filled in.
+        - label: '02'
+          title: Pick the action
+          desc: Filter the list, in-place, or Copy to another location. This decides everything after.
+        - label: '03'
+          title: Criteria range
+          desc: Select the copied headers and every criteria row under them, and nothing else.
+        - label: '04'
+          title: Copy to
+          desc: One destination cell for all fields, or a row of copied headers to choose which.
+        - label: '05'
+          title: Unique records only
+          desc: Ticked with an empty criteria range, this is the non-destructive way to list uniques.
+
+  - figure:
+      eyebrow: Block 02 · The dialog itself
+      title: Three boxes and two option buttons
+      image: img/en/advanced-filter.png
+      caption: >-
+        Copy to stays greyed until Copy to another location is selected, which is the
+        dialog saying the two decisions are really one decision.
+      alt: >-
+        The Excel Advanced Filter dialog, with Filter the list, in-place selected and the
+        List range, Criteria range and Copy to boxes empty.
+      side:
+        label: Read the captions
+        text: >-
+          Filter the list, in-place and Copy to another location are the exact strings on
+          this build. Unique records only sits under the three boxes and works with the
+          criteria range left empty.
+
+  - table:
+      eyebrow: Block 02 · The two option buttons
+      title: What each one leaves on the sheet
+      headers: [Choice, What you see, What it costs]
+      rows:
+        - ["In place", "Rows hidden, list intact", "One result at a time"]
+        - ["Copy to", "A static block of values", "It never updates again"]
+        - ["Unique only", "Duplicates dropped", "Nothing, the list is untouched"]
+
+  - method:
+      eyebrow: Block 02 · Two constraints worth saying out loud
+      title: Where the pieces are allowed to live
+      statement: The extraction is written on the sheet the filter was run from, and the exercise's own note says the criteria range belongs there too.
+      points:
+        - label: Same sheet
+          text: Run the filter from the sheet holding the list and the criteria. Excel refuses the destination otherwise, and the message does not explain why.
+        - label: Below the list
+          text: Exercise 24 starts its extractions at B32, under 27 records that end at row 29. Leave a clear row between blocks or the next filter reads them as data.
+        - label: Untouched source
+          text: The original list is never modified by either option button, which is the reason to prefer this over deleting rows by hand.
+
+  - divider:
+      eyebrow: Block 03
+      title: Filtering with buttons instead of lists
+      lede: >-
+        A slicer is a filter you can see. A PivotChart is a report you can point at. Both
+        leave an object behind, which is what gets graded.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: Insert Slicer, then size it by numbers
+      items:
+        - label: '01'
+          title: Click in the report
+          desc: PivotTable Analyze tab, Filter group, Insert Slicer
+        - label: '02'
+          title: Tick every field named
+          desc: More than one box ticked gives several slicers in a single operation.
+        - label: '03'
+          title: Size and buttons
+          desc: Slicer tab, Size group for Height and Width, Buttons group for Columns. Type, do not drag.
+        - label: '04'
+          title: Caption and settings
+          desc: The Slicer Caption box for the header text, Slicer Settings for sorting and empty items. Both captions to confirm.
+        - label: '05'
+          title: Report Connections
+          desc: One slicer, several reports, if they share a cache. Office 2019 calls it PivotTable Connections.
+
+  - table:
+      eyebrow: Block 03 · Three ways to filter the same report
+      title: Only one of them leaves an object
+      headers: [Route, What lands on the sheet, What a grader finds]
+      rows:
+        - ["Filter arrow", "Nothing at all", "No object, no marks"]
+        - ["Filters area", "A drop-down in the report", "A field, not a slicer"]
+        - ["Insert Slicer", "An object with a header", "A cache named Slicer_Field"]
+        - ["Timeline", "A date bar with a level list", "Years, Quarters, Months, Days"]
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: A chart wired to the report underneath
+      items:
+        - label: '01'
+          title: From an existing report
+          desc: Click in the PivotTable, PivotTable Analyze tab, Tools group, PivotChart
+        - label: '02'
+          title: From raw data
+          desc: Insert tab, Charts group, the arrow under PivotChart, then PivotChart & PivotTable
+        - label: '03'
+          title: The pane renames the areas
+          desc: Filters, Legend (Series), Axis (Categories) and Values, not Rows and Columns
+        - label: '04'
+          title: Field buttons
+          desc: PivotChart Analyze, Show/Hide, Field Buttons. Clear only the kinds named, never the entry that hides them all.
+        - label: '05'
+          title: Switch Row/Column
+          desc: On a PivotChart this swaps the report underneath too, which is what gets checked.
+
+  - method:
+      eyebrow: Block 03 · Objective 4.3.3
+      title: Styling one is three separate marks
+      statement: Chart Design, Chart Styles, the More arrow for the full gallery. Then Change Colors beside it, then Quick Layout in the group to its left. Three buttons, three graded actions.
+      points:
+        - label: Style
+          text: >-
+            The gallery boxes whatever is applied, so reopening it is the check. It is the
+            same gallery an ordinary chart uses, on the same contextual tab.
+        - label: Colour
+          text: >-
+            Change Colors is its own button, with Colorful and Monochromatic palettes. The
+            caption is verified on a plain chart and still to confirm on a PivotChart.
+        - label: Layout first, then style
+          text: >-
+            Quick Layout decides which elements exist and the style decides how they look, so
+            a task naming both wants them in that order or the layout undoes the style.
+
+  - table:
+      eyebrow: Block 03 · A PivotChart is not a chart with extras
+      title: Five places the two behave differently
+      headers: [Action, On a PivotChart, On a plain chart]
+      rows:
+        - ["Switch Row/Column", "Swaps the report too", "Swaps the picture only"]
+        - ["Scatter or Bubble", "Refused outright", "Available"]
+        - ["Field buttons", "Sit on the chart", "Do not exist"]
+        - ["Double-click a value", "Writes a detail sheet", "Nothing happens"]
+        - ["Contextual tab", "PivotChart Analyze", "Chart Design only"]
+
+  - concept:
+      eyebrow: Block 03 · Drilling down
+      title: One double-click writes a new sheet
+      lead: >-
+        Double-click a value cell and Excel adds a worksheet holding only the source rows
+        behind that one number, formatted as a table. Over 26,608 tickets that is the
+        difference between believing a total and showing where it came from, and it is the
+        only route that leaves written evidence.
+      panel:
+        label: How to check it
+        title: Count the new sheet against the number you clicked
+        note: >-
+          Sum the amount column of the drill-through sheet. It has to equal the cell that
+          produced it. The setting that allows or forbids it sits on the Data tab of
+          PivotTable Options, worded Enable show details on the build this was read from.
+      steps:
+        - text: Put a second field under the first in Axis (Categories)
+        - text: Collapse Field and Expand Field walk the levels
+        - text: Double-click the value for the rows themselves
+          loop: ↺ and the sheet stays in the workbook until you delete it
+
+  - quiz:
+      eyebrow: Quick check
+      question: A slicer sits on the sheet and the second PivotTable ignores it. Why?
+      options:
+        - "The two reports were built from separate PivotCaches"
+        - "The slicer was inserted from the Insert tab instead"
+        - "Report Connections works on tables, not on PivotTables"
+        - "Multi Select was left switched off in the slicer header"
+
+  - lab:
+      eyebrow: Lab
+      title: Fifteen filters, then a report with buttons
+      brief: >-
+        Exercise 24 first, starting the extractions at B32: the fifteen filters run from one
+        branch, through department pairs joined by OR, through codes matched with wildcards
+        in four positions, and end at salaries above the average of the list, which cannot
+        be written without a formula criterion. Then exercise 23, where the restaurant
+        report gets a slicer by waiter, a monthly timeline, and a PivotChart of sales by
+        month split by type.
+      blocks:
+        - label: Deliverable
+          text: Both workbooks on Blackboard, with every criteria range left visible on the sheet
+        - label: Constraint
+          text: No AutoFilter anywhere. Every one of the fifteen results is an extraction produced by a criteria range.
+        - label: The test
+          text: Change one cell of a criteria range and rerun. If the result does not move, the filter read a different range.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The layout is the logic
+          desc: >-
+            Conditions on one row are joined with AND, conditions on separate rows with OR.
+            Nothing else in Excel states a compound condition that plainly
+        - title: A formula criterion has three rules
+          desc: >-
+            It returns TRUE or FALSE, it points at the first data row with a relative
+            reference, and its header must not be the name of a field
+        - title: An object is what gets graded
+          desc: >-
+            A filter arrow leaves nothing behind. A slicer, a timeline and a PivotChart are
+            objects on the sheet, and that is what the task means when it says insert one
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Finish the fifteen filters, then take one data set of your own and extract two
+        results from it: one combining two fields with OR, and one driven by a formula
+        criterion. Add one PivotChart with a slicer, and drill into a single value.
+      meta:
+        - [Due, Before week 16]
+        - [Format, Blackboard · two .xlsx files]
+        - [Weight, Part of the mark for assignments]
+      rubric:
+        - ["The fifteen", "40 %", "All extracted, criteria ranges left on the sheet"]
+        - ["Wildcards", "20 %", "The four positions solved without a helper column"]
+        - ["Formula criterion", "20 %", "Blank header, relative first row, locked range"]
+        - ["The objects", "20 %", "Slicer, timeline and PivotChart present and wired"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the model run backwards: Goal Seek, data tables across a range of
+        inputs, scenarios, and the project.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

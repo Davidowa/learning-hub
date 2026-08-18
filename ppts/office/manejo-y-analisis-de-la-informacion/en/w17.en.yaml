@@ -1,0 +1,461 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 17
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 17 · Sessions 33 and 34 · Printing, views and the final exam
+      title: Information Management and Analysis
+      subtitle: >-
+        The last thing a workbook does is leave your screen. Page setup, views, and the
+        three checks before it goes to somebody else.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 33 and 34 of 34]
+      notes: |
+        Sessions 33 and 34 of the syllabus, CLO09. Session 33 is page setup, printing
+        and views; session 34 is the final exam. Covered outright: Associate 1.3.1,
+        1.4.2, 1.4.3, 1.4.4, 1.5.1 and 1.5.3.
+        COBERTURA.md adds 1.3.3 Excel headers and footers, 1.5.2 saving in other
+        formats, and the Compatibility Checker, which is the third leg of 1.5.4 after
+        week 9 and week 11.
+        Routes come from procedures.en.md. Exercise 4 is the file, and the lab also
+        recovers objective 1.4.1 if session 4 ran short.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Page setup and print
+          desc: One dialog with four tabs, and the galleries that are not it
+        - title: Views and windows
+          desc: Freeze at the right anchor, split, page break preview, two windows on one file
+        - title: Handing it over
+          desc: Headers and footers, export, and the third of the Check for Issues tools
+        - title: The final exam
+          desc: What session 34 draws on, and how the hour is spent
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Set up a page in one operation
+          sub: The dialog box launcher, four tabs, and everything applied before you click OK
+        - head: Set a print area and prove it
+          sub: Page Break Preview greys the outside, and Name Manager holds Sheet1!Print_Area
+        - head: Repeat titles and build a footer
+          sub: Rows to repeat at top, then Custom Footer and the buttons that write the codes
+        - head: Freeze at the right anchor cell
+          sub: Everything above and everything left of the cell you clicked, and nothing else
+        - head: Export the whole workbook, not one sheet
+          sub: File, Export, Create PDF/XPS, and the Options button that decides what goes in
+        - head: Run the third inspection tool
+          sub: Compatibility Checker, and Copy to New Sheet, the only one that leaves a record
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: done
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Page setup is one thing, not six
+      lede: >-
+        The ribbon offers five galleries, each its own command with its own undo step. The
+        exam asks for a page setup, singular, and that lives in a dialog.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: Five galleries against one dialog
+      lead: >-
+        Margins, Orientation, Size, Breaks and Scale to Fit all work, and every one of
+        them is a separate operation. The Page Setup dialog holds the same settings on
+        four tabs, and everything you touch there is applied together when you click OK.
+        That is the difference the objective is written to catch.
+      panel:
+        label: The graded route
+        title: The dialog box launcher, bottom right of the group
+        note: >-
+          Page Layout tab, Page Setup group, the small arrow in the corner. Not the
+          Page Setup link at the bottom of Ctrl+P, which opens the same dialog with some
+          Sheet tab options greyed out, the print area among them.
+      steps:
+        - text: Select the sheet, or Ctrl-click several tabs for a group
+        - text: Open the dialog and set all four tabs
+        - text: Print Preview inside the dialog before committing
+          loop: ↺ and one OK applies the lot
+
+  - figure:
+      eyebrow: Block 01 · The dialog itself
+      title: Four tabs, and one OK at the end
+      image: img/en/page-setup-dialog.png
+      caption: >-
+        Orientation, Scaling, Paper size, Print quality and First page number, all on the
+        Page tab, with Print, Print Preview and Options along the bottom.
+      alt: >-
+        The Excel Page Setup dialog on its Page tab, with Portrait selected, Adjust to 100
+        per cent, Letter paper and 600 dpi print quality.
+      side:
+        label: Adjust to against Fit to
+        text: >-
+          The two scaling buttons are exclusive. Setting Width or Height on the ribbon
+          switches the dialog to Fit to and returns Adjust to to 100 per cent without
+          saying so, which is why the two fight.
+
+  - table:
+      eyebrow: Block 01 · The four tabs
+      title: What lives where, and what gets asked
+      headers: [Tab, What lives there, The exam favourite]
+      rows:
+        - ["Page", "Orientation, Scaling, Paper size", "Fit to 1 page wide"]
+        - ["Margins", "Four margins, header, footer", "Center on page"]
+        - ["Header/Footer", "The two lists, Custom buttons", "Different first page"]
+        - ["Sheet", "Print titles, Print area, Print", "Rows to repeat at top"]
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: Print area, and the proof it was set
+      items:
+        - label: '01'
+          title: Select the range
+          desc: Ctrl-click extra blocks into the same selection. Each one prints on its own page.
+        - label: '02'
+          title: Set Print Area
+          desc: Page Layout tab, Page Setup group, Print Area, then Set Print Area
+        - label: '03'
+          title: Extend or clear
+          desc: Add to Print Area for another block, Clear Print Area to take it all off
+        - label: '04'
+          title: Print titles
+          desc: The Sheet tab of the dialog, Rows to repeat at top and Columns to repeat at left
+        - label: '05'
+          title: Prove it
+          desc: Name Manager now holds Sheet1!Print_Area. No name, no print area, whatever printed.
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: A footer built from fields, not words
+      items:
+        - label: '01'
+          title: The same dialog
+          desc: Page Layout, Page Setup launcher, then the Header/Footer tab
+        - label: '02'
+          title: The lists are canned
+          desc: Use them only when the task does not word the text it wants
+        - label: '03'
+          title: Custom Header
+          desc: Three boxes open, Left section, Center section and Right section
+        - label: '04'
+          title: Insert the fields
+          desc: Use the buttons above the boxes. They write the codes; typing the words does not.
+        - label: '05'
+          title: The four check boxes
+          desc: Different odd and even pages, Different first page, Scale with Document, Align with page margins
+
+  - table:
+      eyebrow: Block 01 · Objective 1.5.3
+      title: Ctrl+P, and the half of it that does not stick
+      headers: [Setting, Where it is, Does it write back to the sheet]
+      rows:
+        - ["Copies", "The spinner at the top", "This pane only"]
+        - ["Print what", "Active Sheets, Workbook, Selection", "This pane only"]
+        - ["Ignore Print Area", "Bottom of that list", "This pane only"]
+        - ["Collated", "Under one or two sided", "This pane only"]
+        - ["Orientation, margins", "The dialog's own values", "It writes back"]
+        - ["Scaling", "Fit Sheet, Columns, Rows", "It writes back"]
+
+  - table:
+      eyebrow: Block 01 · What the buttons write
+      title: Six codes worth recognising in a box
+      headers: [Button, Code it writes, What prints]
+      rows:
+        - ["Insert Page Number", "&P", "3"]
+        - ["Number of Pages", "&N", "8"]
+        - ["Insert Date", "&D", "18/08/2026"]
+        - ["Insert Time", "&T", "14:20"]
+        - ["Insert File Name", "&F", "Exercise 4 Excel.xlsx"]
+        - ["Insert Sheet Name", "&A", "World Data 2023"]
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways the printout disagrees
+      items:
+        - label: Error 01
+          title: Scaling set from the ribbon
+          desc: >-
+            Width and Height in Scale to Fit switch the setting to Fit to, and the Adjust to
+            per cent box goes back to 100 without a word. Set both in the dialog.
+        - label: Error 02
+          title: Print Selection instead of an area
+          desc: >-
+            It prints the right cells once and stores nothing. The next print is the whole
+            sheet again, and Name Manager holds no Print_Area to show for it.
+        - label: Error 03
+          title: A header typed as literal text
+          desc: >-
+            A date typed as words prints correctly today and never updates. Insert Date
+            writes the code, and the code is what the grader reads back.
+        - label: Error 04
+          title: Repeating titles by hand
+          desc: >-
+            Pasting the header row every twenty rows survives one print and breaks every
+            sort, filter and PivotTable built on the sheet afterwards.
+
+  - divider:
+      eyebrow: Block 02
+      title: Looking at a sheet too big to look at
+      lede: >-
+        Two hundred rows and thirty-five columns do not fit on a screen. Freezing,
+        splitting and a second window are three different answers to that.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: Three views, and one that is stored
+      items:
+        - label: '01'
+          title: Normal
+          desc: View tab, Workbook Views group. Where the work is actually done.
+        - label: '02'
+          title: Page Break Preview
+          desc: Drag a blue line and it becomes a manual break, solid where the automatic was dashed.
+        - label: '03'
+          title: Page Layout
+          desc: Headers and footers render as they will print, and the rulers set the margins.
+        - label: '04'
+          title: Custom Views
+          desc: Set the sheet up first, then Add, name it, tick Print settings and Hidden rows.
+        - label: '05'
+          title: The catch
+          desc: A workbook holding an Excel table cannot store custom views. The button greys out.
+
+  - concept:
+      eyebrow: Block 02 · The whole objective in one sentence
+      title: Excel freezes above and to the left
+      lead: >-
+        Everything above the selected cell and everything to its left stays put. That
+        single rule is the entire objective, and it is why the answer to "freeze the two
+        header rows and the label column" is to click B3 and nothing else. The two
+        convenience entries under it ignore your selection completely.
+      panel:
+        label: How to check it
+        title: The menu entry now reads Unfreeze Panes
+        note: >-
+          A freeze draws one thin dark line where a split draws two thick grey bars, and a
+          split scrolls in both halves while a freeze does not. The cheapest proof is
+          reopening the menu and reading the first entry.
+      steps:
+        - text: Work out the cell below and right of what stays
+        - text: Click that single cell, not a row or column heading
+        - text: View, Window, Freeze Panes, Freeze Panes
+          loop: ↺ and the same first entry unfreezes it
+
+  - trace:
+      eyebrow: Block 02 · Anchor cell to result
+      title: What each click actually freezes
+      headers: [You click, Rows kept, Columns kept, Reads back as]
+      rows:
+        - ["A2", "1", "0", "SplitRow 1"]
+        - ["B1", "0", "1", "SplitColumn 1"]
+        - ["B3", "2", "1", "Rows 1 and 2, col A"]
+        - ["A1", "0", "0", "Nothing at all"]
+      verdict: Freeze Top Row ignores the selection and freezes exactly one row, which is right about half the time and silent when it is not.
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: The Window group, five commands
+      items:
+        - label: '01'
+          title: New Window
+          desc: A second window onto the same file. The captions become name.xlsx - 1 and - 2.
+        - label: '02'
+          title: Arrange All
+          desc: Tiled, Horizontal, Vertical, Cascade, and the Windows of active workbook box
+        - label: '03'
+          title: Split
+          desc: Click the cell where the split falls, then Split. Both halves scroll on their own.
+        - label: '04'
+          title: View Side by Side
+          desc: Two files, then Synchronous Scrolling and Reset Window Position
+        - label: '05'
+          title: Zoom
+          desc: The Zoom dialog takes an exact percentage. The slider at the corner cannot.
+
+  - divider:
+      eyebrow: Block 03
+      title: Handing it over
+      lede: >-
+        Exporting is distributing. So is sending an .xlsm to somebody whose Excel opens it
+        with the macros switched off and a bar across the top.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: Export, and the button that decides
+      items:
+        - label: '01'
+          title: File, Export
+          desc: Not F12. The Export pane is the route the objective names.
+        - label: '02'
+          title: Create PDF/XPS
+          desc: Then the Create PDF/XPS button, which opens Publish as PDF or XPS
+        - label: '03'
+          title: Options
+          desc: "Publish what: Selection, Active sheet(s), Entire workbook, Table. This is the step."
+        - label: '04'
+          title: Other formats
+          desc: File, Export, Change File Type, pick from the two lists, then the Save As button
+        - label: '05'
+          title: Confirm the type
+          desc: Check Save as type in the Save As dialog, click Save, and read any warning.
+
+  - table:
+      eyebrow: Block 03 · What each format gives up
+      title: Five entries from the Save as type list
+      headers: [Format, What it is for, What it drops]
+      rows:
+        - [".xlsx", "The normal workbook", "Any macro in the file"]
+        - [".xlsm", "A workbook holding code", "Nothing"]
+        - [".xltx", "A template to start from", "It lands in the templates folder"]
+        - [".csv", "One sheet of plain text", "Every other sheet, and formats"]
+        - [".pdf", "Reading and printing", "The formulas behind the numbers"]
+
+  - steps:
+      eyebrow: Block 03 · The file somebody sends you
+      title: Opening a workbook that already has macros
+      items:
+        - label: '01'
+          title: The format
+          desc: Code only survives in .xlsm. Save one as .xlsx and the code is gone.
+        - label: '02'
+          title: The yellow bar
+          desc: SECURITY WARNING, macros disabled, and an Enable Content button. The choice is remembered.
+        - label: '03'
+          title: The red bar
+          desc: From email or the web there is no button. Close, right-click the file, Properties, Unblock.
+        - label: '04'
+          title: The setting behind it
+          desc: Week 11 owns this. Developer, Code, Macro Security, and newer builds word the option Disable VBA macros.
+        - label: '05'
+          title: A folder you trust
+          desc: File, Options, Trust Center, Trust Center Settings, Trusted Locations, Add new location
+
+  - tiers:
+      eyebrow: Block 03 · Check for Issues, one menu
+      title: Three tools, three different weeks
+      items:
+        - key: '01'
+          title: Document Inspector
+          desc: Hidden rows, sheets and comments, plus everything under Document Properties. Permanent, so save first. Week 9.
+        - key: '02'
+          title: Accessibility Checker
+          desc: Errors, Warnings and Tips in a side pane, with Additional Information carrying the fix. Also on the Review tab. Week 11.
+        - key: '03'
+          title: Compatibility Checker
+          desc: Select versions to show, then what 97-2003 through 2013 would lose. Copy to New Sheet is the record. Week 17.
+
+  - quiz:
+      eyebrow: Quick check
+      question: The task says export the entire workbook to PDF and the file comes out with one sheet. What was skipped?
+      options:
+        - "Options, and the Publish what setting inside it"
+        - "Optimize for was left on Minimum size"
+        - "A print area was still set on the first sheet"
+        - "Ignore print areas was ticked in the dialog"
+
+  - table:
+      eyebrow: Block 03 · Session 34
+      title: What the final exam draws on
+      headers: [Block, Weeks, What is asked of you]
+      rows:
+        - ["Formatting", "2 and 3", "Format Cells, sheets, named ranges"]
+        - ["Formulas", "4 to 8", "References, text, dates, the *IFS family"]
+        - ["Data", "9 to 11", "Import, clean, table, chart, protect"]
+        - ["Lookup", "12 and 13", "VLOOKUP, HLOOKUP, INDEX and MATCH"]
+        - ["Reporting", "14 to 16", "Subtotals, PivotTables, filters, what-if"]
+
+  - lab:
+      eyebrow: Lab
+      title: Twenty pages down to eight
+      brief: >-
+        Exercise 4, on the 196-country base that prints on twenty pages untouched. Set the
+        print area to the first ten columns and watch the count fall to eight. Repeat the
+        heading row on every page, turn the sheet landscape and scale it to four pages wide
+        by five tall. Then three copies of the sheet: freeze the first column on one, freeze
+        at B4 on the next, split the third and drag the vertical bar past column C.
+      blocks:
+        - label: Deliverable
+          text: The workbook and a PDF of the whole file, both on Blackboard
+        - label: Add what the file leaves out
+          text: A custom footer with the page number and the sheet name, an exact 85 per cent zoom, and a second window arranged vertically
+        - label: If week 2 ran short
+          text: "This is where the Quick Access Toolbar is recovered: File, Options, Quick Access Toolbar, Commands Not in the Ribbon"
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: One dialog, not five galleries
+          desc: >-
+            Everything the galleries do lives on four tabs of Page Setup, and applying it
+            there is one operation. That is the whole of objective 1.3.1
+        - title: A print area leaves a name
+          desc: >-
+            Setting one writes Sheet1!Print_Area into Name Manager. If the name is not
+            there, nothing was set, whatever came out of the printer
+        - title: Freeze from the cell, not the menu
+          desc: >-
+            Excel keeps everything above and to the left of the cell you clicked. Freeze Top
+            Row is a guess that happens to be right about half the time
+
+  - homework:
+      eyebrow: Preparation
+      title: What to do before session 34
+      brief: >-
+        Rebuild three things from memory rather than rereading them, because the exam grades
+        the route and not the result: one Format Cells pass that sets border and fill
+        together, one lookup with the table array locked, and one PivotTable whose number
+        format survives a refresh.
+      meta:
+        - [When, Session 34]
+        - [Format, "In the lab, on the machine"]
+        - [Bring, Nothing. The files are provided]
+        - [Weight, The final exam component]
+
+  - closing:
+      title: Thank you
+      subtitle: >-
+        Seventeen weeks, thirty-four sessions and twenty-five exercises. The certification
+        is the next step, and it is now within reach.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

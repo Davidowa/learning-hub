@@ -1,0 +1,498 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 8
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 08 · Sessions 15 and 16 · Conditional aggregates
+      title: Information Management and Analysis
+      subtitle: >-
+        Functions that read a whole column and answer once. One criterion first, then as
+        many as the report needs, and the argument order that flips between the two.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 15 and 16 of 34]
+      notes: |
+        Two full sessions for the plural family the syllabus names, plus the three
+        singular forms COBERTURA.md adds ahead of them. This is one of the few weeks
+        of the term with real slack, which is why the deck also closes the material
+        gap the coverage document flags: Exercise 11 practises only SUMIFS, COUNTIFS
+        and AVERAGEIFS, so MAXIFS and MINIFS get their own slide and go into the lab.
+        Every number on the measured slides comes from the small table printed on the
+        slide itself, so it can be checked without opening a file.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: One criterion
+          desc: SUMIF, COUNTIF and AVERAGEIF, and where each one puts the range it aggregates
+        - title: Many criteria
+          desc: The five plural functions, pairs of arguments, and the order that flips
+        - title: The criteria language
+          desc: Operators as text, references joined with an ampersand, and the two nobody practises
+        - title: Your turn
+          desc: Exercises 9 and 11, and the two functions Exercise 11 leaves out
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Total, count and average under one condition
+          sub: SUMIF, COUNTIF and AVERAGEIF, from the Function Library rather than by typing
+        - head: Do the same under several conditions
+          sub: SUMIFS, COUNTIFS, AVERAGEIFS, MAXIFS and MINIFS, in pairs of arguments
+        - head: Say where the aggregated range goes
+          sub: Last in the singular functions and first in the plural ones, with nothing to warn you
+        - head: Write a criterion Excel can read
+          sub: Numbers bare, text quoted, operators quoted and joined to a cell with an ampersand
+        - head: Fill a whole summary grid from one formula
+          sub: With the mixed references of week 3 doing the work down the side and across the top
+        - head: Recognise a wrong answer that raises nothing
+          sub: Ranges of different heights, swapped arguments and the empty result that reads as zero
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: now
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: One criterion, one answer
+      lede: >-
+        Everything so far has written one result per row. These functions read every row
+        and write one number, which is what a report is made of.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: One answer for a column, not one per row
+      lead: >-
+        IF runs once per row and writes once per row. SUMIF runs once, reads the whole
+        column, and writes a single number. That is a different shape of formula, and it
+        is the shape a report is built out of, a grid of totals where every cell asks its
+        own question of the same records.
+      panel:
+        label: What changes with the shape
+        title: The answer does not sit beside the data
+        note: >-
+          These formulas live on a summary block, or on another sheet, pointing back at
+          the records. Because they point rather than sit alongside, the ranges have to be
+          locked before the formula is filled across the grid.
+      steps:
+        - text: IF looks at this row and answers for this row
+        - text: SUMIF looks at every row and answers once
+        - text: The answer lands where the report is
+          loop: ↺ and one formula fills a whole grid of them
+
+  - table:
+      eyebrow: Block 01 · Read off the dialog
+      title: The three singular forms
+      headers: [Function, Argument boxes, What comes back]
+      rows:
+        - ["SUMIF", "Range, Criteria, Sum_range", "The total of the matching rows"]
+        - ["COUNTIF", "Range, Criteria", "How many rows matched"]
+        - ["AVERAGEIF", "Range, Criteria, Average_range", "The mean of the matching rows"]
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: Where the family hides in the ribbon
+      items:
+        - label: '01'
+          title: Click the answer cell
+          desc: One cell for the whole column. This is the first formula of the course that is not filled down beside its data.
+        - label: '02'
+          title: Formulas, More Functions
+          desc: COUNTIF, COUNTIFS, AVERAGEIF, AVERAGEIFS, MAXIFS and MINIFS are all under Statistical
+        - label: '03'
+          title: SUM is somewhere else
+          desc: SUMIF and SUMIFS sit under Math & Trig, apart from the rest of their own family
+        - label: '04'
+          title: Fill Range, then Criteria
+          desc: The dialog shows each argument's value to the right of its box as you move between them
+        - label: '05'
+          title: Read Formula result
+          desc: Bottom of the dialog, before OK. It is the only place the answer appears before it is committed.
+
+  - code:
+      eyebrow: Block 01 · Six formulas, one column of records
+      title: What each argument is doing
+      filename: spa.xlsx
+      lang: excel
+      source: |
+        =SUMIF(C2:C521,"Massage",E2:E521)
+        =SUMIF(E2:E521,">500")
+        =COUNTIF(C2:C521,"Massage")
+        =COUNTIF(E2:E521,">"&H1)
+        =AVERAGEIF(C2:C521,"Massage",E2:E521)
+        =AVERAGEIF(E2:E521,"<>")
+      annotations:
+        - label: Line 2
+          text: Sum_range left out, so SUMIF adds the range it tested. Only correct when they are the same column.
+        - label: Line 4
+          text: An operator has to be joined to a cell with an ampersand before the function ever sees it.
+        - label: Line 6
+          text: Not equal to nothing. This is how a mean stops being dragged down by the empty rows.
+        - label: If it fails
+          text: >-
+            AVERAGEIF with no matching row answers #DIV/0!, so the report shows an error
+            instead of a zero.
+
+  - code_output:
+      eyebrow: Measured · six rows, on the slide
+      title: The same data read six ways
+      filename: singular.xlsx
+      lang: excel
+      output_label: The data, then the answers
+      source: |
+        =SUMIF(A2:A7,"North",B2:B7)
+        =SUMIF(B2:B7,">500")
+        =COUNTIF(A2:A7,"North")
+        =COUNTIF(B2:B7,">500")
+        =AVERAGEIF(A2:A7,"North",B2:B7)
+        =AVERAGEIF(B2:B7,">500")
+      output: |
+        A2:A7  North South North
+               East  North South
+        B2:B7  800 400 200 900 600 300
+        SUMIF North          1600
+        SUMIF >500           2300
+        COUNTIF North           3
+        COUNTIF >500            3
+        AVERAGEIF North    533.33
+        AVERAGEIF >500     766.67
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four wrong answers that raise nothing
+      items:
+        - label: Error 01
+          title: Range and Sum_range swapped
+          desc: >-
+            SUMIF tests the first range and adds the third. Give it the amounts to test
+            and the categories to add and it returns zero, with no error anywhere.
+        - label: Error 02
+          title: A comparison left unquoted
+          desc: >-
+            Greater than five hundred is a criterion, not a value, so it travels as text
+            inside quotation marks. Only a bare number or a bare reference works plain.
+        - label: Error 03
+          title: Ranges of different heights
+          desc: >-
+            Rows 2 to 521 tested against rows 2 to 500 added. Excel lines them up from
+            the top and answers on the wrong rows without a word.
+        - label: Error 04
+          title: Reading an empty result as zero
+          desc: >-
+            No matching row makes SUMIF return zero and AVERAGEIF return an error. One
+            of them looks like data. Check the count before you trust either.
+
+  - divider:
+      eyebrow: Block 02
+      title: As many criteria as the report needs
+      lede: >-
+        Add an S and the arguments rearrange themselves. It is the same family, and the
+        range you are aggregating moves from the end of the list to the front of it.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Read off the dialog
+      title: The five plural forms
+      headers: ["Function", "The first box", "Then, in pairs"]
+      rows:
+        - ["SUMIFS", "Sum_range", "Criteria_range1, Criteria1, on"]
+        - ["COUNTIFS", "Criteria_range1", "Criteria1, then more pairs"]
+        - ["AVERAGEIFS", "Average_range", "Criteria_range1, Criteria1, on"]
+        - ["MAXIFS", "Max_range", "Criteria_range1, Criteria1, on"]
+        - ["MINIFS", "Min_range", "Criteria_range1, Criteria1, on"]
+
+  - compare:
+      eyebrow: Block 02 · The trap the family sets
+      title: The same total, in opposite order
+      before:
+        label: SUMIF, the range to add is last
+        file: orders.xlsx
+        lang: excel
+        code: |
+          =SUMIF(A2:A521,
+                 "North",
+                 E2:E521)
+      after:
+        label: SUMIFS, the range to add is first
+        file: orders.xlsx
+        lang: excel
+        code: |
+          =SUMIFS(E2:E521,
+                  A2:A521,"North",
+                  C2:C521,"Massage")
+      note: >-
+        SUMIF tests first and adds last. SUMIFS adds first and then tests in pairs, so a
+        second condition can be bolted on without moving anything that was already there.
+        AVERAGEIF and AVERAGEIFS flip in exactly the same way, and COUNTIFS has no
+        aggregated range at all because counting needs none.
+
+  - method:
+      eyebrow: Why the dialog, one more time
+      title: The order is only visible in one place
+      statement: The plural functions put the range you are aggregating first and the singular ones put it last. Nothing in the finished cell tells you which of the two you wrote.
+      points:
+        - label: The graded route
+          text: >-
+            Formulas, More Functions, then the function by name. Every box is labelled,
+            described under the boxes and previewed to the right as you fill it, so the
+            swap is visible before you commit anything.
+        - label: The fast route
+          text: >-
+            Type it and read the yellow ScreenTip under the cell. It names the argument
+            you are on and never says what should go there, which is exactly the piece
+            of information this family is testing.
+        - label: What the mistake costs
+          text: >-
+            A swapped pair returns zero rather than an error. A zero in a total column
+            reads as a real answer, and it will be copied into a report before anyone
+            notices.
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: SUMIFS, from the first box on
+      items:
+        - label: '01'
+          title: Sum_range comes first
+          desc: Formulas, Math & Trig, SUMIFS. The first box is the column of numbers you want totalled.
+        - label: '02'
+          title: One pair per condition
+          desc: Criteria_range1 and Criteria1, then range 2 and criteria 2, and the dialog grows as you fill it
+        - label: '03'
+          title: Every range the same height
+          desc: All the criteria ranges and the sum range have to cover the same rows, or the answer is quietly wrong
+        - label: '04'
+          title: Operators travel as text
+          desc: Greater than, less than and not equal go inside quotation marks, joined to a cell with an ampersand
+        - label: '05'
+          title: F4, then fill the grid
+          desc: Lock the record ranges before the formula is filled down the side and across the top of the report
+
+  - code:
+      eyebrow: Block 02 · Five formulas over one table
+      title: From one condition to a whole grid
+      filename: transport.xlsx
+      lang: excel
+      source: |
+        =SUMIFS(E2:E26,B2:B26,"North",C2:C26,"March")
+        =COUNTIFS(B2:B26,"North",C2:C26,"March")
+        =AVERAGEIFS(E2:E26,B2:B26,"North",E2:E26,">0")
+        =SUMIFS($E$2:$E$26,$B$2:$B$26,$G2,$C$2:$C$26,H$1)
+        =COUNTIFS(B2:B26,"North")
+      annotations:
+        - label: Line 3
+          text: The same column can be what is averaged and one of the things tested.
+        - label: Line 4
+          text: Branch down the side, month across the top, week 3 references. One formula fills the grid.
+        - label: Line 5
+          text: One pair is legal, and safer. Adding a second condition later changes nothing else.
+        - label: If it fails
+          text: >-
+            A zero where a total belongs usually means one range starts on the header
+            row.
+
+  - code_output:
+      eyebrow: Measured · six rows, on the slide
+      title: Two conditions, and only two rows meet both
+      filename: plural.xlsx
+      lang: excel
+      output_label: The data, then the answers
+      source: |
+        =SUMIFS(E2:E7,B2:B7,"North",C2:C7,"March")
+        =COUNTIFS(B2:B7,"North",C2:C7,"March")
+        =AVERAGEIFS(E2:E7,B2:B7,"North",C2:C7,"March")
+        =MAXIFS(E2:E7,C2:C7,"March")
+        =MINIFS(E2:E7,C2:C7,"March")
+      output: |
+        North March 800 | South March 400
+        North April 200 | North March 600
+        East  March 900 | South April 300
+        SUMIFS  North and March     1400
+        COUNTIFS North and March       2
+        AVERAGEIFS North and March   700
+        MAXIFS  March                900
+        MINIFS  March                400
+
+  - trace:
+      eyebrow: Block 02 · How COUNTIFS walks the rows
+      title: Two out of three is not a match
+      headers: ["Row", "Region", "Month", "North and March"]
+      rows:
+        - ["2", "North", "March", "counted"]
+        - ["3", "South", "March", "no, region"]
+        - ["4", "North", "April", "no, month"]
+        - ["5", "North", "March", "counted"]
+        - ["6", "East", "March", "no, region"]
+        - ["7", "South", "April", "neither"]
+      verdict: Every criterion has to hold on the same row. Two out of three counts as none.
+
+  - divider:
+      eyebrow: Block 03
+      title: The criteria language
+      lede: >-
+        A criterion is a small language of its own, and most of the wrong answers in this
+        family come from writing a sentence it does not speak.
+      block: 3
+
+  - table:
+      eyebrow: Block 03 · Six shapes of criterion
+      title: What Excel accepts in a Criteria box
+      headers: [Kind, What it means, How you write it]
+      rows:
+        - ["A number", "Equal to that number", "1000, with no quotation marks"]
+        - ["Text", "Equal to that text", "North, in quotation marks"]
+        - ["A comparison", "The operator travels with it", "Above 500 and not zero, quoted"]
+        - ["From a cell", "The operator joined to a reference", "The operator, then and sign, then H1"]
+        - ["Not blank", "Any cell that holds something", "The not equal pair on its own"]
+        - ["A pattern", "The wildcards from week 7", "Mar* and A?a, both quoted"]
+
+  - code:
+      eyebrow: Block 03 · Criteria built from the sheet
+      title: The ampersand is the whole technique
+      filename: criteria.xlsx
+      lang: excel
+      source: |
+        =COUNTIF(E2:E26,">"&H1)
+        =SUMIFS(E2:E26,D2:D26,">="&H1,D2:D26,"<="&H2)
+        =COUNTIFS(B2:B26,G2,C2:C26,H1)
+        =SUMIF(B2:B26,"*"&G2&"*",E2:E26)
+        =COUNTIF(E2:E26,">"&AVERAGE(E2:E26))
+      annotations:
+        - label: The pattern to memorise
+          text: Operator in quotation marks, then the ampersand, then the reference.
+        - label: Line 2
+          text: A range of dates is two criteria over one column, one for each end.
+        - label: Line 3
+          text: No ampersand and no quotation marks. Only operators need the join.
+        - label: Line 5
+          text: The criterion can hold a function. Last week's nesting, inside an argument.
+
+  - code:
+      eyebrow: Block 03 · The two with no exercise
+      title: MAXIFS and MINIFS behave like the rest
+      filename: extremes.xlsx
+      lang: excel
+      source: |
+        =MAXIFS(E2:E26,B2:B26,"North")
+        =MINIFS(E2:E26,B2:B26,"North")
+        =MAXIFS(E2:E26,B2:B26,"North",C2:C26,"March")
+        =MAX(E2:E26)
+        =MAXIFS(E2:E26,B2:B26,"Nowhere")
+      annotations:
+        - label: Nothing new to learn
+          text: Max_range first, then pairs, exactly like SUMIFS. Knowing the plural shape is knowing these two.
+        - label: Line 4
+          text: Week 4 asked MAX of a whole column. This block asks the same question of a subset of it.
+        - label: Line 5
+          text: No matching row returns zero, not an error, which is the opposite of what AVERAGEIFS does.
+        - label: A gap in the pack
+          text: Exercise 11 practises only the first three plural functions. These two have no exercise, so the lab adds them.
+
+  - quiz:
+      eyebrow: Quick check
+      question: Column B holds regions and column E holds amounts. What comes back?
+      filename: quiz.xlsx
+      lang: excel
+      source: |
+        =SUMIF(E2:E26,"North",B2:B26)
+      options:
+        - "The total of the amounts on the North rows"
+        - "Zero, because no amount is equal to North"
+        - "A name error, because the ranges are reversed"
+        - "The number of rows whose region is North"
+
+  - lab:
+      eyebrow: Lab
+      title: Exercise 11, and the two it leaves out
+      brief: >-
+        Work Exercise 11 through to the branch and month report, then extend it. Add two
+        rows to the summary block, the largest and the smallest deposit for each branch
+        and month, using MAXIFS and MINIFS. Write the four formulas of the grid once, with
+        the references locked, and fill the whole block from them.
+      blocks:
+        - label: Deliverable
+          text: The Exercise 11 workbook with the two extra rows and one formula per row
+        - label: Constraint
+          text: >-
+            Every criterion that names a branch or a month points at the label in the
+            report, not at a string typed inside the formula
+        - label: The check
+          text: >-
+            Add one record to the bottom of the data, inside the ranges, and every cell of
+            the summary has to move on its own. Any cell that does not is pointing short.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The shape changed this week
+          desc: >-
+            One formula now reads a whole column and answers once, which is why the
+            references are locked before anything is filled anywhere
+        - title: The S moves the first argument
+          desc: >-
+            Singular puts the aggregated range last and plural puts it first, and the
+            only place that difference is visible is the dialog
+        - title: A criterion is text
+          desc: >-
+            Numbers go bare, text and operators go in quotation marks, and a reference is
+            joined to an operator with an ampersand and nothing else
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Exercise 9 and Exercise 11, plus one summary block of your own over the data set
+        you cleaned in week 4. The block has at least two conditions per cell, at least
+        one criterion built from a cell with an ampersand, and one row that uses MAXIFS or
+        MINIFS.
+      meta:
+        - [Due, Before week 9]
+        - [Format, Blackboard · one .xlsx file]
+        - [Weight, Part of the 30 % inside midterm 2]
+      rubric:
+        - ["Singular forms", "25 %", "SUMIF, COUNTIF and AVERAGEIF answer what Exercise 9 asks"]
+        - ["Plural forms", "30 %", "The report grid is filled from one formula per row"]
+        - ["Criteria", "25 %", "At least one criterion is built from a cell, not typed in"]
+        - ["The extremes", "20 %", "MAXIFS or MINIFS present, and correct on a subset"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week the data stops being given to you. Importing, cleaning, removing
+        duplicates, sorting on several columns and filtering what is left.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

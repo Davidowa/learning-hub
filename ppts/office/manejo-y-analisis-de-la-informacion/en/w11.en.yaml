@@ -1,0 +1,489 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 11
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 11 · Sessions 21 and 22 · Chart choice and distribution
+      title: Information Management and Analysis
+      subtitle: >-
+        Last week built charts. This week decides whether they were the right ones, and
+        then gets the workbook ready to leave your hands.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 21 and 22 of 34]
+      notes: |
+        Sessions 21 and 22 of the syllabus, CLO07 and CLO09. Session 21 is chart critique;
+        session 22 is spelling, the accessibility checker, comments and protection.
+        Covered outright: Expert 1.2.3 and 1.2.5, plus the Accessibility Checker leg of
+        Associate 1.5.4 and a second pass over 5.3.3. COBERTURA.md adds Expert 4.1.2 and
+        4.1.1 to session 21, and Expert 1.2.2 and 1.2.1 to session 22.
+        Expert 1.1.3, enabling macros on a workbook that already has them, is taught in
+        block 3 by the instructor's decision. Recording macros, Expert 3.6.1 to 3.6.3,
+        is not part of this course; TIA503 owns it.
+        Spelling is in the syllabus and is not an objective of its own in the 2019
+        domains. It appears inside Expert 1.3.2, which this course anchors to INNOVATIQ.
+        Exercise 18 is the file. Its workbook carries six dead defined names pointing at
+        #REF!, from an old advanced filter exercise. Clean them before handing it out.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Which chart fits
+          desc: The ordinary types and what each one answers, then the six the Expert exam names by name
+        - title: Two magnitudes, one plot
+          desc: The combo chart and the secondary axis, built in the dialog rather than patched afterwards
+        - title: Review before you send
+          desc: Spelling, the Accessibility Checker, alt text, and the difference between a comment and a note
+        - title: Locking it down
+          desc: Unlock, lock, protect the sheet, protect the structure, and the yellow bar on a macro file
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Say which chart type answers the question
+          sub: And name what each of the six advanced types exists for, rather than which gallery it hides in
+        - head: Build a combo chart with a secondary axis
+          sub: Chart type and axis set inside one dialog, in one operation, before it closes
+        - head: Run the Accessibility Checker and act on it
+          sub: The second of the three tools behind objective 1.5.4, and where the chart alt text is read
+        - head: Tell a threaded comment from a note
+          sub: Two different objects on two different ribbon groups, and only one appears in the Comments pane
+        - head: Protect a sheet and still leave cells editable
+          sub: Unlock everything first, lock what matters, then protect from inside Allow Edit Ranges
+        - head: Enable macros on a file somebody sent you
+          sub: The yellow bar, the Trust Center setting behind it, and the red bar that carries no button
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: now
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: The chart you built against the chart you needed
+      lede: >-
+        Twenty charts came out of last week's exercise. Building them was the easy half.
+        This session is the one where each of them has to justify itself.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · The ordinary types
+      title: What each chart answers, and where it stops
+      headers: [Chart, The question it answers, Wrong choice when]
+      rows:
+        - ["Pie", "What share of the whole", "More than about six slices"]
+        - ["Clustered column", "How categories compare", "The parts make a whole"]
+        - ["100% stacked", "How the mix shifts", "Absolute size matters"]
+        - ["Line", "How something moves over time", "The axis is not ordered"]
+        - ["Scatter", "Whether two numbers move together", "One axis is a category"]
+
+  - tiers:
+      eyebrow: Block 01 · The six the Expert exam names
+      title: Four galleries hold all of them
+      items:
+        - key: Statistic
+          title: Histogram, Pareto, Box and Whisker
+          desc: Insert tab, Charts group, Insert Statistic Chart. Pareto is a Histogram subtype with its own cumulative line.
+        - key: Hierarchy
+          title: Treemap and Sunburst
+          desc: Insert Hierarchy Chart. One source column per level, outermost level last, blanks where a level is absent.
+        - key: Flow
+          title: Waterfall and Funnel
+          desc: The Waterfall, Funnel, Stock, Surface and Radar gallery. A funnel needs its one series sorted first.
+        - key: Combo
+          title: Combo, and the Map
+          desc: Insert Combo Chart for two magnitudes on one plot. Maps needs Bing, and MO-211 dropped that chart.
+
+  - steps:
+      eyebrow: Block 01 · The edits each type needs
+      title: Building it is not the whole task
+      items:
+        - label: '01'
+          title: Change Chart Type
+          desc: Click the chart, Chart Design, Type, Change Chart Type, All Charts tab, pick the new category and subtype, OK. Nothing has to be rebuilt.
+        - label: '02'
+          title: Histogram bins
+          desc: Click the horizontal axis, press Ctrl+1, and in Format Axis, Axis Options, choose By Category, Automatic, Bin width or Number of bins.
+        - label: '03'
+          title: Waterfall totals
+          desc: Click the series once to select every column, click the one column again to select it alone, right-click it, Set as Total. It drops to the baseline.
+        - label: '04'
+          title: Funnel order
+          desc: Sort the source largest to smallest before you insert it. A funnel drawn on unsorted data is not a funnel, it is a bar chart with rounded ends.
+        - label: '05'
+          title: The dialog always reaches it
+          desc: All Charts in the Insert Chart dialog holds every one of these, and All Chart Types at the bottom of any gallery opens the same dialog.
+
+  - steps:
+      eyebrow: Block 01 · Two magnitudes on one plot
+      title: The combo chart, set in one operation
+      items:
+        - label: '01'
+          title: Select both series
+          desc: Headers included. The two have to differ in size for this to be worth doing, units in the tens against revenue in the thousands.
+        - label: '02'
+          title: Insert Combo Chart
+          desc: Insert tab, Charts group. Not Recommended Charts, which will offer something reasonable and never show you the Combo entry.
+        - label: '03'
+          title: Create Custom Combo Chart
+          desc: At the bottom of that gallery. The Insert Chart dialog opens on the All Charts tab with Combo already selected.
+        - label: '04'
+          title: The row for the second series
+          desc: Set its Chart Type list to Line or Line with Markers, and tick Secondary Axis in the same row. Both before the dialog closes.
+        - label: '05'
+          title: Label the new axis
+          desc: Chart Design, Chart Layouts, Add Chart Element, Axis Titles, Secondary Vertical. An unlabelled second axis is a chart that lies politely.
+
+  - compare:
+      eyebrow: Block 01 · Moving a series that already exists
+      title: Two ways to reach the secondary axis
+      before:
+        label: Graded · through Current Selection
+        file: axis.txt
+        lang: text
+        code: |
+          Format tab, Current Selection group
+          Chart Elements list, pick the series
+          Format Selection
+          Format Data Series, Series Options
+          Plot Series On, Secondary Axis
+      after:
+        label: Not graded · through the right-click
+        file: axis.txt
+        lang: text
+        code: |
+          Right-click the series on the chart
+          Format Data Series...
+          Series Options, Secondary Axis
+
+          Same pane, same result, and you
+          had to hit a two-pixel line first
+      note: >-
+        The Chart Elements list on the Format tab names every element in the chart. It is
+        how you select a thin series you cannot click, and it is the route the task is
+        written against when it says to move a named series onto the second axis.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four charts that are correct and still wrong
+      items:
+        - label: Error 01
+          title: A pie with fourteen slices
+          desc: >-
+            Nobody can order fourteen angles by eye. If the question is which are the big
+            ones, a sorted bar chart answers it and a pie does not.
+        - label: Error 02
+          title: A line chart over categories
+          desc: >-
+            The line between two points claims something happened in between. Over
+            branches or products there is no in between, and the claim is invented.
+        - label: Error 03
+          title: Two magnitudes on one axis
+          desc: >-
+            Units in the tens next to revenue in the thousands leaves one series flat on
+            the baseline. That is what the secondary axis is for.
+        - label: Error 04
+          title: Truncating the value axis
+          desc: >-
+            Starting the axis at 90 instead of 0 turns a two per cent difference into a
+            cliff. It is a formatting choice and it is also an argument.
+
+  - divider:
+      eyebrow: Block 02
+      title: Review before you send
+      lede: >-
+        Three tools that look at the workbook instead of at the numbers, and one distinction
+        the exam grades that most people have never noticed.
+      block: 2
+
+  - method:
+      eyebrow: Block 02 · Spelling
+      title: The proofing pass, and what it is worth
+      statement: F7 opens Spelling on the active sheet. The Dictionary language list is where a Spanish column gets judged against an English dictionary and comes back full of errors that are not errors.
+      points:
+        - label: The route
+          text: Review tab, Proofing group, Spelling, or F7 from anywhere on the sheet.
+        - label: Every sheet
+          text: It reads the active sheet. Right-click a tab and Select All Sheets first, then ungroup, or the next thing you type lands on all of them.
+        - label: Where it counts
+          text: Spelling is not an objective of its own in the 2019 domains. It sits inside Expert 1.3.2, the language block, which this course covers through the INNOVATIQ self-paced course.
+
+  - steps:
+      eyebrow: Block 02 · The Accessibility Checker
+      title: The second of the three tools behind 1.5.4
+      items:
+        - label: '01'
+          title: Open it
+          desc: Review tab, Accessibility group, Check Accessibility. The same command sits at File, Info, Check for Issues, Check Accessibility.
+        - label: '02'
+          title: Read the three groups
+          desc: The pane opens on the right with Inspection Results split into Errors, Warnings and Tips. Errors are the ones that block a screen reader outright.
+        - label: '03'
+          title: Click an item
+          desc: Excel selects the offending object on the sheet. Additional Information at the bottom of the pane gives the recommended fix.
+        - label: '04'
+          title: Missing alternative text
+          desc: The commonest error, and the one Associate 5.3.3 is about. Recommended Actions, Add a description, opens the same Alt Text pane as the right-click.
+        - label: '05'
+          title: Leave it running
+          desc: Tick Keep accessibility checker running while I work, and it reports as you build instead of at the end.
+
+  - table:
+      eyebrow: Block 02 · Two objects that look alike
+      title: A note is not a comment, and the exam knows
+      headers: [What you look at, Threaded comment, Note]
+      rows:
+        - ["Cell marker", "Small purple triangle", "Red triangle"]
+        - ["The box", "Carries a Reply field", "Plain yellow rectangle"]
+        - ["Where it is made", "Review, Comments, New Comment", "Review, Notes, New Note"]
+        - ["Show Comments pane", "Lists every thread", "Never appears in it"]
+        - ["Shortcut", "Shift+F2", "Ctrl+Shift+F2, to confirm"]
+
+  - steps:
+      eyebrow: Block 02 · Managing a thread
+      title: Post, reply, resolve, delete
+      items:
+        - label: '01'
+          title: New Comment
+          desc: Select the cell, Review tab, Comments group, New Comment. Type, then click Post, the small arrow at the bottom right of the box, or press Ctrl+Enter.
+        - label: '02'
+          title: Reply
+          desc: Click the comment and type in the Reply box, then Post. The thread grows downward. That reply field is what makes it a comment and not a note.
+        - label: '03'
+          title: The three dots
+          desc: Point at the comment and click the button at its top right for Edit comment, Resolve thread and Delete thread, which some builds word Delete comment. Resolve greys the thread out and keeps it.
+        - label: '04'
+          title: Walking the sheet
+          desc: Previous Comment and Next Comment in the same group. Show Comments opens the pane that lists every thread on the sheet in order.
+        - label: '05'
+          title: Printing them
+          desc: Page Setup dialog, Sheet tab, the Comments and notes list, and pick At end of sheet or As displayed on sheet. Office 2019 labels that list Comments.
+
+  - divider:
+      eyebrow: Block 03
+      title: Locking it down
+      lede: >-
+        Protection in Excel is not a wall around the file. It is a per-cell flag that does
+        nothing at all until you switch the sheet itself on.
+      block: 3
+
+  - concept:
+      eyebrow: Key concept
+      title: Every cell is already locked, and nothing is protected
+      lead: >-
+        A new worksheet has the Locked check box ticked on all of its cells. That flag does
+        nothing at all until the sheet is protected, and the moment you protect it,
+        everything freezes at once. Which is why step one is to unlock the whole sheet, and
+        why nobody remembers it.
+      panel:
+        label: The order that works
+        title: Unlock everything, lock the few, then protect
+        note: >-
+          Doing it the other way round, protecting first and unlocking after, is not
+          possible. Format Cells is one of the things protection blocks, so the dialog you
+          need is the dialog you just locked away.
+      steps:
+        - text: Ctrl+A, Ctrl+1, Protection, clear Locked
+        - text: Select the formulas, tick Locked and Hidden
+        - text: Review, Protect, Allow Edit Ranges
+          loop: ↺ and Protect Sheet is the button at the bottom of that dialog
+
+  - steps:
+      eyebrow: Block 03 · Exercise 18, the 115 employees
+      title: Five steps, in this order and no other
+      items:
+        - label: '01'
+          title: Unlock the whole sheet
+          desc: Select All at the corner of the headers or Ctrl+A, then Ctrl+1, Protection tab, clear Locked, OK. Nothing visible happens.
+        - label: '02'
+          title: Lock what must not move
+          desc: Select the age formulas in column J. Ctrl+1, Protection tab, tick Locked and tick Hidden. Both check boxes in one visit to the dialog.
+        - label: '03'
+          title: Allow Edit Ranges
+          desc: Review tab, Protect group, Allow Edit Ranges, New. Fill Title, Refers to cells and Range password, OK, confirm.
+        - label: '04'
+          title: Protect Sheet from inside
+          desc: The Protect Sheet button at the bottom of the Allow Edit Ranges dialog. Using it is what proves the two settings are one operation.
+        - label: '05'
+          title: Choose what is still allowed
+          desc: Tick Protect worksheet and contents of locked cells, type the password, then work down the Allow all users of this worksheet to list.
+
+  - table:
+      eyebrow: Block 03 · The Protect Sheet allow list
+      title: Fifteen check boxes, and the four that decide things
+      headers: [Check box, Leave it on when, Clear it when]
+      rows:
+        - ["Select locked cells", "People may read them", "They must not even click"]
+        - ["Select unlocked cells", "There are cells to fill in", "Never, that is the point"]
+        - ["Format cells", "Column widths may change", "The layout is the answer"]
+        - ["Sort", "The order is theirs", "Order carries meaning"]
+        - ["Use AutoFilter", "The arrows already exist", "Hiding rows hides evidence"]
+
+  - table:
+      eyebrow: Block 03 · File, Info, Protect Workbook
+      title: Five entries, five different things being stopped
+      headers: [Entry, What it stops, What it does not stop]
+      rows:
+        - ["Mark as Final", "Typing, and it says so", "Clicking Edit Anyway"]
+        - ["Encrypt with Password", "Opening the file at all", "Whoever has the password"]
+        - ["Always Open Read-Only", "Saving over it by accident", "Save As under a new name"]
+        - ["Protect Workbook Structure", "Adding, moving, hiding sheets", "Editing any cell"]
+        - ["Password to modify", "Saving over the original", "Reading it"]
+
+  - steps:
+      eyebrow: Block 03 · The structure, and the yellow bar
+      title: Protecting sheets against protecting the workbook
+      items:
+        - label: '01'
+          title: Protect Workbook Structure
+          desc: Review tab, Protect group, Protect Workbook. Tick Structure, type the password, OK, confirm. The Windows box is dimmed on current builds.
+        - label: '02'
+          title: How to prove it took
+          desc: Right-click a sheet tab. Insert, Delete, Rename, Move or Copy, Tab Color, Hide and Unhide are all dimmed, and the tab refuses to be dragged.
+        - label: '03'
+          title: Password to modify
+          desc: A separate thing from the password to open. File, Save As, Browse, the Tools button beside Save, General Options, and fill Password to modify.
+        - label: '04'
+          title: Enabling macros on a file you were sent
+          desc: Reopen it. A Message Bar reads SECURITY WARNING with an Enable Content button. Click it once and the decision is remembered for that file.
+        - label: '05'
+          title: When the bar is red
+          desc: The file came from the internet and there is no button. Close it, right-click it in File Explorer, Properties, tick Unblock at the bottom, reopen.
+
+  - method:
+      eyebrow: Block 03 · Objective 1.1.3
+      title: The setting behind the bar, and what is not in this course
+      statement: The yellow bar exists because Macro Settings is on Disable all macros with notification. That setting, not the button, is what the exam asks you to find.
+      points:
+        - label: Getting there
+          text: File, Options, Customize Ribbon, tick Developer in Main Tabs. Then Developer tab, Code group, Macro Security, which opens the Trust Center on Macro Settings.
+        - label: The wording
+          text: Current Microsoft 365 builds word the same option Disable VBA macros with notification. Which one the lab machines show is still to be confirmed.
+        - label: Not in this course
+          text: Recording, naming and editing macros are Expert objectives 3.6.1 to 3.6.3 and they belong to TIA503. Here the objective stops at enabling a file that already has them.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways protection does nothing
+      items:
+        - label: Error 01
+          title: Protect Sheet with no unlocking first
+          desc: >-
+            Every cell started locked, so the whole sheet freezes and nobody can type
+            anywhere. The task asked for a sheet where some cells still work.
+        - label: Error 02
+          title: Locked without Hidden
+          desc: >-
+            The formula cannot be changed and it is still readable in the formula bar.
+            Exercise 18 asks for the age formula to be protected and hidden, which is two
+            check boxes.
+        - label: Error 03
+          title: Hiding sheets instead of protecting the structure
+          desc: >-
+            Right-click, Hide, and anyone brings them back with Unhide in three clicks.
+            The workbook is not protected, it is tidied.
+        - label: Error 04
+          title: Read-only set in Windows
+          desc: >-
+            Excel honours the file attribute, so it feels protected. Nothing inside the
+            file changed, and File, Info still reports an unprotected workbook.
+
+  - quiz:
+      eyebrow: Quick check
+      question: You protected the sheet and the salary cells are still editable. What went wrong?
+      options:
+        - The password was too short for Excel to apply it
+        - Locked was cleared on the whole sheet and never put back on the salary cells
+        - Protect Workbook was used instead of Protect Sheet
+        - The cells needed to be a table first
+
+  - lab:
+      eyebrow: Lab
+      title: Excel 18, from a working file to a file you can send
+      brief: >-
+        Calculate the age of each of the 115 employees in column J. Hide and protect that
+        formula, protect the salary cells, and leave the rest of the sheet editable. Then
+        run the Accessibility Checker, leave one comment thread explaining a decision, and
+        protect the workbook structure.
+      blocks:
+        - label: Deliverable
+          text: One workbook, protected, with the passwords written in the submission comment
+        - label: Constraint
+          text: A colleague has to be able to type in the areas the exercise leaves open. Test that before you submit.
+        - label: Watch for
+          text: "The file carries six dead defined names pointing at #REF! from an old exercise. Name Manager, delete them."
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: The chart is an argument
+          desc: >-
+            Type, axis range and the choice of one axis or two all change what the reader
+            concludes from the same numbers. Choosing badly is not a formatting mistake
+        - title: A note is not a comment
+          desc: >-
+            Different button, different group, different marker, different pane. When the
+            task says comment, a note scores nothing, and the reverse holds as well
+        - title: Protection is a two-part switch
+          desc: >-
+            The per-cell Locked flag does nothing until the sheet is protected, and once
+            it is, everything still carrying that flag freezes at the same instant
+
+  - homework:
+      eyebrow: Assignment
+      title: Exercise 18 and the chart rework, submission and grading
+      brief: >-
+        Exercise 18 is the protection work above. On top of it, go back to the charts from
+        Exercise 17 and rebuild two of them. One as a combo chart with a secondary axis,
+        and one that you argue in two lines was the wrong type and should have been
+        something else.
+      meta:
+        - [Due, Before week 12]
+        - [Format, Blackboard · one .xlsx and a two page note]
+        - [Weight, Part of the 30 % inside midterm 2]
+      rubric:
+        - ["Protection", "35 %", "Formula hidden and locked, salaries locked, the rest still editable"]
+        - ["Review", "20 %", "Accessibility Checker clean, one comment thread, spelling run"]
+        - ["Combo chart", "25 %", "Built from Create Custom Combo Chart, second axis labelled"]
+        - ["The argument", "20 %", "Two lines that say what question the new chart answers better"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week is the second midterm, then the certification mock under exam conditions,
+        and the half session that is left opens VLOOKUP.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

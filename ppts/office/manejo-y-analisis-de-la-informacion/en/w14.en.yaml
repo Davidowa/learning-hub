@@ -1,0 +1,483 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 14
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 14 · Sessions 27 and 28 · Subtotals and PivotTables
+      title: Information Management and Analysis
+      subtitle: >-
+        Two ways to collapse a long list into the numbers somebody asked for, and the
+        dialogs that make each of them count on exam day.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 27 and 28 of 34]
+      notes: |
+        Sessions 27 and 28 of the syllabus, CLO08. Both sessions are subtotals and
+        PivotTables. Covered outright: Expert 2.2.4 and Expert 4.2.1, plus the
+        SUBTOTAL half that sits on a table total row, Associate 3.2.3.
+        COBERTURA.md adds Expert 2.2.3, 4.2.2, 4.2.4, 4.2.5 and 4.2.6, which is the
+        heaviest set of additions in the term and only fits because slicers and
+        PivotCharts moved to week 15.
+        Routes come from procedures.en.md. Exercises 22 and 23 version 2.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Subtotals
+          desc: Sort first, then one dialog, and the outline it builds without saying so
+        - title: The PivotTable
+          desc: The four areas, dragging rather than ticking, and Value Field Settings
+        - title: Group and calculate
+          desc: Dates into quarters, numbers into bands, and a calculated field
+        - title: Your turn
+          desc: 576 rows of Mexico City population, then 26,608 restaurant tickets
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Insert subtotals that group correctly
+          sub: Sorting by the break column first, because the dialog will not do it for you
+        - head: Read the code SUBTOTAL was given
+          sub: Why a table total row writes 109 and the Subtotal command writes 9
+        - head: Drive the outline by hand
+          sub: Group, Ungroup, Clear Outline, and the level buttons the subtotals left behind
+        - head: Build a PivotTable by dragging
+          sub: The four areas, and why ticking the check box is a different answer
+        - head: Set a field rather than a block of cells
+          sub: Function, calculation, caption and number format in one pass through one dialog
+        - head: Group and calculate inside the report
+          sub: Dates by month and quarter, numeric bands, and a calculated field that is honest
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: done
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: now
+
+  - divider:
+      eyebrow: Block 01
+      title: Subtotals, and the outline nobody explained
+      lede: >-
+        One command writes the formulas, inserts the rows and builds a three-level
+        outline. Two of those three surprise people every year.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: The sort is part of the command
+      lead: >-
+        Subtotals break the list wherever the chosen column changes value. Sorted, that
+        is one break per town. Unsorted, it is one break per row, and Excel does it
+        without complaint, because from where it stands nothing is wrong. Sorting is
+        half the command, not preparation for it.
+      panel:
+        label: The working rule
+        title: Sort by the column you are about to break on
+        note: >-
+          Data tab, Sort & Filter group, Sort, choose the column in Sort by, click OK.
+          Then click one cell inside the list, not the range, and open Subtotal. Excel
+          expands to the whole block on its own and gets it right.
+      steps:
+        - text: Sort by the break column
+        - text: Click one cell inside the list
+        - text: Data, Outline, Subtotal
+          loop: ↺ and the rows, the formulas and the outline all arrive together
+
+  - steps:
+      eyebrow: Block 01 · The graded route
+      title: Five stops inside the Subtotal dialog
+      items:
+        - label: '01'
+          title: At each change in
+          desc: The column you just sorted by. This is what decides where a group ends.
+        - label: '02'
+          title: Use function
+          desc: Sum, Count, Average, Max, Min, Product, Count Numbers, StdDev, Var and their pair
+        - label: '03'
+          title: Add subtotal to
+          desc: Tick every column that gets a total and clear the rest. Excel preselects the last numeric one.
+        - label: '04'
+          title: Replace current subtotals
+          desc: Leave it on for the first pass. Clear it to stack a second function on the first.
+        - label: '05'
+          title: The two extras
+          desc: Page break between groups for printing, Summary below data to move the totals up
+
+  - figure:
+      eyebrow: Block 01 · The dialog itself
+      title: Five decisions in one box
+      image: img/en/subtotal-dialog.png
+      caption: >-
+        At each change in decides where a group ends, Use function decides what the row
+        computes, and Add subtotal to decides which columns get one.
+      alt: >-
+        The Excel Subtotal dialog, with At each change in set to Region, Use function set
+        to Sum, and Revenue ticked in the Add subtotal to list.
+      side:
+        label: The box that costs marks
+        text: >-
+          Replace current subtotals arrives ticked. Leave it for the first pass and clear
+          it before the second, or an average stacked on a sum deletes the sum. Remove All,
+          bottom left, puts the list back as it was.
+
+  - code:
+      eyebrow: Block 01 · What the command wrote
+      title: Nobody typed any of these
+      filename: Excel22_Subtotals.xlsx
+      lang: excel
+      source: |
+        =SUBTOTAL(9,D2:D48)
+        =SUBTOTAL(9,D50:D97)
+
+        =SUBTOTAL(9,D2:D98)
+
+        =SUBTOTAL(109,Lorena[Quantity])
+      annotations:
+        - label: One per group
+          text: >-
+            The command inserts a row at every break in the sorted column and writes this
+            into it.
+        - label: The grand total
+          text: >-
+            It spans the detail rows and every subtotal inside them, and never double
+            counts.
+        - label: 9 against 109
+          text: >-
+            A table total row writes 109. The 1xx codes also ignore rows hidden by hand;
+            the 9 codes ignore only filtered ones.
+        - label: Risk
+          text: >-
+            Alt+= writes SUM, not SUBTOTAL. A grand total built that way counts the
+            subtotals again and comes out double.
+          accent: true
+
+  - table:
+      eyebrow: Block 01 · The bar on the left of the row headers
+      title: Three levels, and where each came from
+      headers: [Level button, What it shows, Who put it there]
+      rows:
+        - ["1", "The grand total alone", "The Subtotal command"]
+        - ["2", "One row per group", "The break column"]
+        - ["3", "Every record", "Your original list"]
+
+  - steps:
+      eyebrow: Block 01 · Outlines without subtotals
+      title: Grouping rows by hand
+      items:
+        - label: '01'
+          title: Sort first, again
+          desc: Groups made on unsorted data interleave and cannot be repaired afterwards.
+        - label: '02'
+          title: Whole rows
+          desc: Drag across the row headings. Select cells instead and a dialog asks Rows or Columns.
+        - label: '03'
+          title: Data, Outline, Group
+          desc: The top half of the split button. Repeat inside a group for a second level.
+        - label: '04'
+          title: Taking it apart
+          desc: Ungroup for one group. The Ungroup arrow, then Clear Outline, for all of it.
+        - label: '05'
+          title: Settings
+          desc: The dialog launcher in that group moves the summary rows above the detail
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways subtotals go wrong
+      items:
+        - label: Error 01
+          title: The list was never sorted
+          desc: >-
+            You get one subtotal row per record, hundreds of them, and every number is
+            correct. Nothing is broken, which is why it takes so long to notice.
+        - label: Error 02
+          title: Replace current subtotals left on
+          desc: >-
+            Running the dialog a second time to stack an average on top of a sum deletes
+            the sum. Clear that one check box and both survive.
+        - label: Error 03
+          title: Hiding rows instead of grouping
+          desc: >-
+            Right-click, Hide looks identical on screen. No outline bar, no level buttons,
+            nothing to grade. Ctrl+8 shows which of the two you actually did.
+        - label: Error 04
+          title: Selecting the range first
+          desc: >-
+            Click one cell inside the list. A preselected block narrows what Excel treats
+            as the list, and the totals stop where your selection stopped.
+
+  - divider:
+      eyebrow: Block 02
+      title: The PivotTable, area by area
+      lede: >-
+        The report is built by dragging fields into four boxes. Which box each field
+        lands in is the answer, and the default is rarely it.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: From one cell to a named report
+      items:
+        - label: '01'
+          title: One cell inside
+          desc: Not the whole column, not the whole sheet. Excel expands to the block on its own.
+        - label: '02'
+          title: Insert, PivotTable
+          desc: Insert tab, Tables group. If the button opens a menu, click From Table/Range.
+        - label: '03'
+          title: Check Table/Range
+          desc: It must show the whole block including the header row, such as Data!$A$1:$L$26609
+        - label: '04'
+          title: Where it goes
+          desc: New Worksheet, or Existing Worksheet and click the cell for the top left corner
+        - label: '05'
+          title: Drag, then name it
+          desc: Drag into Filters, Columns, Rows, Values. Then the PivotTable Name box on Analyze.
+
+  - concept:
+      eyebrow: Block 02 · Why dragging is the answer
+      title: Four boxes, and the default is a guess
+      lead: >-
+        Ticking a field's check box sends text to Rows and numbers to Values. That is a
+        guess Excel makes from the data type, and the task usually names another area.
+        Waiter in Columns and Category in Rows is a different report from the other way
+        round, out of the same four fields.
+      panel:
+        label: How it is checked
+        title: The four boxes are read, not the grid
+        note: >-
+          A grader reads the Filters, Columns, Rows and Values boxes at the bottom of the
+          PivotTable Fields pane, because that is where the decision is recorded. The grid
+          can look right for a report built the wrong way.
+      steps:
+        - text: Drag the field into the area the task names
+        - text: Drag it again to move it between areas
+        - text: Drag it out of the pane to remove it
+          loop: ↺ and read the four boxes back before you call it done
+
+  - steps:
+      eyebrow: Block 02 · One dialog, four decisions
+      title: Value Field Settings without closing it
+      items:
+        - label: '01'
+          title: Click a value cell
+          desc: The field under the pointer becomes the active field, named on the Analyze tab.
+        - label: '02'
+          title: Field Settings
+          desc: PivotTable Analyze tab, Active Field group. Over a value field it opens Value Field Settings, a title still to confirm.
+        - label: '03'
+          title: Summarize Values By
+          desc: Sum, Count, Average, Max, Min, Product, Count Numbers, StdDev, StdDevp, Var, Varp
+        - label: '04'
+          title: Show Values As
+          desc: '% of Grand Total, % of Column Total, Difference From, Running Total In and its base field'
+        - label: '05'
+          title: Name and format
+          desc: Fix Custom Name, click Number Format for the cut-down Format Cells, then OK once.
+
+  - table:
+      eyebrow: Block 02 · The half of the objective people lose
+      title: Where the number format has to live
+      headers: [Applied to, How it was applied, What a refresh does]
+      rows:
+        - ["Cells", "Ctrl+1 over the range", "It drifts or disappears"]
+        - ["Cells", "Percent Style on Home", "The same, only quicker"]
+        - ["The field", "Field Settings, Number Format", "It survives and reaches new items"]
+
+  - table:
+      eyebrow: Block 02 · The Design tab, next to Analyze
+      title: Five menus, five separate marks
+      headers: [Menu, Entries the exam names, What it decides]
+      rows:
+        - ["Report Layout", "Compact, Outline, Tabular", "Where row labels sit"]
+        - ["Report Layout", "Repeat All Item Labels", "The blank cells down a column"]
+        - ["Subtotals", "Top, Bottom, Do Not Show", "The per-group rows"]
+        - ["Grand Totals", "Rows, columns, both, off", "The last row and column"]
+        - ["Blank Rows", "Insert Blank Line", "A gap after each item"]
+
+  - divider:
+      eyebrow: Block 03
+      title: Grouping and calculating inside the report
+      lede: >-
+        Dates into quarters, amounts into bands, and a field that does arithmetic the
+        source data never had. One of the three has a trap in it.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: Group Field, and the list that toggles
+      items:
+        - label: '01'
+          title: Click an item
+          desc: A date item inside Rows or Columns. The item, not the field header above it.
+        - label: '02'
+          title: Group Field
+          desc: PivotTable Analyze tab, Group group. Right-clicking reaches the same dialog and is not the wording.
+        - label: '03'
+          title: Starting and Ending at
+          desc: Filled in from the data. Clear the check box to type a boundary of your own.
+        - label: '04'
+          title: The By list toggles
+          desc: Click Months, then Quarters, then Years. All three stay lit and Ctrl is not needed.
+        - label: '05'
+          title: Read the field pane
+          desc: Excel added one field per level. Drag them into the order the task asked for.
+
+  - table:
+      eyebrow: Block 03 · Three kinds of grouping
+      title: What each one leaves behind
+      headers: [What you group, The command, What Excel adds]
+      rows:
+        - ["Dates", "Group Field", "Quarters and Years fields"]
+        - ["Numbers", "Group Field, By 500", "Bands written 0-499"]
+        - ["Chosen items", "Group Selection", "Group1, and a second field"]
+        - ["Days in blocks", "Group Field, Days, 7", "Nothing, it stays one field"]
+
+  - steps:
+      eyebrow: Block 03 · The graded route
+      title: A calculated field, built from the list
+      items:
+        - label: '01'
+          title: Anywhere inside
+          desc: Click a cell in the report. The command is greyed out anywhere else.
+        - label: '02'
+          title: Fields, Items, & Sets
+          desc: PivotTable Analyze tab, Calculations group, then Calculated Field
+        - label: '03'
+          title: Name it first
+          desc: The Formula box already holds = 0. Delete the zero and keep the equals sign.
+        - label: '04'
+          title: Insert Field, not typing
+          desc: Click a field, click Insert Field, type the operator, repeat. Cell references are rejected.
+        - label: '05'
+          title: Add, then OK
+          desc: The field appears at the bottom of the pane and lands in Values as Sum of it
+
+  - code:
+      eyebrow: Block 03 · The most common wrong answer
+      title: A calculated field works on totals
+      filename: Excel 23_PivotTables v.2.xlsx
+      lang: excel
+      source: |
+        = Price - Cost
+
+        = Price * Tip
+
+        =SUMPRODUCT($I$2:$I$26609,$K$2:$K$26609)
+      annotations:
+        - label: Right
+          text: >-
+            The difference of two sums equals the sum of the differences, so profit per
+            category comes out correct.
+        - label: Wrong
+          text: >-
+            This multiplies the group's total price by its total tip rate, which is not a
+            number anybody wanted.
+        - label: The cross-check
+          text: >-
+            SUMPRODUCT over the source rows gives the real line-by-line answer. Compare one
+            cell against it.
+        - label: Risk
+          text: >-
+            A helper column in the source is more correct and scores nothing when the task
+            says calculated field.
+          accent: true
+
+  - quiz:
+      eyebrow: Quick check
+      question: A refresh adds three products and the revenue column loses its currency format. What happened?
+      options:
+        - "The format was applied to the cells, not through Field Settings"
+        - "The report was built from a range instead of an Excel table"
+        - "Preserve cell formatting on update was left ticked"
+        - "The calculated field was added after the formatting"
+
+  - lab:
+      eyebrow: Lab
+      title: Four subtotals, then a report on 26,608 tickets
+      brief: >-
+        Exercise 22 first: four copies of the Data sheet, and on each one a different
+        subtotal over the 576 rows of population, sum by town, average by age range, sum by
+        gender, maximum by town. Then exercise 23, where the restaurant file wants total
+        charged per product grouped by waiter, the same report as a percentage of the grand
+        total, average sales per category per month, and profit by category as a calculated
+        field.
+      blocks:
+        - label: Deliverable
+          text: One workbook per exercise, both uploaded to Blackboard
+        - label: Constraint
+          text: Every field placed by dragging, and every number format set through Field Settings rather than on the cells
+        - label: The test
+          text: Refresh the report. A format that disappears was applied to cells, and the mark goes with it.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: Sorting is half the command
+          desc: >-
+            Subtotals break wherever the column changes. On an unsorted list that is every
+            row, every number is right, and the report is useless
+        - title: The four boxes are the answer
+          desc: >-
+            Ticking a check box lets Excel guess the area from the data type. The task names
+            the area, so drag the field there and read the boxes back
+        - title: Format the field, not the cells
+          desc: >-
+            Field Settings, Number Format survives a refresh and reaches items that did not
+            exist yet. Ctrl+1 over the same cells does neither
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Finish both exercises, and on the restaurant file add one PivotTable of your own
+        that groups the dates by quarter and month, shows the values as a percentage of the
+        column total, and carries a calculated field you can defend against a helper column.
+      meta:
+        - [Due, Before week 15]
+        - [Format, Blackboard · two .xlsx files]
+        - [Weight, Part of the mark for assignments]
+      rubric:
+        - ["Exercise 22", "25 %", "Four sheets, four subtotals, SUBTOTAL visible in the bar"]
+        - ["Exercise 23", "35 %", "Fields in the named areas, formats set on the field"]
+        - ["Grouping", "20 %", "Quarters and Years appear in the field pane"]
+        - ["Calculated field", "20 %", "It exists in the dialog and agrees with the check"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, filtering with a written criteria range instead of menus, and the
+        objects that filter this report with buttons.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

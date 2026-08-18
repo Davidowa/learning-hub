@@ -1,0 +1,508 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 7
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 07 · Sessions 13 and 14 · Compound conditions
+      title: Information Management and Analysis
+      subtitle: >-
+        Operators and wildcards, then the three functions that combine tests, then one IF
+        living inside another and the two tools that read a nest back to you.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 13 and 14 of 34]
+      notes: |
+        Session 13 is operators and wildcards plus AND and OR. Session 14 is nested IF.
+        COBERTURA.md adds five objectives here, all from Expert domain 3: NOT, IFS and
+        SWITCH under 3.1.1, Evaluate Formula under 3.5.4, and error checking rules
+        under 3.5.3, the last one moved out of session 6 because session 6 was full.
+        Exercises 8, 10 and 12 all belong to this week, and Exercise 12 is the only
+        file in the pack with no week of its own until now.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: Operators and wildcards
+          desc: What runs before what, and the three symbols that only some arguments read
+        - title: AND, OR and NOT
+          desc: A truth table with four rows, and how a function goes inside another one
+        - title: Nesting
+          desc: Nested IF, then IFS and SWITCH, then the two tools that debug them
+        - title: Your turn
+          desc: Exercises 8, 10 and 12, and the same case written three different ways
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Predict the order a formula runs in
+          sub: Eight precedence levels, with comparison always last and reference always first
+        - head: Write a criterion that uses wildcards
+          sub: And name the places that read them, which is not the places you would guess
+        - head: Combine tests with AND, OR and NOT
+          sub: All four rows of the truth table, not only the two that feel obvious
+        - head: Nest a function from inside the dialog
+          sub: Using the Name Box, which becomes a function list while a dialog is open
+        - head: Build a band with nested IF, IFS or SWITCH
+          sub: And say which of the three the case in front of you actually calls for
+        - head: Debug a nest instead of rewriting it
+          sub: Evaluate Formula step by step, and the error checking rules behind the triangles
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: now
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: What runs before what
+      lede: >-
+        Week 3 gave you the arithmetic half of the order. This is the whole of it, and the
+        half that was missing is the half that decides how a condition reads.
+      block: 1
+
+  - table:
+      eyebrow: Block 01 · Complete, and in order
+      title: Eight levels, top to bottom
+      headers: [Family, Members, When it runs]
+      rows:
+        - ["Reference", "colon, comma, single space", "1st, before anything else"]
+        - ["Sign and percent", "the minus of -5, then 50%", "2nd and 3rd"]
+        - ["Exponent", "^", "4th"]
+        - ["Multiply, divide", "* and /", "5th, left to right"]
+        - ["Add, subtract", "+ and -", "6th, left to right"]
+        - ["Join, then compare", "& then = <> > < >= <=", "7th and 8th, last of all"]
+
+  - concept:
+      eyebrow: Key concept
+      title: A wildcard is not an operator
+      lead: >-
+        An operator sits between two values and produces a third. A wildcard sits inside a
+        piece of text and means nothing at all until some argument decides to read it as a
+        pattern. Most arguments do not. That is why the same asterisk finds forty rows in
+        one place and matches nothing three cells away.
+      panel:
+        label: The rule to carry
+        title: Wildcards live in criteria, not in comparisons
+        note: >-
+          The equals sign never reads them. Neither does the logical test of an IF. They
+          are read by Find and Replace, by text filters, by advanced filter criteria and
+          by the criteria argument of the conditional aggregate family, which is week 8.
+      steps:
+        - text: The criterion is a piece of text in quotation marks
+        - text: The function decides whether to read it as a pattern
+        - text: Everything else compares it letter for letter
+          loop: ↺ so the same string behaves in two ways
+
+  - table:
+      eyebrow: Block 01 · Three symbols
+      title: What each wildcard stands for
+      headers: [Symbol, What it matches, Example]
+      rows:
+        - ["*", "Any run of characters, none included", "Mar* finds Marta and Mario"]
+        - ["?", "Exactly one character, no more", "A?a finds Ana and not Anita"]
+        - ["~", "Takes the next symbol literally", "~* finds a real asterisk"]
+
+  - table:
+      eyebrow: Block 01 · Where they are read
+      title: The same string, two behaviours
+      headers: [Where you write it, Wildcards, What that means]
+      rows:
+        - ["Find and Replace", "read", "Ctrl+F answers on patterns"]
+        - ["Text filters", "read", "Contains is a wildcard already"]
+        - ["Criteria arguments", "read", "COUNTIF and family, in week 8"]
+        - ["Advanced filters", "read", "Week 15 builds criteria ranges"]
+        - ["Plain = comparison", "ignored", "It compares letter for letter"]
+        - ["The IF logical test", "ignored", "So does every branch of an IF"]
+
+  - code:
+      eyebrow: Block 01 · The criterion string
+      title: Six criteria over the same column
+      filename: wildcards.xlsx
+      lang: excel
+      source: |
+        =COUNTIF(B2:B41,"Mar*")
+        =COUNTIF(B2:B41,"*ez")
+        =COUNTIF(B2:B41,"A?a")
+        =COUNTIF(B2:B41,"???")
+        =COUNTIF(B2:B41,"~*")
+        =COUNTIF(B2:B41,"*"&E1&"*")
+      annotations:
+        - label: The vehicle
+          text: COUNTIF is here to carry the criterion. Its own graded route through the dialog is next week.
+        - label: Line 4
+          text: Three question marks means exactly three characters, no more and no fewer. Blanks are not counted.
+        - label: Line 5
+          text: The tilde takes the asterisk plain, so this counts the cells that really hold one.
+        - label: Line 6
+          text: The ampersand builds the criterion out of a cell, which is how a search box on a sheet is made.
+
+  - divider:
+      eyebrow: Block 02
+      title: Three functions, four rows
+      lede: >-
+        There is no AND operator in Excel and there never was. AND, OR and NOT are
+        functions, they take tests as arguments, and between them they have four outcomes.
+      block: 2
+
+  - table:
+      eyebrow: Block 02 · Read off the dialog
+      title: What each one takes and what it answers
+      headers: [Function, Argument boxes, It returns TRUE when]
+      rows:
+        - ["AND", "Logical1, Logical2, and on", "Every argument is TRUE"]
+        - ["OR", "Logical1, Logical2, and on", "At least one is TRUE"]
+        - ["NOT", "Logical, one box only", "Its single argument is FALSE"]
+
+  - trace:
+      eyebrow: Block 02 · The whole truth table
+      title: Four rows, and there is no fifth
+      headers: ["A", "B", "AND(A,B)", "OR(A,B)", "NOT(A)"]
+      rows:
+        - ["TRUE", "TRUE", "TRUE", "TRUE", "FALSE"]
+        - ["TRUE", "FALSE", "FALSE", "TRUE", "FALSE"]
+        - ["FALSE", "TRUE", "FALSE", "TRUE", "TRUE"]
+        - ["FALSE", "FALSE", "FALSE", "FALSE", "TRUE"]
+      verdict: Exercise 10 writes sixteen rows because it adds a third condition. The shape does not change, only the count.
+
+  - steps:
+      eyebrow: Block 02 · The graded route
+      title: Nesting one function inside another
+      items:
+        - label: '01'
+          title: Build the outer one first
+          desc: Formulas, Logical, IF, and fill the boxes down to the one that has to receive the nest
+        - label: '02'
+          title: Leave that box empty
+          desc: The argument waiting for the inner function stays untouched. Do not type anything into it.
+        - label: '03'
+          title: Look at the Name Box
+          desc: At the left end of the formula bar it stops showing the cell reference and becomes a function list
+        - label: '04'
+          title: Fill the inner dialog
+          desc: Do not click OK. To come back out, click the outer function name inside the formula bar itself.
+        - label: '05'
+          title: One OK, at the outer level
+          desc: That single OK commits the whole nest, with the parentheses counted for you
+
+  - code:
+      eyebrow: Block 02 · Tests inside a test
+      title: AND, OR and NOT in working formulas
+      filename: logic.xlsx
+      lang: excel
+      source: |
+        =IF(AND(B2>=10,C2="Yes"),"Bonus","No")
+        =IF(OR(B2>=10,C2="Yes"),"Bonus","No")
+        =IF(NOT(C2="Yes"),"Follow up","")
+        =IF(AND(B2>=10,B2<=20),"In band","Out")
+        =AND(B2>=10,C2="Yes")
+      annotations:
+        - label: Lines 1 and 2
+          text: One character apart in the source and a completely different report. Read the sentence before you pick.
+        - label: Line 4
+          text: A band needs a test at each end. There is no BETWEEN in Excel and there is no shorter way to write it.
+        - label: Line 5
+          text: On its own the function returns TRUE or FALSE, which is exactly what a formula rule from week 5 wants.
+        - label: If it fails
+          text: >-
+            AND over a whole range answers once for the block, not once per row. It takes
+            tests, not columns.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a compound test goes wrong
+      items:
+        - label: Error 01
+          title: AND written as an operator
+          desc: >-
+            The English sentence puts and between the two tests, so people type it there.
+            Excel reads it as a name it does not know and answers with an error.
+        - label: Error 02
+          title: A range where a test belongs
+          desc: >-
+            AND of B2 to B41 greater than ten gives one answer for the whole block. Each
+            argument has to be a comparison that resolves on its own.
+        - label: Error 03
+          title: The and that meant OR
+          desc: >-
+            Customers in Puebla and Oaxaca is OR, because no row is in both. Read the
+            sentence for the rows it should keep, not for the word it uses.
+        - label: Error 04
+          title: Negating what is already negative
+          desc: >-
+            NOT around a not equal test cancels itself out. Write the positive test and
+            let NOT do the turning, or drop NOT and turn the operator.
+
+  - divider:
+      eyebrow: Block 03
+      title: One IF inside another
+      lede: >-
+        Two answers were never going to be enough. A grade band has four, and the way you
+        get four out of a function that offers two is to put the next question in the
+        second answer.
+      block: 3
+
+  - code:
+      eyebrow: Block 03 · The staircase
+      title: The same bands, and one of them is wrong
+      filename: bands.xlsx
+      lang: excel
+      source: |
+        =IF(B2>=90,"A",
+          IF(B2>=80,"B",
+            IF(B2>=70,"C","F")))
+
+        =IF(B2>=70,"C",
+          IF(B2>=80,"B",
+            IF(B2>=90,"A","F")))
+      annotations:
+        - label: Read it as a staircase
+          text: Each IF is the false branch of the one above it, so the tests run top to bottom and the first TRUE wins.
+        - label: The second one is wrong
+          text: A score of 95 is caught by the first test and leaves as C. Nothing is flagged and the column looks full.
+        - label: The rule that follows
+          text: With greater than or equal, bands are written from the top down. There is exactly one order that works.
+        - label: If it fails
+          text: >-
+            The closing parentheses all land at the end, one per IF. Alt+Enter inside the
+            formula bar is what makes them countable.
+
+  - code_output:
+      eyebrow: Measured · four scores, two orders
+      title: The wrong order raises nothing at all
+      filename: bands.xlsx
+      lang: excel
+      output_label: What the column shows
+      source: |
+        =IF(B2>=90,"A",IF(B2>=80,"B",IF(B2>=70,"C","F")))
+
+        =IF(B2>=70,"C",IF(B2>=80,"B",IF(B2>=90,"A","F")))
+      output: |
+        B2    top down   bottom up
+        95    A          C
+        85    B          C
+        75    C          C
+        65    F          F
+
+  - compare:
+      eyebrow: Block 03 · Same bands, two functions
+      title: Three nested IF against one IFS
+      before:
+        label: Nested IF, three levels
+        file: bands.xlsx
+        lang: excel
+        code: |
+          =IF(B2>=90,"A",
+            IF(B2>=80,"B",
+              IF(B2>=70,"C","F")))
+      after:
+        label: IFS, four pairs
+        file: bands.xlsx
+        lang: excel
+        code: |
+          =IFS(B2>=90,"A",
+               B2>=80,"B",
+               B2>=70,"C",
+               TRUE,"F")
+      note: >-
+        IFS reads the pairs in order and stops at the first TRUE, which is exactly what
+        the staircase does with fewer parentheses. The last pair is the literal TRUE, and
+        it always matches, so it carries the default. IFS exists from Office 2019 onward.
+        An older build answers with a name error, which is what Exercise 16 shows when its
+        formulas come back as _xlfn.IFS.
+
+  - code:
+      eyebrow: Block 03 · The third way
+      title: SWITCH, when the test is only equality
+      filename: switch.xlsx
+      lang: excel
+      source: |
+        =SWITCH(C2,"N","North","S","South","E","East","West")
+
+        =IFS(C2="N","North",C2="S","South",C2="E","East",
+             TRUE,"West")
+      annotations:
+        - label: One expression, then pairs
+          text: The first argument is worked out once, then matched against each value in turn.
+        - label: The odd argument
+          text: With no pair left over, the last lone argument is the default. Here that is West.
+        - label: Which of the three
+          text: SWITCH for equality against a list, IFS when there is a comparison, nested IF when neither exists.
+        - label: Where they came from
+          text: Both are additions from Expert 3.1.1. Exercise 12 sets IFS beside nested IF.
+
+  - steps:
+      eyebrow: Block 03 · Evaluate Formula
+      title: Watching Excel work the nest out
+      items:
+        - label: '01'
+          title: One cell at a time
+          desc: Formulas, Formula Auditing, Evaluate Formula. It reads the selected cell and nothing else.
+        - label: '02'
+          title: Read the underline
+          desc: Evaluation shows the formula with the part Excel will work out next underlined
+        - label: '03'
+          title: Click Evaluate
+          desc: The underlined part is replaced by its result in italic and the underline moves along
+        - label: '04'
+          title: Step In and Step Out
+          desc: When the underlined part is another formula, Step In opens it indented below. It stays grey on a repeat reference.
+        - label: '05'
+          title: Close, not OK
+          desc: There is no OK. Nothing on the sheet changes, because the dialog is an instrument and not an edit.
+
+  - method:
+      eyebrow: Block 03 · The fast route, with its warning
+      title: F9 shows the value and can keep it
+      statement: Select one fragment inside the formula bar and press F9. Excel replaces the selection with its value on the spot, and pressing Enter at that moment writes it into the formula for good.
+      points:
+        - label: Why it is worth teaching
+          text: >-
+            It is instant, it needs no dialog, and every working analyst uses it. On a
+            three level nest it answers the only question you had in about two seconds.
+        - label: What it cannot do
+          text: >-
+            F9 evaluates what is inside this cell. An item that asks you to step into a
+            reference that holds another formula has no F9 answer at all.
+        - label: The rule attached to it
+          text: >-
+            Esc, never Enter. Enter hard codes the number and the formula is gone, with
+            no warning and nothing to undo once the file has been saved.
+
+  - steps:
+      eyebrow: Block 03 · Error checking
+      title: The triangles, and the rules behind them
+      items:
+        - label: '01'
+          title: Formula Auditing, Error Checking
+          desc: A split button. The face runs the sweep over the sheet and opens on the first flagged cell.
+        - label: '02'
+          title: Read what it shows
+          desc: The cell, the formula underneath, the error type as a heading and one sentence of explanation
+        - label: '03'
+          title: Four buttons on the right
+          desc: Help on this Error, Show Calculation Steps, Ignore Error, and Edit in Formula Bar
+        - label: '04'
+          title: Show Calculation Steps
+          desc: Hands the cell straight to Evaluate Formula, which is the bridge between these two tools
+        - label: '05'
+          title: Options, then Formulas
+          desc: Where the rules themselves are. Office 2019 lists nine of them and the 365 build adds three more.
+
+  - table:
+      eyebrow: Block 03 · Five rules worth knowing
+      title: What the green triangle is telling you
+      headers: [Rule, What it flags, Why it matters this week]
+      rows:
+        - ["Numbers as text", "A number stored as a string", "Every comparison answers wrongly"]
+        - ["Inconsistent formula", "One cell in a column differs", "A nest pasted one row short"]
+        - ["Omitted cells", "A total that misses a neighbour", "The number is quietly low"]
+        - ["Empty reference", "A test pointing at nothing", "IF answers FALSE and says nothing"]
+        - ["Formula error", "Anything returning an error", "Where a nest usually breaks first"]
+
+  - quiz:
+      eyebrow: Quick check
+      question: Scores of 95 and 65 go through this. What comes out?
+      filename: quiz.xlsx
+      lang: excel
+      source: |
+        =IF(B2>=70,"C",IF(B2>=80,"B",
+              IF(B2>=90,"A","F")))
+      options:
+        - "A for the first and F for the second"
+        - "C for the first and F for the second"
+        - "C for both of them"
+        - "An error, because the tests overlap"
+
+  - lab:
+      eyebrow: Lab
+      title: One case, written three ways
+      brief: >-
+        Take the band from Exercise 8 and build it three times in parallel columns, as a
+        nested IF, as an IFS and, where the case allows it, as a SWITCH. Then break one of
+        them on purpose by reversing the order of the tests, and use Evaluate Formula to
+        show the room the exact step where the wrong branch is taken.
+      blocks:
+        - label: Deliverable
+          text: One sheet with the three columns side by side and the broken one kept, not deleted
+        - label: Constraint
+          text: >-
+            The three columns have to agree on every row. Where SWITCH cannot express the
+            case, write one line saying why rather than forcing it.
+        - label: The check
+          text: >-
+            Take a screenshot of Evaluate Formula at the step where the wrong branch is
+            chosen, and say out loud which part Excel underlined first.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A wildcard needs a reader
+          desc: >-
+            The same asterisk is a pattern inside a criterion and three plain characters
+            inside a comparison, and nothing tells you which one you got
+        - title: Order is the whole nest
+          desc: >-
+            A staircase written from the wrong end returns a full column of wrong answers
+            with no error, which is why it has to be tested at the boundaries
+        - title: Debug it, do not retype it
+          desc: >-
+            Evaluate Formula shows the order Excel actually uses, and F9 answers faster
+            as long as you leave with Esc and never with Enter
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Exercises 10 and 12, plus one addition of your own. On the Exercise 10 sheet, add
+        three criteria that use wildcards over a column the exercise does not touch, and
+        write one line beside each saying which rows it should keep before you count them.
+      meta:
+        - [Due, Before week 8]
+        - [Format, Blackboard · one .xlsx file]
+        - [Weight, Part of the 30 % inside midterm 2]
+      rubric:
+        - ["Truth table", "25 %", "All sixteen rows of Exercise 10, with AND, OR and NOT"]
+        - ["Wildcards", "25 %", "Three criteria of your own, each with its expected rows"]
+        - ["IFS against IF", "30 %", "The two columns agree on every row of Exercise 12"]
+        - ["The debug", "20 %", "Evaluate Formula used on one formula, with the step named"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week, the functions that read a whole column and answer once. One criterion
+        first, then many, and the argument order that changes between them.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

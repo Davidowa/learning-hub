@@ -1,0 +1,524 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 3
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 03 · Sessions 5 and 6 · Structure and references
+      title: Information Management and Analysis
+      subtitle: >-
+        The workbook grows sheets, and the formula bar opens. Everything the rest of the
+        term computes is built on what these two sessions set up.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 5 and 6 of 34]
+      notes: >-
+        Sources. Sessions 5 and 6 from the December syllabus. Eight additions from
+        COBERTURA.md, week 3. Routes from procedures.en.md, objectives 1.2.1, 1.2.2,
+        1.3.2, 1.4.6, 2.1.3, 2.3.1, 4.1.1, Expert 1.2.4, 2.1.2, 3.5.1 and 3.5.2. Every
+        formula result on the code slides was run on the professor's Excel, build 16.0,
+        English interface with Spanish Mexico install language.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: The workbook as a structure
+          desc: Sheets, grouping, rows and columns, sizes, and the fill series behind the drag
+        - title: Finding and naming
+          desc: Find with its options open, Go To Special, and a defined name that carries a scope
+        - title: Formulas
+          desc: What Excel stores, precedence, the four reference forms, and the auditing arrows
+        - title: Your turn
+          desc: Exercises 2 and 5, organised sheets, named ranges and one formula that fills a grid
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Organise sheets and format them at once
+          sub: Add, rename, copy, hide and group the tabs so one edit lands on all of them
+        - head: Insert rows without breaking a formula
+          sub: "And read the #REF! that appears when the formula pointed into what you deleted"
+        - head: Fill a series the handle cannot produce
+          sub: Growth, weekdays, a stop value, a trend and your own custom list
+        - head: Define a name with a scope
+          sub: With an absolute Refers to, and navigate to it, which is a separate objective
+        - head: Write a formula that fills in two directions
+          sub: Relative, absolute and mixed, and the F4 cycle that walks between them
+        - head: See where a formula gets its numbers
+          sub: Trace precedents and dependents, and keep a cell in the Watch Window
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: now
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: todo
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01 · Session 5
+      title: The workbook as a structure
+      lede: >-
+        Sheets, rows, columns and sizes. None of this computes anything, and every formula
+        the course writes from here on depends on it being right.
+      block: 1
+
+  - steps:
+      eyebrow: Block 01 · Managing worksheets
+      title: The tab strip, five commands
+      items:
+        - label: '01'
+          title: Add
+          desc: The plus at the end of the tab strip, or Home, Cells, Insert, Insert Sheet.
+        - label: '02'
+          title: Rename
+          desc: Double-click the tab, or right-click and Rename. Two sheets in one workbook cannot share a name.
+        - label: '03'
+          title: Move or copy
+          desc: Right-click, Move or Copy. The dialog carries To book, Before sheet and the Create a copy check box.
+        - label: '04'
+          title: Hide and unhide
+          desc: Right-click, Hide. Unhide opens a list of what is hidden. A workbook keeps at least one visible sheet.
+        - label: '05'
+          title: Tab colour
+          desc: Right-click, Tab Color. It is stored in the file, and it is the cheapest way to mark the sheets a reader opens first.
+
+  - concept:
+      eyebrow: Block 01 · Grouping
+      title: One edit, every selected sheet
+      lead: >-
+        Click the first tab, then Ctrl+click or Shift+click the others. The title bar
+        adds the word Group. From then on anything you type, format or delete lands on
+        every sheet in the group at once. Right-click and choose Ungroup Sheets to come
+        back out.
+      panel:
+        label: Where the objective comes from
+        title: MO-210 lists it and MO-200 does not
+        note: >-
+          Formatting several worksheets by grouping them is an objective of the 365
+          Associate exam only. It behaves identically in Office 2019, so COBERTURA puts it
+          in the session that already copies and moves sheets.
+      steps:
+        - text: Ctrl+click the tabs that share the change
+        - text: Make the edit once
+        - text: Ungroup before you touch anything else
+          loop: ↺ forgetting step three is how a stray total lands on twelve sheets
+
+  - steps:
+      eyebrow: Block 01 · Objective 2.1.3
+      title: Rows and columns, and what moves
+      items:
+        - label: '01'
+          title: Count first
+          desc: Excel inserts exactly as many rows as you have selected. Three rows above row 5 means selecting rows 5, 6 and 7.
+        - label: '02'
+          title: Select whole headings
+          desc: Drag down the row numbers or across the column letters. A partial range sends you to a different objective.
+        - label: '03'
+          title: The arrow, not the face
+          desc: Home, Cells, the arrow on Insert, then Insert Sheet Rows or Insert Sheet Columns.
+        - label: '04'
+          title: The little paintbrush
+          desc: New rows inherit the format of the row above. The Insert Options button that appears offers Clear Formatting.
+        - label: '05'
+          title: "After a delete, look for #REF!"
+          desc: Delete column A under =A1*2 and the formula is rewritten as =#REF!*2. Measured, and it does not undo itself.
+
+  - table:
+      eyebrow: Block 01 · Objective 1.3.2
+      title: Height and width, and the unit trap
+      headers: [What you want, Where it is, The catch]
+      rows:
+        - ["Row height", "Home, Cells, Format, Row Height", "The unit is points"]
+        - ["Column width", "Format, Column Width", "The unit is characters"]
+        - ["Fit the content", "Format, AutoFit Column Width", "A drag cannot hit an exact number"]
+        - ["The whole sheet", "Format, Default Width", "Reads 8.09 on the lab build"]
+        - ["Check it", "Reopen the same dialog", "Blank means the rows differ"]
+
+  - steps:
+      eyebrow: Block 01 · Expert objective 2.1.2
+      title: Inside the box the handle cannot open
+      items:
+        - label: '01'
+          title: Linear or Growth
+          desc: Linear adds the step, Growth multiplies by it. Verified on the professor's build, from 2 with a step of 3, the series runs 2, 6, 18, 54.
+        - label: '02'
+          title: Date unit
+          desc: Day, Weekday, Month or Year. Weekday skips Saturday and Sunday, which no drag will do for you.
+        - label: '03'
+          title: Stop value
+          desc: With one, select a single cell and let Excel decide how far the series has to run.
+        - label: '04'
+          title: Trend
+          desc: Fits a line through the values already selected, a curve for Growth. Verified, 1, 3, 5 extends to 7, 9, 11.
+        - label: '05'
+          title: Custom lists
+          desc: File, Options, Advanced, Edit Custom Lists. Type the entries or Import list from cells, and the handle follows your order.
+
+  - divider:
+      eyebrow: Block 02 · Session 6
+      title: Finding, and naming
+      lede: >-
+        Two objectives the syllabus never names, and one it names half of. All three are
+        cheap to teach and expensive to be missing when the data set gets big.
+      block: 2
+
+  - steps:
+      eyebrow: Block 02 · Objective 1.2.1
+      title: Find, with the options open
+      items:
+        - label: '01'
+          title: Click one cell
+          desc: A multi-cell selection silently confines the search to that selection, and nothing tells you it did.
+        - label: '02'
+          title: Home, Editing, Find & Select, Find
+          desc: Ctrl+F reaches the same dialog and leaves it collapsed, which is where the marks go missing.
+        - label: '03'
+          title: Options
+          desc: This click is the objective. The collapsed dialog cannot express a single thing that follows.
+        - label: '04'
+          title: Within, Search, Look in
+          desc: Within Sheet or Workbook. Look in Formulas finds text inside a formula, Values finds only what is displayed.
+        - label: '05'
+          title: Find All
+          desc: The dialog grows a list of Book, Sheet, Name, Cell, Value and Formula. Ctrl+A inside it selects every hit at once.
+
+  - table:
+      eyebrow: Block 02 · Objective 1.2.2
+      title: Go To, and the Special dialog behind it
+      headers: [What you need, In the dialog, Why not the Name Box]
+      rows:
+        - ["A named range", "The Go to list, pick it", "This part it does do"]
+        - ["A far away cell", "Reference box, Sheet3!B47", "So does this part"]
+        - ["Every blank cell", "Special, Blanks", "There is no entry for it"]
+        - ["Every formula", "Special, Formulas", "Numbers, Text, Logicals, Errors"]
+        - ["Every rule", "Special, Conditional formats", "Comes back in weeks 5 and 9"]
+
+  - steps:
+      eyebrow: Block 02 · Objective 2.3.1
+      title: A name carries more than a label
+      items:
+        - label: '01'
+          title: Select, then Define Name
+          desc: Formulas tab, Defined Names group, Define Name. The New Name dialog opens.
+        - label: '02'
+          title: Name
+          desc: Starts with a letter, an underscore or a backslash. No spaces. Not a cell address, and not a lone C or R.
+        - label: '03'
+          title: Scope
+          desc: Workbook, so the name works from any sheet, or one sheet, so it works only there. The task will say which.
+        - label: '04'
+          title: Refers to
+          desc: It has to be absolute, =Sheet1!$A$1:$A$20. The collapse arrow at the right lets you reselect on the sheet.
+        - label: '05'
+          title: Several at once
+          desc: Select the block with its header row, Create from Selection, tick Top row. Spaces in the headers become underscores.
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four ways a defined name goes wrong
+      items:
+        - label: Error 01
+          title: A space in the name
+          desc: >-
+            Excel refuses it and the dialog will not close. Sales 2026 is not a name,
+            Sales_2026 is, and Create from Selection makes that substitution for you.
+        - label: Error 02
+          title: A name that reads as an address
+          desc: >-
+            A1, R1C1, and the single letters C and R are rejected, because Excel already
+            parses all four as references to a cell.
+        - label: Error 03
+          title: Scope nobody thought about
+          desc: >-
+            A sheet-scoped name is invisible from any other sheet and absent from the Go
+            To list unless its sheet is active. The Name Box route never asks.
+        - label: Error 04
+          title: "A name pointing at #REF!"
+          desc: >-
+            Name Manager shows it plainly. The Exercise 18 workbook ships with six of
+            them, left over from an old exercise, and you will meet them in week 11.
+
+  - divider:
+      eyebrow: Block 03 · Session 6
+      title: What the formula bar is standing on
+      lede: >-
+        Four kinds of value, an order of operations that is not the one from school, and
+        four ways to write the same address.
+      block: 3
+
+  - code_output:
+      eyebrow: Block 03 · Measured on the lab build
+      title: A number, and a number typed as text
+      filename: types.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        A1  05/03/2024   a real date
+        A2  142          entered as text
+        A3  142          entered as a number
+        A4  TRUE         a logical value
+        A5  =1/0         an error value
+
+        =ISNUMBER(A1)
+        =ISTEXT(A2)
+        =A2+1
+        =SUM(A2:A3)
+        =COUNT(A1:A3)
+        =TRUE+TRUE
+      output: |
+        ISNUMBER(A1)    TRUE
+        ISTEXT(A2)      TRUE
+        A2+1            143
+        SUM(A2:A3)      142
+        COUNT(A1:A3)    2
+        TRUE+TRUE       2
+
+  - concept:
+      eyebrow: Block 03 · Reading the two lines above
+      title: The plus sign converts and SUM does not
+      lead: >-
+        A2 holds the characters 1, 4 and 2, not the number one hundred and forty-two.
+        Write A2+1 and the plus sign converts the text and answers 143. Point SUM at the
+        same two cells and it answers 142, because SUM skips text. The report is short
+        by one row.
+      panel:
+        label: Where it comes from
+        title: A date is a number wearing a format
+        note: >-
+          05/03/2024 is stored as 45356, which is why DAY and MONTH can read it and why
+          COUNT counted it. Clear the format off a date and the serial number is what
+          stays behind.
+      steps:
+        - text: Look at the alignment before you trust a column
+        - text: Numbers sit right, text sits left
+        - text: A right-aligned column of numbers is not proof
+          loop: ↺ someone may have aligned it by hand, so check with ISNUMBER
+
+  - code_output:
+      eyebrow: Block 03 · Measured on the lab build
+      title: Precedence, and two answers that surprise
+      filename: precedence.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        =2+3*4
+        =(2+3)*4
+        =-2^2
+        =2^3^2
+        =10/2*5
+        =50%*4
+        ="A"&1+2
+      output: |
+        2+3*4        14
+        (2+3)*4      20
+        -2^2         4
+        2^3^2        64
+        10/2*5       25
+        50%*4        2
+        "A"&1+2      A3
+
+  - table:
+      eyebrow: Block 03 · The order Excel uses
+      title: What resolves before what
+      headers: [Rank, Operators, What it means here]
+      rows:
+        - ["1", "The colon, space and comma", "Range, intersection, union"]
+        - ["2", "The minus sign of a negative", "Which is why -2^2 is 4"]
+        - ["3", "% then ^", "50% is 0.5 before it multiplies"]
+        - ["4", "* and /", "Left to right when they tie"]
+        - ["5", "+ and -", "Left to right when they tie"]
+        - ["6", "& then the comparisons", "Concatenation runs after the sum"]
+
+  - code_output:
+      eyebrow: Block 03 · Measured on the lab build
+      title: The seven error values, made on purpose
+      filename: errors.xlsx
+      lang: excel
+      output_label: Excel 16.0
+      source: |
+        =A1/A2
+        ="a"+1
+        =SUMA(A1)
+        =NA()
+        =SQRT(-1)
+        =A1:A2 C1:C2
+        =A1*2
+      output: |
+        #DIV/0!  A2 holds a zero
+        #VALUE!  text where a number goes
+        #NAME?   Excel knows no SUMA
+        #N/A     declared not available
+        #NUM!    no root of a negative
+        #NULL!   two ranges that never meet
+        #REF!    after column A was deleted
+
+  - trace:
+      eyebrow: Block 03 · Objective 4.1.1
+      title: What F4 does, one press at a time
+      headers: [Presses, Reference, Column, Row]
+      rows:
+        - ["none", "B2", "moves", "moves"]
+        - ["once", "$B$2", "locked", "locked"]
+        - ["twice", "B$2", "moves", "locked"]
+        - ["three", "$B2", "locked", "moves"]
+        - ["four", "B2", "moves", "moves"]
+      verdict: >-
+        Press F4 with the insertion point touching the reference. Four presses walk the
+        whole cycle and land you back where you started.
+
+  - code:
+      eyebrow: Block 03 · One formula, sixteen cells
+      title: The multiplication grid
+      filename: grid.xlsx
+      lang: excel
+      source: |
+        Typed once in G2, then filled across and down.
+
+          =$F2*G$1
+
+        What the four corners of the block end up holding.
+
+          G2   =$F2*G$1
+          J2   =$F2*J$1
+          G5   =$F5*G$1
+          J5   =$F5*J$1
+      annotations:
+        - label: The dollar on F
+          text: On the column letter, so it never leaves column F when filled right.
+        - label: The dollar on 1
+          text: On the row number, so it never leaves row 1 when filled down.
+        - label: How to check it
+          text: Click J5 and read the formula bar. Both dollars have to still be there.
+        - label: If it fails
+          text: >-
+            Written =$F$2*$G$1, all sixteen cells return 2 and nothing warns you. Written
+            =F2*G1, only the first is right.
+          accent: true
+
+  - table:
+      eyebrow: Block 03 · Objective 1.4.6 and Expert 1.2.4
+      title: Two switches on the Formulas tab
+      headers: [Command, Where it lives, What it does]
+      rows:
+        - ["Show Formulas", "Formulas, Formula Auditing", "Every cell shows its formula"]
+        - ["Ctrl+grave accent", "The key left of the 1", "Same toggle, easy to hit by accident"]
+        - ["Calculation Options", "Formulas, Calculation", "Automatic, Manual, or except tables"]
+        - ["Calculate Now", "F9, or the same group", "Recalculates every open workbook"]
+        - ["Calculate Sheet", "Shift+F9", "The active sheet only"]
+
+  - steps:
+      eyebrow: Block 03 · Expert objectives 3.5.1 and 3.5.2
+      title: Seeing where a number came from
+      items:
+        - label: '01'
+          title: Trace Precedents
+          desc: Blue arrows run from every cell the formula reads, with a dot at the source end. Click again for the next level back.
+        - label: '02'
+          title: Trace Dependents
+          desc: Same group. Arrows run out to every cell that reads this one, which is what you check before deleting anything.
+        - label: '03'
+          title: Remove Arrows
+          desc: Click the arrow on the button. Remove Arrows, Remove Precedent Arrows and Remove Dependent Arrows. The item checks the sheet is left clean.
+        - label: '04'
+          title: Watch Window
+          desc: Add Watch, select the cell, Add. The pane lists Book, Sheet, Name, Cell, Value and Formula, and it survives jumping sheets.
+        - label: '05'
+          title: Select instead of draw
+          desc: Ctrl+G, Special, Precedents, then Direct only or All levels. It selects and draws nothing, so it fails an item that says trace.
+
+  - quiz:
+      eyebrow: Quick check
+      question: One formula has to fill right and down across a grid. Which reference survives?
+      options:
+        - "=F2*G1, because a fill adjusts both parts by itself"
+        - "=$F$2*$G$1, because nothing in it can move"
+        - "=$F2*G$1, one dollar on the column and one on the row"
+        - "=F$2*$G1, which locks the two parts that have to move"
+
+  - lab:
+      eyebrow: Lab
+      title: Exercises 2 and 5, in one workbook
+      brief: >-
+        In Exercise 2, organise the workbook. Rename and colour the sheets, group them to
+        put one header on all of them at once, and define every range you will need later
+        with its scope set deliberately. In Exercise 5, write the precedence formulas,
+        then build the multiplication grid from a single formula filled in two directions.
+      blocks:
+        - label: Deliverable
+          text: One .xlsx with the organised sheets, the defined names and the filled grid
+        - label: Constraint
+          text: No name created from the Name Box. Every one from Define Name, with its Scope and Refers to chosen
+        - label: The test
+          text: Trace precedents on the far corner of the grid, count two generations of arrows, then remove them
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A name carries a scope
+          desc: >-
+            Define Name asks for it and the Name Box never does, which is why the fast
+            route cannot answer an item that names a sheet
+        - title: Mixed references fill both ways
+          desc: >-
+            One dollar on the column and one on the row is what lets a single formula
+            cover a grid. Two dollars gives sixteen copies of the same number
+        - title: SUM skips what the plus sign converts
+          desc: >-
+            Text that looks like a number answers 143 to A2+1 and contributes nothing to
+            SUM. Check the alignment, then check with ISNUMBER
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        Hand in the workbook from the lab, plus one sheet of your own that proves the
+        auditing tools were opened. Put a formula three levels deep, leave the precedent
+        arrows visible in a screenshot, and add one cell to the Watch Window before you
+        save.
+      meta:
+        - [Due, Before week 4]
+        - [Format, Blackboard · .xlsx file]
+        - [Weight, Part of the 30 % inside midterm 1]
+      rubric:
+        - ["Structure", "25 %", "Sheets renamed, coloured and one header applied by grouping"]
+        - ["Names", "25 %", "Every name has a deliberate scope and an absolute Refers to"]
+        - ["References", "30 %", "The grid comes from one filled formula with mixed references"]
+        - ["Auditing", "20 %", "Two generations of precedent arrows, and one watched cell"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next week the function library opens, statistical, text and date functions, and
+        the number format that changes the picture without touching the value.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

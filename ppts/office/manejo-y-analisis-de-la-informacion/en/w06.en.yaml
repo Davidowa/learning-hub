@@ -1,0 +1,443 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 6
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 06 · Sessions 11 and 12 · IF in depth, then the midterm
+      title: Information Management and Analysis
+      subtitle: >-
+        One class session and one exam session. IF as far as it goes on its own, and then
+        a sweep back over everything the first block asked you to be able to do.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 11 and 12 of 34]
+      notes: |
+        Session 11 is the only class session of the week; session 12 is the first
+        midterm. COBERTURA.md adds nothing here on purpose. New material in the week
+        of the exam is the fastest way to lose the marks the block already earned.
+        The deck therefore crosses the block instead of extending it. Word is on the
+        paper and is not covered by these decks, which is said out loud on slide 12
+        rather than left implied.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: IF in depth
+          desc: The six comparisons, both branches as formulas, and where the function stops
+        - title: The sweep back
+          desc: Weeks 2 to 5, the dialogs they live in, and the references that broke
+        - title: The exam session
+          desc: What session 12 is grading, and how to spend the time it gives you
+        - title: Your turn
+          desc: One workbook that rebuilds Exercises 1 to 7 without opening any of them
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Use all six comparison operators
+          sub: And say what happens when a number meets a number that was typed as text
+        - head: Put a formula in either branch of an IF
+          sub: The two answers are values, and a calculation is a value
+        - head: Name the dialog behind each command
+          sub: Seven of them carry the whole first block, and the exam names them
+        - head: Predict a fill in any direction
+          sub: Relative, absolute and both mixed forms, on the same starting formula
+        - head: Read an exam item for verb and scope
+          sub: Apply, insert, modify, remove and clear are five different commands
+        - head: Sit session 12 without surprises
+          sub: What is on the paper, including the half these decks do not cover
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: now
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: todo
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: IF, as far as it goes alone
+      lede: >-
+        One condition and two answers is the whole function. Everything that looks harder
+        is either a comparison you have not read carefully or a second IF in disguise.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: A comparison is a value, not a question
+      lead: >-
+        B2 greater than or equal to 70 is not something Excel asks. It is something Excel
+        computes, and the answer is TRUE or FALSE, a value like any other. Type that
+        comparison into a spare cell and read the word back. IF does nothing more than
+        pick between two values, using that word.
+      panel:
+        label: The habit worth building
+        title: Test the comparison in its own cell
+        note: >-
+          When an IF returns the wrong branch, put the Logical_test alone in a spare cell
+          and read TRUE or FALSE. That separates a broken comparison from a broken answer
+          in about four seconds, and it works on nested formulas too.
+      steps:
+        - text: The comparison resolves to TRUE or FALSE
+        - text: IF reads that word and nothing else
+        - text: One of your two values lands in the cell
+          loop: ↺ and the next row is read from scratch
+
+  - table:
+      eyebrow: Block 01 · Complete, and in order
+      title: The six comparison operators
+      headers: [Operator, Reads as, Returns TRUE when]
+      rows:
+        - ["=", "equal to", "B2=70 and B2 holds 70"]
+        - ["<>", "not equal to", "B2<>70 and B2 holds anything else"]
+        - [">", "greater than", "B2>70 and B2 holds 71"]
+        - ["<", "less than", "B2<70 and B2 holds 69"]
+        - [">=", "greater than or equal to", "B2>=70 and B2 holds 70 or more"]
+        - ["<=", "less than or equal to", "B2<=70 and B2 holds 70 or less"]
+
+  - code_output:
+      eyebrow: Measured · one cell, seven readings
+      title: The same test, written seven ways
+      filename: compare.xlsx
+      lang: excel
+      output_label: What the cell shows
+      source: |
+        =IF(B2>=70,"Pass","Fail")
+        =IF(B2>70,"Pass","Fail")
+        =IF(B2=70,"Pass","Fail")
+        =IF(B2<>70,"Pass","Fail")
+        =IF(B2>=70,"Pass")
+        =IF(B2>="70","Pass","Fail")
+        =IF(B2>=60,"Pass")
+      output: |
+        B2 = 70, a number
+          >= 70             Pass
+          >  70             Fail
+          =  70             Pass
+          <> 70             Fail
+          >= 70, two args   Pass
+          >= "70"           Fail
+        B2 = 50
+          >= 60, two args   FALSE
+
+  - concept:
+      eyebrow: Block 01 · The line that surprises everyone
+      title: A number is never equal to its own text
+      lead: >-
+        Excel sorts every value into three bands before it compares anything. Numbers
+        come first, then text, then FALSE and TRUE. That is why 70 is smaller than the
+        string that reads seventy, and why an IF over a column imported as text answers
+        wrongly on every row without raising a single error.
+      panel:
+        label: How to spot it
+        title: A number left aligned is not a number
+        note: >-
+          Excel right aligns numbers and left aligns text on its own, so the column tells
+          you before any formula does. Week 9 fixes it properly at import; today the
+          reading is enough.
+      steps:
+        - text: Check the alignment of the column
+        - text: Test the comparison in a spare cell
+        - text: If it says FALSE on every row, the band is wrong
+          loop: ↺ not the operator, and not the threshold
+
+  - code:
+      eyebrow: Block 01 · Both branches are values
+      title: An answer can be a calculation
+      filename: branches.xlsx
+      lang: excel
+      source: |
+        =IF(D2>=1000,D2*0.1,0)
+        =IF(D2>=1000,D2*0.1,D2*0.05)
+        =IF(E2="Yes",F2-G2,F2)
+        =IF(H2=0,"",I2/H2)
+        =IF(J2>K2,J2-K2,0)
+      annotations:
+        - label: Lines 1 and 2
+          text: Neither branch has to be a word. A commission rule is two formulas and one test between them.
+        - label: Line 4
+          text: >-
+            Guarding the divisor keeps #DIV/0! off the report. Week 7 opens the dialog
+            that finds the ones nobody guarded.
+        - label: Line 5
+          text: A negative turned into zero. Read it aloud as the rule the business actually has before you write it.
+        - label: If it fails
+          text: >-
+            Text answers need quotation marks in the cell and none in the dialog. Mixing
+            the two is the commonest broken IF in Exercise 7.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways an IF answers the wrong thing
+      items:
+        - label: Error 01
+          title: The third argument left out
+          desc: >-
+            Excel fills the gap with FALSE and puts that word in the cell. It is not an
+            error, nothing is flagged, and the report ships with FALSE in a column.
+        - label: Error 02
+          title: The threshold typed inside
+          desc: >-
+            The number lives in seventy formulas instead of one cell. When the rule
+            changes, every one of them has to be edited by hand.
+        - label: Error 03
+          title: Filling down over a loose reference
+          desc: >-
+            The comparison cell walks down with the formula and by row 20 it is pointing
+            at nothing. F4 on that reference before the fill, not after.
+        - label: Error 04
+          title: Comparing against "TRUE"
+          desc: >-
+            In quotation marks it is text and never equals the logical value. A cell that
+            already holds TRUE is its own test and needs no comparison at all.
+
+  - divider:
+      eyebrow: Block 02
+      title: The sweep back
+      lede: >-
+        Five weeks of commands, and the paper is going to ask for the route rather than
+        the picture. This is the list of routes.
+      block: 2
+
+  - concept:
+      eyebrow: Block 02 · What the first midterm is
+      title: Half the paper is Word, and it is not here
+      lead: >-
+        The syllabus gives weeks 1 and 2 partly to word processing, and session 12 grades
+        that work alongside the Excel block. These decks cover the Excel half only, and
+        say so rather than leaving you to find out on the day. Revise Word from your own
+        notes and from what you handed in.
+      panel:
+        label: What that leaves for these slides
+        title: Weeks 2 to 5, and the routes inside them
+        note: >-
+          Cell formatting, worksheet management, references, the function library,
+          conditional formatting, sparklines and IF. Everything in the two tables that
+          follow has a session, an exercise and a route.
+      steps:
+        - text: Word comes from your own notes and submissions
+        - text: Excel comes from Exercises 1 to 7
+        - text: Both halves are graded on the same paper
+          loop: ↺ and the Excel half is what the next slides cover
+
+  - table:
+      eyebrow: Block 02 · What the paper can ask
+      title: Week by week, and where to practise it
+      headers: [Week, What it covered, Practise on]
+      rows:
+        - ["Weeks 1 to 2", "Word, styles, sections, references", "Your own submissions"]
+        - ["Week 2", "Format Cells, styles, merge, fill", "Exercise 1"]
+        - ["Week 3", "Sheets, names, references, auditing", "Exercises 2 and 5"]
+        - ["Week 4", "Statistics, text and date functions", "Exercises 6 and 13"]
+        - ["Week 5", "Conditional formatting, sparklines", "Exercise 3"]
+        - ["Week 6", "IF, in every form seen so far", "Exercise 7"]
+
+  - table:
+      eyebrow: Block 02 · Seven dialogs
+      title: Where the first block actually lives
+      headers: [Dialog, How it opens, What only it can do]
+      rows:
+        - ["Format Cells", "Ctrl+1", "Borders, fill, custom formats"]
+        - ["Name Manager", "Formulas, Defined Names", "Named ranges and their scope"]
+        - ["Series", "Home, Editing, Fill, Series", "Step, stop value, date unit"]
+        - ["Function Arguments", "Shift+F3", "One box per argument, previewed"]
+        - ["New Rule", "Conditional Formatting", "The six rule types"]
+        - ["Rules Manager", "Conditional Formatting", "Priority, Stop If True, ranges"]
+        - ["Create Sparklines", "Insert, Sparklines", "Data Range and Location Range"]
+
+  - trace:
+      eyebrow: Block 02 · Week 3, collected
+      title: One formula in C3, filled two ways
+      headers: ["Written in C3", "Filled to D3", "Filled to C4", "Held still"]
+      rows:
+        - ["=B2", "=C2", "=B3", "nothing"]
+        - ["=$B$2", "=$B$2", "=$B$2", "both"]
+        - ["=$B2", "=$B2", "=$B3", "the column"]
+        - ["=B$2", "=C$2", "=B$2", "the row"]
+      verdict: A multiplication table needs the last two rows at the same time, which is why absolute alone was never enough.
+
+  - quiz:
+      eyebrow: Quick check
+      question: B2 holds the number 70. What lands in the cell?
+      filename: quiz.xlsx
+      lang: excel
+      source: |
+        =IF(B2>="70","Pass","Fail")
+      options:
+        - "Pass, because 70 equals 70"
+        - "Fail, because text outranks every number"
+        - "It returns an error value"
+        - "Pass, because Excel converts the text first"
+
+  - quiz:
+      eyebrow: Quick check
+      question: A Top 10 rule has coloured the column heading. What happened?
+      options:
+        - "The rule needs Stop If True switched on"
+        - "The heading was inside the selected range"
+        - "Top 10 rules only work inside a table"
+        - "The rule has to be moved up in priority"
+
+  - pitfalls:
+      eyebrow: Block 02 · Common errors
+      title: Four habits that cost marks in weeks 2 to 5
+      items:
+        - label: Error 01
+          title: The ribbon instead of the dialog
+          desc: >-
+            Font colour from one button and fill from another is two operations. The item
+            asks for the Format Cells dialog because it wants one.
+        - label: Error 02
+          title: Renaming a sheet by retyping it
+          desc: >-
+            Double click the sheet tab, or right click and Rename. Deleting the sheet and
+            making a new one loses every reference pointing at it.
+        - label: Error 03
+          title: Dragging the fill handle for a series
+          desc: >-
+            It cannot set a stop value, cannot do growth and cannot fit a trend. The
+            Series dialog can, and the task names it for that reason.
+        - label: Error 04
+          title: Leaving the marching border
+          desc: >-
+            After a copy the source stays selected and the next keystroke can overwrite
+            the clipboard. Esc closes it, and costs nothing.
+
+  - divider:
+      eyebrow: Block 03
+      title: Session 12, the first midterm
+      lede: >-
+        The paper does not ask whether the sheet looks right. It asks how it got that
+        way, and it can tell.
+      block: 3
+
+  - method:
+      eyebrow: Block 03 · Reading an item
+      title: An item is a sentence about a route
+      statement: Read it twice before touching the mouse. Once for the verb, which names the command, and once for the scope, which names the selection.
+      points:
+        - label: The verb
+          text: >-
+            Apply, insert, modify, remove and clear are five different commands with five
+            different menu entries. Clearing rules from the selected cells and clearing
+            them from the entire sheet are graded apart.
+        - label: The scope
+          text: >-
+            Selected cells, this worksheet, this table, the whole workbook. The wrong
+            scope is the answer to a different item, and it is marked as such.
+        - label: The proof
+          text: >-
+            Every objective has a check that runs in about ten seconds. Change a value
+            and watch, or reopen the dialog and read what it says back to you.
+
+  - steps:
+      eyebrow: Block 03 · On the day
+      title: Five habits worth the seconds they cost
+      items:
+        - label: '01'
+          title: Select before you command
+          desc: Almost every route in this course starts with the selection, and it is the part nobody checks afterwards
+        - label: '02'
+          title: Point, do not type
+          desc: A threshold in a cell survives the next item. A threshold inside a formula has to be found again.
+        - label: '03'
+          title: Read the preview line
+          desc: Formula result at the bottom of Function Arguments, and the Format column in the Rules Manager
+        - label: '04'
+          title: Check the boundary
+          desc: One row separates greater than from greater than or equal, and that is the row being marked
+        - label: '05'
+          title: Close what you opened
+          desc: Esc after a copy, OK rather than Cancel, and nothing left selected for the next item to inherit
+
+  - lab:
+      eyebrow: Lab
+      title: Rebuild the block from a blank sheet
+      brief: >-
+        One workbook, four sheets, built without reopening Exercises 1 to 7. Sheet 1
+        formats a raw block with Ctrl+1 alone. Sheet 2 names two ranges and uses them in
+        a formula. Sheet 3 runs the statistical, text and date functions of week 4 over
+        thirty rows. Sheet 4 adds two rules, a sparkline column and one IF.
+      blocks:
+        - label: Deliverable
+          text: The four sheet workbook, uploaded before session 12 opens
+        - label: Constraint
+          text: >-
+            Every format on sheet 1 comes out of the Format Cells dialog, and every rule
+            on sheet 4 appears in the Rules Manager
+        - label: The check
+          text: >-
+            Hand it to somebody else and have them change three values. Anything that
+            does not react was done by hand and will not survive the paper.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A comparison is a value
+          desc: >-
+            Put it alone in a spare cell and read TRUE or FALSE, which separates a broken
+            test from a broken answer in seconds
+        - title: The dialog is the answer
+          desc: >-
+            Seven of them carry the whole first block, and an item that names one is
+            asking for that dialog and not for the picture it makes
+        - title: The exam grades the route
+          desc: >-
+            Verb and scope, then the command, then the ten second check. The sheet
+            looking right is necessary and it is not sufficient
+
+  - homework:
+      eyebrow: Assignment
+      title: Submission and grading criteria
+      brief: >-
+        The four sheet workbook from the lab, plus one page of notes in your own words
+        listing every dialog you had to open to build it and what each one gave you that
+        the ribbon could not. Bring the notes to session 12.
+      meta:
+        - [Due, Before session 12]
+        - [Format, Blackboard · one .xlsx file and one page of notes]
+        - [Weight, Part of the 30 % inside midterm 1]
+      rubric:
+        - ["Sheets 1 and 2", "30 %", "Formatting from the dialog, and two named ranges in use"]
+        - ["Sheet 3", "25 %", "The week 4 functions return what the data says they should"]
+        - ["Sheet 4", "25 %", "Two rules, one sparkline column on a common scale, one IF"]
+        - ["The notes", "20 %", "Each dialog named, with what it does that the ribbon cannot"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        After the midterm, operators and wildcards, then AND, OR and NOT, and the nested
+        IF that week 5 kept promising.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]

@@ -1,0 +1,508 @@
+meta:
+  course: Information Management and Analysis
+  code: TIA501
+  lang: en
+  language: excel
+  week: 10
+  footer: INFORMATION MANAGEMENT AND ANALYSIS · TIA501 · EXCEL
+  blocks: 3
+
+slides:
+  - cover:
+      kicker: Facultad de Empresariales · 2026
+      unit: Week 10 · Sessions 19 and 20 · Tables and charts
+      title: Information Management and Analysis
+      subtitle: >-
+        The range stops being a range and starts being an object with a name, and the
+        numbers get a picture that somebody else has to be able to read.
+      meta:
+        - [Instructor, David Escobar-Castillejos]
+        - [Code, TIA501 · Empresariales]
+        - [Sessions, 19 and 20 of 34]
+      notes: |
+        Sessions 19 and 20 of the syllabus, CLO06 and CLO07. This is the week that closes
+        the most objectives of the whole course: Associate 2.3.2, 3.1.1, 3.1.2, 3.1.3,
+        3.2.2, 3.2.3, 5.1.1, 5.1.2, 5.2.2, 5.2.3, 5.3.1, 5.3.2 and 5.3.3.
+        COBERTURA.md adds three short ones, all inside a screen that is already open:
+        3.2.1, 4.1.2 in its structured reference half, and 5.2.1.
+        Routes come from procedures.en.md. Exercises 16 and 17, and note that Exercise 17
+        asks for none of the chart sheet, the row and column switch, or the alt text, so
+        those three need a task written for them.
+
+  - agenda:
+      eyebrow: Agenda
+      title: Three blocks of work
+      cards:
+        - title: The range becomes an object
+          desc: Ctrl+T, the style gallery, the seven check boxes, the name, and how a table grows on its own
+        - title: The table inside a formula
+          desc: Structured references, the total row that survives a filter, and what Convert to Range throws away
+        - title: The chart
+          desc: The Insert Chart dialog, the chart sheet, the data source, the elements and the alt text
+        - title: Your turn
+          desc: Thirty clothing orders, a table called Lorena, and the first charts from it
+
+  - objectives:
+      eyebrow: Session objectives
+      title: By the end of the two sessions you will be able to…
+      items:
+        - head: Turn a range into a named table
+          sub: Reading the address in the Create Table dialog instead of accepting the guess
+        - head: Set the style and the style options separately
+          sub: The gallery is one graded action, each of the seven check boxes is another
+        - head: Write a structured reference
+          sub: Lorena[Quantity] outside the table and [@Quantity] inside it, without touching the mouse
+        - head: Add a total row that respects a filter
+          sub: And read the SUBTOTAL code it wrote instead of trusting the number
+        - head: Build a chart from the dialog
+          sub: Insert Chart, All Charts, the family on the left and the subtype along the top
+        - head: Give a chart elements and a description
+          sub: Add Chart Element with its position, Quick Layout, the style, and alt text a screen reader can use
+
+  - roadmap:
+      eyebrow: Course map
+      title: Where this week sits in the term
+      phases:
+        - label: A · Weeks 1–2
+          title: Word, then the ribbon
+          desc: Long documents, and the first pass over the Excel grid
+          state: done
+        - label: B · Weeks 3–4
+          title: Sheets and functions
+          desc: Names, references, precedence, statistics, text and dates
+          state: done
+        - label: C · Weeks 5–8
+          title: Conditional logic
+          desc: Formatting by rule, IF, wildcards, nesting and the IFS family
+          state: done
+        - label: D · Weeks 9–13
+          title: Data, tables and lookup
+          desc: Import, filters, tables, charts and the lookup functions
+          state: now
+        - label: E · Weeks 14–17
+          title: Summarising and delivery
+          desc: PivotTables, advanced filters, what-if and printing
+          state: todo
+
+  - divider:
+      eyebrow: Block 01
+      title: A range stops being a range
+      lede: >-
+        Same cells, same numbers, and from Ctrl+T onwards Excel knows where the data ends,
+        what the columns are called, and that a new row belongs to it.
+      block: 1
+
+  - concept:
+      eyebrow: Key concept
+      title: What Excel gains when you press Ctrl+T
+      lead: >-
+        A range is an address. Excel does not know that row 33 is the last one, that B3 is
+        a header rather than data, or that the block is one thing. A table knows all three,
+        and every feature that follows, the total row, the banding, the automatic
+        expansion, exists because it does.
+      panel:
+        label: The tell
+        title: The Table Design tab appears, and Name Manager lists it
+        note: >-
+          Formatting a range to look striped gives none of this. The stripes stop
+          alternating the moment a row is inserted, because nothing knows the rows belong
+          together.
+      steps:
+        - text: One cell inside the block, then Insert, Table
+        - text: Read the address before you accept it
+        - text: Name it in the Table Design tab
+          loop: ↺ and every formula that used Table1 rewrites itself
+
+  - steps:
+      eyebrow: Block 01 · From range to named table
+      title: Five steps, and the one everybody skips
+      items:
+        - label: '01'
+          title: One cell inside the block
+          desc: Do not select the range by hand yet. Excel proposes an extent, and the point of the next step is to check it.
+        - label: '02'
+          title: Insert, Tables, Table
+          desc: Ctrl+T and Ctrl+L open the same Create Table dialog. Pressing Ctrl+T and then Enter accepts a guess you never read.
+        - label: '03'
+          title: Read the address
+          desc: Where is the data for your table. It must cover the header row and the last row of data. A stray cell nearby is what widens it.
+        - label: '04'
+          title: My table has headers
+          desc: Tick it when row one holds the column names. Clear it and Excel invents Column1, Column2, and every formula you write afterwards says Column1.
+        - label: '05'
+          title: Name it and press Enter
+          desc: Table Design tab, Properties group, the Table Name box. Same rules as a defined name. Nothing is committed until Enter.
+
+  - method:
+      eyebrow: Block 01 · Objective 3.1.2
+      title: The style has a name, and the name is what is read
+      statement: Table Design, Table Styles, the More arrow at the corner of the gallery. Hover a style and the tooltip gives its literal name, Green, Table Style Medium 7.
+      points:
+        - label: The gallery
+          text: >-
+            It opens in three sections, Light, Medium and Dark, and it previews on the sheet
+            while you hover. Click the one the task named, not the one that looks closest.
+        - label: The default
+          text: >-
+            A new table arrives as Blue, Table Style Medium 2. If that is still the style
+            boxed in the gallery, nothing was applied and the item is unanswered.
+        - label: The short route
+          text: >-
+            Shading alternate rows by hand from Home, Font, Fill Color. Same picture, no
+            style name attached, and it stops alternating the moment a row is inserted.
+
+  - table:
+      eyebrow: Block 01 · Table Style Options
+      title: Seven check boxes, seven separate graded actions
+      headers: [Check box, What it changes, What it is not]
+      rows:
+        - ["Header Row", "The header text and the arrows", "A frozen pane"]
+        - ["Total Row", "A SUBTOTAL row at the bottom", "A typed SUM"]
+        - ["Banded Rows", "Stripes that repair themselves", "Manual fill"]
+        - ["Banded Columns", "The same, the other way", "Manual fill"]
+        - ["First and Last", "Two boxes, one per edge column", "Bold by hand"]
+        - ["Filter Button", "The arrows, header text stays", "Header Row"]
+
+  - steps:
+      eyebrow: Block 01 · Rows and columns, table version
+      title: The sheet commands are the wrong commands here
+      items:
+        - label: '01'
+          title: Right-click, Insert
+          desc: Inside a table the submenu reads Table Columns to the Left, Table Column to the Right, Table Rows Above, Table Row Below. Not the sheet ones.
+        - label: '02'
+          title: Right-click, Delete
+          desc: It offers Table Columns and Table Rows. Everything outside the table stays where it is, which is the whole reason to use these.
+        - label: '03'
+          title: What the new row inherits
+          desc: The banding, the header naming, and any calculated column formula. Nothing has to be dragged down.
+        - label: '04'
+          title: Resize Table
+          desc: Table Design, Properties, Resize Table, and type or drag the new range. The header row has to stay in the same row.
+        - label: '05'
+          title: The handle is not the route
+          desc: Dragging the small triangle at the bottom right corner works and demonstrates nothing. Same for typing in the first empty row below.
+
+  - pitfalls:
+      eyebrow: Block 01 · Common errors
+      title: Four ways a table goes wrong quietly
+      items:
+        - label: Error 01
+          title: Ctrl+T then Enter
+          desc: >-
+            The dialog opened, proposed an extent and closed again without being read. One
+            blank column swallowed into the table is enough to break every total afterwards.
+        - label: Error 02
+          title: Format as Table when only a table was asked for
+          desc: >-
+            The Home tab route creates the table and applies a style in one move. It changes
+            formatting the task never mentioned, on top of a range you never inspected.
+        - label: Error 03
+          title: Leaving the name as Table1
+          desc: >-
+            The name is what the formulas read. Exercise 16 asks for a name and the file
+            ships with the table called Lorena, which is what makes its formulas legible.
+        - label: Error 04
+          title: Striping by hand
+          desc: >-
+            Direct fill on alternate rows looks the same until somebody inserts a row.
+            The check box is also what the grader reads, and it stays cleared.
+
+  - divider:
+      eyebrow: Block 02
+      title: The table inside a formula
+      lede: >-
+        Once the columns have names, a formula can say what it means. Lorena[Quantity] is
+        the same cells as E4 to E33 and it survives everything that address does not.
+      block: 2
+
+  - code:
+      eyebrow: Block 02 · Exercise 16, the table called Lorena
+      title: The four shapes of a structured reference
+      filename: Lorena.xlsx
+      lang: excel
+      source: |
+        In the calculated column, written once, filled by Excel
+        =MONTH(Lorena[[#This Row],[Order Date]])
+
+        Inside the table, the short form of the same thing
+        =MONTH([@[Order Date]])
+
+        Outside the table, the whole column
+        =SUM(Lorena[Quantity])
+        =AVERAGE(Lorena[Quantity])
+
+        The header text of one column
+        =Lorena[[#Headers],[Quantity]]
+      annotations:
+        - label: The at sign
+          text: The @ means this row. Inside the table the name is dropped because you are already in it.
+        - label: The four special items
+          text: "The others are #Data, #Totals and #All. They pick parts of the table, not cells."
+        - label: Typed, not dragged
+          text: Type the name, then the bracket. Excel lists the columns and you pick one.
+        - label: If it fails
+          text: Dragging with the mouse writes $E$4 and the reference stops growing with the table.
+          accent: true
+
+  - compare:
+      eyebrow: Block 02 · The two routes
+      title: Same arithmetic, and only one of them keeps up
+      before:
+        label: Graded · the structured reference
+        file: total.txt
+        lang: excel
+        code: |
+          =SUM(Lorena[Quantity])
+
+          30 orders today
+          31 orders after the paste
+          The formula never changed
+          The total moved on its own
+      after:
+        label: Not graded · the dragged address
+        file: total.txt
+        lang: excel
+        code: |
+          =SUM(E4:E33)
+
+          30 orders today
+          31 orders after the paste
+          The formula never changed
+          The 31st order is not in it
+      note: >-
+        Exercise 16 asks you to copy the rows from sheet Ex1-2 into the orders table. That
+        paste is the test. A structured reference absorbs the new rows and an address does
+        not, and neither of them says a word about it.
+
+  - code:
+      eyebrow: Block 02 · The total row
+      title: The row that reads the filter, and the row that does not
+      filename: totals.xlsx
+      lang: excel
+      source: |
+        Table Design, Table Style Options, Total Row
+        =SUBTOTAL(109,[Quantity])
+
+        Pick Average from the drop-down in the cell
+        =SUBTOTAL(101,[Quantity])
+
+        Count on a text column such as Status
+        =SUBTOTAL(103,[Status])
+
+        Typed by hand in the first row under the table
+        =SUM(E4:E33)
+      annotations:
+        - label: Where the list is
+          text: A drop-down appears on the right edge of each total cell. That is the graded control.
+        - label: The ten entries
+          text: None, Average, Count, Count Numbers, Max, Min, Sum, StdDev, Var, More Functions.
+        - label: Count against Count Numbers
+          text: Count is COUNTA and counts anything. Count Numbers skips text. Status needs the first.
+        - label: If it fails
+          text: A typed SUM under the table is not owned by it and does not move when you filter.
+          accent: true
+
+  - table:
+      eyebrow: Block 02 · The number inside SUBTOTAL
+      title: Why the total row writes 109 and not 9
+      headers: [Code, Function, Rows a filter hid, Rows hidden by hand]
+      rows:
+        - ["9", "SUM", "Ignored", "Added in"]
+        - ["109", "SUM", "Ignored", "Ignored"]
+        - ["1", "AVERAGE", "Ignored", "Averaged in"]
+        - ["101", "AVERAGE", "Ignored", "Ignored"]
+        - ["103", "COUNTA", "Ignored", "Ignored"]
+
+  - concept:
+      eyebrow: Block 02 · Convert to Range
+      title: What survives when the table stops being one
+      lead: >-
+        Table Design, Tools, Convert to Range, and Yes on the message. The filter buttons
+        go, the contextual tab goes, the name disappears from Name Manager, and every
+        structured reference in the workbook rewrites itself into ordinary addresses.
+        Nothing warns you that it did.
+      panel:
+        label: What stays behind
+        title: The style, now as direct formatting on the cells
+        note: >-
+          If the task asks for a plain range, clear it afterwards with Home, Editing,
+          Clear, Clear Formats. Exercise 14 needs exactly this after the import, because
+          From Text/CSV lands the data as a table.
+      steps:
+        - text: SUM(Lorena[Quantity]) becomes SUM(E4:E33)
+        - text: Name Manager no longer lists the table
+        - text: The colours are still there
+          loop: ↺ and turning the filter buttons off is not the same command
+
+  - divider:
+      eyebrow: Block 03
+      title: The chart
+      lede: >-
+        A chart is read by somebody who was not in the room. Which type, which series, which
+        elements, and what a screen reader is told about it.
+      block: 3
+
+  - steps:
+      eyebrow: Block 03 · Creating one
+      title: The dialog, not the gallery button
+      items:
+        - label: '01'
+          title: Select the source
+          desc: Include the header row and the category column. For columns that are not next to each other, select the first block, hold Ctrl and select the second.
+        - label: '02'
+          title: Open the dialog
+          desc: Insert tab, Charts group, and the dialog box launcher, the small arrow in the bottom right corner of the group.
+        - label: '03'
+          title: All Charts
+          desc: The dialog opens on Recommended Charts. Click All Charts and pick the family in the left list.
+        - label: '04'
+          title: The subtype along the top
+          desc: Clustered, Stacked, 100% Stacked and the 3-D versions sit as icons above the pane. Point at each and read the tooltip.
+        - label: '05'
+          title: Read the preview, then OK
+          desc: The preview draws with your real data, which is where a stacked chart that should have been clustered gives itself away.
+
+  - steps:
+      eyebrow: Block 03 · Where the chart lives and what it plots
+      title: Move Chart and Select Data Source
+      items:
+        - label: '01'
+          title: Select the whole chart
+          desc: Click the border or an empty part of the chart area. If a title or a series is selected, press Esc and click again.
+        - label: '02'
+          title: Move Chart
+          desc: Chart Design, Location, Move Chart. Pick New sheet and type the name. Do not leave it as Chart1 when the task names a sheet.
+        - label: '03'
+          title: Select Data
+          desc: Chart Design, Data, Select Data. Chart data range on top, Legend Entries on the left, Horizontal Axis Labels on the right.
+        - label: '04'
+          title: Add a series
+          desc: Add under Legend Entries. In Edit Series click the header cell for Series name rather than typing it, then drag the values.
+        - label: '05'
+          title: Switch Row/Column
+          desc: The button between the two lists does it inside the dialog, which is where the next edit already is.
+
+  - table:
+      eyebrow: Block 03 · Add Chart Element
+      title: The element is half the answer, the position is the other half
+      headers: [Element, What the submenu asks for, The wrong answer]
+      rows:
+        - ["Chart Title", "Above Chart or Centered Overlay", "Typing in the box"]
+        - ["Legend", "Right, Top, Left or Bottom", "Dragging it there"]
+        - ["Data Labels", "Center, Inside End, Outside End", "A text box"]
+        - ["Axis Titles", "Primary Horizontal or Vertical", "The sheet header"]
+        - ["Any of them", "None removes it", "Pressing Delete"]
+
+  - tiers:
+      eyebrow: Block 03 · Four separate graded actions
+      title: Layout, style, colour and description
+      items:
+        - key: Layout
+          title: Quick Layout
+          desc: Chart Design, Chart Layouts, Quick Layout. A numbered package. Apply it first, then edit elements.
+        - key: Style
+          title: Chart Styles
+          desc: Chart Design, Chart Styles, the More arrow for the whole gallery. The tooltip gives the literal name, Style 1, Style 2.
+        - key: Colour
+          title: Change Colors
+          desc: Same group, separate button, separate graded action. Recolouring by hand leaves formatting no style can override.
+        - key: Alt text
+          title: The description
+          desc: Right-click the border, Alt Text, worded Edit Alt Text on some builds. No OK button, it saves as you type.
+
+  - pitfalls:
+      eyebrow: Block 03 · Common errors
+      title: Four ways to lose marks on a correct chart
+      items:
+        - label: Error 01
+          title: Building it with Alt+F1
+          desc: >-
+            One key, one chart, the default type. The task usually names a subtype, and
+            the gallery route never shows the preview where subtypes are compared.
+        - label: Error 02
+          title: Pressing F11 for a chart sheet
+          desc: >-
+            It does produce a chart sheet, with the default type and the name Chart1. The
+            right kind of object with the wrong type and the wrong name.
+        - label: Error 03
+          title: A caption in the cell under the chart
+          desc: >-
+            A screen reader announces an unlabelled object. The alt text property stays
+            empty, and that property is what the Accessibility Checker reads.
+        - label: Error 04
+          title: Transposing the data instead of switching
+          desc: >-
+            Paste Special with Transpose and a second chart gives the same picture, a
+            duplicate data block, and an original chart that was never switched.
+
+  - quiz:
+      eyebrow: Quick check
+      question: You filter the table down to one product and the Quantity total does not move. What happened?
+      options:
+        - The total row is off and that number is a typed SUM
+        - The formula says SUBTOTAL(9,...) and the filter is being ignored
+        - Filters never change a total row
+        - The table needs to be converted to a range first
+
+  - lab:
+      eyebrow: Lab
+      title: Thirty orders, one table, one honest chart
+      brief: >-
+        Open Excel 16, turn the order block into a table and give it your own name. Add the
+        total row with Count on Status and Average on Quantity. Paste the rows from sheet
+        Ex1-2 into it and confirm the totals moved. Then chart the quantity by product from
+        the Insert Chart dialog and write alt text for it.
+      blocks:
+        - label: Deliverable
+          text: One workbook with the named table, the total row and one chart carrying a description
+        - label: Constraint
+          text: Every formula on the sheet uses the table name. No formula may hold a cell address.
+        - label: The test
+          text: The total row changes when you filter the Status column. If it does not, read the formula.
+
+  - takeaways:
+      eyebrow: Summary
+      title: Three things to take away
+      items:
+        - title: A table knows where it ends
+          desc: >-
+            That single fact is what pays for the total row, the banding that repairs
+            itself, the automatic expansion and the reference that grows with the data
+        - title: The name is the interface
+          desc: >-
+            Lorena[Quantity] says what it means and follows the table. E4 to E33 says
+            where it is, and stops being true the first time somebody pastes a row
+        - title: The chart is graded on its parts
+          desc: >-
+            Type and subtype, series and categories, each element with its position, the
+            layout number, the style number, the colour set and the description. Eight
+            separate actions, not one picture
+
+  - homework:
+      eyebrow: Assignment
+      title: Exercises 16 and 17, submission and grading
+      brief: >-
+        Exercise 16 is the table, its total row and its structured references. Exercise 17
+        builds twenty chart types over five sheets. Add three things the exercise does not
+        ask for and the syllabus does. One chart on its own chart sheet, one chart with the
+        rows and columns switched, and alt text on every chart you keep.
+      meta:
+        - [Due, Before week 11]
+        - [Format, Blackboard · two .xlsx files]
+        - [Weight, Part of the 30 % inside midterm 2]
+      rubric:
+        - ["The table", "25 %", "Named, headers read, total row with the function each column needs"]
+        - ["References", "20 %", "Structured throughout, and they still hold after the Ex1-2 paste"]
+        - ["Charts", "35 %", "Twenty types, built from the dialog, subtype matching the data"]
+        - ["The three extras", "20 %", "A chart sheet, a switched chart, and alt text on each"]
+
+  - closing:
+      title: Questions
+      subtitle: >-
+        Next session, the harder half of charts. Which type actually fits, the second axis,
+        and then getting the workbook ready to leave your hands.
+      meta:
+        - [Email, descobarc@up.edu.mx]
+        - [Chat, Institutional Google Chat]
+        - [Repository, github.com/davidowa/learning-hub]
