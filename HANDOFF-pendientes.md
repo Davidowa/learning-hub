@@ -59,10 +59,12 @@ diapositiva que muestra una captura lo dice.
 **Lo que falta, y por qué está detenido.** Los ejercicios y los 49 archivos de `labs/` no se
 tradujeron todavía, porque antes hay que decidir algo que también afecta a lo ya hecho.
 
-El glosario tiene 303 filas útiles. Las rutas y los decks nombran **1,209 cadenas de interfaz
-distintas**. Donde el término estaba en el glosario se escribió en español; donde no, quedó en
-inglés entre corchetes, que es lo que manda el propio documento. Son 2,977 apariciones. La
-lista completa, ordenada por frecuencia, está en `TERMINOS-PENDIENTES.md`.
+Quedan **969 términos** en **1,986 apariciones**, contra los 1,209 y 2,977 con que empezó. La
+diferencia la cerraron las 92 capturas de Excel en español que el profesor había pegado en sus
+.docx de instrucciones: se leyeron antes de retirar la carpeta y dieron 569 cadenas verificadas
+contra el producto, que es mejor fuente que la documentación de Microsoft. Están en el glosario
+bajo la clave de fuente `IMG`. La lista de lo que falta está en `TERMINOS-PENDIENTES.md`, junto
+con los tres errores que cometió la sustitución automática y cómo se arreglaron.
 
 Ojo al recontar: en los `.yaml` la sintaxis de lista de YAML también usa corchetes y en el
 markdown los enlaces igual, así que un `grep` ingenuo devuelve 3,392 y no 2,977.
@@ -111,16 +113,40 @@ de idioma, con los mismos scripts, escritas a `ppts/img/es/`. Los 91 lugares don
 están marcados: son las figuras de `labs/`, que al traducirse cambian de `img/en/` a
 `img/es/`.
 
-## 5. La carpeta Excel, 124 archivos sin rastrear
+## 5. La carpeta Excel · borrada, y qué se hizo antes
 
-`ppts/office/manejo-y-analisis-de-la-informacion/Excel/` sigue fuera de git a propósito. Son
-los `.xlsx` y `.docx` originales, ya convertidos a markdown y CSV en `labs/`. Los tres PDF de
-ahí quedan fuera solos por la regla de material de terceros de `ppts/.gitignore`.
+Ya no está. Los 72 .xlsx, los 49 .docx y los 3 PDF se borraron después de sacarles todo lo que
+el markdown no tenía. Lo que se recuperó, en orden de cuánto costaba perderlo:
 
-**No la borres sin leer antes `labs/README.md`.** Ahí está escrito qué se pierde: formato de
-celda, reglas de formato condicional, gráficos, diseños de tabla dinámica, listas de
-validación y protección de hoja no sobreviven a un CSV, y varios ejercicios enseñan justamente
-eso. Esa decisión es del profesor, no de quien tome la sesión.
+- **`Ejercicios anteriores/`**, que nunca se había convertido y era un tercio de los datos.
+  Ahora son 28 archivos en `labs/legacy/` y 53 CSV con 34,776 renglones.
+- **8,631 caracteres de instrucciones dentro de cuadros de texto flotantes.** Un cuadro de
+  texto se dibuja encima de la hoja, no vive en una celda, así que la exportación a CSV nunca
+  lo vio. Por eso varias tareas eran archivos de veinte renglones que describían los datos y
+  se quedaban calladas.
+- **Instrucciones en hojas con nombre engañoso.** La tarea 19 guarda su lista de tareas en una
+  hoja llamada `Exercise1` que no tiene un solo dato, y la 10 guarda sus dos reglas de premio
+  en la columna ancha de al lado. Buscar hojas llamadas Instructions no las encontraba.
+- **10,272 fórmulas** de los libros resueltos, que son 27 patrones distintos llenados hacia
+  abajo, en `labs/legacy/answer-key-formulas.en.md` con los nombres definidos de los que
+  dependen.
+- **Las reglas de formato condicional, validación, protección y las 5 gráficas** de los diez
+  libros que las traían, escritas con rango, condición y color exacto.
+- **Las seis fórmulas estadísticas de la tarea 4 anterior**, que venían como metarchivos de
+  Windows. Se renderizaron, se leyeron y se transcribieron.
+- **Tres imágenes** que ahora viven en `ppts/img/en/`: la hoja modelo de la tarea 1, la tabla
+  del Marco Común Europeo de la tarea 19 y el logo del campus del ejercicio 3.
+- **Dos CSV sueltos** que ninguna hoja contenía, `RealState_Database.csv` con 3,337 registros,
+  que la tarea 14 nombra por su nombre, y el registro de tareas del ejercicio 2 anterior.
+- **569 cadenas de interfaz en español**, leídas de las capturas del profesor. Ver el punto 2.
+
+Las capturas mismas no se guardaron: están tomadas en la máquina de otra persona y traen su
+nombre en la barra de título y su escritorio en el cuadro.
+
+La comprobación antes de borrar: las 156 hojas de los 72 libros, contrastadas contra
+`labs/`. Las ocho que el comparador no casó se revisaron a mano una por una y las ocho están
+preservadas; el comparador falla ahí porque el markdown reescribe la prosa en vez de copiarla.
+`labs/` guarda hoy 101,529 renglones de CSV y 77 archivos de markdown.
 
 ## 6. Ejercicios de Unity
 

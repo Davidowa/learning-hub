@@ -15,13 +15,30 @@ The second half of homework 17, and the better one. A hundred and fifty-six rows
 **precipitation**, 33 rows and 13 columns. [../data/hw17b-precipitation.csv](../data/hw17b-precipitation.csv)
 ## What to do
 
-- Columns. National maximum temperature over time, then a clustered column of maximum and minimum for each month.
-- Bars. Average annual temperature by state, sorted high to low, then filtered to the ten hottest.
-- Lines. Turn the clustered column of maxima and minima into a line chart and say what improved.
-- Combo. National average temperature against average precipitation over time, which is the chart that needs a second axis.
-- Pie, then hierarchy. Cumulative precipitation by state as a pie, then as a treemap, then compare them. That comparison is the exercise.
-- Map. Accumulated precipitation by state.
-- The sheet is named Cimate DAta in the workbook, spelled exactly that way.
+The Instructions sheet asks for seven groups of charts over the climate data.
+
+1. Columns.
+   - A column chart of the national maximum temperature over time.
+   - A clustered column chart of the national maximum and minimum temperatures for each month.
+2. Bars.
+   - A bar chart of the average annual temperature of each of the states.
+   - Sort the chart from the highest temperature down to the lowest.
+   - Filter it to show only the ten states with the highest temperatures.
+3. Lines.
+   - Change the clustered column chart of maximum and minimum temperatures into a line chart.
+4. Combo.
+   - A combined chart of the national average temperature and the average precipitation over time.
+5. Pie.
+   - A pie chart of the cumulative precipitation of the states.
+6. Hierarchy.
+   - A hierarchy chart of rectangles, which is the treemap, of the cumulative precipitation of the states.
+   - Compare it to the pie chart.
+7. Map.
+   - A map chart of the accumulated precipitation by state.
+
+- Group 4 is the one that needs a secondary axis, since temperature and precipitation share no scale.
+- The comparison in group 6 is the exercise rather than the second chart. Say what the treemap tells you that the pie does not.
+- The instructions call the source sheet Climate Data. It is named Cimate DAta in the workbook, spelled exactly that way.
 
 ## Checks
 

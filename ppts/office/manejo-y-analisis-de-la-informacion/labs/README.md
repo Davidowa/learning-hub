@@ -14,9 +14,32 @@ CSV under `data/`. A sheet of forty rows or fewer is also written inline as a ta
 can be rebuilt by typing. Anything larger links its CSV. 128 files, 4.8 MB, all of it text that
 diffs and versions.
 
-What CSV does not carry: cell formatting, conditional formatting rules, charts, PivotTable layouts,
-data validation lists and sheet protection. Several exercises teach exactly those, so for that part
-the .xlsx files are still the only copy. Read each file before retiring its workbook.
+What CSV does not carry: cell formatting, conditional formatting rules, charts, data validation
+lists and sheet protection. Several exercises teach exactly those, so each one was written out as
+text before the original workbooks were retired: the exact range, the exact condition, the colour
+as a hex value, the validation list, the protection settings. There turned out to be fewer of them
+than feared, ten workbooks out of seventy-two and no PivotTable layouts at all.
+
+Three things were harder to find and are worth knowing about, because they are the same shape of
+problem and none of them shows up in a directory listing.
+
+**Instructions in floating text boxes.** A text box is drawn over the sheet, not stored in a cell,
+so the CSV export never saw one. Eight thousand six hundred characters of task text were sitting in
+them, which is why several homework files here used to be twenty-line stubs that described the data
+and then went quiet. They are written in now.
+
+**Instructions on a sheet with a misleading name.** Homework 19 keeps its task list on a sheet
+called `Exercise1` that holds no data at all, and Homework 10 keeps its two prize rules in a wide
+column beside the table. Neither was caught by looking for a sheet named Instructions.
+
+**Formulas as pictures.** Legacy homework 4 carried its six statistical formulas as Windows
+metafiles. They were rendered, read and transcribed.
+
+## Previous years
+
+[legacy/](legacy/) holds seventeen exercises and nine homework sets from earlier runs of the course,
+plus the second-partial comprehensive exam. That material was never converted before and is a third
+of the total data. It is archive rather than assignment; nothing in it is set to students today.
 
 ## Pictures of the dialogs
 

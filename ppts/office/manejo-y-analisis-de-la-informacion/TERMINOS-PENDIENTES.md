@@ -1,194 +1,107 @@
-# Los términos de interfaz que faltan en español
+# Los terminos de interfaz que faltan en espanol
 
-Este archivo no es prosa, es una lista de trabajo. Sale de contar cada término que quedó
-entre corchetes en `procedures.es.md` y en los diecisiete decks de `es/`, que es la marca que
-dejamos donde el español no se pudo verificar.
+Lista de trabajo, no prosa. Sale de contar cada termino que quedo entre corchetes en
+`procedures.es.md` y en los diecisiete decks de `es/`, que es la marca que dejamos donde el
+espanol no se pudo verificar.
 
-## Qué pasó
+Van **%d apariciones** de **%d terminos distintos**. Eran 2,977 de 1,209.
 
-El glosario de `procedures.es.md` trae 343 filas, 40 de ellas marcadas **NO SOURCE**. Las 303
-que sirven se usaron todas. El problema es de tamaño: entre las rutas y los decks se nombran
-1209 cadenas de interfaz distintas, y el glosario cubre una fracción.
+## Lo que cerro la diferencia
 
-Donde el término estaba en el glosario, se escribió en español. Donde no estaba, quedó en
-inglés entre corchetes, que es lo que manda el propio documento: "no la inventes ni la
-traduzcas de oído". Son **2977 apariciones** de **1209 términos distintos**.
+Los .docx de instrucciones del profesor traian 92 capturas de pantalla de **Excel corriendo
+en espanol**. Se leyeron una por una antes de retirar la carpeta `Excel/` y salieron 569
+cadenas de interfaz verificadas contra el producto, que es mejor fuente que la documentacion
+de Microsoft. Estan en el glosario de `procedures.es.md`, en la seccion con clave de fuente
+`IMG`, y ya se sustituyeron en los archivos: 1,016 corchetes menos.
 
-Esa decisión es deliberada y es reversible. Un corchete se ve, y se arregla en un minuto con
-Excel enfrente. Una traducción inventada no se ve, y el alumno se entera hasta que está
-sentado frente a la máquina buscando un menú que no existe.
+Las imagenes no se guardaron. Fueron tomadas en la maquina de otra persona y traen su nombre
+en la barra de titulo y su escritorio en el cuadro.
 
-Un puñado de esos corchetes no son de interfaz: `Q1`, `T1`, `Source.xlsx`, `Sales.xlsx` y un
-`0` son datos de ejemplo y nombres de archivo que se marcaron de más. A esos solo hay que
-quitarles los corchetes.
+## Tres cosas que salieron mal en esa sustitucion, y como se arreglaron
 
-## Por qué no se resolvió aquí
+Valen mas que la lista, porque le van a volver a pasar a quien siga.
 
-La máquina donde se hizo este trabajo no tiene el paquete de idioma español de Office.
-Comprobado, no supuesto:
+**El mismo ingles, dos controles distintos.** `Comma` es `Millares` cuando es el estilo de
+celda, y es la coma cuando es el delimitador de un archivo de texto. La sustitucion automatica
+puso `Millares` en la lista de delimitadores de tres lugares. Se revirtieron a corchete: la
+palabra para el delimitador no aparece en ninguna captura, asi que sigue sin verificarse.
+
+**Excel corta sus propias listas.** `Automatic` se leyo como `Automat.` en las dos capturas
+donde sale, porque el cuadro de lista lo trunca. Un truncamiento no es una traduccion, asi que
+esas filas volvieron a corchete.
+
+**El boton no dice la palabra.** `Bold` en la minibarra es la letra `N`, no `Negrita`. Para
+prosa se usa `Negrita`, que si aparece en la lista de estilos de fuente del cuadro Formato de
+celdas. Lo mismo con `Italic`, `K` contra `Cursiva`.
+
+## Como se cierra lo que queda
+
+Con un Excel en espanol enfrente, o contra la documentacion de Microsoft en espanol, con URL
+y confianza declarada por fila. Cuidado con la trampa que el glosario ya anota: la pagina de
+formatos de numero de Microsoft escribe `Tiempo` y `Personalizado` donde el producto dice
+**Hora** y **Personalizada**. Dos paginas que coincidan es el minimo para el nombre de un
+control, y el glosario le gana a una pagina suelta.
+
+Esta maquina no puede cerrarlo sola. Tiene el corrector en espanol y no el paquete de idioma
+de la interfaz:
 
     HKLM\SOFTWARE\Microsoft\Office\ClickToRun\Configuration  ClientCulture = en-us
     Office16\1033\XLINTL32.DLL                                 existe
     Office16\3082\                                             solo MSO.ACL, corrector
 
-La carpeta 3082 trae únicamente las herramientas de corrección. No hay recursos de interfaz
-en español en el disco, así que no hay forma de leer una sola cadena del producto ni de tomar
-las capturas de `img/es/`.
-
-## Cómo se cierra
-
-Dos caminos, y el segundo es el que quedó elegido.
-
-**Con un Excel en español enfrente**, en una sesión. Se lee el nombre en el producto, se
-agrega la fila al glosario con su fuente y se corre el reemplazo sobre los archivos. Si de
-paso se toman las capturas a `img/es/` con los scripts de `ppts/kit/SCREENSHOTS.md`, se
-cierran dos pendientes en el mismo rato.
-
-**Contra la documentación de Microsoft en español**, que es el método con el que se construyó
-el glosario original: sus fuentes M1 a M26 son páginas en español de Microsoft. Cada fila
-nueva lleva su URL y una confianza declarada. Ojo con la trampa que el propio glosario ya
-anota: varias páginas en español de Microsoft están traducidas por máquina, y para **nombres
-de botón** eso no sirve como fuente. El caso medido está escrito ahí: la página de Filtro
-avanzado escribe "Filtrar la lista, de forma local" donde el producto dice otra cosa.
-
-Esta pasada quedó a medias. Se lanzó y se cayó completa por límite de sesión, sin escribir
-nada. La lista de abajo es exactamente la entrada que necesita.
-
-## Un ejemplo trabajado, y la trampa en vivo
-
-Antes de que la pasada se cayera alcancé a verificar un puñado de términos a mano, y el
-primero que toqué ya traía el problema. Vale la pena dejarlo escrito porque es exactamente lo
-que le va a pasar a quien siga.
-
-La página de Microsoft en español sobre formatos de número lista las categorías de la pestaña
-**Número** del cuadro **Formato de celdas** así:
-
-    General, Número, Moneda, Contabilidad, Fecha, Tiempo, Porcentaje,
-    Fracción, Científico, Texto, Especial, Personalizado
-
-Dos de esas doce están mal contra el producto. La categoría de horas se llama **Hora**, no
-"Tiempo", que es traducción literal de Time. Y la última es **Personalizada** en femenino,
-concordando con "categoría", no "Personalizado"; se confirma en otra página de Microsoft que
-dice "en la pestaña Número, puede elegir Personalizada en la lista Categoría". El glosario
-original ya traía **Personalizada**, así que el glosario le gana a esa página.
-
-De ahí salen tres reglas para la pasada que falta:
-
-1. Una sola página no basta para un nombre de control. Dos páginas que coincidan, o el
-   glosario, que ya está verificado.
-2. Cuando el glosario y una página de Microsoft se contradicen, gana el glosario. Está
-   construido contra el material del profesor y contra el producto.
-3. Una traducción que se lee como calco del inglés, "Tiempo" por Time, es la señal de que la
-   página está traducida por máquina. Ahí no se toma el nombre de un botón.
-
-Confirmado de paso y listo para usarse: la caja de la derecha en esa pestaña es **Tipo**.
-
 ## La lista
 
-1209 términos, ordenados por número de apariciones. Los primeros cincuenta cierran una parte
-grande del total.
+969 terminos, por numero de apariciones.
 
-| Término en inglés | Apariciones |
+| Termino en ingles | Apariciones |
 |---|---|
-| `OK` | 154 |
 | `Function Arguments` | 28 |
-| `Type` | 26 |
 | `Function Library` | 25 |
 | `Add` | 24 |
-| `Options` | 17 |
-| `Text` | 17 |
-| `Info` | 15 |
 | `Values` | 14 |
 | `Range_lookup` | 14 |
 | `dialog box launcher` | 13 |
-| `Name` | 12 |
 | `Growth` | 12 |
 | `Current Selection` | 12 |
-| `Q1` | 12 |
 | `All Charts` | 12 |
 | `Table_array` | 12 |
-| `Properties` | 11 |
-| `Delete` | 11 |
 | `Formula result =` | 11 |
 | `Quantity` | 11 |
-| `Color` | 10 |
 | `Applies to` | 10 |
-| `Sum` | 10 |
+| `OK` | 10 |
 | `Insert Chart` | 10 |
-| `Format` | 10 |
-| `General` | 9 |
 | `Summary` | 9 |
-| `Close` | 9 |
-| `Shrink to fit` | 9 |
-| `Clear Formats` | 9 |
-| `Average` | 9 |
-| `Insert Function` | 9 |
 | `Lookup & Reference` | 9 |
-| `Sheet` | 8 |
-| `None` | 8 |
 | `Columns` | 8 |
 | `Code` | 8 |
-| `Data Tools` | 8 |
 | `Col_index_num` | 8 |
-| `Cancel` | 8 |
 | `Pv` | 8 |
-| `Clear` | 7 |
 | `Rows` | 7 |
 | `Linear` | 7 |
 | `Stop value` | 7 |
-| `Size` | 7 |
-| `Style` | 7 |
-| `Define Name` | 7 |
-| `Refers to` | 7 |
 | `Top row` | 7 |
-| `Line` | 7 |
-| `More` | 7 |
-| `Count Numbers` | 7 |
+| `Text` | 7 |
 | `Chart Layouts` | 7 |
 | `Add Chart Element` | 7 |
-| `To value` | 7 |
-| `From Text/CSV` | 6 |
 | `File Origin` | 6 |
-| `Find & Select` | 6 |
 | `Special` | 6 |
-| `Orientation` | 6 |
-| `Show` | 6 |
-| `Hide` | 6 |
-| `Title` | 6 |
-| `Export` | 6 |
 | `Save as type` | 6 |
-| `Fill` | 6 |
-| `Number Format` | 6 |
 | `Left column` | 6 |
 | `Tools` | 6 |
-| `Count` | 6 |
-| `Max` | 6 |
-| `Min` | 6 |
-| `More Functions` | 6 |
 | `Top 10` | 6 |
-| `Logical` | 6 |
 | `Logical_test` | 6 |
-| `Source.xlsx` | 6 |
-| `Edit Links` | 6 |
 | `Criteria_range1` | 6 |
 | `Criteria1` | 6 |
-| `Set cell` | 6 |
 | `Rate` | 6 |
 | `Active Field` | 6 |
 | `My data has headers` | 5 |
-| `Table` | 5 |
-| `Page` | 5 |
 | `Commands Not in the Ribbon` | 5 |
 | `Move Up` | 5 |
 | `Modify` | 5 |
-| `Unhide` | 5 |
-| `Value` | 5 |
-| `Accessibility` | 5 |
 | `Weekday` | 5 |
 | `Trend` | 5 |
 | `Time` | 5 |
 | `Sample` | 5 |
-| `Hidden` | 5 |
 | `Font Color` | 5 |
 | `Math & Trig` | 5 |
 | `Statistical` | 5 |
@@ -197,89 +110,56 @@ grande del total.
 | `Trust Center` | 5 |
 | `Manage Workbook` | 5 |
 | `Automatic` | 5 |
-| `Language` | 5 |
 | `Sum_range` | 5 |
 | `Lookup_value` | 5 |
 | `Row_num` | 5 |
-| `By changing cell` | 5 |
 | `Pmt` | 5 |
 | `Secondary Axis` | 5 |
 | `PivotTable Fields` | 5 |
-| `Height` | 5 |
-| `Width` | 5 |
 | `Years` | 5 |
 | `Quarters` | 5 |
 | `By` | 5 |
 | `Axis (Categories)` | 5 |
 | `PivotChart Analyze` | 5 |
-| `Data` | 5 |
 | `From Text (Legacy)` | 4 |
-| `Get & Transform Data` | 4 |
 | `Import` | 4 |
 | `Load` | 4 |
 | `Find` | 4 |
-| `Search` | 4 |
-| `Reference` | 4 |
-| `Errors` | 4 |
 | `Precedents` | 4 |
 | `Direct only` | 4 |
 | `All levels` | 4 |
-| `Header/Footer` | 4 |
 | `Top` | 4 |
 | `Left` | 4 |
 | `Right` | 4 |
-| `Print` | 4 |
-| `Macros` | 4 |
 | `Move Down` | 4 |
-| `Custom Views` | 4 |
 | `Create PDF/XPS` | 4 |
+| `Options` | 4 |
 | `Excel Macro-Enabled Workbook (\*.xlsm)` | 4 |
 | `Inspect Document` | 4 |
 | `Skip blanks` | 4 |
 | `Month` | 4 |
 | `Step value` | 4 |
-| `Text control` | 4 |
-| `Font style` | 4 |
-| `Underline` | 4 |
-| `More Colors` | 4 |
 | `Background Color` | 4 |
-| `No Color` | 4 |
 | `Fill Effects` | 4 |
 | `Pattern Style` | 4 |
-| `Scope` | 4 |
-| `Edit` | 4 |
-| `Data Range` | 4 |
-| `Greater Than` | 4 |
-| `Between` | 4 |
-| `with` | 4 |
 | `Show formatting rules for` | 4 |
 | `This Worksheet` | 4 |
 | `Resize Table` | 4 |
-| `StdDev` | 4 |
-| `Var` | 4 |
 | `Sort by` | 4 |
-| `AutoSum` | 4 |
 | `Value_if_true` | 4 |
 | `Value_if_false` | 4 |
 | `Num_chars` | 4 |
 | `Start_num` | 4 |
 | `Ignore_empty` | 4 |
-| `Recommended Charts` | 4 |
 | `Location` | 4 |
 | `Select Data` | 4 |
 | `Enable Content` | 4 |
 | `Browse` | 4 |
 | `Confirm Password` | 4 |
 | `Post` | 4 |
-| `$-en-US` | 4 |
-| `Spelling` | 4 |
 | `Stop` | 4 |
 | `Warning` | 4 |
 | `Information` | 4 |
-| `At each change in` | 4 |
-| `Use function` | 4 |
-| `Move or Copy` | 4 |
-| `Unique records only` | 4 |
 | `Apply` | 4 |
 | `Fv` | 4 |
 | `Show Calculation Steps` | 4 |
@@ -287,7 +167,6 @@ grande del total.
 | `Step In` | 4 |
 | `Insert Combo Chart` | 4 |
 | `Change Chart Type` | 4 |
-| `Filters` | 4 |
 | `Months` | 4 |
 | `Group Field` | 4 |
 | `Insert Field` | 4 |
@@ -295,8 +174,6 @@ grande del total.
 | `Field Buttons` | 4 |
 | `Fill Color` | 4 |
 | `Formula result` | 4 |
-| `Adjust to` | 4 |
-| `Next` | 3 |
 | `Comma` | 3 |
 | `Import Data` | 3 |
 | `Existing worksheet` | 3 |
@@ -304,23 +181,17 @@ grande del total.
 | `Do not detect data types` | 3 |
 | `Load To` | 3 |
 | `Within` | 3 |
-| `Look in` | 3 |
 | `Go To` | 3 |
+| `Reference` | 3 |
 | `Dependents` | 3 |
 | `Conditional formats` | 3 |
-| `Margins` | 3 |
 | `Bottom` | 3 |
 | `Header` | 3 |
 | `Comments and notes` | 3 |
-| `Print Preview` | 3 |
-| `Freeze Top Row` | 3 |
-| `Horizontal` | 3 |
-| `Switch Windows` | 3 |
+| `Name` | 3 |
 | `Publish what` | 3 |
-| `Save` | 3 |
 | `Warnings` | 3 |
 | `Tips` | 3 |
-| `Additional Information` | 3 |
 | `Copy to New Sheet` | 3 |
 | `Operation` | 3 |
 | `Paste Link` | 3 |
@@ -328,31 +199,115 @@ grande del total.
 | `Date unit` | 3 |
 | `Day` | 3 |
 | `Year` | 3 |
-| `Merge cells` | 3 |
-| `Center` | 3 |
 | `Center Across Selection` | 3 |
-| `Indent` | 3 |
 | `Decrease Decimal` | 3 |
 | `Single Accounting` | 3 |
-| `Effects` | 3 |
 | `Negative numbers` | 3 |
-| `Clear Contents` | 3 |
 | `New Name` | 3 |
-| `Create from Selection` | 3 |
-| `Location Range` | 3 |
+| `Delete Rule` | 3 |
+| `Sort On` | 3 |
+| `Order` | 3 |
+| `Insert Function` | 3 |
+| `New sheet` | 3 |
+| `Select Data Source` | 3 |
+| `Edit Series` | 3 |
+| `Colorful` | 3 |
+| `Monochromatic` | 3 |
+| `Store macro in` | 3 |
+| `Break Link` | 3 |
+| `Macro Security` | 3 |
+| `Macro Settings` | 3 |
+| `Unblock` | 3 |
+| `Restore` | 3 |
+| `Recover Unsaved Workbooks` | 3 |
+| `Always Open Read-Only` | 3 |
+| `Protect Workbook Structure` | 3 |
+| `Password to modify` | 3 |
+| `Structure` | 3 |
+| `Automatic Except for Data Tables` | 3 |
+| `Set as Preferred` | 3 |
+| `List` | 3 |
+| `Circle Invalid Data` | 3 |
+| `Clear Outline` | 3 |
+| `Product` | 3 |
+| `StdDevp` | 3 |
+| `Varp` | 3 |
+| `Logical1` | 3 |
+| `Logical2` | 3 |
+| `Array` | 3 |
+| `Column_num` | 3 |
+| `Date & Time` | 3 |
+| `Days` | 3 |
+| `Result cells` | 3 |
+| `Nper` | 3 |
+| `Add Watch` | 3 |
+| `Edit in Formula Bar` | 3 |
+| `Evaluate` | 3 |
+| `Format Selection` | 3 |
+| `Format Data Series` | 3 |
+| `Series Options` | 3 |
+| `Insert Statistic Chart` | 3 |
+| `PivotTable Options` | 3 |
+| `Report Connections` | 3 |
+| `Starting at` | 3 |
+| `Ending at` | 3 |
+| `Fields, Items, & Sets` | 3 |
+| `PivotChart Fields` | 3 |
+| `Legend (Series)` | 3 |
+| `Show/Hide` | 3 |
+| `ISNUMBER` | 3 |
+| `Sales.xlsx` | 3 |
+| `Legacy Wizards` | 2 |
+| `Original data type` | 2 |
+| `Start import at row` | 2 |
+| `File origin` | 2 |
+| `Tab` | 2 |
+| `Semicolon` | 2 |
+| `Space` | 2 |
+| `Text qualifier` | 2 |
+| `Data preview` | 2 |
+| `Column data format` | 2 |
+| `Finish` | 2 |
+| `Where do you want to put the data?` | 2 |
+| `New worksheet` | 2 |
+| `Data Type Detection` | 2 |
+| `Find and Replace` | 2 |
+| `Notes` | 2 |
+| `Find All` | 2 |
+| `Data validation` | 2 |
+| `Subject` | 2 |
+| `Footer` | 2 |
+| `Custom Header` | 2 |
+| `Left section` | 2 |
+| `Center section` | 2 |
+| `Right section` | 2 |
+| `Insert Date` | 2 |
+| `Custom Footer` | 2 |
+| `Different odd and even pages` | 2 |
+| `Different first page` | 2 |
+| `Scale with Document` | 2 |
+| `Align with page margins` | 2 |
+| `For all documents (default)` | 2 |
+| `Choose commands from` | 2 |
+| `Popular Commands` | 2 |
+| `All Commands` | 2 |
+| `Custom Views` | 2 |
+| `Print settings` | 2 |
+| `Tiled` | 2 |
+| `Cascade` | 2 |
+| `Windows of active workbook` | 2 |
+| `Show All Properties` | 2 |
+| `Advanced Properties` | 2 |
+| `Document Properties` | 2 |
+| `Author` | 2 |
+| `Manager` | 2 |
+| `Company` | 2 |
+| `Add to Print Area` | 2 |
+| `Publish as PDF or XPS` | 2 |
+| `Selection` | 2 |
 
-Los 959 términos restantes aparecen una o dos veces cada uno y están en los archivos, entre
-corchetes. Se encuentran así:
+Los 719 restantes aparecen una o dos veces y estan en los archivos, entre corchetes.
 
-    grep -rno "\[[^]]*\]" ppts/office/manejo-y-analisis-de-la-informacion/procedures.es.md
-    grep -rno "\[[^]]*\]" ppts/office/manejo-y-analisis-de-la-informacion/es/
-
-Cuidado al contar con grep: en los `.yaml` la sintaxis de lista de YAML también usa corchetes,
-y en el markdown los enlaces igual. Un conteo ingenuo da 3,392 en vez de 2977.
-
-## Lo que no está pendiente
-
-Todo lo demás de esos archivos está terminado y verificado. Las 107 rutas están traducidas
-paso por paso, sin fusionar ni perder pasos. Los diecisiete decks pasan los cuatro chequeos
-del kit en cero. Las fórmulas llevan los nombres de función en español del glosario y la coma
-como separador de argumentos, que es lo confirmado para es-MX.
+Al contar con grep, tres cosas inflan el numero: la sintaxis de lista de YAML usa corchetes,
+los enlaces de markdown tambien, y una referencia estructurada de tabla dentro de una formula
+se escribe `=SUMA(Sales[Q1])`. Un conteo ingenuo da 3,392 donde el real es 1986.
