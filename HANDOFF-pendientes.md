@@ -59,10 +59,19 @@ diapositiva que muestra una captura lo dice.
 **Lo que falta, y por qué está detenido.** Los ejercicios y los 49 archivos de `labs/` no se
 tradujeron todavía, porque antes hay que decidir algo que también afecta a lo ya hecho.
 
-El glosario tiene 303 filas útiles. Las rutas y los decks nombran **1,426 cadenas de interfaz
+El glosario tiene 303 filas útiles. Las rutas y los decks nombran **1,209 cadenas de interfaz
 distintas**. Donde el término estaba en el glosario se escribió en español; donde no, quedó en
-inglés entre corchetes, que es lo que manda el propio documento. Son 3,392 apariciones. La
+inglés entre corchetes, que es lo que manda el propio documento. Son 2,977 apariciones. La
 lista completa, ordenada por frecuencia, está en `TERMINOS-PENDIENTES.md`.
+
+Ojo al recontar: en los `.yaml` la sintaxis de lista de YAML también usa corchetes y en el
+markdown los enlaces igual, así que un `grep` ingenuo devuelve 3,392 y no 2,977.
+
+La decisión ya está tomada: se cierran contra la documentación de Microsoft en español, que es
+el método con el que se construyó el glosario, con URL y confianza declarada por fila. Esa
+pasada se lanzó y se cayó completa por límite de sesión sin escribir nada, así que sigue
+pendiente entera. El separador de argumentos queda confirmado en **coma**, es-MX, y no hay que
+tocar los decks.
 
 Esta máquina no puede cerrarlo: tiene el corrector en español pero no el paquete de idioma de
 la interfaz. Está comprobado, no supuesto, y los tres renglones que lo prueban están en ese
