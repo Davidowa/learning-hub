@@ -46,15 +46,15 @@ slides:
       title: Al terminar las dos sesiones el alumno podrá…
       items:
         - head: Construir un BUSCARV desde el diálogo
-          sub: Fórmulas, [Lookup & Reference], y F4 sobre el [Table_array] antes que nada
+          sub: Fórmulas, Búsqueda y referencia, y F4 sobre el Matriz_buscar_en antes que nada
         - head: Elegir entre FALSO y VERDADERO
-          sub: Y decir en voz alta qué hace un [Range_lookup] vacío, porque no es FALSO
+          sub: Y decir en voz alta qué hace un Ordenado vacío, porque no es FALSO
         - head: "Leer #N/D en lugar de taparlo"
           sub: Las cuatro cosas que lo producen, y el único momento en que SI.ERROR puede cubrirlo
         - head: Llegar a una columna que BUSCARV no alcanza
-          sub: ÍNDICE con COINCIDIR anidada en [Row_num], en una sola pasada por un diálogo
+          sub: ÍNDICE con COINCIDIR anidada en Núm_fila, en una sola pasada por un diálogo
         - head: Resumir varios rangos por rótulo
-          sub: Datos, Consolidar, con [Top row] y [Left column] marcadas para que sume por nombre
+          sub: Datos, Consolidar, con Fila superior y Columna izquierda marcadas para que sume por nombre
         - head: Ligar una fórmula a otro archivo
           sub: La notación de corchetes, y qué puede y qué no puede devolver Editar vínculos
 
@@ -104,32 +104,32 @@ slides:
         title: La clave vive en la primera columna del bloque
         note: >-
           No la primera columna de la hoja, ni la columna que tengas seleccionada. Si la
-          clave no está en la columna uno del [Table_array], BUSCARV es la función
+          clave no está en la columna uno del Matriz_buscar_en, BUSCARV es la función
           equivocada y ningún argumento lo arregla.
       steps:
         - text: Excel lee hacia abajo la columna uno del bloque
         - text: Se detiene en la fila donde coincide la clave
-        - text: Camina a la derecha tantas columnas como diga [Col_index_num]
+        - text: Camina a la derecha tantas columnas como diga Indicador_columnas
           loop: ↺ y devuelve lo que esté ahí, correcto o no
 
   - steps:
       eyebrow: Bloque 01 · La ruta calificada
-      title: Cinco paradas dentro de [Function Arguments]
+      title: Cinco paradas dentro de Argumentos de función
       items:
         - label: '01'
           title: Abre el diálogo
-          desc: Pestaña Fórmulas, grupo [Function Library], [Lookup & Reference], luego BUSCARV
+          desc: Pestaña Fórmulas, grupo Biblioteca de funciones, Búsqueda y referencia, luego BUSCARV
         - label: '02'
-          title: "[Lookup_value]"
+          title: "Valor_buscado"
           desc: La celda que tiene la clave. Déjala relativa para poder rellenar hacia abajo.
         - label: '03'
-          title: "[Table_array]"
+          title: "Matriz_buscar_en"
           desc: Selecciona desde la columna de la clave hacia la derecha y presiona F4 para fijarlo en $A$2:$D$50
         - label: '04'
-          title: "[Col_index_num]"
-          desc: Un número contado desde la columna uno del [Table_array], nunca desde la columna A de la hoja
+          title: "Indicador_columnas"
+          desc: Un número contado desde la columna uno del Matriz_buscar_en, nunca desde la columna A de la hoja
         - label: '05'
-          title: "[Range_lookup]"
+          title: "Ordenado"
           desc: FALSO para exacta, VERDADERO para la búsqueda por rangos. Luego Aceptar, una vez.
 
   - compare:
@@ -142,7 +142,7 @@ slides:
         code: |
           =BUSCARV(A2,Fees!A2:B24,2)
       after:
-        label: Construida en [Function Arguments]
+        label: Construida en Argumentos de función
         file: Students.xlsx
         lang: excel
         code: |
@@ -169,11 +169,11 @@ slides:
       annotations:
         - label: Exacta
           text: >-
-            FALSO en [Range_lookup]. El programa encuentra una fila de Fees o la fórmula
+            FALSO en Ordenado. El programa encuentra una fila de Fees o la fórmula
             se detiene en #N/D.
         - label: El argumento que falta
           text: >-
-            [Range_lookup] vacío. Vacío es VERDADERO, y una tabla sin ordenar devuelve
+            Ordenado vacío. Vacío es VERDADERO, y una tabla sin ordenar devuelve
             la cuota del vecino, en silencio.
         - label: Por rangos, a propósito
           text: >-
@@ -189,11 +189,11 @@ slides:
       title: Desde dónde se cuenta cada argumento
       headers: [Argumento, Qué se pone dentro, Desde dónde se cuenta]
       rows:
-        - ["[Lookup_value]", "La celda que tiene la clave", "Relativa, para rellenar abajo"]
-        - ["[Table_array]", "La clave y todo lo de su derecha", "Fijado con F4"]
-        - ["[Col_index_num]", "Un número, nunca una letra", "Columna 1 del [Table_array]"]
-        - ["[Range_lookup]", "FALSO, escrito completo", "Vacío es VERDADERO, no FALSO"]
-        - ["[Row_index_num]", "BUSCARH toma este en su lugar", "Fila 1 del [Table_array]"]
+        - ["Valor_buscado", "La celda que tiene la clave", "Relativa, para rellenar abajo"]
+        - ["Matriz_buscar_en", "La clave y todo lo de su derecha", "Fijado con F4"]
+        - ["Indicador_columnas", "Un número, nunca una letra", "Columna 1 del Matriz_buscar_en"]
+        - ["Ordenado", "FALSO, escrito completo", "Vacío es VERDADERO, no FALSO"]
+        - ["Indicador_filas", "BUSCARH toma este en su lugar", "Fila 1 del Matriz_buscar_en"]
 
   - pitfalls:
       eyebrow: Bloque 01 · Errores comunes
@@ -208,11 +208,11 @@ slides:
         - label: Error 02
           title: Contar desde la columna A
           desc: >-
-            [Col_index_num] cuenta dentro del [Table_array]. Si el bloque empieza en la
+            Indicador_columnas cuenta dentro del Matriz_buscar_en. Si el bloque empieza en la
             columna C, el valor de la columna D es 2, no 4, y el 4 devuelve #¡REF! o el
             campo equivocado.
         - label: Error 03
-          title: "[Range_lookup] vacío"
+          title: "Ordenado vacío"
           desc: >-
             Vacío significa VERDADERO, y VERDADERO sobre una tabla sin ordenar devuelve
             la fila de arriba de la clave. El número se ve creíble y nada en la pantalla
@@ -275,24 +275,24 @@ slides:
       items:
         - label: '01'
           title: ÍNDICE desde la biblioteca
-          desc: Pestaña Fórmulas, grupo [Function Library], [Lookup & Reference], luego ÍNDICE
+          desc: Pestaña Fórmulas, grupo Biblioteca de funciones, Búsqueda y referencia, luego ÍNDICE
         - label: '02'
           title: "[Select Arguments]"
           desc: Elige array,row_num,column_num. La otra entrada es para referencias de varias áreas.
         - label: '03'
-          title: "[Array]"
+          title: "Matriz"
           desc: La columna de valores por devolver. No la tabla completa, y sin fila de encabezado.
         - label: '04'
           title: Anida COINCIDIR
-          desc: Con el cursor en [Row_num], elige COINCIDIR en el Cuadro de nombres, a la izquierda de la barra de fórmulas
+          desc: Con el cursor en Núm_fila, elige COINCIDIR en el Cuadro de nombres, a la izquierda de la barra de fórmulas
         - label: '05'
           title: Un solo Aceptar
           desc: Haz clic en la palabra INDICE de la barra de fórmulas para salir, y luego Aceptar en el nivel de ÍNDICE
 
   - table:
       eyebrow: Bloque 02 · COINCIDIR devuelve una posición, no un valor
-      title: Qué le pide [Match_type] al rango
-      headers: ["[Match_type]", Qué encuentra, Qué necesita el rango]
+      title: Qué le pide Tipo_de_coincidencia al rango
+      headers: ["Tipo_de_coincidencia", Qué encuentra, Qué necesita el rango]
       rows:
         - ["0", "Una coincidencia exacta", "Cualquier orden"]
         - ["1 o vacío", "El mayor valor bajo la clave", "Ordenado de menor a mayor"]
@@ -308,7 +308,7 @@ slides:
       options:
         - "#N/D, porque no encontró el programa"
         - "La cuota del programa que queda justo antes en el orden"
-        - "0, porque [Range_lookup] se dejó vacío"
+        - "0, porque Ordenado se dejó vacío"
         - "#¡REF!, porque el bloque solo tiene dos columnas"
 
   - divider:
@@ -329,7 +329,7 @@ slides:
         de que el cuadro Consolidar traiga dos casillas que nadie lee.
       panel:
         label: El punto entero
-        title: "[Top row] y [Left column] lo hacen sumar por nombre"
+        title: "Fila superior y Columna izquierda lo hacen sumar por nombre"
         note: >-
           Con las dos marcadas, Consolidar compara los rótulos en vez de las posiciones
           de celda, así que tres hojas en tres órdenes distintos caen en las filas
@@ -349,13 +349,13 @@ slides:
           desc: Haz clic en la celda superior izquierda de un área vacía. Consolidar escribe hacia la derecha y hacia abajo lo que necesite.
         - label: '02'
           title: Datos, Consolidar
-          desc: Pestaña Datos, grupo Herramientas de datos. La lista [Function] trae once entradas, Suma primero.
+          desc: Pestaña Datos, grupo Herramientas de datos. La lista Función trae once entradas, Suma primero.
         - label: '03'
           title: "Referencia, luego [Add]"
           desc: Arrastra un rango de origen, haz clic en [Add], repite. Uno equivocado sale con Eliminar.
         - label: '04'
           title: "[Use labels in]"
-          desc: Marca [Top row] y [Left column] cuando las hojas traigan encabezados en distinto orden
+          desc: Marca Fila superior y Columna izquierda cuando las hojas traigan encabezados en distinto orden
         - label: '05'
           title: "Aceptar, no Cerrar"
           desc: Este cuadro trae Aceptar y Cerrar en vez de Aceptar y Cancelar. Cerrar sale sin consolidar.
@@ -382,12 +382,12 @@ slides:
             comillas.
         - label: Cómo se administra
           text: >-
-            Pestaña Datos, Consultas y conexiones, Editar vínculos: [Update Values],
-            [Change Source], [Check Status].
+            Pestaña Datos, Consultas y conexiones, Editar vínculos: Actualizar valores,
+            Cambiar origen, Comprobar estado.
         - label: Riesgo
           text: >-
-            [Break Link] convierte las fórmulas en valores, para siempre. Las nuevas
-            versiones abren [Workbook Links]; confírmalo en el laboratorio.
+            Romper vínculo convierte las fórmulas en valores, para siempre. Las nuevas
+            versiones abren Vínculos de libro; confírmalo en el laboratorio.
           accent: true
 
   - method:
@@ -416,7 +416,7 @@ slides:
         - label: Entregable
           text: Un solo libro con los dos ejercicios, subido a Blackboard
         - label: Restricción
-          text: Cada [Table_array] fijado con F4, y cada [Range_lookup] escrito como FALSO o VERDADERO en vez de dejarlo vacío
+          text: Cada Matriz_buscar_en fijado con F4, y cada Ordenado escrito como FALSO o VERDADERO en vez de dejarlo vacío
         - label: La prueba
           text: Rellenen cada fórmula dos filas más allá de los datos. Si las respuestas dejan de seguir la tabla correcta, el bloque se movió.
 
@@ -426,11 +426,11 @@ slides:
       items:
         - title: F4 no es adorno
           desc: >-
-            Un [Table_array] sin fijar camina hoja abajo con cada relleno. Las primeras
+            Un Matriz_buscar_en sin fijar camina hoja abajo con cada relleno. Las primeras
             filas salen bien, el resto sale mal, y nada en la hoja se pone rojo
         - title: Vacío no es FALSO
           desc: >-
-            Un [Range_lookup] que falta significa VERDADERO, que es una búsqueda por
+            Un Ordenado que falta significa VERDADERO, que es una búsqueda por
             rangos sobre una tabla que nadie ordenó. Contesta con el valor del vecino y
             lo llama resultado
         - title: BUSCARV es una forma del problema
@@ -444,7 +444,7 @@ slides:
       title: Entrega y criterios de calificación
       brief: >-
         Terminen los dos ejercicios de búsqueda y agreguen una hoja propia que consolide
-        tres rangos pequeños por rótulo, con [Top row] y [Left column] marcadas, más una
+        tres rangos pequeños por rótulo, con Fila superior y Columna izquierda marcadas, más una
         fórmula que se ligue a un segundo libro que también entreguen.
       meta:
         - [Entrega, Antes de la semana 14]

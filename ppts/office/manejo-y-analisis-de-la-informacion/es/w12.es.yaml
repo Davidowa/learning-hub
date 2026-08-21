@@ -111,7 +111,7 @@ slides:
         - ["Semana 7", "Comodines, Y y O", "La tabla de verdad, no la sintaxis"]
         - ["Semana 7", "SI anidado", "El orden en que se prueban las condiciones"]
         - ["Semana 8", "La familia .CONJUNTO", "Rangos de criterios del tamaño del de suma"]
-        - ["Semana 9", "[Get and transform], filtros", "Las tres listas, y cuál ruta se tomó"]
+        - ["Semana 9", "Obtener y transformar, filtros", "Las tres listas, y cuál ruta se tomó"]
         - ["Semanas 10 y 11", "Tablas y gráficos", "El nombre, la fila de totales, el tipo de gráfico"]
 
   - method:
@@ -257,13 +257,13 @@ slides:
       filename: buscarv.xlsx
       lang: excel
       source: |
-        =BUSCARV([lookup_value],[table_array],
-                 [col_index_num],[range_lookup])
+        =BUSCARV(valor_buscado,matriz_buscar_en,
+                 indicador_columnas,ordenado)
 
         1  La llave. Relativa, para que baje al llenar.
         2  Toda la tabla de referencia, con su primera columna.
            Presiona F4 para fijarla en $A$15:$C$18.
-        3  Se cuenta desde la primera columna de [table_array],
+        3  Se cuenta desde la primera columna de matriz_buscar_en,
            no desde la columna A de la hoja de cálculo.
         4  FALSO es coincidencia exacta, VERDADERO la aproximada.
            Vacío no es FALSO. Vacío quiere decir VERDADERO.
@@ -280,23 +280,23 @@ slides:
 
   - steps:
       eyebrow: Bloque 03 · La ruta que se califica
-      title: Por el cuadro [Function Arguments]
+      title: Por el cuadro Argumentos de función
       items:
         - label: '01'
           title: Selecciona la celda
           desc: La que va a tener la búsqueda, en el reporte, no en la tabla de referencia.
         - label: '02'
-          title: Fórmulas, [Lookup & Reference]
-          desc: Pestaña Fórmulas, grupo [Function Library], [Lookup & Reference], y luego BUSCARV. Shift+F3 abre Insertar función sobre la misma lista.
+          title: Fórmulas, Búsqueda y referencia
+          desc: Pestaña Fórmulas, grupo Biblioteca de funciones, Búsqueda y referencia, y luego BUSCARV. Shift+F3 abre Insertar función sobre la misma lista.
         - label: '03'
-          title: '[Lookup_value]'
+          title: 'Valor_buscado'
           desc: Haz clic en la celda que tiene la llave. Déjala relativa si la fórmula se va a llenar hacia abajo, que siempre va a pasar.
         - label: '04'
-          title: '[Table_array], y luego F4'
+          title: 'Matriz_buscar_en, y luego F4'
           desc: Selecciona toda la tabla de referencia con su primera columna, y presiona F4. Aquí es donde los candidatos pierden puntos.
         - label: '05'
           title: Las dos últimas casillas
-          desc: '[Col_index_num] contado dentro del rango de la tabla. [Range_lookup] escrito como FALSO, con todas sus letras, no vacío.'
+          desc: 'Indicador_columnas contado dentro del rango de la tabla. Ordenado escrito como FALSO, con todas sus letras, no vacío.'
 
   - code_output:
       eyebrow: Medido · Ejercicio 19, la hoja Report
@@ -337,11 +337,11 @@ slides:
         file: ruta.txt
         lang: text
         code: |
-          Fórmulas, [Lookup & Reference], BUSCARV
-          [Lookup_value]  clic en D3
-          [Table_array]   arrastra y presiona F4
-          [Col_index_num] teclea 2
-          [Range_lookup]  teclea FALSO
+          Fórmulas, Búsqueda y referencia, BUSCARV
+          Valor_buscado  clic en D3
+          Matriz_buscar_en   arrastra y presiona F4
+          Indicador_columnas teclea 2
+          Ordenado  teclea FALSO
           Aceptar
       after:
         label: No se califica · tecleado a mano
@@ -358,7 +358,7 @@ slides:
       note: >-
         Teclearla es más rápido y todos lo hacemos. La razón para aprender el cuadro de
         diálogo es que muestra las cuatro casillas con su nombre, y la tarea del día del
-        examen está escrita con esos nombres. [Range_lookup] no es una palabra que alguien
+        examen está escrita con esos nombres. Ordenado no es una palabra que alguien
         diga en voz alta.
 
   - table:
@@ -366,10 +366,10 @@ slides:
       title: A dónde se van los puntos en realidad
       headers: [Argumento, Qué recibe, El error]
       rows:
-        - ["[Lookup_value]", "La celda que tiene la llave", "Fijarla por costumbre"]
-        - ["[Table_array]", "La tabla, con su primera columna", "Sin F4, y se recorre"]
-        - ["[Col_index_num]", "Contado dentro del rango dado", "Contado desde la columna A"]
-        - ["[Range_lookup]", "FALSO para coincidencia exacta", "Vacío, que es VERDADERO"]
+        - ["Valor_buscado", "La celda que tiene la llave", "Fijarla por costumbre"]
+        - ["Matriz_buscar_en", "La tabla, con su primera columna", "Sin F4, y se recorre"]
+        - ["Indicador_columnas", "Contado dentro del rango dado", "Contado desde la columna A"]
+        - ["Ordenado", "FALSO para coincidencia exacta", "Vacío, que es VERDADERO"]
         - ["El resultado", "El valor N columnas a la derecha", "Envolver el error sin leerlo"]
 
   - pitfalls:
@@ -401,12 +401,12 @@ slides:
 
   - quiz:
       eyebrow: Comprobación rápida
-      question: Le entregas a BUSCARV el rango A15 a C18 y quieres la meta de ventas, que está en la columna C. ¿Cuál es [Col_index_num]?
+      question: Le entregas a BUSCARV el rango A15 a C18 y quieres la meta de ventas, que está en la columna C. ¿Cuál es Indicador_columnas?
       options:
         - 3, contado desde la primera columna del rango de la tabla
         - 1, porque C es la primera columna que trae la respuesta
         - 3, pero solo si la tabla empieza en la columna A de la hoja
-        - Depende de si [Range_lookup] es VERDADERO o FALSO
+        - Depende de si Ordenado es VERDADERO o FALSO
 
   - lab:
       eyebrow: Laboratorio · la media sesión
@@ -414,13 +414,13 @@ slides:
       brief: >-
         En la hoja Report del ejercicio 19, llenen el sueldo base mensual y la meta de
         ventas de los primeros tres vendedores con BUSCARV, construido desde el cuadro
-        [Function Arguments]. Luego llenen la fórmula hasta el renglón 12 y comprueben que
+        Argumentos de función. Luego llenen la fórmula hasta el renglón 12 y comprueben que
         Andrea Legarreta, de tipo D, sigue leyendo veinte mil y cinco millones.
       blocks:
         - label: Entregable
           text: Las dos columnas llenas, y la barra de fórmulas visible para el renglón 3 y para el renglón 12
         - label: Restricción
-          text: '[Range_lookup] escrito como FALSO en las dos. No vacío, no tecleado como 0.'
+          text: 'Ordenado escrito como FALSO en las dos. No vacío, no tecleado como 0.'
         - label: La prueba
           text: Cambien el sueldo base del tipo B en la tabla de referencia. Dos renglones del reporte tienen que moverse.
 

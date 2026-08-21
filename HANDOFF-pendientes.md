@@ -57,23 +57,29 @@ los 17 decks. Las imágenes siguen apuntando a `img/en/`, porque no existe `img/
 diapositiva que muestra una captura lo dice.
 
 **Lo que falta, y por qué está detenido.** Los ejercicios y los 49 archivos de `labs/` no se
-tradujeron todavía, porque antes hay que decidir algo que también afecta a lo ya hecho.
+tradujeron todavía. El bloqueo del glosario ya se destrabó a medias: la pasada contra la
+documentación de Microsoft corrió completa el 20 de agosto de 2026, en dieciocho lotes con
+escritura incremental, así que un corte de sesión ya no la pierde entera como la vez anterior.
 
-Quedan **969 términos** en **1,986 apariciones**, contra los 1,209 y 2,977 con que empezó. La
-diferencia la cerraron las 92 capturas de Excel en español que el profesor había pegado en sus
-.docx de instrucciones: se leyeron antes de retirar la carpeta y dieron 569 cadenas verificadas
-contra el producto, que es mejor fuente que la documentación de Microsoft. Están en el glosario
-bajo la clave de fuente `IMG`. La lista de lo que falta está en `TERMINOS-PENDIENTES.md`, junto
-con los tres errores que cometió la sustitución automática y cómo se arreglaron.
+El resultado vive en `GLOSARIO-DOC.es.md` del curso: **816 términos cerrados** de los 1,045
+reales (la tabla vieja decía 969; estaba contada antes de la sustitución IMG), con URL y
+confianza por fila. 235 en alta con dos páginas coincidentes, 491 en media con una página, y
+90 en baja que **no se sustituyen sin un Excel en español enfrente**, porque la página que las
+respalda huele a traducción automática. Quedan **229 términos en 364 apariciones** que ninguna
+página de Microsoft nombra; están en `TERMINOS-PENDIENTES.md` con su candidato anotado, y solo
+se cierran con el producto. La pasada también dejó siete trampas nuevas documentadas al frente
+de `GLOSARIO-DOC.es.md` (Add/Sumar en Pegado especial, Tabulación/Tabulador, el cuadro Serie
+traducido a máquina, entre otras). La clave de fuente `DOC` quedó registrada en el glosario de
+`procedures.es.md`.
 
-Ojo al recontar: en los `.yaml` la sintaxis de lista de YAML también usa corchetes y en el
-markdown los enlaces igual, así que un `grep` ingenuo devuelve 3,392 y no 2,977.
-
-La decisión ya está tomada: se cierran contra la documentación de Microsoft en español, que es
-el método con el que se construyó el glosario, con URL y confianza declarada por fila. Esa
-pasada se lanzó y se cayó completa por límite de sesión sin escribir nada, así que sigue
-pendiente entera. El separador de argumentos queda confirmado en **coma**, es-MX, y no hay que
-tocar los decks.
+La sustitución de corchetes corrió el 21 de agosto de 2026: **1,468 reemplazos** de 673
+términos alta y media en `procedures.es.md` y los 17 decks, con una lista de exclusión de 60
+términos multi-contexto (Add/Sumar y compañía) que se quedan en corchete a propósito. Quedan
+**654 corchetes**: los 229 sin evidencia (364 apariciones), las 90 filas baja y los excluidos.
+Los cuatro chequeos del kit volvieron a cero después de acortar nueve renglones que el español
+más largo reventó. Hay PDF de `GLOSARIO-DOC.es.md` y `TERMINOS-PENDIENTES.md` junto a sus
+fuentes. El separador de argumentos queda confirmado en **coma**, es-MX, y no hay que tocar
+los decks.
 
 Esta máquina no puede cerrarlo: tiene el corrector en español pero no el paquete de idioma de
 la interfaz. Está comprobado, no supuesto, y los tres renglones que lo prueban están en ese

@@ -47,7 +47,7 @@ slides:
       eyebrow: Objetivos de la sesión
       title: Al terminar las dos sesiones el alumno podrá…
       items:
-        - head: Importar un .csv con [Get & Transform]
+        - head: Importar un .csv con Obtener y transformar
           sub: Fijando la codificación, el delimitador y la detección de tipos antes de que aterrice una sola fila
         - head: Correr el asistente heredado sobre un .txt
           sub: Delimitado contra ancho fijo, el calificador de texto y la columna que fuerzas a Texto
@@ -101,7 +101,7 @@ slides:
         son tuyas, y Excel las conserva.
       panel:
         label: La señal
-        title: Una consulta en [Queries and Connections], o nada
+        title: Una consulta en Consultas y conexiones, o nada
         note: >-
           La ruta de importación deja una consulta con nombre y aterriza los datos como
           tabla. La ruta de abrir no deja ninguna de las dos. Eso es lo primero que se
@@ -122,12 +122,12 @@ slides:
         code: |
           Datos > Obtener y transformar datos
                 > Desde el texto/CSV
-          Elige Students_data.csv, [Import]
-          [File Origin]:  Windows (ANSI)
-          [Delimiter]:    [Comma]
+          Elige Students_data.csv, Importar
+          Origen del archivo:  Windows (ANSI)
+          Delimitador:    Coma
           [Data Type Detection]: [Do not detect]
-          Flecha de [Load] > [Load To...]
-          [Import Data] > [Existing worksheet]: =$A$1
+          Flecha de Cargar > Cargar en...
+          Importar datos > Hoja de cálculo existente: =$A$1
       after:
         label: No califica · el doble clic
         file: ruta.txt
@@ -150,15 +150,15 @@ slides:
       title: Tres listas, y qué decide cada una
       headers: ["Lista", "Qué estás eligiendo", "Cuándo duele"]
       rows:
-        - ["[File Origin]", "La tabla de bytes del archivo", "Texto con acentos"]
-        - ["[Delimiter]", "El carácter que termina un campo", "Punto y coma"]
+        - ["Origen del archivo", "La tabla de bytes del archivo", "Texto con acentos"]
+        - ["Delimitador", "El carácter que termina un campo", "Punto y coma"]
         - ["[Data Type Detection]", "200 filas, todo el archivo o nada", "Códigos e IDs"]
-        - ["[Transform Data]", "Abre Power Query en vez de cargar", "Cualquier limpieza"]
-        - ["[Load To...]", "Tabla, tabla dinámica o solo conexión", "Siempre"]
+        - ["Transformar datos", "Abre Power Query en vez de cargar", "Cualquier limpieza"]
+        - ["Cargar en...", "Tabla, tabla dinámica o solo conexión", "Siempre"]
 
   - code_output:
       eyebrow: Medido · Students_data.csv
-      title: La lista [File Origin] no es adorno
+      title: La lista Origen del archivo no es adorno
       filename: Students_data.csv
       lang: text
       output_label: Lo que aterriza en las celdas
@@ -173,10 +173,10 @@ slides:
                                 pone ahí una marca de
                                 reemplazo
       output: |
-        [File Origin]: Windows (ANSI)
+        Origen del archivo: Windows (ANSI)
         Iñaki    España    Bilbao
         Björn    Suecia    Västerås
-        [File Origin]: 65001 UTF-8
+        Origen del archivo: 65001 UTF-8
         I?aki    Espa?a    Bilbao
         Bj?rn    Suecia    V?ster?s
 
@@ -194,23 +194,23 @@ slides:
           title: Llega hasta él
           desc: >-
             Haz clic en la celda de destino, luego Datos, Obtener y transformar datos,
-            Obtener datos, [Legacy Wizards], [From Text (Legacy)].
+            Obtener datos, Asistentes heredados, [From Text (Legacy)].
         - label: '03'
           title: Paso 1 de 3
           desc: >-
             [Original data type], delimitado o de ancho fijo. Fija [Start import at row],
-            abre [File origin] y elige la codificación.
+            abre Origen del archivo y elige la codificación.
         - label: '04'
           title: Paso 2 de 3
           desc: >-
-            Marca todos los delimitadores que use el archivo. Pon [Text qualifier] en la
+            Marca todos los delimitadores que use el archivo. Pon Calificador de texto en la
             comilla doble cuando los campos vengan entrecomillados. Mira cómo se parte la
             vista previa.
         - label: '05'
           title: Paso 3 de 3
           desc: >-
-            Haz clic en cada columna de la vista previa y fija su [Column data format].
-            Texto es lo que conserva un cero a la izquierda. [Finish], y luego elige
+            Haz clic en cada columna de la vista previa y fija su Formato de los datos en columnas.
+            Texto es lo que conserva un cero a la izquierda. Finalizar, y luego elige
             dónde va.
 
   - pitfalls:
@@ -224,12 +224,12 @@ slides:
             en el paso 3 del asistente, o elige [Do not detect data types] en la ventana
             de vista previa.
         - label: Error 02
-          title: Dar clic en [Load] y no en [Load To...]
+          title: Dar clic en Cargar y no en Cargar en...
           desc: >-
-            [Load] a secas suelta la tabla en una hoja nueva y no pregunta nada. Funciona.
+            Cargar a secas suelta la tabla en una hoja nueva y no pregunta nada. Funciona.
             También deja sin mostrar que sabías a dónde más podían haber ido los datos.
         - label: Error 03
-          title: El [File Origin] equivocado, descubierto tarde
+          title: Origen del archivo equivocado, visto tarde
           desc: >-
             España con una marca de reemplazo en medio no es un problema de formato y no
             hay reemplazo que lo arregle limpio. Vuelve a importar con la codificación
@@ -250,7 +250,7 @@ slides:
         - label: La condición
           text: La columna nueva tiene que estar pegada a la columna de origen, y los datos necesitan fila de encabezados. Relleno rápido no busca más lejos.
         - label: La señal
-          text: Haz clic en una celda rellenada. La barra de fórmulas muestra una constante. Una cadena de IZQUIERDA y [FIND] mostraría una fórmula, y responde a otro objetivo.
+          text: Haz clic en una celda rellenada. La barra de fórmulas muestra una constante. Una cadena de IZQUIERDA y ENCONTRAR mostraría una fórmula, y responde a otro objetivo.
 
   - divider:
       eyebrow: Bloque 02
@@ -277,8 +277,8 @@ slides:
         - label: '03'
           title: Datos, Herramientas de datos, Quitar duplicados
           desc: >-
-            En el cuadro de diálogo marca [My data has headers] y observa cómo la lista
-            [Columns] cambia de [Column A] a los nombres reales de los encabezados.
+            En el cuadro de diálogo marca Mis datos tienen encabezados y observa cómo la lista
+            Columnas cambia de [Column A] a los nombres reales de los encabezados.
         - label: '04'
           title: Marca solo las columnas que definen
           desc: >-
@@ -316,15 +316,15 @@ slides:
         - label: '02'
           title: Datos, Ordenar y filtrar, Ordenar
           desc: >-
-            Marca [My data has headers] para que la fila de encabezados se quede en su
+            Marca Mis datos tienen encabezados para que la fila de encabezados se quede en su
             lugar y las listas muestren nombres de columna en vez de letras.
         - label: '03'
           title: Llena el primer nivel
           desc: >-
-            [Sort by] elige la columna, [Sort On] elige [Cell Values], [Cell Color],
-            [Font Color] o [Conditional Formatting Icon], [Order] elige la dirección.
+            Ordenar por elige la columna, Ordenar según elige Valores de celda, Color de celda,
+            Color de fuente o Icono de formato condicional, Orden elige la dirección.
         - label: '04'
-          title: "[Add Level], y luego [Then by]"
+          title: "Agregar nivel, y luego Luego por"
           desc: >-
             Cada criterio que nombre la tarea lleva su propio nivel. Las flechas de arriba
             del cuadro mueven un nivel, y el orden de los niveles es la prioridad.
@@ -337,11 +337,11 @@ slides:
   - table:
       eyebrow: Bloque 02 · Ejercicio 14, el segundo ordenamiento
       title: Tres niveles, escritos como los lee el cuadro
-      headers: ["Nivel", "[Sort by]", "[Sort On]", "[Order]"]
+      headers: ["Nivel", "Ordenar por", "Ordenar según", "Orden"]
       rows:
-        - ["[Sort by]", "Last name", "[Cell Values]", "[A to Z]"]
-        - ["[Then by]", "Country of origin", "[Cell Values]", "[A to Z]"]
-        - ["[Then by]", "Average", "[Cell Values]", "Preguntar"]
+        - ["Ordenar por", "Last name", "Valores de celda", "De la A a la Z"]
+        - ["Luego por", "Country of origin", "Valores de celda", "De la A a la Z"]
+        - ["Luego por", "Average", "Valores de celda", "Preguntar"]
         - ["Prueba", "Reabre el cuadro", "Tres niveles", "En orden"]
 
   - steps:
@@ -356,7 +356,7 @@ slides:
         - label: '02'
           title: Configuración
           desc: >-
-            Permitir da Número entero, Decimal, [List], Fecha, [Time], Longitud del texto
+            Permitir da Número entero, Decimal, Lista, Fecha, [Time], Longitud del texto
             o Personalizada. Llena la lista Datos y las casillas que produce.
         - label: '03'
           title: Mensaje de entrada
@@ -366,8 +366,8 @@ slides:
         - label: '04'
           title: Mensaje de error
           desc: >-
-            Sigue sin cerrarlo. Estilo elige [Stop], [Warning] o [Information]. [Stop]
-            rechaza la entrada, [Warning] pregunta, [Information] solo avisa.
+            Sigue sin cerrarlo. Estilo elige Detener, Advertencia o Información. Detener
+            rechaza la entrada, Advertencia pregunta, Información solo avisa.
         - label: '05'
           title: "[Circle Invalid Data]"
           desc: >-
@@ -384,7 +384,7 @@ slides:
         Permitir dice [Any value] y todo lo de abajo está en gris. Cambia Permitir y la
         lista Datos despierta, aparecen las casillas que necesita, y las otras dos
         pestañas quedan a un clic. Borrar todo es como se quita una regla, y
-        [Apply these changes] empuja una edición a todas las celdas que ya comparten
+        Aplicar estos cambios a otras celdas con la misma configuración empuja una edición a todas las celdas que ya comparten
         la regla.
       alt: >-
         El cuadro de diálogo Validación de datos de Excel en su pestaña Configuración, con
@@ -430,27 +430,27 @@ slides:
       items:
         - key: Por valor
           title: La lista de casillas
-          desc: Quita [(Select All)] y marca solo lo que nombre la tarea. La casilla Buscar arma una selección larga por pasadas.
+          desc: Quita (Seleccionar todo) y marca solo lo que nombre la tarea. La casilla Buscar arma una selección larga por pasadas.
         - key: Por regla
-          title: "Texto, Número y [Date Filters]"
-          desc: Excel ofrece la familia que corresponde al tipo de la columna. Es mayor que, Entre, [Top 10], [Begins With], [Contains].
+          title: "Texto, Número y Filtros de fecha"
+          desc: Excel ofrece la familia que corresponde al tipo de la columna. Es mayor que, Entre, [Top 10], Comienza por, Contiene.
         - key: Por formato
           title: Color e icono
-          desc: "[Filter by Color] lee el relleno, el color de letra o el icono. Solo existe cuando la columna carga uno."
+          desc: "Filtrar por color lee el relleno, el color de letra o el icono. Solo existe cuando la columna carga uno."
         - key: Cómo se quita
           title: Tres comandos distintos
-          desc: "[Clear Filter From] en una columna, Borrar en la pestaña Datos para todas, Filtro otra vez para quitar las flechas."
+          desc: "Borrar filtro de en una columna, Borrar en la pestaña Datos para todas, Filtro otra vez para quitar las flechas."
 
   - table:
       eyebrow: Medido · las 408 ventas del Ejercicio 15
       title: Cinco filtros, y las filas que deja cada uno
       headers: ["Qué se pide", "Dónde vive", "Filas"]
       rows:
-        - ["Trimestre 1 de 2018", "[Date Filters], Entre", "90"]
-        - ["Septiembre de 2018", "[Date Filters], [All Dates in the Period]", "35"]
-        - ["Brand empieza con PH", "Filtros de texto, [Begins With]", "131"]
-        - ["Celdas amarillas en Product", "[Filter by Color], [Cell Color]", "5"]
-        - ["Top 10 de Total Sale", "[Number Filters], [Top 10]", "10"]
+        - ["Trimestre 1 de 2018", "Filtros de fecha, Entre", "90"]
+        - ["Septiembre de 2018", "Filtros de fecha, Todas las fechas en el período", "35"]
+        - ["Brand empieza con PH", "Filtros de texto, Comienza por", "131"]
+        - ["Celdas amarillas en Product", "Filtrar por color, Color de celda", "5"]
+        - ["Top 10 de Total Sale", "Filtros de número, [Top 10]", "10"]
 
   - steps:
       eyebrow: Bloque 03 · Archivo, Información
@@ -459,25 +459,25 @@ slides:
         - label: '01'
           title: "Propiedades"
           desc: >-
-            Haz clic en un valor para editarlo ahí mismo. [Show All Properties] destapa
-            [Company], [Manager] y el resto. Propiedades, [Advanced Properties] abre las
-            pestañas [Summary] y Personalizada.
+            Haz clic en un valor para editarlo ahí mismo. Mostrar todas las propiedades destapa
+            Compañía, Administrador y el resto. Propiedades, Propiedades avanzadas abre las
+            pestañas Resumen y Personalizada.
         - label: '02'
-          title: "[Inspect Document]"
+          title: "Inspeccionar documento"
           desc: >-
-            Comprobar si hay problemas, [Inspect Document]. Marca solo las categorías que
-            nombre la tarea, haz clic en [Inspect], y Quitar todos solo donde lo hayas
+            Comprobar si hay problemas, Inspeccionar documento. Marca solo las categorías que
+            nombre la tarea, haz clic en Inspeccionar, y Quitar todos solo donde lo hayas
             querido. No se puede deshacer.
         - label: '03'
-          title: "[Manage Workbook]"
+          title: "Administrar libro"
           desc: >-
-            Así se llama en la máquina del profesor, [Version History] en otras. Cada
-            versión autoguardada con su marca de tiempo, y [Restore].
+            Así se llama en la máquina del profesor, Historial de versiones en otras. Cada
+            versión autoguardada con su marca de tiempo, y Restaurar.
         - label: '04'
-          title: "[Recover Unsaved Workbooks]"
+          title: "Recuperar libros no guardados"
           desc: >-
             Hasta abajo de Archivo, Abrir, Recientes, y también dentro de
-            [Manage Workbook]. Abre la carpeta [Unsaved Files] con los borradores .xlsb.
+            Administrar libro. Abre la carpeta [Unsaved Files] con los borradores .xlsb.
         - label: '05'
           title: Fija el intervalo
           desc: >-
@@ -492,18 +492,18 @@ slides:
         - label: Error 01
           title: Vaciar el autor a mano
           desc: >-
-            Vaciar la casilla [Author] del panel quita un campo. El Inspector de documento
+            Vaciar la casilla Autor del panel quita un campo. El Inspector de documento
             trata de los campos que no se te ocurrió mirar, que es el punto entero.
         - label: Error 02
-          title: Correr [Inspect Document] sin guardar
+          title: Correr Inspeccionar documento sin guardar
           desc: >-
             Las eliminaciones son permanentes y no hay manera de deshacerlas. Excel ofrece
             guardar primero por algo, y esa oferta es fácil de pasar de largo.
         - label: Error 03
           title: Quitar todas las categorías encontradas
           desc: >-
-            Quitar todos en [Hidden Worksheets] borra hojas que el libro necesita. Marca
-            solo lo que nombre la tarea, y luego [Reinspect] para probar que el resto
+            Quitar todos en Hojas de cálculo ocultas borra hojas que el libro necesita. Marca
+            solo lo que nombre la tarea, y luego Volver a inspeccionar para probar que el resto
             sigue intacto.
         - label: Error 04
           title: Filtrar y luego leer el total
@@ -531,7 +531,7 @@ slides:
         que nombra el ejercicio.
       blocks:
         - label: Entregable
-          text: Un libro, con el panel [Queries and Connections] mostrando la consulta de la que salió
+          text: Un libro, con el panel Consultas y conexiones mostrando la consulta de la que salió
         - label: Restricción
           text: Ninguna fila se borra a mano. Si Quitar duplicados no reportó la cuenta, háganlo otra vez.
         - label: La prueba

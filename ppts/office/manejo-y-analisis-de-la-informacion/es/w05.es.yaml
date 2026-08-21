@@ -50,11 +50,11 @@ slides:
         - head: Escribir su propia regla desde Nueva regla
           sub: Incluido el tipo de fórmula, que es lo que aquí separa Expert de Associate
         - head: Administrar las reglas que la hoja ya tiene
-          sub: Prioridad, Detener si es verdad, el rango [Applies to] y el borrado por alcance
+          sub: Prioridad, Detener si es verdad, el rango Se aplica a y el borrado por alcance
         - head: Insertar minigráficos que se puedan comparar
           sub: Una sola escala común para todas las filas, no una escala por fila
         - head: Pegar eligiendo una opción
-          sub: Valores, transponer, [Skip blanks] y la aritmética a la que solo llega el cuadro de diálogo
+          sub: Valores, transponer, Saltar blancos y la aritmética a la que solo llega el cuadro de diálogo
         - head: Escribir un SI y defender su límite
           sub: Mayor que y mayor o igual que difieren en exactamente una fila
 
@@ -98,7 +98,7 @@ slides:
         El formato directo es de la celda. El formato condicional es del rango, y Excel lo
         evalúa una vez por celda en cada recálculo. Por eso el rango que estaba
         seleccionado cuando escribiste la regla decide qué pinta, y la única vuelta atrás
-        es el cuadro [Applies to].
+        es el cuadro Se aplica a.
       panel:
         label: La consecuencia
         title: Selecciona solo los datos, nunca el encabezado
@@ -194,7 +194,7 @@ slides:
         es de la interfaz en inglés.
       alt: >-
         El cuadro de diálogo Nueva regla de formato, con los seis tipos de regla en lista y
-        el primero seleccionado, mostrando [Format Style], [Minimum] y [Maximum], Tipo,
+        el primero seleccionado, mostrando Estilo de formato, [Minimum] y [Maximum], Tipo,
         Valor, Color y Vista previa.
       side:
         label: Lee la lista, no los cuadros
@@ -211,7 +211,7 @@ slides:
       lang: excel
       source: |
         =$E2="Atrasado"
-        =[MOD]([ROW](),2)=0
+        =RESIDUO(FILA(),2)=0
         =DIASEM(B$1,2)>5
         =Y($C2>$B2,$B2<>"")
         =Y($A2<>"",$D2="")
@@ -221,7 +221,7 @@ slides:
         - label: Línea 1
           text: Una sola columna decide toda la fila. El signo de pesos detiene la columna mientras la fila baja.
         - label: Línea 2
-          text: Filas con bandas sin tabla. [MOD] y [ROW] hacen aritmética sobre la dirección, no sobre los datos.
+          text: Filas con bandas sin tabla. RESIDUO y FILA operan sobre la dirección, no sobre los datos.
         - label: Líneas 4 a 7
           text: La función Y llega en la semana 7 y CONTAR.SI en la 8. Regresa a esta lámina cuando ya las tengas.
         - label: Si falla
@@ -243,16 +243,16 @@ slides:
       title: Cinco cosas que solo hace este cuadro de diálogo
       items:
         - label: '01'
-          title: "[Show formatting rules for]"
+          title: "Mostrar reglas de formato para"
           desc: Abre en [Current Selection], que esconde toda regla en la que no estés parado. Cámbialo a [This Worksheet].
         - label: '02'
-          title: "[Move Up] y [Move Down]"
+          title: "Subir y Bajar"
           desc: Dos reglas que fijan la misma propiedad, gana la de arriba. Dos reglas que fijan propiedades distintas, se aplican las dos.
         - label: '03'
           title: Detener si es verdad
           desc: Nada de lo que está abajo se evalúa para las celdas que coincidieron. Así una excepción de prioridad alta sobrevive a una regla amplia.
         - label: '04'
-          title: "[Applies to]"
+          title: "Se aplica a"
           desc: Vuelve a teclear el rango o arrástralo en la hoja detrás del cuadro de diálogo, y la regla sigue trabajando sobre menos celdas
         - label: '05'
           title: "[Apply], y luego Aceptar"
@@ -263,18 +263,18 @@ slides:
       title: Abre en la opción que esconde tus reglas
       image: img/en/cf-rules-manager.png
       caption: >-
-        [Show formatting rules for] dice [Current Selection], así que una hoja que carga
+        Mostrar reglas de formato para dice [Current Selection], así que una hoja que carga
         tres reglas puede abrir exactamente igual que esta y verse vacía. La captura es de
         la interfaz en inglés.
       alt: >-
         El Administrador de reglas de formato condicionales, con [Show formatting rules
         for] puesto en [Current Selection], la lista de reglas vacía, y las columnas
-        [Rule], Formato, [Applies to] y Detener si es verdad.
+        [Rule], Formato, Se aplica a y Detener si es verdad.
       side:
         label: Las cuatro columnas
         text: >-
-          [Rule] en orden de prioridad, la vista previa de Formato, el rango [Applies to]
-          que puedes volver a teclear, y la casilla Detener si es verdad. [Edit Rule],
+          [Rule] en orden de prioridad, la vista previa de Formato, el rango Se aplica a
+          que puedes volver a teclear, y la casilla Detener si es verdad. Editar regla,
           [Delete Rule] y las dos flechas se quedan en gris hasta que hay una regla
           seleccionada, y [Apply] confirma sin cerrar.
 
@@ -285,7 +285,7 @@ slides:
       rows:
         - ["Borrar reglas", "Menú Formato condicional", "Toda regla del alcance que nombres"]
         - ["[Delete Rule]", "Administrar reglas...", "Una regla, las demás siguen en orden"]
-        - ["[Applies to]", "Administrar reglas...", "Salen celdas, la regla sobrevive"]
+        - ["Se aplica a", "Administrar reglas...", "Salen celdas, la regla sobrevive"]
         - ["Borrar formatos", "Inicio, Edición, Borrar", "Todo formato, de regla o a mano"]
 
   - pitfalls:
@@ -326,7 +326,7 @@ slides:
         title: La barra de fórmulas queda vacía
         note: >-
           Haz clic en la celda. Nada en la barra de fórmulas, y una pestaña contextual
-          [Sparkline] en la cinta de opciones. Un gráfico de líneas encogido mostraría
+          Minigráfico en la cinta de opciones. Un gráfico de líneas encogido mostraría
           controladores de selección y te daría Diseño de gráfico en su lugar.
       steps:
         - text: Selecciona las celdas que los van a alojar
@@ -351,7 +351,7 @@ slides:
           title: Grupo Mostrar
           desc: "Punto alto, Punto bajo, Puntos negativos, Primer punto, Último punto, y Marcadores solo para Línea"
         - label: '05'
-          title: "[Axis], [Same for All Sparklines]"
+          title: "Eje, Igual para todos los minigráficos"
           desc: Sin eso cada fila se escala contra sí misma y las filas no se pueden comparar, que es lo que la tarea está pidiendo de verdad
 
   - table:
@@ -364,7 +364,7 @@ slides:
         - ["Un archivo por crear", "Crear nuevo documento", "Nombre y ruta del archivo nuevo"]
         - ["Un correo nuevo", "Dirección de correo electrónico", "Dirección de correo electrónico y Asunto"]
         - ["La prueba al pasar", "[ScreenTip...]", "El texto que se muestra al pasar"]
-        - ["El vínculo quitado", "Clic derecho, [Remove Hyperlink]", "Borrar hipervínculos deja el azul"]
+        - ["El vínculo quitado", "Clic derecho, Quitar hipervínculo", "Borrar hipervínculos deja el azul"]
 
   - steps:
       eyebrow: Bloque 02 · Pegado especial
@@ -378,13 +378,13 @@ slides:
           desc: No la cara del botón. Hasta abajo de la galería, Pegado especial. O Ctrl+Alt+V.
         - label: '03'
           title: La sección Pegar
-          desc: "[All], Fórmulas, [Values], [Formats], [Validation], [Column widths], [Values and number formats], y cinco más"
+          desc: "Todo, Fórmulas, Valores, Formatos, [Validation], [Column widths], Formatos de números y valores, y cinco más"
         - label: '04'
-          title: "[Operation], [Skip blanks], Transponer"
-          desc: "[Add], [Subtract], [Multiply] y [Divide] contra lo que ya está ahí. Nada fuera de este cuadro de diálogo llega hasta ellas."
+          title: "[Operation], Saltar blancos, Transponer"
+          desc: "[Add], [Subtract], Multiplicar y Dividir contra lo que ya está ahí. Nada fuera de este cuadro de diálogo llega hasta ellas."
         - label: '05'
-          title: "Aceptar, o [Paste Link]"
-          desc: "[Paste Link] deja una referencia viva en lugar de una constante. Luego Esc, para quitar el marco parpadeante."
+          title: "Aceptar, o Pegar vínculo"
+          desc: "Pegar vínculo deja una referencia viva en lugar de una constante. Luego Esc, para quitar el marco parpadeante."
 
   - divider:
       eyebrow: Bloque 03
@@ -398,9 +398,9 @@ slides:
       eyebrow: Concepto clave
       title: Una prueba lógica responde VERDADERO o FALSO
       lead: >-
-        SI toma tres argumentos y solo el primero es una pregunta. [Logical_test] es una
+        SI toma tres argumentos y solo el primero es una pregunta. Prueba_lógica es una
         comparación, y toda comparación se resuelve en VERDADERO o FALSO antes que nada.
-        [Value_if_true] y [Value_if_false] son las dos respuestas que ya escribiste, y Excel
+        Valor_si_verdadero y Valor_si_falso son las dos respuestas que ya escribiste, y Excel
         pone una en la celda.
       panel:
         label: Dónde están los puntos
@@ -416,14 +416,14 @@ slides:
 
   - steps:
       eyebrow: Bloque 03 · La ruta calificada
-      title: SI desde [Function Arguments]
+      title: SI desde Argumentos de función
       items:
         - label: '01'
           title: Fórmulas, Lógicas, SI
-          desc: Se abre el cuadro [Function Arguments] con los tres campos nombrados y descritos
+          desc: Se abre el cuadro Argumentos de función con los tres campos nombrados y descritos
         - label: '02'
           title: Arma la comparación
-          desc: Haz clic en [Logical_test], haz clic en la celda B2 de la hoja, teclea el resto de la prueba
+          desc: Haz clic en Prueba_lógica, haz clic en la celda B2 de la hoja, teclea el resto de la prueba
         - label: '03'
           title: Teclea las respuestas en limpio
           desc: Sin comillas. El cuadro de diálogo las agrega y muestra el valor terminado a la derecha del campo.
@@ -497,10 +497,10 @@ slides:
         - title: La regla es del rango
           desc: >-
             Qué celdas estaban seleccionadas cuando la escribiste decide qué celdas pinta,
-            y la única vuelta atrás es el cuadro [Applies to]
+            y la única vuelta atrás es el cuadro Se aplica a
         - title: El minigráfico vive en la celda
           desc: >-
-            Barra de fórmulas vacía, pestaña [Sparkline] en la cinta de opciones, y una
+            Barra de fórmulas vacía, pestaña Minigráfico en la cinta de opciones, y una
             sola escala común, o las filas de la hoja no se pueden comparar entre sí
         - title: SI se califica en una fila
           desc: >-

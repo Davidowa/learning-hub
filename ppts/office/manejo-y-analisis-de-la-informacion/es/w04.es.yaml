@@ -31,7 +31,7 @@ slides:
       title: Tres bloques de trabajo
       cards:
         - title: Estadística y conteo
-          desc: El cuadro [Function Arguments], los cuatro agregados, K.ESIMO.MAYOR y K.ESIMO.MENOR, y el trío de conteo
+          desc: El cuadro Argumentos de función, los cuatro agregados, K.ESIMO.MAYOR y K.ESIMO.MENOR, y el trío de conteo
         - title: Texto
           desc: Partir una cadena con IZQUIERDA, DERECHA y EXTRAE, y rearmarla con CONCAT y UNIRCADENAS
         - title: Fechas y formatos
@@ -44,7 +44,7 @@ slides:
       title: Al terminar las dos sesiones el alumno podrá…
       items:
         - head: Insertar una función desde su propio cuadro
-          sub: 'Insertar función y [Function Arguments], la ruta que reutilizan todos los demás objetivos de funciones'
+          sub: 'Insertar función y Argumentos de función, la ruta que reutilizan todos los demás objetivos de funciones'
         - head: Elegir entre las tres funciones de conteo
           sub: Y explicar el rango donde las dos últimas suman más celdas de las que existen
         - head: Partir una cadena y volver a armarla
@@ -86,7 +86,7 @@ slides:
       title: El cuadro por el que pasa toda función
       lede: >-
         Teclear una fórmula es más rápido y el examen no te ve hacerlo. Lo que sí ve es el
-        cuadro [Function Arguments], y después de esta semana ya no se vuelve a explicar.
+        cuadro Argumentos de función, y después de esta semana ya no se vuelve a explicar.
       block: 1
 
   - steps:
@@ -95,19 +95,19 @@ slides:
       items:
         - label: '01'
           title: La lista de Autosuma
-          desc: Fórmulas, [Function Library], la flecha debajo de Autosuma. Suma, Promedio, Máx, Mín y Contar números. La cara del botón aplica Suma.
+          desc: Fórmulas, Biblioteca de funciones, la flecha debajo de Autosuma. Suma, Promedio, Máx, Mín y Contar números. La cara del botón aplica Suma.
         - label: '02'
           title: 'Insertar función'
-          desc: El mismo grupo. Elige una categoría, [Math & Trig] para SUMA, [Statistical] para PROMEDIO, MAX y MIN, o busca por lo que quieres hacer.
+          desc: El mismo grupo. Elige una categoría, [Math & Trig] para SUMA, Estadísticas para PROMEDIO, MAX y MIN, o busca por lo que quieres hacer.
         - label: '03'
-          title: '[Function Arguments]'
-          desc: Haz clic en [Number1] y arrastra sobre el rango. El botón de contraer, a la derecha del cuadro, quita el diálogo de en medio.
+          title: 'Argumentos de función'
+          desc: Haz clic en Número1 y arrastra sobre el rango. El botón de contraer, a la derecha del cuadro, quita el diálogo de en medio.
         - label: '04'
           title: Lee el resultado antes
           desc: '[Formula result] aparece abajo a la izquierda antes de aceptar. Es la única comprobación gratis que da el cuadro.'
         - label: '05'
           title: Shift+F3
-          desc: Abre Insertar función en una celda vacía, y abre [Function Arguments] cuando el punto de inserción ya está dentro de una función.
+          desc: Abre Insertar función en una celda vacía, y abre Argumentos de función cuando el punto de inserción ya está dentro de una función.
 
   - code_output:
       eyebrow: Bloque 01 · Medido en la máquina del laboratorio
@@ -189,9 +189,9 @@ slides:
           =PROMEDIO(Unidades)
           =MAX(Unidades)-MIN(Unidades)
 
-        Teclea Un y [Formula AutoComplete] ofrece el
+        Teclea Un y Fórmula Autocompletar ofrece el
         nombre con un icono de etiqueta. Tab lo inserta.
-        F3 abre el cuadro [Paste Name] en su lugar.
+        F3 abre el cuadro Pegar nombre en su lugar.
       annotations:
         - label: Por qué vale la pena
           text: Seis meses después, =SUMA(Unidades) sigue diciendo qué suma. =SUMA(C2:C6) no.
@@ -227,14 +227,14 @@ slides:
           =EXTRAE(A2,5,3)
           =LARGO(A2)
           =LARGO("Ana Luz ")
-          =LARGO([TRIM]("Ana Luz "))
+          =LARGO(ESPACIOS("Ana Luz "))
       output: |
         IZQUIERDA(A2,3)      ana
         DERECHA(A2,6)        mendez
         EXTRAE(A2,5,3)       luz
         LARGO(A2)            14
         LARGO("Ana Luz ")    8
-        LARGO([TRIM](...))   7
+        LARGO(ESPACIOS(...))   7
 
   - concept:
       eyebrow: Bloque 02 · Cómo leer las dos últimas líneas
@@ -248,14 +248,14 @@ slides:
         label: Contar desde uno
         title: EXTRAE empieza en 1 en el primer carácter
         note: >-
-          EXTRAE recibe Texto, [Start_num] y [Num_chars]. [Start_num] cuenta desde 1, así
+          EXTRAE recibe Texto, Posición_inicial y Núm_de_caracteres. Posición_inicial cuenta desde 1, así
           que el quinto carácter de ana luz mendez es la l de luz. El error de uno aparece en
           la última fila de una columna, donde los nombres miden otra cosa.
       steps:
         - text: Apunta LARGO a una celda que creas limpia
         - text: Compárala con los caracteres que puedes ver
         - text: Uno de más quiere decir un espacio al final
-          loop: ↺ [TRIM] lo quita, y la semana 9 tiene una sesión entera de limpieza
+          loop: ↺ ESPACIOS lo quita, y la semana 9 tiene una sesión entera de limpieza
 
   - code_output:
       eyebrow: Bloque 02 · Objetivo 4.3.2 y sesión 8
@@ -296,9 +296,9 @@ slides:
           ana luz mendez Centro
         CONCAT sobre un rango
           ana luz mendezCentro142
-        [Ignore_empty] VERDADERO
+        Ignorar_vacío VERDADERO
           ana luz mendez, Centro
-        [Ignore_empty] FALSO
+        Ignorar_vacío FALSO
           ana luz mendez, , Centro
 
   - pitfalls:
@@ -317,12 +317,12 @@ slides:
             =A2&" "&B2 une bien y no es una función, así que una tarea que dice usa la
             función CONCAT no queda resuelta con eso.
         - label: Error 03
-          title: Recurrir a [CONCATENATE]
+          title: Recurrir a CONCATENAR
           desc: >-
             La antecesora retirada todavía funciona, y no acepta un rango entero en un solo
             argumento. El objetivo nombra CONCAT y UNIRCADENAS, y nada más.
         - label: Error 04
-          title: '[Ignore_empty] en FALSO'
+          title: 'Ignorar_vacío en FALSO'
           desc: >-
             Medido. Sobre tres celdas con la de en medio vacía, VERDADERO da un separador
             limpio y FALSO lo da doble, que es la señal que busca la calificación.
@@ -395,7 +395,7 @@ slides:
         C2 tiene 142. D2 tiene la fecha 05/03/2024.
 
           =TEXTO(C2,"0.00")
-          =[ISNUMBER](TEXTO(C2,"0.00"))
+          =ESNUMERO(TEXTO(C2,"0.00"))
           =TEXTO(D2,"dddd")
           =TEXTO(D2,"mmmm")
 
@@ -405,7 +405,7 @@ slides:
           =B1+B2
       output: |
         TEXTO(C2,"0.00")     142.00
-        [ISNUMBER] de eso    FALSO
+        ESNUMERO de eso    FALSO
         TEXTO(D2,"dddd")     martes
         TEXTO(D2,"mmmm")     marzo
 
@@ -451,18 +451,18 @@ slides:
       image: img/en/format-cells-dialog.png
       caption: >-
         Captura de la interfaz en inglés. La pestaña Número tal como se abre, en General.
-        [Special] y Personalizada están hasta abajo de la lista Categoría, y ninguna de las
+        Especial y Personalizada están hasta abajo de la lista Categoría, y ninguna de las
         dos tiene botón en la cinta de opciones.
       alt: >-
         El cuadro de diálogo Formato de celdas en su pestaña Número, con las seis pestañas de
-        arriba, la lista Categoría desde General hasta Personalizada, y el cuadro [Sample] a
+        arriba, la lista Categoría desde General hasta Personalizada, y el cuadro Muestra a
         la derecha.
       side:
         label: Qué mirar
         text: >-
           Arma primero el formato aproximado con Número o Moneda, y luego haz clic en
           Personalizada. El cuadro Tipo llega con el código que Excel acaba de escribir,
-          listo para editarse, y [Sample], arriba de él, muestra la celda seleccionada antes
+          listo para editarse, y Muestra, arriba de él, muestra la celda seleccionada antes
           de que aceptes nada.
 
   - steps:
@@ -479,7 +479,7 @@ slides:
           title: Cuatro secciones, en orden
           desc: Positivo; negativo; cero; texto, separadas por punto y coma. Escribe dos y la segunda cubre todo lo negativo.
         - label: '04'
-          title: Lee [Sample]
+          title: Lee Muestra
           desc: El cuadro que está arriba de la lista Tipo muestra la celda seleccionada antes de que aceptes nada.
         - label: '05'
           title: Borra solo los tuyos
@@ -531,7 +531,7 @@ slides:
         armado con K.ESIMO.MENOR.
       blocks:
         - label: Entregable
-          text: Los dos libros en Blackboard, con cada función insertada desde [Function Library]
+          text: Los dos libros en Blackboard, con cada función insertada desde Biblioteca de funciones
         - label: Restricción
           text: Una columna tiene que llevar un formato de número personalizado que la cinta no puede producir, y un comentario que diga cuál código
         - label: La prueba
@@ -567,8 +567,8 @@ slides:
         - [Formato, Blackboard · archivo .xlsx]
         - [Peso, Parte del 30 % dentro del parcial 1]
       rubric:
-        - ["DIASEM", "30 %", "[Return_type] elegido a propósito, y la elección explicada"]
-        - ["DIA.LAB", "40 %", "El argumento [Holidays] está lleno y fijado con F4"]
+        - ["DIASEM", "30 %", "Tipo elegido a propósito, y la elección explicada"]
+        - ["DIA.LAB", "40 %", "El argumento Vacaciones está lleno y fijado con F4"]
         - ["Formato", "20 %", "Los resultados se leen como fechas, no como números de serie"]
         - ["La comprobación", "10 %", "Un viernes más un día hábil cae en lunes"]
 
