@@ -260,20 +260,20 @@ slides:
       lead: >-
         The app installs, the session reaches tracking, your cube appears, and every other
         pixel is the same colour. Under the Universal Render Pipeline the AR Camera
-        Background component does not draw the camera image itself. It hands that work to a
-        Renderer Feature on the Universal Renderer asset. With no feature in that list,
-        nothing draws the camera, so what fills the screen is the camera's own Background.
+        Background component does not draw the camera image: it hands that work to a Renderer
+        Feature. The feature lives on the renderer of whichever URP asset Android has active,
+        which in the Universal 3D template is the mobile one, not the PC one.
       panel:
-        label: How to confirm it in one build
-        title: Turn the Camera Background field red
+        label: The asset that actually counts
+        title: Quality, Android, Mobile_RPAsset
         note: >-
-          If the phone comes back red, nothing is drawing the passthrough and the renderer
-          feature is missing.
+          Adding the feature to PC_Renderer changes nothing on the phone. It goes on the
+          Mobile_Renderer.
       steps:
-        - text: Project Settings, then Graphics
-        - text: Open the URP asset it points at
-        - text: Find its Renderer List
-        - text: Open the Universal Renderer
+        - text: Project Settings, then Quality
+        - text: Find which level Android defaults to
+        - text: That level points at Mobile_RPAsset
+        - text: Open it and go to its Mobile_Renderer
         - text: Add Renderer Feature, AR Background
           loop: ↺ rebuild, and the room appears behind the cube
 
@@ -282,7 +282,7 @@ slides:
       title: Three broken screens that look alike and are not
       headers: [What you see, What it means, Where to fix it]
       rows:
-        - ["Flat colour", "Camera image never drawn", "URP renderer feature"]
+        - ["Flat colour", "Camera image never drawn", "Feature on Mobile_Renderer"]
         - ["Magenta objects", "Materials still built-in", "Render Pipeline Converter"]
         - ["Black screen", "Camera permission refused", "Android app permissions"]
         - ["Nothing moves", "No AR Session in the scene", "GameObject > XR > AR Session"]
@@ -322,8 +322,8 @@ slides:
         - label: Mistake 02
           title: Vulkan still in the list
           desc: >-
-            Auto Graphics API was never turned off, so Vulkan sits above OpenGLES3 and the
-            ARCore plug-in documentation asks you to take it out.
+            Auto Graphics API was never turned off. The ARCore plug-in only runs on
+            OpenGLES3 in 6.0; from 6.1 on Vulkan works, with one more feature.
         - label: Mistake 03
           title: Mono backend with ARM64 ticked
           desc: >-
@@ -339,7 +339,7 @@ slides:
       eyebrow: Quick check
       question: The build runs, tracking works, the cube renders, and the rest of the screen is one grey. What is missing?
       options:
-        - The AR Background Renderer Feature on the Universal Renderer asset
+        - The AR Background Renderer Feature on the Mobile_Renderer
         - The AR Session, so tracking never started in the first place
         - ARCore, which this phone still has to install from the store
         - The materials, which were never converted to the pipeline
@@ -355,7 +355,8 @@ slides:
         - ["Camera image", "The room behind it", "No"]
       verdict: >-
         Content renders and the material is right, so the pipeline itself is working. Only
-        the passthrough is absent, which narrows it to one list on one asset. If the cube had
+        the passthrough is absent, which narrows it to one list on one asset, the one Android
+        really uses. If the cube had
         also been magenta, the answer would have been the converter instead, and the renderer
         feature would still have been missing underneath.
 
@@ -383,7 +384,7 @@ slides:
         - title: Two GameObjects, no exceptions
           desc: AR Session and XR Origin. Without either one the app runs and AR quietly does not
         - title: The passthrough is a render pass
-          desc: Under the pipeline the camera image is drawn by a renderer feature, and a missing feature draws nothing
+          desc: A renderer feature draws it, and the one that counts lives on the mobile asset's renderer
         - title: Flat colour and magenta are unrelated
           desc: One is the camera image, the other is a shader. Fixing either does nothing for the other
 

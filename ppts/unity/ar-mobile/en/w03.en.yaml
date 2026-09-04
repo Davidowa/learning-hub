@@ -13,7 +13,7 @@ slides:
       unit: Session 03 · AR development · Trackable targets and placement
       title: Mobile AR Development
       subtitle: >-
-        Planes, printed images and ray casts. The three ways a session hands you somewhere
+        Planes, on-screen images and ray casts. The three ways a session hands you somewhere
         real to put something that is not.
       meta:
         - [Instructor, David Escobar-Castillejos]
@@ -36,7 +36,7 @@ slides:
           desc: An identifier, a pose and a state, and one event that reports all three
         - title: Placing on a plane
           desc: A ray cast that needs no collider, and a tap that turns into a world position
-        - title: Printed targets
+        - title: On-screen targets
           desc: A reference image library, and the one measurement everybody enters wrong
         - title: When it does not work
           desc: Bare floors, fast phones and cached references, with the symptom for each
@@ -52,7 +52,7 @@ slides:
         - head: Place an object with a ray cast
           sub: From a screen point, against PlaneWithinPolygon, with no collider anywhere
         - head: Build a reference image library
-          sub: And enter the physical size the paper actually came out of the printer at
+          sub: And enter the width the image actually measures on the screen showing it
         - head: Read a failure back to its cause
           sub: A bare floor, a fast pan or a cached plane each look different on screen
 
@@ -322,13 +322,13 @@ slides:
 
   - divider:
       eyebrow: Block 03
-      title: Printed targets
+      title: On-screen targets
       lede: An image the app already knows, a library it lives in, and one measurement that decides the scale of everything.
       block: 3
 
   - steps:
       eyebrow: Block 03 · Workflow
-      title: From a printed sheet to a tracked image
+      title: From an on-screen image to a tracked image
       items:
         - label: '01'
           title: Import
@@ -341,7 +341,7 @@ slides:
           desc: One entry per target, with the texture assigned to it
         - label: '04'
           title: Specify Size
-          desc: Tick it and type the printed width in metres
+          desc: Tick it and type the on-screen width in metres
         - label: '05'
           title: Assign it
           desc: Drop the library onto the AR Tracked Image Manager
@@ -355,16 +355,16 @@ slides:
         - ["Detail", "Busy, non repeating", "Repeats match the wrong place"]
         - ["Shape", "Flat and rigid", "A curled poster stops matching"]
         - ["Physical size", "Measured, in metres", "Distance is derived from it"]
-        - ["Finish", "Matte paper", "Gloss returns the room instead"]
+        - ["Surface", "A screen without glare", "A reflection hides the pattern"]
 
   - stat:
       eyebrow: The number nobody measures
-      value: 0.210 m
-      text: The width of an A4 sheet, and the number the Specify Size field is asking for
+      value: 0.180 m
+      text: The width the image measures on screen, which is what Specify Size is asking for
       note: >-
-        Type what the paper is, not what the image file suggests. Get it wrong by a factor
-        and the estimated distance is wrong by the same factor, so content that belongs on
-        the page floats above the table or sinks through it.
+        Type what the ruler reads against the screen, not what the image file suggests. Get it
+        wrong by a factor and the estimated distance is wrong by the same factor, so content
+        that belongs on the target floats above the table or sinks through it.
 
   - code:
       eyebrow: Block 03 · Image tracking
@@ -402,10 +402,10 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: The library says the target is 0.210 m wide. It was printed at 0.105 m. What happens?
+      question: The library says the target is 0.210 m wide. On screen it measures 0.105 m. What happens?
       options:
         - Content lands at about twice the distance it should, and at twice the size
-        - The image is not recognised, because the size has to match the print
+        - The image is not recognised, because the size has to match the screen
         - Nothing, the size field is only a hint used inside the editor
         - Tracking works, but the rotation of the target comes back mirrored
 
@@ -419,24 +419,24 @@ slides:
         - ["Content scale", "Authored", "Unchanged", "Looks twice as big"]
         - ["Rotation", "Correct", "Correct", "Unaffected"]
       verdict: >-
-        The tracker cannot measure your paper. It believes the library and derives distance
-        from apparent width, so halving the print doubles the estimated distance. Measure the
-        sheet with a ruler once it leaves the printer.
+        The tracker cannot measure your screen. It believes the library and derives distance
+        from apparent width, so halving the displayed size doubles the estimated distance.
+        Measure the on-screen width with a ruler, then leave the zoom alone.
 
   - lab:
       eyebrow: Lab
       title: Two ways to place one object, in pairs
       brief: >-
-        Add plane detection and tap to place to the project from session two, then print one
-        target image and place the same prefab on it. Measure the printed width with a ruler
-        before you type it into the library.
+        Add plane detection and tap to place to the project from session two, then show one
+        target image on a second screen and place the same prefab on it. Measure its on-screen
+        width with a ruler before you type it into the library.
       blocks:
         - label: Constraint
           text: One prefab, placed both ways. No second scene and no second project.
         - label: Deliverable
           text: A short video of the phone screen showing both placements, one after the other.
         - label: Criterion
-          text: That the object on the printed target is the size you intended, measured against the page.
+          text: That the object on the target is the size you intended, measured against the screen.
 
   - takeaways:
       eyebrow: Summary
@@ -448,7 +448,7 @@ slides:
           desc: Two floor patches that turn out to be one floor leave one trackable and one missing reference
         - title: The ray cast asks the session
           desc: No collider is generated, so a plane is a valid target the moment the provider reports it
-        - title: The printed size sets the scale
+        - title: The on-screen size sets the scale
           desc: Distance is derived from apparent width, so a mismeasured target moves everything with it
 
   - homework:
@@ -461,10 +461,10 @@ slides:
       meta:
         - [Due, Before session 4]
         - [Format, The updated repository]
-        - [Bring, The phone and one printed target]
+        - [Bring, The phone and the target on a second screen]
       rubric:
         - ["Placement", "Required", "Tapping a detected plane places the prefab on it"]
-        - ["Image target", "Required", "The printed target is recognised and its size is measured"]
+        - ["Image target", "Required", "The on-screen target is recognised and its size is measured"]
         - ["Pathway", "Ongoing", "This week's units on Unity Learn, done in your own time"]
 
   - closing:

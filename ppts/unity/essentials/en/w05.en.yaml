@@ -57,7 +57,7 @@ slides:
         - head: Describe the frustum in one sentence
           sub: And compute how tall the view is at a given distance from the camera
         - head: Set the camera fields on purpose
-          sub: Clear flags, culling mask, projection, field of view and the two clip planes
+          sub: Background type, culling mask, projection, field of view and the two clip planes
         - head: Diagnose a camera that shows nothing
           sub: Four separate causes, each with a different thing to look at
         - head: Turn a 2D sound into a 3D one
@@ -117,16 +117,16 @@ slides:
           loop: ↺ and the culling mask removes whole layers before any of that
 
   - table:
-      eyebrow: Block 01 · The Inspector
+      eyebrow: Block 01 · The Inspector, in URP
       title: Six camera fields, and what each one decides
       headers: [Field, What it decides, The default]
       rows:
-        - ["Clear Flags", "What fills the empty pixels", "Skybox"]
+        - ["Background Type", "What fills the empty pixels", "Skybox"]
         - ["Culling Mask", "Which layers get drawn", "Everything"]
         - ["Projection", "Perspective or orthographic", "Perspective"]
         - ["Field of View", "The vertical angle in degrees", "60"]
         - ["Clipping Planes", "Nearest and furthest drawn", "0.3 and 1000"]
-        - ["Depth", "Which camera draws on top", "0 on the main camera"]
+        - ["Priority", "Which camera draws on top", "The higher one draws last"]
 
   - code_output:
       eyebrow: Block 01 · Measured
@@ -179,10 +179,11 @@ slides:
             The object is in the Hierarchy, it is lit, it is in front of the camera and it is
             not drawn. The culling mask is the only place that explains it.
         - label: Error 04
-          title: Two cameras at the same depth
+          title: Two cameras at the same Priority
           desc: >-
             Both render, in an order nobody promised, and the image flickers between them.
-            Give one of them a higher depth and the argument is settled.
+            Raise one camera's Priority and the argument is settled. The built-in pipeline
+            calls that same field Depth.
 
   - divider:
       eyebrow: Block 02

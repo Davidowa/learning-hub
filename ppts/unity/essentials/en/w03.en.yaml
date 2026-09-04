@@ -277,8 +277,9 @@ slides:
         - label: Error 04
           title: The component that is not there
           desc: >-
-            GetComponent returns null and the console reads MissingComponentException, with
-            the name of the object and the component it expected to find on it.
+            GetComponent returns null when the component is not there, and the console stays
+            quiet until the first line that uses that null. That line throws a
+            NullReferenceException, and it names the method, not the lookup.
 
   - divider:
       eyebrow: Block 03

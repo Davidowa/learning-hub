@@ -58,7 +58,7 @@ slides:
         - head: Describir el frustum en una frase
           sub: Y calcular qué tan alta es la vista a cierta distancia de la cámara
         - head: Poner los campos de la cámara a propósito
-          sub: Clear Flags, Culling Mask, Projection, Field of View y los dos clipping planes
+          sub: Background Type, Culling Mask, Projection, Field of View y los dos clipping planes
         - head: Diagnosticar una cámara que no muestra nada
           sub: Cuatro causas distintas, cada una con algo distinto que revisar
         - head: Convertir un sonido 2D en uno 3D
@@ -118,16 +118,16 @@ slides:
           loop: ↺ y el Culling Mask quita capas enteras antes de todo eso
 
   - table:
-      eyebrow: Bloque 01 · El Inspector
+      eyebrow: Bloque 01 · El Inspector, en URP
       title: Seis campos de la cámara, y qué decide cada uno
       headers: [Campo, Qué decide, De fábrica]
       rows:
-        - ["Clear Flags", "Qué llena los pixeles vacíos", "Skybox"]
+        - ["Background Type", "Qué llena los pixeles vacíos", "Skybox"]
         - ["Culling Mask", "Qué capas se dibujan", "Everything"]
         - ["Projection", "Perspectiva u ortográfica", "Perspective"]
         - ["Field of View", "El ángulo vertical en grados", "60"]
         - ["Clipping Planes", "Lo más cerca y lo más lejos", "0.3 y 1000"]
-        - ["Depth", "Cuál cámara dibuja encima", "0 en la cámara principal"]
+        - ["Priority", "Cuál cámara dibuja encima", "La mayor dibuja al final"]
 
   - code_output:
       eyebrow: Bloque 01 · Medido
@@ -181,10 +181,11 @@ slides:
             El objeto está en el Hierarchy, tiene luz, está frente a la cámara y no se dibuja.
             El Culling Mask es el único lugar que lo explica.
         - label: Error 04
-          title: Dos cámaras en el mismo depth
+          title: Dos cámaras con la misma Priority
           desc: >-
             Las dos dibujan, en un orden que nadie prometió, y la imagen parpadea entre
-            ellas. Dale a una un depth más alto y el pleito se acaba.
+            ellas. Súbele la Priority a una y el pleito se acaba. En el pipeline integrado
+            ese mismo campo se llama Depth.
 
   - divider:
       eyebrow: Bloque 02

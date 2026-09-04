@@ -260,20 +260,20 @@ slides:
       lead: >-
         La app se instala, la sesión llega a rastrear, tu cubo aparece, y todos los demás
         píxeles son del mismo color. Bajo el Universal Render Pipeline, el componente AR
-        Camera Background no dibuja la imagen por sí mismo. Le pasa ese trabajo a un renderer
-        feature del asset Universal Renderer. Sin nada en esa lista, nadie dibuja la cámara,
-        y lo que llena la pantalla es el Background de la cámara.
+        Camera Background no dibuja la imagen: le pasa ese trabajo a un renderer feature. Y el
+        feature vive en el renderer del asset de URP que Android tiene activo, que en la
+        plantilla Universal 3D es el de móvil, no el de PC.
       panel:
-        label: Cómo confirmarlo en una compilación
-        title: Pon en rojo el Background de la cámara
+        label: El asset que sí cuenta
+        title: Quality, Android, Mobile_RPAsset
         note: >-
-          Si el teléfono regresa en rojo, nadie está dibujando el passthrough y el renderer
-          feature no está puesto.
+          Ponerle el feature al PC_Renderer no cambia nada en el teléfono. Va en el
+          Mobile_Renderer.
       steps:
-        - text: Project Settings, luego Graphics
-        - text: Abre el asset de URP al que apunta
-        - text: Busca su Renderer List
-        - text: Abre el Universal Renderer
+        - text: Project Settings, luego Quality
+        - text: Mira cuál nivel es el default de Android
+        - text: Ese nivel apunta a Mobile_RPAsset
+        - text: Ábrelo y entra a su Mobile_Renderer
         - text: Add Renderer Feature, AR Background
           loop: ↺ recompila, y el cuarto aparece detrás del cubo
 
@@ -282,7 +282,7 @@ slides:
       title: Tres pantallas rotas que se parecen y no lo son
       headers: [Qué ves, Qué significa, Dónde se arregla]
       rows:
-        - ["Un solo color", "Nunca se dibujó la cámara", "Renderer feature de URP"]
+        - ["Un solo color", "Nunca se dibujó la cámara", "Feature en Mobile_Renderer"]
         - ["Objetos magenta", "Materiales aún built-in", "Render Pipeline Converter"]
         - ["Pantalla negra", "Permiso de cámara negado", "Permisos de la app"]
         - ["Nada se mueve", "No hay AR Session", "GameObject > XR > AR Session"]
@@ -322,8 +322,8 @@ slides:
         - label: Error 02
           title: Vulkan sigue en la lista
           desc: >-
-            Nunca se apagó Auto Graphics API, así que Vulkan quedó arriba de OpenGLES3 y la
-            documentación del plug-in de ARCore pide sacarlo.
+            Nunca se apagó Auto Graphics API. El plug-in de ARCore 6.0 sólo corre en
+            OpenGLES3; de la 6.1 en adelante Vulkan sí sirve, con un feature más.
         - label: Error 03
           title: Backend Mono con ARM64 marcado
           desc: >-
@@ -339,7 +339,7 @@ slides:
       eyebrow: Verificación rápida
       question: Compila, el rastreo sirve, el cubo se dibuja, y el resto de la pantalla es un gris. ¿Qué falta?
       options:
-        - El AR Background Renderer Feature en el asset Universal Renderer
+        - El AR Background Renderer Feature en el Mobile_Renderer
         - El AR Session, así que el rastreo nunca arrancó siquiera
         - ARCore, que este teléfono todavía tiene que instalar de la tienda
         - Los materiales, que nunca se convirtieron al pipeline
@@ -355,7 +355,8 @@ slides:
         - ["Imagen de cámara", "El cuarto detrás", "No"]
       verdict: >-
         El contenido se dibuja y el material está bien, así que el pipeline funciona. Sólo
-        falta el passthrough, y eso lo reduce a una lista en un asset. Si el cubo también
+        falta el passthrough, y eso lo reduce a una lista en un asset, el que Android usa de
+        verdad. Si el cubo también
         hubiera salido magenta, la respuesta sería el convertidor, y el renderer feature
         seguiría faltando por debajo.
 
@@ -384,7 +385,7 @@ slides:
         - title: Dos GameObjects, sin excepción
           desc: AR Session y XR Origin. Si falta cualquiera, la app corre y AR calladito no
         - title: El passthrough es un pase de render
-          desc: Bajo el pipeline la imagen la dibuja un renderer feature, y si falta no se dibuja nada
+          desc: Lo dibuja un renderer feature, y el que cuenta vive en el renderer del asset de móvil
         - title: Color plano y magenta no se parecen
           desc: Uno es la imagen de la cámara, el otro un shader. Arreglar uno no hace nada por el otro
 

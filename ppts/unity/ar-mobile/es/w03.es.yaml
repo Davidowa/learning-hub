@@ -13,7 +13,7 @@ slides:
       unit: Sesión 03 · Desarrollo · Blancos rastreables y colocación
       title: Desarrollo de AR móvil
       subtitle: >-
-        Planos, imágenes impresas y raycasts. Las tres formas en que una sesión te entrega un
+        Planos, imágenes en pantalla y raycasts. Las tres formas en que una sesión te entrega un
         lugar real donde poner algo que no lo es.
       meta:
         - [Profesor, David Escobar-Castillejos]
@@ -36,7 +36,7 @@ slides:
           desc: Un identificador, una pose y un estado, y un solo evento que reporta los tres
         - title: Colocar sobre un plano
           desc: Un raycast que no necesita collider, y un tap que se vuelve posición en el mundo
-        - title: Blancos impresos
+        - title: Blancos en pantalla
           desc: Una biblioteca de imágenes, y la medida que todo el mundo captura mal
         - title: Cuando no funciona
           desc: Pisos vacíos, teléfonos rápidos y referencias guardadas, con su síntoma cada uno
@@ -52,7 +52,7 @@ slides:
         - head: Colocar un objeto con un raycast
           sub: Desde un punto de pantalla, contra PlaneWithinPolygon, sin un solo collider
         - head: Armar una biblioteca de imágenes
-          sub: Y capturar el tamaño físico con que el papel salió de la impresora
+          sub: Y capturar el ancho que la imagen mide sobre la pantalla que la muestra
         - head: Leer una falla de regreso a su causa
           sub: Un piso vacío, un giro rápido o un plano guardado se ven distinto en pantalla
 
@@ -323,13 +323,13 @@ slides:
 
   - divider:
       eyebrow: Bloque 03
-      title: Blancos impresos
+      title: Blancos en pantalla
       lede: Una imagen que la app ya conoce, una biblioteca donde vive, y una medida que decide la escala de todo.
       block: 3
 
   - steps:
       eyebrow: Bloque 03 · Flujo
-      title: De una hoja impresa a una imagen rastreada
+      title: De una imagen en pantalla a una imagen rastreada
       items:
         - label: '01'
           title: Importa
@@ -342,7 +342,7 @@ slides:
           desc: Una entrada por blanco, con su textura asignada
         - label: '04'
           title: Specify Size
-          desc: Márcalo y captura el ancho impreso en metros
+          desc: Márcalo y captura el ancho en pantalla, en metros
         - label: '05'
           title: Asígnala
           desc: Suelta la biblioteca en el AR Tracked Image Manager
@@ -356,16 +356,16 @@ slides:
         - ["Detalle", "Cargado y sin repetir", "Lo repetido empata mal"]
         - ["Forma", "Plana y rígida", "Un póster curvo deja de empatar"]
         - ["Tamaño físico", "Medido, en metros", "De ahí sale la distancia"]
-        - ["Acabado", "Papel mate", "El brillo devuelve el cuarto"]
+        - ["Superficie", "Pantalla sin reflejo", "Un reflejo tapa el patrón"]
 
   - stat:
       eyebrow: La medida que nadie mide
-      value: 0.210 m
-      text: El ancho de una hoja A4, que es el número que el campo Specify Size está pidiendo
+      value: 0.180 m
+      text: El ancho que la imagen mide sobre la pantalla, que es lo que pide Specify Size
       note: >-
-        Captura lo que mide el papel, no lo que sugiere el archivo de imagen. Si le pegas mal
-        por un factor, la distancia estimada sale mal por el mismo factor, y el contenido que
-        va sobre la página flota encima de la mesa o se hunde en ella.
+        Captura lo que mides con la regla contra la pantalla, no lo que sugiere el archivo de
+        imagen. Si le pegas mal por un factor, la distancia estimada sale mal por el mismo
+        factor, y el contenido que va sobre el blanco flota encima de la mesa o se hunde.
 
   - code:
       eyebrow: Bloque 03 · Rastreo de imágenes
@@ -403,10 +403,10 @@ slides:
 
   - quiz:
       eyebrow: Verificación rápida
-      question: La biblioteca dice que el blanco mide 0.210 m de ancho. Se imprimió a 0.105 m. ¿Qué pasa?
+      question: La biblioteca dice que el blanco mide 0.210 m de ancho. En pantalla mide 0.105 m. ¿Qué pasa?
       options:
         - El contenido cae como al doble de distancia, y al doble de tamaño
-        - No se reconoce la imagen, porque el tamaño tiene que empatar con el impreso
+        - No se reconoce la imagen, porque el tamaño tiene que empatar con el de pantalla
         - Nada, el campo de tamaño es sólo una pista que se usa en el editor
         - El rastreo sirve, pero la rotación del blanco regresa espejeada
 
@@ -420,24 +420,24 @@ slides:
         - ["Escala", "De autor", "Sin cambio", "Se ve al doble"]
         - ["Rotación", "Correcta", "Correcta", "Sin efecto"]
       verdict: >-
-        El rastreador no puede medir tu papel. Le cree a la biblioteca y deriva la distancia
-        del ancho aparente, así que imprimir a la mitad duplica la distancia estimada. Mide
-        la hoja con una regla en cuanto salga de la impresora.
+        El rastreador no puede medir tu pantalla. Le cree a la biblioteca y deriva la distancia
+        del ancho aparente, así que mostrar la imagen a la mitad duplica la distancia estimada.
+        Mide con una regla el ancho en pantalla, y ya no le muevas al zoom.
 
   - lab:
       eyebrow: Laboratorio
       title: Dos maneras de colocar un objeto, en parejas
       brief: >-
         Agreguen detección de planos y tap para colocar al proyecto de la sesión dos, después
-        impriman una imagen de blanco y coloquen el mismo prefab sobre ella. Midan el ancho
-        impreso con una regla antes de capturarlo en la biblioteca.
+        muestren una imagen de blanco en una segunda pantalla y coloquen el mismo prefab sobre
+        ella. Midan con una regla el ancho en pantalla antes de capturarlo en la biblioteca.
       blocks:
         - label: Restricción
           text: Un solo prefab, colocado de las dos maneras. Sin segunda escena y sin segundo proyecto.
         - label: Entregable
           text: Un video corto de la pantalla del teléfono con las dos colocaciones, una tras otra.
         - label: Criterio
-          text: Que el objeto sobre el blanco impreso tenga el tamaño que buscaban, medido contra la hoja.
+          text: Que el objeto sobre el blanco tenga el tamaño que buscaban, medido contra la pantalla.
 
   - takeaways:
       eyebrow: Resumen
@@ -449,7 +449,7 @@ slides:
           desc: Dos parches que resultan ser un piso dejan un trackable y una referencia perdida
         - title: El raycast le pregunta a la sesión
           desc: No se genera collider, así que un plano es blanco válido desde que el proveedor lo reporta
-        - title: El tamaño impreso fija la escala
+        - title: El tamaño en pantalla fija la escala
           desc: La distancia sale del ancho aparente, así que un blanco mal medido mueve todo con él
 
   - homework:
@@ -462,10 +462,10 @@ slides:
       meta:
         - [Entrega, Antes de la sesión 4]
         - [Formato, El repositorio actualizado]
-        - [Trae, El teléfono y un blanco impreso]
+        - [Trae, El teléfono y el blanco en una segunda pantalla]
       rubric:
         - ["Colocación", "Obligatorio", "Tocar un plano detectado coloca el prefab encima"]
-        - ["Blanco impreso", "Obligatorio", "El blanco se reconoce y su tamaño está medido"]
+        - ["Blanco en pantalla", "Obligatorio", "El blanco se reconoce y su tamaño está medido"]
         - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
 
   - closing:
