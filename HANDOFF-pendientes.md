@@ -186,6 +186,14 @@ retomó en esta sesión.
     ../.venv/Scripts/python.exe -m kit.lint      <carpeta>
     ../.venv/Scripts/python.exe -m kit.sizes     <carpeta>
 
+En macOS o Linux, el intérprete del venv está en `.venv/bin/python`:
+
+    cd ppts
+    ../.venv/bin/python -m kit.preflight <carpeta>
+    ../.venv/bin/python -m kit.build     <carpeta>
+    ../.venv/bin/python -m kit.lint      <carpeta>
+    ../.venv/bin/python -m kit.sizes     <carpeta>
+
 Los cuatro tienen que volver en cero, y un renglón del build que empiece con `!` cuenta como
 problema aunque el archivo se escriba igual. Se arregla partiendo el ejemplo o acortando el
 título, nunca bajando el tipo bajo el piso de 18 pt.
