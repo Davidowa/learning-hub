@@ -55,8 +55,15 @@ def measure(text: str, name: str, size_pt: float, bold: bool = False) -> float:
 
 
 def wrap_lines(text: str, name: str, size_pt: float, width_in: float, bold=False) -> int:
-    """How many lines ``text`` needs inside ``width_in``."""
-    usable = width_in - 0.07           # the 25400 EMU body insets
+    """How many lines ``text`` needs inside ``width_in``.
+
+    PowerPoint breaks a line a little earlier than PIL measures it: set side by
+    side on the built decks, strings up to 0.6 % inside the limit still wrapped
+    there, and a title the kit placed on one line took two and covered the text
+    under it. The 1 % keeps the kit on the side that wraps. A token wider than the
+    box is not left hanging either: PowerPoint breaks it mid-word, which costs lines.
+    """
+    usable = (width_in - 0.07) * 0.99  # the 25400 EMU body insets, and the margin
     lines, cur = 1, ''
     for word in text.split():
         trial = f'{cur} {word}'.strip()
@@ -64,6 +71,11 @@ def wrap_lines(text: str, name: str, size_pt: float, width_in: float, bold=False
             lines, cur = lines + 1, word
         else:
             cur = trial
+        if cur == word:
+            over = measure(word, name, size_pt, bold) / usable
+            if over > 1:
+                lines += int(over)
+                cur = word[int(len(word) * int(over) / over):]
     return lines
 
 
@@ -319,10 +331,11 @@ class Deck:
             self._text(s, ax, y, 0.30, 0.40, '→', size=K.T.value, font=K.MONO,
                        color=self.C.ACCENT_LO)
             hs = fit_size(it['head'], K.SANS, K.T.head, 7.9, 2, True, floor=20)
+            hl = wrap_lines(it['head'], K.SANS, hs, 7.9, True)
             self._text(s, ax + 0.46, y - 0.04, 7.9, 0.95, it['head'], size=hs,
                        bold=True, spacing=K.LS.head)
-            self._text(s, ax + 0.46, y + 0.51, 7.9, 0.9, it['sub'], size=K.T.sub,
-                       color=self.C.MUTED, spacing=K.LS.sub)
+            self._text(s, ax + 0.46, y + 0.51 + (hl - 1) * line_h(hs, K.LS.head), 7.9, 0.9,
+                       it['sub'], size=K.T.sub, color=self.C.MUTED, spacing=K.LS.sub)
         return self._page(s, notes)
 
     # ───────────────────────────────────────────── 04 roadmap
@@ -393,9 +406,12 @@ class Deck:
         dy = self._head(s, eyebrow, title)
         top = 2.57 + dy
         self._text(s, K.M, top, 8.6, 1.9, lead, size=K.T.lead, spacing=K.LS.lead)
-        y = top + 0.44 * wrap_lines(lead if isinstance(lead, str) else
-                                    ''.join(r[0] for r in lead),
-                                    K.SANS, K.T.lead, 8.6) + 0.55
+        n = wrap_lines(lead if isinstance(lead, str) else ''.join(r[0] for r in lead),
+                       K.SANS, K.T.lead, 8.6)
+        # 0.44 a line runs short of the real 0.53, so the rule climbed into a long
+        # lead and struck its last line from seven lines on. Short leads keep the
+        # spacing they always had.
+        y = top + max(0.44 * n + 0.55, line_h(K.T.lead, K.LS.lead) * n + 0.25)
         if panel:
             self._rule(s, K.M, y, 8.58)
             self._text(s, K.M, y + 0.30, 9.44, 0.34, panel['label'].upper(),
@@ -431,10 +447,12 @@ class Deck:
         n = len(blocks)
         gap = 1.25
         w = (K.CONTENT_W - gap * (n - 1)) / n
+        dl = max(wrap_lines(b['desc'], K.SANS, K.T.label, w - 0.7) for b in blocks)
+        h = max(2.48, 1.37 + dl * line_h(K.T.label, K.LS.desc) + 0.20)
         for i, b in enumerate(blocks):
             x = K.M + i * (w + gap)
             dark = b.get('dark')
-            blk = self._rect(s, x, 2.65 + dy, w, 2.48, fill=self.C.NAVY if dark else self.C.WHITE,
+            blk = self._rect(s, x, 2.65 + dy, w, h, fill=self.C.NAVY if dark else self.C.WHITE,
                        line=None if dark else self.C.BORDER, radius=0.05)
             self._text(s, x + 0.32, 3.04 + dy, w - 0.5, 0.34, b['label'].upper(),
                        size=K.T.label, font=K.MONO,
@@ -449,8 +467,8 @@ class Deck:
                 self._text(s, x + w + 0.34, 3.63 + dy, 0.6, 0.6, '→', size=K.T.arrow,
                            color=self.C.MUTED)
         if note:
-            self._text(s, K.M, 5.45 + dy, 15.0, 1.0, note, size=K.T.note, color=self.C.MUTED,
-                       spacing=K.LS.note)
+            self._text(s, K.M, 2.65 + h + 0.32 + dy, 15.0, 1.0, note, size=K.T.note,
+                       color=self.C.MUTED, spacing=K.LS.note)
         return self._page(s, notes)
 
     # ───────────────────────────────────────────── 08–11 code card
@@ -574,9 +592,10 @@ class Deck:
     # ───────────────────────────────────────────── 10 code + console output
 
     def code_output(self, eyebrow, title, filename, source, output, lang='python',
-                    output_label='Salida', notes=None):
+                    output_label=None, notes=None):
         s = self._slide(self.C.PAPER)
         dy = self._head(s, eyebrow, title)
+        output_label = output_label or ('Salida' if self.lang == 'es' else 'Output')
         top = K.CODE_Y + dy
         self._code_card(s, K.CODE_X, top, K.CODE_W, filename, source, lang, 'dark')
         ox, ow = 12.03, 6.93
@@ -616,8 +635,9 @@ class Deck:
                 raise ValueError(f'table row {r + 1} has {len(row)} cells but there '
                                  f'are {n} headers: {row!r}. A comma inside a YAML '
                                  f'flow list splits the cell; quote it.')
+            # the first column is set bold, so it is measured bold
             hs = max(wrap_lines(str(c), K.MONO if i else K.SANS, K.T.body,
-                                widths[i] - 0.35) for i, c in enumerate(row))
+                                widths[i] - 0.35, bold=(i == 0)) for i, c in enumerate(row))
             # 0.38, not 0.42: seven single-line rows have to clear the footer
             # rule, and the convention is to show a group of operators whole
             rh = 0.38 + 0.40 * hs
@@ -679,10 +699,17 @@ class Deck:
     def pitfalls(self, eyebrow, title, items, notes=None):
         s = self._slide(self.C.PAPER)
         dy = self._head(s, eyebrow, title)
-        for i, it in enumerate(items[:4]):
+        # A row is as tall as its longer description. At a fixed 2.45 a fourth line
+        # printed over the label of the row below.
+        items = items[:4]
+        tops = [2.61 + dy]
+        for pair in (items[:2], items[2:]):
+            dl = max((wrap_lines(it['desc'], K.SANS, K.T.sub, 8.3) for it in pair), default=0)
+            tops.append(tops[-1] + max(2.45, 1.00 + dl * line_h(K.T.sub, K.LS.sub) + 0.20))
+        for i, it in enumerate(items):
             col, row = i % 2, i // 2
             x = K.M + col * 9.29
-            y = 2.61 + dy + row * 2.45
+            y = tops[row]
             self._rect(s, x, y, 0.06, 1.55, fill=self.C.ACCENT_LO)
             self._text(s, x + 0.36, y, 8.3, 0.34,
                        it.get('label', f'ERROR {i + 1:02d}').upper(),
@@ -813,16 +840,23 @@ class Deck:
     def tiers(self, eyebrow, title, items, notes=None):
         s = self._slide(self.C.PAPER)
         dy = self._head(s, eyebrow, title)
+        y = 2.80 + dy
         for i, it in enumerate(items[:4]):
-            y = 2.80 + dy + i * 1.62
             self._text(s, K.M, y, 3.0, 0.6, it['key'], size=K.T.card_num, font=K.MONO,
                        color=self.C.ACCENT_LO if it.get('accent') else self.C.BLUE)
             self._text(s, 4.30, y + 0.05, 5.2, 0.5, it['title'], size=K.T.card_title,
                        bold=True, spacing=K.LS.card_title)
             self._text(s, 9.80, y + 0.05, 9.0, 1.0, it['desc'], size=K.T.body,
                        color=self.C.MUTED, spacing=K.LS.body)
+            # the rule goes under the taller of the two columns; at a fixed 1.26 it
+            # struck through a third line of description
+            tall = max(wrap_lines(it['title'], K.SANS, K.T.card_title, 5.2, True)
+                       * line_h(K.T.card_title, K.LS.card_title),
+                       wrap_lines(it['desc'], K.SANS, K.T.body, 9.0) * line_h(K.T.body, K.LS.body))
+            rule = y + max(1.26, 0.05 + tall + 0.20)
             if i < len(items[:4]) - 1:
-                self._rule(s, K.M, y + 1.26, K.CONTENT_W)
+                self._rule(s, K.M, rule, K.CONTENT_W)
+            y = rule + 0.36
         return self._page(s, notes)
 
     # ───────────────────────────────────────────── 23 quotation
@@ -843,16 +877,21 @@ class Deck:
     def takeaways(self, eyebrow, title, items, notes=None):
         s = self._slide(self.C.PAPER)
         dy = self._head(s, eyebrow, title)
+        y = 2.70 + dy
         for i, it in enumerate(items[:4]):
-            y = 2.70 + dy + i * 1.65
             self._text(s, K.M, y, 1.0, 0.6, f'{i + 1:02d}', size=K.T.card_num,
                        font=K.MONO, color=self.C.BLUE)
             self._text(s, 2.20, y + 0.02, 8.0, 0.6, it['title'], size=K.T.head,
                        bold=True, spacing=K.LS.head)
             self._text(s, 2.20, y + 0.62, 15.0, 0.8, it['desc'], size=K.T.sub,
                        color=self.C.MUTED, spacing=K.LS.sub)
+            # the separator goes under the description; at a fixed 1.35 it only
+            # cleared one line and struck through the second
+            dl = wrap_lines(it['desc'], K.SANS, K.T.sub, 15.0)
+            rule = y + max(1.35, 0.62 + dl * line_h(K.T.sub, K.LS.sub) + 0.20)
             if i < len(items[:4]) - 1:
-                self._rule(s, K.M, y + 1.35, K.CONTENT_W)
+                self._rule(s, K.M, rule, K.CONTENT_W)
+            y = rule + 0.30
         return self._page(s, notes)
 
     # ───────────────────────────────────────────── 26 homework
@@ -883,7 +922,9 @@ class Deck:
                 label, weight, desc = row
                 self._text(s, K.M, y2, 5.0, 0.5, label, size=K.T.body, bold=True)
                 self._text(s, 6.20, y2, 10.6, 0.5, desc, size=K.T.sub, color=self.C.MUTED)
-                self._text(s, 16.9, y2, 2.06, 0.5, weight, size=K.T.body, font=K.MONO,
+                # 2.56 wide, not 2.06: "Obligatorio" in Courier needs 2.13 and
+                # PowerPoint broke it mid-word on every row that used it
+                self._text(s, 16.4, y2, 2.56, 0.5, weight, size=K.T.body, font=K.MONO,
                            color=self.C.BLUE, align=PP_ALIGN.RIGHT)
                 y2 += 0.70
         return self._page(s, notes)
@@ -896,12 +937,15 @@ class Deck:
                    color=self.C.ON_NAVY, spacing=0.92)
         self._text(s, K.M, 5.90, 13.0, 1.0, subtitle, size=K.T.divider_lede,
                    color=self.C.ON_NAVY_SOFT, spacing=K.LS.lead)
-        self._rule(s, K.M, 7.60, K.CONTENT_W, self.C.ON_NAVY_DIM, 0.012)
+        # three lines fit above 7.60; a fourth pushes the rule and the meta down
+        sl = wrap_lines(subtitle, K.SANS, K.T.divider_lede, 13.0)
+        rule = max(7.60, 5.90 + sl * line_h(K.T.divider_lede, K.LS.lead) + 0.12)
+        self._rule(s, K.M, rule, K.CONTENT_W, self.C.ON_NAVY_DIM, 0.012)
         for i, (label, value) in enumerate(meta):
             x = K.M + i * 4.60
-            self._text(s, x, 8.00, 4.3, 0.32, label.upper(), size=K.T.eyebrow,
+            self._text(s, x, rule + 0.40, 4.3, 0.32, label.upper(), size=K.T.eyebrow,
                        font=K.MONO, color=self.C.ON_NAVY_DIM)
-            self._text(s, x, 8.40, 4.3, 0.5, value, size=K.T.value, color=self.C.ON_NAVY)
+            self._text(s, x, rule + 0.80, 4.3, 0.5, value, size=K.T.value, color=self.C.ON_NAVY)
         return self._dark_page(s, notes)
 
     # ───────────────────────────────────────────── output

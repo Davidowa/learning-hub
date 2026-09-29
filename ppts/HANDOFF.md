@@ -37,7 +37,7 @@ matters more than keeping a deck short.
 cd ppts
 python -m kit.preflight python   # before building: the caps below
 python -m kit.build      python  # every lesson, .pptx lands next to its .yaml
-python -m kit.lint       python  # text spilling past the safe area
+python -m kit.lint       python  # text past the safe area, or on other text
 python -m kit.sizes      python  # type below the 18 pt floor
 python -m kit.figures --list     # the figures already drawn
 python -m kit.preview python/.../es/w14.es.pptx w14 --cols 4
@@ -125,6 +125,22 @@ measures two characters short and a line that really overflows comes back as
 fitting. PowerPoint keeps every space. That single-character difference is what
 let two broken slides pass every check for a week.
 
+**`lint` also checks what lands on what.** A slide can keep every box inside the
+safe area and still print one text over another. In September 2026 a visual
+review of all 334 decks found 266 of those, and every one had passed all four
+checks: a concept rule striking the last line of a long lead, a takeaway
+separator through a two-line description, an objective sub under a two-line head,
+a bold table label spilling out of its band. `lint` now works out where each text
+ends from its wrapped line count, and reports text on text, a rule through text,
+text leaving the card or band it starts in, and anything that falls into the
+footer row. The layouts behind those defects placed rules and rows at fixed
+offsets. They measure now, and grow.
+
+`wrap_lines` keeps a 1 % margin. Set against PowerPoint, strings up to 0.6 %
+inside the kit's limit still wrapped there, so a title the kit put on one line
+took two and covered the text under it. A token wider than its box also counts as
+the extra lines PowerPoint gives it when it breaks the token mid-word.
+
 **The cover subtitle has its own budget: about 130 characters.** Past that it
 wraps to a third line, which ends 0.06 in above the rule over the meta row. It
 does not overflow and no check complains, it just looks cramped. Two lines leave
@@ -150,6 +166,13 @@ cells, not three. Quote any cell with a comma.
 topic goes in `subtitle`. A student opening any deck sees which course it belongs
 to before anything else.
 
+**The agenda title counts what it shows.** Four cards are four moments of the
+session, and the title says so: "Cuatro momentos de la sesión", "Four moments in
+the session". Until September 2026, 312 decks said "Tres bloques de trabajo" or
+"Cuatro bloques de trabajo" over four cards and three dividers, the same mismatch
+the verification loop below caught on a `w17`. A title that names blocks has to
+match the dividers.
+
 **No durations anywhere on a slide.** No "90 minutos" on the cover, no "20 min"
 on the agenda cards, no "· 25 minutos" on the lab eyebrow. Minutes belong in
 `notes`, which is the speaker's business.
@@ -169,7 +192,7 @@ identity ones. A partial table teaches that the rest do not exist.
 
 **Python 3.12 or newer.** Consistent across every deck.
 
-**No em dashes in the prose.** Commas, periods, colons, parentheses. The middle
+**No em dashes in the prose.** `preflight` rejects them. Commas, periods, colons, parentheses. The middle
 dot `·` is the separator the template already uses. There are none in any deck,
 including in a `tiers` key, where using one as a placeholder is tempting. Use a
 word instead.

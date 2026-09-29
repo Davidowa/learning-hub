@@ -32,7 +32,7 @@ slides:
 
   - agenda:
       eyebrow: Agenda
-      title: Three working blocks
+      title: Four moments in the session
       cards:
         - title: The project that can see
           desc: Five packages, one provider, and the two GameObjects an AR scene cannot run without
@@ -258,11 +258,11 @@ slides:
       eyebrow: Block 03 · The failure
       title: The camera feed has to be drawn by something
       lead: >-
-        The app installs, the session reaches tracking, your cube appears, and every other
-        pixel is the same colour. Under the Universal Render Pipeline the AR Camera
-        Background component does not draw the camera image: it hands that work to a Renderer
-        Feature. The feature lives on the renderer of whichever URP asset Android has active,
-        which in the Universal 3D template is the mobile one, not the PC one.
+        The app installs, tracking starts, your cube appears, and every other pixel is one
+        flat colour. Under URP the AR Camera Background component does not draw the camera
+        image: it hands that to a Renderer Feature, which lives on the renderer of
+        whichever URP asset Android has active. In the Universal 3D template that is the
+        mobile one, not the PC one.
       panel:
         label: The asset that actually counts
         title: Quality, Android, Mobile_RPAsset
@@ -293,10 +293,10 @@ slides:
       title: Magenta is a different problem with a different fix
       lead: >-
         Magenta is the colour Unity paints a material whose shader cannot run under the
-        active pipeline. It means the material was authored for the built-in pipeline and
-        never converted, so it has nothing to do with the camera image, and adding renderer
-        features will not change it by one pixel. The two failures arrive together often
-        enough that people fix one and assume they fixed both.
+        active pipeline: one authored for the built-in pipeline and never converted. It
+        has nothing to do with the camera image, and no renderer feature will change it.
+        The two failures often arrive together, so people fix one and assume they fixed
+        both.
       panel:
         label: The one that converts materials
         title: Window, Rendering, Render Pipeline Converter

@@ -32,7 +32,7 @@ ppts/
     deck.py       the Deck class, one method per slide archetype
     build.py      YAML -> .pptx
     preflight.py  YAML checks that are cheaper to run than a build
-    lint.py       overflow check against the safe area
+    lint.py       overflow and collision check on the built deck
     preview.py    .pptx -> PNG, for reviewing a build without PowerPoint
   brand/          the duck, as SVG and PNG
   python/
@@ -245,8 +245,9 @@ discipline:
   ever appears on navy, the darkened one only on paper. Python yellow `#FFD43B`
   reads at 12.0:1 on navy and 1.3:1 on paper, so on paper it becomes `#8A6A00`.
 - **Text is measured before it is placed.** Headings shrink instead of spilling,
-  cards grow to the tallest one in the row, and annotation blocks stack by their
-  real height. `python -m kit.lint` re-checks the built file.
+  cards grow to the tallest one in the row, rules and rows move down under text
+  that wraps, and annotation blocks stack by their real height.
+  `python -m kit.lint` re-checks the built file.
 - **One code line, one text box.** Line breaks collapse inside a single frame, so
   each line is placed on its own and can be edited without disturbing the rest.
 - **The accent means one thing: this is the risk.** `accent: true` belongs on a

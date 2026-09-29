@@ -130,7 +130,7 @@ def _table_height(problems, n, kw):
     tall = []
     for r, row in enumerate(rows, 1):
         hs = max(wrap_lines(str(c), K.MONO if i else K.SANS, K.T.body,
-                            widths[i] - 0.35) for i, c in enumerate(row))
+                            widths[i] - 0.35, bold=(i == 0)) for i, c in enumerate(row))
         y += 0.38 + 0.40 * hs + 0.14
         if hs > 1:
             tall.append(r)
@@ -211,6 +211,9 @@ def check(path: str) -> tuple[list[str], int]:
     problems: list[str] = []
     for i, raw in enumerate(open(path, encoding='utf-8'), 1):
         line = raw.rstrip('\n').rstrip()
+        if '—' in line:
+            problems.append(f'line {i}: em dash, which the house style bans; use a comma, '
+                            f'a colon, parentheses or a word -> {line.strip()[:64]}')
         q = QUOTED_SCALAR.match(line)
         if q and not line.endswith(q.group(1)):
             problems.append(f'line {i}: opens with {q.group(1)} and does not end with it, '
