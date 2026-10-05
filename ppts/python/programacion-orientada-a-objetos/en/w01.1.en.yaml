@@ -31,7 +31,7 @@ slides:
         - head: Use the seven arithmetic operators
           sub: Add, subtract, multiply, both divisions, remainder and power
         - head: Convert whatever input returns
-          sub: input always hands back text, and doing arithmetic on it raises TypeError
+          sub: input always hands back text, and doing arithmetic on it can raise TypeError
 
   - roadmap:
       eyebrow: Review map
@@ -178,9 +178,9 @@ slides:
       rows:
         - ["upper()", "All to capitals", "'python'.upper()", "'PYTHON'"]
         - ["lower()", "All to lower case", "'PYTHON'.lower()", "'python'"]
-        - ["title()", "First letter of each", "'python 3'.title()", "'Python 3'"]
+        - ["title()", "Capitalizes each word", "'python 3'.title()", "'Python 3'"]
         - ["strip()", "Trims the edges", "'  py  '.strip()", "'py'"]
-        - ["find(x)", "Position, or -1", "'python'.find('th')", "2"]
+        - ["find(x)", "Position, -1 if absent", "'python'.find('th')", "2"]
         - ["replace(a, b)", "Swaps a for b", "'py'.replace('p','j')", "'jy'"]
 
   - concept:
@@ -262,7 +262,7 @@ slides:
       title: The two divisions do not agree
       lead: >-
         The single slash always returns a float, even when the division is exact. The
-        double slash drops the decimal part and returns an integer. The remainder answers
+        double slash rounds down and, between integers, returns an integer. The remainder answers
         a different question: what was left over.
       panel:
         label: What the remainder is for
@@ -334,11 +334,11 @@ slides:
   - trace:
       eyebrow: Answer
       title: It prints 6, because price was never a number
-      headers: ["Step", "Statement", "price", "total", "Type of total"]
+      headers: ["Step", "Statement", "price", "total", "Type of total", "Output"]
       rows:
-        - ["1", "price = '100'", "'100'", "–", "str"]
-        - ["2", "total = price * 2", "'100'", "'100100'", "str"]
-        - ["3", "len(total)", "'100'", "'100100'", "6"]
+        - ["1", "price = '100'", "'100'", "–", "–", "–"]
+        - ["2", "total = price * 2", "'100'", "'100100'", "str", "–"]
+        - ["3", "len(total)", "'100'", "'100100'", "str", "6"]
       verdict: Multiplying a string by an integer repeats it. To do arithmetic you need int(price) first.
 
   - takeaways:
@@ -355,7 +355,7 @@ slides:
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
-      brief: Write a program that reads a name and an age, then greets the person with an f-string saying which year they turned that age.
+      brief: Write a program that reads a name and an age, then greets the person with an f-string saying which year they will turn 100.
       meta:
         - [Due, Before review 2]
         - [Format, Blackboard · .py]

@@ -31,7 +31,7 @@ slides:
         - head: Usar los siete operadores aritméticos
           sub: Suma, resta, producto, las dos divisiones, residuo y potencia
         - head: Convertir lo que llega de input
-          sub: input siempre devuelve texto, y operar sin convertir levanta TypeError
+          sub: input siempre devuelve texto, y operar sin convertir puede levantar TypeError
 
   - roadmap:
       eyebrow: Mapa del repaso
@@ -262,7 +262,7 @@ slides:
       title: Las dos divisiones no dan lo mismo
       lead: >-
         La barra sencilla siempre devuelve un float, aunque la división sea exacta. La
-        barra doble descarta la parte decimal y devuelve un entero. El residuo contesta
+        barra doble redondea hacia abajo y, entre enteros, devuelve un entero. El residuo contesta
         otra pregunta: qué sobró después de repartir.
       panel:
         label: Para qué sirve el residuo
@@ -334,11 +334,11 @@ slides:
   - trace:
       eyebrow: Respuesta
       title: Imprime 6, porque precio nunca fue un número
-      headers: [Paso, Instrucción, precio, total, Tipo de total]
+      headers: [Paso, Instrucción, precio, total, Tipo de total, Salida]
       rows:
-        - ["1", "precio = '100'", "'100'", "–", "str"]
-        - ["2", "total = precio * 2", "'100'", "'100100'", "str"]
-        - ["3", "len(total)", "'100'", "'100100'", "6"]
+        - ["1", "precio = '100'", "'100'", "–", "–", "–"]
+        - ["2", "total = precio * 2", "'100'", "'100100'", "str", "–"]
+        - ["3", "len(total)", "'100'", "'100100'", "str", "6"]
       verdict: Multiplicar una cadena por un entero la repite. Para operar con números hace falta int(precio) primero.
 
   - takeaways:
@@ -355,7 +355,7 @@ slides:
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Escribe un programa que pida nombre y edad, y salude con una f-string diciendo en qué año cumplió esa edad.
+      brief: Escribe un programa que pida nombre y edad, y salude con una f-string diciendo en qué año cumplirá 100 años.
       meta:
         - [Entrega, Antes del repaso 2]
         - [Formato, Blackboard · .py]
