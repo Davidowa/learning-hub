@@ -140,12 +140,12 @@ slides:
       annotations:
         - label: Los dos Call
           text: Cada uno va a un procedimiento que hace una cosa. La maestra no sabe cómo, solo qué.
-        - label: La tercera línea
+        - label: La tercera llamada
           text: Summation no se llama con Call. Devuelve un valor, así que va del lado derecho del igual.
         - label: Por qué importa
           text: Los dos primeros actúan sobre la hoja. El tercero contesta una pregunta. Son cosas distintas.
         - label: Riesgo
-          text: Este nombre está declarado también en AmortizationTable.bas. Con los dos módulos abiertos, Call no sabe a cuál ir.
+          text: Estos tres Sub están declarados también en AmortizationTable.bas. Desde un tercer módulo, Call no sabe a cuál ir.
           accent: true
 
   - divider:
@@ -161,7 +161,7 @@ slides:
       rows:
         - ["Devuelve valor", "No", "Sí, el de su propio nombre"]
         - ["Cómo se llama", "Call Nombre", "x = Nombre(args)"]
-        - ["Sale en el cuadro de macros", "Sí, si es público", "No"]
+        - ["Sale en el cuadro de macros", "Sí, si es público y sin parámetros", "No"]
         - ["Se usa en una celda", "No", "Sí, como cualquier fórmula"]
         - ["Para qué sirve", "Actuar sobre la hoja", "Contestar una pregunta"]
 
@@ -253,23 +253,23 @@ slides:
   - code_output:
       eyebrow: Bloque 03 · El pago de la sesión
       title: Tu función, escrita una vez, disponible en toda la hoja
-      filename: hoja.xlsx
+      filename: hoja.xlsm
       lang: excel
-      output_label: Lo que devuelve
+      output_label: Lo que devuelve, con 0.12 en A1
       source: |
         =TasaMensual(A1)
         =Summation(5,3)
         =TasaMensual(A1)*12
       output: |
-        9.48879293458305E-03
+        0.009488793
 
         8
 
-        0.113865515214997
+        0.113865515
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
-      title: Cuatro formas de que una función mienta
+      title: Cuatro formas de que un procedimiento falle
       items:
         - label: Error 01
           title: No asignarle el nombre
@@ -282,7 +282,7 @@ slides:
           desc: Con dos o más argumentos y sin Call, los paréntesis sobran y VBA se queja de sintaxis.
         - label: Error 04
           title: Repetir el nombre en dos módulos
-          desc: Es lo que ya trae el módulo 09 del repositorio. Ninguna llamada sabe a cuál de los dos ir.
+          desc: Es lo que ya trae el módulo 09 del repositorio. Desde un tercer módulo, la llamada no sabe a cuál ir.
 
   - quiz:
       eyebrow: Verificación rápida

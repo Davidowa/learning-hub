@@ -95,7 +95,7 @@ slides:
       title: The four, with the property that separates them
       image: img/en/collections.png
       caption: The syntax gets forgotten and looked up. What you have to remember is the property underneath.
-      alt: Four boxes labelled list, tuple, set and dictionary, each with its syntax and its property
+      alt: Four boxes labeled list, tuple, set and dictionary, each with its syntax and its property
 
   - table:
       eyebrow: Decision table
@@ -142,7 +142,7 @@ slides:
       eyebrow: Diagram
       title: How a list grows on the inside
       blocks:
-        - label: On creation
+        - label: On append
           title: Over-allocates
           desc: Asks for more room than it uses, so the next append costs nothing at all
         - label: On filling up
@@ -186,6 +186,7 @@ slides:
       lang: python
       output_label: Output
       source: |
+        import array
         from sys import getsizeof
 
         numbers = list(range(1000))
@@ -195,7 +196,7 @@ slides:
         print(getsizeof(packed))
       output: |
         8056
-        4064
+        4200
 
   - pitfalls:
       eyebrow: Diagnosis
@@ -217,7 +218,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Processing data in memory
-      lede: Filter, transform and group before anything reaches the disk. Files arrive next week.
+      lede: Filter, transform and group before anything reaches the disk. Files arrive in two weeks.
       block: 3
 
   - code:
@@ -284,7 +285,7 @@ slides:
         - ["1", "numbers = [1, 2, 3, 4]", "[1, 2, 3, 4]", "–", "–"]
         - ["2", "copy = numbers", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Yes"]
         - ["3", "copy.append(5)", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Yes"]
-        - ["4", "len(numbers)", "5", "5", "Yes"]
+        - ["4", "len(numbers) → 5", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Yes"]
       verdict: The equals sign copies the reference, not the contents. Two independent lists have to be asked for, with numbers.copy() or with list(numbers).
 
   - figure:

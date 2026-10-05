@@ -38,7 +38,7 @@ slides:
         - head: Declare and use a pointer
           sub: With the ampersand to take an address and the asterisk to reach the value
         - head: Reserve and release memory
-          sub: With new and delete paired up, and recognise a leak when the second is missing
+          sub: With new and delete paired up, and recognize a leak when the second is missing
         - head: Explain what virtual does
           sub: And predict which function runs when calling through a pointer to the base
         - head: Declare an abstract class
@@ -85,13 +85,13 @@ slides:
       lang: cpp
       output_label: Output
       source: |
-        int n = 42;
-        int* p = &n;
+        int x = 42;
+        int* p = &x;
 
-        std::cout << n << " " << *p << "\n";
+        std::cout << x << " " << *p << "\n";
 
         *p = 99;
-        std::cout << n << "\n";
+        std::cout << x << "\n";
       output: |
         42 42
         99
@@ -165,7 +165,7 @@ slides:
       eyebrow: How it works
       title: Where a virtual call actually goes
       image: img/en/vtable.png
-      caption: The object carries a table holding the address of the function that belongs to it. The call consults the table instead of being settled at compile time.
+      caption: The object carries a pointer to a table holding the address of the function that belongs to it. The call consults the table instead of being settled at compile time.
       alt: A call entering a three-row virtual table and leaving through the row matching the real type
 
   - code:
@@ -232,7 +232,7 @@ slides:
       rows:
         - ["f->area()", "The real object", "While running", "Square, gives 9"]
         - ["f->areaNonVirtual()", "The pointer's type", "At compile time", "Shape, gives -1"]
-      verdict: The difference between the two lines is a single word written in the base class. That is the whole cost of polymorphism, and it is what lets one piece of code handle different objects.
+      verdict: The difference between the two lines is a single word written in the base class. That is all you write to get polymorphism, and it is what lets one piece of code handle different objects.
 
   - pitfalls:
       eyebrow: Diagnosis
@@ -246,10 +246,10 @@ slides:
           desc: Deleting through a base pointer never destroys the child's part, and that is where it leaks
         - label: Error 03
           title: Using the pointer after delete
-          desc: Not an error, undefined behaviour, which sometimes works and is worse for that reason
+          desc: Not an error, undefined behavior, which sometimes works and is worse for that reason
         - label: Error 04
           title: Mixing delete and delete brackets
-          desc: What new brackets reserved is released with delete brackets, and never the other way round
+          desc: What new brackets reserved is released with delete brackets, and never the other way around
 
   - lab:
       eyebrow: Lab

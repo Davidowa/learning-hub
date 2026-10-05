@@ -98,7 +98,7 @@ slides:
       eyebrow: Concepto clave
       title: Qué gana Excel cuando presionas Ctrl+T
       lead: >-
-        Un rango es una dirección. Excel no sabe que la fila 33 es la última, que B3 es un
+        Un rango es una dirección. Excel no sabe que la fila 32 es la última, que B2 es un
         encabezado y no un dato, ni que el bloque es una sola cosa. Una tabla sabe las
         tres, y todo lo que viene después, la fila de totales, las bandas, el crecimiento
         automático, existe porque lo sabe.
@@ -127,9 +127,9 @@ slides:
           desc: Ctrl+T y Ctrl+L abren el mismo cuadro Crear tabla. Presionar Ctrl+T y luego Enter acepta una propuesta que nunca leíste.
         - label: '03'
           title: Lee la dirección
-          desc: Dónde están los datos de la tabla. Tiene que cubrir la fila de encabezados y la última fila de datos. Una celda suelta cerca es lo que la ensancha.
+          desc: ¿Dónde están los datos de la tabla? Tiene que cubrir la fila de encabezados y la última fila de datos. Una celda suelta cerca es lo que la ensancha.
         - label: '04'
-          title: La casilla La tabla tiene encabezados.
+          title: La casilla La tabla tiene encabezados
           desc: Márcala cuando la primera fila trae los nombres de columna. Déjala vacía y Excel inventa Column1, Column2, y todas tus fórmulas dirán Column1.
         - label: '05'
           title: Ponle nombre y presiona Enter
@@ -221,7 +221,7 @@ slides:
       title: La tabla dentro de una fórmula
       lede: >-
         Una vez que las columnas tienen nombre, una fórmula puede decir lo que significa.
-        Lorena[Quantity] son las mismas celdas que E4 a E33, y sobrevive a todo lo que una
+        Lorena[Quantity] son las mismas celdas que E3 a E32, y sobrevive a todo lo que una
         dirección no.
       block: 2
 
@@ -232,7 +232,7 @@ slides:
       lang: excel
       source: |
         En la columna calculada, se escribe una vez y Excel la rellena
-        =MES(Lorena[[#This Row],[Order Date]])
+        =MES(Lorena[[#Esta fila],[Order Date]])
 
         Dentro de la tabla, la forma corta de lo mismo
         =MES([@[Order Date]])
@@ -242,16 +242,16 @@ slides:
         =PROMEDIO(Lorena[Quantity])
 
         El texto del encabezado de una columna
-        =Lorena[#Encabezados,[Quantity]]
+        =Lorena[[#Encabezados],[Quantity]]
       annotations:
         - label: La arroba
           text: La @ quiere decir esta fila. Dentro de la tabla se omite el nombre porque ya estás en ella.
-        - label: Los cuatro elementos especiales
-          text: "Los otros son #Data, #Totals y #All. Toman partes de la tabla, no celdas."
+        - label: Los cinco elementos especiales
+          text: "Los otros son #Datos, #Totales y #Todo. Toman partes de la tabla, no celdas."
         - label: Tecleada, no arrastrada
           text: Teclea el nombre y luego el corchete. Excel lista las columnas y tú eliges una.
         - label: Si falla
-          text: Arrastrar con el mouse escribe $E$4 y la referencia deja de crecer con la tabla.
+          text: Si el mouse toma solo parte de la columna, Excel escribe una dirección que no crece con la tabla.
           accent: true
 
   - compare:
@@ -264,21 +264,21 @@ slides:
         code: |
           =SUMA(Lorena[Quantity])
 
-          30 pedidos hoy
-          31 pedidos después de pegar
+          22 pedidos hoy
+          30 pedidos después de pegar
           La fórmula nunca cambió
           El total se movió solo
       after:
-        label: No califica · la dirección arrastrada
+        label: No califica · la dirección tecleada
         file: total.txt
         lang: excel
         code: |
-          =SUMA(E4:E33)
+          =SUMA(E3:E24)
 
-          30 pedidos hoy
-          31 pedidos después de pegar
+          22 pedidos hoy
+          30 pedidos después de pegar
           La fórmula nunca cambió
-          El pedido 31 no está adentro
+          Los ocho pedidos nuevos no están adentro
       note: >-
         El ejercicio 16 te pide copiar las filas de la hoja Ex1-2 a la tabla de pedidos.
         Ese pegado es la prueba. Una referencia estructurada absorbe las filas nuevas y una
@@ -300,7 +300,7 @@ slides:
         =SUBTOTALES(103,[Status])
 
         Tecleada a mano en la primera fila bajo la tabla
-        =SUMA(E4:E33)
+        =SUMA(E3:E32)
       annotations:
         - label: Dónde está la lista
           text: Sale una lista desplegable en la orilla derecha de cada celda de total. Ese es el control calificado.
@@ -339,7 +339,7 @@ slides:
           Borrar formatos. El ejercicio 14 necesita justo esto después de importar, porque
           Desde el texto/CSV deja los datos como tabla.
       steps:
-        - text: SUMA(Lorena[Quantity]) se vuelve SUMA(E4:E33)
+        - text: SUMA(Lorena[Quantity]) se vuelve SUMA($E$3:$E$32)
         - text: El Administrador de nombres ya no la enlista
         - text: Los colores siguen ahí
           loop: ↺ y apagar los botones de filtro no es el mismo comando
@@ -367,7 +367,7 @@ slides:
           desc: El cuadro abre en Gráficos recomendados. Haz clic en Todos los gráficos y elige la familia en la lista de la izquierda.
         - label: '04'
           title: El subtipo va hasta arriba
-          desc: Columnas agrupadas, Columna apilada, Columna 100 % apilada y las versiones 3D están como iconos arriba del panel. Apunta a cada uno y lee la etiqueta.
+          desc: Columna agrupada, Columna apilada, Columna 100 % apilada y las versiones 3D están como iconos arriba del panel. Apunta a cada uno y lee la etiqueta.
         - label: '05'
           title: Lee la vista previa y acepta
           desc: La vista previa se dibuja con tus datos reales, que es donde se delata un gráfico apilado que debía ser agrupado.
@@ -401,7 +401,7 @@ slides:
         - ["Leyenda", "Derecha, Superior, Izquierda o Inferior", "Arrastrarla hasta ahí"]
         - ["Etiquetas de datos", "Centrar, [Inside End], [Outside End]", "Un cuadro de texto"]
         - ["Títulos de eje", "Horizontal primario o Vertical", "El encabezado de la hoja"]
-        - ["Cualquiera", "Ninguno lo quita", "Presionar Supr"]
+        - ["Título, leyenda o etiquetas", "Ninguno lo quita", "Presionar Supr"]
 
   - tiers:
       eyebrow: Bloque 03 · Cuatro acciones calificadas aparte
@@ -484,11 +484,11 @@ slides:
             solas, el crecimiento automático y la referencia que crece con los datos
         - title: El nombre es la interfaz
           desc: >-
-            Lorena[Quantity] dice lo que significa y sigue a la tabla. E4 a E33 dice dónde
+            Lorena[Quantity] dice lo que significa y sigue a la tabla. E3 a E32 dice dónde
             está, y deja de ser cierto la primera vez que alguien pega una fila
         - title: El gráfico se califica por partes
           desc: >-
-            Tipo y subtipo, series y categorías, cada elemento con su posición, el número
+            Tipo y subtipo, series, categorías, cada elemento con su posición, el número
             de diseño, el número de estilo, el juego de colores y la descripción. Ocho
             acciones aparte, no una sola imagen
 

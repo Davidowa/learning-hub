@@ -80,7 +80,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: done
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: now
         - label: 04 · Session 6
@@ -101,7 +101,7 @@ slides:
       title: The engine calls your methods by their names
       lead: >-
         When a MonoBehaviour is created, Unity looks through the class for methods with names
-        it knows, Start, Update, OnTriggerEnter and about forty others, and remembers the ones
+        it knows, Start, Update, OnTriggerEnter and about fifty others, and remembers the ones
         it found. Nothing registers anything. That is why a typo in Update costs no error at
         all: the method is perfectly valid C# and the engine simply never looks for it.
       panel:
@@ -271,13 +271,13 @@ slides:
         - ["Crate 4", "3", "True", "No"]
       verdict: >-
         The fourth crate arrives, the first condition is already true and the method returns
-        before the counter moves. Nothing is printed, which is the correct behaviour and also
+        before the counter moves. Nothing is printed, which is the correct behavior and also
         the one students report as a bug. Remove the closed check and the door counts to
         seventeen quite happily.
 
   - table:
       eyebrow: Block 02 · The Inspector
-      title: Three ways to declare a field, and what each one costs
+      title: Four ways to declare a field, and what each one costs
       headers: [Declaration, In the Inspector, Reachable from outside]
       rows:
         - ["public float x", "Shown and editable", "Yes, by any script"]
@@ -307,8 +307,8 @@ slides:
         - label: Error 04
           title: The reference nobody dragged in
           desc: >-
-            A serialized field left as None throws NullReferenceException on the first frame
-            that uses it, and the console names the method, not the empty slot.
+            A serialized field left as None fails on the first frame that uses it. In the
+            editor it throws UnassignedReferenceException, which does name the empty slot.
 
   - divider:
       eyebrow: Block 03
@@ -323,10 +323,9 @@ slides:
       title: Three compiler errors you will meet this week
       headers: [Code, What it says, What it usually is]
       rows:
-        - ["CS1002", "; expected", "A missing semicolon above"]
+        - ["CS1002", "; expected", "A missing semicolon on that line"]
         - ["CS0103", "The name does not exist", "A typo, or a missing field"]
         - ["CS0246", "Type or namespace not found", "A missing using directive"]
-        - ["CS0029", "Cannot convert type", "An int put into a float slot"]
 
   - code_output:
       eyebrow: Block 03 · Measured
@@ -335,7 +334,7 @@ slides:
       lang: csharp
       output_label: Console, at run time
       source: |
-        [SerializeField] AudioSource chime;
+        AudioSource chime;
 
         void OnTriggerEnter(Collider other)
         {
@@ -383,14 +382,14 @@ slides:
             transform.Translate(0f, 0f, 2f);
         }
       options:
-        - Two metres, because the vector says 2
-        - A hundred and twenty metres, two per frame
-        - Two metres per second only if the object has a Rigidbody
+        - Two meters, because the vector says 2
+        - A hundred and twenty meters, two per frame
+        - Two meters per second only if the object has a Rigidbody
         - Nothing moves, because Translate needs Time.deltaTime to compile
 
   - code_output:
       eyebrow: Answer · Measured
-      title: Two metres per frame, counted over one second
+      title: Two meters per frame, counted over one second
       filename: Mover.cs
       lang: csharp
       output_label: Console
@@ -416,7 +415,7 @@ slides:
       brief: >-
         Add Spinner.cs to a sign over the door and BayDoor.cs to the trigger. Set the capacity
         to 3 in the Inspector, run four crates down the ramp, and paste the console output.
-        Then break it on purpose in the two ways the pitfalls slide describes.
+        Then break it on purpose in two of the ways the pitfalls slide describes.
       blocks:
         - label: Deliverable
           text: The console for four crates, plus a screenshot of each of the two failures

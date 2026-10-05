@@ -37,7 +37,7 @@ slides:
         - title: La cámara
           desc: >-
             Área de la ruta · Beginner Unity Cameras. El frustum, los campos que le dan forma
-            y los cuatro ajustes que hacen que una escena se dibuje como rectángulo negro.
+            y los cuatro ajustes que dejan a una cámara sin dibujar nada útil.
         - title: Sonido con posición
           desc: >-
             Área de la ruta · Audio Essentials. Un listener, muchas fuentes, y el deslizador
@@ -104,7 +104,7 @@ slides:
         El frustum es una pirámide con la punta en la cámara y la parte de arriba rebanada.
         El Field of View fija qué tanto abre, los clipping planes la cortan en los dos
         extremos, y lo de afuera no se dibuja. Casi toda cámara que no muestra nada apunta a
-        algo que cae fuera de uno de esos cuatro límites.
+        algo que cae fuera de uno de esos límites.
       panel:
         label: La cuenta que vale la pena recordar
         title: El alto es 2 d por la tangente de medio Field of View
@@ -156,8 +156,8 @@ slides:
       value: 11.55 m
       text: Qué tan alto es el mundo visible a diez metros de una cámara de 60 grados
       note: >-
-        La rampa mide 12 metros de largo, así que encuadrarla de frente desde diez metros no
-        deja casi margen. O la cámara se echa para atrás, o el Field of View abre, y lo
+        La rampa mide 12 metros de largo, así que de frente y a diez metros no cabe por 45
+        centímetros. O la cámara se echa para atrás, o el Field of View abre, y lo
         segundo deforma las cajas de las orillas. Ese es el canje que hace toda cámara.
 
   - pitfalls:
@@ -243,7 +243,7 @@ slides:
           desc: Spatial Blend hasta 3D. Nada más de esta lista importa antes de eso
         - label: '04'
           title: Poner las distancias
-          desc: Min 1 y Max 20 para un cuarto de este tamaño. El 500 de fábrica no se apaga adentro
+          desc: Volume Rolloff en Linear, Min 1 y Max 20 para este cuarto. Con Max en 500 casi no baja adentro
         - label: '05'
           title: Alejarse
           desc: Mueve la cámara en Play mode. Si el volumen no baja, el blend sigue en 0
@@ -281,8 +281,8 @@ slides:
             GetComponent corre una vez aquí, no una por caja y nunca una por cuadro.
         - label: Riesgo
           text: >-
-            Dejar Play On Awake marcado hace que el timbre suene también en cuanto carga la
-            escena, antes de que se mueva ninguna caja.
+            Si el Audio Source también trae el clip, Play On Awake marcado lo hace sonar en
+            cuanto carga la escena, antes de que se mueva ninguna caja.
           accent: true
 
   - code_output:
@@ -335,13 +335,13 @@ slides:
       items:
         - label: '01'
           title: Texture Type
-          desc: Ponlo en Sprite, 2D and UI. Antes de eso las opciones de sprite no aparecen
+          desc: Ponlo en Sprite (2D and UI). Antes de eso las opciones de sprite no aparecen
         - label: '02'
           title: Sprite Mode
           desc: Multiple, que es lo que permite que un archivo tenga más de un sprite
         - label: '03'
           title: Abrir el editor
-          desc: El botón Sprite Editor de los ajustes de importación, no un menú de otro lado
+          desc: El botón Open Sprite Editor de los ajustes de importación, no un menú de otro lado
         - label: '04'
           title: Cortar
           desc: Grid By Cell Size, 128 por 128, sin offset y sin padding. Después Slice
@@ -354,7 +354,7 @@ slides:
       title: Seis ajustes que deciden cómo se porta un sprite
       headers: [Ajuste, Qué controla, Nota]
       rows:
-        - ["Texture Type", "Si es un sprite o no", "Sprite, 2D and UI"]
+        - ["Texture Type", "Si es un sprite o no", "Sprite (2D and UI)"]
         - ["Sprite Mode", "Un sprite o varios", "Multiple, para una hoja"]
         - ["Pixels Per Unit", "Pixeles por unidad de mundo", "100 de fábrica"]
         - ["Filter Mode", "Cómo se ve al escalarse", "Point para pixel art"]
@@ -398,12 +398,12 @@ slides:
       points:
         - label: Después, las distancias
           text: >-
-            Con Spatial Blend en 1 y el Max Distance de fábrica en 500, un cuarto de 20
-            metros usa cuatro por ciento de la curva, así que sigue sonando casi plano.
+            Con Spatial Blend en 1, rolloff Linear y el Max Distance de fábrica en 500, un
+            cuarto de 20 metros usa cuatro por ciento de la recta y sigue sonando casi plano.
         - label: El listener
           text: >-
             En la cámara es el lugar habitual, y es correcto para una vista en primera
-            persona. Está mal sólo cuando la cámara queda lejos del personaje que sigue.
+            persona. Está mal solo cuando la cámara queda lejos del personaje que sigue.
         - label: Mono contra estéreo
           text: >-
             Un clip estéreo carga su propio izquierdo y derecho, lo que pelea con el paneo.

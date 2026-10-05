@@ -82,14 +82,14 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · with
-      title: Leer un archivo de texto completo
+      title: Leer la primera línea de un archivo
       filename: leer.py
       source: |
         from pathlib import Path
 
         DATOS = Path(__file__).resolve().parent / "data"
 
-        with (DATOS / "ventas.csv").open(encoding="utf-8") as f:
+        with (DATOS / "sales.csv").open(encoding="utf-8") as f:
             primera = f.readline()
 
         print(primera)
@@ -224,10 +224,10 @@ slides:
         for region, monto in sorted(por_region.items()):
             print(f"{region:<10}{monto:>16,.2f}")
       output: |
-        Centre      3,918,978.30
-        North       4,351,976.40
-        South       1,553,002.85
-        West        3,030,019.45
+        Centre        3,918,978.30
+        North         4,351,976.40
+        South         1,553,002.85
+        West          3,030,019.45
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
@@ -241,21 +241,21 @@ slides:
           desc: C:\\Users\\tu_nombre\\datos.csv no corre en ninguna otra máquina. Usa pathlib y rutas relativas.
         - label: Error 03
           title: Sumar sin convertir
-          desc: Los valores llegan como texto. Sumarlos concatena y el total sale absurdo sin lanzar error.
+          desc: 'Los valores llegan como texto. "15" + "18" da "1518", un total absurdo que no lanza error.'
         - label: Error 04
           title: Olvidar newline al escribir
-          desc: Al escribir un CSV en Windows sin newline vacío, el archivo sale con un renglón en blanco entre cada dato.
+          desc: Al escribir un CSV en Windows sin newline vacío, el archivo sale con un renglón en blanco entre cada registro.
 
   - quiz:
       eyebrow: Verificación rápida
-      question: ¿Qué pasa con el archivo al correr esta línea?
+      question: ¿Qué pasa con el archivo al correr este código?
       filename: modos.py
       source: |
         with open("ventas.csv", "w") as f:
             contenido = f.read()
       options:
         - "Lee el contenido y lo guarda en la variable"
-        - "Borra el archivo al abrirlo y luego falla al leer"
+        - "Borra su contenido al abrirlo y luego falla al leer"
         - "Falla porque el archivo ya existe"
         - "Agrega una línea vacía al final"
 
@@ -285,7 +285,7 @@ slides:
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Clona el módulo A04 del repositorio, corre los dos scripts sobre sales.csv, y escribe media cuartilla explicando por qué el total cambia si no quitas los siete renglones duplicados.
+      brief: Corre los dos scripts del módulo A04 del repositorio sobre sales.csv, y escribe media cuartilla explicando por qué el total cambia si no quitas los siete renglones duplicados.
       meta:
         - [Entrega, Antes de la semana 15]
         - [Formato, Blackboard · .pdf]

@@ -42,7 +42,7 @@ slides:
         - head: Read a server process list
           sub: Every session carries its own identifier and the server sees all of them
         - head: Tell data from information
-          sub: The 8.33 average is on nobody's disc, and one query proves it
+          sub: The 8.50 average is on nobody's disk, and one query proves it
         - head: Rule on the inherited classifications
           sub: Which are alive, which are history with a date, and which one is simply wrong
         - head: Count the objects of a database
@@ -58,7 +58,7 @@ slides:
           state: now
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: todo
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -88,7 +88,7 @@ slides:
       blocks:
         - label: '01'
           title: The database
-          desc: The files the data lives in. Week 3 will list them on the disc itself.
+          desc: The files the data lives in. Week 3 will list them on the disk itself.
         - label: '02'
           title: The DBMS
           desc: The process that serves, stores and protects. It answers your query.
@@ -133,10 +133,10 @@ slides:
         -- on a separate run, root closes session 1028
         KILL CONNECTION 1028;
       output: |
-        CONNECTION_ID()   1116
+        CONNECTION_ID()   1119
         816   event_scheduler  Daemon
-        1118  operador
-        1119  root
+        1118  operador         Sleep
+        1119  root             Query
         Threads_connected  2
 
         ERROR 2013 (HY000): Lost
@@ -145,7 +145,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · where information is born
-      title: Seven grades sit on disc and no 8.33 is stored anywhere
+      title: Seven grades sit on disk and no 8.50 is stored anywhere
       filename: w02_information.sql
       lang: sql
       output_label: Output
@@ -163,6 +163,7 @@ slides:
         promedio_general       8.33
         clave    promedio
         BD1001       8.50
+        …
         filas_que_contienen_8_50  0
 
   - divider:
@@ -229,7 +230,7 @@ slides:
           FROM information_schema.TABLES
          WHERE TABLE_SCHEMA = 'agente_intro01'
            AND TABLE_TYPE = 'BASE TABLE';
-        -- and so on for each catalogue
+        -- and so on for each catalog
       output: |
         TABLE                4
         VIEW                 2
@@ -276,14 +277,13 @@ slides:
       source: |
         CREATE TRIGGER trg_alumno_after_update
         AFTER UPDATE ON alumno FOR EACH ROW
-        BEGIN
           INSERT INTO bitacora_alumno
             (matricula, creditos_antes, creditos_despues, cuando)
           VALUES (OLD.matricula, OLD.creditos, NEW.creditos, NOW());
-        END
 
         UPDATE alumno SET creditos = creditos + 5;
-        SELECT * FROM bitacora_alumno;
+        SELECT matricula, creditos_antes, creditos_despues
+          FROM bitacora_alumno;
       output: |
         A0000001  135  140
         A0000002   60   65
@@ -325,8 +325,7 @@ slides:
       output: |
         v_alumno_activo         YES
         v_creditos_por_materia  NO
-        ROW_COUNT() = 1
-        creditos = 135
+        Query OK, 1 row affected
 
         ERROR 1288 (HY000): The
         target table
@@ -359,7 +358,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · with no ORM connected
-      title: Two of the three refusals come from the server and nobody else
+      title: The first two refusals come from the server and nobody else
       filename: w02_constraints.sql
       lang: sql
       output_label: Output
@@ -387,7 +386,7 @@ slides:
       lang: sql
       output_label: Output
       source: |
-        INSERT INTO inscripcion
+        INSERT INTO inscripcion (matricula, clave, periodo)
           VALUES ('A9999999','BD1001','26PRI');
       output: |
         ERROR 1452 (23000): Cannot add
@@ -409,16 +408,15 @@ slides:
             has its own identifier the server can close without touching a single row
         - title: Four inherited definitions are wrong
           desc: >-
-            A trigger fires per row and not per condition, an event is not a Job, a form is no
-            MySQL object, and an account is identified by user and by host
+            A view is not read-only, an event is not a Job, a form is no MySQL object, and an
+            account is identified by user and by host
         - title: Integrity is the server's job
           desc: >-
-            Today's three errors were raised by the engine with no ORM connected. USER() says
-            where the connection came from and CURRENT_USER() which account let it in, and week 17 cashes that
+            Today's three integrity refusals were raised by the engine with no ORM connected
 
   - homework:
       eyebrow: Homework
-      title: Deliverable and marking criteria
+      title: Deliverable and grading criteria
       brief: >-
         Create a database of your own with at least one table, one view and one trigger, then
         count its objects with the same inventory query. Compare your count row by row against
@@ -436,7 +434,7 @@ slides:
       title: Questions
       subtitle: >-
         Next session we open the DBMS. The three levels of the architecture, one query per
-        level, and a trip down to the disc to see the files today's definition only promised.
+        level, and a trip down to the disk to see the files today's definition only promised.
       meta:
         - [Email, descobarc@up.edu.mx]
         - [Messaging, Institutional Google Chat]

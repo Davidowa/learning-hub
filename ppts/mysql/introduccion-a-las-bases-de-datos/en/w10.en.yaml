@@ -93,8 +93,8 @@ slides:
         - ["MIN / MAX", "The end of the range", "Leaves them out of the compare"]
 
   - code_output:
-      eyebrow: Measured · all five in one statement
-      title: The average of twenty enrolments was worked out from fourteen
+      eyebrow: Measured · all five in two statements
+      title: The average of twenty enrollments was worked out from fourteen
       filename: aggregates.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -158,13 +158,13 @@ slides:
           desc: Filters row by row. No groups and no aggregates exist to ask about yet.
         - label: GROUP BY
           title: Builds the groups
-          desc: Joins the rows sharing a value. From here each row summarises several.
+          desc: Gathers the rows sharing a value. From here each row summarizes several.
           dark: true
         - label: HAVING
           title: After grouping
           desc: Filters groups already formed, and it does take the alias born in SELECT.
       note: >-
-        If a row of the result summarises several rows of the table, every column you name
+        If a row of the result summarizes several rows of the table, every column you name
         has to hold one value for the whole group. That sentence is error 1055.
 
   - code_output:
@@ -239,7 +239,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · the number the coordinator wants
-      title: Six enrolments in Calculus and an average built from four
+      title: Six enrollments in Calculus and an average built from four
       filename: per_subject.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -344,8 +344,8 @@ slides:
         tutores_nulos     6
 
   - code_output:
-      eyebrow: Measured · why the PDF writes a t after the bracket
-      title: Every derived table needs its alias, and a CTE halves the text
+      eyebrow: Measured · why the PDF writes a t after the parenthesis
+      title: Every derived table needs its alias, and a CTE writes the subquery once
       filename: cte.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -382,7 +382,7 @@ slides:
         FROM pago
         GROUP BY YEAR(fecha_pago), MONTH(fecha_pago),
                  MONTHNAME(fecha_pago)
-        ORDER BY anio, mes;
+        ORDER BY anio, MONTH(fecha_pago);
 
         SET lc_time_names = 'es_MX';
         SELECT MONTHNAME('2025-08-10') AS mes;
@@ -425,8 +425,8 @@ slides:
       eyebrow: Lab
       title: The end-of-term figures, in a single session
       brief: >-
-        The coordinator wants five numbers. How many students per career, how many
-        enrolments per subject, which subjects went over capacity, the average grade per
+        The coordinator wants five numbers. How many students per major, how many
+        enrollments per subject, which subjects went over capacity, the average grade per
         subject, and the status matrix. All five come out of two tables and none of them
         needs a JOIN yet.
       blocks:
@@ -447,11 +447,11 @@ slides:
       items:
         - title: Four of five aggregates skip NULL
           desc: >-
-            Only COUNT of star counts everything. The average of the twenty enrolments was
+            Only COUNT of star counts everything. The average of the twenty enrollments was
             computed from fourteen, and the report carries no note saying so
         - title: The week 9 drawing explains 1055
           desc: >-
-            If a row summarises several rows, every column you name has to hold one value
+            If a row summarizes several rows, every column you name has to hold one value
             for the whole group. Grouping by the primary key already meets that condition
         - title: NOT IN is not NOT EXISTS
           desc: >-

@@ -184,10 +184,10 @@ slides:
       title: Cinco reglas que Python aplica siempre
       headers: [Regla, Qué exige, Qué pasa si la rompes]
       rows:
-        - ["Sangría", "Cuatro espacios marcan qué anida", "IndentationError, y no corre nada"]
+        - ["Sangría", "Una sangría pareja marca qué anida", "IndentationError, y no corre nada"]
         - ["Mayúsculas", "Print y print no son iguales", "NameError sobre un nombre inexistente"]
-        - ["Comillas", "El texto va entre comillas, las dos", "SyntaxError en esa línea o la siguiente"]
-        - ["Paréntesis", "Los que abren y cierran, en pares", "SyntaxError, a veces una línea abajo"]
+        - ["Comillas", "El texto va entre comillas, las dos", "SyntaxError en esa misma línea"]
+        - ["Paréntesis", "Los que abren y cierran, en pares", "SyntaxError que señala al que quedó solo"]
         - ["Dos puntos", "Condiciones y ciclos terminan en uno", "SyntaxError justo donde falta"]
 
   - pitfalls:
@@ -202,7 +202,7 @@ slides:
           desc: El mensaje trae el archivo, la línea y el tipo. Las tres cosas antes de tocar nada.
         - label: Error 03
           title: Buscar el error donde lo marca
-          desc: Un paréntesis sin cerrar se reclama en la línea siguiente. El problema está arriba.
+          desc: Un nombre mal escrito al crearlo se reclama donde se usa. El problema está arriba.
         - label: Error 04
           title: Calcular sin imprimir
           desc: El programa corre, no muestra nada y parece roto. Faltaba el print, no el cálculo.
@@ -247,7 +247,7 @@ slides:
         - label: Por qué
           text: Los vas a ver cien veces este semestre. Vale más reconocerlos que evitarlos.
         - label: Pista
-          text: El mensaje termina con el tipo de error. Esa última palabra es la que hay que leer primero.
+          text: La última línea del mensaje empieza con el tipo de error. Esa palabra es la que hay que leer primero.
 
   - takeaways:
       eyebrow: Resumen
@@ -256,14 +256,14 @@ slides:
         - title: Tres estructuras bastan para todo
           desc: Secuencia, selección y repetición. Todo lo demás del semestre es una variante de esas tres
         - title: Python traduce mientras corre
-          desc: Por eso el error aparece cuando llega a esa línea, y no antes de arrancar
+          desc: Antes revisa la sintaxis de todo el archivo. Un NameError, en cambio, aparece al llegar a esa línea
         - title: El error es una pista, no un regaño
           desc: Trae archivo, línea y tipo. Leerlo completo ahorra más tiempo que cualquier otra costumbre
 
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Traduce a Python el pseudocódigo del bono que escribiste la semana pasada, con tus propios valores de entrada, y que imprima el resultado con una etiqueta que se entienda.
+      brief: Traduce a Python el pseudocódigo del bono de la semana pasada, con tus propios valores de entrada, y que imprima el resultado con una etiqueta que se entienda.
       meta:
         - [Entrega, Antes de la semana 4]
         - [Formato, Blackboard · .py]

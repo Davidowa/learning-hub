@@ -29,7 +29,7 @@ slides:
         - title: Converting
           desc: A file stores text. The types are yours to supply, every time
         - title: Your turn
-          desc: Your own file, loaded, cleaned and summarised
+          desc: Your own file, loaded, cleaned and summarized
 
   - objectives:
       eyebrow: Learning objectives
@@ -37,7 +37,7 @@ slides:
       items:
         - head: Open a file with with
           sub: And explain why that form closes the file even when the program fails
-        - head: Recognise the four modes
+        - head: Recognize the four modes
           sub: Read, write, append and create, and which of them erases what was there
         - head: Read a CSV by column name
           sub: With DictReader, instead of counting positions that shift
@@ -64,7 +64,7 @@ slides:
           state: done
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: now
 
   - divider:
@@ -82,7 +82,7 @@ slides:
 
   - code:
       eyebrow: Block 01 · with
-      title: Reading a whole text file
+      title: Reading the first line of a file
       filename: read.py
       source: |
         from pathlib import Path
@@ -219,15 +219,15 @@ slides:
   - code_output:
       eyebrow: Block 03 · The summary
       title: What a PivotTable does, done by hand
-      filename: summarise.py
+      filename: summarize.py
       source: |
         for region, amount in sorted(by_region.items()):
             print(f"{region:<10}{amount:>16,.2f}")
       output: |
-        Centre      3,918,978.30
-        North       4,351,976.40
-        South       1,553,002.85
-        West        3,030,019.45
+        Centre        3,918,978.30
+        North         4,351,976.40
+        South         1,553,002.85
+        West          3,030,019.45
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
@@ -241,21 +241,21 @@ slides:
           desc: C:\\Users\\your_name\\data.csv runs on no other machine. Use pathlib and relative paths.
         - label: Error 03
           title: Adding up without converting
-          desc: Values arrive as text. Adding them glues them together and the total is absurd, with no error raised.
+          desc: 'Values arrive as text. "15" + "18" gives "1518", an absurd total with no error raised.'
         - label: Error 04
           title: Forgetting newline when writing
           desc: Writing a CSV on Windows without an empty newline gives a file with a blank line between every record.
 
   - quiz:
       eyebrow: Quick check
-      question: What happens to the file when this line runs?
+      question: What happens to the file when this code runs?
       filename: modes.py
       source: |
         with open("sales.csv", "w") as f:
             content = f.read()
       options:
         - "It reads the contents into the variable"
-        - "It erases the file on opening, then fails on the read"
+        - "It erases its contents on opening, then fails on the read"
         - "It fails because the file already exists"
         - "It adds a blank line at the end"
 
@@ -285,7 +285,7 @@ slides:
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
-      brief: Clone module A04 from the repository, run both scripts against sales.csv, and write half a page explaining why the total changes if you do not drop the seven duplicated rows.
+      brief: Run both scripts of module A04 from the repository against sales.csv, and write half a page explaining why the total changes if you do not drop the seven duplicated rows.
       meta:
         - [Due, Before week 15]
         - [Format, Blackboard · .pdf]

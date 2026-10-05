@@ -82,7 +82,7 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · with
-      title: Leer un archivo de texto completo
+      title: Leer la primera línea de un archivo de texto
       filename: leer.py
       source: |
         from pathlib import Path
@@ -99,7 +99,7 @@ slides:
         - label: with
           text: Al salir del bloque el archivo se cierra solo, aunque una línea de adentro lance un error.
         - label: encoding
-          text: utf-8 explícito. Sin él, un archivo con acentos se lee distinto en Windows y en Mac.
+          text: utf-8 explícito. Sin él, hasta Python 3.14, un archivo con acentos se lee distinto en Windows y en Mac.
         - label: Riesgo
           text: Fuera del with el archivo ya está cerrado. Leerlo ahí lanza ValueError sobre un archivo cerrado.
           accent: true
@@ -167,7 +167,7 @@ slides:
         - label: DictReader
           text: Convierte cada renglón en un diccionario, con las llaves del encabezado. Es la semana 13 aplicada.
         - label: list
-          text: Sin él solo puedes recorrer una vez. Con él quedan en memoria y se pueden revisar.
+          text: Sin él solo puedes recorrerlos una vez. Con él quedan en memoria y se pueden revisar.
         - label: El archivo real
           text: sales.csv está en el repositorio, en 06 - Advanced/data, y trae 324 renglones.
         - label: Riesgo
@@ -214,7 +214,7 @@ slides:
         - label: Una función
           text: Cada regla de limpieza en su propia función. Así se prueba sola y se reusa en todo el archivo.
         - label: La decisión
-          text: Que vacío valga cero es una decisión de negocio. Podría ser descartar el renglón, y se justifica.
+          text: Que vacío valga cero es una decisión de negocio. Podría ser descartar el renglón. Justifícala.
 
   - code_output:
       eyebrow: Bloque 03 · El resumen
@@ -224,10 +224,32 @@ slides:
         for region, monto in sorted(por_region.items()):
             print(f"{region:<10}{monto:>16,.2f}")
       output: |
-        Centre      3,918,978.30
-        North       4,351,976.40
-        South       1,553,002.85
-        West        3,030,019.45
+        Centre        3,918,978.30
+        North         4,351,976.40
+        South         1,553,002.85
+        West          3,030,019.45
+
+  - code:
+      eyebrow: Bloque 03 · Guardar
+      title: Escribir el resumen en un archivo nuevo
+      filename: guardar.py
+      source: |
+        import csv
+
+        salida = DATOS / "resumen.csv"
+
+        with salida.open("w", newline="", encoding="utf-8") as f:
+            escritor = csv.writer(f)
+            escritor.writerow(["region", "monto"])
+            for region, monto in sorted(por_region.items()):
+                escritor.writerow([region, round(monto, 2)])
+      annotations:
+        - label: Modo w
+          text: Crea el archivo, o vacía el que ya existía. Aquí es lo que quieres, porque el resumen se rehace completo cada vez.
+        - label: 'newline=""'
+          text: El módulo csv pone sus propios saltos de línea. Sin esto, en Windows sale un renglón en blanco entre cada registro.
+        - label: writerow
+          text: Recibe una lista y escribe un renglón, con las comas y las comillas que hagan falta.
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
@@ -238,24 +260,24 @@ slides:
           desc: El modo w borra el contenido en el instante en que abre. El archivo original se pierde sin preguntar.
         - label: Error 02
           title: Rutas escritas a mano
-          desc: C:\\Users\\tu_nombre\\datos.csv no corre en ninguna otra máquina. Usa pathlib y rutas relativas.
+          desc: C:\Users\tu_nombre\datos.csv no corre en ninguna otra máquina. Usa pathlib y rutas relativas.
         - label: Error 03
           title: Sumar sin convertir
-          desc: Los valores llegan como texto. Sumarlos concatena y el total sale absurdo sin lanzar error.
+          desc: Los valores llegan como texto. "15" + "18" da "1518" sin error, y sumarlos a un total que empieza en 0 lanza TypeError.
         - label: Error 04
           title: Olvidar newline al escribir
           desc: Al escribir un CSV en Windows sin newline vacío, el archivo sale con un renglón en blanco entre cada dato.
 
   - quiz:
       eyebrow: Verificación rápida
-      question: ¿Qué pasa con el archivo al correr esta línea?
+      question: ¿Qué pasa con el archivo al correr estas líneas?
       filename: modos.py
       source: |
         with open("ventas.csv", "w") as f:
             contenido = f.read()
       options:
         - "Lee el contenido y lo guarda en la variable"
-        - "Borra el archivo al abrirlo y luego falla al leer"
+        - "Borra el contenido al abrirlo y luego falla al leer"
         - "Falla porque el archivo ya existe"
         - "Agrega una línea vacía al final"
 

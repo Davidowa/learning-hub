@@ -110,6 +110,27 @@ slides:
           title: Propiedades
           desc: F4. Sirve poco hoy y mucho en la semana 5, cuando aparezcan los formularios.
 
+  - figure:
+      eyebrow: Bloque 01 · El recorrido, en pantalla
+      title: Tres de esas cuatro ventanas, en un solo editor
+      image: img/en/vbe-editor.png
+      caption: >-
+        Explorador de proyectos arriba a la izquierda, Propiedades debajo, y la ventana de
+        código en el resto. El árbol dice VBAProject, luego Microsoft Excel Objects con
+        Sheet1 y ThisWorkbook, luego Modules con Module1, que es donde está FormatHeader.
+        La captura es de la interfaz en inglés.
+      alt: El editor de Visual Basic para Aplicaciones con el Explorador de proyectos, la ventana Propiedades y una ventana de código con un Sub.
+
+  - figure:
+      eyebrow: Bloque 01 · Correrla desde la hoja
+      title: La lista que Excel muestra con Alt + F8
+      image: img/en/macro-dialog.png
+      caption: >-
+        Las macros del libro, vistas desde Excel y no desde el editor. Solo salen los Sub sin
+        parámetros, y Paso a paso abre en el editor la que elijas, detenida en su primer
+        renglón. La captura es de la interfaz en inglés.
+      alt: El cuadro Macro con la lista vacía, los botones Ejecutar, Paso a paso, Modificar, Crear, Eliminar y Opciones, y Macros en con Todos los libros abiertos.
+
   - divider:
       eyebrow: Bloque 02
       title: Dónde vive el código
@@ -134,9 +155,9 @@ slides:
           title: Un renglón
           desc: Objeto, propiedad y valor
       note: >-
-        El cuadro de macros de Excel solo lista procedimientos, y solo los de los módulos
-        estándar. Si tu macro no aparece ahí, casi siempre es porque la escribiste dentro
-        del módulo de una hoja.
+        El cuadro de macros de Excel solo lista procedimientos, y solo los Sub sin
+        parámetros. Si escribiste tu macro dentro del módulo de una hoja, sale con el
+        nombre del módulo delante, como Hoja1.MiMacro.
 
   - code:
       eyebrow: Bloque 02 · El procedimiento mínimo
@@ -174,7 +195,7 @@ slides:
 
   - table:
       eyebrow: Bloque 02 · Vocabulario
-      title: Tres palabras que se usan como si fueran una
+      title: Cinco palabras que se usan como si fueran una
       headers: [Palabra, Qué es exactamente, Dónde la ves]
       rows:
         - ["Sub", "Un procedimiento que hace algo y no devuelve nada", "De Sub a End Sub"]
@@ -251,10 +272,10 @@ slides:
       items:
         - label: Error 01
           title: Escribir fuera de un procedimiento
-          desc: Una instrucción suelta arriba del primer Sub no corre nunca. Todo lo que se ejecuta vive entre Sub y End Sub.
+          desc: Una instrucción suelta arriba del primer Sub no corre, y VBA la marca como error de compilación. Todo lo que se ejecuta vive entre Sub y End Sub.
         - label: Error 02
-          title: Buscar la macro en el cuadro equivocado
-          desc: El cuadro de macros solo lista los módulos estándar. Si la escribiste en la hoja, ahí no aparece.
+          title: Escribir la macro en el módulo de la hoja
+          desc: En el cuadro de macros sale como Hoja1.MiMacro, y ese módulo es para los eventos de la hoja. Las macros van en un módulo estándar.
         - label: Error 03
           title: Correr con el cursor en otro procedimiento
           desc: F5 corre el procedimiento donde está parado el cursor, no el que estabas leyendo.
@@ -298,16 +319,16 @@ slides:
           desc: Proyecto, módulo, procedimiento e instrucción. Todo lo que sigue en el semestre se cuelga de ese árbol
         - title: El amarillo es el renglón pendiente
           desc: Lo que está resaltado todavía no ocurrió, y confundir eso hace que un error parezca estar un renglón antes
-        - title: Dónde lo pones cambia si aparece
-          desc: El cuadro de macros solo lista módulos estándar, y la hoja y ThisWorkbook se usan para eventos
+        - title: Dónde lo pones cambia cómo aparece
+          desc: Fuera de un módulo estándar la macro sale como Hoja1.MiMacro, y la hoja y ThisWorkbook se usan para eventos
 
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
       brief: >-
         Entrega un módulo con tres procedimientos escritos a mano: uno que muestre un
-        mensaje, uno que escriba tu nombre en A1, y uno que llame a los dos anteriores
-        con Call.
+        mensaje, uno que escriba tu nombre en A1, y uno que oculte la columna D y la
+        vuelva a mostrar, como la macro que grabaste en la semana 1.
       meta:
         - [Entrega, Antes de la semana 3]
         - [Formato, Blackboard · .bas y .xlsm]
@@ -315,7 +336,7 @@ slides:
       rubric:
         - ["Estructura", "30 %", "Tres procedimientos con nombre propio, cada uno cerrado con End Sub"]
         - ["Ejecución", "40 %", "Los tres corren desde el cuadro de macros sin marcar error"]
-        - ["El tercero", "30 %", "Llama a los otros dos y no repite su código"]
+        - ["El tercero", "30 %", "Oculta y vuelve a mostrar la columna D, sin los comentarios que deja la grabadora"]
 
   - closing:
       title: Preguntas

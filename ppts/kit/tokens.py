@@ -386,8 +386,103 @@ UNITY = Palette(
                     dot='33393F', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
 )
 
+# React Native. React publishes one colour, the cyan 61DAFB, and like the Python
+# yellow it cannot touch paper: 1.53:1. It runs bright on the dark canvas, where it
+# is 9.7:1, and is darkened to 086C8C for structure on paper (5.6:1, white on it
+# 5.9:1). The canvas is 20232A, the dark surface of the React documentation, so a
+# React Native deck does not read as one of the navy courses. React has no second
+# brand colour, so the accent pair stays the academy's duck orange (5.9:1 on this
+# canvas). Comment grey is re-tuned to 8E99A8 (5.5:1): the shared 7789A6 is 4.4:1
+# here.
+_REACT_DARK = dict(
+    NAVY='20232A',           # react.dev dark surface, white text at 14.8:1
+    ON_NAVY='F7F8FA',        # 14.8:1
+    ON_NAVY_SOFT='C3CAD5',   # 9.5:1
+    ON_NAVY_DIM='8E99A8',    # 5.5:1
+)
+
+REACT = Palette(
+    **{**_NEUTRAL, **_REACT_DARK},
+    BLUE='086C8C',       # React cyan darkened, 5.6:1 on paper
+    BLUE_FILL='086C8C',  # white text on it is 5.9:1
+    BLUE_DEEP='0B5A73',
+    ACCENT='E8871E',     # duck orange on the React canvas, 5.9:1
+    ACCENT_LO='B4530A',  # duck orange on paper, 4.7:1
+    ON_NAVY_LINK='61DAFB',  # brand cyan, 9.7:1 on the canvas
+    DARK_CODE=dict(bg='20232A', text='E6EDF7', kw='61DAFB', fn='9EE7FB', num='F0A868',
+                   str='E3B778', com='8E99A8', cls='B8EEFC', op='B5C2D1', self='F0A868',
+                   dot='E8871E', chrome='8E99A8', rule='F7F8FA', header=None),
+    LIGHT_CODE=dict(bg='FFFFFF', text='0F172A', kw='086C8C', fn='0B5A73', num='B4530A',
+                    str='B4530A', com='5B6B84', cls='086C8C', op='5B6B84', self='B4530A',
+                    dot='086C8C', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
+)
+
+# Swift. The brand is the orange F05138, which is 3.3:1 on paper, so structure takes
+# it darkened to C23A22 (5.0:1, white on it 5.4:1) and the bright orange only shows
+# on the dark canvas as the link colour (FA7343, 6.2:1). Because the structure is
+# already orange, the duck cannot be the accent here: "this is the risk" would
+# vanish into the structure colour. The accent moves to the Apple system blue,
+# 64A8FF on the canvas (7.0:1) and 0057D9 on paper (5.9:1). The canvas is a warm
+# charcoal, 1F1A1C, which separates from navy, the React canvas and Unity black.
+# The syntax theme follows Xcode's default dark theme: pink keywords, cyan types,
+# green project functions, red-orange strings, yellow numbers.
+_SWIFT_DARK = dict(
+    NAVY='1F1A1C',           # warm charcoal, white text at 16.2:1
+    ON_NAVY='F7F8FA',        # 16.2:1
+    ON_NAVY_SOFT='D2C9CB',   # 10.6:1
+    ON_NAVY_DIM='9E9294',    # 5.7:1
+)
+
+SWIFT = Palette(
+    **{**_NEUTRAL, **_SWIFT_DARK},
+    BLUE='C23A22',       # Swift orange darkened, 5.0:1 on paper
+    BLUE_FILL='C23A22',  # white text on it is 5.4:1
+    BLUE_DEEP='A8341C',  # 6.2:1 on paper
+    ACCENT='64A8FF',     # Apple system blue on the canvas, 7.0:1
+    ACCENT_LO='0057D9',  # the same blue on paper, 5.9:1
+    ON_NAVY_LINK='FA7343',  # Swift orange lightened, 6.2:1 on the canvas
+    DARK_CODE=dict(bg='1F1A1C', text='E6EDF7', kw='FF7AB2', fn='67B7A4', num='D0BF69',
+                   str='FF8170', com='8A949E', cls='5DD8FF', op='C9C1C3', self='FF7AB2',
+                   dot='FA7343', chrome='9E9294', rule='F7F8FA', header=None),
+    LIGHT_CODE=dict(bg='FFFFFF', text='0F172A', kw='A8341C', fn='0B5A73', num='0057D9',
+                    str='A8341C', com='5B6B84', cls='0057D9', op='5B6B84', self='A8341C',
+                    dot='C23A22', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
+)
+
+# Commerce, for the e-commerce fundamentals course. It is not a programming
+# language and has no brand, so the palette is chosen to separate on sight from
+# every course already in the file: a raspberry structure colour, 9D174D (7.4:1 on
+# paper, white on it 7.9:1), on an aubergine canvas, 2A0E1F, with an amber accent
+# that reads as "price tag": F5A524 on the canvas (8.7:1) and 92400E on paper
+# (6.7:1). The few code cards in the course (JSON payloads, a webhook, an API
+# call) use the generic scanner.
+_COMMERCE_DARK = dict(
+    NAVY='2A0E1F',           # aubergine, white text at 16.7:1
+    ON_NAVY='F7F8FA',        # 16.7:1
+    ON_NAVY_SOFT='E6C9D6',   # 11.6:1
+    ON_NAVY_DIM='B48FA2',    # 6.3:1
+)
+
+COMMERCE = Palette(
+    **{**_NEUTRAL, **_COMMERCE_DARK},
+    BLUE='9D174D',       # raspberry, 7.4:1 on paper
+    BLUE_FILL='9D174D',  # white text on it is 7.9:1
+    BLUE_DEEP='7E1D49',  # 9.2:1 on paper
+    ACCENT='F5A524',     # amber on the canvas, 8.7:1
+    ACCENT_LO='92400E',  # amber darkened, 6.7:1 on paper
+    ON_NAVY_LINK='F9A8D4',  # 9.8:1 on the canvas
+    DARK_CODE=dict(bg='2A0E1F', text='E6EDF7', kw='F9A8D4', fn='FBCFE8', num='FDBA74',
+                   str='E3B778', com='A58597', cls='F472B6', op='D9B8C8', self='F5A524',
+                   dot='F5A524', chrome='B48FA2', rule='F7F8FA', header=None),
+    LIGHT_CODE=dict(bg='FFFFFF', text='0F172A', kw='9D174D', fn='7E1D49', num='92400E',
+                    str='92400E', com='5B6B84', cls='9D174D', op='5B6B84', self='92400E',
+                    dot='9D174D', chrome='5B6B84', rule='DBE3EF', header='EEF2F8'),
+)
+
 PALETTES = {'generic': GENERIC, 'python': PYTHON, 'cpp': CPP, 'csharp': CSHARP,
-            'vba': VBA, 'excel': EXCEL, 'mysql': MYSQL, 'unity': UNITY}
+            'vba': VBA, 'excel': EXCEL, 'mysql': MYSQL, 'unity': UNITY,
+            'react': REACT, 'react-native': REACT, 'swift': SWIFT, 'swiftui': SWIFT,
+            'commerce': COMMERCE, 'ecommerce': COMMERCE}
 
 
 def palette(name: str) -> Palette:

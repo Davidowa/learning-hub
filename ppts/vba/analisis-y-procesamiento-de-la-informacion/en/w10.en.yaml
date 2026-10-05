@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 10 · Units 1 and 3 · Procedures and functions
       title: Information Analysis and Processing
       subtitle: Splitting a long macro into pieces that test on their own, and writing a function Excel accepts in a cell.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 10 of 17]
 
   - agenda:
@@ -140,12 +140,12 @@ slides:
       annotations:
         - label: The two Calls
           text: Each goes to a procedure that does one thing. The master does not know how, only what.
-        - label: The third line
+        - label: The third call
           text: Summation is not called with Call. It returns a value, so it sits on the right of the equals.
         - label: Why it matters
           text: The first two act on the sheet. The third answers a question. They are different things.
         - label: Risk
-          text: This name is declared in AmortizationTable.bas as well. With both modules open, Call cannot choose.
+          text: These three Subs are declared in AmortizationTable.bas as well. From a third module, Call cannot choose.
           accent: true
 
   - divider:
@@ -161,7 +161,7 @@ slides:
       rows:
         - ["Returns a value", "No", "Yes, through its own name"]
         - ["How it is called", "Call Name", "x = Name(args)"]
-        - ["Shows in the macro dialog", "Yes, if public", "No"]
+        - ["Shows in the macro dialog", "Yes, if public with no parameters", "No"]
         - ["Usable in a cell", "No", "Yes, like any formula"]
         - ["What it is for", "Acting on the sheet", "Answering a question"]
 
@@ -253,23 +253,23 @@ slides:
   - code_output:
       eyebrow: Block 03 · The payoff
       title: Your function, written once, available across the sheet
-      filename: sheet.xlsx
+      filename: sheet.xlsm
       lang: excel
-      output_label: What it returns
+      output_label: What it returns, with 0.12 in A1
       source: |
         =MonthlyRate(A1)
         =Summation(5,3)
         =MonthlyRate(A1)*12
       output: |
-        9.48879293458305E-03
+        0.009488793
 
         8
 
-        0.113865515214997
+        0.113865515
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
-      title: Four ways for a function to lie
+      title: Four ways for a procedure to go wrong
       items:
         - label: Error 01
           title: Never assigning the name
@@ -282,7 +282,7 @@ slides:
           desc: With two or more arguments and no Call, the parentheses are wrong and VBA complains of syntax.
         - label: Error 04
           title: Repeating the name in two modules
-          desc: Which is what module 09 of the repository already carries. No call knows which of the two to reach.
+          desc: Which is what module 09 of the repository already carries. A call from a third module cannot tell which to reach.
 
   - quiz:
       eyebrow: Quick check
@@ -314,7 +314,7 @@ slides:
         - label: Submission
           text: The module exported and the .xlsm with the function used in at least three cells
         - label: Constraint
-          text: The master stays under ten lines, and no procedure goes past forty.
+          text: The master is ten lines at most, and no procedure goes past forty.
         - label: The test
           text: Run each procedure alone from the macro dialog. If one breaks by itself, it depends on another silently.
 
@@ -327,7 +327,7 @@ slides:
         - title: Without ByVal, the change escapes
           desc: The default is by reference, so the procedure modifies the variable belonging to whoever called it
         - title: Your function lives in the sheet
-          desc: Written once in a module, Excel recognises it in any cell as though it shipped with the program
+          desc: Written once in a module, Excel recognizes it in any cell as though it shipped with the program
 
   - homework:
       eyebrow: Assignment

@@ -30,6 +30,7 @@ T = {  # every label the figures use, so a new language is one dict away
         list_='lista', tuple_='tupla', set_='conjunto', dict_='diccionario',
         ordered='ordenada', immutable='inmutable', unique='sin repetidos', bykey='por llave',
         caught='cada except atrapa su tipo', clean='sin excepción',
+        exc_expr='10 / edad',            # the variable the w01.5 and w11 code divides by
         klass='clase', object_='objeto', objects='objetos',
         blueprint='el molde', instances='cada objeto con su propio estado',
         shared='se comparte', own='propio de cada objeto',
@@ -59,6 +60,7 @@ T = {  # every label the figures use, so a new language is one dict away
         cpp_acc_note='los tres los cobra el compilador, y saltárselos da error C2248',
         cpp_uml_attrs=('- titulo: string', '- autor: string', '- prestado: bool'),
         cpp_uml_code=('class Libro {', 'std::string titulo;', 'void prestar();'),
+        cpp_ctor='Rectangulo',           # the w06 class, whose constructor bears its name
         vr_by_value='por valor', vr_by_ref='por referencia', vr_copy='se copia',
         vr_sig_value='void duplicar(int n)', vr_sig_ref='void duplicarRef(int& n)',
         vr_caller='original', vr_note_value='cambiar n no toca a original',
@@ -78,6 +80,7 @@ T = {  # every label the figures use, so a new language is one dict away
         vt_real='el objeto es un Cuadrado',
         vt_note='la llamada es una sola y el tipo real decide cuál corre',
         # w07 · inheritance depth
+        hier_kids=('ArchivoStream', 'RedStream', 'MemoriaStream'),   # as the w07 code names them
         hier_a='Animal', hier_b='Ave', hier_c='Gallina', hier_fly='volar()',
         hier_good='dos niveles: cada hijo lee a su manera',
         hier_bad='tres niveles, y la gallina hereda volar()',
@@ -96,7 +99,8 @@ T = {  # every label the figures use, so a new language is one dict away
         fl_bad='sin with, un error se salta el close',
         fl_note='el archivo abierto retiene el búfer, así que lo escrito puede no llegar al disco',
         # w13 · sequential and random access
-        st_data='HOLA MUNDO!!', sequential='lectura secuencial, una posición a la vez',
+        # twelve cells, one per byte, so plain ASCII: '¡' would take two bytes in UTF-8
+        st_data='HOLA A TODOS', sequential='lectura secuencial, una posición a la vez',
         st_note='seek mueve el cursor de un salto; tell dice dónde quedó',
         # w14 · the Qt event loop
         el_user='clic del usuario', el_queue='cola de eventos',
@@ -145,6 +149,7 @@ T = {  # every label the figures use, so a new language is one dict away
         list_='list', tuple_='tuple', set_='set', dict_='dictionary',
         ordered='ordered', immutable='immutable', unique='no duplicates', bykey='by key',
         caught='each except catches its own type', clean='no exception',
+        exc_expr='10 / age',
         klass='class', object_='object', objects='objects',
         blueprint='the cutter', instances='each object with its own state',
         shared='shared', own='one per object',
@@ -174,6 +179,7 @@ T = {  # every label the figures use, so a new language is one dict away
         cpp_acc_note='all three are enforced by the compiler, and breaking one is error C2248',
         cpp_uml_attrs=('- title: string', '- author: string', '- onLoan: bool'),
         cpp_uml_code=('class Book {', 'std::string title;', 'void lend();'),
+        cpp_ctor='Rectangle',
         vr_by_value='by value', vr_by_ref='by reference', vr_copy='copied',
         vr_sig_value='void twice(int n)', vr_sig_ref='void twiceRef(int& n)',
         vr_caller='original', vr_note_value='changing n does not touch original',
@@ -193,6 +199,7 @@ T = {  # every label the figures use, so a new language is one dict away
         vt_real='the object is a Square',
         vt_note='there is one call site and the real type decides which one runs',
         # w07 · inheritance depth
+        hier_kids=('FileStream', 'NetworkStream', 'MemoryStream'),
         hier_a='Animal', hier_b='Bird', hier_c='Chicken', hier_fly='fly()',
         hier_good='two levels: each child reads its own way',
         hier_bad='three levels, and the chicken inherits fly()',
@@ -279,8 +286,10 @@ def slicing(t, lang):
 
     cut = x0 + 3 * tw + 2.5 * gap
     p.line(cut, y0 - 6, cut, y0 + th + 6, w=5, color=YELLOW, passes=1, wobble=0.8)
-    p.arrow(cut + 300, y0 - 96, cut + 12, y0 - 14)
-    p.text(cut + 320, y0 - 104, t['not_in'], 32, anchor='start')
+    # straight down the gap between the 2 and the 3: a slanted arrow from the
+    # right crossed out the very index the label is about
+    p.arrow(cut, y0 - 116, cut, y0 - 12)
+    p.text(cut + 22, y0 - 92, t['not_in'], 32, anchor='start')
     return p
 
 
@@ -367,7 +376,7 @@ def exceptions(t, lang):
     p = Pen(WS, HS, seed=61)
     p.rect(120, 120, 520, 220, r=22, fill=YELLOW_WASH)
     p.mono(380, 200, 'try:', 40)
-    p.mono(380, 268, '10 / age', 32, MUTED)
+    p.mono(380, 268, t['exc_expr'], 32, MUTED)
 
     for i, (name, y) in enumerate((('ValueError', 470), ('ZeroDivisionError', 640))):
         p.arrow(660, 250 + i * 40, 830, y - 30, wavy=True)
@@ -377,7 +386,8 @@ def exceptions(t, lang):
     p.arrow(400, 350, 400, 690)
     p.rect(180, 690, 440, 96, r=18)
     p.mono(400, 750, 'else:', 34)
-    p.text(400, 660, t['clean'], 26, MUTED)
+    # beside the arrow, not on it: centred on x=400 the shaft struck the label out
+    p.text(490, 530, t['clean'], 26, MUTED)
     p.text(1075, 250, t['caught'], 28, MUTED)
     return p
 
@@ -438,7 +448,7 @@ def parallel_lists(t, lang):
     return p
 
 
-def class_object(t, lang):
+def _class_object(t, ctor):
     p = Pen(W, H, seed=31)
     p.rect(110, 230, 380, 300, r=22)
     p.text(300, 300, t['klass'], 46)
@@ -449,7 +459,7 @@ def class_object(t, lang):
 
     p.arrow(520, 380, 640, 380)
     p.rect(660, 250, 340, 260, r=20, fill=YELLOW_WASH)
-    p.mono(830, 350, '__init__', 38)
+    p.mono(830, 350, ctor, 38)
     p.text(830, 430, '(  )', 40, MUTED)
     p.arrow(1030, 380, 1130, 380)
 
@@ -463,6 +473,16 @@ def class_object(t, lang):
     p.text(mid, 540, t['objects'], 34)
     p.text(mid, 596, t['instances'], 26, MUTED)
     return p
+
+
+def class_object(t, lang):
+    return _class_object(t, '__init__')
+
+
+def class_object_cpp(t, lang):
+    # Same drawing, one label. __init__ is Python; a C++ constructor has no name
+    # of its own and is called by the name of the class, as the w06 code writes it.
+    return _class_object(t, t['cpp_ctor'])
 
 
 def class_vs_instance(t, lang):
@@ -724,7 +744,7 @@ def hierarchy(t, lang):
 
     p.rect(320, 150, 240, 96, r=18, fill=BLUE_WASH)
     p.mono(440, 210, 'Stream', 34)
-    for i, name in enumerate(('FileStream', 'NetworkStream', 'MemoryStream')):
+    for i, name in enumerate(t['hier_kids']):
         x = 40 + i * 280
         p.rect(x, 380, 230, 96, r=18, fill=YELLOW_WASH)
         p.mono(x + 115, 438, name, 22)
@@ -815,11 +835,13 @@ def seek_tell(t, lang):
         p.mono(x + cw / 2, y0 + 80, data[i] if i < len(data) else ' ', 40)
         p.mono(x + cw / 2, y0 - 28, str(i), 24, BLUE)
 
+    # the jump leaves from above the 0 and lands above the 7; run down to the
+    # cell, the arrow struck out the index it was pointing at
     start, target = x0 + cw / 2, x0 + 7 * cw + cw / 2
-    p.line(start, y0 - 62, start, 168, w=2.4)
-    p.line(start, 168, target, 168, w=2.4)
-    p.arrow(target, 168, target, y0 - 14)
-    p.mono((start + target) / 2, 126, 'f.seek(7)', 32, BLUE)
+    p.line(start, y0 - 62, start, 148, w=2.4)
+    p.line(start, 148, target, 148, w=2.4)
+    p.arrow(target, 148, target, y0 - 58)
+    p.mono((start + target) / 2, 116, 'f.seek(7)', 32, BLUE)
 
     for i in range(7):
         xa = x0 + i * cw + cw / 2
@@ -1147,6 +1169,14 @@ FIGURES = {
         reuse='The same analogy is already in docs/02-oop.md, so the drawing and the '
               'written notes reinforce each other.',
         used_by=['w03']),
+    'class-object-cpp': dict(
+        fn=class_object_cpp, size='21:9',
+        about='Class, constructor, objects, with the constructor labelled the C++ way: '
+              'the name of the class and its parentheses.',
+        reuse='The COM103 twin of class-object. The analogy is identical; only the '
+              'middle box changes, because a C++ constructor is called by the name of '
+              'the class where Python calls __init__.',
+        used_by=['w06']),
     'class-vs-instance': dict(
         fn=class_vs_instance, size='21:9',
         about='One list on the class shared by every object, against one list per object.',

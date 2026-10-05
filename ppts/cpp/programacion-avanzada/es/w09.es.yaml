@@ -73,10 +73,10 @@ slides:
 
   - figure:
       eyebrow: Diagnóstico
-      title: Dos niveles funcionan, cuatro empiezan a doler
+      title: Dos niveles funcionan, tres empiezan a doler
       image: img/es/hierarchy.png
       caption: La cadena larga hereda comportamiento que nadie pidió. Cada nivel nuevo es una decisión que ya no se puede deshacer.
-      alt: Un árbol de dos niveles junto a una cadena de cuatro que termina heredando algo que no corresponde
+      alt: Un árbol de dos niveles junto a una cadena de tres que termina heredando algo que no corresponde
 
   - code:
       eyebrow: Herencia
@@ -126,7 +126,7 @@ slides:
       eyebrow: Acceso
       title: Para qué sirve el nivel de en medio
       image: img/es/access-levels-cpp.png
-      caption: La columna derecha es la que apareció esta semana. Protegido es lo que la hija puede ver y el mundo no.
+      caption: La columna derecha es la que esta semana empieza a contar. Protegido es lo que la hija puede ver y el mundo no.
       alt: Tres miembros de una clase contra dos columnas, desde fuera y desde una clase hija, con palomas y cruces
 
   - divider:
@@ -153,6 +153,9 @@ slides:
         private:
             Motor motor;
         };
+
+        Auto a;
+        a.encender();
       output: |
         motor encendido
 
@@ -183,7 +186,7 @@ slides:
         - label: Suena raro
           text: Un auto es un motor. Una nómina es un empleado. Ahí lo que hay es contención.
         - label: La duda típica
-          text: Una pila es un vector, o tiene un vector. Tiene. La pila expone menos operaciones, no más.
+          text: ¿Una pila es un vector, o tiene un vector? Tiene. La pila expone menos operaciones, no más.
 
   - quiz:
       eyebrow: Pregunta rápida
@@ -211,6 +214,7 @@ slides:
         - ["a.getNombre()", "main, desde fuera", "público", "Sí"]
         - ["a.nombre", "main, desde fuera", "protegido", "No, C2248"]
         - ["nombre dentro de Alumno", "la clase hija", "protegido", "Sí"]
+        - ['Persona p("Ana")', "main, desde fuera", "público", "Sí"]
         - ["p.getNombre()", "main, desde fuera", "público", "Sí"]
       verdict: Desde main, protegido y privado se comportan igual. La única diferencia aparece dentro de la clase derivada, y por eso el nivel no tiene sentido sin herencia.
 
@@ -257,7 +261,7 @@ slides:
   - homework:
       eyebrow: Para la próxima sesión
       title: La jerarquía terminada y una decisión justificada
-      brief: Terminen el laboratorio y agreguen una tercera clase que hayan tenido que decidir entre heredar y componer, con un comentario de bloque que explique en tres renglones por qué eligieron una y no la otra.
+      brief: Terminen el laboratorio y agreguen una cuarta clase que hayan tenido que decidir entre heredar y componer, con un comentario de bloque que explique en tres renglones por qué eligieron una y no la otra.
       meta:
         - [Entrega, Antes de la sesión 10]
         - [Formato, Blackboard · .zip sin la carpeta x64]

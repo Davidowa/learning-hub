@@ -36,11 +36,11 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Configure a console project
-          sub: With the standard set to C++20, which is not switched on in any configuration by default
+          sub: With the standard on C++20 in both configurations, and checked with _MSVC_LANG
         - head: Explain what runs before your program
           sub: Preprocessor, compiler and linker, and which of the three is the one complaining
         - head: Read a complete C++ program
-          sub: The include, the main function, the return value and where the name std comes from
+          sub: The include, the main function and the return value
         - head: Find a bug with the debugger
           sub: Breakpoint, stepping one line at a time, and the locals window
 
@@ -68,7 +68,7 @@ slides:
   - divider:
       eyebrow: Block 01
       title: The working environment
-      lede: Half an hour spent well today avoids the problem that shows up in week nine and that nobody connects back to this session.
+      lede: Getting the setup right today avoids the problem that shows up in week nine and that nobody connects back to this session.
       block: 1
 
   - concept:
@@ -83,7 +83,7 @@ slides:
         title: Open the .sln, not the .cpp
         note: >-
           Open the loose .cpp and Visual Studio will edit it happily, but there is no
-          project to build, and half the menu turns grey without telling you why.
+          project to build, and half the menu turns gray without telling you why.
       steps:
         - text: The solution groups projects
         - text: The project holds the options
@@ -98,7 +98,7 @@ slides:
         - [".sln", "The solution and its list of projects", "Almost never, and never by hand"]
         - [".vcxproj", "The project and its build options", "Through the properties window"]
         - [".cpp", "The source code you write", "All the time"]
-        - [".h", "What several .cpp files share", "From unit 3 onwards"]
+        - [".h", "What several .cpp files share", "From unit 3 onward"]
         - ['x64\Debug\', "What the build produces", "Never, and it is not submitted"]
 
   - steps:
@@ -107,7 +107,7 @@ slides:
       items:
         - label: Step 01
           title: Open properties
-          desc: Right click the project, not the solution. They are different windows.
+          desc: Right-click the project, not the solution. They are different windows.
         - label: Step 02
           title: All configurations
           desc: Change it at the top before touching anything, or Release keeps its old value
@@ -119,7 +119,7 @@ slides:
           desc: The entry reads ISO C++20 Standard and passes /std:c++20 underneath
         - label: Step 05
           title: Rebuild everything
-          desc: Build, Rebuild Solution. Changing the standard does not redo what is already compiled.
+          desc: Build, Rebuild Solution. That way every file goes through the compiler again under the new standard.
 
   - diagram:
       eyebrow: Configurations
@@ -127,11 +127,11 @@ slides:
       blocks:
         - label: While you learn
           title: Debug
-          desc: Unoptimised and carrying symbol information. The debugger can stop the program and show you every variable.
+          desc: Unoptimized and carrying symbol information. The debugger can stop the program and show you every variable.
           dark: true
         - label: When you ship
           title: Release
-          desc: Optimised and stripped of symbols. It runs faster and the debugger stops being much use to you.
+          desc: Optimized. It runs faster and, since the compiler rearranges the code, the debugger stops being much use to you.
       note: >-
         Almost every project option is stored per configuration, the standard included.
         That is the reason for step 02, and also the reason a project builds on the machine
@@ -171,7 +171,7 @@ slides:
         - label: Line 6
           text: Zero tells the system it went well. Any other number means it did not.
         - label: Risk
-          text: No accents, on purpose. The Windows console is not UTF-8 and they print as garbage.
+          text: Keep accented letters out. The Windows console is not UTF-8 by default and they print as garbage.
           accent: true
 
   - code_output:
@@ -283,7 +283,7 @@ slides:
       rows:
         - ["Locals", "The live variables of this function", "Almost always. It is the first one you open."]
         - ["Watch", "Only the expressions you add yourself", "When there are many variables and two of them matter"]
-        - ["Call Stack", "Who called whom to get here", "From unit 3 onwards, once there are functions"]
+        - ["Call Stack", "Who called whom to get here", "From unit 3 onward, once there are functions"]
         - ["Immediate", "Evaluates whatever you type, without rebuilding", "For testing a fix before you write it"]
 
   - quiz:
@@ -309,7 +309,7 @@ slides:
         - ["2", "F10, runs line 9", "254", "63"]
         - ["3", "F10, prints the result", "254", "63"]
         - ["4", "You change the 4 to a 3", "254", "84"]
-      verdict: An uninitialised variable does not hold zero, it holds whatever was in that memory. And with the divisor fixed it comes out at 84, not 84.67, because integer division throws the fraction away.
+      verdict: An uninitialized variable does not hold zero, it holds whatever was in that memory. And with the divisor fixed it comes out at 84, not 84.67, because integer division throws the fraction away.
 
   - lab:
       eyebrow: Lab
@@ -327,8 +327,8 @@ slides:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: The standard is not set for you
-          desc: A new project builds as C++14 until somebody opens the properties and changes it
+        - title: Check the standard, do not assume it
+          desc: Look at both configurations and confirm it with _MSVC_LANG, not with __cplusplus
         - title: Compiling and linking are two steps
           desc: C2143 comes from the compiler and LNK2019 from the linker, and each is fixed elsewhere
         - title: The debugger stops beforehand
@@ -337,7 +337,7 @@ slides:
   - homework:
       eyebrow: For the next session
       title: The week's project, submitted and corrected
-      brief: Submit the lab project with the standard on C++20 in both Debug and Release, the average corrected, and a block comment above main explaining in two lines what the original program was doing wrong.
+      brief: Submit the lab project with the standard on C++20 in both Debug and Release, the average corrected, and a block comment between /* and */ above main explaining in two lines what the original program was doing wrong.
       meta:
         - [Due, Before session 2]
         - [Format, Blackboard · .zip without the x64 folder]

@@ -15,7 +15,7 @@ slides:
       subtitle: >-
         A JOIN answers «and the ones with none?». A UNION answers «and the ones on the
         other list?». Between UNION and UNION ALL there are three letters and, on the
-        payments table, 3,900 pesos.
+        payment tables, 3,900 pesos.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Engine, MySQL 9.7.2]
@@ -41,11 +41,11 @@ slides:
         - head: Read an ON out loud
           sub: And tell which table is the left one and which the right by looking at the FROM
         - head: Choose between COUNT(*) and COUNT(column)
-          sub: The student with no enrolments returns 1 and 0 on the same row of the result
+          sub: The student with no enrollments returns 1 and 0 on the same row of the result
         - head: Put the filter in the ON or the WHERE on purpose
           sub: The same predicate gives 3 rows in one clause and 6 rows in the other
         - head: Decide between UNION and UNION ALL with a rule
-          sub: On the payments table those three letters are worth 3,900 pesos and no warning
+          sub: On the payment tables those three letters are worth 3,900 pesos and no warning
         - head: Simulate the FULL OUTER JOIN that MySQL does not have
           sub: Projecting the keys, so the recipe never merges two different people into one
 
@@ -59,7 +59,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          desc: Entity-relationship, normalization, and the model turned into tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -86,7 +86,7 @@ slides:
       eyebrow: Key concept
       title: Left is the FROM table, right is the JOIN table
       lead: >-
-        Before the meaning lands there is exactly one thing worth memorising: the left
+        Before the meaning lands there is exactly one thing worth memorizing: the left
         table is the one you wrote after FROM and the right table is the one you wrote
         after JOIN. Every rule in this session is stated in those terms, including the one
         everybody gets wrong.
@@ -94,7 +94,7 @@ slides:
         label: The ON out loud
         title: It reads as a sentence, not as a formula
         note: >-
-          «The enrolment whose alumno_id is this student's.» If you cannot say the
+          «The enrollment whose alumno_id is this student's.» If you cannot say the
           sentence, the ON is written wrong. And it compares keys rather than names,
           because week 6 already measured that ALUMNO.NOMBRE and MATERIA.NOMBRE are not
           the same domain even though both hold text.
@@ -109,11 +109,11 @@ slides:
       title: The six spellings, with what the server answered
       headers: [Spelling, Which rows it returns, What was measured]
       rows:
-        - ["INNER JOIN … ON", "the ones matching on both sides", "synonym of JOIN"]
+        - ["INNER JOIN … ON", "the ones matching on both sides", "synonym for JOIN"]
         - ["LEFT JOIN … ON", "every FROM row, match or not", "the student with none shows up"]
         - ["CROSS JOIN … ON", "the same ones as INNER JOIN", "compiles and returns them"]
-        - ["INNER JOIN with no ON", "the cartesian product", "20 rows, from 5 x 4"]
-        - ["JOIN … USING (col)", "the INNER JOIN, in short", "when the column has one name"]
+        - ["INNER JOIN with no ON", "the Cartesian product", "20 rows, from 5 x 4"]
+        - ["JOIN … USING (col)", "the INNER JOIN, in short", "when both columns share a name"]
         - ["FULL OUTER JOIN", "nothing, MySQL has no such thing", "ERROR 1064 (42000)"]
 
   - code:
@@ -130,25 +130,25 @@ slides:
       annotations:
         - label: Week 5, cashed in
           text: >-
-            Normalising split one table into three. This query rebuilds it without storing
+            Normalizing split one table into three. This query rebuilds it without storing
             anything twice.
         - label: Two ONs, two sentences
           text: >-
-            The enrolment whose student is this one, and the subject whose identifier that
-            enrolment carries. Every foreign key of week 6 is an ON today.
+            The enrollment whose student is this one, and the subject whose identifier that
+            enrollment carries. Every foreign key of week 6 is an ON today.
         - label: A short alias
           text: >-
             With three tables the aliases stop being style. Without them the query cannot
             be read and the ON stops sounding like a sentence.
         - label: Risk
           text: >-
-            With no ON the query is still legal. MySQL returns the cartesian product and
+            With no ON the query is still legal. MySQL returns the Cartesian product and
             nobody raises a hand.
           accent: true
 
   - code_output:
       eyebrow: Measured · the LEFT JOIN
-      title: How many enrolments does the student with none have?
+      title: How many enrollments does the student with none have?
       filename: left.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -167,7 +167,7 @@ slides:
       output: |
         the anti-join returns exactly
         the student with no
-        enrolments
+        enrollments
 
         for that same student:
         con_asterisco = 1
@@ -223,14 +223,14 @@ slides:
           UNION
           SELECT correo FROM profesores) t;
       output: |
-        12 students and 8 lecturers
+        12 students and 8 professors
 
         con_union_all = 20
         con_union     = 17
 
         the 3 that are gone are the
-        postgraduates who also teach
-        a course
+        graduate students who also
+        teach a course
 
   - code_output:
       eyebrow: Measured · the same query with money in it
@@ -337,7 +337,7 @@ slides:
         syntax to use near 'FULL
         OUTER JOIN lms_cuentas l ON
         e.matricula = l.matricula'
-        at line 1
+        at line 3
 
   - code_output:
       eyebrow: Measured · the recipe
@@ -446,7 +446,7 @@ slides:
           desc: >-
             In the WHERE the predicate throws the fabricated rows away and the LEFT is an
             INNER again: 3 rows against 6. In the ON it applies earlier and the NULLs stay
-        - title: UNION ALL stacks, UNION catalogues
+        - title: UNION ALL stacks, UNION catalogs
           desc: >-
             If the rows stand for things that happened, stack them with UNION ALL. UNION is
             for asking which distinct values exist, and it charges a temporary table for it
@@ -464,7 +464,7 @@ slides:
         - [Weight, Part of the 20 % for assignments]
       rubric:
         - ["The three queries", "40 %", "They run, and the ON joins on keys and not on names"]
-        - ["The judgement", "30 %", "It names the worst one with an argument, not a preference"]
+        - ["The judgment", "30 %", "It names the worst one with an argument, not a preference"]
         - ["UNION", "30 %", "Both counts differ and the difference is explained"]
 
   - closing:

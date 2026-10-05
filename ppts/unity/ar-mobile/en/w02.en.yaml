@@ -14,7 +14,7 @@ slides:
       title: Mobile AR Development
       subtitle: >-
         The packages, the settings, and the one renderer feature that decides whether the
-        phone shows you the room or a wall of colour.
+        phone shows you the room or a wall of color.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, UNITY · Foundational]
@@ -35,13 +35,13 @@ slides:
       title: Four moments in the session
       cards:
         - title: The project that can see
-          desc: Five packages, one provider, and the two GameObjects an AR scene cannot run without
+          desc: Six packages, one provider, and the two GameObjects an AR scene cannot run without
         - title: Android settings
           desc: The values that decide whether the build installs, and why each one exists
-        - title: The flat colour bug
+        - title: The flat color bug
           desc: It builds, it tracks, and the camera feed is nowhere. The most common misconfiguration
         - title: Telling failures apart
-          desc: Flat colour, magenta and black are three different problems with three fixes
+          desc: Flat color, magenta and black are three different problems with three fixes
 
   - objectives:
       eyebrow: Learning objectives
@@ -53,10 +53,10 @@ slides:
           sub: API level, scripting backend, architecture and graphics API, and say why each
         - head: Run Project Validation
           sub: And use its Fix buttons instead of hunting the settings one at a time
-        - head: Diagnose a flat colour screen
+        - head: Diagnose a flat color screen
           sub: Naming the renderer feature that draws the camera image under the pipeline
         - head: Tell three broken screens apart
-          sub: Flat colour, magenta materials and a black screen have nothing in common
+          sub: Flat color, magenta materials and a black screen have nothing in common
 
   - roadmap:
       eyebrow: Course map
@@ -86,7 +86,7 @@ slides:
   - divider:
       eyebrow: Block 01
       title: The project that can see
-      lede: Five packages, one provider and two GameObjects. Everything after this session assumes these are in place.
+      lede: Six packages, one provider and two GameObjects. Everything after this session assumes these are in place.
       block: 1
 
   - table:
@@ -105,11 +105,11 @@ slides:
       eyebrow: Key concept
       title: One project, one provider per platform
       lead: >-
-        AR Foundation is an interface. It knows about planes and images and anchors, and it
-        knows nothing about Android. The work is done by a provider package, and XR Plug-in
+        AR Foundation is an interface. It knows about planes, images and anchors, and
+        nothing about Android. The work is done by a provider package, and XR Plug-in
         Management is the switchboard that decides which provider loads for which build
-        target. Tick ARCore on the Android tab and the same scene that runs here runs on
-        iOS the day somebody ticks ARKit on the iOS tab.
+        target. Check ARCore on the Android tab and the same scene that runs here runs on
+        iOS the day somebody checks ARKit on the iOS tab.
       panel:
         label: Where you switch it on
         title: Project Settings, XR Plug-in Management
@@ -118,7 +118,7 @@ slides:
           plug-ins at the same version. Keep the three in step.
       steps:
         - text: Open the Android tab
-        - text: Tick ARCore under Plug-in Providers
+        - text: Check ARCore under Plug-in Providers
         - text: Unity pulls the provider package in
         - text: Nothing in your scene changes
           loop: ↺ which is the whole point of the interface
@@ -132,7 +132,7 @@ slides:
           desc: Unity 6, the Universal 3D template, so URP is already configured
         - label: '02'
           title: Add packages
-          desc: Window then Package Manager, Unity Registry, the five from the table
+          desc: Window then Package Manager, Unity Registry, the six from the table
         - label: '03'
           title: Enable ARCore
           desc: Project Settings, XR Plug-in Management, Android tab
@@ -165,7 +165,7 @@ slides:
   - divider:
       eyebrow: Block 02
       title: Settings that decide whether it installs
-      lede: Six values in Player Settings, and every one of them is a refusal somewhere if you get it wrong.
+      lede: Six values in Project Settings, and every one of them is a refusal somewhere if you get it wrong.
       block: 2
 
   - table:
@@ -176,8 +176,8 @@ slides:
         - ["Minimum API Level", "Android 7.0, API level 24", "Player > Other Settings"]
         - ["Scripting Backend", "IL2CPP", "Player > Other Settings"]
         - ["Target Architectures", "ARM64", "Player > Other Settings"]
-        - ["Auto Graphics API", "Off", "Player > Rendering"]
-        - ["Graphics APIs", "OpenGLES3, no Vulkan", "Player > Rendering"]
+        - ["Auto Graphics API", "Off", "Other Settings > Rendering"]
+        - ["Graphics APIs", "OpenGLES3, no Vulkan", "Other Settings > Rendering"]
         - ["ARCore Requirement", "Required or Optional", "XR Plug-in Management"]
 
   - concept:
@@ -217,7 +217,7 @@ slides:
           desc: File then Build Profiles, Android, Switch Platform, and wait for the reimport
         - label: '04'
           title: Development Build
-          desc: Tick it with Autoconnect Profiler, which session 5 depends on
+          desc: Enable it with Autoconnect Profiler, which session 5 depends on
         - label: '05'
           title: Build And Run
           desc: Phone awake, USB debugging on, and a cable that carries data
@@ -246,11 +246,11 @@ slides:
       output: |
         urp True
         api OpenGLES3
-        session SessionInitializing
+        session CheckingAvailability
 
   - divider:
       eyebrow: Block 03
-      title: It runs, and it is one flat colour
+      title: It runs, and it is one flat color
       lede: The most common AR misconfiguration there is, and the console says nothing at all about it.
       block: 3
 
@@ -259,7 +259,7 @@ slides:
       title: The camera feed has to be drawn by something
       lead: >-
         The app installs, tracking starts, your cube appears, and every other pixel is one
-        flat colour. Under URP the AR Camera Background component does not draw the camera
+        flat color. Under URP the AR Camera Background component does not draw the camera
         image: it hands that to a Renderer Feature, which lives on the renderer of
         whichever URP asset Android has active. In the Universal 3D template that is the
         mobile one, not the PC one.
@@ -279,20 +279,20 @@ slides:
 
   - table:
       eyebrow: Block 03 · Diagnosis
-      title: Three broken screens that look alike and are not
+      title: Five broken screens that look alike and are not
       headers: [What you see, What it means, Where to fix it]
       rows:
-        - ["Flat colour", "Camera image never drawn", "Feature on Mobile_Renderer"]
+        - ["Flat color", "Camera image never drawn", "Feature on Mobile_Renderer"]
         - ["Magenta objects", "Materials still built-in", "Render Pipeline Converter"]
         - ["Black screen", "Camera permission refused", "Android app permissions"]
         - ["Nothing moves", "No AR Session in the scene", "GameObject > XR > AR Session"]
         - ["Content sunk", "Objects outside the XR Origin", "Reparent under XR Origin"]
 
   - concept:
-      eyebrow: Block 03 · The neighbour
+      eyebrow: Block 03 · The neighbor
       title: Magenta is a different problem with a different fix
       lead: >-
-        Magenta is the colour Unity paints a material whose shader cannot run under the
+        Magenta is the color Unity paints a material whose shader cannot run under the
         active pipeline: one authored for the built-in pipeline and never converted. It
         has nothing to do with the camera image, and no renderer feature will change it.
         The two failures often arrive together, so people fix one and assume they fixed
@@ -302,9 +302,9 @@ slides:
         title: Window, Rendering, Render Pipeline Converter
         note: >-
           Set the source to Built-in and the target to Universal, choose the material
-          upgrade, initialise the converter and then convert the assets.
+          upgrade, initialize the converter and then convert the assets.
       steps:
-        - text: Flat colour means no passthrough
+        - text: Flat color means no passthrough
         - text: Magenta means an unconverted shader
         - text: One is a renderer feature
         - text: The other is a material
@@ -325,7 +325,7 @@ slides:
             Auto Graphics API was never turned off. The ARCore plug-in only runs on
             OpenGLES3 in 6.0; from 6.1 on Vulkan works, with one more feature.
         - label: Mistake 03
-          title: Mono backend with ARM64 ticked
+          title: Mono backend with ARM64 checked
           desc: >-
             The build fails before it compiles. ARM64 needs IL2CPP, and the two settings sit
             two rows apart in the same Configuration panel.
@@ -337,7 +337,7 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: The build runs, tracking works, the cube renders, and the rest of the screen is one grey. What is missing?
+      question: The build runs, tracking works, the cube renders, and the rest of the screen is one gray. What is missing?
       options:
         - The AR Background Renderer Feature on the Mobile_Renderer
         - The AR Session, so tracking never started in the first place
@@ -351,7 +351,7 @@ slides:
       rows:
         - ["Session tracking", "Content stays put", "Yes"]
         - ["Objects render", "The cube is on screen", "Yes"]
-        - ["Objects magenta", "The cube is grey", "No"]
+        - ["Objects magenta", "The cube is gray", "No"]
         - ["Camera image", "The room behind it", "No"]
       verdict: >-
         Content renders and the material is right, so the pipeline itself is working. Only
@@ -365,7 +365,7 @@ slides:
       title: Your own phone, your own build, in pairs
       brief: >-
         Take an empty Unity 6 project to a running AR app on your own Android phone. A cube
-        one metre in front of the camera is enough content. Then break it on purpose by
+        one meter in front of the camera is enough content. Then break it on purpose by
         removing the renderer feature, rebuild, and photograph the screen.
       blocks:
         - label: Constraint
@@ -385,7 +385,7 @@ slides:
           desc: AR Session and XR Origin. Without either one the app runs and AR quietly does not
         - title: The passthrough is a render pass
           desc: A renderer feature draws it, and the one that counts lives on the mobile asset's renderer
-        - title: Flat colour and magenta are unrelated
+        - title: Flat color and magenta are unrelated
           desc: One is the camera image, the other is a shader. Fixing either does nothing for the other
 
   - homework:

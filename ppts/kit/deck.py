@@ -952,5 +952,16 @@ class Deck:
 
     def save(self, path):
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+        # python-pptx gives every autoshape a <p:style> whose effectRef points at the
+        # theme's effect style 2, a drop shadow. PowerPoint lets the empty
+        # <a:effectLst/> on the shape win, so nothing shows. LibreOffice, and the
+        # importers built on it, apply the theme shadow to the text instead and
+        # export every line of text as a blurred bitmap: a 24-slide deck came out
+        # at 9.5 MB of PDF and 1,070 images. Pointing the style at no effect keeps
+        # PowerPoint identical and makes every other renderer match it. The cards'
+        # own soft shadows live in each shape's effectLst and are untouched.
+        for slide in self.prs.slides:
+            for ref in slide.shapes._spTree.iter(qn('a:effectRef')):
+                ref.set('idx', '0')
         self.prs.save(path)
         return path

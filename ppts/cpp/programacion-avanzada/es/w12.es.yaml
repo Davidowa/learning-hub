@@ -85,13 +85,13 @@ slides:
       lang: cpp
       output_label: Salida
       source: |
-        int n = 42;
-        int* p = &n;
+        int x = 42;
+        int* p = &x;
 
-        std::cout << n << " " << *p << "\n";
+        std::cout << x << " " << *p << "\n";
 
         *p = 99;
-        std::cout << n << "\n";
+        std::cout << x << "\n";
       output: |
         42 42
         99
@@ -165,7 +165,7 @@ slides:
       eyebrow: Cómo funciona
       title: Por dónde pasa la llamada cuando es virtual
       image: img/es/vtable.png
-      caption: El objeto lleva una tabla con la dirección de la función que le toca. La llamada consulta la tabla en lugar de decidirlo al compilar.
+      caption: El objeto lleva un puntero a una tabla con la dirección de la función que le toca. La llamada consulta la tabla en lugar de decidirlo al compilar.
       alt: Una llamada que entra a una tabla virtual de tres renglones y sale por el que corresponde al tipo real
 
   - code:
@@ -205,7 +205,7 @@ slides:
       rows:
         - ["virtual", "La decide el objeto real", "En la base"]
         - ["override", "Verifica que sustituyas", "En la hija"]
-        - ["= 0", "La vuelve pura y abstrae", "En la base"]
+        - ["= 0", "La vuelve pura y abstracta", "En la base"]
         - ["virtual ~", "Destruye la parte de la hija", "En la base, siempre"]
 
   - quiz:
@@ -232,7 +232,7 @@ slides:
       rows:
         - ["f->area()", "El objeto real", "Al ejecutar", "Cuadrado, da 9"]
         - ["f->areaNoVirtual()", "El tipo del puntero", "Al compilar", "Figura, da -1"]
-      verdict: La diferencia entre las dos líneas es una sola palabra escrita en la clase base. Ese es todo el costo del polimorfismo, y es lo que permite tratar objetos distintos con el mismo código.
+      verdict: La diferencia entre las dos líneas es una sola palabra escrita en la clase base. Es todo lo que escribes para tener polimorfismo, y es lo que permite tratar objetos distintos con el mismo código.
 
   - pitfalls:
       eyebrow: Diagnóstico

@@ -41,10 +41,39 @@ _KEYWORD_SRC = {
         INTO JOIN KEY LEFT LIMIT NOT NULL ON OR ORDER PRIMARY SELECT SET TABLE UPDATE VALUES
         WHERE""",
 }
+_KEYWORD_SRC.update({
+    'javascript': """as async await break case catch class const continue debugger default delete do
+        else enum export extends false finally for from function if implements import in
+        instanceof interface keyof let new null of readonly return satisfies static super switch
+        this throw true try type typeof undefined var void while yield""",
+    'swift': """actor any as associatedtype async await break case catch class continue default
+        defer deinit didSet do else enum extension fallthrough false fileprivate final for func
+        get guard if import in init inout internal is lazy let mutating nil nonisolated open
+        operator override private protocol public repeat rethrows return self Self set some
+        static struct subscript super switch throw throws true try var weak where while willSet""",
+    'kotlin': """as break class companion continue data do else enum false for fun if import in
+        interface internal is lateinit null object override package private protected public
+        return sealed super suspend this throw true try typealias val var when while""",
+    'java': """abstract boolean break byte case catch char class continue default do double else
+        enum extends false final finally float for if implements import instanceof int interface
+        long new null package private protected public return short static super switch this
+        throw throws true try void while""",
+    'json': "true false null",
+    'bash': """case do done elif else esac export fi for function if in then while""",
+    'xml': "",
+})
 KEYWORDS: dict[str, set[str]] = {k: set(v.split())
                                  for k, v in _KEYWORD_SRC.items()}
 
-LINE_COMMENT = {'csharp': '//', 'cpp': '//', 'java': '//', 'vba': "'", 'sql': '--'}
+LINE_COMMENT = {'csharp': '//', 'cpp': '//', 'java': '//', 'vba': "'", 'sql': '--',
+                'javascript': '//', 'swift': '//', 'kotlin': '//', 'json': '\0',
+                'bash': '#', 'xml': '<!--'}
+
+# Languages whose keywords are case sensitive and whose capitalised names are types
+# (React components, SwiftUI views, Kotlin classes). In these, ``Text`` is a type and
+# ``text`` is a name, so the case-folding the VBA and SQL scanners need would be wrong.
+CASE_SENSITIVE = {'javascript', 'swift', 'kotlin', 'java', 'json', 'bash', 'xml'}
+CAPITALS_ARE_TYPES = {'javascript', 'swift', 'kotlin', 'java'}
 TYPE_WORDS = {'csharp': {'Console', 'List', 'Math', 'String', 'WriteLine'},
               'cpp': {'std', 'cout', 'cin', 'endl', 'vector', 'string'},
               'vba': {'Cells', 'Range', 'Worksheets', 'MsgBox', 'ActiveSheet'}}
@@ -103,6 +132,19 @@ def _python(src: str) -> list[list[Span]]:
     return out
 
 
+# JavaScript, TypeScript and Swift: template literals are strings, a JSX tag name
+# (<View, </Text) is a type, and a Swift attribute or property wrapper (@State,
+# @Observable) is a keyword. Everything else matches the shared scanner.
+_TOKEN_RE_C = re.compile(r"""
+    (?P<str>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)
+  | (?P<tag>(?<=<)/?[A-Za-z][A-Za-z0-9_.]*|(?<=</)[A-Za-z][A-Za-z0-9_.]*)
+  | (?P<attr>@[A-Za-z_][A-Za-z_0-9]*)
+  | (?P<num>\b\d+\.?\d*\b)
+  | (?P<word>[A-Za-z_#$][A-Za-z_0-9$]*)
+  | (?P<space>\s+)
+  | (?P<op>[^\sA-Za-z_0-9])
+""", re.X)
+
 _TOKEN_RE = re.compile(r"""
     (?P<str>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|<[A-Za-z_./]+>)
   | (?P<num>\b\d+\.?\d*\b)
@@ -114,7 +156,10 @@ _TOKEN_RE = re.compile(r"""
 
 def _generic(src: str, lang: str | None) -> list[list[Span]]:
     kws = KEYWORDS.get(lang or '', set())
-    kws_lower = {k.lower() for k in kws}
+    case = lang in CASE_SENSITIVE
+    kws_lower = kws if case else {k.lower() for k in kws}
+    caps = lang in CAPITALS_ARE_TYPES
+    token_re = _TOKEN_RE_C if lang in ('javascript', 'swift', 'kotlin', 'java') else _TOKEN_RE
     types = TYPE_WORDS.get(lang or '', set())
     com = LINE_COMMENT.get(lang or '', '#')
     out = []
@@ -122,16 +167,24 @@ def _generic(src: str, lang: str | None) -> list[list[Span]]:
         spans: list[Span] = []
         idx = line.find(com)
         # a comment marker inside a string literal is not a comment
-        if idx >= 0 and line[:idx].count('"') % 2 == 0:
+        quotes = '"\'`' if lang in CASE_SENSITIVE else '"'
+        if lang in CASE_SENSITIVE:      # skip markers inside strings, e.g. 'https://'
+            while idx >= 0 and not all(line[:idx].count(q) % 2 == 0 for q in quotes):
+                idx = line.find(com, idx + 1)
+        if idx >= 0 and all(line[:idx].count(q) % 2 == 0 for q in quotes):
             body, tail = line[:idx], line[idx:]
         else:
             body, tail = line, ''
-        for m in _TOKEN_RE.finditer(body):
+        for m in token_re.finditer(body):
             kind, text = m.lastgroup or 'text', m.group()
-            if kind == 'word':
-                if text.lower() in kws_lower:
+            if kind == 'tag':
+                role = 'cls'
+            elif kind == 'attr':
+                role = 'kw'
+            elif kind == 'word':
+                if (text if case else text.lower()) in kws_lower:
                     role = 'kw'
-                elif text in types:
+                elif text in types or (caps and text[:1].isupper()):
                     role = 'cls'
                 elif body[m.end():m.end() + 1] == '(':
                     role = 'fn'
@@ -205,4 +258,9 @@ def highlight(src: str, lang: str = 'python') -> list[list[Span]]:
         return _excel(src)
     if lang in ('text', 'output', 'console', 'plain', ''):
         return [[(l, 'text')] for l in src.split('\n')]
-    return _generic(src, {'cs': 'csharp', 'c++': 'cpp', 'c': 'cpp'}.get(lang, lang))
+    return _generic(src, {'cs': 'csharp', 'c++': 'cpp', 'c': 'cpp',
+                          'js': 'javascript', 'jsx': 'javascript', 'ts': 'javascript',
+                          'tsx': 'javascript', 'typescript': 'javascript',
+                          'swiftui': 'swift', 'kt': 'kotlin', 'sh': 'bash', 'shell': 'bash',
+                          'zsh': 'bash', 'terminal': 'bash', 'html': 'xml',
+                          'plist': 'xml'}.get(lang, lang))

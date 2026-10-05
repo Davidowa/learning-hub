@@ -42,7 +42,7 @@ slides:
         - head: Leer una lista de procesos del servidor
           sub: Cada sesión tiene su propio identificador y el servidor las ve todas
         - head: Distinguir dato de información
-          sub: El promedio 8.33 no está en el disco de nadie, y hay una consulta que lo prueba
+          sub: El promedio 8.50 no está en el disco de nadie, y hay una consulta que lo prueba
         - head: Dar veredicto a las clasificaciones heredadas
           sub: Cuáles siguen vivas, cuáles son historia con fecha y cuál está simplemente mal
         - head: Contar los objetos de una base
@@ -133,10 +133,10 @@ slides:
         -- en otra corrida, root cierra la sesion 1028
         KILL CONNECTION 1028;
       output: |
-        CONNECTION_ID()   1116
+        CONNECTION_ID()   1119
         816   event_scheduler  Daemon
-        1118  operador
-        1119  root
+        1118  operador         Sleep
+        1119  root             Query
         Threads_connected  2
 
         ERROR 2013 (HY000): Lost
@@ -145,7 +145,7 @@ slides:
 
   - code_output:
       eyebrow: Medido · dónde nace la información
-      title: Hay siete calificaciones en disco y ningún 8.33 guardado
+      title: Hay siete calificaciones en disco y ningún 8.50 guardado
       filename: w02_informacion.sql
       lang: sql
       output_label: Salida
@@ -163,6 +163,7 @@ slides:
         promedio_general       8.33
         clave    promedio
         BD1001       8.50
+        …
         filas_que_contienen_8_50  0
 
   - divider:
@@ -211,7 +212,7 @@ slides:
       title: El inventario, y cuatro definiciones que están mal
       lede: >-
         Cinco objetos creados en vivo y contados en una consulta. Cuatro de las siete
-        definiciones que trae el material se caen en pantalla, y la que las tira es el propio
+        definiciones que trae el material se caen en pantalla, y quien las tira es el propio
         servidor.
       block: 3
 
@@ -276,14 +277,13 @@ slides:
       source: |
         CREATE TRIGGER trg_alumno_after_update
         AFTER UPDATE ON alumno FOR EACH ROW
-        BEGIN
           INSERT INTO bitacora_alumno
             (matricula, creditos_antes, creditos_despues, cuando)
           VALUES (OLD.matricula, OLD.creditos, NEW.creditos, NOW());
-        END
 
         UPDATE alumno SET creditos = creditos + 5;
-        SELECT * FROM bitacora_alumno;
+        SELECT matricula, creditos_antes, creditos_despues
+          FROM bitacora_alumno;
       output: |
         A0000001  135  140
         A0000002   60   65
@@ -325,8 +325,7 @@ slides:
       output: |
         v_alumno_activo         YES
         v_creditos_por_materia  NO
-        ROW_COUNT() = 1
-        creditos = 135
+        Query OK, 1 row affected
 
         ERROR 1288 (HY000): The
         target table
@@ -359,7 +358,7 @@ slides:
 
   - code_output:
       eyebrow: Medido · sin un solo ORM conectado
-      title: Dos de los tres rechazos vienen del servidor y de nadie más
+      title: Los dos primeros rechazos vienen del servidor y de nadie más
       filename: w02_constraints.sql
       lang: sql
       output_label: Salida
@@ -387,7 +386,7 @@ slides:
       lang: sql
       output_label: Salida
       source: |
-        INSERT INTO inscripcion
+        INSERT INTO inscripcion (matricula, clave, periodo)
           VALUES ('A9999999','BD1001','26PRI');
       output: |
         ERROR 1452 (23000): Cannot add
@@ -409,12 +408,11 @@ slides:
             tiene identificador propio y el servidor puede cerrarla sin tocar un solo dato
         - title: Cuatro definiciones heredadas están mal
           desc: >-
-            El trigger corre por fila y no por condición, el evento no se llama Job, el
-            formulario no es objeto de MySQL y la cuenta se identifica por usuario y por host
+            La vista no es de solo lectura, el evento no se llama Job, el formulario no es
+            objeto de MySQL y la cuenta se identifica por usuario y por host
         - title: La integridad la pone el servidor
           desc: >-
-            Los tres errores de hoy los levantó el motor sin un ORM conectado. USER() dice de
-            dónde vino la conexión y CURRENT_USER() qué cuenta la dejó entrar, y eso se cobra en la semana 17
+            Los tres rechazos de integridad de hoy los levantó el motor sin un ORM conectado
 
   - homework:
       eyebrow: Tarea

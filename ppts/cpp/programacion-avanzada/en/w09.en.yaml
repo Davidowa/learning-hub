@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: Inheriting
-          desc: A class that takes on the state and behaviour of another
+          desc: A class that takes on the state and behavior of another
         - title: The protected level
           desc: What the child can see and an outsider cannot
         - title: Composing
@@ -73,10 +73,10 @@ slides:
 
   - figure:
       eyebrow: Diagnosis
-      title: Two levels work, four start to hurt
+      title: Two levels work, three start to hurt
       image: img/en/hierarchy.png
-      caption: The long chain inherits behaviour nobody asked for. Every new level is a decision that can no longer be undone.
-      alt: A two-level tree beside a four-level chain that ends up inheriting something it should not
+      caption: The long chain inherits behavior nobody asked for. Every new level is a decision that can no longer be undone.
+      alt: A two-level tree beside a three-level chain that ends up inheriting something it should not
 
   - code:
       eyebrow: Inheritance
@@ -102,7 +102,7 @@ slides:
         - label: Line 9
           text: The colon and public Person are the inheritance. Student already has name and getName.
         - label: Line 11
-          text: The initialiser list calls the base constructor, and it runs before the body
+          text: The initializer list calls the base constructor, and it runs before the body
         - label: Line 6
           text: protected is what lets Student read name directly. With private it could not.
         - label: Risk
@@ -126,7 +126,7 @@ slides:
       eyebrow: Access
       title: What the middle level is for
       image: img/en/access-levels-cpp.png
-      caption: The right-hand column is the one that turned up this week. Protected is what the child can see and the world cannot.
+      caption: The right-hand column is the one that starts to count this week. Protected is what the child can see and the world cannot.
       alt: Three class members against two columns, from outside and from a derived class, with ticks and crosses
 
   - divider:
@@ -153,6 +153,9 @@ slides:
         private:
             Engine engine;
         };
+
+        Car c;
+        c.turnOn();
       output: |
         engine running
 
@@ -183,7 +186,7 @@ slides:
         - label: Sounds odd
           text: A car is an engine. A payroll is an employee. What you have there is containment.
         - label: The usual doubt
-          text: Is a stack a vector, or does it have one. It has one. A stack exposes fewer operations, not more.
+          text: Is a stack a vector, or does it have one? It has one. A stack exposes fewer operations, not more.
 
   - quiz:
       eyebrow: Quick question
@@ -211,6 +214,7 @@ slides:
         - ["a.getName()", "main, from outside", "public", "Yes"]
         - ["a.name", "main, from outside", "protected", "No, C2248"]
         - ["name inside Student", "the derived class", "protected", "Yes"]
+        - ['Person p("Ana")', "main, from outside", "public", "Yes"]
         - ["p.getName()", "main, from outside", "public", "Yes"]
       verdict: From main, protected and private behave identically. The only difference shows up inside the derived class, which is why the level makes no sense without inheritance.
 
@@ -220,13 +224,13 @@ slides:
       items:
         - label: Error 01
           title: Forgetting the base constructor
-          desc: Without the initialiser list, the compiler looks for a no-argument one and does not find it
+          desc: Without the initializer list, the compiler looks for a no-argument one and does not find it
         - label: Error 02
           title: Inheriting purely to reuse
           desc: Ties two classes together forever to save a few lines a function would have handled
         - label: Error 03
           title: Chains four levels deep
-          desc: Every level drags along behaviour the one below never asked for and cannot remove
+          desc: Every level drags along behavior the one below never asked for and cannot remove
         - label: Error 04
           title: Making everything protected
           desc: Turns the internal data into part of the contract with every future derived class
@@ -247,7 +251,7 @@ slides:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: The derived starts with the base
+        - title: The derived class starts with the base
           desc: The public and protected parts arrive on their own, without another line written
         - title: Protected only matters with inheritance
           desc: From outside it behaves exactly like private, which is why the figure has two columns
@@ -257,13 +261,13 @@ slides:
   - homework:
       eyebrow: For the next session
       title: The hierarchy finished and one decision justified
-      brief: Finish the lab and add a third class where you had to decide between inheriting and composing, with a block comment explaining in three lines why you chose one over the other.
+      brief: Finish the lab and add a fourth class where you had to decide between inheriting and composing, with a block comment explaining in three lines why you chose one over the other.
       meta:
         - [Due, Before session 10]
         - [Format, Blackboard · .zip without the x64 folder]
         - [Weight, Exercises are averaged into one point of the term grade]
       rubric:
-        - ["Inheritance", "Required", "The base constructor is called from the initialiser list"]
+        - ["Inheritance", "Required", "The base constructor is called from the initializer list"]
         - ["Composition", "Required", "Course delegates to its member without inheriting from it"]
         - ["Justification", "Required", "The comment applies the is a against has a test"]
 

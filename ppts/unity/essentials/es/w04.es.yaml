@@ -101,7 +101,7 @@ slides:
       title: El motor llama a tus métodos por su nombre
       lead: >-
         Cuando se crea un MonoBehaviour, Unity revisa la clase buscando métodos con nombres
-        que conoce, Start, Update, OnTriggerEnter y unos cuarenta más, y se queda con los que
+        que conoce, Start, Update, OnTriggerEnter y unos cincuenta más, y se queda con los que
         encontró. Nadie registra nada. Por eso un error de dedo en Update no cuesta ningún
         error de compilación, porque el método sigue siendo C# válido y el motor no lo busca.
       panel:
@@ -278,7 +278,7 @@ slides:
 
   - table:
       eyebrow: Bloque 02 · El Inspector
-      title: Tres maneras de declarar un campo, y qué cuesta cada una
+      title: Cuatro maneras de declarar un campo, y qué cuesta cada una
       headers: [Declaración, En el Inspector, Alcanzable desde fuera]
       rows:
         - ["public float x", "Visible y editable", "Sí, por cualquier script"]
@@ -308,8 +308,8 @@ slides:
         - label: Error 04
           title: La referencia que nadie arrastró
           desc: >-
-            Un campo serializado que quedó en None lanza NullReferenceException en el primer
-            cuadro que lo usa, y la consola nombra el método, no la ranura vacía.
+            Un campo serializado que quedó en None falla en el primer cuadro que lo usa. En el
+            editor lanza UnassignedReferenceException, que sí nombra la ranura vacía.
 
   - divider:
       eyebrow: Bloque 03
@@ -324,10 +324,9 @@ slides:
       title: Tres errores de compilación que verás esta semana
       headers: [Código, Qué dice, Qué suele ser]
       rows:
-        - ["CS1002", "; expected", "Un punto y coma que falta arriba"]
+        - ["CS1002", "; expected", "Un punto y coma que falta en esa línea"]
         - ["CS0103", "The name does not exist", "Error de dedo, o un campo que falta"]
         - ["CS0246", "Type or namespace not found", "Falta una directiva using"]
-        - ["CS0029", "Cannot convert type", "Un int metido en una ranura float"]
 
   - code_output:
       eyebrow: Bloque 03 · Medido
@@ -336,7 +335,7 @@ slides:
       lang: csharp
       output_label: Consola, en ejecución
       source: |
-        [SerializeField] AudioSource chime;
+        AudioSource chime;
 
         void OnTriggerEnter(Collider other)
         {
@@ -417,7 +416,7 @@ slides:
       brief: >-
         Agrega Spinner.cs a un letrero sobre la puerta y BayDoor.cs al trigger. Pon la
         capacidad en 3 desde el Inspector, echa cuatro cajas rampa abajo y pega la salida de
-        consola. Después rómpelo a propósito de las dos maneras de la lámina de errores.
+        consola. Después rómpelo a propósito de dos maneras de la lámina de errores.
       blocks:
         - label: Entregable
           text: La consola de las cuatro cajas, más una captura de cada una de las dos fallas

@@ -41,8 +41,8 @@ slides:
           sub: Write a loop calling the same method without asking what class each object is
         - head: Declare an abstract class
           sub: ABC plus @abstractmethod, and exactly what fails when one of the two is missing
-        - head: Sit the first midterm
-          sub: With units 1, 2 and 3 practised at the keyboard rather than read
+        - head: Take the first midterm
+          sub: With units 1, 2 and 3 practiced at the keyboard rather than read
 
   - roadmap:
       eyebrow: Course map
@@ -117,9 +117,9 @@ slides:
             def talk(self) -> None:
                 print("Meow")
       annotations:
-        - label: Line 6
+        - label: Line 7
           text: Dog defines talk again. For a dog, the parent's version is covered up.
-        - label: Line 11
+        - label: Line 12
           text: Cat does the same with a different body, and neither knows the other exists
         - label: Mind the words
           text: Overriding replaces the body in the child. Overloading would mean two signatures, and Python has none.
@@ -195,7 +195,7 @@ slides:
                 print("Reading from memory")
       annotations:
         - label: Line 4
-          text: Inheriting from ABC marks the class abstract, and with that it stops being buildable
+          text: Inheriting from ABC marks the class abstract, but it only stops being buildable once it has an abstract method
         - label: Line 8
           text: The decorator forces every child to write read. Leave it out and the error fires on construction.
         - label: Risk
@@ -216,8 +216,12 @@ slides:
         other = Stream()
       output: |
         Reading from memory
+        Traceback (most recent call last):
+          File "try_stream.py", line 5
         TypeError: Can't instantiate
-        abstract class Stream
+        abstract class Stream without an
+        implementation for abstract
+        method 'read'
 
   - table:
       eyebrow: Vocabulary
@@ -226,8 +230,8 @@ slides:
       rows:
         - ["Concrete", "Yes", "All of it", "class Dog(Animal):"]
         - ["Abstract", "No", "Part of it", "class Stream(ABC):"]
-        - ["Interface", "No", "None", "Only @abstractmethod"]
-        - ["Protocol", "Not applicable", "None", "typing.Protocol"]
+        - ["Interface", "No", "None", "ABC, all abstract"]
+        - ["Protocol", "No", "None", "typing.Protocol"]
 
   - diagram:
       eyebrow: Diagram
@@ -253,7 +257,7 @@ slides:
       items:
         - label: Error 01
           title: Overriding with a different signature
-          desc: If the child asks for other arguments, the polymorphic loop blows up on the third object
+          desc: If the child asks for other arguments, the polymorphic loop blows up on the first object of that class
         - label: Error 02
           title: '@abstractmethod without ABC'
           desc: The decorator prevents nothing on its own, and the class gets instantiated as if nothing happened
@@ -302,7 +306,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: First midterm
-      lede: It closes units 1, 2 and 3. Everything on it has already been practised in a lab.
+      lede: It closes units 1, 2 and 3. Everything on it has already been practiced in a lab.
       block: 3
 
   - tiers:
@@ -320,19 +324,19 @@ slides:
           desc: Encapsulation, hiding, reuse, inheritance, hierarchy, polymorphism and abstract classes
         - key: Out
           title: What it does not cover
-          desc: Files, graphical interfaces and databases, which belong to the second midterm
+          desc: Advanced functions and files, for the second midterm; graphical interfaces and databases, for the project and the final
 
   - method:
       eyebrow: How to prepare
       title: The exam asks you to write classes, not describe them
       statement: If you cannot type from memory a class with a constructor, a private attribute, a property and a child that overrides a method, you do not know it yet.
       points:
-        - label: What to practise
+        - label: What to practice
           text: The labs from weeks 4, 6 and 7, solved again without opening the solution
         - label: What to review
           text: The diagnosis slides. The four errors on each one are the errors on the exam.
         - label: What not to do
-          text: Memorising definitions. No question asks for the definition of encapsulation.
+          text: Memorizing definitions. No question asks for the definition of encapsulation.
 
   - lab:
       eyebrow: Lab
@@ -360,13 +364,13 @@ slides:
   - homework:
       eyebrow: First midterm
       title: Submission and grading criteria
-      brief: The exam covers units 1, 2 and 3, and is sat during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
+      brief: The exam covers units 1, 2 and 3, and is taken during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
       meta:
         - [When, Week 8]
         - [Format, Blackboard · one .py per question]
         - [Weight, 20 % of the final grade]
       rubric:
-        - ["Modelling", "30 %", "The classes match the brief and respect the access levels"]
+        - ["Modeling", "30 %", "The classes match the brief and respect the access levels"]
         - ["Inheritance", "30 %", "The hierarchies pass the is-a test and chain their constructors"]
         - ["Polymorphism", "25 %", "The code walks different objects without asking about their type"]
         - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]

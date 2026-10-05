@@ -76,8 +76,9 @@ slides:
       title: Qué recibe una subclase
       lead: >-
         Todo lo público y lo protegido del padre, sin escribir una línea. Los atributos
-        existen solo si el constructor del padre llegó a correr, y eso no pasa solo. Hay que
-        llamarlo con super, y ese olvido es el error más común de toda la unidad.
+        existen solo si el constructor del padre llegó a correr, y si la hija tiene su propio
+        __init__, eso no pasa solo. Hay que llamarlo con super, y ese olvido es el error más
+        común de toda la unidad.
       panel:
         label: La frase que lo decide todo
         title: La relación tiene que ser de tipo, no de uso
@@ -115,12 +116,12 @@ slides:
           text: El paréntesis declara la herencia. Pez ya tiene nombre y comer sin escribirlos.
         - label: Línea 11
           text: super().__init__ corre el constructor del padre. Sin esa línea, nombre no existe.
-        - label: Línea 14
+        - label: Línea 13
           text: nadar solo vive en Pez. El padre no lo conoce, y hacerlo subir sería un error.
 
   - code_output:
       eyebrow: Demostración
-      title: Lo heredado y lo propio, en la misma llamada
+      title: Lo heredado y lo propio, en el mismo objeto
       filename: usar_pez.py
       lang: python
       output_label: Salida
@@ -216,7 +217,7 @@ slides:
                 print("Leyendo de un archivo")
       annotations:
         - label: Línea 1
-          text: Stream reúne lo que comparten todos, que es el estado abierto y cómo se abre y se cierra
+          text: Stream reúne lo que comparten todos, que es el estado abierto y cómo se abre
         - label: Línea 11
           text: ArchivoStream solo agrega lo que de verdad cambia entre un hijo y otro, que es leer
         - label: La regla
@@ -247,7 +248,7 @@ slides:
         - label: Línea 11
           text: El orden de la lista decide. Empleado va primero, así que su saludar es el que corre.
         - label: Cómo comprobarlo
-          text: Gerente.__mro__ imprime el orden exacto en que Python busca cada método
+          text: Gerente.__mro__ guarda el orden exacto en que Python busca cada método
         - label: Riesgo
           text: Si alguien invierte el orden en un refactor, el programa cambia de comportamiento sin un solo error
           accent: true
@@ -300,7 +301,7 @@ slides:
       rows:
         - ["1", "Perro('Bobby', 'pastor')", "–", "–"]
         - ["2", "corre Perro.__init__", "pastor", "no existe"]
-        - ["3", "Animal.__init__", "nunca se llamó", "no existe"]
+        - ["3", "Animal.__init__ no corre", "pastor", "no existe"]
         - ["4", "print(p.nombre)", "pastor", "AttributeError"]
       verdict: Definir __init__ en la subclase reemplaza al del padre. Si no lo llamas con super().__init__(nombre), el constructor del padre no corre nunca.
 

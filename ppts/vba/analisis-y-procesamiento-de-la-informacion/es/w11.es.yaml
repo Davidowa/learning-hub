@@ -136,10 +136,10 @@ slides:
           dark: true
         - label: Para eventos de libro
           title: ThisWorkbook
-          desc: En el explorador de proyecto, arriba. Ahí van Open y BeforeSave, y valen para el archivo entero.
+          desc: En el explorador de proyectos, arriba. Ahí van Open y BeforeSave, y valen para el archivo entero.
       note: >-
         Un módulo normal, de los que llevas usando desde la semana 2, no dispara ningún
-        evento. El código compila, la macro aparece en la lista, y el disparador nunca
+        evento. El código compila, el módulo aparece en el árbol, y el disparador nunca
         ocurre. Es el error más frecuente de esta sesión y no produce ningún mensaje.
 
   - code:
@@ -163,25 +163,25 @@ slides:
         End Sub
       annotations:
         - label: La guarda
-          text: Sin ese If, el manejador corre con cada cambio de cualquier celda de la hoja
+          text: Sin ese If, el manejador actúa con cada cambio de cualquier celda de la hoja
         - label: Offset
           text: Offset(0, 1) es una celda a la derecha. Cero renglones abajo, una columna a la derecha.
         - label: El módulo
           text: El primero va en la hoja. El segundo puede vivir en un módulo normal, porque a ese sí lo llamas tú.
         - label: Riesgo
-          text: Esa guarda no es adorno. Sin ella el programa se muerde la cola, y es la lámina que sigue.
+          text: Esa guarda no es adorno. Sin ella el programa se muerde la cola, y es el bloque que sigue.
           accent: true
 
   - table:
-      eyebrow: Medido
+      eyebrow: Medido en la celda
       title: Qué considera número IsNumeric, y qué no
       headers: ["Lo que se escribe", "IsNumeric", "Qué escribe al lado"]
       rows:
         - ["123", "True", "Número"]
         - ["12.5", "True", "Número"]
         - ["1e3", "True", "Número"]
-        - ["$5", "False", "No es número"]
-        - ["5%", "False", "No es número"]
+        - ["$5", "True", "Número"]
+        - ["5%", "True", "Número"]
         - ["2026-01-01", "False", "No es número"]
         - ["abc", "False", "No es número"]
 
@@ -229,7 +229,7 @@ slides:
       title: Cómo se corta el ciclo
       headers: ["Manera", "Cómo se ve", "Cuándo conviene"]
       rows:
-        - ["Guarda de dirección", "If Target.Address = ", "Cuando solo te importa una celda"]
+        - ["Guarda de dirección", 'If Target.Address = "$A$1"', "Cuando solo te importa una celda"]
         - ["Apagar los eventos", "Application.EnableEvents = False", "Cuando el manejador escribe en varias"]
 
   - code:
@@ -311,7 +311,7 @@ slides:
       eyebrow: Resumen
       title: Tres ideas para llevarse
       items:
-        - title: El evento vive en la hoja
+        - title: El evento vive en la hoja o en el libro
           desc: En un módulo normal el mismo código compila y no se dispara jamás, sin ningún aviso
         - title: Target dice qué cambió
           desc: Y sirve para decidir si el evento le toca a esa celda o hay que ignorarlo
@@ -321,10 +321,10 @@ slides:
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Termina el laboratorio y agrega un tercer evento, BeforeSave, que escriba la fecha y hora del guardado en una celda de bitácora antes de que el archivo se guarde.
+      brief: Termina el laboratorio y agrega un tercer evento, BeforeSave, que escriba con Now la fecha y hora del guardado en una celda de bitácora antes de que el archivo se guarde.
       meta:
         - [Entrega, Antes de la sesión 12]
-        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Formato, Blackboard · .xlsm + módulos .cls]
         - [Peso, Parte del 20 % de tareas]
       rubric:
         - ["Ubicación", "40 %", "Cada manejador está en la hoja o en ThisWorkbook, según corresponda"]

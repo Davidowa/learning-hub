@@ -76,8 +76,9 @@ slides:
       title: What a subclass receives
       lead: >-
         Everything public and protected from the parent, without writing a line. The
-        attributes only exist if the parent constructor actually ran, and that does not
-        happen by itself. You call it with super, and forgetting is the unit's classic bug.
+        attributes only exist if the parent constructor actually ran, and once the child
+        has its own __init__, that does not happen by itself. You call it with super, and
+        forgetting is the unit's classic bug.
       panel:
         label: The sentence that decides
         title: The relationship has to be about type, not use
@@ -115,7 +116,7 @@ slides:
           text: The parentheses declare the inheritance. Fish already has name and eat for free.
         - label: Line 11
           text: super().__init__ runs the parent constructor. Without that line, name never exists.
-        - label: Line 14
+        - label: Line 13
           text: swim lives only in Fish. The parent does not know it, and pushing it up would be a mistake.
 
   - code_output:
@@ -216,7 +217,7 @@ slides:
                 print("Reading from a file")
       annotations:
         - label: Line 1
-          text: Stream holds what they all share, which is the open state and how you open and close it
+          text: Stream holds what they all share, which is the open state and how you open it
         - label: Line 11
           text: FileStream only adds what genuinely differs from one child to the next, which is read
         - label: The rule
@@ -247,9 +248,9 @@ slides:
         - label: Line 11
           text: The order of the list decides. Employee comes first, so its greet is the one that runs.
         - label: How to check
-          text: Manager.__mro__ prints the exact order in which Python looks for each method
+          text: Manager.__mro__ holds the exact order in which Python looks for each method
         - label: Risk
-          text: Flip that order in a refactor and the program changes behaviour without a single error
+          text: Flip that order in a refactor and the program changes behavior without a single error
           accent: true
 
   - pitfalls:
@@ -300,7 +301,7 @@ slides:
       rows:
         - ["1", "Dog('Bobby', 'collie')", "–", "–"]
         - ["2", "Dog.__init__ runs", "collie", "does not exist"]
-        - ["3", "Animal.__init__", "never called", "does not exist"]
+        - ["3", "Animal.__init__ never runs", "collie", "does not exist"]
         - ["4", "print(d.name)", "collie", "AttributeError"]
       verdict: Defining __init__ in the subclass replaces the parent's. Unless you call it with super().__init__(name), the parent constructor never runs at all.
 
@@ -318,7 +319,7 @@ slides:
 
   - code_output:
       eyebrow: Checking
-      title: Every class inherits from object, even unwritten
+      title: Every class inherits from object, written or not
       filename: check.py
       lang: python
       output_label: Output

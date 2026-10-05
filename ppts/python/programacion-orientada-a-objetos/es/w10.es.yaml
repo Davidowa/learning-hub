@@ -142,7 +142,7 @@ slides:
       eyebrow: Diagrama
       title: Cómo crece una lista por dentro
       blocks:
-        - label: Al crearse
+        - label: Al agregar
           title: Reserva de más
           desc: Pide más espacio del que usa, para que el siguiente append no cueste nada
         - label: Al llenarse
@@ -186,6 +186,7 @@ slides:
       lang: python
       output_label: Salida
       source: |
+        import array
         from sys import getsizeof
 
         lista = list(range(1000))
@@ -195,7 +196,7 @@ slides:
         print(getsizeof(arreglo))
       output: |
         8056
-        4064
+        4200
 
   - pitfalls:
       eyebrow: Diagnóstico
@@ -217,12 +218,12 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: Procesamiento de datos en memoria
-      lede: Filtrar, transformar y agrupar antes de que nada toque el disco. La semana que entra ya habrá archivos.
+      lede: Filtrar, transformar y agrupar antes de que nada toque el disco. En dos semanas ya habrá archivos.
       block: 3
 
   - code:
       eyebrow: Filtrar
-      title: Una comprensión de lista, línea por línea
+      title: Una comprensión de lista, de izquierda a derecha
       filename: filtrar.py
       lang: python
       source: |
@@ -284,7 +285,7 @@ slides:
         - ["1", "numeros = [1, 2, 3, 4]", "[1, 2, 3, 4]", "–", "–"]
         - ["2", "copia = numeros", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Sí"]
         - ["3", "copia.append(5)", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Sí"]
-        - ["4", "len(numeros)", "5", "5", "Sí"]
+        - ["4", "len(numeros) → 5", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4, 5]", "Sí"]
       verdict: El signo igual copia la referencia, no el contenido. Para tener dos listas independientes hay que pedirlo, con numeros.copy() o con list(numeros).
 
   - figure:
@@ -311,7 +312,7 @@ slides:
       title: Tres ideas para llevarse
       items:
         - title: Tres preguntas eligen el contenedor
-          desc: Si importa el orden, si va a cambiar y si se busca por llave. En ese orden y ya está.
+          desc: Si importa el orden, si va a cambiar y si se busca por llave. En ese orden, y listo.
         - title: La lista es un arreglo dinámico
           desc: Reserva de más y copia cuando se llena, y por eso agregar al final casi nunca cuesta
         - title: El igual no copia, comparte

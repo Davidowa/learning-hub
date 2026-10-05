@@ -36,11 +36,11 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Configurar un proyecto de consola
-          sub: Con el estándar fijado en C++20, que no viene puesto de fábrica en ninguna configuración
+          sub: Con el estándar en C++20 en las dos configuraciones, y comprobado con _MSVC_LANG
         - head: Explicar qué corre antes que su programa
           sub: Preprocesador, compilador y enlazador, y cuál de los tres es el que se está quejando
         - head: Leer un programa de C++ completo
-          sub: El include, la función main, el valor de retorno y de dónde sale el nombre std
+          sub: El include, la función main y el valor de retorno
         - head: Encontrar un error con el depurador
           sub: Punto de ruptura, avance paso a paso y la ventana de variables locales
 
@@ -68,7 +68,7 @@ slides:
   - divider:
       eyebrow: Bloque 01
       title: El entorno de trabajo
-      lede: Media hora bien invertida hoy evita el problema que aparece en la semana nueve y que nadie relaciona con esta sesión.
+      lede: Lo que configures bien hoy evita el problema que aparece en la semana nueve y que nadie relaciona con esta sesión.
       block: 1
 
   - concept:
@@ -113,13 +113,13 @@ slides:
           desc: Cámbialo arriba antes de tocar nada, o Release se queda como estaba
         - label: Paso 03
           title: Entra a Lenguaje
-          desc: C/C++, Lenguaje, Estándar de lenguaje de C++
+          desc: C/C++, Lenguaje, Estándar de lenguaje C++
         - label: Paso 04
           title: Elige C++20
-          desc: La opción se lee ISO C++20 Standard y por debajo pasa la marca /std:c++20
+          desc: La opción se lee Estándar ISO C++20 y por debajo pasa la marca /std:c++20
         - label: Paso 05
           title: Recompila todo
-          desc: Compilar, Recompilar solución. Cambiar el estándar no rehace lo ya compilado.
+          desc: Compilar, Recompilar solución. Así cada archivo vuelve a pasar por el compilador con el estándar nuevo.
 
   - diagram:
       eyebrow: Configuraciones
@@ -131,7 +131,7 @@ slides:
           dark: true
         - label: Cuando entregas
           title: Release
-          desc: Optimizado y sin símbolos. Corre más rápido y el depurador deja de servirte casi por completo.
+          desc: Optimizado. Corre más rápido y, como el compilador reacomoda el código, el depurador deja de servirte casi por completo.
       note: >-
         Casi todas las opciones del proyecto se guardan por configuración, incluida la del
         estándar. Ese es el motivo del paso 02, y también el motivo por el que un proyecto
@@ -281,14 +281,14 @@ slides:
       title: Las cuatro ventanas que vas a usar todo el semestre
       headers: ["Ventana", "Qué muestra", "Cuándo sirve"]
       rows:
-        - ["Locales", "Las variables vivas de esta función", "Casi siempre. Es la primera que abres."]
+        - ["Variables locales", "Las variables vivas de esta función", "Casi siempre. Es la primera que abres."]
         - ["Inspección", "Solo las expresiones que tú agregas", "Cuando hay muchas variables y te importan dos"]
         - ["Pila de llamadas", "Quién llamó a quién para llegar aquí", "A partir de la unidad 3, cuando haya funciones"]
         - ["Inmediato", "Evalúa lo que le escribas, sin recompilar", "Para probar una corrección antes de escribirla"]
 
   - quiz:
       eyebrow: Pregunta rápida
-      question: El punto de ruptura está en la línea 9. ¿Qué muestra Locales cuando se detiene?
+      question: El punto de ruptura está en la línea 9. ¿Qué muestra la ventana Variables locales cuando se detiene?
       filename: promedio.cpp
       lang: cpp
       source: |
@@ -317,7 +317,7 @@ slides:
       brief: Creen un proyecto de consola, déjenlo en C++20 en las dos configuraciones y compilen el programa del promedio tal como está en la diapositiva. Encuentren el error usando el depurador y nada más.
       blocks:
         - label: Restricción
-          text: Sin agregar líneas de impresión. Solo puntos de ruptura y la ventana Locales.
+          text: Sin agregar líneas de impresión. Solo puntos de ruptura y la ventana Variables locales.
         - label: Entregable
           text: Una captura con el programa detenido y suma visible, más el archivo .cpp corregido
         - label: Criterio
@@ -327,17 +327,17 @@ slides:
       eyebrow: Resumen
       title: Tres ideas para llevarse
       items:
-        - title: El estándar no viene puesto
-          desc: Un proyecto nuevo compila como C++14 hasta que alguien entra a las propiedades y lo cambia
+        - title: El estándar se comprueba, no se supone
+          desc: Revísalo en las dos configuraciones y confírmalo con _MSVC_LANG, no con __cplusplus
         - title: Compilar y enlazar son dos pasos
           desc: C2143 lo dice el compilador y LNK2019 el enlazador, y cada uno se arregla en otro lado
         - title: El depurador se detiene antes
-          desc: Lo que ves en Locales es el estado justo antes de ejecutar la línea marcada, no después
+          desc: Lo que ves en Variables locales es el estado justo antes de ejecutar la línea marcada, no después
 
   - homework:
       eyebrow: Para la próxima sesión
       title: El proyecto de la semana, entregado y corregido
-      brief: Entreguen el proyecto del laboratorio con el estándar en C++20 en Debug y en Release, el promedio corregido, y un comentario de bloque arriba de main que explique en dos renglones qué hacía mal el programa original.
+      brief: Entreguen el proyecto del laboratorio con el estándar en C++20 en Debug y en Release, el promedio corregido, y un comentario de bloque, entre /* y */, arriba de main que explique en dos renglones qué hacía mal el programa original.
       meta:
         - [Entrega, Antes de la sesión 2]
         - [Formato, Blackboard · .zip sin la carpeta x64]
@@ -345,7 +345,7 @@ slides:
       rubric:
         - ["Configuración", "Requisito", "El proyecto compila en C++20 en las dos configuraciones"]
         - ["Corrección", "Requisito", "El promedio se calcula con los tres exámenes que hay"]
-        - ["Depuración", "Requisito", "La captura muestra el programa detenido y la ventana Locales abierta"]
+        - ["Depuración", "Requisito", "La captura muestra el programa detenido y la ventana Variables locales abierta"]
 
   - closing:
       title: Preguntas

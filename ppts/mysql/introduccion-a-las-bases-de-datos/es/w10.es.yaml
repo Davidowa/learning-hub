@@ -93,7 +93,7 @@ slides:
         - ["MIN / MAX", "El extremo de la columna", "Los ignora al comparar"]
 
   - code_output:
-      eyebrow: Medido · los cinco en una sentencia
+      eyebrow: Medido · los cinco en dos sentencias
       title: El promedio de las veinte inscripciones se sacó con catorce
       filename: agregados.sql
       lang: sql
@@ -164,8 +164,8 @@ slides:
           title: Después de agrupar
           desc: Filtra grupos ya formados, y sí acepta el alias que nació en el SELECT.
       note: >-
-        Si un renglón del resultado resume varias filas de la tabla, cada columna que usted
-        nombre tiene que valer lo mismo para todo el grupo. Esa frase es el error 1055.
+        Si un renglón del resultado resume varias filas de la tabla, cada columna que
+        nombres tiene que valer lo mismo para todo el grupo. Esa frase es el error 1055.
 
   - code_output:
       eyebrow: Medido · el error de la semana
@@ -344,8 +344,8 @@ slides:
         tutores_nulos     6
 
   - code_output:
-      eyebrow: Medido · por qué el PDF escribe un t después del paréntesis
-      title: Toda tabla derivada necesita su alias, y la CTE ahorra la mitad del texto
+      eyebrow: Medido · por qué el PDF escribe una t después del paréntesis
+      title: Toda tabla derivada necesita su alias, y la CTE escribe la subconsulta una vez
       filename: cte.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -382,7 +382,7 @@ slides:
         FROM pago
         GROUP BY YEAR(fecha_pago), MONTH(fecha_pago),
                  MONTHNAME(fecha_pago)
-        ORDER BY anio, mes;
+        ORDER BY anio, MONTH(fecha_pago);
 
         SET lc_time_names = 'es_MX';
         SELECT MONTHNAME('2025-08-10') AS mes;
@@ -414,7 +414,7 @@ slides:
           title: NOT IN sobre una subconsulta nula
           desc: >-
             Devuelve el conjunto vacío sin error y sin advertencia. La misma pregunta con
-            NOT EXISTS contesta diez. Cuando la lista pueda traer NULL, use NOT EXISTS.
+            NOT EXISTS contesta diez. Cuando la lista pueda traer NULL, usa NOT EXISTS.
         - label: Error 04
           title: Concatenar columnas que aceptan NULL
           desc: >-
@@ -438,8 +438,8 @@ slides:
             por la llave, la lista se queda en una sola columna.
         - label: La prueba
           text: >-
-            En la del promedio, escriba al lado cuántas filas se saltó el AVG. Si no lo
-            sabe, la cifra que va a mandar el reporte tampoco lo sabe.
+            En la del promedio, escribe al lado cuántas filas se saltó el AVG. Si no lo
+            sabes, la cifra que va a mandar el reporte tampoco lo sabe.
 
   - takeaways:
       eyebrow: Resumen
@@ -462,7 +462,7 @@ slides:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
       brief: >-
-        Cinco consultas con agrupación sobre su propia base, todas con su salida pegada.
+        Cinco consultas con agrupación sobre tu propia base, todas con su salida pegada.
         Una de ellas tiene que provocar el error 1055 a propósito y traer al lado la
         versión corregida, con un renglón que explique por qué la corrección funciona.
       meta:

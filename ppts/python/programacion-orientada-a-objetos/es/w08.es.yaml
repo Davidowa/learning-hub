@@ -117,9 +117,9 @@ slides:
             def hablar(self) -> None:
                 print("Miau")
       annotations:
-        - label: Línea 6
+        - label: Línea 7
           text: Perro vuelve a definir hablar. Para un perro, la versión del padre queda tapada.
-        - label: Línea 11
+        - label: Línea 12
           text: Gato hace lo mismo con otro cuerpo, y ninguna de las dos sabe que la otra existe
         - label: Ojo con el nombre
           text: Sobrescribir cambia el cuerpo en la hija. Sobrecargar sería tener dos firmas, y eso Python no lo hace.
@@ -195,7 +195,7 @@ slides:
                 print("Leyendo de memoria")
       annotations:
         - label: Línea 4
-          text: Heredar de ABC marca la clase como abstracta, y con eso deja de poder instanciarse
+          text: Heredar de ABC marca la clase como abstracta, pero solo deja de instanciarse si tiene un método abstracto
         - label: Línea 8
           text: El decorador obliga a cada hija a escribir leer. Si falta, el error salta al construirla.
         - label: Riesgo
@@ -216,8 +216,12 @@ slides:
         otro = Stream()
       output: |
         Leyendo de memoria
+        Traceback (most recent call last):
+          File "probar_stream.py", line 5
         TypeError: Can't instantiate
-        abstract class Stream
+        abstract class Stream without an
+        implementation for abstract
+        method 'leer'
 
   - table:
       eyebrow: Vocabulario
@@ -226,8 +230,8 @@ slides:
       rows:
         - ["Concreta", "Sí", "Todo", "class Perro(Animal):"]
         - ["Abstracta", "No", "Una parte", "class Stream(ABC):"]
-        - ["Interfaz", "No", "Nada", "Solo @abstractmethod"]
-        - ["Protocolo", "No aplica", "Nada", "typing.Protocol"]
+        - ["Interfaz", "No", "Nada", "ABC, todo abstracto"]
+        - ["Protocolo", "No", "Nada", "typing.Protocol"]
 
   - diagram:
       eyebrow: Diagrama
@@ -253,7 +257,7 @@ slides:
       items:
         - label: Error 01
           title: Sobrescribir cambiando la firma
-          desc: Si la hija pide otros argumentos, el ciclo polimórfico revienta en el tercer objeto
+          desc: Si la hija pide otros argumentos, el ciclo polimórfico revienta en el primer objeto de esa clase
         - label: Error 02
           title: '@abstractmethod sin heredar de ABC'
           desc: El decorador no impide nada por su cuenta, y la clase se instancia como si nada
@@ -320,7 +324,7 @@ slides:
           desc: Encapsulamiento, ocultamiento, reutilización, herencia, jerarquía, polimorfismo y abstractas
         - key: Fuera
           title: Lo que no entra
-          desc: Archivos, interfaces gráficas y bases de datos, que son materia del segundo parcial
+          desc: Funciones avanzadas y archivos, del segundo parcial; interfaces gráficas y bases de datos, del proyecto y el final
 
   - method:
       eyebrow: Cómo prepararse

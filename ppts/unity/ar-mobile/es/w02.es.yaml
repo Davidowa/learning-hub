@@ -35,7 +35,7 @@ slides:
       title: Cuatro momentos de la sesión
       cards:
         - title: El proyecto que ve
-          desc: Cinco paquetes, un proveedor y los dos GameObjects sin los cuales no corre nada
+          desc: Seis paquetes, un proveedor y los dos GameObjects sin los cuales no corre nada
         - title: Ajustes de Android
           desc: Los valores que deciden si la app se instala, y por qué existe cada uno
         - title: La pantalla de un color
@@ -86,7 +86,7 @@ slides:
   - divider:
       eyebrow: Bloque 01
       title: El proyecto que ve
-      lede: Cinco paquetes, un proveedor y dos GameObjects. Todo lo que sigue da por hecho que ya están puestos.
+      lede: Seis paquetes, un proveedor y dos GameObjects. Todo lo que sigue da por hecho que ya están puestos.
       block: 1
 
   - table:
@@ -132,7 +132,7 @@ slides:
           desc: Unity 6, plantilla Universal 3D, para que URP ya venga configurado
         - label: '02'
           title: Agrega paquetes
-          desc: Window, luego Package Manager, Unity Registry, los cinco de la tabla
+          desc: Window, luego Package Manager, Unity Registry, los seis de la tabla
         - label: '03'
           title: Prende ARCore
           desc: Project Settings, XR Plug-in Management, pestaña de Android
@@ -165,7 +165,7 @@ slides:
   - divider:
       eyebrow: Bloque 02
       title: Ajustes que deciden si se instala
-      lede: Seis valores en Player Settings, y cada uno es un rechazo en alguna parte si le pegas mal.
+      lede: Seis valores en Project Settings, y cada uno es un rechazo en alguna parte si le pegas mal.
       block: 2
 
   - table:
@@ -176,8 +176,8 @@ slides:
         - ["Minimum API Level", "Android 7.0, nivel 24", "Player > Other Settings"]
         - ["Scripting Backend", "IL2CPP", "Player > Other Settings"]
         - ["Target Architectures", "ARM64", "Player > Other Settings"]
-        - ["Auto Graphics API", "Apagado", "Player > Rendering"]
-        - ["Graphics APIs", "OpenGLES3, sin Vulkan", "Player > Rendering"]
+        - ["Auto Graphics API", "Apagado", "Other Settings > Rendering"]
+        - ["Graphics APIs", "OpenGLES3, sin Vulkan", "Other Settings > Rendering"]
         - ["ARCore Requirement", "Required u Optional", "XR Plug-in Management"]
 
   - concept:
@@ -223,7 +223,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 02 · Medido
-      title: Tres líneas que vale la pena registrar al compilar
+      title: Tres líneas que vale la pena registrar al arrancar
       filename: BuildReport.cs
       lang: csharp
       output_label: Log del equipo
@@ -245,7 +245,7 @@ slides:
       output: |
         urp True
         api OpenGLES3
-        session SessionInitializing
+        session CheckingAvailability
 
   - divider:
       eyebrow: Bloque 03
@@ -255,7 +255,7 @@ slides:
 
   - concept:
       eyebrow: Bloque 03 · La falla
-      title: Alguien tiene que dibujar la imagen de la cámara
+      title: Algo tiene que dibujar la imagen de la cámara
       lead: >-
         La app se instala, la sesión llega a rastrear, tu cubo aparece, y todos los demás
         píxeles son del mismo color. Bajo el Universal Render Pipeline, el componente AR
@@ -278,7 +278,7 @@ slides:
 
   - table:
       eyebrow: Bloque 03 · Diagnóstico
-      title: Tres pantallas rotas que se parecen y no lo son
+      title: Cinco pantallas rotas que se parecen y no lo son
       headers: [Qué ves, Qué significa, Dónde se arregla]
       rows:
         - ["Un solo color", "Nunca se dibujó la cámara", "Feature en Mobile_Renderer"]
@@ -348,7 +348,7 @@ slides:
       title: Cuatro revisiones que lo reducen a un asset
       headers: [Revisión, Qué miras, Resultado]
       rows:
-        - ["Rastreo", "El contenido no se mueve", "Sí"]
+        - ["Rastreo", "El contenido se queda en su lugar", "Sí"]
         - ["Se dibuja", "El cubo está en pantalla", "Sí"]
         - ["Magenta", "El cubo es gris", "No"]
         - ["Imagen de cámara", "El cuarto detrás", "No"]

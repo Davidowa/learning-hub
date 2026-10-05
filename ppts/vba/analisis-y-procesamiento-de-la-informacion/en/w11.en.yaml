@@ -41,7 +41,7 @@ slides:
           sub: Change, SelectionChange, Open and BeforeSave, and what triggers each
         - head: Use the Target parameter
           sub: To find out which cell changed, and decide whether the event applies to it
-        - head: Stop an event firing itself
+        - head: Stop an event from firing itself
           sub: With an address guard or by switching events off while it writes
 
   - roadmap:
@@ -123,7 +123,7 @@ slides:
   - divider:
       eyebrow: Block 02
       title: Where the code lives
-      lede: The one time in this course when putting code in the wrong place raises no error. Nothing simply happens.
+      lede: The one time in this course when putting code in the wrong place raises no error. Simply nothing happens.
       block: 2
 
   - diagram:
@@ -132,15 +132,15 @@ slides:
       blocks:
         - label: For sheet events
           title: The sheet module
-          desc: Right click the tab, View Code. Change and SelectionChange go here, and only for that sheet.
+          desc: Right-click the tab, View Code. Change and SelectionChange go here, and only for that sheet.
           dark: true
         - label: For workbook events
           title: ThisWorkbook
           desc: At the top of the project explorer. Open and BeforeSave go here, and they cover the whole file.
       note: >-
         An ordinary module, the kind you have used since week 2, fires no events at all. The
-        code compiles, the macro shows up in the list, and the trigger never happens. It is
-        the commonest mistake of this session and it produces no message.
+        code compiles, the module shows up in the tree, and the trigger never happens. It is
+        the most common mistake of this session and it produces no message.
 
   - code:
       eyebrow: With a condition
@@ -163,25 +163,25 @@ slides:
         End Sub
       annotations:
         - label: The guard
-          text: Without that If, the handler runs on every change to any cell in the sheet
+          text: Without that If, the handler acts on every change to any cell in the sheet
         - label: Offset
           text: Offset(0, 1) is one cell to the right. Zero rows down, one column across.
         - label: The module
           text: The first goes in the sheet. The second can live in an ordinary module, since you do call that one.
         - label: Risk
-          text: That guard is not decoration. Without it the program bites its own tail, which is the next slide.
+          text: That guard is not decoration. Without it the program bites its own tail, which is the next block.
           accent: true
 
   - table:
-      eyebrow: Measured
+      eyebrow: Measured in the cell
       title: What IsNumeric counts as a number
       headers: ["What gets typed", "IsNumeric", "What it writes beside it"]
       rows:
         - ["123", "True", "Number"]
         - ["12.5", "True", "Number"]
         - ["1e3", "True", "Number"]
-        - ["$5", "False", "Not a Number"]
-        - ["5%", "False", "Not a Number"]
+        - ["$5", "True", "Number"]
+        - ["5%", "True", "Number"]
         - ["2026-01-01", "False", "Not a Number"]
         - ["abc", "False", "Not a Number"]
 
@@ -229,7 +229,7 @@ slides:
       title: How the loop gets cut
       headers: ["Way", "How it looks", "When it suits"]
       rows:
-        - ["Address guard", "If Target.Address = ", "When only one cell matters"]
+        - ["Address guard", 'If Target.Address = "$A$1"', "When only one cell matters"]
         - ["Switch events off", "Application.EnableEvents = False", "When the handler writes to several"]
 
   - code:
@@ -305,13 +305,13 @@ slides:
         - label: Deliverable
           text: The .xlsm and the exported modules, with both events and a comment saying what triggers each
         - label: Criterion
-          text: That writing in the input cell twenty times running does not take Excel down
+          text: That writing in the input cell twenty times in a row does not take Excel down
 
   - takeaways:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: The event lives in the sheet
+        - title: The event lives in the sheet or the workbook
           desc: In an ordinary module the same code compiles and never fires, with no warning at all
         - title: Target says what changed
           desc: And it is what decides whether the event applies to that cell or should be ignored
@@ -321,10 +321,10 @@ slides:
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
-      brief: Finish the lab and add a third event, BeforeSave, that writes the date and time of the save into a log cell before the file is written.
+      brief: Finish the lab and add a third event, BeforeSave, that uses Now to write the date and time of the save into a log cell before the file is written.
       meta:
         - [Due, Before session 12]
-        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Format, Blackboard · .xlsm + .cls modules]
         - [Weight, Part of the 20 % for assignments]
       rubric:
         - ["Placement", "40 %", "Each handler sits in the sheet or in ThisWorkbook, as it should"]
@@ -334,7 +334,7 @@ slides:
   - closing:
       title: Questions
       subtitle: >-
-        Next session, custom classes. Packing data and behaviour into a type you define, and
+        Next session, custom classes. Packing data and behavior into a type you define, and
         using it as though it shipped with VBA.
       meta:
         - [Email, descobarc@up.edu.mx]

@@ -14,7 +14,7 @@ slides:
       title: Unity Essentials
       subtitle: >-
         What the player sees, what the player hears, and what a flat image is doing in a
-        scene measured in metres.
+        scene measured in meters.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, UNITY · Foundational]
@@ -36,7 +36,7 @@ slides:
         - title: The camera
           desc: >-
             Pathway area · Beginner Unity Cameras. The frustum, the fields that shape it, and
-            the four settings that make a scene render as a black rectangle.
+            the four settings that leave a camera rendering nothing useful.
         - title: Sound with a position
           desc: >-
             Pathway area · Audio Essentials. One listener, many sources, and the slider that
@@ -63,7 +63,7 @@ slides:
         - head: Turn a 2D sound into a 3D one
           sub: With Spatial Blend at 1 and a min and max distance that suit the room
         - head: Keep exactly one AudioListener
-          sub: And recognise the warning the console prints when there are two
+          sub: And recognize the warning the console prints when there are two
         - head: Slice a sprite sheet into frames
           sub: Grid by cell size, and the pixels per unit that decide its size in the scene
 
@@ -80,7 +80,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: done
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: now
         - label: 04 · Session 6
@@ -103,13 +103,13 @@ slides:
         The frustum is a pyramid with its tip at the camera and its top sliced off. The field
         of view sets how wide it opens, the near and far clipping planes cut it at both ends,
         and anything outside is not drawn at all. Most cameras that show nothing are not
-        broken. They are pointed at something that falls outside one of those four limits.
+        broken. They are pointed at something that falls outside one of those limits.
       panel:
         label: The arithmetic worth remembering
         title: Height is 2 d tan of half the field of view
         note: >-
           With a 60 degree camera, the view is 1.155 times the distance in height: 11.55
-          metres at ten metres, and the aspect ratio gives the width.
+          meters at ten meters, and the aspect ratio gives the width.
       steps:
         - text: Field of view opens the pyramid, in degrees
         - text: The near plane cuts off what is too close
@@ -130,7 +130,7 @@ slides:
 
   - code_output:
       eyebrow: Block 01 · Measured
-      title: How big the view is ten metres out
+      title: How big the view is ten meters out
       filename: FrustumProbe.cs
       lang: csharp
       output_label: Console
@@ -153,10 +153,10 @@ slides:
   - stat:
       eyebrow: Measured on the class camera
       value: 11.55 m
-      text: How tall the visible world is ten metres in front of a 60 degree camera
+      text: How tall the visible world is ten meters in front of a 60 degree camera
       note: >-
-        The ramp is 12 metres long, so framing it head on from ten metres leaves almost
-        nothing to spare. Either the camera moves back, or the field of view opens, and the
+        The ramp is 12 meters long, so framed head on from ten meters it is 45 centimeters
+        too long. Either the camera moves back, or the field of view opens, and the
         second one distorts the crates at the edges. This is the trade a game camera makes.
 
   - pitfalls:
@@ -218,8 +218,8 @@ slides:
       title: Six fields that turn a clip into a sound in a room
       headers: [Field, What it does, The default]
       rows:
-        - ["Play On Awake", "Starts with the scene", "Ticked"]
-        - ["Loop", "Restarts at the end", "Unticked"]
+        - ["Play On Awake", "Starts with the scene", "Checked"]
+        - ["Loop", "Restarts at the end", "Unchecked"]
         - ["Spatial Blend", "0 is 2D, 1 is fully 3D", "0"]
         - ["Min Distance", "Inside it, full volume", "1"]
         - ["Max Distance", "Where the fade stops", "500"]
@@ -234,13 +234,13 @@ slides:
           desc: Drop the .wav into Assets/Audio. Unity imports it as an AudioClip
         - label: '02'
           title: Add the source
-          desc: An Audio Source on the door, with Play On Awake unticked so it waits
+          desc: An Audio Source on the door, with Play On Awake unchecked so it waits
         - label: '03'
           title: Blend to 1
           desc: Spatial Blend all the way to 3D. Nothing else in this list matters until then
         - label: '04'
           title: Set the distances
-          desc: Min 1 and Max 20 for a room this size. The default 500 never fades indoors
+          desc: Volume Rolloff to Linear, Min 1 and Max 20 for this room. With Max at 500 it barely drops indoors
         - label: '05'
           title: Walk away
           desc: Move the camera in play mode. If the volume does not drop, blend is still 0
@@ -278,8 +278,8 @@ slides:
             GetComponent runs once here, not once per crate and never once per frame.
         - label: Risk
           text: >-
-            Play On Awake left ticked means the chime also fires the moment the scene loads,
-            before any crate has moved.
+            If the Audio Source also holds the clip, Play On Awake left checked fires it the
+            moment the scene loads, before any crate has moved.
           accent: true
 
   - code_output:
@@ -299,7 +299,7 @@ slides:
 
   - divider:
       eyebrow: Block 03
-      title: Flat images in a world of metres
+      title: Flat images in a world of meters
       lede: >-
         A sprite is an image with a rule attached, and the rule says how many of its pixels
         make one unit of the scene.
@@ -309,7 +309,7 @@ slides:
       eyebrow: Block 03 · Key concept
       title: Pixels Per Unit is the only bridge between the two
       lead: >-
-        An image knows pixels. A scene knows units, and a unit is a metre. Pixels Per Unit is
+        An image knows pixels. A scene knows units, and a unit is a meter. Pixels Per Unit is
         the exchange rate, and at the default of 100 a sprite 128 pixels tall is 1.28 units
         tall in the scene. Scaling the Transform to fix a size that came out wrong is the
         habit to avoid, because the number to fix is in the import settings.
@@ -331,13 +331,13 @@ slides:
       items:
         - label: '01'
           title: Texture Type
-          desc: Set it to Sprite, 2D and UI. Until then the sprite options are not shown
+          desc: Set it to Sprite (2D and UI). Until then the sprite options are not shown
         - label: '02'
           title: Sprite Mode
           desc: Multiple, which is what allows one file to hold more than one sprite
         - label: '03'
           title: Open the editor
-          desc: The Sprite Editor button in the import settings, not a menu somewhere else
+          desc: The Open Sprite Editor button in the import settings, not a menu somewhere else
         - label: '04'
           title: Slice
           desc: Grid By Cell Size, 128 by 128, no offset and no padding. Then Slice
@@ -350,16 +350,16 @@ slides:
       title: Six settings that decide how a sprite behaves
       headers: [Setting, What it controls, Note]
       rows:
-        - ["Texture Type", "Whether it is a sprite", "Sprite, 2D and UI"]
+        - ["Texture Type", "Whether it is a sprite", "Sprite (2D and UI)"]
         - ["Sprite Mode", "One sprite or many", "Multiple, for a sheet"]
         - ["Pixels Per Unit", "Pixels to one world unit", "100 by default"]
         - ["Filter Mode", "How it looks when scaled", "Point for pixel art"]
-        - ["Pivot", "The point it rotates about", "Centre by default"]
-        - ["Compression", "Size against quality", "Artefacts show on flat colour"]
+        - ["Pivot", "The point it rotates about", "Center by default"]
+        - ["Compression", "Size against quality", "Artifacts show on flat color"]
 
   - code_output:
       eyebrow: Block 03 · Measured
-      title: One frame of the sheet, in pixels and in metres
+      title: One frame of the sheet, in pixels and in meters
       filename: SpriteProbe.cs
       lang: csharp
       output_label: Console
@@ -394,8 +394,8 @@ slides:
       points:
         - label: Then the distances
           text: >-
-            At Spatial Blend 1 with the default Max Distance of 500, a room 20 metres across
-            uses four per cent of the fade curve, so it still sounds nearly flat.
+            At Spatial Blend 1, Linear rolloff and the default Max Distance of 500, a room 20
+            meters across uses four percent of the line and still sounds nearly flat.
         - label: The listener
           text: >-
             On the camera is the usual place, and it is correct for a first person view. It
@@ -409,7 +409,7 @@ slides:
       eyebrow: Lab
       title: Frame it, hear it, slice it, in pairs
       brief: >-
-        Frame the camera on the ramp from ten metres and record the field of view you needed.
+        Frame the camera on the ramp from ten meters and record the field of view you needed.
         Give the door a 3D chime with Min 1 and Max 20. Then slice the four frame sheet and
         put one frame in the scene at Transform scale 1.
       blocks:

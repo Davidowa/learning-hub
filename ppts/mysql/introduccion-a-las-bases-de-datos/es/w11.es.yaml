@@ -14,8 +14,8 @@ slides:
       title: Introducción a las Bases de Datos
       subtitle: >-
         Un JOIN contesta «¿y los que no tienen ninguno?». Un UNION contesta «¿y los que
-        están en la otra lista?». Entre UNION y UNION ALL hay tres letras y, sobre la
-        tabla de pagos, 3 900 pesos.
+        están en la otra lista?». Entre UNION y UNION ALL hay tres letras y, sobre las
+        tablas de pagos, 3 900 pesos.
       meta:
         - [Profesor, David Escobar-Castillejos]
         - [Motor, MySQL 9.7.2]
@@ -45,7 +45,7 @@ slides:
         - head: Poner el filtro en el ON o en el WHERE a propósito
           sub: El mismo predicado da 3 filas en una cláusula y 6 en la otra
         - head: Decidir entre UNION y UNION ALL con un criterio
-          sub: Sobre la tabla de pagos las tres letras valen 3 900 pesos y ninguna advertencia
+          sub: Sobre las tablas de pagos las tres letras valen 3 900 pesos y ninguna advertencia
         - head: Simular el FULL OUTER JOIN que MySQL no tiene
           sub: Proyectando las llaves, para que la receta no fusione a dos personas distintas
 
@@ -109,8 +109,8 @@ slides:
       title: Las seis escrituras, con lo que el servidor contestó
       headers: [Escritura, Qué filas devuelve, Lo medido]
       rows:
-        - ["INNER JOIN … ON", "las que casan de los dos lados", "sinonimo de JOIN"]
-        - ["LEFT JOIN … ON", "todas las del FROM, casen o no", "el alumno sin inscripcion sale"]
+        - ["INNER JOIN … ON", "las que casan de los dos lados", "sinónimo de JOIN"]
+        - ["LEFT JOIN … ON", "todas las del FROM, casen o no", "el alumno sin inscripción sale"]
         - ["CROSS JOIN … ON", "las mismas que el INNER JOIN", "compila y las devuelve"]
         - ["INNER JOIN sin ON", "el producto cartesiano", "20 filas, de 5 x 4"]
         - ["JOIN … USING (col)", "el INNER JOIN, en corto", "cuando la columna se llama igual"]
@@ -165,7 +165,7 @@ slides:
         LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id
         GROUP BY a.alumno_id;
       output: |
-        la antiunion devuelve
+        la antiunión devuelve
         exactamente al alumno sin
         inscripciones
 
@@ -229,7 +229,7 @@ slides:
         con_union     = 17
 
         los 3 que faltan son los de
-        posgrado que ademas dan
+        posgrado que además dan
         clase de asignatura
 
   - code_output:
@@ -337,7 +337,7 @@ slides:
         syntax to use near 'FULL
         OUTER JOIN lms_cuentas l ON
         e.matricula = l.matricula'
-        at line 1
+        at line 3
 
   - code_output:
       eyebrow: Medido · la receta
@@ -357,7 +357,7 @@ slides:
         filas del LEFT JOIN  = 10
         filas del RIGHT JOIN = 10
         coinciden            = 7
-        la union             = 13
+        la unión             = 13
         con UNION ALL        = 20
 
         13 = 7 que casan
@@ -379,7 +379,7 @@ slides:
         FROM alumnos a
         RIGHT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
       output: |
-        devolvio 5 filas donde el
+        devolvió 5 filas donde el
         full outer verdadero tiene 6
 
         dos alumnas distintas

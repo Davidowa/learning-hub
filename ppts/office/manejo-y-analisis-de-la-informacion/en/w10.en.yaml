@@ -80,7 +80,7 @@ slides:
           desc: Import, filters, tables, charts and the lookup functions
           state: now
         - label: E · Weeks 14–17
-          title: Summarising and delivery
+          title: Summarizing and delivery
           desc: PivotTables, advanced filters, what-if and printing
           state: todo
 
@@ -96,7 +96,7 @@ slides:
       eyebrow: Key concept
       title: What Excel gains when you press Ctrl+T
       lead: >-
-        A range is an address. Excel does not know that row 33 is the last one, that B3 is
+        A range is an address. Excel does not know that row 32 is the last one, that B2 is
         a header rather than data, or that the block is one thing. A table knows all three,
         and every feature that follows, the total row, the banding, the automatic
         expansion, exists because it does.
@@ -125,10 +125,10 @@ slides:
           desc: Ctrl+T and Ctrl+L open the same Create Table dialog. Pressing Ctrl+T and then Enter accepts a guess you never read.
         - label: '03'
           title: Read the address
-          desc: Where is the data for your table. It must cover the header row and the last row of data. A stray cell nearby is what widens it.
+          desc: Where is the data for your table? It must cover the header row and the last row of data. A stray cell nearby is what widens it.
         - label: '04'
           title: My table has headers
-          desc: Tick it when row one holds the column names. Clear it and Excel invents Column1, Column2, and every formula you write afterwards says Column1.
+          desc: Check it when the first row holds the column names. Clear it and Excel invents Column1, Column2, and every formula you write afterward says Column1.
         - label: '05'
           title: Name it and press Enter
           desc: Table Design tab, Properties group, the Table Name box. Same rules as a defined name. Nothing is committed until Enter.
@@ -191,9 +191,9 @@ slides:
           title: Ctrl+T then Enter
           desc: >-
             The dialog opened, proposed an extent and closed again without being read. One
-            blank column swallowed into the table is enough to break every total afterwards.
+            blank column swallowed into the table is enough to break every total afterward.
         - label: Error 02
-          title: Format as Table when only a table was asked
+          title: Format as Table when the task says Table
           desc: >-
             The Home tab route creates the table and applies a style in one move. It changes
             formatting the task never mentioned, on top of a range you never inspected.
@@ -213,7 +213,7 @@ slides:
       title: The table inside a formula
       lede: >-
         Once the columns have names, a formula can say what it means. Lorena[Quantity] is
-        the same cells as E4 to E33 and it survives everything that address does not.
+        the same cells as E3 to E32 and it survives everything that address does not.
       block: 2
 
   - code:
@@ -237,12 +237,12 @@ slides:
       annotations:
         - label: The at sign
           text: The @ means this row. Inside the table the name is dropped because you are already in it.
-        - label: The four special items
+        - label: The five special items
           text: "The others are #Data, #Totals and #All. They pick parts of the table, not cells."
         - label: Typed, not dragged
           text: Type the name, then the bracket. Excel lists the columns and you pick one.
         - label: If it fails
-          text: Dragging with the mouse writes $E$4 and the reference stops growing with the table.
+          text: If the mouse takes only part of the column, Excel writes an address that does not grow with the table.
           accent: true
 
   - compare:
@@ -255,21 +255,21 @@ slides:
         code: |
           =SUM(Lorena[Quantity])
 
-          30 orders today
-          31 orders after the paste
+          22 orders today
+          30 orders after the paste
           The formula never changed
           The total moved on its own
       after:
-        label: Not graded · the dragged address
+        label: Not graded · the typed address
         file: total.txt
         lang: excel
         code: |
-          =SUM(E4:E33)
+          =SUM(E3:E24)
 
-          30 orders today
-          31 orders after the paste
+          22 orders today
+          30 orders after the paste
           The formula never changed
-          The 31st order is not in it
+          The eight new orders are not in it
       note: >-
         Exercise 16 asks you to copy the rows from sheet Ex1-2 into the orders table. That
         paste is the test. A structured reference absorbs the new rows and an address does
@@ -291,7 +291,7 @@ slides:
         =SUBTOTAL(103,[Status])
 
         Typed by hand in the first row under the table
-        =SUM(E4:E33)
+        =SUM(E3:E32)
       annotations:
         - label: Where the list is
           text: A drop-down appears on the right edge of each total cell. That is the graded control.
@@ -326,13 +326,13 @@ slides:
         label: What stays behind
         title: The style, now as direct formatting on the cells
         note: >-
-          If the task asks for a plain range, clear it afterwards with Home, Editing,
+          If the task asks for a plain range, clear it afterward with Home, Editing,
           Clear, Clear Formats. Exercise 14 needs exactly this after the import, because
           From Text/CSV lands the data as a table.
       steps:
-        - text: SUM(Lorena[Quantity]) becomes SUM(E4:E33)
+        - text: SUM(Lorena[Quantity]) becomes SUM($E$3:$E$32)
         - text: Name Manager no longer lists the table
-        - text: The colours are still there
+        - text: The colors are still there
           loop: ↺ and turning the filter buttons off is not the same command
 
   - divider:
@@ -392,11 +392,11 @@ slides:
         - ["Legend", "Right, Top, Left or Bottom", "Dragging it there"]
         - ["Data Labels", "Center, Inside End, Outside End", "A text box"]
         - ["Axis Titles", "Primary Horizontal or Vertical", "The sheet header"]
-        - ["Any of them", "None removes it", "Pressing Delete"]
+        - ["Title, legend or labels", "None removes it", "Pressing Delete"]
 
   - tiers:
       eyebrow: Block 03 · Four separate graded actions
-      title: Layout, style, colour and description
+      title: Layout, style, color and description
       items:
         - key: Layout
           title: Quick Layout
@@ -404,16 +404,16 @@ slides:
         - key: Style
           title: Chart Styles
           desc: Chart Design, Chart Styles, the More arrow for the whole gallery. The tooltip gives the literal name, Style 1, Style 2.
-        - key: Colour
+        - key: Color
           title: Change Colors
-          desc: Same group, separate button, separate graded action. Recolouring by hand leaves formatting no style can override.
+          desc: Same group, separate button, separate graded action. Recoloring by hand leaves formatting no style can override.
         - key: Alt text
           title: The description
           desc: Right-click the border, Alt Text, worded Edit Alt Text on some builds. No OK button, it saves as you type.
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
-      title: Four ways to lose marks on a correct chart
+      title: Four ways to lose points on a correct chart
       items:
         - label: Error 01
           title: Building it with Alt+F1
@@ -428,7 +428,7 @@ slides:
         - label: Error 03
           title: A caption in the cell under the chart
           desc: >-
-            A screen reader announces an unlabelled object. The alt text property stays
+            A screen reader announces an unlabeled object. The alt text property stays
             empty, and that property is what the Accessibility Checker reads.
         - label: Error 04
           title: Transposing the data instead of switching
@@ -471,12 +471,12 @@ slides:
             itself, the automatic expansion and the reference that grows with the data
         - title: The name is the interface
           desc: >-
-            Lorena[Quantity] says what it means and follows the table. E4 to E33 says
+            Lorena[Quantity] says what it means and follows the table. E3 to E32 says
             where it is, and stops being true the first time somebody pastes a row
         - title: The chart is graded on its parts
           desc: >-
-            Type and subtype, series and categories, each element with its position, the
-            layout number, the style number, the colour set and the description. Eight
+            Type and subtype, series, categories, each element with its position, the
+            layout number, the style number, the color set and the description. Eight
             separate actions, not one picture
 
   - homework:

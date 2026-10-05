@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 02 · Unit 1 · The VBA editor
       title: Information Analysis and Processing
       subtitle: Where the code you recorded actually lives. Project, module and procedure, and how to run one line at a time.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 2 of 17]
 
   - agenda:
@@ -27,7 +27,7 @@ slides:
         - title: Where the code lives
           desc: Project, module and procedure, and why it matters which one you put it in
         - title: Run it and watch it run
-          desc: F5 runs the lot, F8 runs one line, and the second one is what teaches
+          desc: F5 runs it all, F8 runs one line, and the second one is what teaches
         - title: Your turn
           desc: Last week's macro, stepped through one line at a time
 
@@ -105,14 +105,14 @@ slides:
           desc: The big one on the right. This is where you type, and the two lists on top jump between procedures.
         - label: '03'
           title: Immediate
-          desc: Ctrl + G. A console where you can ask what something is worth without running the whole macro.
+          desc: Ctrl + G. A console where you can check a value without running the whole macro.
         - label: '04'
           title: Properties
           desc: F4. Barely useful today, and central in week 5 when the user forms arrive.
 
   - figure:
       eyebrow: Block 01 · The tour, on screen
-      title: The same four windows, in one editor
+      title: Three of those four windows, in one editor
       image: img/en/vbe-editor.png
       caption: >-
         Project Explorer top left, Properties under it, and the code window filling the
@@ -125,10 +125,10 @@ slides:
       title: The list Excel shows when you press Alt and F8
       image: img/en/macro-dialog.png
       caption: >-
-        The same procedure, seen from the workbook rather than from the editor. A macro
-        that does not appear here is either in another workbook or is not a Sub without
-        arguments, which are the two reasons a student cannot find their own code.
-      alt: The Macro dialog listing the macros available to run in the workbook.
+        The workbook's macros, seen from Excel rather than from the editor. Only Subs
+        without parameters show up here, and Step Into opens the one you pick in the
+        editor, stopped on its first line.
+      alt: The Macro dialog with an empty list, the Run, Step Into, Edit, Create, Delete and Options buttons, and Macros in set to All Open Workbooks.
 
   - divider:
       eyebrow: Block 02
@@ -154,9 +154,9 @@ slides:
           title: One line
           desc: Object, property and value
       note: >-
-        The Excel macro dialog only lists procedures, and only the ones in standard
-        modules. When your macro is missing from that list, it is almost always because
-        you wrote it inside a sheet module.
+        The Excel macro dialog only lists procedures, and only Subs without parameters.
+        If you wrote your macro inside a sheet module, it shows up with the module's name
+        in front, as Sheet1.MyMacro.
 
   - code:
       eyebrow: Block 02 · The smallest procedure
@@ -194,7 +194,7 @@ slides:
 
   - table:
       eyebrow: Block 02 · Vocabulary
-      title: Three words people use as if they were one
+      title: Five words people use as if they were one
       headers: [Word, What it is exactly, Where you see it]
       rows:
         - ["Sub", "A procedure that does something and returns nothing", "From Sub to End Sub"]
@@ -251,7 +251,7 @@ slides:
         - ["Alt + F11", "Switches between the sheet and the editor", "All the time"]
         - ["F5", "Runs the whole procedure", "Once you trust it"]
         - ["F8", "Runs one line and stops", "When something is not doing what you expected"]
-        - ["Ctrl + G", "Opens the Immediate window", "To ask what something is worth"]
+        - ["Ctrl + G", "Opens the Immediate window", "To check a value"]
         - ["Ctrl + Break", "Stops the macro that is running", "When it has run into an endless loop"]
 
   - trace:
@@ -271,10 +271,10 @@ slides:
       items:
         - label: Error 01
           title: Typing outside a procedure
-          desc: A loose statement above the first Sub never runs. Everything that executes lives between Sub and End Sub.
+          desc: A loose statement above the first Sub does not run, and VBA flags it as a compile error. Everything that executes lives between Sub and End Sub.
         - label: Error 02
-          title: Looking in the wrong dialog
-          desc: The macro dialog only lists standard modules. If you wrote it in the sheet, it will not be there.
+          title: Writing the macro in the sheet module
+          desc: It shows up in the macro dialog as Sheet1.MyMacro, and that module is for the sheet's events. Macros go in a standard module.
         - label: Error 03
           title: Running with the cursor elsewhere
           desc: F5 runs the procedure the cursor is sitting in, not the one you were reading.
@@ -318,15 +318,16 @@ slides:
           desc: Project, module, procedure and statement. Everything else this term hangs off that tree
         - title: The yellow line is the pending one
           desc: What is highlighted has not happened yet, and mixing that up makes an error look like it sits one line earlier
-        - title: Where you put it decides if it shows
-          desc: The macro dialog only lists standard modules, and the sheet and ThisWorkbook are for events
+        - title: Where you put it changes how it shows
+          desc: Outside a standard module the macro shows up as Sheet1.MyMacro, and the sheet and ThisWorkbook are for events
 
   - homework:
       eyebrow: Assignment
       title: Submission and grading criteria
       brief: >-
         Hand in a module with three procedures written by hand: one that shows a message,
-        one that writes your name into A1, and one that calls the other two with Call.
+        one that writes your name into A1, and one that hides column D and shows it
+        again, like the macro you recorded in week 1.
       meta:
         - [Due, Before week 3]
         - [Format, Blackboard · .bas and .xlsm]
@@ -334,7 +335,7 @@ slides:
       rubric:
         - ["Structure", "30 %", "Three procedures with names of their own, each closed with End Sub"]
         - ["Execution", "40 %", "All three run from the macro dialog without raising an error"]
-        - ["The third one", "30 %", "It calls the other two and does not repeat their code"]
+        - ["The third one", "30 %", "It hides column D and shows it again, without the comments the recorder leaves"]
 
   - closing:
       title: Questions
