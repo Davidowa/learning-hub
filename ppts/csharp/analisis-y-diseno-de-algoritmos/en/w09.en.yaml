@@ -38,14 +38,14 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Write a for with its three beats
-          sub: And programme the step to walk two at a time or to walk backwards
+          sub: And program the step to walk two at a time or to walk backwards
         - head: Walk an array with foreach
           sub: No counter, no bound, and no chance of running off the end of it
         - head: Decide when foreach will not do
           sub: Because the question moved from what the maximum is to where the maximum sits
         - head: Count what nesting costs
           sub: Four times the input is sixteen times the work, and it counts without a clock
-        - head: Recognise a silent overflow
+        - head: Recognize a silent overflow
           sub: A cycle counter in an int passes 2147483647 and reports a negative total
 
   - roadmap:
@@ -99,7 +99,7 @@ slides:
               sum += rpm[i];
           }
       note: >-
-        Initialise, check and change all fit in the header, separated by semicolons. The
+        Initialize, check and change all fit in the header, separated by semicolons. The
         body keeps the work and nothing else. There is no new loop here, only a way of
         writing the same one that makes the fourth beat hard to forget.
 
@@ -208,6 +208,8 @@ slides:
         int maxIdx = 0;
         for (int i = 1; i < rpm.Length; i++)
             if (rpm[i] > rpm[maxIdx]) maxIdx = i;
+        Console.WriteLine($"foreach: {count} readings, sum {sum}");
+        Console.WriteLine($"for: max {rpm[maxIdx]}, index {maxIdx}");
       output: |
         foreach: 7 readings, sum 10478
         for: max 1533, index 3
@@ -235,7 +237,7 @@ slides:
 
   - table:
       eyebrow: Block 01 · Measured
-      title: Three element types, three answers, one single rule
+      title: Five attempts, five answers, one single rule
       headers: [What you walk, What you try to write, What comes back]
       rows:
         - ["int[]", "The foreach variable", "error CS1656"]
@@ -315,7 +317,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Accumulators
-      lede: Sum, count, maximum with its index, and how many fell out of band. One walk, four answers.
+      lede: Sum, maximum and minimum with their index, and how many fell out of band. One walk, four answers.
       block: 3
 
   - code:
@@ -506,7 +508,7 @@ slides:
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
-      title: Four traps in repetition done properly
+      title: Four traps of repetition in depth
       items:
         - label: Error 01
           title: Reaching for i after the loop
@@ -538,7 +540,7 @@ slides:
         - title: foreach walks, for knows where
           desc: The moment the question is where and not what, the loop with no index stops helping
         - title: Passes are counted, not guessed
-          desc: Four times the input is sixteen times the work, and starting the inner loop at i plus one leaves 21 pairs over seven sensors
+          desc: Four times the input is sixteen times the work, and starting the inner loop at a + 1 leaves 21 pairs over seven readings
 
   - homework:
       eyebrow: Homework
