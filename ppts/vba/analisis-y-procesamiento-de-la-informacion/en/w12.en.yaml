@@ -12,7 +12,7 @@ slides:
       kicker: School of Business · 2026
       unit: Week 12 · Unit 3 · Custom classes
       title: Information Analysis and Processing
-      subtitle: Packing data and behaviour into a type you define, and using it as though it shipped with VBA.
+      subtitle: Packing data and behavior into a type you define, and using it as though it shipped with VBA.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, TIA503 · Business]
@@ -40,7 +40,7 @@ slides:
         - head: Validate inside the class
           sub: So an invalid value cannot get in from any macro at all
         - head: Create objects with New
-          sub: And recognise error 91 when it is forgotten, which is the commonest one
+          sub: And recognize error 91 when it is forgotten, which is the most common one
         - head: Tell two objects from two names
           sub: Set b = a copies nothing, it leaves two names pointing at the same thing
 
@@ -120,6 +120,7 @@ slides:
       lang: vba
       source: |
         Private pSalary As Double
+        Public Name As String
 
         Public Property Get Salary() As Double
             Salary = pSalary
@@ -140,7 +141,7 @@ slides:
         - label: The validation
           text: It sits in Let, so it applies wherever the assignment comes from
         - label: Risk
-          text: Name the private field the same as the property and VBA recurses into itself until the stack runs out.
+          text: Write Salary = value inside Let instead of pSalary and the property calls itself until the stack runs out.
           accent: true
 
   - code_output:
@@ -148,7 +149,7 @@ slides:
       title: What happens when it gets used
       filename: Module1
       lang: vba
-      output_label: Output
+      output_label: Immediate window
       source: |
         Dim e As Employee
         Set e = New Employee
@@ -221,14 +222,16 @@ slides:
         Set b = New Employee
         a.Name = "Ana"
         b.Name = "Beto"
+        Debug.Print a.Name, b.Name
 
         Set a = New Employee
         Set b = a
         a.Name = "Ana"
         b.Name = "Beto"
+        Debug.Print a.Name, b.Name
       output: |
-        first:   a=Ana   b=Beto
-        second:  a=Beto  b=Beto
+        Ana           Beto
+        Beto          Beto
 
   - concept:
       eyebrow: Why
@@ -241,8 +244,8 @@ slides:
         label: Where it bites
         title: Passing an object to a procedure
         note: >-
-          An object passed to a procedure goes by reference even if you write ByVal. What
-          gets copied is the address, not the object.
+          An object passed to a procedure is shared even if you write ByVal. What gets
+          copied is the address, not the object.
       steps:
         - text: Set copies the reference
         - text: Both names reach the same place
@@ -293,8 +296,8 @@ slides:
           title: Set b = a expecting a copy
           desc: You end up with two names for one object, and writing through one shows in the other
         - label: Error 04
-          title: A field named like the property
-          desc: The property calls itself, recurses, and the program runs out of stack
+          title: The property instead of the field
+          desc: Salary = value inside Let calls itself, recurses, and the program runs out of stack
 
   - lab:
       eyebrow: Lab
@@ -325,11 +328,11 @@ slides:
       brief: Finish the lab class and add a Class_Initialize that leaves the object with valid starting values. Write a macro that creates two objects and proves, by printing, that their state is independent.
       meta:
         - [Due, Before session 13]
-        - [Format, Blackboard · .xlsm + .bas modules]
+        - [Format, Blackboard · .xlsm + .bas and .cls modules]
         - [Weight, Part of the 20 % for assignments]
       rubric:
         - ["The class", "40 %", "Private field, Get and Let properties, and validation inside Let"]
-        - ["Initialisation", "30 %", "Class_Initialize leaves the object usable with nothing assigned"]
+        - ["Initialization", "30 %", "Class_Initialize leaves the object usable with nothing assigned"]
         - ["Independence", "30 %", "The macro proves with output that the two objects share no state"]
 
   - closing:

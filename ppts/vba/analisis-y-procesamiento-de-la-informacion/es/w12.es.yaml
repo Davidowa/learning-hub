@@ -120,6 +120,7 @@ slides:
       lang: vba
       source: |
         Private pSueldo As Double
+        Public Nombre As String
 
         Public Property Get Sueldo() As Double
             Sueldo = pSueldo
@@ -140,7 +141,7 @@ slides:
         - label: La validación
           text: Está en Let, así que aplica venga de donde venga la asignación
         - label: Riesgo
-          text: Si el campo privado se llamara igual que la propiedad, VBA entra en recursión y truena por pila.
+          text: Si dentro de Let escribes Sueldo = valor en vez de pSueldo, la propiedad se llama a sí misma y truena por pila.
           accent: true
 
   - code_output:
@@ -148,7 +149,7 @@ slides:
       title: Lo que pasa al usarla
       filename: Modulo1
       lang: vba
-      output_label: Salida
+      output_label: Ventana Inmediato
       source: |
         Dim e As Empleado
         Set e = New Empleado
@@ -221,14 +222,16 @@ slides:
         Set b = New Empleado
         a.Nombre = "Ana"
         b.Nombre = "Beto"
+        Debug.Print a.Nombre, b.Nombre
 
         Set a = New Empleado
         Set b = a
         a.Nombre = "Ana"
         b.Nombre = "Beto"
+        Debug.Print a.Nombre, b.Nombre
       output: |
-        primera:  a=Ana   b=Beto
-        segunda:  a=Beto  b=Beto
+        Ana           Beto
+        Beto          Beto
 
   - concept:
       eyebrow: Por qué
@@ -241,8 +244,8 @@ slides:
         label: Dónde muerde
         title: Pasar un objeto a un procedimiento
         note: >-
-          Un objeto que se pasa a un procedimiento se pasa por referencia aunque digas
-          ByVal. Lo que se copia es la dirección, no el objeto.
+          Un objeto que se pasa a un procedimiento se comparte aunque digas ByVal. Lo
+          que se copia es la dirección, no el objeto.
       steps:
         - text: Set copia la referencia
         - text: Los dos nombres van al mismo lugar
@@ -293,8 +296,8 @@ slides:
           title: Set b = a esperando una copia
           desc: Quedan dos nombres del mismo objeto, y escribir por uno se ve por el otro
         - label: Error 04
-          title: El campo con el nombre de la propiedad
-          desc: La propiedad se llama a sí misma, entra en recursión y el programa se queda sin pila
+          title: La propiedad en lugar del campo
+          desc: Sueldo = valor dentro de Let se llama a sí misma, entra en recursión y el programa se queda sin pila
 
   - lab:
       eyebrow: Laboratorio
@@ -325,7 +328,7 @@ slides:
       brief: Termina la clase del laboratorio y agrégale un Class_Initialize que deje el objeto con valores de arranque válidos. Escribe una macro que cree dos objetos y demuestre, imprimiendo, que su estado es independiente.
       meta:
         - [Entrega, Antes de la sesión 13]
-        - [Formato, Blackboard · .xlsm + módulos .bas]
+        - [Formato, Blackboard · .xlsm + módulos .bas y .cls]
         - [Peso, Parte del 20 % de tareas]
       rubric:
         - ["La clase", "40 %", "Campo privado, propiedades Get y Let, y validación dentro de Let"]

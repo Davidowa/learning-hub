@@ -14,7 +14,7 @@ slides:
       title: Analysis and Design of Algorithms
       subtitle: >-
         The wall we built around every method last week is there on purpose. Today we punch
-        two labelled holes in it, and we find the one that had been open all along.
+        two labeled holes in it, and we find the one that had been open all along.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM101 · Term 1]
@@ -25,7 +25,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: The broken Swap
-          desc: Predict it on the board, run it afterwards, and explain why it builds without a complaint
+          desc: Predict it on the board, run it afterward, and explain why it builds without a complaint
         - title: The word ref
           desc: Reading, changing and writing back into the caller's own variable
         - title: The word out
@@ -42,7 +42,7 @@ slides:
         - head: Share a variable with ref
           sub: With the keyword in the signature and again at the call site
         - head: Fill a parameter with out
-          sub: And say who is obliged to initialise it in each of the two cases
+          sub: And say who is obliged to initialize it in each of the two cases
         - head: Read the contract errors
           sub: CS1620, CS0165, CS0177 and CS1510, which say different things
         - head: Use TryParse as a fixed rule
@@ -268,15 +268,15 @@ slides:
         Fill(ref tank, 15.0);   Console.WriteLine(tank);
         Fill(ref tank, 10.0);   Console.WriteLine(tank);
 
-        static void Fill(ref double litres, double add)
+        static void Fill(ref double liters, double add)
         {
-            bool room = litres + add <= 60.0;
+            bool room = liters + add <= 60.0;
             if (!room)
             {
                 Console.WriteLine("  no headroom above 60 L");
                 return;
             }
-            litres += add;
+            liters += add;
         }
       output: |
         55
@@ -335,7 +335,7 @@ slides:
       title: The word out, and the input rule
       lede: >-
         ref says the caller has already filled the variable. out says the method is obliged
-        to fill it. Who initialises is the whole difference.
+        to fill it. Who initializes is the whole difference.
       block: 3
 
   - code_output:
@@ -366,8 +366,8 @@ slides:
 
   - table:
       eyebrow: Block 03 · The contract
-      title: Who initialises, and what the caller takes home
-      headers: [Form, Who initialises, What the caller takes home]
+      title: Who initializes, and what the caller takes home
+      headers: [Form, Who initializes, What the caller takes home]
       rows:
         - ["by value", "The caller", "Nothing, the method saw a copy"]
         - ["ref", "The caller", "Whatever the method wrote there"]
@@ -440,7 +440,7 @@ slides:
       title: Lowest and highest through two output parameters
       brief: >-
         Write MinMax over the thermocouple trio with two out parameters, and in front of it
-        a reader that uses int.TryParse so it refuses rubbish. Then add Drain, which empties
+        a reader that uses double.TryParse so it refuses garbage. Then add Drain, which empties
         the coolant tank by reference.
       blocks:
         - label: Deliverable
@@ -462,9 +462,9 @@ slides:
       items:
         - title: ref goes on both sides
           desc: In the signature and at the call. Nobody ends up sharing a variable without writing it
-        - title: Who initialises decides it all
+        - title: Who initializes decides it all
           desc: With out the method is obliged; with ref, the caller. That is the entire difference
-        - title: An array already travelled shared
+        - title: An array already traveled shared
           desc: The variable holds a reference, so the parameter's copy points at the very same array
 
   - homework:

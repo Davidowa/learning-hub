@@ -12,7 +12,7 @@ slides:
       kicker: School of Engineering · 2026
       unit: Week 02 · Unit 1 · Basic elements of C++
       title: Advanced Programming
-      subtitle: How a value gets declared, what the operators do with it, and why the machine answered 63 when you expected 63.5.
+      subtitle: How a value gets declared, what the operators do with it, and why the machine answered 84 when you expected 84.67.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM103 · Term 2]
@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: Names and values
-          desc: Declaring, initialising, and the difference between the two
+          desc: Declaring, initializing, and the difference between the two
         - title: Operators
           desc: All five arithmetic ones, precedence, and the compound forms
         - title: Increment
@@ -35,14 +35,14 @@ slides:
       eyebrow: Learning objectives
       title: By the end of the session you will be able to…
       items:
-        - head: Declare and initialise correctly
-          sub: And explain why reading an uninitialised variable gives you anything rather than zero
+        - head: Declare and initialize correctly
+          sub: And explain why reading an uninitialized variable gives you anything rather than zero
         - head: Predict what an expression evaluates to
           sub: Applying precedence in the order the language uses, not the order you read in
         - head: Tell prefix from postfix increment
           sub: And say which value each one hands back to the expression around it
         - head: Control type conversion
-          sub: Recognise the implicit one when it happens by itself and force the explicit one with static_cast
+          sub: Recognize the implicit one when it happens by itself and force the explicit one with static_cast
 
   - roadmap:
       eyebrow: Course map
@@ -73,10 +73,10 @@ slides:
 
   - concept:
       eyebrow: Key concept
-      title: Declaring reserves the space, initialising fills it
+      title: Declaring reserves the space, initializing fills it
       lead: >-
         Declaring tells the compiler how much memory to set aside and how to read it.
-        Initialising puts the first value in. They are two separate things, and C++ lets you
+        Initializing puts the first value in. They are two separate things, and C++ lets you
         do the first without the second, which is where the hardest bugs come from.
       panel:
         label: What does not happen by itself
@@ -87,7 +87,7 @@ slides:
       steps:
         - text: The type decides the size
         - text: The name decides what you call it
-        - text: The initialiser decides its value
+        - text: The initializer decides its value
           loop: ↺ skipping the third still compiles and fails differently every run
 
   - tiers:
@@ -96,7 +96,7 @@ slides:
       items:
         - key: '01'
           title: Letters, digits and underscore
-          desc: Nothing else. No spaces, no accented characters, no hyphen, which the compiler reads as a subtraction.
+          desc: No spaces and no hyphen, which the compiler reads as a subtraction. Accented letters are avoided by habit, not by rule.
         - key: '02'
           title: Cannot start with a digit
           desc: exam2 is valid and 2exam is not. The compiler rejects it before it works out what you meant.
@@ -110,7 +110,7 @@ slides:
   - code:
       eyebrow: Declaration
       title: Three variables, and one the compiler protects
-      filename: marks.cpp
+      filename: grades.cpp
       lang: cpp
       source: |
         #include <iostream>
@@ -119,10 +119,10 @@ slides:
         {
             int students = 32;
             double average = 8.75;
-            const double PASS_MARK = 7.0;
+            const double PASSING_GRADE = 7.0;
 
             students = 33;
-            std::cout << students << " " << PASS_MARK << "\n";
+            std::cout << students << " " << PASSING_GRADE << "\n";
             return 0;
         }
       annotations:
@@ -131,7 +131,7 @@ slides:
         - label: Line 7
           text: const promises that value is never reassigned, and the compiler collects on the promise
         - label: Line 9
-          text: Reassigning students is fine. The same line applied to PASS_MARK does not compile.
+          text: Reassigning students is fine. The same line applied to PASSING_GRADE does not compile.
         - label: Risk
           text: Capitals are a habit, not a rule. What protects the value is const, not the name.
           accent: true
@@ -144,10 +144,10 @@ slides:
       output_label: One run, out of many possible
       source: |
         int declared;
-        int initialised = 0;
+        int initialized = 0;
 
         std::cout << declared << "\n";
-        std::cout << initialised << "\n";
+        std::cout << initialized << "\n";
       output: |
         237
         0
@@ -171,7 +171,7 @@ slides:
 
   - table:
       eyebrow: Assignment
-      title: The six compound forms, and what each one stands for
+      title: Six assignment operators, and what each one stands for
       headers: ["Operator", "Reads as", "Stands for"]
       rows:
         - ["=", "Assign", "x becomes 5"]
@@ -303,8 +303,8 @@ slides:
           title: Dividing two integers by accident
           desc: The result comes out truncated, nothing crashes, and the bug surfaces when somebody checks the number
         - label: Error 02
-          title: Reading before initialising
-          desc: It compiles, it runs, and it gives a different value each time. Warning C4700 already said so.
+          title: Reading before initializing
+          desc: If it compiles, it gives any value at all. In a new Visual Studio project, C4700 already flags it as an error.
         - label: Error 03
           title: Mixing increment into an expression
           desc: n++ + n on one line is not a hard exam question, it is code that needs rewriting
@@ -318,7 +318,7 @@ slides:
       statement: A well chosen identifier saves the comment that used to explain it. The rule is not to write long names, it is that the name should say what the variable holds rather than what type it is.
       points:
         - label: What works
-          text: finalAverage, enrolledStudents, PASS_MARK. They read on their own and need no footnote.
+          text: finalAverage, enrolledStudents, PASSING_GRADE. They read on their own and need no footnote.
         - label: What does not
           text: x, data, temp, number2. Each costs a full read of the code to find out what it holds.
         - label: The constant
@@ -327,10 +327,10 @@ slides:
   - lab:
       eyebrow: Lab
       title: A report card that computes correctly, in pairs
-      brief: Write a program that declares one student's three marks as integers, computes the average with its fraction intact, and prints it alongside the remainder of dividing the total by three.
+      brief: Write a program that declares one student's three grades as integers, computes the average with its fraction intact, and prints it alongside the remainder of dividing the total by three.
       blocks:
         - label: Constraint
-          text: No if and no loops, which arrive in week 7. Straight down the page.
+          text: No if and no loops, which arrive in weeks 7 and 8. Straight down the page.
         - label: Deliverable
           text: A .cpp file that prints the fractional average and the remainder in the same run
         - label: Criterion
@@ -340,7 +340,7 @@ slides:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: Declaring is not initialising
+        - title: Declaring is not initializing
           desc: The first sets memory aside and the second fills it. Without the second, what is inside is leftovers.
         - title: Integer division truncates
           desc: 7 over 2 gives 3, and one of the two operands being real is enough to make it 3.5
@@ -350,19 +350,19 @@ slides:
   - homework:
       eyebrow: For the next session
       title: The report card finished and one conversion explained
-      brief: Finish the lab program, add a const for the pass mark, and include a block comment explaining in three lines why one of the divisions needed static_cast and the other did not.
+      brief: Finish the lab program, add a const for the passing grade, and include a block comment explaining in three lines why one of the divisions needed static_cast and the other did not.
       meta:
         - [Due, Before session 3]
         - [Format, Blackboard · .zip without the x64 folder]
         - [Weight, Exercises are averaged into one point of the term grade]
       rubric:
         - ["Correctness", "Required", "The average keeps its fraction and the remainder is right"]
-        - ["Style", "Required", "Names say what they hold and the pass mark is const"]
+        - ["Style", "Required", "Names say what they hold and the passing grade is const"]
         - ["Explanation", "Required", "The comment separates integer division from real division"]
 
   - closing:
       title: Questions
-      subtitle: Next session, the full catalogue of types, namespaces, and the string type.
+      subtitle: Next session, the full catalog of types, namespaces, and the string type.
       meta:
         - [Email, descobarc@up.edu.mx]
         - [Chat, Institutional Google Chat]

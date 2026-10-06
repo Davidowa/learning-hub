@@ -107,7 +107,7 @@ slides:
         - label: Definir no es llamar
           text: El def solo crea la función. Sin la llamada, nunca se ejecuta.
         - label: Riesgo
-          text: Llamarla sin paréntesis no la ejecuta, imprime la referencia a la función
+          text: Llamarla sin paréntesis no la ejecuta ni marca error; en un script no pasa nada
           accent: true
 
   - table:
@@ -241,7 +241,7 @@ slides:
       title: Local dentro de global
       image: img/es/scope.png
       caption: Lo que se declara dentro de la función deja de existir cuando la llamada termina
-      alt: Un frasco rotulado local dentro de una caja función, dentro de una caja global
+      alt: Una caja local con dos variables, dentro de una caja función, dentro de una caja global; una flecha desde afuera marca NameError
 
   - code_output:
       eyebrow: Módulo 3 · Alcance
@@ -278,11 +278,14 @@ slides:
                     print("Buzz")
                 else:
                     print(number)
+
+
+        fizz_buzz()
       annotations:
         - label: Por qué este orden
           text: La condición doble va primero; si no, 15 se imprime como Fizz y nunca llega a FizzBuzz
         - label: Qué repasa
-          text: Función, ciclo, residuo, condicional encadenado y else por defecto, en diez líneas
+          text: Función, ciclo, residuo, condicional encadenado y else por defecto, en una función de diez líneas
 
   - pitfalls:
       eyebrow: Diagnóstico
@@ -336,7 +339,7 @@ slides:
       title: Tres ideas para llevarse
       items:
         - title: Una función es una responsabilidad
-          desc: En tres semanas eso mismo se llamará método y vivirá dentro de una clase
+          desc: En la semana 3 eso mismo se llamará método y vivirá dentro de una clase
         - title: return entrega, print solo muestra
           desc: Una función de cálculo que imprime deja al que la llamó con las manos vacías
         - title: Asignar dentro crea una variable local

@@ -76,7 +76,7 @@ slides:
         title: A verb and a noun
         note: >-
           calculate_average, read_file, is_even. If you cannot name it that way, it
-          probably does more than one thing and wants splitting.
+          probably does more than one thing and needs splitting.
       steps:
         - text: Defined with def, exactly once
         - text: Called by name, with parentheses
@@ -107,7 +107,7 @@ slides:
         - label: Defining is not calling
           text: The def only creates the function. Without the call, it never runs.
         - label: Risk
-          text: Calling it without parentheses does not run it, it prints the function reference
+          text: Calling it without parentheses does not run it or raise an error; in a script nothing happens
           accent: true
 
   - table:
@@ -135,7 +135,7 @@ slides:
         introduce(last="Lopez", first="Ana")          # by name
       annotations:
         - label: Defaults go last
-          text: The other way round is a SyntaxError, because Python could not tell which one was omitted
+          text: The other way around is a SyntaxError, because Python could not tell which one was omitted
         - label: Keyword arguments
           text: Naming them at the call site frees the order and reads better
         - label: Risk
@@ -169,7 +169,7 @@ slides:
 
   - code_output:
       eyebrow: Module 3 · return
-      title: The same sum, with print and with return
+      title: The same calculation, with print and with return
       filename: returning.py
       lang: python
       output_label: Output
@@ -241,7 +241,7 @@ slides:
       title: Local inside global
       image: img/en/scope.png
       caption: What is declared inside the function stops existing when the call returns
-      alt: A jar labelled local inside a function box, inside a global box
+      alt: A local box holding two variables, inside a function box, inside a global box; an arrow from outside marks NameError
 
   - code_output:
       eyebrow: Module 3 · Scope
@@ -278,11 +278,14 @@ slides:
                     print("Buzz")
                 else:
                     print(number)
+
+
+        fizz_buzz()
       annotations:
         - label: Why this order
           text: The double condition goes first; otherwise 15 prints as Fizz and never reaches FizzBuzz
         - label: What it reviews
-          text: Function, loop, remainder, chained conditionals and a default else, in ten lines
+          text: Function, loop, remainder, chained conditionals and a default else, in a ten-line function
 
   - pitfalls:
       eyebrow: Diagnosis
@@ -335,8 +338,8 @@ slides:
       eyebrow: Summary
       title: Three things to take away
       items:
-        - title: A function is a responsibility with a name
-          desc: In three weeks the same thing is called a method and lives inside a class
+        - title: A function is a responsibility
+          desc: In week 3 the same thing is called a method and lives inside a class
         - title: return hands over, print only shows
           desc: A calculating function that prints leaves the caller empty-handed
         - title: Assigning inside creates a local

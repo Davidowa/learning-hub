@@ -84,7 +84,7 @@ slides:
       title: Precision is the requirement, not the decoration
       lead: >-
         An algorithm is a finite sequence of steps that solves a problem and leaves
-        nothing to the judgement of whoever runs it. The practical test is quick and
+        nothing to the judgment of whoever runs it. The practical test is quick and
         uncomfortable. If two people follow your steps with the same data and reach
         different results, it was not an algorithm yet.
       panel:
@@ -164,7 +164,7 @@ slides:
       title: Order is correctness, and the compiler has no opinion
       filename: Program.cs
       lang: csharp
-      output_label: On running
+      output_label: Build and run
       source: |
         double bedA = 22.0;
         Console.WriteLine($"A: purge nozzle at {bedA:F1} C");
@@ -206,6 +206,15 @@ slides:
         - ["WHILE", "Repeats while the test holds", "WHILE bed < 60.0"]
         - ["FOR", "Repeats a counted number of times", "FOR i = 1 TO 7"]
 
+  - figure:
+      eyebrow: Block 02 · Unit 1.2
+      title: The four shapes of a flowchart
+      image: img/en/ct-05.png
+      caption: >-
+        An oval for start and end, a rectangle for a process, a diamond for a decision,
+        a parallelogram for input and output.
+      alt: The four flowchart symbols, hand-drawn and labeled
+
   - code:
       eyebrow: Block 02 · Pseudocode
       title: The startup sequence, written to be read
@@ -233,7 +242,7 @@ slides:
         - label: The indentation
           text: It marks which instructions fall inside the loop and which fall inside each branch.
         - label: The three shapes
-          text: Sequence, selection and repetition. No fourth one shows up anywhere in this session.
+          text: Sequence, selection and repetition. No fourth one shows up anywhere in the plan.
         - label: Risk
           text: If the heating step does not move the test, the WHILE never ends.
           accent: true
@@ -269,7 +278,7 @@ slides:
         starting print
 
   - compare:
-      eyebrow: Block 02 · Unit 1.5
+      eyebrow: Block 02 · Unit 1.3
       title: The expected trace gets written before running
       before:
         label: expected.txt · what the team predicted
@@ -309,7 +318,7 @@ slides:
         - ['2', "is i <= 10?   yes", '0', '1']
         - ['3–4', "sum = sum+i, i = i+1", '1', '2']
         - ['…', "eight more passes", '45', '10']
-        - ['21–23', "sum+i, i+1, i<=10? no", '55', '11']
+        - ['30–32', "sum+i, i+1, i<=10? no", '55', '11']
       verdict: >-
         Half the room writes 10 in the last row. The counter has to overshoot the limit
         for the test to be false, and that extra step is exactly what makes the loop end.
@@ -368,7 +377,7 @@ slides:
       rows:
         - ["x != 1.0", "1000 and going", "99.9999999999986", "no, the cap cut it"]
         - ["x == 1.0", "n/a", "False", "equality never holds"]
-        - ["y < 1.0", "11", "1.0999999999999999", "yes, but not at 1.0"]
+        - ["x < 1.0", "11", "1.0999999999999999", "yes, but not at 1.0"]
       verdict: >-
         Adding 0.1 ten times does not give 1.0 in binary. With != the loop sails past and
         never comes back; with < it does end, but at eleven passes and at
@@ -378,14 +387,14 @@ slides:
       eyebrow: Block 03
       title: Paradigms, and why we live in three shapes
       lede: >-
-        Four ways of organising the same solution. Three of them produce exactly the same
+        Four ways of organizing the same solution. Three of them produce exactly the same
         number over the same seven readings.
       block: 3
 
   - table:
       eyebrow: Block 03 · Unit 1.4
-      title: The four paradigms over the same seven readings
-      headers: [Paradigm, How it organises the solution, What it gives]
+      title: Four paradigms and goto, over the same seven readings
+      headers: [Paradigm, How it organizes the solution, What it gives]
       rows:
         - ["Imperative", "I say the how, step by step", "sum = 10478"]
         - ["Structured", "Imperative with three shapes only", "sum = 10478"]
@@ -453,7 +462,7 @@ slides:
                   (double)m.Sum() / m.Length;
           }
       note: >-
-        Both print 1496.857 over the same seven readings and comparing the two means
+        Both give 1496.857 over the same seven readings and comparing the two means
         returns True. The difference is not the number, it is who holds the data. Week 15
         builds half of that road with struct.
 
@@ -473,7 +482,7 @@ slides:
         - label: The one argued point
           text: >-
             That those three suffice is the Böhm and Jacopini theorem, of 1966. No number
-            of examples proves it. It is cited, and labelled for what it is.
+            of examples proves it. It is cited, and labeled for what it is.
 
   - lab:
       eyebrow: Lab
@@ -497,7 +506,7 @@ slides:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: An algorithm leaves nothing to judgement
+        - title: An algorithm leaves nothing to judgment
           desc: If two people following your steps get different results, it is not one yet
         - title: Order is correctness, not style
           desc: The same two instructions swapped purge at 22 °C or at 60 °C, and both compile clean

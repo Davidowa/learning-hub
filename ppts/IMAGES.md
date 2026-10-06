@@ -26,6 +26,7 @@ most explain a language feature and get reused across sessions.
 | `paradigms` | 21:9 | w02 | es, en |
 | `parallel-lists` | 21:9 | w02 | es, en |
 | `class-object` | 21:9 | w03 | es, en |
+| `class-object-cpp` | 21:9 | w06 | es, en |
 | `class-vs-instance` | 21:9 | w03 | es, en |
 | `access-levels` | 21:9 | w04, w06 | es, en |
 | `array-memory` | 21:9 | w10 | es, en |
@@ -159,6 +160,16 @@ most explain a language feature and get reused across sessions.
 **Reuse.** The same analogy is already in docs/02-oop.md, so the drawing and the written notes reinforce each other.
 
 **Ratio** 21:9 · **lessons** w03 · **drawn by** `figures.class_object`
+
+## `class-object-cpp`
+
+![class-object-cpp](img/es/class-object-cpp.png)
+
+**Shows.** Class, constructor, objects, with the constructor labelled the C++ way: the name of the class and its parentheses.
+
+**Reuse.** The COM103 twin of class-object. The analogy is identical; only the middle box changes, because a C++ constructor is called by the name of the class where Python calls __init__.
+
+**Ratio** 21:9 · **lessons** w06 · **drawn by** `figures.class_object_cpp`
 
 ## `class-vs-instance`
 

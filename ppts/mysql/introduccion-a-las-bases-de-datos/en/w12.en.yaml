@@ -14,7 +14,7 @@ slides:
       title: Introduction to Databases
       subtitle: >-
         A table stores data. A view stores logic. Last week's JOIN gets a name today, and
-        it is the first object you write in this course that outlives the session.
+        it is the first query you write in this course that outlives the session.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Engine, MySQL 9.7.2]
@@ -58,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          desc: Entity-relationship, normalization, and the model turned into tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -77,7 +77,7 @@ slides:
       eyebrow: Block 01
       title: What a view stores and what it does not
       lede: >-
-        Week 2 called it «Vista (RO)» and week 3 placed it at the external level. One of
+        Week 2's source called it “Vista (RO)” and week 3 placed it at the external level. One of
         those two is wrong, and today it gets corrected with the server on screen.
       block: 1
 
@@ -91,9 +91,9 @@ slides:
         in SQL.
       panel:
         label: What does change
-        title: It is the first object of the course that outlives the session
+        title: It is the first query of the course that outlives the session
         note: >-
-          Until last week everything you wrote left with the connection. A view stays in
+          Until last week every query you wrote left with the connection. A view stays in
           the schema, whoever logs in tomorrow sees it, and from today on it matters which
           user created it and what happens when somebody restores it on another server.
       steps:
@@ -124,8 +124,8 @@ slides:
             rewritten twenty times.
         - label: Every column named
           text: >-
-            Both tables carry a column called nombre. Without aliases the view returns two
-            nombre columns.
+            Both tables carry a column called nombre. Without aliases CREATE VIEW fails with
+            ERROR 1060.
         - label: The outer query
           text: >-
             The WHERE belongs here, not inside. The view describes what may be seen and
@@ -189,7 +189,7 @@ slides:
       eyebrow: Block 02
       title: When you can write through it
       lede: >-
-        «A view is not updatable if it contains a JOIN» is the most quoted line in the
+        “A view is not updatable if it contains a JOIN” is the most quoted line in the
         source and it is false. The true rule is shorter and more useful, and it comes out
         of three measurements in a row.
       block: 2
@@ -235,6 +235,9 @@ slides:
         FROM alumnos a
         LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
 
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_insc_left';
+
         UPDATE v_insc_left SET calificacion = 9.9
         WHERE inscripcion_id = 3;
       output: |
@@ -246,7 +249,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · the one disagreement all term
-      title: The catalogue says yes and the server says no
+      title: The catalog says yes and the server says no
       filename: escalar.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -273,19 +276,19 @@ slides:
   - table:
       eyebrow: Block 02 · The list, corrected
       title: What each view accepts, measured one by one
-      headers: [The view has, Can you write, What the server answers]
+      headers: [The case, Can you write, What the server answers]
       rows:
         - ["Inner JOIN", "yes, one base table at a time", "IS_UPDATABLE = YES"]
         - ["Two base tables", "no", "ERROR 1393 (HY000)"]
-        - ["A DELETE", "no", "ERROR 1395 (HY000)"]
+        - ["DELETE via JOIN", "no", "ERROR 1395 (HY000)"]
         - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
         - ["Aggregation", "no", "ERROR 1288 (HY000)"]
         - ["DISTINCT, UNION", "no", "IS_UPDATABLE = NO, error 1288"]
-        - ["A subquery", "no, though it says yes", "says YES and fails with 1288"]
+        - ["A subquery", "no, if correlated", "says YES and fails with 1288"]
 
   - code_output:
       eyebrow: Measured · closing the view
-      title: The clause that turns «control access» into something real
+      title: The clause that turns “control access” into something real
       filename: check.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -334,8 +337,7 @@ slides:
         every view created without a
         clause came back with
 
-        DEFINER=`root`@`localhost`
-        SQL SECURITY DEFINER
+        DEFINER = root@localhost
         SECURITY_TYPE = DEFINER
 
         and nobody asked for it
@@ -395,20 +397,20 @@ slides:
         - label: Error 03
           title: Believing a view stores data
           desc: >-
-            MySQL has no materialized views. ALGORITHM=TEMPTABLE materialises per execution,
+            MySQL has no materialized views. ALGORITHM=TEMPTABLE materializes per execution,
             throws the result away, and leaves the view read-only on top of that.
         - label: Error 04
           title: Trusting IS_UPDATABLE
           desc: >-
-            With a scalar subquery the catalogue says YES and the UPDATE fails with 1288.
+            With a correlated subquery the catalog says YES and the UPDATE fails with 1288.
             You try the UPDATE; you do not take the column's word for it.
 
   - lab:
       eyebrow: Lab
       title: The coordinator's screen, and the row that vanishes
       brief: >-
-        Build the view that shows the students of a single degree programme. Then, through
-        that same view, insert a student from another programme and go looking for the row
+        Build the view that shows the students of a single degree program. Then, through
+        that same view, insert a student from another program and go looking for the row
         you just wrote. When you cannot find it, add WITH CHECK OPTION and try again.
       blocks:
         - label: Deliverable
@@ -416,10 +418,10 @@ slides:
         - label: Constraint
           text: >-
             The view has to come out of week 11's JOIN. A single-table view will not do,
-            because none of today's boundaries show up there.
+            because the JOIN boundary never shows up there.
         - label: The test
           text: >-
-            Run the UPDATE before you believe the catalogue. The IS_UPDATABLE column is an
+            Run the UPDATE before you believe the catalog. The IS_UPDATABLE column is an
             opinion and the server is the one in charge.
 
   - takeaways:
@@ -432,12 +434,12 @@ slides:
             is never stale and why the asterisk stays frozen
         - title: One base table at a time, and never DELETE
           desc: >-
-            That is the true updatability rule. The real boundary is not the JOIN, it is
+            That is the true rule for a view with a JOIN. The real boundary is not the JOIN, it is
             the outer join, the aggregation and the UNION
         - title: Storing a query does not speed it up
           desc: >-
             EXPLAIN over the view returns the base tables' plan and never names the view,
-            because the algorithm is MERGE and not materialisation
+            because the algorithm is MERGE and not materialization
 
   - homework:
       eyebrow: Homework

@@ -164,7 +164,7 @@ slides:
       title: El orden es corrección, y el compilador no opina
       filename: Program.cs
       lang: csharp
-      output_label: Al correr
+      output_label: Al compilar y correr
       source: |
         double camaA = 22.0;
         Console.WriteLine($"A: purgar boquilla a {camaA:F1} C");
@@ -206,6 +206,15 @@ slides:
         - ["MIENTRAS", "Repite mientras la condición valga", "MIENTRAS cama < 60.0"]
         - ["PARA", "Repite un número contado de veces", "PARA i = 1 HASTA 7"]
 
+  - figure:
+      eyebrow: Bloque 02 · Tema 1.2
+      title: Las cuatro figuras del diagrama de flujo
+      image: img/es/ct-05.png
+      caption: >-
+        Óvalo para inicio y fin, rectángulo para un proceso, rombo para una decisión,
+        paralelogramo para entrada y salida.
+      alt: Los cuatro símbolos de un diagrama de flujo, dibujados a mano y etiquetados
+
   - code:
       eyebrow: Bloque 02 · Pseudocódigo
       title: La secuencia de arranque, escrita para leerse
@@ -233,7 +242,7 @@ slides:
         - label: La sangría
           text: Marca qué instrucciones caen dentro del lazo y cuáles dentro de cada rama.
         - label: Las tres formas
-          text: Secuencia, selección y repetición. No aparece una cuarta en toda la sesión.
+          text: Secuencia, selección y repetición. No aparece una cuarta en todo el plan.
         - label: Riesgo
           text: Si el paso del calentado no mueve la condición, el MIENTRAS no termina nunca.
           accent: true
@@ -269,7 +278,7 @@ slides:
         iniciando impresion
 
   - compare:
-      eyebrow: Bloque 02 · Tema 1.5
+      eyebrow: Bloque 02 · Tema 1.3
       title: La traza esperada se escribe antes de correr
       before:
         label: esperado.txt · lo que predijo el equipo
@@ -309,7 +318,7 @@ slides:
         - ['2', "¿i <= 10?   sí", '0', '1']
         - ['3–4', "suma = suma+i, i = i+1", '1', '2']
         - ['…', "ocho vueltas más", '45', '10']
-        - ['21–23', "suma+i, i+1, ¿i<=10? no", '55', '11']
+        - ['30–32', "suma+i, i+1, ¿i<=10? no", '55', '11']
       verdict: >-
         Medio salón escribe 10 en el último renglón. El contador tiene que pasarse del
         límite para que la condición sea falsa, y ese paso de más es justo lo que hace
@@ -368,7 +377,7 @@ slides:
       rows:
         - ["x != 1.0", "1000 y seguía", "99.9999999999986", "no, la corta el tope"]
         - ["x == 1.0", "no aplica", "False", "la igualdad no se da"]
-        - ["y < 1.0", "11", "1.0999999999999999", "sí, pero no en 1.0"]
+        - ["x < 1.0", "11", "1.0999999999999999", "sí, pero no en 1.0"]
       verdict: >-
         Sumar 0.1 diez veces no da 1.0 en binario. Con != el lazo se pasa de largo y ya no
         vuelve; con < sí termina, pero en once pasadas y en 1.0999999999999999. «Todo lazo
@@ -384,7 +393,7 @@ slides:
 
   - table:
       eyebrow: Bloque 03 · Tema 1.4
-      title: Los cuatro paradigmas sobre las mismas siete lecturas
+      title: Cuatro paradigmas y el goto, sobre las mismas siete lecturas
       headers: [Paradigma, Cómo organiza la solución, Lo que da]
       rows:
         - ["Imperativo", "Digo el cómo, paso por paso", "suma = 10478"]
@@ -453,7 +462,7 @@ slides:
                   (double)m.Sum() / m.Length;
           }
       note: >-
-        Las dos imprimen 1496.857 sobre las mismas siete lecturas y la comparación de las
+        Las dos dan 1496.857 sobre las mismas siete lecturas y la comparación de las
         dos medias devuelve True. La diferencia no está en el número, está en quién
         guarda los datos. La semana 15 construye la mitad de ese camino con struct.
 

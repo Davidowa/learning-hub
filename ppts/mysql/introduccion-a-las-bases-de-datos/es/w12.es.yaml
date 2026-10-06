@@ -14,7 +14,7 @@ slides:
       title: Introducción a las Bases de Datos
       subtitle: >-
         Una tabla almacena datos. Una vista almacena lógica. El JOIN de la semana pasada
-        recibe hoy un nombre, y es el primer objeto que escribes en este curso que
+        recibe hoy un nombre, y es la primera consulta que escribes en este curso que
         sobrevive a la sesión.
       meta:
         - [Profesor, David Escobar-Castillejos]
@@ -78,7 +78,7 @@ slides:
       eyebrow: Bloque 01
       title: Qué guarda una vista y qué no
       lede: >-
-        La semana 2 la llamó «Vista (RO)» y la semana 3 la puso en el nivel externo. Una
+        La fuente de la semana 2 la llamó «Vista (RO)» y la semana 3 la puso en el nivel externo. Una
         de las dos cosas está mal, y hoy se corrige con el servidor en pantalla.
       block: 1
 
@@ -92,9 +92,9 @@ slides:
         externo de la semana 3, escrito en SQL.
       panel:
         label: Lo que sí cambia
-        title: Es el primer objeto del curso que sobrevive a la sesión
+        title: Es la primera consulta del curso que sobrevive a la sesión
         note: >-
-          Hasta la semana pasada, todo lo que escribías se iba con la conexión. Una vista
+          Hasta la semana pasada, cada consulta que escribías se iba con la conexión. Una vista
           se queda en el esquema, la ve el que entre mañana, y por eso a partir de hoy
           importa con qué usuario se creó y qué pasa cuando alguien la restaura en otro
           servidor.
@@ -127,7 +127,7 @@ slides:
         - label: Cada columna con su nombre
           text: >-
             Los dos alias existen porque las dos tablas traen una columna llamada nombre.
-            Sin alias la vista devuelve dos columnas homónimas.
+            Sin alias el CREATE VIEW falla con el ERROR 1060.
         - label: La consulta de afuera
           text: >-
             El WHERE va aquí, no adentro. La vista describe qué se puede ver y quien la
@@ -215,7 +215,7 @@ slides:
         DELETE FROM v_insc_join WHERE inscripcion_id = 3;
       output: |
         IS_UPDATABLE = YES
-        el UPDATE movio la fila de la
+        el UPDATE movió la fila de la
         tabla base
 
         ERROR 1393 (HY000): Can not
@@ -236,6 +236,9 @@ slides:
         SELECT i.inscripcion_id, a.nombre, i.calificacion
         FROM alumnos a
         LEFT JOIN inscripciones i ON a.alumno_id = i.alumno_id;
+
+        SELECT IS_UPDATABLE FROM information_schema.VIEWS
+        WHERE TABLE_NAME = 'v_insc_left';
 
         UPDATE v_insc_left SET calificacion = 9.9
         WHERE inscripcion_id = 3;
@@ -275,15 +278,15 @@ slides:
   - table:
       eyebrow: Bloque 02 · La lista, corregida
       title: Qué acepta cada vista, medido una por una
-      headers: [La vista trae, Se puede escribir, Lo que contesta el servidor]
+      headers: [El caso, Se puede escribir, Lo que contesta el servidor]
       rows:
-        - ["JOIN interno", "si, una tabla base a la vez", "IS_UPDATABLE = YES"]
+        - ["JOIN interno", "sí, una tabla base a la vez", "IS_UPDATABLE = YES"]
         - ["Dos tablas base", "no", "ERROR 1393 (HY000)"]
-        - ["Un DELETE", "no", "ERROR 1395 (HY000)"]
+        - ["DELETE con JOIN", "no", "ERROR 1395 (HY000)"]
         - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
-        - ["Agregacion", "no", "ERROR 1288 (HY000)"]
+        - ["Agregación", "no", "ERROR 1288 (HY000)"]
         - ["DISTINCT o UNION", "no", "IS_UPDATABLE = NO, error 1288"]
-        - ["Subconsulta", "no, aunque diga que si", "dice YES y falla con el 1288"]
+        - ["Subconsulta", "no, si es correlacionada", "dice YES y falla con el 1288"]
 
   - code_output:
       eyebrow: Medido · cerrar la vista
@@ -309,7 +312,7 @@ slides:
 
         CHECK_OPTION = CASCADED
 
-        sin la clausula la fila entra
+        sin la cláusula la fila entra
         y desaparece de la vista del
         coordinador
 
@@ -334,13 +337,12 @@ slides:
         WHERE TABLE_SCHEMA = DATABASE();
       output: |
         todas las vistas creadas sin
-        clausula salieron con
+        cláusula salieron con
 
-        DEFINER=`root`@`localhost`
-        SQL SECURITY DEFINER
+        DEFINER = root@localhost
         SECURITY_TYPE = DEFINER
 
-        y nadie lo pidio
+        y nadie lo pidió
 
   - diagram:
       eyebrow: Bloque 03 · Arquitectura
@@ -402,7 +404,7 @@ slides:
         - label: Error 04
           title: Confiar en IS_UPDATABLE
           desc: >-
-            Con una subconsulta escalar el catálogo dice YES y el UPDATE falla con 1288.
+            Con una subconsulta correlacionada el catálogo dice YES y el UPDATE falla con 1288.
             Se prueba el UPDATE, no se le cree a la columna.
 
   - lab:
@@ -418,7 +420,7 @@ slides:
         - label: Restricción
           text: >-
             La vista tiene que salir del JOIN de la semana 11. No se vale una vista de una
-            sola tabla, porque ahí no aparece ninguna de las fronteras de hoy.
+            sola tabla, porque ahí no aparece la frontera del JOIN.
         - label: La prueba
           text: >-
             Corre el UPDATE antes de creerle al catálogo. La columna IS_UPDATABLE es una
@@ -434,7 +436,7 @@ slides:
             lectura. Por eso nunca está vieja y por eso el asterisco queda congelado
         - title: Una tabla base a la vez, y nunca DELETE
           desc: >-
-            Esa es la regla verdadera de actualizabilidad. La frontera real no está en el
+            Esa es la regla verdadera de una vista con JOIN. La frontera real no está en el
             JOIN, está en el outer join, en la agregación y en el UNION
         - title: Guardar una consulta no la acelera
           desc: >-

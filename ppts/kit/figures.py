@@ -840,7 +840,7 @@ def seek_tell(t, lang):
     start, target = x0 + cw / 2, x0 + 7 * cw + cw / 2
     p.line(start, y0 - 62, start, 148, w=2.4)
     p.line(start, 148, target, 148, w=2.4)
-    p.arrow(target, 148, target, y0 - 58)
+    p.arrow(target, 148, target, y0 - 62)
     p.mono((start + target) / 2, 116, 'f.seek(7)', 32, BLUE)
 
     for i in range(7):
