@@ -31,7 +31,7 @@ slides:
         - title: Catching the error
           desc: CONDITION, HANDLER, GET DIAGNOSTICS and RESIGNAL on that same procedure
         - title: The midterm
-          desc: Weeks 9 to 12, twenty per cent, and nothing you see this morning
+          desc: Weeks 9 to 12, twenty percent, and nothing you see this morning
 
   - objectives:
       eyebrow: Learning objectives
@@ -44,7 +44,7 @@ slides:
         - head: Raise an error of your own
           sub: SIGNAL always comes out as 1644; the SQLSTATE is a label and MYSQL_ERRNO is the number that does distinguish
         - head: Read the SQLSTATEs the server emits
-          sub: Three class 22 codes for data errors and a single 23000 for the whole of integrity
+          sub: Three class 22 codes for data errors and a single 23000 for keys and NOT NULL
         - head: Catch, diagnose and undo
           sub: DECLARE HANDLER, GET DIAGNOSTICS and RESIGNAL, applied to the procedure left half written
 
@@ -58,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -90,7 +90,7 @@ slides:
             final exam.
         - label: Weight
           text: >-
-            Twenty per cent of the course grade, the same as the first midterm back in
+            Twenty percent of the course grade, the same as the first midterm back in
             week 8.
 
   - divider:
@@ -128,7 +128,7 @@ slides:
             inside do not cut it in half.
         - label: The p_ prefix
           text: >-
-            Not style. It is all that stops the parameter from shadowing the column of the
+            Not style. It is what stops the parameter from shadowing the column of the
             same name.
         - label: Who runs it
           text: >-
@@ -136,7 +136,7 @@ slides:
             Running it is granted separately, with GRANT EXECUTE.
         - label: Risk
           text: >-
-            Without IF EXISTS the second run of the script dies with ERROR 1305 (42000),
+            Without the DROP the second run of the script dies with ERROR 1304 (42000),
             and students run their script twenty times in an afternoon.
           accent: true
 
@@ -207,15 +207,15 @@ slides:
         in BEFORE trigger
 
         with session variables:
-        total = 2
-        acumulado = 102
+        @tot  = 2
+        @acum = 102
 
   - divider:
       eyebrow: Block 02
       title: The procedure that fails halfway
       lede: >-
-        Four steps, one of them breaks a foreign key, and the error arrives with the
-        earlier steps already written. This is where the half of the session that repairs
+        Two steps, the second one breaks a foreign key, and the error arrives with the
+        first one already written. This is where the half of the session that repairs
         what the first half broke begins.
       block: 2
 
@@ -228,7 +228,7 @@ slides:
       source: |
         -- sp_dos_pasos writes two rows. The second
         -- one points at a subject that is not in
-        -- the catalogue.
+        -- the catalog.
 
         CALL sp_dos_pasos(...);
         SELECT * FROM inscripciones;
@@ -275,7 +275,7 @@ slides:
 
   - table:
       eyebrow: Measured · what the server emits on its own
-      title: Three class 22 codes for data and a single 23000 for the whole of integrity
+      title: Three class 22 codes for data and a single 23000 for keys and NOT NULL
       headers: [Situation, SQLSTATE, Error]
       rows:
         - ["Division by zero", "22012", "ERROR 1365"]
@@ -436,7 +436,7 @@ slides:
             Every DECLARE goes right after the BEGIN. One of them out of place and the
             procedure is not even created, with an ERROR 1064 (42000).
         - label: Error 02
-          title: Signalling with a variable instead of a literal
+          title: Signaling with a variable instead of a literal
           desc: >-
             SIGNAL SQLSTATE demands the code written out by hand. With a parameter it
             fails when creating the routine, not when calling it, again with ERROR 1064
@@ -458,7 +458,7 @@ slides:
       items:
         - title: The number is yours to set
           desc: >-
-            SIGNAL always comes out as 1644, whichever SQLSTATE you pick. The code is a
+            SIGNAL always comes out as 1644, whichever error SQLSTATE you pick. The code is a
             label the server carries, and MYSQL_ERRNO is the only thing your application
             can tell apart
         - title: 23000 does not mean duplicate
@@ -476,7 +476,7 @@ slides:
       eyebrow: Homework
       title: Submission and grading criteria
       brief: >-
-        Take the enrolment procedure that was left half written today and close it. Write
+        Take the enrollment procedure that was left half written today and close it. Write
         the handler, the GET DIAGNOSTICS and the ROLLBACK, and hand in the run that proves
         the table came out exactly as it was before the call.
       meta:

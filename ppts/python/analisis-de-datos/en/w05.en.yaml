@@ -25,7 +25,7 @@ slides:
         - title: Kinds of statement
           desc: The four things a single line of a program can do
         - title: Input
-          desc: Reading from the keyboard, converting, and checking before any arithmetic
+          desc: Reading from the keyboard and converting before any arithmetic
         - title: Output
           desc: f-strings, thousands separators, decimals and percentages
         - title: Your turn
@@ -64,7 +64,7 @@ slides:
           state: todo
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: todo
 
   - divider:
@@ -81,7 +81,7 @@ slides:
         - ["Assignment", "Stores a value under a name", "clicks = 5074"]
         - ["Input", "Brings a value in from outside", "channel = input('Channel: ')"]
         - ["Output", "Shows a result", "print(cost_per_click)"]
-        - ["Control", "Decides or repeats, and arrives next week", "if, else, while, for"]
+        - ["Control", "Decides or repeats, and starts next week", "if, else, while, for"]
 
   - concept:
       eyebrow: Key concept
@@ -139,6 +139,11 @@ slides:
       source: |
         channel = input("Campaign channel: ")
         clicks = int(input("Clicks recorded: "))
+        spend = float(input("Spend in pesos: "))
+
+        cost_per_click = spend / clicks
+
+        print(channel, cost_per_click)
       output: |
         Campaign channel: Instagram
         Clicks recorded: 5074
@@ -214,6 +219,7 @@ slides:
       title: A report that reads without explanation
       filename: report.py
       source: |
+        print(f"Channel: {channel}")
         print(f"Impressions: {impressions:,}")
         print(f"Conversion: {conversion:.2%}")
         print(f"Cost per click: ${cpc:,.2f}")

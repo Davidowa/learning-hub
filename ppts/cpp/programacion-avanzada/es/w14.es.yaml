@@ -42,7 +42,7 @@ slides:
         - head: Escribir una función plantilla
           sub: Con typename, y explicar en qué momento el compilador genera la versión concreta
         - head: Leer una plantilla de clase
-          sub: Y relacionarla con el vector y el string que ya usó todo el semestre
+          sub: Y relacionarla con el vector y el string que ya conoce
 
   - roadmap:
       eyebrow: Mapa del curso
@@ -90,6 +90,7 @@ slides:
         };
 
         Vector2 v = Vector2(1, 2) + Vector2(3, 4);
+        std::cout << v.x << " " << v.y << "\n";
       output: |
         4 6
 
@@ -99,7 +100,7 @@ slides:
       headers: ["Se puede", "No se puede", "Por qué"]
       rows:
         - ["+ - * /", "El punto", "Rompería el acceso a miembros"]
-        - ["== != < >", "El ámbito", "Es parte de cómo se nombran las cosas"]
+        - ["== != < >", "El operador de ámbito", "Es parte de cómo se nombran las cosas"]
         - ["[] () << >>", "El ternario", "El lenguaje lo reserva"]
         - ["++ -- =", "Inventar signos", "Solo existen los que ya hay"]
 
@@ -148,11 +149,11 @@ slides:
         Caja<std::string> b("hola");
       annotations:
         - label: Los corchetes angulares
-          text: Aquí el tipo se escribe a mano. En una función plantilla el compilador lo deduce solo.
+          text: Aquí el tipo se escribe a mano. Desde C++17 el compilador también puede deducirlo, como en una función plantilla.
         - label: Dos clases distintas
           text: Caja de int y Caja de string no comparten nada. Son dos clases generadas por separado.
-        - label: Ya la conocen
-          text: std::vector y std::unique_ptr son exactamente esto, y llevan usándolos desde la semana 12
+        - label: Ya la conoces
+          text: std::vector y std::unique_ptr son exactamente esto, y unique_ptr lo usas desde la semana 12
         - label: Riesgo
           text: Una plantilla de clase suele vivir completa en el archivo de cabecera. Separarla en un .cpp da errores de enlace.
           accent: true
@@ -231,7 +232,7 @@ slides:
           title: Sobrecargar sin significado obvio
           desc: Un operador que hace algo inesperado es peor que una función con nombre largo
         - label: Error 02
-          title: Recibir el operando por valor
+          title: Recibir por valor un operando grande
           desc: Cada suma copia el objeto completo. La firma con const y ampersand no copia nada.
         - label: Error 03
           title: Plantilla partida en dos archivos
@@ -266,7 +267,7 @@ slides:
   - homework:
       eyebrow: Para la próxima sesión
       title: La fracción completa
-      brief: Terminen el laboratorio y agreguen la sobrecarga del operador de salida para que una fracción se pueda imprimir con cout directamente, en la forma numerador diagonal denominador.
+      brief: Terminen el laboratorio y agreguen la sobrecarga del operador de salida para que una fracción se pueda imprimir con cout directamente, en la forma numerador diagonal denominador. Ese operador va fuera de la clase y recibe por referencia el ostream y la fracción.
       meta:
         - [Entrega, Antes de la sesión 15]
         - [Formato, Blackboard · .zip sin la carpeta x64]

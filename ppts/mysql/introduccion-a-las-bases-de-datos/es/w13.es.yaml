@@ -44,7 +44,7 @@ slides:
         - head: Levantar su propio error
           sub: SIGNAL siempre sale con 1644; el SQLSTATE es una etiqueta y MYSQL_ERRNO es el número que sí distingue
         - head: Leer los SQLSTATE que emite el servidor
-          sub: Cuatro clases 22 para los errores de dato y un solo 23000 para toda la integridad
+          sub: Tres códigos de clase 22 para los errores de dato y un solo 23000 para llaves y NOT NULL
         - head: Atrapar, diagnosticar y deshacer
           sub: DECLARE HANDLER, GET DIAGNOSTICS y RESIGNAL, aplicados al procedimiento que quedó a medias
 
@@ -129,7 +129,7 @@ slides:
             ya no lo corta.
         - label: El prefijo p_
           text: >-
-            No es estilo. Es lo único que impide que el parámetro tape a la columna que se
+            No es estilo. Es lo que impide que el parámetro tape a la columna que se
             llama igual.
         - label: Quién lo ejecuta
           text: >-
@@ -137,7 +137,7 @@ slides:
             12. Ejecutar se concede aparte, con GRANT EXECUTE.
         - label: Riesgo
           text: >-
-            Sin IF EXISTS, la segunda corrida del script muere con ERROR 1305 (42000) y
+            Sin el DROP, la segunda corrida del script muere con ERROR 1304 (42000) y
             el alumno corre su script veinte veces por tarde.
           accent: true
 
@@ -207,16 +207,16 @@ slides:
         variable or NEW pseudo-variable
         in BEFORE trigger
 
-        con variables de sesion:
-        total = 2
-        acumulado = 102
+        con variables de sesión:
+        @tot  = 2
+        @acum = 102
 
   - divider:
       eyebrow: Bloque 02
       title: El procedimiento que falla a la mitad
       lede: >-
-        Cuatro pasos, uno de ellos rompe una llave foránea, y el error llega con los
-        pasos anteriores ya escritos. Aquí empieza la mitad de la sesión que repara lo
+        Dos pasos, el segundo rompe una llave foránea, y el error llega con el primero
+        ya escrito. Aquí empieza la mitad de la sesión que repara lo
         que la primera mitad rompió.
       block: 2
 
@@ -243,7 +243,7 @@ slides:
         REFERENCES `materias`
         (`materia_id`))
 
-        y la PRIMERA fila sigue ahi
+        y la PRIMERA fila sigue ahí
 
   - code_output:
       eyebrow: Medido · cinco señales, cinco salidas
@@ -276,7 +276,7 @@ slides:
 
   - table:
       eyebrow: Medido · lo que el servidor emite solo
-      title: Tres clases 22 para el dato y un solo 23000 para toda la integridad
+      title: Tres códigos de clase 22 para el dato y un solo 23000 para llaves y NOT NULL
       headers: [Situación, SQLSTATE, Error]
       rows:
         - ["División entre cero", "22012", "ERROR 1365"]
@@ -448,7 +448,7 @@ slides:
         - label: Error 04
           title: Un mensaje que no cabe en su variable
           desc: >-
-            MESSAGE_TEXT tope a 128 caracteres, ERROR 1648. Y el OUT VARCHAR(200) se
+            MESSAGE_TEXT tiene tope de 128 caracteres, ERROR 1648. Y el OUT VARCHAR(200) se
             desbordó con un mensaje de llave foránea, ERROR 1406.
 
   - takeaways:
@@ -457,13 +457,13 @@ slides:
       items:
         - title: El número lo pones tú
           desc: >-
-            SIGNAL siempre sale con 1644, elijas el SQLSTATE que elijas. El código es una
+            SIGNAL siempre sale con 1644, elijas el SQLSTATE de error que elijas. El código es una
             etiqueta que el servidor transporta, y MYSQL_ERRNO es lo único que tu
             aplicación puede distinguir
         - title: 23000 no quiere decir duplicado
           desc: >-
             Es el duplicado, la llave foránea y el NOT NULL a la vez, mientras que los
-            errores de dato se reparten en cuatro clases 22 distintas. El 23505 de la
+            errores de dato se reparten en tres códigos de clase 22 distintos. El 23505 de la
             fuente pertenece a otro manejador
         - title: Atrapar no es deshacer
           desc: >-

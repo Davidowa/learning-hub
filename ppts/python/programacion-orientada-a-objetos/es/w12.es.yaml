@@ -204,7 +204,7 @@ slides:
       items:
         - label: Error 01
           title: Abrir sin with
-          desc: Si algo falla entre el open y el close, el archivo queda abierto y lo escrito no llega al disco
+          desc: Si algo falla entre el open y el close, el archivo queda abierto y lo escrito puede no llegar al disco
         - label: Error 02
           title: Rutas con barras escritas a mano
           desc: 'La cadena "datos\notas.txt" lleva un salto de línea escondido. Usa Path.'
@@ -240,7 +240,7 @@ slides:
         - label: Línea 7
           text: DictReader toma la primera fila como encabezado y entrega cada fila como diccionario
         - label: El newline vacío
-          text: Se lo pide el módulo csv. Sin él, en Windows aparecen renglones en blanco de más.
+          text: Se lo pide el módulo csv. Sin él, al escribir en Windows aparecen renglones en blanco de más.
         - label: Con csv.reader
           text: Cada fila llega como lista, y hay que acordarse de qué columna es cada índice
 
@@ -293,9 +293,9 @@ slides:
       headers: ["Paso", "Instrucción", "Contenido en disco"]
       rows:
         - ["1", 'open(ruta, "w")', "queda vacío"]
-        - ["2", 'f.write("primera")', "primera"]
+        - ["2", 'f.write("primera") y cierre', "primera"]
         - ["3", 'open(ruta, "w")', "queda vacío otra vez"]
-        - ["4", 'f.write("segunda")', "segunda"]
+        - ["4", 'f.write("segunda") y cierre', "segunda"]
       verdict: El modo w vacía el archivo en el momento de abrirlo, antes de que se escriba un solo carácter. Para conservar lo que había hay que abrir con a.
 
   - lab:

@@ -56,6 +56,8 @@ slides:
           sub: Event, question and action, in the order the connections force
         - head: Regenerate the node library
           sub: So AR Foundation types appear in the finder instead of silently missing
+        - head: Send an event from C# into a graph
+          sub: With CustomEvent.Trigger, letting the script compute and the graph sequence
 
   - roadmap:
       eyebrow: Course map
@@ -95,8 +97,8 @@ slides:
         One kind of connection says what happens next. It leaves the output of one node and
         enters the input of another, and it is what makes a graph a sequence rather than a
         pile. The other kind carries a value into a port that needs one, a number, a
-        position, a GameObject. A node with no incoming control connection never runs, no
-        matter how many values are wired into it.
+        position, a GameObject. A node with a control port but no incoming control connection
+        never runs, no matter how many values are wired into it.
       panel:
         label: Where nodes come from
         title: Right click in the graph, the fuzzy finder
@@ -115,7 +117,7 @@ slides:
       title: Two graph types, and the components that run them
       headers: [Piece, What it is, What it is for]
       rows:
-        - ["Script Graph", "A flow of nodes", "One behaviour, start to end"]
+        - ["Script Graph", "A flow of nodes", "One behavior, start to end"]
         - ["State Graph", "States and transitions", "Modes an object moves between"]
         - ["Script Machine", "A component", "Runs a Script Graph"]
         - ["State Machine", "A component", "Runs a State Graph"]
@@ -133,12 +135,12 @@ slides:
           desc: The nodes live here. Point ten objects at one asset and all ten run the same logic.
         - label: '03'
           title: The nodes
-          desc: An event node first, then whatever the behaviour needs, edited in the graph window.
+          desc: An event node first, then whatever the behavior needs, edited in the graph window.
           dark: true
       note: >-
         This is the arrangement you get with the source set to Graph. With Embed the middle
         block disappears and the nodes live inside the component, which is convenient once
-        and a problem the second time you need the same behaviour.
+        and a problem the second time you need the same behavior.
 
   - tiers:
       eyebrow: Block 01 · Source
@@ -202,7 +204,7 @@ slides:
         - ["Branch", "A boolean", "Two control outputs"]
         - ["Screen point", "Nothing", "A position in pixels"]
         - ["Ray cast", "Point, list, mask", "True, and the list filled in"]
-        - ["Instantiate", "Prefab, position, angle", "The new GameObject"]
+        - ["Instantiate", "Prefab, position, rotation", "The new GameObject"]
 
   - diagram:
       eyebrow: Block 02 · Shape
@@ -225,13 +227,13 @@ slides:
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four ways a graph does nothing at all
+      title: Four ways a graph goes wrong
       items:
         - label: Mistake 01
           title: The node is not in the finder
           desc: >-
             The type exists, the package is installed, and the node was never generated.
-            Block three is entirely about this one.
+            Block three opens with this one.
         - label: Mistake 02
           title: A node with no control wire
           desc: >-
@@ -313,8 +315,8 @@ slides:
             Unity.VisualScripting is what puts CustomEvent in reach of a script.
         - label: The target
           text: >-
-            The event is delivered to one GameObject, so the graph listening for it has to
-            be on that object.
+            The event is delivered to one GameObject, so the graph listening for it usually
+            sits on that object.
         - label: The name
           text: >-
             A string, matched against the Custom Event node in the graph. Nothing checks the
@@ -329,7 +331,7 @@ slides:
       title: One event, and the graph picking it up
       filename: PlaneAnnouncer.cs
       lang: csharp
-      output_label: Console
+      output_label: Console, script and graph
       source: |
         if (e.added.Count > 0)
         {
@@ -340,9 +342,14 @@ slides:
         plane added, event sent
         graph woke on PlaneFound
         graph, banner shown
+      notes: |
+        Only the first line comes from this code. The second and third are written by two
+        Debug Log nodes in the graph, one right after the PlaneFound Custom Event node and one
+        after the banner is shown. Trigger runs the graph inside the same call, which is why
+        its lines follow the script's line at once.
 
   - concept:
-      eyebrow: Block 03 · Judgement
+      eyebrow: Block 03 · Judgment
       title: Where the boundary between the two belongs
       lead: >-
         Graphs read well when they describe what happens and in what order. They read badly
@@ -384,13 +391,13 @@ slides:
       verdict: >-
         The package is there and the compiler is happy, which is exactly what makes this one
         confusing. The finder is not reading the project, it is reading a generated list, and
-        that list was written before the assembly was added to it.
+        that list was generated without the assembly in it.
 
   - lab:
       eyebrow: Lab
       title: The same placement, twice, in pairs
       brief: >-
-        Rebuild the tap to place behaviour from session three as a Script Graph on a second
+        Rebuild the tap to place behavior from session three as a Script Graph on a second
         GameObject, with the script version still in the scene and disabled. Then swap which
         one is active and confirm both behave the same on the phone.
       blocks:

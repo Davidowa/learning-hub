@@ -41,7 +41,7 @@ slides:
           sub: And explain why the compiler needs the first before it has seen the second
         - head: Tell a parameter from an argument
           sub: What the function declares it takes against the concrete value it is called with
-        - head: Recognise the scope of a local variable
+        - head: Recognize the scope of a local variable
           sub: And predict the error you get from using it outside the function that declared it
 
   - roadmap:
@@ -73,7 +73,7 @@ slides:
 
   - figure:
       eyebrow: Decomposition
-      title: Separating a problem into pieces that solve themselves
+      title: Separating a problem into pieces you can solve on their own
       image: img/en/ct-01.png
       caption: Each piece can be tested, corrected and explained on its own. That is what the extra line it costs to declare it buys you.
       alt: A tangle of thread pulled apart into several tidy coils
@@ -87,7 +87,7 @@ slides:
         the whole idea, and it is the same one that holds up the rest of the course.
       panel:
         label: The test of a good function
-        title: It explains in a single sentence
+        title: It can be explained in a single sentence
         note: >-
           If saying what it does needs an "and also", it is probably two functions that got
           stuck together, and separating them now is cheaper than later.
@@ -166,6 +166,8 @@ slides:
       lang: cpp
       output_label: Error list, trimmed
       source: |
+        #include <iostream>
+
         int main()
         {
             std::cout << twice(4);
@@ -191,7 +193,7 @@ slides:
         - label: Why it happens
           text: The compiler carries on with incomplete information, and every bad assumption generates new errors
         - label: What to do
-          text: Double click the first line of the list, fix that, rebuild. Nothing else.
+          text: Double-click the first line of the list, fix that, rebuild. Nothing else.
         - label: When to doubt it
           text: If the first error points into a standard library file, the problem is almost always in your call
 
@@ -239,7 +241,7 @@ slides:
         }
       annotations:
         - label: No prototype
-          text: The definition sits above main, which is the other valid fix for the previous slide
+          text: The definition sits above main, which is the other valid fix for noproto.cpp
         - label: Line 3
           text: n changes to 20 inside the function, and n only exists inside the function
         - label: Line 10
@@ -278,10 +280,10 @@ slides:
   - lab:
       eyebrow: Lab
       title: A report card split into functions, in pairs
-      brief: Take the report card program from week 2, which today sits entirely inside main, and separate it into three functions with prototypes, one that computes the average, one that turns it into a percentage, and one that assembles the final line of text.
+      brief: Take the report card program from week 2, which today sits entirely inside main, and separate it into three functions with prototypes, one that computes the average, one that turns it into a percentage, and one that computes the remainder of dividing the total by three.
       blocks:
         - label: Constraint
-          text: No if and no loops, which arrive in week 7. One route through each function.
+          text: No if and no loops, which arrive in weeks 7 and 8. One route through each function.
         - label: Deliverable
           text: A .cpp with the three prototypes above, main in the middle and the three definitions below
         - label: Criterion

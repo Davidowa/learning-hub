@@ -27,7 +27,7 @@ slides:
         - title: The four clauses
           desc: try, except, else and finally, and when each of them runs
         - title: Validation
-          desc: Checking the value at the border and trusting it from there inwards
+          desc: Checking the value at the border and trusting it from there inward
         - title: Robustness
           desc: Custom exceptions and messages that say what to fix
 
@@ -35,8 +35,8 @@ slides:
       eyebrow: Learning objectives
       title: By the end of this session you will be able to…
       items:
-        - head: Read a full traceback
-          sub: Bottom to top, starting at the type and ending at the line that actually failed
+        - head: Follow an exception's path
+          sub: From the line that raises it, up the call chain, to whoever catches it
         - head: Catch by type
           sub: One except per error you know how to handle, and none that catches the unexpected
         - head: Decide where to validate
@@ -75,7 +75,7 @@ slides:
       eyebrow: Key concept
       title: What an exception is
       lead: >-
-        An object Python creates when something goes wrong and throws upwards, looking for
+        An object Python creates when something goes wrong and throws upward, looking for
         someone to handle it. If nobody catches it anywhere in the chain of calls, the
         program stops and prints the trail of where it had been before giving up.
       panel:
@@ -116,7 +116,7 @@ slides:
         - label: Lines 4 and 6
           text: One except per type. The first one that matches runs and the rest are never checked.
         - label: Risk
-          text: except Exception catches everything, including errors you did not expect, and hides the defect
+          text: except Exception catches any error, including ones you did not expect, and hides the defect
           accent: true
 
   - code_output:
@@ -181,7 +181,7 @@ slides:
 
   - method:
       eyebrow: Design criterion
-      title: Validate at the border, trust inwards
+      title: Validate at the border, trust inward
       statement: Every value arriving from the keyboard, a file or the network is checked at the exact point where it enters. Once inside, no function asks again whether the value is usable.
       points:
         - label: Where the check goes
@@ -223,7 +223,7 @@ slides:
           title: An except with pass inside
           desc: The error vanishes without a trace and the defect resurfaces three screens later
         - label: Error 03
-          title: A try wrapped round forty lines
+          title: A try wrapped around forty lines
           desc: When it fires you cannot tell which of the forty failed. Wrap the risky line only.
         - label: Error 04
           title: Exceptions for the normal flow
@@ -232,7 +232,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Software robustness
-      lede: An error with a name of its own and a message saying what to fix beats twenty lines of defences scattered about.
+      lede: An error with a name of its own and a message saying what to fix beats twenty lines of defenses scattered about.
       block: 3
 
   - code:
@@ -282,7 +282,7 @@ slides:
 
   - quiz:
       eyebrow: Quick question
-      question: In what order do the two outputs appear?
+      question: What does the program print, and in what order?
       filename: ordering.py
       lang: python
       source: |
@@ -331,7 +331,7 @@ slides:
         - title: One except per type, and named
           desc: except Exception catches what you did not expect and hides the error that mattered
         - title: Validation lives at the border
-          desc: The check happens where the value enters, and from there inwards the program trusts it
+          desc: The check happens where the value enters, and from there inward the program trusts it
         - title: finally runs every time
           desc: With an error, without one, and with a return waiting. It is where you close what you opened.
 
@@ -345,7 +345,7 @@ slides:
         - [Weight, Part of the 20 % homework block]
       rubric:
         - ["Types", "40 %", "Every except names a concrete type and handles a distinct case"]
-        - ["Custom exception", "30 %", "It inherits from Exception and its name comes from the problem"]
+        - ["Custom exception", "30 %", "It inherits from Exception and is named after the problem, not the implementation"]
         - ["Messages", "30 %", "Every message says what to fix, not only that something went wrong"]
 
   - closing:

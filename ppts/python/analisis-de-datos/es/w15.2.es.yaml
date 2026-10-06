@@ -33,10 +33,10 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión el alumno podrá…
+      title: Al terminar la sesión podrás…
       items:
         - head: Elegir columnas y renglones
-          sub: Por nombre con corchetes, y por etiqueta o posición con loc e iloc
+          sub: Columnas por nombre con corchetes, renglones por condición
         - head: Construir una máscara booleana
           sub: Una columna de verdadero y falso que se devuelve a la tabla
         - head: Combinar condiciones
@@ -83,14 +83,14 @@ slides:
         code: |
           Datos > Filtro
           region = "North"
-          amount > 50000
+          units > 20
       after:
         label: En pandas
         file: filtrar.py
         code: |
           norte = ventas[
               (ventas["region"] == "North") &
-              (ventas["amount"] > 50000)
+              (ventas["units"] > 20)
           ]
       note: >-
         El autofiltro esconde renglones y hay que acordarse de quitarlo. La máscara devuelve
@@ -101,7 +101,7 @@ slides:
       title: Una condición devuelve una columna de verdad o falso
       filename: mascara.py
       source: |
-        mascara = ventas["amount"] > 50000
+        mascara = ventas["units"] > 20
 
         print(mascara.head(3))
         print(mascara.sum())
@@ -135,12 +135,12 @@ slides:
       filename: filtrar.py
       source: |
         sel = ventas[(ventas["region"] == "North") &
-                     (ventas["amount"] > 50000)]
+                     (ventas["units"] > 20)]
 
         print(len(sel))
         print(sorted(sel["channel"].unique()))
       output: |
-        22
+        26
         ['Online', 'Retail', 'Wholesale']
 
   - divider:
@@ -197,7 +197,7 @@ slides:
         ventas["date"] = pd.to_datetime(ventas["date"])
       annotations:
         - label: regex=False
-          text: Trata el signo de pesos como carácter literal. Sin esto lo interpretaría como un símbolo de patrón.
+          text: Trata el signo de pesos como carácter literal. Es lo predeterminado desde pandas 2.0, y escrito queda claro.
         - label: Dos replace
           text: El símbolo y la coma de miles, por separado. Los dos son formato, ninguno es el valor.
         - label: astype
@@ -207,7 +207,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 02 · Los huecos
-      title: Tres respuestas honestas, y hay que elegir una
+      title: Tres respuestas honestas, y aquí quitamos el renglón
       filename: limpiar.py
       source: |
         print(ventas["units"].isna().sum())
@@ -223,7 +223,7 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: La trampa que hay que ver una vez
-      lede: Desde pandas 3.0 hay una forma de escribir en la tabla que no escribe nada, y no avisa.
+      lede: Desde pandas 3.0 hay una forma de escribir en la tabla que no escribe nada, y solo deja una advertencia.
       block: 3
 
   - concept:
@@ -232,8 +232,8 @@ slides:
       lead: >-
         Cuando encadenas dos operaciones para asignar, la primera mitad construye una tabla
         temporal con los renglones que coinciden. La asignación cae sobre esa copia
-        temporal, que se descarta en la línea siguiente. No se lanza ningún error y no
-        cambia nada. Es una operación silenciosa que no hace absolutamente nada.
+        temporal, que se descarta en la línea siguiente. El programa no se detiene y no
+        cambia nada. Solo sale una advertencia fácil de pasar por alto.
       panel:
         label: La forma correcta
         title: Con loc, en un solo paso, renglones primero
@@ -256,7 +256,7 @@ slides:
           ventas[ventas["region"] == "North"] \
               ["channel"] = "Retail"
 
-          # ningún error, ningún cambio
+          # solo una advertencia, ningún cambio
       after:
         label: Sí funciona
         file: con_loc.py
@@ -265,8 +265,8 @@ slides:
               ventas["region"] == "North",
               "channel"] = "Retail"
       note: >-
-        La izquierda corre limpia y no cambia nada. Ese silencio es lo que la vuelve
-        peligrosa: parece que funcionó hasta que revisas el resultado.
+        La izquierda corre hasta el final, no cambia nada y solo deja una advertencia. Por
+        eso es peligrosa: parece que funcionó hasta que revisas el resultado.
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
@@ -295,7 +295,7 @@ slides:
         print(ventas["channel"].value_counts())
       options:
         - "Todos los renglones del norte quedan en Retail"
-        - "Nada cambia, y tampoco se lanza ningún error"
+        - "Nada cambia, y solo aparece una advertencia"
         - "Se lanza KeyError porque channel no existe"
         - "Se crea una columna nueva llamada channel"
 
@@ -307,7 +307,7 @@ slides:
         - label: Entrega
           text: El cuaderno, el archivo limpio y la bitácora de decisiones
         - label: Restricción
-          text: Ninguna asignación encadenada. Todo lo que escriba en la tabla va con loc.
+          text: Ninguna asignación encadenada. Todo lo que escribas en la tabla va con loc.
         - label: La prueba
           text: Compara el total antes y después de limpiar. Si no cambió, o el archivo estaba limpio o no limpiaste.
 
@@ -320,7 +320,7 @@ slides:
         - title: Limpiar antes de calcular
           desc: La suma sobre datos sucios devuelve un número, y un número equivocado nunca se anuncia solo
         - title: Escribe con loc, en un paso
-          desc: La asignación encadenada no hace nada y no lanza error, que es la peor combinación posible
+          desc: La asignación encadenada no hace nada y solo deja una advertencia, que es la peor combinación posible
 
   - homework:
       eyebrow: Tarea

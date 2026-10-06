@@ -27,7 +27,7 @@ slides:
         - head: Index and walk a list
           sub: Indexes, slices and step, exactly as in strings
         - head: Use the list methods
-          sub: append, insert, remove, pop, sort and reverse
+          sub: append, insert, remove, pop, sort, reverse and count
         - head: Look up by key in a dictionary
           sub: And why get avoids the KeyError that stops the program
         - head: Tell copying from renaming
@@ -76,15 +76,15 @@ slides:
 
   - figure:
       eyebrow: Module 4 · Collections
-      title: The same table, as a picture
+      title: The same four, as a picture
       image: img/en/collections.png
-      caption: Each container drawn with the property that separates it from the other three
+      caption: Each container with its syntax and one key trait; the table before has the rest
       alt: List, tuple, set and dictionary side by side
 
   - divider:
       eyebrow: Block 02
       title: Lists
-      lede: The collection you will reach for ninety per cent of the time.
+      lede: The collection you will reach for ninety percent of the time.
       block: 2
 
   - code:
@@ -163,7 +163,7 @@ slides:
         - label: What it is for
           text: Data that must not change, such as a coordinate or a date
         - label: The lonely comma
-          text: '(5,) is a one-element tuple. (5) without the comma is just a number in brackets.'
+          text: '(5,) is a one-element tuple. (5) without the comma is just a number in parentheses.'
         - label: Risk
           text: There is no append and no extend. Concatenating with + builds a new tuple.
           accent: true
@@ -216,14 +216,14 @@ slides:
   - divider:
       eyebrow: Block 04
       title: Copying against renaming
-      lede: The block they forget most, and the one that comes back in week 3.
+      lede: The block most often forgotten, and the one that comes back in week 3.
       block: 4
 
   - concept:
       eyebrow: Module 4 · References
       title: The equals sign does not copy a list
       lead: >-
-        With numbers and strings, assigning copies the value. With lists, dictionaries and
+        With numbers and strings, assigning seems to copy the value. With lists, dictionaries and
         sets, assigning only gives the same thing a second name. Changing it through
         either name changes what the other one sees.
       panel:
@@ -288,7 +288,7 @@ slides:
         - ["1", "numbers = [1, 2, 3]", "[1, 2, 3]", "–", "–"]
         - ["2", "copy = numbers", "[1, 2, 3]", "[1, 2, 3]", "Yes"]
         - ["3", "copy.append(4)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Yes"]
-        - ["4", "len(numbers)", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "4"]
+        - ["4", "len(numbers) → 4", "[1, 2, 3, 4]", "[1, 2, 3, 4]", "Yes"]
       verdict: The equals sign copies the reference, not the contents. For a separate list use numbers.copy() or list(numbers).
 
   - takeaways:
@@ -297,7 +297,7 @@ slides:
       items:
         - title: Three questions pick the collection
           desc: Does order matter, will it change, can there be duplicates. That is enough.
-        - title: List methods change it and return None
+        - title: append, sort and reverse return None
           desc: Exactly the opposite of string methods, which return a copy and touch nothing
         - title: Assigning a list does not copy it
           desc: In week 3 this comes back as the class attribute every object shares
@@ -311,7 +311,7 @@ slides:
         - [Format, Blackboard · .py]
         - [Weight, Part of the 20 % homework block]
       rubric:
-        - ["Collections", "40 %", "The degrees without repeats use a set, not a loop"]
+        - ["Collections", "40 %", "The degrees without repeats use a set, not a manual duplicate check"]
         - ["Access", "30 %", "Student fields are read with get where the field may be missing"]
         - ["No side effects", "30 %", "No function modifies the list it receives"]
 

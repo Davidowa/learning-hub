@@ -25,7 +25,7 @@ slides:
         - title: Tipos de instrucción
           desc: Las cuatro cosas que puede hacer una línea de un programa
         - title: Entrada
-          desc: Leer del teclado, convertir y validar antes de operar
+          desc: Leer del teclado y convertir antes de operar
         - title: Salida
           desc: f-strings, formato de miles, decimales y porcentajes
         - title: Tu turno
@@ -42,7 +42,7 @@ slides:
         - head: Componer texto con f-strings
           sub: Mezclando texto fijo y valores calculados en una sola línea
         - head: Dar formato a un número
-          sub: Separador de miles, decimales fijos y porcentaje con un solo código
+          sub: Separador de miles, decimales fijos y porcentaje, cada uno con un código
         - head: Escribir una salida que se entienda
           sub: Con etiquetas, alineación y unidades, no solo números sueltos
 
@@ -81,7 +81,7 @@ slides:
         - ["Asignación", "Guarda un valor en un nombre", "clics = 5074"]
         - ["Entrada", "Trae un dato desde fuera del programa", "canal = input('Canal: ')"]
         - ["Salida", "Muestra un resultado", "print(costo_por_clic)"]
-        - ["Control", "Decide o repite, y llega la semana que entra", "if, else, while, for"]
+        - ["Control", "Decide o repite, y empieza la semana que entra", "if, else, while, for"]
 
   - concept:
       eyebrow: Concepto clave
@@ -139,6 +139,11 @@ slides:
       source: |
         canal = input("Canal de la campaña: ")
         clics = int(input("Clics registrados: "))
+        inversion = float(input("Inversión en pesos: "))
+
+        costo_por_clic = inversion / clics
+
+        print(canal, costo_por_clic)
       output: |
         Canal de la campaña: Instagram
         Clics registrados: 5074
@@ -177,7 +182,7 @@ slides:
       headers: [Código, Qué hace, Entrada, Se ve como]
       rows:
         - [":,", "Separador de miles", "148230", "148,230"]
-        - [":.2f", "Dos decimales fijos", "7.588490", "7.59"]
+        - [":.2f", "Dos decimales fijos", "7.587702", "7.59"]
         - [":,.2f", "Miles y dos decimales", "38500", "38,500.00"]
         - [":.1%", "Porcentaje con un decimal", "0.0342", "3.4%"]
         - [":>10", "Alineado a la derecha en diez espacios", "5074", "      5074"]
@@ -214,6 +219,7 @@ slides:
       title: Un reporte que se lee sin explicación
       filename: reporte.py
       source: |
+        print(f"Canal: {canal}")
         print(f"Impresiones: {impresiones:,}")
         print(f"Conversión: {conversion:.2%}")
         print(f"Costo por clic: ${cpc:,.2f}")
@@ -230,7 +236,7 @@ slides:
         label: Sin formato
         file: crudo.py
         code: |
-          print("Conversion:", conversion)
+          print("Conversión:", conversion)
           print("Costo:", cpc)
       after:
         label: Con f-string

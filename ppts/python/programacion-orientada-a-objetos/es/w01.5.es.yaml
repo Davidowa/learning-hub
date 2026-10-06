@@ -25,7 +25,7 @@ slides:
         - head: Leer un traceback de abajo hacia arriba
           sub: La última línea dice qué pasó; la penúltima, dónde
         - head: Nombrar los errores más comunes
-          sub: TypeError, ValueError, NameError, IndexError, KeyError y ZeroDivisionError
+          sub: TypeError, ValueError, NameError, IndexError, KeyError, ZeroDivisionError y AttributeError
         - head: Envolver solo lo que puede fallar
           sub: Un try corto es un try que se entiende
         - head: Escribir un except por tipo
@@ -79,17 +79,19 @@ slides:
         Traceback (most recent call last):
           File "div.py", line 4, in <module>
             print(dividir(10, 0))
+                  ~~~~~~~^^^^^^^
           File "div.py", line 2, in dividir
             return a / b
+                   ~~^~~
         ZeroDivisionError: division by zero
 
   - concept:
       eyebrow: Módulo 5 · Traceback
       title: Se lee de abajo hacia arriba
       lead: >-
-        La última línea es la que importa: dice el tipo de error y el mensaje. La de
-        arriba dice el archivo, la línea y la función donde ocurrió. Todo lo demás es el
-        camino que siguió el programa para llegar ahí.
+        La última línea es la que importa: dice el tipo de error y el mensaje. Más
+        arriba, la línea con File dice el archivo, el número de línea y la función donde
+        ocurrió. Todo lo demás es el camino que siguió el programa para llegar ahí.
       panel:
         label: El orden de lectura
         title: Primero qué, después dónde, al final cómo llegó
@@ -152,7 +154,7 @@ slides:
       title: Cada except atrapa lo suyo
       image: img/es/exceptions.png
       caption: Nombrar el tipo deja pasar los errores que sí deberías ver
-      alt: Una caja try agrietada, dos dardos con nombre y dos canastas que los atrapan
+      alt: Una caja try con 10 / edad, dos flechas hacia except ValueError y except ZeroDivisionError, y una flecha sin excepción hacia else
 
   - table:
       eyebrow: Módulo 5 · Las cuatro cláusulas
@@ -175,7 +177,7 @@ slides:
             try:
                 r = x / y
             except ZeroDivisionError:
-                print("division por cero")
+                print("división por cero")
             else:
                 print("resultado", r)
             finally:
@@ -186,7 +188,7 @@ slides:
       output: |
         resultado 2.0
         finally siempre
-        division por cero
+        división por cero
         finally siempre
 
   - divider:
@@ -243,23 +245,23 @@ slides:
         except ValueError:
             print("valor")
         except IndexError:
-            print("indice")
+            print("índice")
         finally:
             print("fin")
       options:
         - 'valor, y luego fin'
-        - 'indice, y luego fin'
+        - 'índice, y luego fin'
         - 'Solo fin, porque ningún except aplica'
         - 'El programa truena antes de llegar a finally'
 
   - trace:
       eyebrow: Respuesta
-      title: Imprime indice y luego fin
+      title: Imprime índice y luego fin
       headers: [Paso, Qué pasa, Resultado]
       rows:
         - ["1", "numeros[5] en una lista de 3", "levanta IndexError"]
         - ["2", "except ValueError", "no aplica, se salta"]
-        - ["3", "except IndexError", "coincide, imprime indice"]
+        - ["3", "except IndexError", "coincide, imprime índice"]
         - ["4", "finally", "corre siempre, imprime fin"]
       verdict: Los except se revisan en orden y solo entra el primero que coincide. finally corre pase lo que pase.
 

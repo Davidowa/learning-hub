@@ -35,7 +35,7 @@ slides:
         - title: Qué es un build
           desc: >-
             Área de la ruta · Publishing. El player, tus datos, la lista de escenas y los
-            cuatro ajustes que deciden qué termina dentro de la carpeta.
+            otros cuatro ajustes que deciden qué termina dentro de la carpeta.
         - title: Leer la salida
           desc: >-
             Área de la ruta · Publishing. Qué escribió Unity junto al ejecutable, y dónde
@@ -154,11 +154,15 @@ slides:
       lang: csharp
       output_label: Player.log
       source: |
+        using UnityEngine;
         using UnityEngine.SceneManagement;
 
-        void Restart()
+        public class LevelLoader : MonoBehaviour
         {
-            SceneManager.LoadScene("Bay");
+            void Restart()
+            {
+                SceneManager.LoadScene("Bay");
+            }
         }
       output: |
         Scene 'Bay' couldn't be loaded
@@ -185,20 +189,20 @@ slides:
           title: Código de editor en el runtime
           desc: >-
             Cualquier cosa de UnityEditor compila en el editor y detiene el build. O la
-            llamada se va detrás de un bloque if UNITY_EDITOR o el script se mueve a una
+            llamada se va detrás de un bloque #if UNITY_EDITOR o el script se mueve a una
             carpeta Editor.
         - label: Error 04
           title: Compilar dentro de Assets
           desc: >-
-            El importador intenta importar tu propio build, el proyecto crece cada vez, y el
-            siguiente build incluye al anterior. Compila fuera del proyecto.
+            Unity lo rechaza con el aviso Invalid build path, porque Assets es una carpeta
+            interna de trabajo. La raíz del proyecto tampoco sirve. Usa Builds/Windows.
 
   - divider:
       eyebrow: Bloque 02
       title: Leer lo que produjo Unity
       lede: >-
         Cinco cosas caen en la carpeta y cada una tiene un trabajo. Borrar la que parece de
-        sobra es como un build deja de abrir.
+        sobra es así como un build deja de abrir.
       block: 2
 
   - table:
@@ -225,7 +229,7 @@ slides:
         title: AppData · LocalLow · Compañía · Producto
         note: >-
           El archivo es Player.log, y la corrida anterior queda a su lado. Nombrar bien la
-          compañía en la sesión 1 es lo que hace encontrable esta carpeta.
+          compañía en Player Settings es lo que hace encontrable esta carpeta.
       steps:
         - text: Debug.Log sigue corriendo en un build
         - text: Escribe en Player.log, no en una ventana
@@ -269,9 +273,9 @@ slides:
   - code_output:
       eyebrow: Bloque 02 · Medido
       title: Las mismas cuatro líneas, leídas del archivo de log
-      filename: Player.log
+      filename: BuildStamp.cs
       lang: csharp
-      output_label: Player.log, primera corrida
+      output_label: Player.log, extracto
       source: |
         Debug.Log($"producto {Application.productName}");
         Debug.Log($"version {Application.version}");
@@ -282,6 +286,10 @@ slides:
         version 0.1.0
         plataforma WindowsPlayer
         dev False
+      notes: |
+        El panel es un extracto. En el archivo real, cada Debug.Log va seguido de su traza de
+        pila, porque Stack Trace, en Player Settings · Other Settings, deja Log en ScriptOnly
+        de fábrica. Las cuatro líneas del sello se buscan entre esas trazas.
 
   - stat:
       eyebrow: La consola que tiene un juego compilado
@@ -308,7 +316,7 @@ slides:
         - ["Sesión 1", "Creating and Managing Unity Projects · Unity Editor Essentials"]
         - ["Sesión 2", "Scene Building Essentials, creación, transformación, apariencia"]
         - ["Sesión 3", "Scene Building, física · GameObjects, componentes y prefabs"]
-        - ["Sesión 4", "Level 1 Code Comprehension · Level 1 Application Scripting"]
+        - ["Sesión 4", "Level 1 Code Comprehension · Level 1 Application Scripting · GameObjects, scripting"]
         - ["Sesión 5", "Beginner Unity Cameras · Audio Essentials · 2D Art"]
         - ["Sesión 6", "Publishing, y las diez áreas vistas como un solo mapa"]
 
@@ -384,7 +392,7 @@ slides:
       brief: >-
         Compila el proyecto StoreRoom para Windows en Builds/Windows, con Bay.unity en el
         índice cero, Development Build sin marcar y BuildStamp.cs en la escena. Córrelo en una
-        máquina sin Unity instalado y trae las primeras cuatro líneas de su Player.log.
+        máquina sin Unity instalado y trae de su Player.log las cuatro líneas del sello.
       blocks:
         - label: Entregable
           text: La carpeta del build comprimida, más las cuatro líneas copiadas de Player.log
@@ -427,7 +435,7 @@ slides:
         - [Peso, Parte de la evaluación práctica]
       rubric:
         - ["Build", "Obligatorio", "Corre en una máquina sin Unity instalado"]
-        - ["Lista de escenas", "Obligatorio", "Bay.unity en el índice cero, sin marca de agua"]
+        - ["Ajustes", "Obligatorio", "Bay.unity en el índice cero, sin marca de agua"]
         - ["Log", "Obligatorio", "Las cuatro líneas del sello, copiadas de Player.log"]
         - ["Ruta", "Obligatorio", "Las diez áreas de la ruta marcadas como terminadas"]
 

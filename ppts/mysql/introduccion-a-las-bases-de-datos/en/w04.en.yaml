@@ -14,7 +14,7 @@ slides:
       title: Introduction to Databases
       subtitle: >-
         Every line you draw today has exactly one physical form, and before the session
-        ends all four of them come back out of a SHOW CREATE TABLE.
+        ends the N:M and the ternary come back out of a SHOW CREATE TABLE.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Engine, MySQL 9.7.2]
@@ -47,7 +47,7 @@ slides:
             inherited deck carries a single one
         - head: Name the relationship with a verb
           sub: >-
-            «Student enrols in Course» can be read aloud and can be built; a hyphen
+            “Student enrolls in Course” can be read aloud and can be built; a hyphen
             between two nouns cannot
         - head: Turn each cardinality into its physical form
           sub: >-
@@ -55,8 +55,8 @@ slides:
             pair
         - head: Say which promise the diagram cannot enforce
           sub: >-
-            Minimum cardinality has no construct in MySQL, and the course with zero
-            enrolments just sits there
+            Beyond NOT NULL, minimum cardinality has no construct in MySQL, and the
+            course with zero enrollments just sits there
 
   - roadmap:
       eyebrow: Course map
@@ -68,7 +68,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation and keys
+          desc: Entity-relationship, normalization and keys
           state: now
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -97,12 +97,12 @@ slides:
       lead: >-
         The entity-relationship model describes data at the conceptual level. Entities,
         attributes and relationships, with not one engine decision in sight. Out of the
-        conceptual comes the logical model, the relational schema week 5 normalises, and
+        conceptual comes the logical model, the relational schema week 5 normalizes, and
         out of the logical comes the physical, the DDL of week 6. Three steps, three
         weeks.
       panel:
         label: The inherited slide
-        title: «The logical model… describes data at the conceptual level»
+        title: “The logical model… describes data at the conceptual level”
         note: >-
           The opening sentence of both versions of the deck contradicts itself, and it is
           the first one the student reads. Getting the name of the first step wrong is
@@ -129,7 +129,7 @@ slides:
       eyebrow: Block 01 · Naming
       title: A relationship is named with a verb
       statement: >-
-        «Student enrols in Course» can be read out loud and can be built. «Student-Course»
+        “Student enrolls in Course” can be read out loud and can be built. “Student-Course”
         does not say what happens between the two, and by the time somebody writes the
         table nobody remembers what it was for.
       points:
@@ -137,10 +137,10 @@ slides:
           text: >-
             The diagram is his and its shape has not changed. Worth ten seconds of credit,
             and it is still drawn that way.
-        - label: One word, two meanings
+        - label: Relationship is not relation
           text: >-
-            Chen calls the line a relation; Codd calls the table a relation. The «formally
-            speaking» slide defines Codd's, and week 6 uses it.
+            Chen calls the line a relationship; Codd calls the table a relation. The
+            “formally speaking” slide defines Codd's, and week 6 uses it.
         - label: Risk
           text: >-
             A diagram with no attributes cannot become tables. Both inherited decks draw
@@ -172,8 +172,8 @@ slides:
         - label: Shape 03
           title: Double
           desc: >-
-            The same pair joined twice. City and State, by «is capital of» and by «belongs
-            to». It looks symmetric and it is not.
+            The same pair joined twice. City and State, by “is capital of” and by “belongs
+            to.” It looks symmetric and it is not.
         - label: Shape 04
           title: Recursive
           desc: >-
@@ -207,8 +207,8 @@ slides:
             NULL is the mandatory kind.
         - label: Risk
           text: >-
-            Without the nullable column there is nowhere to start the tree, and the first
-            INSERT fails on the foreign key.
+            With NOT NULL, the first INSERT fails on the foreign key unless the root is
+            its own boss.
           accent: true
 
   - code_output:
@@ -229,15 +229,17 @@ slides:
 
   - code_output:
       eyebrow: Measured · SHOW CREATE TABLE horario
-      title: Only dia_id got its own index, because curso_id is already the left column
+      title: aula_id and dia_id got their own index; curso_id is already the left column
       filename: horario.sql
       lang: sql
       output_label: MySQL 9.7.2
       source: |
         SHOW CREATE TABLE horario;
       output: |
-        PRIMARY KEY (curso_id, aula_id,
-                     dia_id, hora)
+        PRIMARY KEY (`curso_id`,`aula_id`,
+                     `dia_id`,`hora`),
+        KEY `aula_id` (`aula_id`),
+        KEY `dia_id` (`dia_id`),
 
   - compare:
       eyebrow: Block 02 · Double
@@ -268,7 +270,7 @@ slides:
             fk_estado_capital FOREIGN KEY (capital_id)
             REFERENCES ciudad(ciudad_id);
       note: >-
-        The ciudad table is created first, with estado_id NOT NULL. The second foreign key
+        The ciudad table is created before the ALTER, with estado_id NOT NULL. The second foreign key
         will not fit in the CREATE TABLE; it needs an ALTER, and one of the two columns
         has to accept NULL to break the cycle. That is what turns a pretty drawing into a
         script that fails at night.
@@ -290,7 +292,7 @@ slides:
         - ["0:1", "Alumno has Credencial", "Nullable FK plus UNIQUE"]
         - ["1:1", "Profesor heads Departamento", "FK NOT NULL plus UNIQUE"]
         - ["1:N", "Profesor teaches Materia", "FK on the many side"]
-        - ["N:M", "Alumno enrols in Materia", "Table keyed on the pair"]
+        - ["N:M", "Alumno enrolls in Materia", "Table keyed on the pair"]
         - ["Ternary", "Curso, Aula and Dia", "Table with three FKs"]
 
   - code_output:
@@ -315,7 +317,7 @@ slides:
 
   - code_output:
       eyebrow: Measured
-      title: What happens when the same student enrols twice in the same course?
+      title: What happens when the same student enrolls twice in the same course?
       filename: alumno_materia.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -335,7 +337,7 @@ slides:
       output_label: MySQL 9.7.2
       source: |
         SELECT m.materia_id, m.nombre,
-               COUNT(i.inscripcion_id) AS inscritos
+               COUNT(i.alumno_id) AS inscritos
         FROM materia m
         LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
         GROUP BY m.materia_id, m.nombre;
@@ -348,7 +350,7 @@ slides:
       title: Four ways to lose the model before you write it
       items:
         - label: Mistake 01
-          title: Saying «tertiary relationship»
+          title: Saying “tertiary relationship”
           desc: >-
             The word is ternary. Tertiary is a sector of the economy. Both versions of the
             inherited deck carry the wrong term.
@@ -360,13 +362,13 @@ slides:
         - label: Mistake 03
           title: Believing the minimum is enforceable
           desc: >-
-            «Every course must have at least one student» has no construct in MySQL. The
-            course with zero enrolments sits there forever.
+            “Every course must have at least one student” has no construct in MySQL. The
+            course with zero enrollments sits there forever.
         - label: Mistake 04
           title: Welding optionality onto the N
           desc: >-
-            The connectors slide defines N as «not required to participate and may do so
-            many times». Two different things, and its own 1:N contradicts it.
+            The connectors slide defines N as “not required to participate and may do so
+            many times.” Two different things, and its own 1:N contradicts it.
 
   - lab:
       eyebrow: Lab
@@ -401,12 +403,12 @@ slides:
             N:M is a third table whose primary key is the pair
         - title: The drawing promises more than the engine
           desc: >-
-            Maximum cardinality is enforced with keys; the minimum is not. Saying so out
-            loud beats promising that the model holds itself together
+            Maximum cardinality is enforced with keys; the minimum, beyond NOT NULL, is
+            not. Saying so out loud beats promising that the model holds itself together
 
   - homework:
       eyebrow: Homework
-      title: Deliverable and marking criteria
+      title: Deliverable and grading criteria
       brief: >-
         Entity-relationship diagram of the records system, with attributes on every entity
         and the four cardinalities marked. Under the drawing, the list of tables it
@@ -425,7 +427,7 @@ slides:
       title: Questions
       subtitle: >-
         Next session we take this same diagram, flatten it into one wide table on purpose,
-        and measure what breaks. That is normalisation, and the server will let you break
+        and measure what breaks. That is normalization, and the server will let you break
         every rule without saying a word.
       meta:
         - [Email, descobarc@up.edu.mx]

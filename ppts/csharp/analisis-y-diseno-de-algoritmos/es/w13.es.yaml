@@ -44,7 +44,7 @@ slides:
         - head: Partir una línea del registrador
           sub: Trim, Split y una cultura fijada antes de convertir a número
         - head: Usar la biblioteca de cadenas
-          sub: Prefijo, sufijo, subcadena, relleno y comparación sin distinguir mayúsculas
+          sub: Prefijo, sufijo, subcadena y comparación sin distinguir mayúsculas
         - head: Validar un identificador de parte
           sub: Por largo, por prefijo y por dígitos, con una sola política de comparación
 
@@ -98,7 +98,7 @@ slides:
         Console.WriteLine($"suma       = {suma}");
       annotations:
         - label: Un nombre
-          text: Siete variables sueltas se volvieron una. El ciclo ya no cambia cuando llegue la octava muestra.
+          text: Una variable en lugar de siete sueltas. El ciclo ya no cambia cuando llegue la octava muestra.
         - label: La regla de banda
           text: r menor que 1480 o mayor que 1520. Es la convención inclusiva y va escrita cada vez que aparece el conteo.
         - label: Length
@@ -202,7 +202,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 01 · Alias y copia
-      title: Un arreglo es una referencia y Clone no lo es
+      title: Un arreglo es una referencia y Clone hace una copia
       filename: Program.cs
       lang: csharp
       output_label: Al correr
@@ -285,7 +285,6 @@ slides:
           text: Sin InvariantCulture el 20.1 se lee 201 en una máquina alemana, y TryParse devuelve True igual.
         - label: Lo que imprime
           text: SENSOR-07 media 21.500, con el especificador F3 haciendo el trabajo de presentación.
-          accent: true
 
   - code_output:
       eyebrow: Bloque 02 · La etiqueta
@@ -320,7 +319,7 @@ slides:
         - ["\"\".Split(';').Length", "1", "una línea vacía da un campo"]
       verdict: >-
         La cadena vacía es prefijo, sufijo y subcadena de todo, así que una entrada vacía
-        pasa cualquier revisión ingenua. Por eso IsNullOrWhiteSpace va antes de convertir.
+        pasa cualquier búsqueda ingenua. Por eso IsNullOrWhiteSpace va antes de convertir.
 
   - code:
       eyebrow: Bloque 02 · El validador
@@ -350,7 +349,7 @@ slides:
         - label: Los dígitos
           text: char.IsDigit sobre las posiciones 4 a 7. Cuatro dígitos en SNS-4471-A, contados por el ciclo.
         - label: Riesgo
-          text: El prefijo se comparó sin distinguir mayúsculas y el sufijo dos líneas abajo no. Ese es el defecto.
+          text: El prefijo se comparó sin distinguir mayúsculas y el sufijo en la línea de abajo no. Ese es el defecto.
           accent: true
 
   - trace:
@@ -364,8 +363,8 @@ slides:
         - ["SNS-44X1-A", "False", "la X no es dígito"]
         - ["(vacía)", "False", "largo cero, como SNS-447-A"]
       verdict: >-
-        El tercer renglón falla a propósito. Misma cadena, dos políticas de comparación a
-        dos líneas de distancia, un solo defecto.
+        El tercer renglón falla a propósito. Misma cadena, dos políticas de comparación en
+        dos líneas seguidas, un solo defecto.
 
   - code_output:
       eyebrow: Bloque 02 · Comparar de verdad

@@ -29,7 +29,7 @@ slides:
         - title: Cuando falla
           desc: Lo que pasa si el archivo no existe, que no es un error
         - title: El parcial
-          desc: Qué cubre el segundo y cómo se prepara
+          desc: Qué cubre el segundo y qué entra de nuevo
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
@@ -96,7 +96,7 @@ slides:
       eyebrow: Acceso
       title: Leer en orden o saltar a una posición
       image: img/es/seek-tell.png
-      caption: La lectura secuencial avanza un paso a la vez. seek mueve el cursor de golpe y tell dice dónde quedó.
+      caption: La lectura secuencial avanza un paso a la vez. seekg mueve el cursor de golpe y tellg dice dónde quedó.
       alt: Un cursor sobre un archivo dibujado como posiciones numeradas, con una lectura secuencial y un salto
 
   - divider:
@@ -146,7 +146,7 @@ slides:
         - label: Por qué así
           text: Preguntar por el fin de archivo antes de leer da una vuelta de más, con la última línea repetida
         - label: Riesgo
-          text: Un return dentro del if deja el archivo abierto. Con archivos grandes conviene cerrar antes de salir.
+          text: Una línea con texto donde va el número detiene el ciclo ahí, y el resto del archivo ya no se lee
           accent: true
 
   - table:
@@ -155,7 +155,7 @@ slides:
       headers: ["Consulta", "Es cierta cuando", "Se usa"]
       rows:
         - ["is_open()", "El archivo se abrió", "Justo después de abrir"]
-        - ["eof()", "Se llegó al final", "Casi nunca, ver la nota"]
+        - ["eof()", "Una lectura topó con el final", "Casi nunca, ver la nota"]
         - ["fail()", "La última lectura falló", "Al leer un tipo que no cuadra"]
         - ["good()", "Todo va bien", "Como condición general"]
 
@@ -171,7 +171,7 @@ slides:
       items:
         - key: '01'
           title: Cubre de la unidad 1 a la 11
-          desc: Todo lo del primer parcial otra vez, más funciones, clases, herencia, arreglos, registros y punteros
+          desc: Todo lo del primer parcial otra vez, más herencia, arreglos, registros, punteros y archivos
         - key: '02'
           title: Lo del primer parcial vuelve a entrar
           desc: Acumulativo quiere decir eso. Lo que quedó mal en septiembre sigue contando en octubre.
@@ -201,7 +201,7 @@ slides:
 
   - trace:
       eyebrow: Respuesta
-      title: La lectura falló, y aun así tocó la variable
+      title: La lectura falló, y nunca tocó la variable
       headers: ["Paso", "Qué ocurre", "El flujo", "n"]
       rows:
         - ["1", "int n = 7", "no abrió, ya falló", "7"]

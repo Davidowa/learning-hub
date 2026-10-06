@@ -77,7 +77,7 @@ slides:
       lead: >-
         A path points at a place on disk. Written as a string it depends on the system, on
         which way the slashes lean and on whether somebody remembered to escape the
-        characters. Path treats it as what it is, a route with parts, and builds it correctly.
+        characters. Path treats it as what it is, a route with parts, and builds it correctly on any machine.
       panel:
         label: What has to stay separate
         title: The path, the file and the contents
@@ -109,7 +109,7 @@ slides:
         - label: Line 3
           text: The slash joins pieces of a path, and Python inserts whatever separator the system uses
         - label: Why not a string
-          text: 'Writing "data\students.csv" smuggles in an escape character nobody asked for'
+          text: 'Writing "data\students.csv" smuggles in \s, an invalid escape that Python 3.12 warns about'
         - label: Risk
           text: exists() answers for right now. A second later the answer can already be wrong.
           accent: true
@@ -142,7 +142,7 @@ slides:
       title: The life of an open file
       image: img/en/file-lifecycle.png
       caption: The with does the first step and the last one. All that is left to write is the middle.
-      alt: Three boxes with open, read and close, with a bracket underneath labelled with spanning all three
+      alt: Three boxes with open, read and close, with a bracket underneath labeled with spanning all three
 
   - code:
       eyebrow: The with block
@@ -162,7 +162,7 @@ slides:
         - label: Line 5
           text: The with closes the file on the way out of the block, even if something raises inside
         - label: The encoding
-          text: Without it Python uses the system default, and accents break on the next machine along
+          text: Without it Python uses the system default, and accents break on the next machine over
         - label: Risk
           text: read() pulls the whole file into memory, and with a large file that does not fit
           accent: true
@@ -204,7 +204,7 @@ slides:
       items:
         - label: Error 01
           title: Opening without with
-          desc: If something fails between open and close, the file stays open and the writes never reach disk
+          desc: If something fails between open and close, the file stays open and the writes may never reach disk
         - label: Error 02
           title: Paths with hand-typed slashes
           desc: 'The string "data\notes.txt" carries a hidden line break. Use Path.'
@@ -213,7 +213,7 @@ slides:
           desc: It loads everything at once, while walking line by line costs the same and always fits
         - label: Error 04
           title: Forgetting the encoding
-          desc: The file reads fine on your machine and with broken accents on the marker's
+          desc: The file reads fine on your machine and with broken accents on the grader's
 
   - divider:
       eyebrow: Block 03
@@ -240,7 +240,7 @@ slides:
         - label: Line 7
           text: DictReader takes the first row as the header and hands each row over as a dictionary
         - label: The empty newline
-          text: The csv module asks for it. Without it, Windows grows blank rows between records.
+          text: The csv module asks for it. Without it, writing on Windows grows blank rows between records.
         - label: With csv.reader
           text: Each row arrives as a list, and you have to remember which column each index is
 
@@ -293,9 +293,9 @@ slides:
       headers: ["Step", "Statement", "Contents on disk"]
       rows:
         - ["1", 'open(path, "w")', "left empty"]
-        - ["2", 'f.write("first")', "first"]
+        - ["2", 'f.write("first") and close', "first"]
         - ["3", 'open(path, "w")', "left empty again"]
-        - ["4", 'f.write("second")', "second"]
+        - ["4", 'f.write("second") and close', "second"]
       verdict: Mode w empties the file the moment it opens it, before a single character gets written. To keep what was there you have to open with a.
 
   - lab:

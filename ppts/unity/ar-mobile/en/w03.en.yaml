@@ -36,10 +36,10 @@ slides:
           desc: An identifier, a pose and a state, and one event that reports all three
         - title: Placing on a plane
           desc: A ray cast that needs no collider, and a tap that turns into a world position
-        - title: On-screen targets
-          desc: A reference image library, and the one measurement everybody enters wrong
         - title: When it does not work
           desc: Bare floors, fast phones and cached references, with the symptom for each
+        - title: On-screen targets
+          desc: A reference image library, and the one measurement everybody enters wrong
 
   - objectives:
       eyebrow: Learning objectives
@@ -92,7 +92,7 @@ slides:
       title: A trackable is an id, a pose and a state
       lead: >-
         Every plane, image and point cloud a session finds carries a TrackableId that stays
-        the same for as long as the session recognises it. That identifier is what lets a
+        the same for as long as the session recognizes it. That identifier is what lets a
         manager tell you three different things. This one is new, this one moved or grew,
         this one is gone. AR Foundation turns each of them into a GameObject and keeps its
         transform in step with the provider.
@@ -100,12 +100,12 @@ slides:
         label: One event for every manager
         title: trackablesChanged, since AR Foundation 6
         note: >-
-          It replaced the per manager events, planesChanged and trackedImagesChanged among
+          It replaced the per-manager events, planesChanged and trackedImagesChanged among
           them, and it can be wired in the Inspector like any UnityEvent.
       steps:
         - text: added, the session just found it
-        - text: updated, its pose or shape moved
-        - text: removed, it is not there any more
+        - text: updated, its pose or shape changed
+        - text: removed, it is not there anymore
         - text: and a merged plane arrives as removed
           loop: ↺ so never cache a plane, ask the manager
 
@@ -125,8 +125,8 @@ slides:
           dark: true
       note: >-
         The merge is the one that surprises people. Two small floor patches that turn out to
-        be one floor become one plane, and the smaller of the two is removed while the
-        content standing on it disappears.
+        be one floor become one plane, and the smaller of the two is removed along with
+        anything parented to it.
 
   - table:
       eyebrow: Block 01 · Managers
@@ -175,8 +175,8 @@ slides:
             writing AddListener at all.
         - label: Risk
           text: >-
-            Add the listener in OnEnable and remove it in OnDisable, or a reloaded scene
-            gets two handlers.
+            Add the listener in OnEnable and remove it in OnDisable, or a re-enabled
+            script gets two handlers.
           accent: true
 
   - code_output:
@@ -217,7 +217,7 @@ slides:
         label: The mask that matters most
         title: TrackableType.PlaneWithinPolygon
         note: >-
-          Within the polygon means the detected boundary. The other choice lets a tap land
+          Within the polygon means the detected boundary. PlaneWithinInfinity lets a tap land
           past the edge of the floor, on the infinite plane behind it.
       steps:
         - text: Take the screen point of the tap
@@ -289,7 +289,7 @@ slides:
             Pixels, not world units. The manager builds the ray from the AR camera.
         - label: The pose
           text: >-
-            Position and rotation arrive together, so the object lands lying on the surface.
+            Position and rotation arrive together, so the object lands aligned with the surface.
         - label: Risk
           text: >-
             On a false the list keeps its old contents, so read it only after a true.
@@ -297,7 +297,7 @@ slides:
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four reasons a plane never turns up
+      title: Four reasons placement goes wrong
       items:
         - label: Mistake 01
           title: A bare white floor
@@ -313,7 +313,7 @@ slides:
           title: Caching an ARPlane reference
           desc: >-
             Planes merge and disappear. A field holding one becomes a missing reference,
-            and the content standing on it goes with it.
+            and anything parented to it goes with it.
         - label: Mistake 04
           title: Placing content with no anchor
           desc: >-
@@ -341,7 +341,7 @@ slides:
           desc: One entry per target, with the texture assigned to it
         - label: '04'
           title: Specify Size
-          desc: Tick it and type the on-screen width in metres
+          desc: Tick it and type the on-screen width in meters
         - label: '05'
           title: Assign it
           desc: Drop the library onto the AR Tracked Image Manager
@@ -351,10 +351,10 @@ slides:
       title: What separates a target that works from one that does not
       headers: [Property, What works, Why]
       rows:
-        - ["Contrast", "High, even in grey", "The tracker sees no colour"]
-        - ["Detail", "Busy, non repeating", "Repeats match the wrong place"]
+        - ["Contrast", "High, even in gray", "The tracker sees no color"]
+        - ["Detail", "Busy, non-repeating", "Repeats match the wrong place"]
         - ["Shape", "Flat and rigid", "A curled poster stops matching"]
-        - ["Physical size", "Measured, in metres", "Distance is derived from it"]
+        - ["Physical size", "Measured, in meters", "Distance is derived from it"]
         - ["Surface", "A screen without glare", "A reflection hides the pattern"]
 
   - stat:
@@ -368,7 +368,7 @@ slides:
 
   - code:
       eyebrow: Block 03 · Image tracking
-      title: Reacting to a target the session recognised
+      title: Reacting to a target the session recognized
       filename: ImageLog.cs
       lang: csharp
       source: |
@@ -404,8 +404,8 @@ slides:
       eyebrow: Quick check
       question: The library says the target is 0.210 m wide. On screen it measures 0.105 m. What happens?
       options:
-        - Content lands at about twice the distance it should, and at twice the size
-        - The image is not recognised, because the size has to match the screen
+        - Content lands at about twice the distance it should, and looks half the size
+        - The image is not recognized, because the size has to match the screen
         - Nothing, the size field is only a hint used inside the editor
         - Tracking works, but the rotation of the target comes back mirrored
 
@@ -416,7 +416,7 @@ slides:
       rows:
         - ["Target width", "0.210 m", "0.105 m", "Two to one"]
         - ["Distance", "Derived", "Half of it", "Twice as far"]
-        - ["Content scale", "Authored", "Unchanged", "Looks twice as big"]
+        - ["Content scale", "Authored", "Unchanged", "Looks half as big"]
         - ["Rotation", "Correct", "Correct", "Unaffected"]
       verdict: >-
         The tracker cannot measure your screen. It believes the library and derives distance
@@ -464,7 +464,7 @@ slides:
         - [Bring, The phone and the target on a second screen]
       rubric:
         - ["Placement", "Required", "Tapping a detected plane places the prefab on it"]
-        - ["Image target", "Required", "The on-screen target is recognised and its size is measured"]
+        - ["Image target", "Required", "The on-screen target is recognized and its size is measured"]
         - ["Pathway", "Ongoing", "This week's units on Unity Learn, done in your own time"]
 
   - closing:

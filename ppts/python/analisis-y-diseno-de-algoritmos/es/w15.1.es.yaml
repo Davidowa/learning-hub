@@ -37,8 +37,8 @@ slides:
       items:
         - head: Explicar qué es una Series
           sub: Una columna con un índice encima, que es la lista de la semana 12
-        - head: Construir un DataFrame
-          sub: Desde un diccionario de columnas, y desde un archivo
+        - head: Reconocer un DataFrame
+          sub: La hoja completa, hecha de varias listas emparejadas
         - head: Cargar un CSV en una línea
           sub: Con read_csv, y saber qué hizo con cada columna
         - head: Inspeccionar antes de analizar
@@ -156,12 +156,12 @@ slides:
       source: |
         ventas = pd.read_csv(DATOS / "sales.csv")
 
-        print(ventas.head(3))
-      output: |
-        date   region  channel   units
-        2025-12-08  South   Online  15.0
-        2025-05-26  South   Wholes  18.0
-        2025-06-02   West   Online   5.0
+        print(ventas[["date", "region", "units"]].head(3))
+      output: |2
+                 date region  units
+        0  2025-12-08  South   15.0
+        1  2025-05-26  South   18.0
+        2  2025-06-02   West    5.0
 
   - divider:
       eyebrow: Bloque 03
@@ -170,18 +170,20 @@ slides:
       block: 3
 
   - code_output:
-      eyebrow: Bloque 03 · info
-      title: El comando más útil del archivo
+      eyebrow: Bloque 03 · dtypes y shape
+      title: El tipo de cada columna, y el tamaño
       filename: inspeccionar.py
       source: |
         print(ventas.dtypes)
         print(ventas.shape)
       output: |
-        date            str
-        region          str
-        channel         str
-        units       float64
-        unit_price      str
+        date              str
+        region            str
+        channel           str
+        product           str
+        units         float64
+        unit_price        str
+        dtype: object
         (324, 6)
 
   - concept:
@@ -210,12 +212,26 @@ slides:
       filename: diagnostico.py
       source: |
         print(ventas["region"].value_counts())
+      output: |
+        region
+        West      81
+        North     75
+        Centre    73
+        South     71
+         North     7
+        north      7
+        North      5
+        NORTH      5
+        Name: count, dtype: int64
+
+  - code_output:
+      eyebrow: Bloque 03 · Huecos y duplicados
+      title: Once celdas vacías y siete renglones repetidos
+      filename: diagnostico.py
+      source: |
         print(ventas.isna().sum().sum())
         print(ventas.duplicated().sum())
       output: |
-        West 81   North 75   Centre 73
-        South 71   " North" 7   north 7
-        "North " 5   NORTH 5
         11
         7
 
@@ -266,8 +282,8 @@ slides:
       title: Tres ideas para llevarse
       items:
         - title: Una Series es una columna con índice
-          desc: Es la lista de la semana 12 con etiquetas, y todo lo que aprendiste ahí sigue valiendo aquí
-        - title: read_csv no adivina lo que no puede
+          desc: Es la lista de la semana 12 con etiquetas, y mucho de lo que aprendiste ahí sigue valiendo aquí
+        - title: read_csv no adivina lo que no puede saber
           desc: Infiere tipos bien casi siempre, y no puede saber qué querías que significara una celda vacía
         - title: Inspeccionar antes de analizar
           desc: head, info, shape y describe. Dos minutos que evitan un resultado equivocado que se ve razonable
@@ -275,14 +291,14 @@ slides:
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Corre los scripts 01 y 02 del módulo A05 del repositorio sobre sales.csv y explica en tres renglones por qué describe solo resume una columna.
+      brief: Corre los scripts 01 y 02 del módulo A05 del repositorio y explica en tres renglones por qué describe solo resume una columna de sales.csv.
       meta:
         - [Entrega, Antes de la sesión 15.2]
         - [Formato, Blackboard · .pdf]
         - [Peso, Parte del 20 % de tareas]
       rubric:
         - ["Ejecución", "40 %", "Los dos scripts corren y se muestra su salida completa"]
-        - ["Diagnóstico", "40 %", "Se nombran las tres columnas que salieron texto y por qué"]
+        - ["Diagnóstico", "40 %", "Se nombran las tres columnas con tipo inesperado y por qué"]
         - ["Explicación", "20 %", "Se dice qué tendría que pasar para que describe resumiera más columnas"]
 
   - closing:

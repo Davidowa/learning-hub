@@ -36,10 +36,10 @@ slides:
           desc: Un identificador, una pose y un estado, y un solo evento que reporta los tres
         - title: Colocar sobre un plano
           desc: Un raycast que no necesita collider, y un tap que se vuelve posición en el mundo
-        - title: Blancos en pantalla
-          desc: Una biblioteca de imágenes, y la medida que todo el mundo captura mal
         - title: Cuando no funciona
           desc: Pisos vacíos, teléfonos rápidos y referencias guardadas, con su síntoma cada uno
+        - title: Blancos en pantalla
+          desc: Una biblioteca de imágenes, y la medida que todo el mundo captura mal
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
@@ -125,8 +125,8 @@ slides:
           dark: true
       note: >-
         La fusión es la que sorprende. Dos parches chicos de piso que resultan ser un mismo
-        piso quedan como un solo plano, y el menor de los dos se elimina mientras el
-        contenido que estaba parado ahí desaparece.
+        piso quedan como un solo plano, y el menor de los dos se elimina junto con lo
+        que tenía emparentado.
 
   - table:
       eyebrow: Bloque 01 · Managers
@@ -175,8 +175,8 @@ slides:
             AddListener.
         - label: Riesgo
           text: >-
-            Agrega el listener en OnEnable y quítalo en OnDisable, o la escena recargada
-            trae dos.
+            Agrega el listener en OnEnable y quítalo en OnDisable, o al reactivar el
+            componente quedan dos.
           accent: true
 
   - code_output:
@@ -217,7 +217,7 @@ slides:
         label: La máscara que más importa
         title: TrackableType.PlaneWithinPolygon
         note: >-
-          Dentro del polígono quiere decir dentro de la frontera detectada. La otra opción
+          Dentro del polígono quiere decir dentro de la frontera detectada. PlaneWithinInfinity
           deja que un tap caiga más allá del piso, sobre el plano infinito de atrás.
       steps:
         - text: Toma el punto de pantalla del tap
@@ -289,7 +289,7 @@ slides:
             Píxeles, no unidades de mundo. El manager arma el rayo desde la cámara de AR.
         - label: La pose
           text: >-
-            Posición y rotación llegan juntas, así que el objeto cae acostado en la
+            Posición y rotación llegan juntas, así que el objeto cae alineado con la
             superficie.
         - label: Riesgo
           text: >-
@@ -298,7 +298,7 @@ slides:
 
   - pitfalls:
       eyebrow: Bloque 02 · Errores comunes
-      title: Cuatro razones por las que nunca aparece un plano
+      title: Cuatro razones por las que falla la colocación
       items:
         - label: Error 01
           title: Un piso blanco y vacío
@@ -314,7 +314,7 @@ slides:
           title: Guardar una referencia a un plano
           desc: >-
             Los planos se fusionan y desaparecen. Un campo que guarda uno queda como
-            referencia perdida, y el contenido parado ahí se va con él.
+            referencia perdida, y lo que le emparentaste se va con él.
         - label: Error 04
           title: Colocar contenido sin ancla
           desc: >-
@@ -405,7 +405,7 @@ slides:
       eyebrow: Verificación rápida
       question: La biblioteca dice que el blanco mide 0.210 m de ancho. En pantalla mide 0.105 m. ¿Qué pasa?
       options:
-        - El contenido cae como al doble de distancia, y al doble de tamaño
+        - El contenido cae como al doble de distancia, y se ve a la mitad de tamaño
         - No se reconoce la imagen, porque el tamaño tiene que empatar con el de pantalla
         - Nada, el campo de tamaño es sólo una pista que se usa en el editor
         - El rastreo sirve, pero la rotación del blanco regresa espejeada
@@ -417,7 +417,7 @@ slides:
       rows:
         - ["Ancho del blanco", "0.210 m", "0.105 m", "Dos a uno"]
         - ["Distancia", "Derivada", "La mitad", "El doble"]
-        - ["Escala", "De autor", "Sin cambio", "Se ve al doble"]
+        - ["Escala", "De autor", "Sin cambio", "Se ve a la mitad"]
         - ["Rotación", "Correcta", "Correcta", "Sin efecto"]
       verdict: >-
         El rastreador no puede medir tu pantalla. Le cree a la biblioteca y deriva la distancia

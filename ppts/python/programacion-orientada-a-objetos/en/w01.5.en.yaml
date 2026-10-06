@@ -25,7 +25,7 @@ slides:
         - head: Read a traceback from the bottom up
           sub: The last line says what happened; the one above says where
         - head: Name the errors you meet most
-          sub: TypeError, ValueError, NameError, IndexError, KeyError and ZeroDivisionError
+          sub: TypeError, ValueError, NameError, IndexError, KeyError, ZeroDivisionError and AttributeError
         - head: Wrap only what can fail
           sub: A short try is a try you can understand
         - head: Write one except per type
@@ -79,8 +79,10 @@ slides:
         Traceback (most recent call last):
           File "div.py", line 4, in <module>
             print(divide(10, 0))
+                  ~~~~~~^^^^^^^
           File "div.py", line 2, in divide
             return a / b
+                   ~~^~~
         ZeroDivisionError: division by zero
 
   - concept:
@@ -88,13 +90,13 @@ slides:
       title: It reads from the bottom up
       lead: >-
         The last line is the one that matters: it gives the type of error and the message.
-        The line above gives the file, the line number and the function where it happened.
-        Everything else is the path the program took to get there.
+        Further up, the File line gives the file, the line number and the function where it
+        happened. Everything else is the path the program took to get there.
       panel:
         label: The reading order
         title: First what, then where, last how it got there
         note: >-
-          The type and the line number are ninety per cent of it. The rest of the
+          The type and the line number are ninety percent of it. The rest of the
           traceback only matters when the error comes from a distant function.
       steps:
         - text: Read the last line, type and message
@@ -152,7 +154,7 @@ slides:
       title: Each except catches its own
       image: img/en/exceptions.png
       caption: Naming the type lets the errors you should see travel up
-      alt: A cracked try box, two named darts and two baskets catching them
+      alt: A try box holding 10 / age, two arrows to except ValueError and except ZeroDivisionError, and a no exception arrow down to else
 
   - table:
       eyebrow: Module 5 · The four clauses
@@ -196,7 +198,7 @@ slides:
       block: 3
 
   - concept:
-      eyebrow: Module 5 · Judgement
+      eyebrow: Module 5 · Judgment
       title: Validate first, catch afterwards
       lead: >-
         If you can check the condition with an if, use an if. try is for what you cannot

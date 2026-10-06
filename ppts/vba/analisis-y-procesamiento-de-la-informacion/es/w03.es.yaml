@@ -23,13 +23,13 @@ slides:
       title: Cuatro momentos de la sesión
       cards:
         - title: Los tipos de dato
-          desc: Los diez que existen, para qué sirve cada uno y cuál se queda corto
+          desc: Los diez más comunes, para qué sirve cada uno y cuál se queda corto
         - title: Declarar bien
           desc: Dim, As, Const y la línea que convierte un error mudo en un error visible
         - title: Llegar a una celda
           desc: Range, Offset y ActiveCell, y qué deja cada uno en la hoja
         - title: Tu turno
-          desc: Una base de clientes recorrida con variables en vez de a mano
+          desc: Una base de clientes con una variable y un tipo por campo
 
   - objectives:
       eyebrow: Objetivos de la sesión
@@ -97,14 +97,14 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · Tipos · 1 de 2
-      title: Los numéricos, completos y en orden
+      title: Los numéricos de uso común, en orden
       headers: [Tipo, Rango, Cuándo lo usas]
       rows:
         - ["Integer", "-32,768 a 32,767", "Casi nunca. Se queda corto."]
-        - ["Long", "±2,147,483,647", "El de cajón para contar"]
+        - ["Long", "-2,147,483,648 a 2,147,483,647", "El de cajón para contar"]
         - ["Single", "7 cifras significativas", "Rara vez. Double da más."]
         - ["Double", "15 cifras significativas", "Tasas, importes, decimales"]
-        - ["Currency", "4 decimales exactos", "Dinero sin redondeo"]
+        - ["Currency", "4 decimales exactos", "Sumas de dinero exactas"]
 
   - table:
       eyebrow: Bloque 01 · Tipos · 2 de 2
@@ -174,7 +174,7 @@ slides:
         - label: Const
           text: Se declara y se le asigna valor en el mismo renglón, y ya no se puede cambiar.
         - label: Los nombres
-          text: Cada uno dice qué guarda. VBA no distingue mayúsculas, así que el editor te corrige la caja al escribir.
+          text: Cada uno dice qué guarda. VBA no distingue mayúsculas, así que el editor te corrige las mayúsculas al escribir.
         - label: Riesgo
           text: Dim mesesPlazo, tasaAnual As Double declara solo la segunda como Double. La primera queda Variant.
           accent: true
@@ -195,7 +195,7 @@ slides:
         End Sub
       annotations:
         - label: El error de dedo
-          text: unidaes no existe. Es unidades sin la d, y se ve idéntico al leer de corrido.
+          text: unidaes no existe. Es unidades sin la segunda d, y se ve idéntico al leer de corrido.
         - label: Sin la primera línea
           text: VBA crea unidaes al vuelo, le pone 300, y el mensaje muestra 250. Verificado en Excel.
         - label: Con la primera línea
@@ -252,7 +252,7 @@ slides:
         - label: Por qué importa
           text: Offset es el que sirve cuando el punto de partida cambia de mes a mes. Range fijo no.
         - label: Riesgo
-          text: Offset(1, 0) baja un renglón, no va a la columna B. El primer número son renglones.
+          text: Offset(1, 0) baja un renglón, no va a la columna C. El primer número son renglones.
           accent: true
 
   - table:
@@ -260,8 +260,8 @@ slides:
       title: Lo que queda en la hoja al correrlo completo
       headers: [Columna, Cómo se escribió, Qué quedó]
       rows:
-        - ["A1:A5", "Range directo, una por una", "1, 2, 3, 4, 5"]
-        - ["B1:B5", "Range(\"B1\") más Offset", "2, 4, 6, 8, 10"]
+        - ["A1:A3", "Range directo, una por una", "1, 2, 3"]
+        - ["B1:B3", "Range(\"B1\") más Offset", "2, 4, 6"]
         - ["C1:C3", "Select y ActiveCell", "3, 6, 9"]
         - ["ActiveCell", "Dónde quedó parado al final", "$C$3"]
 
@@ -303,7 +303,7 @@ slides:
         - label: Restricción
           text: Ningún Variant y ningún nombre de una sola letra. El RFC y el código postal van como String.
         - label: La prueba
-          text: Cambia un valor por uno que no corresponda al tipo. Si no truena, el tipo estaba mal elegido.
+          text: Pon texto en un campo numérico o de fecha. Si no truena, el tipo estaba mal elegido.
 
   - takeaways:
       eyebrow: Resumen
@@ -321,8 +321,9 @@ slides:
       title: Entrega y criterios de evaluación
       brief: >-
         Escribe un procedimiento que lea de la hoja el monto de un préstamo y su tasa
-        anual, calcule la tasa mensual y la escriba de regreso. Declara cada variable con
-        su tipo y usa una constante para los doce meses.
+        anual, los guarde en variables y los escriba de regreso una columna a la derecha,
+        con Offset. Declara cada variable con su tipo y usa una constante para el plazo
+        de doce meses, que también va a la hoja.
       meta:
         - [Entrega, Antes de la semana 4]
         - [Formato, Blackboard · .bas y .xlsm]

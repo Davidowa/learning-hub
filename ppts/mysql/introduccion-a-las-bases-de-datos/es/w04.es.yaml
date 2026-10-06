@@ -14,7 +14,7 @@ slides:
       title: Introducción a las Bases de Datos
       subtitle: >-
         Cada línea que dibujes hoy tiene exactamente una forma física, y antes de que
-        termine la sesión las cuatro salen de vuelta por un SHOW CREATE TABLE.
+        termine la sesión el N:M y la ternaria salen de vuelta por un SHOW CREATE TABLE.
       meta:
         - [Profesor, David Escobar-Castillejos]
         - [Motor, MySQL 9.7.2]
@@ -55,8 +55,8 @@ slides:
             par
         - head: Decir qué promesa del diagrama no se puede exigir
           sub: >-
-            La cardinalidad mínima no tiene construcción en MySQL, y la materia con cero
-            inscritos se queda ahí
+            Fuera de NOT NULL, la cardinalidad mínima no tiene construcción en MySQL, y la
+            materia con cero inscritos se queda ahí
 
   - roadmap:
       eyebrow: Mapa del curso
@@ -194,20 +194,20 @@ slides:
       annotations:
         - label: jefe_id
           text: >-
-            Apunta a su propia tabla. No hace falta una segunda entidad, hace falta una
-            segunda columna.
+            Apunta a su propia tabla. No hace falta otra entidad, sino una segunda
+            columna.
         - label: 'NULL'
           text: >-
             La raíz del árbol no tiene jefe. Ese NULL es el conector 0 del diagrama, hecho
             columna.
         - label: Participación opcional
           text: >-
-            La regla vale para cualquier llave foránea. NULL es participación opcional y
-            NOT NULL es obligatoria.
+            En toda llave foránea, NULL es participación opcional y NOT NULL es
+            obligatoria.
         - label: Riesgo
           text: >-
-            Sin la columna nullable no hay por dónde empezar el árbol, y el primer INSERT
-            falla por la llave foránea.
+            Con NOT NULL, el primer INSERT falla por la llave foránea, salvo que la raíz
+            sea su propio jefe.
           accent: true
 
   - code_output:
@@ -228,15 +228,17 @@ slides:
 
   - code_output:
       eyebrow: Medido · SHOW CREATE TABLE horario
-      title: Solo dia_id recibió índice propio, porque curso_id ya es la columna izquierda
+      title: aula_id y dia_id recibieron índice propio; curso_id ya es la columna izquierda
       filename: horario.sql
       lang: sql
       output_label: MySQL 9.7.2
       source: |
         SHOW CREATE TABLE horario;
       output: |
-        PRIMARY KEY (curso_id, aula_id,
-                     dia_id, hora)
+        PRIMARY KEY (`curso_id`,`aula_id`,
+                     `dia_id`,`hora`),
+        KEY `aula_id` (`aula_id`),
+        KEY `dia_id` (`dia_id`),
 
   - compare:
       eyebrow: Bloque 02 · Doble
@@ -267,10 +269,10 @@ slides:
             fk_estado_capital FOREIGN KEY (capital_id)
             REFERENCES ciudad(ciudad_id);
       note: >-
-        La tabla ciudad se crea primero, con estado_id NOT NULL. La segunda llave foránea
-        no cabe en el CREATE TABLE, necesita un ALTER, y una de las dos columnas tiene que
-        aceptar NULL para romper el ciclo. Eso convierte un dibujo bonito en un script que
-        falla a las once de la noche.
+        La tabla ciudad se crea antes del ALTER, con estado_id NOT NULL. La segunda llave
+        foránea no cabe en el CREATE TABLE, necesita un ALTER, y una de las dos columnas
+        tiene que aceptar NULL para romper el ciclo. Eso convierte un dibujo bonito en un
+        script que falla a las once de la noche.
 
   - divider:
       eyebrow: Bloque 03
@@ -290,7 +292,7 @@ slides:
         - ["1:1", "Profesor dirige Departamento", "FK NOT NULL más UNIQUE"]
         - ["1:N", "Profesor imparte Materia", "FK del lado muchos"]
         - ["N:M", "Alumno se inscribe en Materia", "Tabla con la PK del par"]
-        - ["Ternaria", "Curso, Aula y Dia", "Tabla con tres FK"]
+        - ["Ternaria", "Curso, Aula y Día", "Tabla con tres FK"]
 
   - code_output:
       eyebrow: Medido · cuerpo de SHOW CREATE TABLE
@@ -334,7 +336,7 @@ slides:
       output_label: MySQL 9.7.2
       source: |
         SELECT m.materia_id, m.nombre,
-               COUNT(i.inscripcion_id) AS inscritos
+               COUNT(i.alumno_id) AS inscritos
         FROM materia m
         LEFT JOIN inscripcion i ON m.materia_id = i.materia_id
         GROUP BY m.materia_id, m.nombre;
@@ -401,8 +403,9 @@ slides:
             N:M es una tercera tabla cuya llave primaria es el par
         - title: El dibujo promete más que el motor
           desc: >-
-            La cardinalidad máxima se hace cumplir con llaves; la mínima no. Decirlo en
-            voz alta es más honesto que prometer que el modelo se mantiene solo
+            La cardinalidad máxima se hace cumplir con llaves; la mínima, fuera de NOT
+            NULL, no. Decirlo en voz alta es más honesto que prometer que el modelo se
+            mantiene solo
 
   - homework:
       eyebrow: Tarea

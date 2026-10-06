@@ -29,7 +29,7 @@ slides:
         - title: When it fails
           desc: What happens if the file is not there, which is not an error
         - title: The partial
-          desc: What the second one covers and how to prepare for it
+          desc: What the second one covers and what is new on it
 
   - objectives:
       eyebrow: Learning objectives
@@ -96,7 +96,7 @@ slides:
       eyebrow: Access
       title: Reading in order or jumping to a position
       image: img/en/seek-tell.png
-      caption: Sequential reading moves one step at a time. seek moves the cursor in one go and tell reports where it stopped.
+      caption: Sequential reading moves one step at a time. seekg moves the cursor in one go and tellg reports where it stopped.
       alt: A cursor over a file drawn as numbered positions, with a sequential read and a jump
 
   - divider:
@@ -146,7 +146,7 @@ slides:
         - label: Why this way
           text: Asking about end of file before reading gives one extra pass, with the last line repeated
         - label: Risk
-          text: A return inside the if leaves the file open. With large files it is worth closing before leaving.
+          text: A line with text where the number goes stops the loop there, and the rest of the file is never read
           accent: true
 
   - table:
@@ -155,14 +155,14 @@ slides:
       headers: ["Query", "True when", "Used"]
       rows:
         - ["is_open()", "The file opened", "Right after opening"]
-        - ["eof()", "The end was reached", "Almost never, see the note"]
+        - ["eof()", "A read ran into the end", "Almost never, see the note"]
         - ["fail()", "The last read failed", "When a type does not match"]
         - ["good()", "Everything is fine", "As a general condition"]
 
   - divider:
       eyebrow: Block 03
       title: Second partial exam
-      lede: Tuesday 20 October. Cumulative, as all three are.
+      lede: Tuesday, October 20. Cumulative, as all three are.
       block: 3
 
   - tiers:
@@ -171,7 +171,7 @@ slides:
       items:
         - key: '01'
           title: It covers units 1 to 11
-          desc: Everything from the first partial again, plus functions, classes, inheritance, arrays, records and pointers
+          desc: Everything from the first partial again, plus inheritance, arrays, records, pointers and files
         - key: '02'
           title: The first partial comes back
           desc: That is what cumulative means. What went wrong in September still counts in October.

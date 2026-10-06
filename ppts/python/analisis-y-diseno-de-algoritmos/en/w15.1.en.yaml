@@ -37,11 +37,11 @@ slides:
       items:
         - head: Explain what a Series is
           sub: A column with an index on top, which is the list from week 12
-        - head: Build a DataFrame
-          sub: From a dictionary of columns, and from a file
+        - head: Recognize a DataFrame
+          sub: The whole sheet, made of several paired lists
         - head: Load a CSV in one line
           sub: With read_csv, and know what it did to each column
-        - head: Inspect before analysing
+        - head: Inspect before analyzing
           sub: head, info, shape and describe, always in that order
         - head: Spot the dirt
           sub: Missing values, duplicates and badly captured categories
@@ -64,7 +64,7 @@ slides:
           state: done
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: now
 
   - divider:
@@ -156,12 +156,12 @@ slides:
       source: |
         sales = pd.read_csv(DATA / "sales.csv")
 
-        print(sales.head(3))
-      output: |
-        date   region  channel   units
-        2025-12-08  South   Online  15.0
-        2025-05-26  South   Wholes  18.0
-        2025-06-02   West   Online   5.0
+        print(sales[["date", "region", "units"]].head(3))
+      output: |2
+                 date region  units
+        0  2025-12-08  South   15.0
+        1  2025-05-26  South   18.0
+        2  2025-06-02   West    5.0
 
   - divider:
       eyebrow: Block 03
@@ -170,18 +170,20 @@ slides:
       block: 3
 
   - code_output:
-      eyebrow: Block 03 · info
-      title: The single most useful command
+      eyebrow: Block 03 · dtypes and shape
+      title: Each column's type, and the size
       filename: inspect.py
       source: |
         print(sales.dtypes)
         print(sales.shape)
       output: |
-        date            str
-        region          str
-        channel         str
-        units       float64
-        unit_price      str
+        date              str
+        region            str
+        channel           str
+        product           str
+        units         float64
+        unit_price        str
+        dtype: object
         (324, 6)
 
   - concept:
@@ -191,7 +193,7 @@ slides:
         units came back float and not integer, because eleven cells are blank and the
         marker for blank only exists in a decimal column. unit_price came back as text,
         because the currency sign and the thousands comma are format, not value. And date
-        came back as text, because a CSV has no date type. None of the three is a failure.
+        came back as text, because a CSV has no date type. None of the three is a pandas failure.
       panel:
         label: The consequence
         title: The unit counts will print as 15.0, not as 15
@@ -210,12 +212,26 @@ slides:
       filename: diagnose.py
       source: |
         print(sales["region"].value_counts())
+      output: |
+        region
+        West      81
+        North     75
+        Centre    73
+        South     71
+         North     7
+        north      7
+        North      5
+        NORTH      5
+        Name: count, dtype: int64
+
+  - code_output:
+      eyebrow: Block 03 · Holes and duplicates
+      title: Eleven blank cells and seven repeated rows
+      filename: diagnose.py
+      source: |
         print(sales.isna().sum().sum())
         print(sales.duplicated().sum())
       output: |
-        West 81   North 75   Centre 73
-        South 71   " North" 7   north 7
-        "North " 5   NORTH 5
         11
         7
 
@@ -224,7 +240,7 @@ slides:
       title: Four loading errors
       items:
         - label: Error 01
-          title: Analysing before inspecting
+          title: Analyzing before inspecting
           desc: The result comes out, it looks reasonable, and it is wrong. head, info and describe cost two minutes.
         - label: Error 02
           title: Trusting the inferred type
@@ -266,24 +282,24 @@ slides:
       title: Three ideas to take away
       items:
         - title: A Series is a column with an index
-          desc: It is the list from week 12 with labels, and everything you learned there still holds here
-        - title: read_csv cannot guess what it cannot
+          desc: It is the list from week 12 with labels, and much of what you learned there still holds here
+        - title: read_csv does not guess what it cannot know
           desc: It infers types well nearly always, and it cannot know what you wanted a blank cell to mean
-        - title: Inspect before analysing
+        - title: Inspect before analyzing
           desc: head, info, shape and describe. Two minutes that prevent a wrong result that looks reasonable
 
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
-      brief: Run scripts 01 and 02 of module A05 from the repository against sales.csv and explain in three lines why describe only summarises one column.
+      brief: Run scripts 01 and 02 of module A05 from the repository and explain in three lines why describe only summarizes one column of sales.csv.
       meta:
         - [Due, Before session 15.2]
         - [Format, Blackboard · .pdf]
         - [Weight, Part of the 20 % for assignments]
       rubric:
         - ["Execution", "40 %", "Both scripts run and their full output is shown"]
-        - ["Diagnosis", "40 %", "The three columns that came back as text are named, with the reason"]
-        - ["Explanation", "20 %", "You say what would have to change for describe to summarise more columns"]
+        - ["Diagnosis", "40 %", "The three columns with an unexpected type are named, with the reason"]
+        - ["Explanation", "20 %", "You say what would have to change for describe to summarize more columns"]
 
   - closing:
       title: Questions

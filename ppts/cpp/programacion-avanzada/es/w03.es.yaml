@@ -110,8 +110,9 @@ slides:
       title: Un tipo entero no avisa cuando se le acaba el espacio
       lead: >-
         Cada tipo entero tiene un valor mínimo y uno máximo. Al pasarse no hay error, ni
-        excepción, ni advertencia en tiempo de ejecución. El valor da la vuelta y sigue
-        contando desde el otro extremo, y el programa continúa como si nada.
+        excepción, ni advertencia en tiempo de ejecución. En un tipo sin signo el valor da
+        la vuelta y sigue desde el otro extremo; en uno con signo es comportamiento
+        indefinido, que a veces da la vuelta y a veces no.
       panel:
         label: Dónde consultarlo
         title: La cabecera limits lo dice
@@ -170,10 +171,11 @@ slides:
         file: corto.cpp
         lang: cpp
         code: |
+          #include <string>
           using namespace std;
 
           string curso = "Programacion";
-          cout << curso.length() << endl;
+          cout << curso.length() << "\n";
       after:
         label: Con el prefijo
         file: explicito.cpp
@@ -184,9 +186,9 @@ slides:
           std::string curso = "Programacion";
           std::cout << curso.length() << "\n";
       note: >-
-        En una diapositiva y en un ejercicio de una página, la izquierda se lee mejor y este
-        curso la usa. En un archivo de cabecera nunca, porque el using se contagia a todo
-        archivo que lo incluya y ahí sí empiezan los choques de nombres.
+        La izquierda se lee mejor en un ejercicio de una página, pero las diapositivas del
+        curso usan la derecha. En un archivo de cabecera la izquierda nunca, porque el using
+        se contagia a todo archivo que lo incluya y ahí sí empiezan los choques de nombres.
 
   - code:
       eyebrow: Enumeraciones y alias
@@ -194,8 +196,9 @@ slides:
       filename: niveles.cpp
       lang: cpp
       source: |
-        enum class Nivel { Bajo, Medio, Alto };
+        #include <iostream>
 
+        enum class Nivel { Bajo, Medio, Alto };
         using Calificacion = double;
 
         int main()
@@ -208,14 +211,14 @@ slides:
             return 0;
         }
       annotations:
-        - label: Línea 1
-          text: Los valores empiezan en cero y suben de uno en uno, así que Alto vale 2
         - label: Línea 3
+          text: Los valores empiezan en cero y suben de uno en uno, así que Alto vale 2
+        - label: Línea 4
           text: using le pone otro nombre a un tipo que ya existe. Es un sinónimo, no un tipo nuevo.
-        - label: Línea 7
+        - label: Línea 8
           text: El nombre del enum va obligatorio delante del valor. Eso evita chocar con otro Alto.
         - label: Riesgo
-          text: enum sin class deja los nombres sueltos y se convierte a int solo.
+          text: enum sin class deja los nombres sueltos y se convierte a int solo. Usa siempre enum class.
           accent: true
 
   - pitfalls:
@@ -265,7 +268,7 @@ slides:
         - label: Línea 2
           text: string necesita su propia cabecera. iostream la arrastra a veces y en otro compilador no.
         - label: Línea 9
-          text: El operador de suma concatena. Con al menos un string de por medio, los literales se pegan solos.
+          text: El operador de suma concatena. Como empieza por un string, los literales se pegan solos.
         - label: Línea 12
           text: length() cuenta caracteres y devuelve 12. size() hace exactamente lo mismo.
         - label: Riesgo
@@ -274,7 +277,7 @@ slides:
 
   - table:
       eyebrow: Operaciones
-      title: Siete operaciones, con lo que devuelven
+      title: 'Siete operaciones sobre a = "Programacion"'
       headers: ["Operación", "Qué hace", "Devuelve"]
       rows:
         - ["a + b", "Concatena las dos", "Un string nuevo"]
@@ -298,7 +301,7 @@ slides:
         - 'Program12, porque substr no modifica la cadena original'
         - 'Program7, porque substr deja la cadena en siete caracteres'
         - 'Programacion12, porque substr copia toda la cadena'
-        - 'rogramac12, porque el primer número es dónde empieza y el segundo dónde termina'
+        - 'Programa12, porque el primer número es dónde empieza y el segundo dónde termina'
 
   - trace:
       eyebrow: Respuesta
@@ -342,14 +345,14 @@ slides:
         - title: El tamaño depende de la plataforma
           desc: long mide 4 bytes en Windows y 8 en Linux, con el mismo código y el mismo estándar
         - title: Pasarse de rango no da error
-          desc: El valor da la vuelta en silencio, así que el tipo se elige por el rango que necesitas
+          desc: Sin signo da la vuelta en silencio y con signo es indefinido, así que el tipo se elige por el rango que necesitas
         - title: std es un espacio de nombres
           desc: El prefijo dice de qué biblioteca sale cada nombre, y en una cabecera nunca se omite
 
   - homework:
       eyebrow: Para la próxima sesión
       title: Una ficha de alumno con texto y tipos elegidos
-      brief: Escriban un programa que arme la ficha de un alumno con nombre y matrícula en std::string, un enum class para el nivel, y que imprima el nombre completo concatenado, su longitud y las primeras tres letras de la matrícula.
+      brief: Escriban un programa que arme la ficha de un alumno con nombre y matrícula en std::string, un enum class para el nivel, y que imprima el nombre completo concatenado, su longitud y los primeros tres caracteres de la matrícula.
       meta:
         - [Entrega, Antes de la sesión 4]
         - [Formato, Blackboard · .zip sin la carpeta x64]

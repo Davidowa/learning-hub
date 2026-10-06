@@ -22,7 +22,7 @@ slides:
       eyebrow: Agenda
       title: Four moments in the session
       cards:
-        - title: The catalogue
+        - title: The catalog
           desc: The types the language already ships, and what each one costs
         - title: The limits
           desc: What happens when a value does not fit and nothing raises an error
@@ -67,7 +67,7 @@ slides:
 
   - divider:
       eyebrow: Block 01
-      title: The catalogue of types
+      title: The catalog of types
       lede: "Choosing a type settles two things at once: which values fit, and how much memory holding them costs."
       block: 1
 
@@ -110,8 +110,9 @@ slides:
       title: An integer type does not announce that it ran out of room
       lead: >-
         Every integer type has a smallest and a largest value. Going past either one raises
-        no error, no exception and no runtime warning. The value wraps around and carries on
-        counting from the other end, and the program continues as though nothing happened.
+        no error, no exception and no runtime warning. An unsigned type wraps around and
+        carries on from the other end; in a signed one it is undefined behavior, which
+        sometimes wraps and sometimes does not.
       panel:
         label: Where to look it up
         title: The limits header says so
@@ -170,10 +171,11 @@ slides:
         file: short.cpp
         lang: cpp
         code: |
+          #include <string>
           using namespace std;
 
           string course = "Programming";
-          cout << course.length() << endl;
+          cout << course.length() << "\n";
       after:
         label: With the prefix
         file: explicit.cpp
@@ -184,9 +186,9 @@ slides:
           std::string course = "Programming";
           std::cout << course.length() << "\n";
       note: >-
-        On a slide and in a one-page exercise the left reads better, and this course uses
-        it. In a header file never, because the using spreads to every file that includes
-        it, and that is where the name collisions start.
+        The left reads better in a one-page exercise, but the course slides use the right.
+        In a header file never the left, because the using spreads to every file that
+        includes it, and that is where the name collisions start.
 
   - code:
       eyebrow: Enumerations and aliases
@@ -194,8 +196,9 @@ slides:
       filename: levels.cpp
       lang: cpp
       source: |
-        enum class Level { Low, Medium, High };
+        #include <iostream>
 
+        enum class Level { Low, Medium, High };
         using Mark = double;
 
         int main()
@@ -208,11 +211,11 @@ slides:
             return 0;
         }
       annotations:
-        - label: Line 1
-          text: The values start at zero and go up by one, so High is 2
         - label: Line 3
+          text: The values start at zero and go up by one, so High is 2
+        - label: Line 4
           text: using gives another name to a type that already exists. It creates a synonym, not a new type.
-        - label: Line 7
+        - label: Line 8
           text: The enum name is required in front of the value, and that is what stops it colliding with another High
         - label: Risk
           text: enum without class leaves the names loose and converts to int on its own. Always use enum class.
@@ -265,7 +268,7 @@ slides:
         - label: Line 2
           text: string needs its own header. iostream sometimes drags it in, and on another compiler it will not.
         - label: Line 9
-          text: The plus operator joins them. With at least one string involved, the literals attach themselves.
+          text: The plus operator joins them. Since it starts from a string, the literals attach themselves.
         - label: Line 12
           text: length() counts characters and gives 11 here. size() does exactly the same thing.
         - label: Risk
@@ -274,7 +277,7 @@ slides:
 
   - table:
       eyebrow: Operations
-      title: Seven operations, and what each hands back
+      title: 'Seven operations on a = "Programacion"'
       headers: ["Operation", "What it does", "Gives"]
       rows:
         - ["a + b", "Joins the two", "A new string"]
@@ -298,7 +301,7 @@ slides:
         - 'Program12, because substr does not modify the original'
         - 'Program7, because substr leaves the string seven characters long'
         - 'Programacion12, because substr copies the whole string'
-        - 'rogramac12, because the numbers are the start and the end'
+        - 'Programa12, because the numbers are the start and the end'
 
   - trace:
       eyebrow: Answer
@@ -314,7 +317,7 @@ slides:
   - method:
       eyebrow: Criterion
       title: Read somebody else's code before writing your own
-      statement: Half of a programmer's work is understanding what is already written. It gets read in a different order from the one it was written in, and it is worth practising deliberately.
+      statement: Half of a programmer's work is understanding what is already written. It gets read in a different order from the one it was written in, and it is worth practicing deliberately.
       points:
         - label: First
           text: The types of the variables. They say what the program holds before any line of logic does.
@@ -342,7 +345,7 @@ slides:
         - title: The size depends on the platform
           desc: long is 4 bytes on Windows and 8 on Linux, from the same code under the same standard
         - title: Going out of range raises nothing
-          desc: The value wraps silently, so the type is chosen by the range you actually need
+          desc: Unsigned wraps silently and signed is undefined, so the type is chosen by the range you actually need
         - title: std is a namespace
           desc: The prefix says which library each name came from, and in a header it is never left out
 

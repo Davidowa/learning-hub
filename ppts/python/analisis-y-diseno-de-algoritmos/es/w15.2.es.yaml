@@ -22,12 +22,12 @@ slides:
       eyebrow: Agenda
       title: Cuatro momentos de la sesión
       cards:
-        - title: Elegir
-          desc: Columnas por nombre, renglones por condición
-        - title: Filtrar
+        - title: Elegir y filtrar
           desc: El autofiltro, escrito. Y las dos reglas que evitan el error confuso
         - title: Limpiar
           desc: Duplicados, texto inconsistente, números que eran texto y huecos
+        - title: La trampa
+          desc: La asignación que no escribe nada, y cómo se escribe con loc
         - title: Tu turno
           desc: Tu archivo, limpio, con cada decisión anotada
 
@@ -36,7 +36,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Elegir columnas y renglones
-          sub: Por nombre con corchetes, y por etiqueta o posición con loc e iloc
+          sub: Por nombre con corchetes, y por etiqueta con loc
         - head: Construir una máscara booleana
           sub: Una columna de verdadero y falso que se devuelve a la tabla
         - head: Combinar condiciones
@@ -83,14 +83,14 @@ slides:
         code: |
           Datos > Filtro
           region = "North"
-          amount > 50000
+          units > 20
       after:
         label: En pandas
         file: filtrar.py
         code: |
           norte = ventas[
               (ventas["region"] == "North") &
-              (ventas["amount"] > 50000)
+              (ventas["units"] > 20)
           ]
       note: >-
         El autofiltro esconde renglones y hay que acordarse de quitarlo. La máscara devuelve
@@ -101,7 +101,7 @@ slides:
       title: Una condición devuelve una columna de verdad o falso
       filename: mascara.py
       source: |
-        mascara = ventas["amount"] > 50000
+        mascara = ventas["units"] > 20
 
         print(mascara.head(3))
         print(mascara.sum())
@@ -135,12 +135,12 @@ slides:
       filename: filtrar.py
       source: |
         sel = ventas[(ventas["region"] == "North") &
-                     (ventas["amount"] > 50000)]
+                     (ventas["units"] > 20)]
 
         print(len(sel))
         print(sorted(sel["channel"].unique()))
       output: |
-        22
+        26
         ['Online', 'Retail', 'Wholesale']
 
   - divider:
@@ -197,7 +197,7 @@ slides:
         ventas["date"] = pd.to_datetime(ventas["date"])
       annotations:
         - label: regex=False
-          text: Trata el signo de pesos como carácter literal. Sin esto lo interpretaría como un símbolo de patrón.
+          text: Trata el signo de pesos como carácter literal. Ya es lo predeterminado, pero escribirlo deja clara la intención.
         - label: Dos replace
           text: El símbolo y la coma de miles, por separado. Los dos son formato, ninguno es el valor.
         - label: astype
@@ -210,6 +210,7 @@ slides:
       title: Tres respuestas honestas, y hay que elegir una
       filename: limpiar.py
       source: |
+        ventas = ventas.drop_duplicates()
         print(ventas["units"].isna().sum())
 
         ventas = ventas.dropna(subset=["units"])
@@ -223,7 +224,7 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: La trampa que hay que ver una vez
-      lede: Desde pandas 3.0 hay una forma de escribir en la tabla que no escribe nada, y no avisa.
+      lede: Desde pandas 3.0 hay una forma de escribir en la tabla que no escribe nada, y solo deja una advertencia.
       block: 3
 
   - concept:
@@ -232,8 +233,8 @@ slides:
       lead: >-
         Cuando encadenas dos operaciones para asignar, la primera mitad construye una tabla
         temporal con los renglones que coinciden. La asignación cae sobre esa copia
-        temporal, que se descarta en la línea siguiente. No se lanza ningún error y no
-        cambia nada. Es una operación silenciosa que no hace absolutamente nada.
+        temporal, que se descarta en la línea siguiente. No se lanza ningún error, solo
+        una advertencia, y no cambia nada. Es una operación que no hace absolutamente nada.
       panel:
         label: La forma correcta
         title: Con loc, en un solo paso, renglones primero
@@ -256,7 +257,7 @@ slides:
           ventas[ventas["region"] == "North"] \
               ["channel"] = "Retail"
 
-          # ningún error, ningún cambio
+          # solo una advertencia, ningún cambio
       after:
         label: Sí funciona
         file: con_loc.py
@@ -265,12 +266,13 @@ slides:
               ventas["region"] == "North",
               "channel"] = "Retail"
       note: >-
-        La izquierda corre limpia y no cambia nada. Ese silencio es lo que la vuelve
-        peligrosa: parece que funcionó hasta que revisas el resultado.
+        La izquierda corre sin error y no cambia nada. Solo deja una advertencia, fácil de
+        pasar por alto, y eso la vuelve peligrosa: parece que funcionó hasta que revisas el
+        resultado.
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
-      title: Cuatro errores al limpiar
+      title: Cuatro errores al filtrar y limpiar
       items:
         - label: Error 01
           title: Calcular antes de limpiar

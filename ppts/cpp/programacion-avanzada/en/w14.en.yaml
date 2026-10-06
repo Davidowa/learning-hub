@@ -38,11 +38,11 @@ slides:
         - head: Overload an operator
           sub: As a member function, with the signature that matches the sign
         - head: Decide when not to overload
-          sub: Recognising that an operator with an invented meaning is worse than a named function
+          sub: Recognizing that an operator with an invented meaning is worse than a named function
         - head: Write a function template
           sub: With typename, and explain when the compiler generates the concrete version
         - head: Read a class template
-          sub: And connect it to the vector and string you have used all term
+          sub: And connect it to the vector and string you already know
 
   - roadmap:
       eyebrow: Course map
@@ -90,6 +90,7 @@ slides:
         };
 
         Vector2 v = Vector2(1, 2) + Vector2(3, 4);
+        std::cout << v.x << " " << v.y << "\n";
       output: |
         4 6
 
@@ -148,11 +149,11 @@ slides:
         Box<std::string> b("hello");
       annotations:
         - label: The angle brackets
-          text: Here the type is written by hand. In a function template the compiler works it out.
+          text: Here the type is written by hand. Since C++17 the compiler can also work it out, as in a function template.
         - label: Two separate classes
           text: Box of int and Box of string share nothing. They are two classes generated separately.
         - label: You already know it
-          text: std::vector and std::unique_ptr are exactly this, and you have used them since week 12
+          text: std::vector and std::unique_ptr are exactly this, and you have used unique_ptr since week 12
         - label: Risk
           text: A class template usually lives entirely in the header. Splitting it into a .cpp gives linker errors.
           accent: true
@@ -167,7 +168,7 @@ slides:
       eyebrow: Forty years on
       title: The same stack, with templates and without
       before:
-        label: C with classes
+        label: C with Classes
         file: stack.cpp
         lang: cpp
         code: |
@@ -231,7 +232,7 @@ slides:
           title: Overloading without an obvious meaning
           desc: An operator doing something unexpected is worse than a function with a long name
         - label: Error 02
-          title: Taking the operand by value
+          title: Taking a large operand by value
           desc: Every addition copies the whole object. The const ampersand signature copies nothing.
         - label: Error 03
           title: A template split across two files
@@ -266,7 +267,7 @@ slides:
   - homework:
       eyebrow: For the next session
       title: The fraction finished
-      brief: Finish the lab and add the output operator overload so a fraction can be printed straight through cout, in the form numerator slash denominator.
+      brief: Finish the lab and add the output operator overload so a fraction can be printed straight through cout, in the form numerator slash denominator. That operator goes outside the class and takes the ostream and the fraction by reference.
       meta:
         - [Due, Before session 15]
         - [Format, Blackboard · .zip without the x64 folder]

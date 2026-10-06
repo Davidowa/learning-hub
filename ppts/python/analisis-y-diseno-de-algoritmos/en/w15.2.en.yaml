@@ -22,12 +22,12 @@ slides:
       eyebrow: Agenda
       title: Four moments in the session
       cards:
-        - title: Choosing
-          desc: Columns by name, rows by condition
-        - title: Filtering
+        - title: Choosing and filtering
           desc: The AutoFilter, written. And the two rules that avoid the confusing error
         - title: Cleaning
           desc: Duplicates, inconsistent text, numbers that were text, and holes
+        - title: The trap
+          desc: The assignment that writes nothing, and how to write with loc
         - title: Your turn
           desc: Your file, cleaned, with every decision written down
 
@@ -36,13 +36,13 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Choose columns and rows
-          sub: By name with brackets, and by label or position with loc and iloc
+          sub: By name with brackets, and by label with loc
         - head: Build a boolean mask
           sub: A column of true and false handed back to the table
         - head: Combine conditions
           sub: With the symbols, never the words, and always in parentheses
         - head: Clean the four kinds of dirt
-          sub: Duplicates, capitalisation, currency format and blank cells
+          sub: Duplicates, capitalization, currency format and blank cells
         - head: Assign with loc
           sub: And explain why chained assignment does nothing at all
 
@@ -64,7 +64,7 @@ slides:
           state: done
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: now
 
   - divider:
@@ -83,14 +83,14 @@ slides:
         code: |
           Data > Filter
           region = "North"
-          amount > 50000
+          units > 20
       after:
         label: In pandas
         file: filter.py
         code: |
           north = sales[
               (sales["region"] == "North") &
-              (sales["amount"] > 50000)
+              (sales["units"] > 20)
           ]
       note: >-
         The AutoFilter hides rows and you have to remember to clear it. The mask returns a
@@ -101,7 +101,7 @@ slides:
       title: A condition returns a column of true or false
       filename: mask.py
       source: |
-        mask = sales["amount"] > 50000
+        mask = sales["units"] > 20
 
         print(mask.head(3))
         print(mask.sum())
@@ -135,12 +135,12 @@ slides:
       filename: filter.py
       source: |
         sel = sales[(sales["region"] == "North") &
-                    (sales["amount"] > 50000)]
+                    (sales["units"] > 20)]
 
         print(len(sel))
         print(sorted(sel["channel"].unique()))
       output: |
-        22
+        26
         ['Online', 'Retail', 'Wholesale']
 
   - divider:
@@ -177,7 +177,7 @@ slides:
         - label: strip
           text: It removes the surrounding spaces. " North" and "North " become the same value.
         - label: title
-          text: It normalises the capitalisation. north, NORTH and North all end up identical.
+          text: It normalizes the capitalization. north, NORTH and North all end up identical.
         - label: Why it matters
           text: Without this, a groupby by region reports eight regions, four of which do not exist.
 
@@ -197,7 +197,7 @@ slides:
         sales["date"] = pd.to_datetime(sales["date"])
       annotations:
         - label: regex=False
-          text: It treats the currency sign as a literal character. Otherwise it reads as a pattern symbol.
+          text: It treats the currency sign as a literal character. That is already the default, but writing it makes the intent clear.
         - label: Two replaces
           text: The symbol and the thousands comma, separately. Both are format, neither is the value.
         - label: astype
@@ -210,6 +210,7 @@ slides:
       title: Three honest answers, and you pick one
       filename: clean.py
       source: |
+        sales = sales.drop_duplicates()
         print(sales["units"].isna().sum())
 
         sales = sales.dropna(subset=["units"])
@@ -223,7 +224,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: The trap worth meeting once
-      lede: Since pandas 3.0 there is a way of writing into the table that writes nothing, and says nothing.
+      lede: Since pandas 3.0 there is a way of writing into the table that writes nothing, and only leaves a warning.
       block: 3
 
   - concept:
@@ -232,8 +233,8 @@ slides:
       lead: >-
         When you chain two operations to assign, the first half builds a temporary table of
         the matching rows. The assignment lands on that temporary copy, which is discarded
-        on the next line. No error is raised and nothing changes. It is a silent operation
-        that does absolutely nothing.
+        on the next line. No error is raised, only a warning, and nothing changes. It is an
+        operation that does absolutely nothing.
       panel:
         label: The correct form
         title: With loc, in one step, rows first
@@ -256,7 +257,7 @@ slides:
           sales[sales["region"] == "North"] \
               ["channel"] = "Retail"
 
-          # no error, no change
+          # only a warning, no change
       after:
         label: Actually works
         file: with_loc.py
@@ -265,12 +266,13 @@ slides:
               sales["region"] == "North",
               "channel"] = "Retail"
       note: >-
-        The left one runs clean and changes nothing. That silence is what makes it
-        dangerous: it looks like it worked until you check the result.
+        The left one runs without an error and changes nothing. It only leaves a warning,
+        easy to miss, and that is what makes it dangerous: it looks like it worked until
+        you check the result.
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
-      title: Four cleaning errors
+      title: Four filtering and cleaning errors
       items:
         - label: Error 01
           title: Calculating before cleaning

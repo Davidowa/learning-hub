@@ -56,6 +56,8 @@ slides:
           sub: Evento, pregunta y acción, en el orden que obligan las conexiones
         - head: Regenerar la biblioteca de nodos
           sub: Para que los tipos de AR Foundation salgan en el buscador y no falten en silencio
+        - head: Mandar un evento de C# a un grafo
+          sub: Con CustomEvent.Trigger, dejando que el script calcule y el grafo secuencie
 
   - roadmap:
       eyebrow: Mapa del curso
@@ -95,8 +97,8 @@ slides:
         Una clase de conexión dice qué pasa después. Sale de la salida de un nodo y entra a la
         entrada de otro, y es lo que vuelve secuencia a un grafo en lugar de montón. La otra
         clase lleva un valor hacia un puerto que lo pide, un número, una posición, un
-        GameObject. Un nodo al que no le entra una conexión de control nunca corre, por más
-        valores que le hayas cableado.
+        GameObject. Un nodo con puerto de control al que no le entra esa conexión nunca corre,
+        por más valores que le hayas cableado.
       panel:
         label: De dónde salen los nodos
         title: Clic derecho en el grafo, el buscador
@@ -202,7 +204,7 @@ slides:
         - ["Rama", "Un booleano", "Dos salidas de control"]
         - ["Punto de pantalla", "Nada", "Una posición en píxeles"]
         - ["Raycast", "Punto, lista, máscara", "True, y la lista llena"]
-        - ["Instanciar", "Prefab, posición, giro", "El GameObject nuevo"]
+        - ["Instanciar", "Prefab, posición, rotación", "El GameObject nuevo"]
 
   - diagram:
       eyebrow: Bloque 02 · Forma
@@ -225,13 +227,13 @@ slides:
 
   - pitfalls:
       eyebrow: Bloque 02 · Errores comunes
-      title: Cuatro maneras de que un grafo no haga nada
+      title: Cuatro maneras de que un grafo falle
       items:
         - label: Error 01
           title: El nodo no está en el buscador
           desc: >-
             El tipo existe, el paquete está instalado, y el nodo nunca se generó. El bloque
-            tres es entero sobre esto.
+            tres arranca con esto.
         - label: Error 02
           title: Un nodo sin cable de control
           desc: >-
@@ -313,7 +315,7 @@ slides:
             Unity.VisualScripting es lo que pone CustomEvent al alcance de un script.
         - label: El destino
           text: >-
-            El evento se entrega a un GameObject, así que el grafo que lo escucha vive ahí.
+            El evento se entrega a un GameObject, así que el grafo que lo escucha suele vivir ahí.
         - label: El nombre
           text: >-
             Una cadena, comparada contra el nodo Custom Event. Nadie te revisa la
@@ -328,7 +330,7 @@ slides:
       title: Un evento, y el grafo levantándolo
       filename: PlaneAnnouncer.cs
       lang: csharp
-      output_label: Consola
+      output_label: Consola, script y grafo
       source: |
         if (e.added.Count > 0)
         {
@@ -339,6 +341,11 @@ slides:
         plano agregado, evento enviado
         grafo despierta con PlaneFound
         grafo, banner mostrado
+      notes: |
+        Sólo la primera línea sale de este código. La segunda y la tercera las escriben dos
+        nodos Debug Log del grafo, uno justo después del nodo Custom Event PlaneFound y otro
+        después de mostrar el banner. Trigger corre el grafo en la misma llamada, por eso sus
+        líneas salen enseguida de la del script.
 
   - concept:
       eyebrow: Bloque 03 · Criterio
@@ -351,14 +358,14 @@ slides:
         como costura entre los dos.
       panel:
         label: La regla de dedo
-        title: Un grafo que no se lee de un tirón sobra
+        title: Un grafo que no se lee de un tirón es demasiado grande
         note: >-
           Si la ventana tiene que desplazarse dos veces para seguir un flujo, pasa el centro
           a un script y dispáralo con un evento.
       steps:
         - text: C# calcula, el grafo secuencia
         - text: Un evento propio por costura
-        - text: Los nombres empatan por cadena, acuérdenlos
+        - text: Los nombres empatan por cadena, acuérdalos
         - text: Deja el grafo legible de una mirada
           loop: ↺ y la costura es donde vas a depurar primero
 
@@ -383,7 +390,7 @@ slides:
       verdict: >-
         El paquete está y el compilador está contento, que es justo lo que vuelve confuso
         este caso. El buscador no lee el proyecto, lee una lista generada, y esa lista se
-        escribió antes de que el ensamblado entrara.
+        generó sin el ensamblado.
 
   - lab:
       eyebrow: Laboratorio
@@ -426,7 +433,7 @@ slides:
         - [Formato, El repositorio actualizado]
         - [Trae, El teléfono y el cable]
       rubric:
-        - ["Grafo", "Obligatorio", "Tap para colocar corre como Script Graph en el equipo"]
+        - ["Grafo", "Obligatorio", "Tap para colocar corre como Script Graph en el teléfono"]
         - ["Costura", "Obligatorio", "Al menos un evento propio cruzando de C# al grafo"]
         - ["Ruta", "En curso", "Las unidades de esta semana en Unity Learn, por tu cuenta"]
 
