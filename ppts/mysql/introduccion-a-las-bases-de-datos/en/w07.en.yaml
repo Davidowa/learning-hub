@@ -27,7 +27,7 @@ slides:
         - title: The four families
           desc: DDL, DML, DCL and TCL, and the one-line test that sorts any command into one
         - title: Choosing the type
-          desc: Date, decimal, closed catalogue, and the four errors the wrong type lets through
+          desc: Date, decimal, closed catalog, and the four errors the wrong type lets through
         - title: Create and destroy
           desc: CREATE, ALTER, DROP, TRUNCATE, and the promise DDL does not keep
         - title: Your turn
@@ -41,8 +41,8 @@ slides:
           sub: With a single question, whether it touches the whole object or the rows inside it
         - head: Defend the type of every column
           sub: Each choice stands on the error the alternative would have quietly allowed
-        - head: Write dates in the only format the server accepts
-          sub: And recognise error 1292 when somebody writes the date the way they say it out loud
+        - head: Write dates in the format the server accepts
+          sub: And recognize error 1292 when somebody writes the date the way they say it out loud
         - head: Tell DELETE and TRUNCATE apart
           sub: They look alike in the result and alike in nothing else, not even in the error
         - head: Explain why a ROLLBACK sometimes undoes nothing
@@ -58,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          desc: Entity-relationship, normalization, and the model turned into tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -77,7 +77,7 @@ slides:
       eyebrow: Block 01
       title: The four families of SQL
       lede: >-
-        Fifteen commands and one question that sorts them. The answer decides, among other
+        Ten commands and one question that sorts them. The answer decides, among other
         things, whether ROLLBACK is going to be any use to you.
       block: 1
 
@@ -106,7 +106,7 @@ slides:
         note: >-
           COMMENT does not exist in MySQL and leaves the list. RENAME TABLE does exist and
           the new deck deleted it by mistake. LOCK TABLE, singular, is also accepted here
-          and arrives in full in week 16.
+          and arrives in week 16.
       steps:
         - text: Ask whether the command touches the definition or the contents
         - text: If it touches the definition it is DDL and it commits on its own
@@ -172,7 +172,7 @@ slides:
             from it; a string cannot.
         - label: DECIMAL(4,2)
           text: >-
-            Two digits, two decimals. That same average in FLOAT is
+            Two integer digits, two decimals. That same average in FLOAT is
             8.700000127156576.
         - label: Risk
           text: >-
@@ -234,6 +234,7 @@ slides:
           FROM information_schema.TABLES
          WHERE TABLE_NAME IN ('t_char','t_varchar');
 
+        -- then, with both tables emptied
         INSERT INTO t_char    VALUES ('AB  ');
         INSERT INTO t_varchar VALUES ('AB  ');
         SELECT CONCAT('[',v,']'), LENGTH(v) FROM t_char;
@@ -277,9 +278,9 @@ slides:
           title: It sorts by declared position
           desc: >-
             ORDER BY does not come out alphabetical. It comes out in the order you wrote
-            the catalogue, which is usually what you wanted, but nobody told you.
+            the catalog, which is usually what you wanted, but nobody told you.
         - label: Refusal
-          title: A value outside the catalogue is stopped
+          title: A value outside the catalog is stopped
           desc: >-
             Inserting 'egresado' returns ERROR 1265 (01000) Data truncated. It is the
             closed domain MySQL does have, because CREATE DOMAIN does not exist here.
@@ -289,9 +290,9 @@ slides:
             If the new value goes at the end of the list, ALGORITHM=INSTANT takes it. If
             it goes in the middle, the table is rewritten and that already costs.
         - label: The rule
-          title: ENUM for short closed catalogues
+          title: ENUM for short closed catalogs
           desc: >-
-            For everything else, a catalogue table with a foreign key. If you are going to
+            For everything else, a catalog table with a foreign key. If you are going to
             run an ALTER every term, it was never an ENUM.
 
   - divider:
@@ -318,7 +319,7 @@ slides:
         CREATE TABLE t_ddl (id INT);
         ROLLBACK;
         SHOW TABLES LIKE 't_ddl';
-
+        -- t_prueba is refilled with 6 rows
         START TRANSACTION;
         DELETE FROM t_prueba WHERE id = 3;
         ROLLBACK;
@@ -343,7 +344,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · MySQL 9.7.2
-      title: Two ways to empty a table and two ways to refuse
+      title: Two ways to delete and two ways to refuse
       filename: fk_delete.sql
       lang: sql
       output_label: Output
@@ -361,7 +362,7 @@ slides:
 
         ERROR 1451 (23000): Cannot delete
         or update a parent row: a foreign
-        key constraint fails
+        key constraint fails (...)
 
   - pitfalls:
       eyebrow: Common mistakes
@@ -386,7 +387,7 @@ slides:
           title: Testing DDL inside a transaction
           desc: >-
             There is no net. CREATE, ALTER and TRUNCATE commit on their own and the
-            ROLLBACK you wrote afterwards has nothing left to undo.
+            ROLLBACK you wrote afterward has nothing left to undo.
 
   - lab:
       eyebrow: Lab
@@ -413,7 +414,7 @@ slides:
       items:
         - title: A type is a constraint
           desc: >-
-            Every one of today's four errors was a type doing its job. A well chosen column
+            Every one of today's four errors was a type doing its job. A well-chosen column
             refuses on its own what your program would otherwise have to check
         - title: CHAR does not save memory
           desc: >-
@@ -426,7 +427,7 @@ slides:
 
   - homework:
       eyebrow: Homework
-      title: Deliverable and marking criteria
+      title: Deliverable and grading criteria
       brief: >-
         Pick five tables from your project and write a three-column table with the name of
         every field, the type you assign it and the reason in one line. At least one reason

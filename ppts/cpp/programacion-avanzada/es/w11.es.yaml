@@ -104,6 +104,7 @@ slides:
       source: |
         Punto q;
         q.x = 3.0;
+        q.y = 4.0;
 
         Punto r = q;
         r.x = 99.0;
@@ -210,6 +211,7 @@ slides:
 
         Punto q;
         q.x = 3.0;
+        q.y = 4.0;
         Punto r = q;
         r.x = 99.0;
 
@@ -225,7 +227,7 @@ slides:
       title: Dos registros distintos desde la línea de la asignación
       headers: ["Paso", "Qué ocurre", "q.x", "r.x"]
       rows:
-        - ["1", "q.x = 3.0", "3", "no existe"]
+        - ["1", "q.x = 3.0 y q.y = 4.0", "3", "no existe"]
         - ["2", "Punto r = q, copia campo a campo", "3", "3"]
         - ["3", "r.x = 99.0", "3", "99"]
         - ["4", "Se imprimen los dos", "3", "99"]
@@ -246,7 +248,7 @@ slides:
           desc: El compilador agrega relleno para alinear, así que la suma de los campos no siempre cuadra
         - label: Error 04
           title: Copiar registros grandes
-          desc: Cada paso por valor duplica todos los campos. A las funciones se pasan por const referencia.
+          desc: Cada paso por valor duplica todos los campos. A las funciones se pasan por referencia constante.
 
   - lab:
       eyebrow: Laboratorio

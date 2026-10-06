@@ -75,7 +75,7 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · Los seis, completos
-      title: Todos los operadores de comparación de VBA
+      title: Los seis operadores que comparan dos valores
       headers: [Operador, Qué pregunta, Ejemplo, Resultado]
       rows:
         - ["=", "¿Son iguales?", "5 = 5", "True"]
@@ -184,6 +184,8 @@ slides:
               nivel = "A"
           ElseIf calificacion >= 8 Then
               nivel = "B"
+          ElseIf calificacion >= 7 Then
+              nivel = "C"
           End If
       after:
         label: Con Select Case
@@ -191,8 +193,9 @@ slides:
         lang: vba
         code: |
           Select Case calificacion
-              Case Is >= 9:   nivel = "A"
-              Case 8 To 8.99: nivel = "B"
+              Case Is >= 9: nivel = "A"
+              Case Is >= 8: nivel = "B"
+              Case Is >= 7: nivel = "C"
           End Select
       note: >-
         Las dos dan C con 7.5, verificado. Select Case gana cuando todas las condiciones
@@ -284,7 +287,7 @@ slides:
   - lab:
       eyebrow: Laboratorio
       title: Clasifica una cartera de clientes
-      brief: Toma una base de clientes de tu área y escribe una macro que clasifique cada renglón en tres niveles según su saldo. Escríbela dos veces, una con ElseIf en cadena y otra con Select Case, y decide cuál queda mejor para este caso.
+      brief: Toma una base de clientes de tu área y escribe una macro que clasifique el renglón seleccionado en tres niveles según su saldo. Escríbela dos veces, una con ElseIf en cadena y otra con Select Case, y decide cuál queda mejor para este caso.
       blocks:
         - label: Entrega
           text: El módulo con los dos procedimientos y una nota de cuál elegiste, en Blackboard
@@ -308,16 +311,16 @@ slides:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
       brief: >-
-        Sobre la tabla de amortización, escribe una macro que revise cada periodo y marque
-        los que ya pagaron más de la mitad del capital. Usa el rango variable de la semana
-        6 y clasifica en tres niveles.
+        Sobre la tabla de amortización, escribe una macro que revise el periodo
+        seleccionado y lo marque si ya pagó más de la mitad del capital. Ubícalo con
+        Cells, como en la semana 6, y clasifícalo en tres niveles.
       meta:
         - [Entrega, Antes de la semana 9]
         - [Formato, Blackboard · .bas y .xlsm]
         - [Peso, Parte del 20 % de tareas]
       rubric:
-        - ["Condiciones", "40 %", "Las tres ramas están y ninguna fila queda sin clasificar"]
-        - ["Rango variable", "30 %", "Recorre lo que haya, no una dirección escrita a mano"]
+        - ["Condiciones", "40 %", "Las tres ramas están y ningún periodo queda sin clasificar"]
+        - ["Sin dirección fija", "30 %", "Ubica el periodo con Cells, no con una dirección escrita a mano"]
         - ["Vacíos", "30 %", "Un periodo sin dato no se cuenta como cero"]
 
   - closing:

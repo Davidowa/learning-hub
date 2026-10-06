@@ -93,7 +93,7 @@ slides:
       value: 13.9 ms
       text: Everything a frame has to do, from input to the image the eyes see
       note: >-
-        One second divided by seventy two. Miss it and the runtime shows something anyway,
+        One second divided by seventy-two. Miss it and the runtime shows something anyway,
         built from the previous frame, and the head has moved since. That is the discomfort
         of session 1 arriving as an engineering problem.
 
@@ -118,7 +118,7 @@ slides:
         label: What the first measurement is for
         title: Finding out which of the two is over
         note: >-
-          Until you know that, every optimisation is a guess. Half the work in this block
+          Until you know that, every optimization is a guess. Half the work in this block
           exists only to answer that one question.
       steps:
         - text: The CPU prepares the frame
@@ -159,10 +159,10 @@ slides:
       items:
         - label: '01'
           title: Development Build
-          desc: Tick it, with Autoconnect Profiler, in the build profile.
+          desc: Check it, with Autoconnect Profiler, in the build profile.
         - label: '02'
           title: Build And Run
-          desc: To the headset over the cable, awake and authorised.
+          desc: To the headset over the cable, awake and authorized.
         - label: '03'
           title: Forward the port
           desc: adb forward, so the Editor and the build can find each other.
@@ -177,16 +177,17 @@ slides:
       eyebrow: Block 02 · The cable
       title: The two commands that make the Editor and the build talk
       filename: adb.txt
-      lang: csharp
+      lang: bash
       output_label: Terminal
       source: |
-        // Editor to Android player
+        # Editor to Android player
         adb forward tcp:34999 localabstract:Unity-<bundle id>
 
-        // Android player back to the Editor
+        # Android player back to the Editor
         adb reverse tcp:34998 tcp:34999
       output: |
         > adb devices
+        List of devices attached
         <serial>      device
         > adb forward tcp:34999 ...
         34999
@@ -271,20 +272,21 @@ slides:
       title: Four ways a measurement lies to you
       items:
         - label: Error 01
-          title: Measuring in play mode
+          title: Measuring in Play mode
           desc: >-
             A desktop processor with a fan is not the device. The number is real and it
             belongs to a machine nobody is going to wear.
         - label: Error 02
           title: Reading the average
           desc: >-
-            A mean of 8 ms hides four frames at 21. The wearer feels the four, and the mean
+            A mean of 8 ms hides four late frames, one of them at 21. The wearer feels the four, and the mean
             is the one number that is guaranteed not to mention them.
         - label: Error 03
           title: Frame timing off in a release build
           desc: >-
             The timings are always on in a development build and off by default in a
-            release one, so the same code reports nothing and looks broken.
+            release one. Without Frame Timing Stats, FrameTimingManager reports nothing;
+            a ProfilerRecorder turns it on by itself.
         - label: Error 04
           title: A profiler that reports late
           desc: >-
@@ -310,7 +312,7 @@ slides:
         - label: Same build type
           text: Development build both times. Comparing one against a release build proves nothing.
         - label: Write it down
-          text: Before, after, and what changed. Three numbers per line, and the log outlives the term.
+          text: Before, after, and what changed. Three entries per line, and the log outlives the term.
 
   - tiers:
       eyebrow: Block 03 · When the CPU is over
@@ -379,10 +381,10 @@ slides:
 
   - trace:
       eyebrow: Answer
-      title: The same scene, the same task, three measurements
+      title: The same scene, the same task, four measurements
       headers: [Where it was measured, Main thread, Verdict]
       rows:
-        - ["Editor, play mode", "4.1 ms", "Tells you nothing"]
+        - ["Editor, Play mode", "4.1 ms", "Tells you nothing"]
         - ["Device, first run", "14.2 ms", "Over by 0.3 ms"]
         - ["Device, after one change", "11.8 ms", "Inside, with room"]
         - ["Device, after ten minutes", "13.6 ms", "Heat took the room back"]
@@ -415,7 +417,7 @@ slides:
         - title: Only the device's number counts
           desc: The Editor measures a machine with a fan, a desktop GPU and no thermal limit.
         - title: The average is the wrong number
-          desc: Four frames at 21 ms are what the wearer felt, and a mean of 8 will never mention them.
+          desc: Four late frames, one at 21 ms, are what the wearer felt, and a mean of 8 will never mention them.
 
   - homework:
       eyebrow: For the end of the course

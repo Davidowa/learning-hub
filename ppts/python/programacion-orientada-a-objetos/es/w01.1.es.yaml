@@ -303,7 +303,7 @@ slides:
       items:
         - label: Error 01
           title: Operar con lo que llegó de input
-          desc: 'TypeError. input devuelve str, así que hay que convertir con int() o float() antes.'
+          desc: 'TypeError o un resultado absurdo. input devuelve str, así que hay que convertir con int() o float() antes.'
         - label: Error 02
           title: Creer que bool("0") es False
           desc: Cualquier cadena no vacía es verdadera, incluidas "0" y un solo espacio en blanco
@@ -334,11 +334,11 @@ slides:
   - trace:
       eyebrow: Respuesta
       title: Imprime 6, porque precio nunca fue un número
-      headers: [Paso, Instrucción, precio, total, Tipo de total, Salida]
+      headers: [Paso, Instrucción, total, Tipo de total, Salida]
       rows:
-        - ["1", "precio = '100'", "'100'", "–", "–", "–"]
-        - ["2", "total = precio * 2", "'100'", "'100100'", "str", "–"]
-        - ["3", "len(total)", "'100'", "'100100'", "str", "6"]
+        - ["1", "precio = '100'", "–", "–", "–"]
+        - ["2", "total = precio * 2", "'100100'", "str", "–"]
+        - ["3", "print(len(total))", "'100100'", "str", "6"]
       verdict: Multiplicar una cadena por un entero la repite. Para operar con números hace falta int(precio) primero.
 
   - takeaways:

@@ -119,7 +119,7 @@ slides:
       title: Las partes de una ruta, ya separadas
       filename: rutas.py
       lang: python
-      output_label: Salida
+      output_label: Salida en Windows
       source: |
         print(ruta)
         print(ruta.name)
@@ -162,7 +162,7 @@ slides:
         - label: Línea 5
           text: El with cierra el archivo al salir del bloque, incluso si adentro se lanza una excepción
         - label: El encoding
-          text: Sin él Python usa el del sistema, y los acentos salen rotos en la máquina de al lado
+          text: Sin él, Python 3.14 y anteriores usan el del sistema, y los acentos salen rotos en la máquina de al lado
         - label: Riesgo
           text: read() carga el archivo completo en memoria, y con un archivo grande eso no cabe
           accent: true
@@ -274,13 +274,13 @@ slides:
       source: |
         ruta = Path("notas.txt")
 
-        with open(ruta, "w") as f:
+        with open(ruta, "w", encoding="utf-8") as f:
             f.write("primera")
 
-        with open(ruta, "w") as f:
+        with open(ruta, "w", encoding="utf-8") as f:
             f.write("segunda")
 
-        print(ruta.read_text())
+        print(ruta.read_text(encoding="utf-8"))
       options:
         - 'primerasegunda'
         - 'segunda, porque w vacía el archivo al abrirlo'
@@ -314,7 +314,7 @@ slides:
       eyebrow: Resumen
       title: Tres ideas para llevarse
       items:
-        - title: Path arma rutas que sirven en todo
+        - title: Path arma rutas que sirven en todos lados
           desc: Unir con la diagonal evita el problema de las barras y del carácter de escape escondido
         - title: El with cierra aunque truene
           desc: Abrir a mano obliga a escribir un finally, y ese finally es justo el que se olvida

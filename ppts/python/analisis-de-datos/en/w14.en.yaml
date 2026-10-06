@@ -99,7 +99,7 @@ slides:
         - label: with
           text: On leaving the block the file closes itself, even if a line inside raises an error.
         - label: encoding
-          text: utf-8, stated explicitly. Without it a file with accents reads differently on Windows and on Mac.
+          text: utf-8, stated explicitly. Without it, up to Python 3.14, a file with accents reads differently on Windows and on Mac.
         - label: Risk
           text: Outside the with the file is already closed. Reading there raises ValueError on a closed file.
           accent: true
@@ -167,7 +167,7 @@ slides:
         - label: DictReader
           text: It turns each line into a dictionary, keyed by the header. It is week 13 put to work.
         - label: list
-          text: Without it you can only walk once. With it they stay in memory and can be looked at again.
+          text: Without it you can only go through the rows once. With it they stay in memory and can be looked at again.
         - label: The real file
           text: sales.csv lives in the repository, in 06 - Advanced/data, and carries 324 rows.
         - label: Risk
@@ -229,6 +229,28 @@ slides:
         South         1,553,002.85
         West          3,030,019.45
 
+  - code:
+      eyebrow: Block 03 · Saving
+      title: Writing the summary to a new file
+      filename: save.py
+      source: |
+        import csv
+
+        output = DATA / "summary.csv"
+
+        with output.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["region", "amount"])
+            for region, amount in sorted(by_region.items()):
+                writer.writerow([region, round(amount, 2)])
+      annotations:
+        - label: Mode w
+          text: Creates the file, or empties the one already there. Here that is what you want, because the summary is rebuilt in full every time.
+        - label: 'newline=""'
+          text: The csv module writes its own line endings. Without this, on Windows a blank line appears between every record.
+        - label: writerow
+          text: Takes a list and writes one row, with whatever commas and quotes it needs.
+
   - pitfalls:
       eyebrow: Block 03 · Common errors
       title: Four file errors
@@ -238,13 +260,13 @@ slides:
           desc: Mode w erases the contents the instant it opens. The original file is gone, with no question asked.
         - label: Error 02
           title: Paths typed by hand
-          desc: C:\\Users\\your_name\\data.csv runs on no other machine. Use pathlib and relative paths.
+          desc: C:\Users\your_name\data.csv runs on no other machine. Use pathlib and relative paths.
         - label: Error 03
           title: Adding up without converting
           desc: 'Values arrive as text. "15" + "18" gives "1518", an absurd total with no error raised.'
         - label: Error 04
           title: Forgetting newline when writing
-          desc: Writing a CSV on Windows without an empty newline gives a file with a blank line between every record.
+          desc: 'Writing a CSV on Windows without newline="" gives a file with a blank line between every record.'
 
   - quiz:
       eyebrow: Quick check
@@ -255,7 +277,7 @@ slides:
             content = f.read()
       options:
         - "It reads the contents into the variable"
-        - "It erases its contents on opening, then fails on the read"
+        - "It empties the file on open, then the read fails"
         - "It fails because the file already exists"
         - "It adds a blank line at the end"
 

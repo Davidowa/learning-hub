@@ -20,6 +20,7 @@ from pptx.oxml import parse_xml
 from pptx.oxml.ns import qn
 from pptx.util import Emu, Inches, Pt
 
+from . import fonts
 from . import tokens as K
 from .highlight import highlight
 
@@ -37,8 +38,7 @@ _font_cache: dict = {}
 def _pil(name: str, bold: bool, size_pt: float):
     key = (name, bold, round(size_pt, 1))
     if key not in _font_cache:
-        path = os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts',
-                            _FONT_FILES.get((name, bold), 'arial.ttf'))
+        path = fonts.find(_FONT_FILES.get((name, bold), 'arial.ttf'))
         try:
             _font_cache[key] = ImageFont.truetype(path, max(4, int(round(size_pt * 4))))
         except OSError:

@@ -37,7 +37,7 @@ slides:
       eyebrow: Learning objectives
       title: By the end of the session you will be able to…
       items:
-        - head: Choose between COUNT of star and COUNT of a column
+        - head: Choose between COUNT(*) and COUNT(column)
           sub: And say how many rows the average skipped without anybody mentioning it
         - head: Write a GROUP BY the server accepts
           sub: Without padding it with every column, because grouping by the key is enough
@@ -89,8 +89,8 @@ slides:
         - ["COUNT(*)", "How many rows there are", "Counts every one"]
         - ["COUNT(col)", "How many carry a value", "Skips the NULLs"]
         - ["SUM(col)", "The total of the column", "Leaves them out of the sum"]
-        - ["AVG(col)", "The average", "Divides by the ones that do carry"]
-        - ["MIN / MAX", "The end of the range", "Leaves them out of the compare"]
+        - ["AVG(col)", "The average", "Divides by the ones carrying a value"]
+        - ["MIN / MAX", "The end of the range", "Leaves them out of the comparison"]
 
   - code_output:
       eyebrow: Measured · all five in two statements
@@ -345,7 +345,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · why the PDF writes a t after the parenthesis
-      title: Every derived table needs its alias, and a CTE writes the subquery once
+      title: Every derived table needs its alias, and with a CTE the subquery is written once
       filename: cte.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -447,7 +447,7 @@ slides:
       items:
         - title: Four of five aggregates skip NULL
           desc: >-
-            Only COUNT of star counts everything. The average of the twenty enrollments was
+            Only COUNT(*) counts everything. The average of the twenty enrollments was
             computed from fourteen, and the report carries no note saying so
         - title: The week 9 drawing explains 1055
           desc: >-
@@ -478,8 +478,8 @@ slides:
   - closing:
       title: Questions
       subtitle: >-
-        Next session we put JOIN underneath all of this, and two things from today break
-        at once, the COUNT that returns one and the grouping that merges two people.
+        Next session we put JOIN underneath all of this, and two things break at once: the
+        COUNT that returns one and the UNION that merges two people.
       meta:
         - [Email, descobarc@up.edu.mx]
         - [Chat, Institutional Google Chat]

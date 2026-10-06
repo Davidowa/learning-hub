@@ -46,7 +46,7 @@ slides:
         - head: Leer un comando de mysqldump
           sub: Y decir qué objetos NO van a estar en el archivo que produce
         - head: Verificar una restauración
-          sub: Porque una restauración exitosa no imprime una sola línea y una fallida tampoco avisa
+          sub: Porque una restauración exitosa no imprime una sola línea y una fallida avisa poco
 
   - roadmap:
       eyebrow: Mapa del curso
@@ -93,10 +93,9 @@ slides:
         label: Los tres alcances
         title: Tres alcances, tres cuentas distintas
         note: >-
-          localhost es la misma máquina, el signo de porcentaje es desde cualquiera, y
-          192.168.1.% es una red. Con skip_name_resolve apagado, conectarse por TCP a
-          127.0.0.1 sí empata con localhost, así que la regla es un mecanismo y no un
-          decreto.
+          localhost es la misma máquina, % es cualquiera y 192.168.1.% es una red. Con
+          skip_name_resolve apagado, conectarse por TCP a 127.0.0.1 sí empata con
+          localhost, así que la regla es un mecanismo y no un decreto.
       steps:
         - text: CREATE USER crea la cuenta, sin nada adentro
         - text: GRANT le dice qué va a poder hacer
@@ -168,11 +167,13 @@ slides:
 
         SHOW GRANTS FOR 'wk15_tutor'@'localhost';
       output: |
+        GRANT USAGE ON *.*
+        TO `wk15_tutor`@`localhost`
+
         GRANT SELECT (`apellido`,
         `matricula`) ON
         `db_ops_wk141516`.`alumnos`
         TO `wk15_tutor`@`localhost`
-
         GRANT UPDATE (`calificacion`) ON
         `db_ops_wk141516`.`inscripciones`
         TO `wk15_tutor`@`localhost`
@@ -193,6 +194,7 @@ slides:
         -- ya conectado como wk15_reportes
         SELECT CURRENT_ROLE();
         SELECT COUNT(*) FROM db_ops_wk141516.alumnos;
+        SHOW VARIABLES LIKE 'activate_all%';
       output: |
         NONE
 
@@ -201,7 +203,7 @@ slides:
         'wk15_reportes'@'localhost'
         for table 'alumnos'
 
-        activate_all_roles_on_login = OFF
+        activate_all_roles_on_login  OFF
 
   - table:
       eyebrow: Bloque 01 · Tarjeta de referencia
@@ -235,8 +237,8 @@ slides:
 
         wc -l -c db_backup.sql
         head -5 db_backup.sql
-      output: |
-        169  7249  db_backup.sql
+      output: |2
+         169 7249 db_backup.sql
 
         -- MySQL dump 10.13  Distrib
            9.7.2, for Win64 (x86_64)
@@ -291,6 +293,7 @@ slides:
 
          6963 db_backup.sql
          9542 completo.sql
+        16505 total
 
   - code_output:
       eyebrow: Medido · el hecho más peligroso de la sesión
@@ -303,7 +306,7 @@ slides:
         -- SHOW VIEW, EVENT y TRIGGER, pero no tiene PROCESS
 
         mysqldump -u operador -p --routines \
-          db_backup > op_rout.sql 2> op_rout_err.txt
+          db_backup > op_rout.sql
         echo "exit=$?"
 
         wc -c op_rout.sql
@@ -405,8 +408,8 @@ slides:
         - label: Trampa 04
           title: SOURCE es una orden del cliente
           desc: >-
-            Es lo que recomienda casi todo tutorial y dentro de un script contesta
-            ERROR 1064, porque el servidor nunca la recibe. Desde la terminal se restaura
+            Es lo que recomienda casi todo tutorial y fuera del cliente mysql contesta
+            ERROR 1064, porque el servidor no la conoce. Desde la terminal se restaura
             con el operador de redirección.
 
   - method:

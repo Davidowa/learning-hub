@@ -41,7 +41,7 @@ slides:
           sub: Con una sola pregunta, si toca el objeto completo o las filas que viven adentro
         - head: Defender el tipo de cada columna
           sub: Cada elección se sostiene con el error que la alternativa habría dejado pasar
-        - head: Escribir fechas en el único formato que el servidor acepta
+        - head: Escribir fechas en el formato que el servidor acepta
           sub: Y reconocer el error 1292 cuando alguien escriba la fecha como se dice en voz alta
         - head: Distinguir DELETE de TRUNCATE
           sub: Se parecen en el resultado y no se parecen en nada más, ni siquiera en el error
@@ -77,7 +77,7 @@ slides:
       eyebrow: Bloque 01
       title: Las cuatro familias del SQL
       lede: >-
-        Quince comandos y una sola pregunta para ordenarlos. La respuesta decide, entre
+        Diez comandos y una sola pregunta para ordenarlos. La respuesta decide, entre
         otras cosas, si el ROLLBACK va a servirte de algo.
       block: 1
 
@@ -106,7 +106,7 @@ slides:
         note: >-
           COMMENT no existe en MySQL y sale de la lista. RENAME TABLE sí existe y el deck
           nuevo lo borró por error. LOCK TABLE, en singular, también se acepta y llega
-          completo en la semana 16.
+          en la semana 16.
       steps:
         - text: Pregunta si el comando toca la definición o el contenido
         - text: Si toca la definición, es DDL y confirma solo
@@ -234,6 +234,7 @@ slides:
           FROM information_schema.TABLES
          WHERE TABLE_NAME IN ('t_char','t_varchar');
 
+        -- despues, con las dos tablas vaciadas
         INSERT INTO t_char    VALUES ('AB  ');
         INSERT INTO t_varchar VALUES ('AB  ');
         SELECT CONCAT('[',v,']'), LENGTH(v) FROM t_char;
@@ -318,7 +319,7 @@ slides:
         CREATE TABLE t_ddl (id INT);
         ROLLBACK;
         SHOW TABLES LIKE 't_ddl';
-
+        -- t_prueba se vuelve a llenar con 6 filas
         START TRANSACTION;
         DELETE FROM t_prueba WHERE id = 3;
         ROLLBACK;
@@ -343,7 +344,7 @@ slides:
 
   - code_output:
       eyebrow: Medido · MySQL 9.7.2
-      title: Dos maneras de vaciar una tabla y dos maneras de negarse
+      title: Dos maneras de borrar y dos maneras de negarse
       filename: fk_borrado.sql
       lang: sql
       output_label: Salida
@@ -361,7 +362,7 @@ slides:
 
         ERROR 1451 (23000): Cannot delete
         or update a parent row: a foreign
-        key constraint fails
+        key constraint fails (...)
 
   - pitfalls:
       eyebrow: Errores comunes

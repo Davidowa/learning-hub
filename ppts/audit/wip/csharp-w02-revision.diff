@@ -1,0 +1,165 @@
+diff --git a/ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml b/ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml
+index 34431af..71ceb11 100644
+--- a/ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml
++++ b/ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml
+@@ -127,8 +127,9 @@ slides:
+         lang: text
+         code: |
+           HOME axes X Y Z
+-          WHILE bed < 60.0
++          WHILE bed < 60.0 AND passes < 5
+               bed = bed + 12.0
++              passes = passes + 1
+               WRITE bed
+           IF bed >= 60.0 THEN
+               purge nozzle
+@@ -137,7 +138,8 @@ slides:
+       note: >-
+         The one on the left sounds clear and is not. How much «ready» is gets decided by
+         whoever reads it, and two operators will decide differently. The one on the right
+-        names the setpoint, names the step, and says what to do if it is not reached.
++        names the setpoint, names the step, sets a cap, and says what to do if it is not
++        reached.
+ 
+   - steps:
+       eyebrow: Block 01 · Unit 1.3
+@@ -223,18 +225,19 @@ slides:
+       source: |
+         START
+             bed = 22.0
++            passes = 0
+             WRITE "HOME axes X Y Z"
+ 
+-            WHILE bed < 60.0
++            WHILE bed < 60.0 AND passes < 5
+                 bed = bed + 12.0
++                passes = passes + 1
+                 WRITE "heating bed", bed
+ 
+             IF bed >= 60.0 THEN
+                 WRITE "purging nozzle"
++                WRITE "starting print"
+             ELSE
+                 WRITE "ABORT"
+-
+-            WRITE "starting print"
+         END
+       annotations:
+         - label: No language
+@@ -244,7 +247,7 @@ slides:
+         - label: The three shapes
+           text: Sequence, selection and repetition. No fourth one shows up anywhere in the plan.
+         - label: Risk
+-          text: If the heating step does not move the test, the WHILE never ends.
++          text: Without the pass cap, if the heating step does not move the test, the WHILE never ends.
+           accent: true
+ 
+   - code_output:
+@@ -255,19 +258,23 @@ slides:
+       output_label: On running
+       source: |
+         double bed = 22.0;
++        int passes = 0;
+         string abort = "ABORT: the bed did not reach the setpoint";
+ 
+         Console.WriteLine("HOME axes X Y Z");
+-        while (bed < 60.0)
++        while (bed < 60.0 && passes < 5)
+         {
+             bed += 12.0;
++            passes++;
+             Console.WriteLine($"heating bed: {bed:F1} C");
+         }
+         if (bed >= 60.0)
++        {
+             Console.WriteLine("bed at setpoint, purging nozzle");
++            Console.WriteLine("starting print");
++        }
+         else
+             Console.WriteLine(abort);
+-        Console.WriteLine("starting print");
+       output: |
+         HOME axes X Y Z
+         heating bed: 34.0 C
+diff --git a/ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml b/ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml
+index f3b9a21..19c6414 100644
+--- a/ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml
++++ b/ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml
+@@ -127,8 +127,9 @@ slides:
+         lang: text
+         code: |
+           HOME de ejes X Y Z
+-          MIENTRAS cama < 60.0
++          MIENTRAS cama < 60.0 Y vueltas < 5
+               cama = cama + 12.0
++              vueltas = vueltas + 1
+               ESCRIBIR cama
+           SI cama >= 60.0 ENTONCES
+               purgar boquilla
+@@ -137,7 +138,7 @@ slides:
+       note: >-
+         La de la izquierda suena clara y no lo es. Cuánto es «lista» lo decide quien la
+         lea, y dos operadores van a decidir distinto. La de la derecha dice el setpoint,
+-        dice el paso y dice qué hacer si no se alcanza.
++        dice el paso, pone un tope y dice qué hacer si no se alcanza.
+ 
+   - steps:
+       eyebrow: Bloque 01 · Tema 1.3
+@@ -223,18 +224,19 @@ slides:
+       source: |
+         INICIO
+             cama = 22.0
++            vueltas = 0
+             ESCRIBIR "HOME de ejes X Y Z"
+ 
+-            MIENTRAS cama < 60.0
++            MIENTRAS cama < 60.0 Y vueltas < 5
+                 cama = cama + 12.0
++                vueltas = vueltas + 1
+                 ESCRIBIR "calentando cama", cama
+ 
+             SI cama >= 60.0 ENTONCES
+                 ESCRIBIR "purgando boquilla"
++                ESCRIBIR "iniciando impresion"
+             SI NO
+                 ESCRIBIR "ABORTAR"
+-
+-            ESCRIBIR "iniciando impresion"
+         FIN
+       annotations:
+         - label: Sin lenguaje
+@@ -244,7 +246,7 @@ slides:
+         - label: Las tres formas
+           text: Secuencia, selección y repetición. No aparece una cuarta en todo el plan.
+         - label: Riesgo
+-          text: Si el paso del calentado no mueve la condición, el MIENTRAS no termina nunca.
++          text: Sin el tope de vueltas, si el calentado no mueve la condición, el MIENTRAS no termina nunca.
+           accent: true
+ 
+   - code_output:
+@@ -255,19 +257,23 @@ slides:
+       output_label: Al correr
+       source: |
+         double cama = 22.0;
++        int vueltas = 0;
+         string aborto = "ABORTAR: la cama no alcanzo el setpoint";
+ 
+         Console.WriteLine("HOME de ejes X Y Z");
+-        while (cama < 60.0)
++        while (cama < 60.0 && vueltas < 5)
+         {
+             cama += 12.0;
++            vueltas++;
+             Console.WriteLine($"calentando cama: {cama:F1} C");
+         }
+         if (cama >= 60.0)
++        {
+             Console.WriteLine("cama en setpoint, purgando boquilla");
++            Console.WriteLine("iniciando impresion");
++        }
+         else
+             Console.WriteLine(aborto);
+-        Console.WriteLine("iniciando impresion");
+       output: |
+         HOME de ejes X Y Z
+         calentando cama: 34.0 C

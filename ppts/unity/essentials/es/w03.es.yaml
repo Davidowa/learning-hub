@@ -146,7 +146,7 @@ slides:
         - ["Mesh Filter", "Cuál malla se dibuja", "Sí"]
         - ["Mesh Renderer", "La dibuja, guarda materiales", "Sí"]
         - ["Box Collider", "Una forma que la física toca", "Sí"]
-        - ["Rigidbody", "Masa, drag y gravedad", "Sí"]
+        - ["Rigidbody", "Masa, damping y gravedad", "Sí"]
 
   - divider:
       eyebrow: Bloque 02
@@ -258,7 +258,7 @@ slides:
 
   - pitfalls:
       eyebrow: Bloque 02 · Errores comunes
-      title: Cuatro fallas de física sin mensaje de error
+      title: Cuatro fallas de física que no avisan a tiempo
       items:
         - label: Error 01
           title: Is Trigger quedó marcado
@@ -274,14 +274,14 @@ slides:
           title: Mover un cuerpo por su Transform
           desc: >-
             Escribir transform.position sobre un Rigidbody lo teletransporta más allá de
-            colliders delgados y pelea con el solver. Usa MovePosition, o una fuerza, o
-            vuélvelo kinematic.
+            colliders delgados y pelea con el solver. Usa una fuerza, o vuélvelo kinematic y
+            muévelo con MovePosition.
         - label: Error 04
           title: El componente que no está
           desc: >-
             GetComponent regresa null cuando el componente no está, y la consola no dice
-            nada hasta el primer renglón que usa ese null. Ahí tira NullReferenceException,
-            y nombra el método, no la línea que buscó.
+            nada hasta el primer renglón que usa ese null. Ahí el editor tira
+            MissingComponentException, y nombra el método, no la línea que buscó.
 
   - divider:
       eyebrow: Bloque 03
@@ -323,7 +323,7 @@ slides:
           desc: A Assets/Prefabs. El renglón del Hierarchy se pone azul, que quiere decir ligado
         - label: '03'
           title: Borra las demás
-          desc: Se van las otras dos cajas y llegan tres instancias nuevas del asset
+          desc: Se van las otras dos cajas y llegan dos instancias nuevas del asset
         - label: '04'
           title: Edita en Prefab Mode
           desc: Doble clic al asset. La barra de arriba te avisa que saliste de la escena
@@ -336,10 +336,10 @@ slides:
       title: Cuatro maneras de cambiar un prefab, y quién se entera
       headers: [Qué haces, Dónde cae, Otras instancias]
       rows:
-        - ["Editar en Prefab Mode", "En el asset", "Todas lo siguen"]
+        - ["Editar en Prefab Mode", "En el asset", "Lo siguen, salvo override"]
         - ["Editar una instancia", "Un override en esa", "Se quedan igual"]
         - ["Overrides · Apply All", "Se empuja al asset", "Lo siguen, salvo override"]
-        - ["Overrides · Revert All", "Se descarta", "La instancia vuelve a coincidir"]
+        - ["Overrides · Revert All", "Se descarta", "Igual, y esa vuelve a coincidir"]
 
   - trace:
       eyebrow: Bloque 03 · Traza medida
@@ -435,7 +435,7 @@ slides:
         - ["Prefab", "Obligatorio", "Un asset y tres instancias ligadas en la escena"]
         - ["Física", "Obligatorio", "Las cajas caen en la rampa y llegan a la puerta"]
         - ["Lectura", "Obligatorio", "Un renglón que explique la instancia que no siguió"]
-        - ["Ruta", "Obligatorio", "Las dos áreas de la sesión marcadas en Unity Learn"]
+        - ["Ruta", "Obligatorio", "Las tres partes de la sesión marcadas en Unity Learn"]
 
   - closing:
       title: Preguntas

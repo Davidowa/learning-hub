@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Universidad Panamericana · 2026
+      kicker: School of Engineering · 2026
       unit: Week 16 · Block E · Concurrency and locking · Project
       title: Introduction to Databases
       subtitle: >-
@@ -18,7 +18,7 @@ slides:
         a thousand pesos.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, COM112 · Term 1]
+        - [Engine, MySQL 9.7.2]
         - [Session, 16 of 17]
 
   - agenda:
@@ -59,7 +59,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -182,7 +182,7 @@ slides:
           WHERE alumno_id = 1 FOR SHARE;
 
         SELECT ... FOR UPDATE NOWAIT;
-        SELECT ... FOR UPDATE SKIP LOCKED;
+        SELECT * FROM alumno FOR UPDATE SKIP LOCKED;
       output: |
         ERROR 1205 (HY000): Lock wait
         timeout exceeded; try
@@ -196,7 +196,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · how far the lock reaches
-      title: A FOR UPDATE on an unindexed column locks the neighbours too
+      title: A FOR UPDATE on an unindexed column locks the neighbors too
       filename: sin_indice.sql
       lang: sql
       output_label: Output
@@ -252,7 +252,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · the scenario of the week
-      title: BD1001 seats two, and three students enrol
+      title: BD1001 seats two, and three students enroll
       filename: inscripcion.sql
       lang: sql
       output_label: Output
@@ -303,7 +303,7 @@ slides:
         UPDATE alumno SET ...      UPDATE alumno SET ...
           WHERE alumno_id = 1;       WHERE alumno_id = 2;
 
-        -- and now, together     -- and now, together
+        -- and now, together       -- and now, together
 
         UPDATE alumno SET ...      UPDATE alumno SET ...
           WHERE alumno_id = 2;       WHERE alumno_id = 1;
@@ -326,12 +326,14 @@ slides:
       output_label: Output
       source: |
         -- case 1, the deadlock
+        START TRANSACTION;
         UPDATE alumno SET credito_maximo = credito_maximo + 500
           WHERE alumno_id = 3;
         -- and then it collides head on:  ERROR 1213
         COMMIT;
 
         -- case 2, the wait that expires
+        START TRANSACTION;
         UPDATE alumno SET credito_maximo = 7777
           WHERE alumno_id = 3;
         -- and then it waits and expires:  ERROR 1205
@@ -390,7 +392,7 @@ slides:
         SELECT ID, COMMAND, TIME, STATE, LEFT(INFO,34)
         FROM information_schema.PROCESSLIST;
 
-        KILL 1131;
+        KILL 1123;
       output: |
         waiting_pid    1124
         blocking_pid   1123
@@ -410,18 +412,18 @@ slides:
       output_label: Output
       source: |
         DECLARE v_intentos INT DEFAULT 0;
+        DECLARE v_falla INT DEFAULT 0;
         DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
-        BEGIN
-          ROLLBACK;
-          SET v_intentos = v_intentos + 1;
-        END;
+          BEGIN ROLLBACK; SET v_falla = 1; END;
 
         reintenta: LOOP
+          SET v_falla = 0, v_intentos = v_intentos + 1;
           START TRANSACTION;
           UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = 1;
-          COMMIT;
-          LEAVE reintenta;
+            WHERE alumno_id = p_primera;
+          UPDATE alumno SET credito_maximo = credito_maximo + 100
+            WHERE alumno_id = p_segunda;
+          IF v_falla = 0 THEN COMMIT; LEAVE reintenta; END IF;
         END LOOP;
       output: |
         session A
@@ -454,7 +456,7 @@ slides:
           title: Assuming the transaction is still open
           desc: >-
             DDL commits on its own, LOCK TABLES commits too, and in MyISAM the ROLLBACK
-            undoes nothing. Three ways to lose «all or nothing» without a single warning.
+            undoes nothing. Three ways to lose “all or nothing” without a single error.
         - label: Error 04
           title: Raising the isolation level instead of thinking
           desc: >-
@@ -494,8 +496,8 @@ slides:
             between. That is where the other session fits, with no error and no warning
         - title: A lock is requested, not inherited
           desc: >-
-            A plain read never waits. FOR UPDATE and FOR SHARE do, and how far they reach
-            is decided by the index behind the WHERE
+            At the factory default, a plain read never waits. FOR UPDATE and FOR SHARE do,
+            and how far they reach is decided by the index behind the WHERE
         - title: 1205 and 1213 are not the same error
           desc: >-
             The 1213 undoes the whole transaction and the 1205 only the statement. Retrying

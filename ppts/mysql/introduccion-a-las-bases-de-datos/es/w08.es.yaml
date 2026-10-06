@@ -28,7 +28,7 @@ slides:
         - title: INSERT
           desc: Una fila, muchas filas, y filas que salen de otra consulta
         - title: UPDATE y DELETE
-          desc: El WHERE que separa una corrección de un desastre, y el que además divide entre cero
+          desc: El WHERE que separa una corrección de un desastre, y la división entre cero
         - title: La transacción
           desc: START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, y las tres veces que no deshacen
         - title: Primer parcial
@@ -45,7 +45,7 @@ slides:
         - head: Abrir y cerrar una transacción
           sub: START TRANSACTION, y después COMMIT o ROLLBACK, que son dos finales y no un botón
         - head: Nombrar las tres condiciones en que ROLLBACK no deshace nada
-          sub: Autocommit encendido, un DDL de por medio, o una tabla que no es InnoDB
+          sub: Sin transacción abierta, un DDL de por medio, o una tabla que no es InnoDB
         - head: Reconocer que una sentencia es atómica sin que nadie lo pida
           sub: De dos filas en un INSERT, una mala deja fuera a las dos
 
@@ -105,8 +105,8 @@ slides:
             un ALTER futuro lo rompe.
         - label: Varias filas
           text: >-
-            Un viaje al servidor para tres alumnos, y un solo destino si algo falla (lo
-            verás en dos láminas).
+            Un viaje al servidor para dos alumnos, y un solo destino si algo falla (lo
+            verás en tres láminas).
         - label: INSERT desde SELECT
           text: >-
             Las filas salen de una consulta. Así se cargan las inscripciones de un
@@ -167,10 +167,12 @@ slides:
 
         SELECT COUNT(*) FROM inscripciones;
       output: |
-        ERROR 1644 (45000)
+        ERROR 3819 (HY000): Check
+        constraint 'inscripciones_chk_1'
+        is violated.
 
-        conteo = 6
-        la primera fila tampoco quedo
+        COUNT(*)
+        6
 
   - divider:
       eyebrow: Bloque 02
@@ -203,8 +205,8 @@ slides:
             copiar nada.
         - label: El WHERE del UPDATE
           text: >-
-            Dos condiciones porque la fila se identifica con dos columnas. Una sola habría
-            calificado a todo el grupo.
+            Dos condiciones porque la fila se identifica con dos columnas. Sin la matrícula
+            habría calificado a todo el grupo.
         - label: DELETE FROM
           text: >-
             No lleva lista de columnas. Se va la fila completa o no se va nada; no existe
@@ -243,7 +245,7 @@ slides:
 
         -- La misma division adentro de un INSERT
 
-        -- La reparacion, que se cobra en la semana 10
+        -- La reparacion
         --   / NULLIF(costo_interno, 0)
       output: |
         margen
@@ -280,7 +282,8 @@ slides:
         SELECT COUNT(*) AS materias_despues_del_rollback
           FROM materia;
       output: |
-        @@autocommit -> 1
+        @@autocommit
+        1
 
         materias_dentro_de_la_transaccion
         3
@@ -323,7 +326,8 @@ slides:
         ROLLBACK;
         SELECT clave FROM materias WHERE clave = 'HIS100';
       output: |
-        HIS100 sigue ahi
+        clave
+        HIS100
 
   - code_output:
       eyebrow: Medido · MySQL 9.7.2
@@ -342,21 +346,25 @@ slides:
         ROLLBACK;
         SELECT * FROM t_myisam;
       output: |
-        la fila sigue ahi
-        el ROLLBACK no hizo nada
+        Warning 1196 'Some non-
+        transactional changed tables
+        couldn't be rolled back'
+
+        id  nombre
+        1   uno
 
   - method:
       eyebrow: La frase heredada, completa
       title: ROLLBACK regresa la base al estado anterior
       statement: >-
-        La lámina de la fuente dice eso y se detiene ahí. En este servidor la frase es
-        cierta tres veces de cada cuatro, y las tres condiciones que le faltan son
-        exactamente las tres que ya viste correr.
+        La lámina de la fuente dice eso y se detiene ahí. En este servidor la frase solo
+        es cierta con tres condiciones que no menciona, y son exactamente las tres que ya
+        viste correr.
       points:
         - label: Condición 1
           text: >-
             Tiene que haber una transacción abierta. Con autocommit en 1 cada sentencia ya
-            se confirmó sola y el ROLLBACK contesta que hizo cero cambios.
+            se confirmó sola y el ROLLBACK contesta Query OK sin deshacer nada.
         - label: Condición 2
           text: >-
             No puede haber un DDL de por medio. El CREATE que metiste entre el INSERT y el
@@ -364,7 +372,7 @@ slides:
         - label: Condición 3
           text: >-
             La tabla tiene que ser transaccional. Sobre MyISAM el ROLLBACK no hace nada y
-            tampoco dice nada, que es la peor de las dos partes.
+            solo lo admite en la advertencia 1196, que nadie lee.
 
   - pitfalls:
       eyebrow: Errores comunes
@@ -378,8 +386,8 @@ slides:
         - label: Error 02
           title: Creer que ROLLBACK es un botón de deshacer
           desc: >-
-            Sin transacción abierta contesta Query OK y no cambia nada. El alumno concluye
-            que funcionó, y funcionó tan bien como no hacer nada.
+            Sin transacción abierta contesta Query OK y no cambia nada. Concluyes que
+            funcionó, y funcionó tan bien como no hacer nada.
         - label: Error 03
           title: Usar REPLACE INTO como si actualizara
           desc: >-
@@ -396,7 +404,7 @@ slides:
       title: Día de inscripciones en control escolar
       brief: >-
         Carga cincuenta inscripciones en un solo INSERT de varias filas, con una de ellas
-        apuntando a un alumno dado de baja. Después corrige la carga, envuélvela en una
+        apuntando a una matrícula que no existe. Después corrige la carga, envuélvela en una
         transacción y verifica con un SELECT antes de confirmar.
       blocks:
         - label: Entrega
@@ -421,7 +429,7 @@ slides:
         - title: ROLLBACK tiene tres condiciones
           desc: >-
             Transacción abierta, sin DDL de por medio y sobre una tabla InnoDB. Si falta
-            cualquiera de las tres, el deshacer no ocurre y el servidor no se queja
+            cualquiera de las tres, el deshacer no ocurre y el servidor no da ningún error
         - title: Todo esto supuso que estabas solo
           desc: >-
             Cada corrida de hoy tuvo el servidor para ella sola. Lo que pasa cuando dos

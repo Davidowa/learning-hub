@@ -155,7 +155,7 @@ slides:
   - divider:
       eyebrow: Bloque 02
       title: Elegir un caso de uso
-      lede: La cámara cuesta batería, atención y un cuarto donde el usuario tiene que pararse. La idea paga las tres.
+      lede: La cámara cuesta batería, atención y un cuarto donde el usuario tiene que pararse. La idea tiene que pagar los tres.
       block: 2
 
   - method:
@@ -170,7 +170,7 @@ slides:
         - label: Pregunta 02
           text: ¿El usuario tiene espacio para moverse? El asiento de un autobús no es un lugar donde alguien escanee el piso.
         - label: Pregunta 03
-          text: ¿Qué pasa cuando el rastreo falla? Contestar nada no es una respuesta, es un error esperando usuario.
+          text: ¿Qué pasa cuando el rastreo falla? Contestar nada no es una respuesta, es un error esperando a un usuario.
 
   - tiers:
       eyebrow: Bloque 02 · Formas
@@ -285,11 +285,12 @@ slides:
             clasificación de planos.
         - label: Cuándo llamarlo
           text: >-
-            Desde Awake no. No hay nada que describir hasta que la sesión arranca.
+            Desde Awake no. El manager toma su subsistema en OnEnable, y tu Awake puede
+            correr antes.
         - label: Riesgo
           text: >-
-            Si lo lees demasiado pronto obtienes una referencia nula, y un equipo que sirve
-            parece no soportado.
+            Si lo lees muy pronto, descriptor es null y la línea 10 lanza una excepción
+            aunque el equipo sirva.
           accent: true
 
   - code_output:
@@ -317,6 +318,14 @@ slides:
 
         tableta sin soporte de ARCore
         state Unsupported
+      notes: |
+        Las líneas "teléfono con ARCore" y "tableta sin soporte de ARCore" son rótulos de
+        cada equipo. El código solo imprime las líneas "state".
+
+        La salida supone el patrón del manual de AR Foundation, con el componente AR Session
+        desactivado hasta que termina la revisión. Si la sesión ya está activa en la escena,
+        arranca en cuanto el estado llega a Ready, y el teléfono puede imprimir
+        SessionInitializing en lugar de Ready.
 
   - quiz:
       eyebrow: Verificación rápida
@@ -329,7 +338,7 @@ slides:
 
   - trace:
       eyebrow: Respuesta
-      title: Profundidad y mallado son dos funciones distintas
+      title: Profundidad y mallado son funciones distintas
       headers: [Afirmación, Dónde verificarlo, Veredicto]
       rows:
         - ["Mallado en ARCore", "Manual del plug-in", "No disponible"]
@@ -365,8 +374,8 @@ slides:
         - title: El rastreo es una estimación
           desc: Seis números por frame, sacados de imágenes y sensores, y todos pueden irse de lado
         - title: El cuarto decide
-          desc: Textura, luz y una superficie con patrón. Ningún ajuste del editor reemplaza a las tres
-        - title: La capacidad se pregunta corriendo
+          desc: Textura, luz y una superficie con patrón. Ningún ajuste del editor reemplaza a ninguna de las tres
+        - title: La capacidad se pregunta en ejecución
           desc: El descriptor de cada manager reporta lo que el proveedor cargado puede hacer de verdad
         - title: El caso de uso se gana la cámara
           desc: Si la posición del contenido no significa nada, una foto hace el trabajo por menos

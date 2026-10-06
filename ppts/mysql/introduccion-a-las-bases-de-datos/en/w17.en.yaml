@@ -35,7 +35,7 @@ slides:
 
   - objectives:
       eyebrow: Learning objectives
-      title: By the end of the session the student will be able to…
+      title: By the end of the session you will be able to…
       items:
         - head: Read an account as a pair
           sub: User and host are one identifier, and changing the host gives you another account
@@ -58,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -94,9 +94,9 @@ slides:
         label: The three scopes
         title: Three scopes, three separate accounts
         note: >-
-          localhost is the same machine, the per cent sign is from anywhere, and
-          192.168.1.% is a network. With skip_name_resolve off, connecting over TCP to
-          127.0.0.1 does match localhost, so the rule is a mechanism and not a decree.
+          localhost is the same machine, % is from anywhere, and 192.168.1.% is a
+          network. With skip_name_resolve off, connecting over TCP to 127.0.0.1 does
+          match localhost, so the rule is a mechanism and not a decree.
       steps:
         - text: CREATE USER makes the account, with nothing in it
         - text: GRANT tells it what it will be able to do
@@ -168,11 +168,13 @@ slides:
 
         SHOW GRANTS FOR 'wk15_tutor'@'localhost';
       output: |
+        GRANT USAGE ON *.*
+        TO `wk15_tutor`@`localhost`
+
         GRANT SELECT (`apellido`,
         `matricula`) ON
         `db_ops_wk141516`.`alumnos`
         TO `wk15_tutor`@`localhost`
-
         GRANT UPDATE (`calificacion`) ON
         `db_ops_wk141516`.`inscripciones`
         TO `wk15_tutor`@`localhost`
@@ -193,6 +195,7 @@ slides:
         -- now connected as wk15_reportes
         SELECT CURRENT_ROLE();
         SELECT COUNT(*) FROM db_ops_wk141516.alumnos;
+        SHOW VARIABLES LIKE 'activate_all%';
       output: |
         NONE
 
@@ -201,7 +204,7 @@ slides:
         'wk15_reportes'@'localhost'
         for table 'alumnos'
 
-        activate_all_roles_on_login = OFF
+        activate_all_roles_on_login  OFF
 
   - table:
       eyebrow: Block 01 · Reference card
@@ -235,8 +238,8 @@ slides:
 
         wc -l -c db_backup.sql
         head -5 db_backup.sql
-      output: |
-        169  7249  db_backup.sql
+      output: |2
+         169 7249 db_backup.sql
 
         -- MySQL dump 10.13  Distrib
            9.7.2, for Win64 (x86_64)
@@ -291,6 +294,7 @@ slides:
 
          6963 db_backup.sql
          9542 completo.sql
+        16505 total
 
   - code_output:
       eyebrow: Measured · the most dangerous fact of the session
@@ -303,7 +307,7 @@ slides:
         -- SHOW VIEW, EVENT and TRIGGER, but not PROCESS
 
         mysqldump -u operador -p --routines \
-          db_backup > op_rout.sql 2> op_rout_err.txt
+          db_backup > op_rout.sql
         echo "exit=$?"
 
         wc -c op_rout.sql
@@ -405,9 +409,9 @@ slides:
         - label: Trap 04
           title: SOURCE is a client command
           desc: >-
-            It is what nearly every tutorial recommends, and inside a script it answers
-            ERROR 1064, because the server never receives it. From the terminal you restore
-            with the redirection operator.
+            It is what nearly every tutorial recommends, and outside the mysql client it
+            answers ERROR 1064, because the server does not know it. From the terminal
+            you restore with the redirection operator.
 
   - method:
       eyebrow: Closing the course
@@ -453,7 +457,7 @@ slides:
           desc: >-
             Granting produces no output. What you see is the 1142 the restricted account
             gets, and that is why one window stays connected as that account
-        - title: A backup is not worth anything for existing
+        - title: A backup is worth nothing just by existing
           desc: >-
             Exit 0 can lie. You verify by reading the file and counting rows after the
             restore, and mysqldump --no-data returns the schema alone in 5,643 bytes

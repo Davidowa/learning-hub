@@ -23,14 +23,16 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageChops, ImageDraw
 
+from . import fonts
+
 # palette, kept in sync with tokens.PYTHON
 INK, BLUE, YELLOW, PAPER = '#0B1B3A', '#3776AB', '#FFD43B', '#F7F8FA'
 BLUE_WASH, YELLOW_WASH, MUTED = '#DCE8F2', '#FFF3C4', '#5B6B84'
 WOOD, WOOD_WASH = '#8A6A00', '#EADCB4'   # the one warm pair, for wood
 
 FONTS = os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts')
-HAND_FILE = os.path.join(FONTS, 'Inkfree.ttf')     # Ink Free ships with Windows
-MONO_FILE = os.path.join(FONTS, 'consola.ttf')
+HAND_FILE = fonts.find('Inkfree.ttf')     # Ink Free ships with Windows
+MONO_FILE = fonts.find('consola.ttf')     # Consolas: Windows, or Office for Mac
 
 CURVE_STEPS = 12
 

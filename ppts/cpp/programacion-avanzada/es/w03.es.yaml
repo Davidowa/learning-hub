@@ -117,12 +117,12 @@ slides:
         label: Dónde consultarlo
         title: La cabecera limits lo dice
         note: >-
-          std::numeric_limits<int>::max() devuelve 2147483647 y min() devuelve
-          -2147483648. Sirve para verificar un rango en lugar de suponerlo.
+          std::numeric_limits<int>::min() devuelve -2147483648 y max() devuelve
+          2147483647. Sirve para verificar un rango en lugar de suponerlo.
       steps:
         - text: Cada tipo tiene un rango fijo
         - text: Pasarse no lanza ningún error
-        - text: El valor da la vuelta y sigue
+        - text: El programa sigue con un valor equivocado
           loop: ↺ elegir el tipo es elegir dónde está ese borde
 
   - code_output:
@@ -171,6 +171,7 @@ slides:
         file: corto.cpp
         lang: cpp
         code: |
+          #include <iostream>
           #include <string>
           using namespace std;
 
@@ -181,6 +182,7 @@ slides:
         file: explicito.cpp
         lang: cpp
         code: |
+          #include <iostream>
           #include <string>
 
           std::string curso = "Programacion";
@@ -345,7 +347,7 @@ slides:
         - title: El tamaño depende de la plataforma
           desc: long mide 4 bytes en Windows y 8 en Linux, con el mismo código y el mismo estándar
         - title: Pasarse de rango no da error
-          desc: Sin signo da la vuelta en silencio y con signo es indefinido, así que el tipo se elige por el rango que necesitas
+          desc: Sin signo da la vuelta en silencio y con signo el resultado es indefinido, así que el tipo se elige por el rango que necesitas
         - title: std es un espacio de nombres
           desc: El prefijo dice de qué biblioteca sale cada nombre, y en una cabecera nunca se omite
 

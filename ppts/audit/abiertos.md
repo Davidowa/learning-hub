@@ -1,0 +1,3795 @@
+# Hallazgos abiertos, todos
+
+Lo que los agentes encontraron y no corrigieron. Un hallazgo queda abierto por una de tres razones:
+la corrección es una decisión del profesor (una política del syllabus, una convención de todo el
+curso), vive fuera del deck (una figura, el syllabus, otro archivo) o exigiría inventar contenido.
+El agente también marcó así lo que le pareció sospechoso aunque concluyó que no era defecto; esos
+casi siempre son de severidad low. Cada entrada da semana, archivo, diapositiva (contada desde 1 en
+el orden del YAML), la evidencia que reunió el agente y su propuesta. Los textos están en inglés
+porque así los reportaron.
+
+## C++ · Programación Avanzada (COM103)
+
+121 entradas, de mayor a menor severidad.
+
+- **w00** · auditoría · technical-claim · medium · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s13 table
+  - The numbers themselves are questionable. They put C++ at 0.75 of C's speed, well behind Rust at 0.95, when published benchmarks put C, C++ and Rust close together. They also put Python at 0.15 (about 7x slower than C), while CPU-bound benchmarks usually show 30x to 70x. The HANDOFF says the numbers come from the instructor's infographic, which labels them as the author's own editorial assessment and not published figures. Neither the slide nor any note says so any more.
+  - Evidencia: HANDOFF.md: 'The sector percentages and the language comparison table come from the original infographics... They are nobody's published figures. The speaker notes on both slides say so, and they should keep saying so.' The notes were removed in 6818abb. The source file 'ppts/cpp/Introducción al curso.pptx' is not in the repo, so I could not check the transcription. For comparison, Pereira et al. (2017) give normalized time C 1.00, Rust 1.04, C++ 1.56, Java 1.89, Python 71.9.
+  - Propuesta: Not changed: correcting the values would mean inventing data. The instructor should either cite a source or put the 'editorial assessment' caveat back on the slide or in its notes.
+- **w00** · revisión · confirmado
+  - s13 table: the speed/memory figures are questionable and unsourced
+  - Evidencia: I agree: C++ at 0.75 of C, behind Rust at 0.95, does not match published benchmarks. The figures come from the instructor's infographic, which is not in the repo. The instructor removed the notes deliberately in 6818abb, so neither changing the data nor restoring notes is in scope. One more point: the same table also undercuts the s21 takeaway (new finding).
+- **w00** · revisión · confirmado
+  - s22 homework: asks for std::cout and _MSVC_LANG, which w00 does not teach
+  - Evidencia: It is an ungraded setup check. s20 says the console template already has main, and the template ships with a cout line. The syllabus also confirms team .zip submissions ('Equipo1.zip'). The decision belongs to the instructor.
+- **w01** · auditoría · technical-claim · medium · `ppts/cpp/programacion-avanzada/es/w01.es.yaml; ppts/cpp/programacion-avanzada/en/w01.en.yaml` s6 concept, 7 table
+  - The deck tells students to open the '.sln' and lists '.sln' as the solution file. Several secondary sources, and a Microsoft Q&A thread titled 'Visual Studio 2026 keeps generating .slnx instead of .sln even when Default Solution File Format is set to .sln', say VS 2026 creates .slnx by default. If so, students on VS 2026 will see .slnx.
+  - Evidencia: The official page I could reach (visualstudio-docs projects-and-solutions-options-dialog-box.md) says only that VS 2026 lets you choose the default: '.sln' or 'XML Solution File Format (.slnx)'. It does not say which one is the default. learn.microsoft.com and devblogs were blocked by the egress proxy.
+  - Propuesta: Not changed because the official default could not be confirmed. Instructor: create a solution on the classroom VS 2026 and check the extension. If it is .slnx, change '.sln' to '.slnx' in slide 6 (panel title) and slide 7 (first table row) of both decks.
+- **w01** · revisión · technical-claim · medium · `ppts/cpp/programacion-avanzada/es/w00.es.yaml; ppts/cpp/programacion-avanzada/en/w00.en.yaml` sw00 steps (line 275)
+  - w00 still says the standard 'No viene puesto por omisión' (en: same at line 274/275). In VS 2026 18.0, new Console App projects already default to C++20, so this is the same stale claim the auditor fixed in w01. Not in my files.
+  - Evidencia: MicrosoftDocs/cpp-docs docs/overview/what-s-new-for-msvc.md line 101: 'C++20 is the default for new Console App, Windows Desktop Application, Dynamic-Link Library, and Static Library C++ projects.' grep of es/w00.es.yaml line 275.
+  - Propuesta: Must be fixed in w00 (es and en) by the agent that owns w00, for example 'Propiedades, C/C++, Lenguaje, C++20. Compruébalo en las dos configuraciones.'
+- **w01** · revisión · confirmado
+  - 12. 11 figure: compilation.png note 'aparece aquí' not anchored
+  - Evidencia: Viewed both PNGs. In kit/figures.py compilation(), p.text(W / 2, 626, t['cc_note']) centers the note under hola.obj, so 'aquí' is ambiguous. This is low severity, the fix belongs in ppts/kit/figures.py with both PNGs regenerated, and w00 uses the same figure.
+- **w02** · auditoría · technical-claim · medium · `ppts/cpp/programacion-avanzada/es/w02.es.yaml + en/w02.en.yaml` s9 code_output (and 6 concept loop)
+  - basura.cpp is shown with output '237 / 0' as 'one run of many possible'. In the course's default Visual Studio project, /sdl makes C4700 an error, so it does not build. With /sdl off in Debug, /RTC1 stops it with Run-Time Check Failure #3. A value like 237 only shows up outside the VS defaults (Release without /sdl, or g++/clang). The concept slide's loop 'olvidar la tercera compila igual' has the same caveat.
+  - Evidencia: With g++/clang the fragment (wrapped in main with #include <iostream>) compiles with a -Wuninitialized warning and prints garbage then 0, so the panel is plausible for those compilers. The MSVC behaviour comes from documentation knowledge and could not be executed here.
+  - Propuesta: Not changed: the slide is valid C++ and the label hedges the value. The instructor should decide whether to demo it with SDL checks off in Release (or with g++), or add a speaker note. Neither deck has any notes, so adding one would be new content.
+- **w02** · revisión · confirmado
+  - 9 code_output basura.cpp: the '237' run cannot be reproduced in a default VS project
+  - Evidencia: Real issue, and the auditor correctly left it for the instructor. Making the demo run needs a setup decision: SDL off in Release, or a different compiler. The output_label already hedges the value, and s21's new 'Si compila' reconciles the slide with the deck. The s6 loop 'olvidar la tercera compila igual' is literally true, since the declaration compiles and only the read trips C4700, so it does not contradict s21. Its 'falla distinto cada vez' is an overstatement under MSVC Debug: /RTC1 either stops the run (failure #3) or the stack fill gives the same value every run. Same instructor decision.
+- **w03** · revisión · confirmado
+  - es/en s14 pitfalls: string pitfalls placed before Block 03
+  - Evidencia: The order issue is real but mild. std::string is already shown (declared and measured) on s12 in Block 02, and Error 04 (char vs string literal) builds on char from s6. Moving the slide would renumber the quiz that the instructor list cites as s18. I agree with leaving the structural decision to the instructor.
+- **w04** · revisión · confirmado
+  - 11. Slides 9 and 16: promedio.cpp/average.cpp and copia.cpp/copy.cpp lack #include <iostream>
+  - Evidencia: Confirmed: neither compiles as shown. With the include added, both print 84.6667 and '10 20' under g++ and clang++ with no warnings. w01 to w03 show includes on every program with main, and w04 to w17 drop them, but no deck states that convention. Fixing it in w04 alone would move every 'Línea N' annotation by 2, and the decision is course-wide (instructor). Line references are correct for the source as displayed.
+- **w07** · auditoría · pedagogy-order · medium · `ppts/cpp/programacion-avanzada/es/w07.es.yaml` s2 agenda / 19 lab / 21 homework
+  - Agenda card 3 promises "if, if-else y el anidamiento, con el problema que trae", and the lab and homework rubric require "if-else encadenado" (else if). No slide shows a nested or chained if-else; nesting appears only as a table cell ("Anidar más de dos niveles") and in the divider lede. Students can derive it from if-else, but the deck never demonstrates it. Same in en.
+  - Evidencia: All 22 slides of both decks read. The only code with if is setAncho/setWidth (a single if-else) and the quiz (if-else). No `else if` appears anywhere in the deck.
+  - Propuesta: Not fixed: it needs a new code slide with an else-if chain or nesting, in both es and en, which would be new content. The instructor should add one, or rephrase the agenda card and lab.
+- **w08** · auditoría · pedagogy-order · medium · `ppts/cpp/programacion-avanzada/es/w08.es.yaml, ppts/cpp/programacion-avanzada/en/w08.en.yaml` s20 homework
+  - The homework asks for the average of ten grades 'capturadas' / 'entered by the user', and the rubric checks behavior 'con cualquier entrada válida'. That needs console input (std::cin), which no deck from w01 to w08 teaches. Across the whole course cin appears only once, in a w13 lede that assumes it is already known.
+  - Evidencia: grep -w cin across es/*.yaml and en/*.yaml matches only w13 line 71. No `std::cin`, `>>` input or getline appears in any w01 to w08 code.
+  - Propuesta: Not fixed: a fix needs an instructor decision. One option is to introduce std::cin in an early week (w01 or w02). The other is to change where the homework's ten values come from. Either one means writing new content.
+- **w09** · revisión · confirmado
+  - kit/figures.py 'hierarchy' registry about= text says four-level chain
+  - Evidencia: Confirmed: the about= text in the 'hierarchy' entry (around line 1262) says 'a four-level chain', but hierarchy() loops over hier_a/b/c only. The fix belongs in ppts/kit/figures.py, which is not my file. It is metadata only and the image is unaffected.
+- **w10** · revisión · confirmado
+  - 8. s13 vocales.cpp / vowels.cpp: int i < length() triggers -Wsign-compare
+  - Evidencia: I reproduced it: g++ 13 and clang++ with -Wall -Wextra both warn, and the outputs are 5 and 3 as the slides show. The code is correct and no slide denies the warning. A warning-free loop needs std::size_t, which no week up to 10 teaches (w03 teaches only unsigned int). The lab's sizeof-based loops raise the same question, so the instructor should decide whether to introduce size_t. It is not a silent YAML fix.
+- **w10** · revisión · confirmado
+  - 13. en: 'marks' and 'Term 2' lean British
+  - Evidencia: 'term' is acceptable in American English. 'marks' is less usual than 'grades', but it appears in every English deck of the course, in the marks[] identifier, and in img/en/array-memory.png, which kit/figures.py generates. A change would have to be made course-wide and in the figure.
+- **w11** · auditoría · pedagogy-order · medium · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s17 lab; 19 homework
+  - The lab asks for 'una tabla alineada', and the homework rubric grades 'La salida está alineada' (en: 'aligned table' / 'The output is aligned'). Aligning columns whose names differ in length needs std::setw from <iomanip> (or at least the '\t' escape). Neither appears on any slide from w00 to w11 in this course, which breaks the rule that week N's exercise uses only what weeks 1 to N taught.
+  - Evidencia: Grepped every es and en deck in ppts/cpp/programacion-avanzada for setw, iomanip, \t, tabula and alinea. The only hits are these two w11 lines and the padding pitfall.
+  - Propuesta: Needs an instructor decision: teach std::setw in w11 (new content) or drop the alignment requirement from the lab brief and the rubric in both languages. I did not invent content or change the grading on my own.
+- **w11** · revisión · confirmado
+  - s17 Criterio: sixth student 'cueste una línea' needs untaught brace-init or cin
+  - Evidencia: Borderline. With a constructor (w06) and array brace initialization (w10), each student is one line, e.g. Alumno("Ana", 1001, 90, 85, 77) inside the array initializer. The declared size literal still has to change, unless it is omitted, which was never shown. So 'one line' is only approximately reachable. Rewording the instructor's success criterion is the instructor's call, and both languages are still in parity.
+- **w11** · revisión · confirmado
+  - s7/s14/s15 call 'Punto r = q;' an asignación (it is copy-initialization)
+  - Evidencia: Technically right: w02 of this course separates declaring and initializing from assignment. No slide in the course teaches copy constructor vs operator=, though (grep finds neither), and the observable behavior is identical (I re-ran it: 3 99). Fixing it would touch the agenda, objectives, s7, quiz, trace and takeaways in both languages. Leaving it for the instructor is reasonable.
+- **w11** · revisión · confirmado
+  - s14 quiz repeats the s7 program and output (recall, not prediction)
+  - Evidencia: Confirmed identical apart from the struct line. I re-derived the key: it prints 3 99, so A is the only correct option. B is reference semantics, C is a frozen-snapshot confusion, D is C-array assignment. The s15 trace matches step by step. Varying the quiz means writing new options, so it is left for the instructor. My q.y addition went into both s7 and the quiz, so they stay parallel.
+- **w11** · revisión · confirmado
+  - en 'mark/marks' is British for grade
+  - Evidencia: Real, minor. The course is split: w02 to w08 say 'grade(s)', while w10, w11 and w13 use 'marks' and the identifier int mark (w13 reuses it). This needs one decision for the whole course. The w10 auditor also left it.
+- **w12** · auditoría · figure · medium · `ppts/cpp/programacion-avanzada/es/w12.es.yaml + ppts/cpp/programacion-avanzada/en/w12.en.yaml` s14 figure (vtable.png)
+  - The vtable drawing shows a single 'tabla virtual' with one row per derived class (Circulo::area / Cuadrado::area / Triangulo::area, Circle/Square/Triangle in en), and the real type picks a row. That is the wrong model. Each class has its own table with one row per virtual function. The object's hidden pointer selects its class's table, and the area slot in that table holds the override.
+  - Evidencia: Viewed img/es/vtable.png and img/en/vtable.png. Generated by vtable() in ppts/kit/figures.py, with vt_rows=('Circulo::area','Cuadrado::area','Triangulo::area') at line 77 (es) and line 192 (en). The figure is used only by w12.
+  - Propuesta: Not fixed: the fix belongs in ppts/kit/figures.py vtable(), followed by regenerating ppts/img/{es,en}/vtable.png. For example, draw the object with its vptr pointing to the Cuadrado/Square table (rows: area -> Cuadrado::area, ~Figura -> Cuadrado::~Cuadrado), or draw three per-class tables and highlight the Cuadrado one.
+- **w12** · revisión · figure · medium · `ppts/kit/figures.py (stack_vs_heap) + ppts/img/{es,en}/stack-vs-heap.png, used by ppts/cpp/programacion-avanzada/{es,en}/w12.*.yaml` s9 figure (stack-vs-heap.png)
+  - The figure draws the pointer variable p in the 'montón'/'heap' column, next to the heap 42. But p is a local variable and lives on the stack; only the int created by new is on the heap. The figure contradicts the slide's own alt text ('con un puntero en la pila que apunta a un valor en el montón') and the registry description in figures.py ('with the pointer on the stack and the object it owns on the heap'). It also hides the leak mechanism: p dies with the block while the heap 42 stays.
+  - Evidencia: Viewed img/es/stack-vs-heap.png and img/en/stack-vs-heap.png. The divider is at x=W/2=840 and the p box is drawn at p.rect(940, 270, 200, 80) in stack_vs_heap(), right of the divider and under the 'montón' header.
+  - Propuesta: Not fixed (kit file). In stack_vs_heap(), put p in one of the stack frames (e.g. the top frame) and draw the arrow across the divider to the heap 42, then regenerate ppts/img/{es,en}/stack-vs-heap.png. I made the slide caption independent of where p is drawn (next finding).
+- **w12** · revisión · confirmado
+  - 14 figure (vtable.png): one table with a row per derived class is the wrong model
+  - Evidencia: I viewed img/es/vtable.png and img/en/vtable.png. Each shows a single 'tabla virtual' / 'virtual table' with rows Circulo/Cuadrado/Triangulo::area, and the real type picks a row. Real implementations have one table per class and a vptr per object, so the model is wrong. The fix belongs in ppts/kit/figures.py vtable() (vt_rows at lines 79 es and 198 en), followed by regenerating ppts/img/{es,en}/vtable.png. Not touched. While regenerating, vt_call ('figura->area()' / 'shape->area()') should become 'f->area()' to match slides 13 and 17 (logged as a new finding).
+- **w12** · revisión · confirmado
+  - 13 code_output / 17 quiz: class defining areaNoVirtual never shown; the quiz repeats slide 13
+  - Evidencia: I checked it myself. Slide 15's Figura has only a pure virtual area and no areaNoVirtual, so slides 13 and 17 cannot compile against the only Figura on screen. I scaffolded Figura (virtual area, non-virtual areaNoVirtual returning -1) and Cuadrado(3) overriding both, in both languages. Slide 13 printed '9\n-1' and the quiz printed '9 -1'. The key is A, and slide 18 confirms it. Each distractor matches the confusion it names. A real fix needs a new class slide or a redesigned quiz, which is the instructor's call. As it stands, the quiz works as retrieval practice and has one defensible answer.
+- **w12** · revisión · confirmado
+  - 19 pitfalls Error 04: new[]/delete[] never taught
+  - Evidencia: Confirmed: neither w10 nor w12 shows new[] or delete[]. The pitfall is a warning, and the lab and homework don't need new[] (I built the lab with an array of Figura* and delete per element, and the homework with std::unique_ptr<Figura>[3] from make_unique, both under ASan; output was 16.1416 for both). The desc did have a separate problem: its last clause was illogical. I fixed that (new finding).
+- **w13** · auditoría · figure · medium · `ppts/kit/figures.py (seek_tell) / ppts/img/{es,en}/seek-tell.png` s7 figure
+  - The figure shown in this C++ deck is the shared Python figure. It is labelled with Python's file API: 'f.seek(7)', 'f.read(1)' and 'f.tell() == 7'. The C++ equivalents are in.seekg(7), in.get() and in.tellg(). This is the same kind of defect as the known w06 class-object.png showing __init__.
+  - Evidencia: Viewed img/es/seek-tell.png and img/en/seek-tell.png. kit/figures.py lines 828-855 hard-code 'f.seek(7)', 'f.read(1)' and 'f.tell() == 7'. The python/programacion-orientada-a-objetos w13 decks also use the same image.
+  - Propuesta: Not fixable in my files. It needs a C++ variant of seek_tell in ppts/kit/figures.py (for example 'seek-tell-cpp' with in.seekg(7), in.get(), in.tellg() == 7). Then the image: line of both w13 cpp decks should point to it. The Python decks must keep the current figure.
+- **w13** · revisión · confirmado
+  - s7 figure: seek-tell.png is the Python figure (f.seek(7), f.read(1), f.tell() == 7)
+  - Evidencia: I viewed img/es/seek-tell.png. kit/figures.py seek_tell (lines ~828-855) hard-codes the Python calls, and both python POO w13 decks share the image. No seek-tell-cpp variant exists yet, though scope-cpp and class-object-cpp do. Fix it in ppts/kit/figures.py with a seek-tell-cpp variant using in.seekg(7), in.get() and in.tellg() == 7, then point image: in both cpp w13 decks to img/{es,en}/seek-tell-cpp.png.
+- **w13** · revisión · confirmado
+  - s19 homework: handling a malformed line and continuing uses tools not taught in weeks 1-13
+  - Evidencia: No deck in w00-w13 teaches getline, stringstream, clear() or ignore(). getline is not taught anywhere in the course, and stoi first appears in w15. A narrow version is possible with taught tools: read the grade as a string, check chars via at(i) (w10), then convert by hand. Even that needs c - '0' arithmetic, which is never shown. Rewriting the assignment is the instructor's call, not a silent edit, so I am flagging it and leaving it unchanged.
+- **w15** · revisión · confirmado
+  - es/en s3 objectives: objective 2 mentions the stdexcept header and 'cadenas sueltas', which no slide shows
+  - Evidencia: I agree. The table and the lab teach how to choose a standard type, but no slide contrasts throw "text" with a typed exception or names <stdexcept>. bad_alloc, which is in the table, comes from <new>. This is a soft gap, not a false statement. Fixing it means either new content or rewording the instructor's stated objective, so it needs an instructor decision and I did not edit it.
+- **w16** · revisión · confirmado
+  - w17.en 'how it is marked' / 'per cent' (outside the auditor's files)
+  - Evidencia: The defect was real, but w17.en was already fixed by its own audit in the same commit 59501ed (now 'graded' and 'twenty percent'). grep finds no 'marked' or 'per cent' left, so w16 and w17 now agree and nothing is pending.
+- **w16** · revisión · confirmado
+  - es/en slide 17 lab asks for a mutex whose syntax is never shown
+  - Evidencia: The concept is taught in week 16 (slide 15 names mutex and lock_guard), so the week rule is not broken. Still, no slide shows std::mutex / std::lock_guard<std::mutex> syntax. Fixing that needs a new code slide, which is new content and the instructor's call. I verified a lock_guard version: 0 torn lines in 200 runs.
+- **w00** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s12 tiers
+  - The sector shares have no source: 'poco más de la mitad' of new game code, 'un cuarto' of scientific code, 'alrededor del tres por ciento' of all new code. Item 04 ('Todo lo demás', a niche) also sits under the title 'Dónde sigue siendo la primera opción', but it is a contrast item, not a sector where C++ is the first choice.
+  - Evidencia: HANDOFF.md says these come from the instructor's infographic as an editorial assessment, and the notes saying so were removed in 6818abb.
+  - Propuesta: Not changed: there is no source to correct against. The caveat should be put back in notes if the instructor wants it.
+- **w00** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml` s3 objectives
+  - The heading 'Al terminar la sesión el alumno podrá…' is third person. The rest of the deck uses tú, and the English heading says 'you will be able to', so there is a register and parity mismatch.
+  - Evidencia: The same heading appears in all 18 cpp es decks and in 147 Spanish decks repo-wide. Only 5 use 'vas a poder'.
+  - Propuesta: Not changed: it is a course-wide (repo-wide) convention, and changing only w00 would make it the odd deck out. If the instructor wants tú, change it in all decks at once, e.g. 'Al terminar la sesión vas a poder…'.
+- **w00** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s9 compare
+  - The right-hand card is labelled 'C++20', but nothing in it needs C++20: templates and std::vector have been standard since C++98. A reader could take templates for a C++20 feature, and the 'cuarenta años de trabajo' note overstates the gap. The s10 table, which says C++98 brought templates and the STL, does correct this.
+  - Evidencia: Compiled the four snippets (es pila/Pila, en stack/Stack) with g++ 13 and clang++ using -std=c++20 -Wall -Wextra: no warnings. Scaffolding added: #include <vector>, member definitions and a main; output was 999 and 2.5. The 'after' fragment also compiles with g++ -std=c++98 -pedantic. Without #include <vector> it fails ('vector in namespace std does not name a template type'), which is expected for a declaration fragment.
+  - Propuesta: Not changed: the code is valid C++20, the label names the course standard, and the next slide corrects the impression. Left to the instructor.
+- **w00** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s22 homework
+  - The homework, due before session 1, asks students to print their name and _MSVC_LANG. Neither std::cout nor _MSVC_LANG is taught in w00; week 1 is where the macros are shown side by side.
+  - Evidencia: No w00 slide shows cout or _MSVC_LANG. HANDOFF.md: 'Week 1 shows the two macros side by side'. The VS console template already contains a std::cout Hello World line, so the task is still doable.
+  - Propuesta: Not changed: it is an ungraded setup check, and the template supplies the cout pattern. Flagged so the instructor can decide.
+- **w00** · auditoría · other · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` sall (1, 13, 22 in particular)
+  - Neither deck has speaker notes. HANDOFF.md says the notes on the sector and comparison slides should keep the editorial caveat, and that the homework note explains why _MSVC_LANG is used instead of __cplusplus (MSVC keeps __cplusplus at 199711 without /Zc:__cplusplus). All of these were deleted in commit 6818abb, which stripped notes repo-wide.
+  - Evidencia: git show 6818abb -- es/w00.es.yaml shows three notes blocks deleted.
+  - Propuesta: Not restored: removing the notes was a deliberate repo-wide decision by the instructor. Reported because HANDOFF.md still says the caveats should be kept.
+- **w00** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s10 table
+  - The C++23 row gives the year as 2023. ISO published the standard as ISO/IEC 14882:2024 in October 2024; work on it was finished in 2023, and the name follows that year.
+  - Evidencia: ISO catalogue: ISO/IEC 14882:2024. The other rows match their publication years (1998, 2011, 2017, 2020).
+  - Propuesta: Not changed: giving the year in the name is the usual convention. Noted for completeness.
+- **w00** · revisión · consistency · low · `ppts/cpp/programacion-avanzada/es/w00.es.yaml + en/w00.en.yaml` s13 table / 21 takeaways
+  - The comparison table puts Rust ahead of C++ on speed (0.95 vs 0.75), and nearly level on memory (1.10 vs 1.05). The s21 takeaway says that where performance and memory control decide, 'ahí no lo ha movido nadie' / 'nothing has moved it there'. The deck's own data undercuts its own conclusion.
+  - Evidencia: Read s13's rows against s21 item 03.
+  - Propuesta: Not changed, because it depends on the instructor's unsourced figures (auditor finding 4). If the instructor corrects the numbers to published benchmarks (C, C++ and Rust close together), the tension goes away. Otherwise the takeaway should be softened.
+- **w01** · auditoría · figure · low · `ppts/kit/figures.py (compilation); shown in es/w01 and en/w01` s11 figure
+  - compilation.png ends with the note 'el error de sintaxis aparece aquí' / 'the syntax error turns up here'. The note is centered at W/2, under hola.obj, with no arrow, so 'here' does not point at the compiler step where syntax errors occur.
+  - Evidencia: Viewed img/es/compilation.png and img/en/compilation.png. In kit/figures.py compilation(), p.text(W / 2, 626, t['cc_note'], ...) is centered on the whole canvas.
+  - Propuesta: Must be fixed in ppts/kit/figures.py: move cc_note under the first arrow (x about 588) or reword it to name the compiler, then regenerate img/es and img/en compilation.png. The figure is also used by w00.
+- **w01** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml; ppts/cpp/programacion-avanzada/en/w01.en.yaml` s7 table
+  - The '.h' row says students touch header files 'A partir de la unidad 3' / 'From unit 3 onward', but no deck in weeks 4 to 17 has students write a .h file. The unit 3 (w04) lab deliverable is 'Un .cpp con los tres prototipos arriba'.
+  - Evidencia: grep for '.h', 'cabecera', 'encabezado' and '#include "' across the course decks. Only w03 (using namespace in a header) and w14 (templates live in headers) mention headers.
+  - Propuesta: Left as is; this needs an instructor decision. Either reword to a vaguer 'más adelante', or add a header to a unit 3 lab.
+- **w01** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml; ppts/cpp/programacion-avanzada/en/w01.en.yaml` s5 divider
+  - The lede promises 'el problema que aparece en la semana nueve' / 'the problem that shows up in week nine', but w09 (inheritance) has nothing about environment, configuration or the language standard.
+  - Evidencia: grep w04 to w17 for Release, estándar, C++20, LNK and configuración. No match ties week 9 to a setup problem.
+  - Propuesta: Not changed; I cannot tell which problem the instructor means. Confirm it or replace it with something the course shows.
+- **w01** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml` s3 objectives, 18 code, 20 quiz, 22 lab
+  - 'Punto de ruptura' is used for breakpoint, but Spanish Visual Studio says 'punto de interrupción' (Depurar > Alternar punto de interrupción, F9).
+  - Evidencia: Microsoft Learn es-es: 'Introducción a los puntos de interrupción', 'Depurar>Alternar punto de interrupción'. w00.es also uses 'punto de ruptura' twice.
+  - Propuesta: Kept for consistency with w00, which I may not edit. It is an accepted academic term, but if the instructor wants the UI term, change it in w00 and w01 together.
+- **w01** · auditoría · output-mismatch · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml; ppts/cpp/programacion-avanzada/en/w01.en.yaml` s14 code_output
+  - The output panel is labeled 'Lista de errores' / 'Error list', but the text is in cl.exe console format ('roto.cpp(6): error C2143: ...'). The Error List window shows columns (Code, Description, File, Line), not this line format. A Spanish VS with the language pack would also print the message in Spanish.
+  - Evidencia: g++ and clang++ both reject roto.cpp and broken.cpp (missing ';' at line 5), which confirms the error is real. MSVC reports the next token's line (6) with C2143. The exact text matches the HANDOFF's cl command-line results; MSVC itself cannot be run here.
+  - Propuesta: The content is right for cl. Optionally relabel the panel 'Salida' / 'Output'. Left for the instructor.
+- **w01** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: The same formula appears in 147 Spanish objectives titles across the repository and in all 18 COM103 Spanish decks, so it is the house formula.
+  - Propuesta: Not changed, because changing one deck would break course-wide consistency. Flagged for the instructor.
+- **w02** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w02.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck addresses the student as tú and the English deck says 'you will be able to'.
+  - Evidencia: The same title appears in all 18 Spanish decks of this course (w00 to w17), so it is a course-wide convention rather than a slip in w02.
+  - Propuesta: Not changed: changing one week alone would make the course inconsistent. If wanted, change it in one sweep across all 18 es decks to 'Al terminar la sesión podrás…'.
+- **w02** · auditoría · trace · low · `ppts/cpp/programacion-avanzada/es/w02.es.yaml + en/w02.en.yaml` s16 trace
+  - The verdict says n already holds 4 when the addition happens. The standard only sequences the n++ side effect after its own value computation and before the end of the full-expression; it is unsequenced relative to the +. So this ordering is a model, not a guarantee.
+  - Evidencia: The trace values match real execution: contador.cpp prints '4 13' under g++ and clang, and g++ -O0 stores n+1 before the add. The quiz answer (option A, 4 13) and all three distractors derive consistently from the confusions they name.
+  - Propuesta: Left as is: the numbers are right and the simplification is standard teaching. Flagged only for a pedantic reader.
+- **w02** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w02.es.yaml + en/w02.en.yaml` s8 code
+  - `double promedio = 8.75;` / `double average = 8.75;` is declared but never used, so g++/clang with -Wall -Wextra warn -Wunused-variable. MSVC at the default /W3 stays silent, because C4189 is level 4.
+  - Evidencia: g++ 13 and clang++: 'warning: unused variable promedio [-Wunused-variable]'. The program prints 33 7. Replacing line 9 with `APROBATORIA = 6.0;` gives 'error: assignment of read-only variable', which confirms the Line 9 annotation.
+  - Propuesta: Not a defect: the slide does not claim a warning-free build, and the title counts three variables on purpose.
+- **w02** · auditoría · other · low · `ppts/cpp/programacion-avanzada/es/w02.es.yaml + en/w02.en.yaml` sall
+  - Neither deck has any speaker notes, so there is no stated quiz answer in notes to cross-check. The answer is given by the trace slide that follows.
+  - Evidencia: grep 'notes:' gives 0 hits in both files. Slide counts and layouts are identical in es and en (26 each, same order), and all facts and numbers match.
+  - Propuesta: No change; adding notes would be new content.
+- **w02** · revisión · consistency · low · `ppts/cpp/programacion-avanzada/es/w01.es.yaml + en/w01.en.yaml (closing subtitle, line 352)` sw01 closing vs w02 1 cover / 18 code_output
+  - The w01 closing hook promises 'por qué 254 entre 4 le dio 63' / 'why the computer answered 63 when asked for 254 over 4'. The w02 cover, the s17 divider ('the question left open last week') and s18 ('Why last week's average came out at 84') all answer with 254/3 = 84 vs 84.67.
+  - Evidencia: grep on w01: line 352 has the 63 hook, and line 276 and the trace verdict at line 312 already show 84 vs 84.67. w02 s18 compiled prints 84.
+  - Propuesta: Has to be fixed in w01 (out of scope), for example 'por qué 254 entre 3 le dio 84 a la computadora' / 'why the computer answered 84 for 254 over 3'. w02 is now internally consistent.
+- **w03** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w03.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses third person, while the rest of the deck uses tú (and ustedes for pairs). The English deck says 'you will be able to'.
+  - Evidencia: Across all Spanish decks, 146 use 'el alumno podrá…' and 15 use 'las dos sesiones el alumno podrá…'. 'podrás' appears once and 'vas a poder' five times. w02 and w04 of this course also use 'el alumno podrá'.
+  - Propuesta: Not changed. This is the repo-wide formula, and changing one deck would break consistency with its neighbors. The instructor should decide globally whether to switch to 'podrás'.
+- **w03** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w03.es.yaml` s14 pitfalls
+  - Errors 03 (comparing quoted text: std::string == against char arrays) and 04 (single versus double quote, terminating zero) sit at the end of Block 02, before the Block 03 divider that introduces std::string. string == is first shown on slide 17. The English deck has the same order.
+  - Evidencia: Slide order: pitfalls is 14 and 'El tipo string' starts at 15. I checked Error 03's claim with g++: comparing two char arrays gives 0 (address comparison) plus '-Warray-compare: comparison between two arrays is deprecated in C++20'.
+  - Propuesta: Not moved. Moving the slide after the trace would fix the order, but it changes the structure and renumbers the slides the instructor's list cites (the quiz is s18). Leaving it for the instructor.
+- **w03** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w03.es.yaml` s21 lab
+  - The lab hands out a program with 'using namespace std dentro de una cabecera'. w01 says .h files come 'A partir de la unidad 3', and no deck in the course formally teaches user header files. This deck itself only states the rule about using in headers. The English deck is identical.
+  - Evidencia: w01.es.yaml line 101 says '.h … A partir de la unidad 3'. grep for '.h'/cabecera in w04 to w06 finds no lesson on writing headers.
+  - Propuesta: Not changed. The lab only asks students to read and fix the header, which this session's rule covers. Flagged so the instructor can confirm students can work with a two-file project at week 3.
+- **w03** · auditoría · output-mismatch · low · `ppts/cpp/programacion-avanzada/es/w03.es.yaml` s7 code_output
+  - Not a defect, but a reader may find it suspicious: compiled on Linux, the program prints 4 8 8, not the 4 4 8 on the slide. The slide labels its output 'x64 con MSVC', and under MSVC x64 long is 4 bytes (LLP64). The English deck is the same.
+  - Evidencia: g++ on Linux prints 4/8/8. clang++ --target=x86_64-pc-windows-msvc accepts static_asserts for bool 1, char 1, short 2, int 4, long 4, long long 8, float 4, double 8, which matches slides 6 and 7. --target=x86_64-linux-gnu fails the sizeof(long)==4 assert, which supports the takeaway that long is 4 bytes on Windows and 8 on Linux (64-bit).
+  - Propuesta: No change needed.
+- **w04** · auditoría · description-mismatch · low · `ppts/cpp/programacion-avanzada/es/w04.es.yaml + en/w04.en.yaml` s11 table
+  - Under the column 'En el ejemplo' / 'In the example', the Prototipo row shows 'double promedio(int, int, int);', but the example on slide 9 is 'double promedio(int a, int b, int c);'. The unnamed form is valid C++ but no slide explains it. The Cuerpo/Body cell 'suma / 3' is shorthand for what the body computes, not the body itself.
+  - Evidencia: I tried the literal prototype in both decks. In Spanish the 7th row then wraps and ends at 10.09 in, below the footer rule at 9.76 in (check.sh slide 11 issue). The unnamed form compiles with g++ and clang.
+  - Propuesta: Reverted to the original text in both decks to keep the table inside the slide and the two languages identical. Both cells are valid shorthand. If the instructor wants the literal prototype, the 'Qué es' cell must be shortened first.
+- **w04** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w04.es.yaml + en/w04.en.yaml` s9 code, 16 code
+  - promedio.cpp/average.cpp and copia.cpp/copy.cpp are full programs (they have main) that use std::cout without #include <iostream>, so they do not compile as shown.
+  - Evidencia: Every deck from w04 on has 0 #include lines (w04, w05 and w11 have full mains), while w01 to w03 show the includes. This is a course-wide convention. Adding the include would move every 'Línea N' / 'Line N' annotation down by two. With the include added, both programs compile under g++ and clang++ (-std=c++20 -Wall -Wextra) with no warnings and print 84.6667 and '10 20'.
+  - Propuesta: Left as is (course convention, and the line references are correct for the displayed source). Fixed only on slide 12, where the missing include changes the slide's claim.
+- **w04** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w04.es.yaml` s3 objectives
+  - The Spanish objectives title is in third person ('Al terminar la sesión el alumno podrá…'). The English says 'you will be able to', and the house rule asks for tú throughout.
+  - Evidencia: All 18 Spanish decks in cpp/programacion-avanzada (w00 to w17, line 36) use 'el alumno podrá'; all English decks use 'you will be able to'.
+  - Propuesta: Not changed: it is the course-wide Spanish wording, and changing only w04 would make it inconsistent with the other 17 decks. If the instructor wants tú, all 18 Spanish decks should change together (e.g. 'Al terminar la sesión podrás…').
+- **w04** · auditoría · quiz-key · low · `ppts/cpp/programacion-avanzada/es/w04.es.yaml + en/w04.en.yaml` s17 quiz
+  - Neither deck has speaker notes, so the quiz has no stated answer and no explanation of its distractors. The answer is only implied by the next trace slide (eyebrow 'Respuesta' / 'Answer').
+  - Evidencia: grep -c notes: gives 0 for every deck in the course. I ran the code: output is '10 20', option A, the only defensible answer. B (same variable), C (return value lost) and D (copy-back on exit) are each a distinct misconception.
+  - Propuesta: No notes added, to avoid inventing content. The quiz itself is correct.
+- **w05** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' uses third person, while the rest of the deck addresses the reader with tú or ustedes. The English side says 'you will be able to'. The house rule asks for one register (tú).
+  - Evidencia: The same title appears in 145 Spanish decks across the repo (grep), and the instructor list did not flag it for Spanish. Changing one deck would make this course inconsistent.
+  - Propuesta: Not changed. This is a convention across the course and the repo, so the instructor should decide it globally (for example, 'Al terminar la sesión podrás…', which 3 decks already use).
+- **w05** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s19 quiz
+  - The quiz asks what contador.cpp prints after three calls. Slide 13 already showed the same code with the output panel '1 1 / 2 1 / 3 1', so the answer is on screen six slides earlier. Otherwise the quiz is sound: only A is correct, B is the 'both persist' confusion, C is 'static resets too', and D is wrong because the last line is 3 1.
+  - Evidencia: I wrapped the quiz fragment in void f(){...} and called it three times: prints 1 1, 2 1, 3 1. The trace on slide 20 matches row by row.
+  - Propuesta: Not changed, because it would need a structural decision: drop the output from slide 13 or treat the quiz as recall. Reported for the instructor.
+- **w05** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s18 code
+  - saludo/greeting takes both std::string parameters by value only to read them. That comes right after slide 9 teaches 'const string& para solo leer'. The code is correct, but an attentive student may ask why the advice is not followed.
+  - Evidencia: Compiled and ran both versions: 'Ing. Ana' / 'Dra. Ana' and 'Eng. Ana' / 'Dr. Ana', matching 'La salida' / 'The output'. Switching to const std::string& would make line 2 about 54 characters and risk shrinking the code card.
+  - Propuesta: Not changed. The code is valid and the fix would risk overflow. Left to the instructor.
+- **w05** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s12 code_output / 14 pitfalls / 22 takeaways
+  - The deck says a local that shadows a global compiles 'sin advertencia' / 'with no warning'. That is true at default warning levels but not in general. A reader using stricter flags will see a warning.
+  - Evidencia: g++ and clang++ with -Wall -Wextra: no warning, output 99 then 0 as shown. With g++ -Wshadow: 'declaration of contador shadows a global declaration'. MSVC reports C4459 only at /W4, and new Visual Studio projects default to /W3.
+  - Propuesta: Not a defect for the course's default Visual Studio setup. Reported only because it can look wrong to a reader who uses /W4 or -Wshadow.
+- **w05** · auditoría · description-mismatch · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s5 divider / 7 code
+  - 'Hoy la diferencia son cuatro caracteres' / 'Cuatro caracteres separan una cosa de la otra'. The four characters are 'Ref' + '&' between duplicar(int n) and duplicarRef(int& n). Pass-by-reference itself only needs one character, the ampersand.
+  - Evidencia: Diffed the two signatures character by character: exactly 4 characters differ in both languages ('Ref&'). Compiled both functions with no warnings, and the s8 demo prints '10 20' in both decks.
+  - Propuesta: Literally accurate, and the name suffix fits the lab criterion that names announce modification. Not changed.
+- **w05** · auditoría · figure · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s11 figure
+  - The title and the scope-cpp figure text say 'lo local muere cuando la función termina' (lifetime), while the caption explains C2065, which is a scope or visibility error. Slide 20's verdict explicitly separates lifetime from visibility, so the two framings sit side by side.
+  - Evidencia: Viewed img/es/scope-cpp.png and img/en/scope-cpp.png. g++ using a local outside its function gives 'x was not declared in this scope' (MSVC C2065), so the caption is correct.
+  - Propuesta: Not changed. The figure text lives in ppts/kit/figures.py / ppts/img (outside my files), and the YAML title just mirrors it. Reported only.
+- **w05** · auditoría · description-mismatch · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s2 agenda
+  - The agenda card 'Alcance: Global, local y de bloque' promises block scope. No slide shows a block-scoped variable inside a function body. The deck shows global versus function-local (sombra.cpp), static locals, and a figure of three nested boxes labelled global, función, local.
+  - Evidencia: Read every slide in Block 02 (slides 10 to 14).
+  - Propuesta: Not changed. The nested 'local' box in the figure can be read as block scope, and adding a slide would be inventing content. Reported for the instructor.
+- **w05** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s23 homework
+  - The homework asks the average function to return 'el número de materias contadas' and to add an overload for 'un cuarto examen'. It mixes subjects (materias) and exams. Without if or loops, the count is also a constant (3 or 4).
+  - Evidencia: The w04 homework defines the function as receiving 'la suma y el número de materias'. w02 calls them a student's three grades.
+  - Propuesta: Not changed. The wording is ambiguous rather than wrong, and the instructor should decide whether the report card holds subjects or exams.
+- **w05** · auditoría · language · low · `ppts/cpp/programacion-avanzada/en/w05.en.yaml` s18 code
+  - 'Eng.' is a literal translation of the Mexican honorific 'Ing.'. American English does not use it as a title before a name.
+  - Evidencia: Read the slide. The output 'Eng. Ana' matches a real run.
+  - Propuesta: Not changed. It is a localization choice that keeps the es/en code behavior parallel.
+- **w05** · auditoría · trace · low · `ppts/cpp/programacion-avanzada/es/w05.es.yaml + en/w05.en.yaml` s20 trace
+  - The title 'La línea del static se ejecuta una sola vez en todo el programa' is a simplification. static int llamadas = 0 is constant-initialized before any call, and the line is skipped on every call. The trace rows themselves are correct.
+  - Evidencia: Ran registrar/record three times with g++ and clang++: 1 1, 2 1, 3 1, matching each trace row (calls 0 to 1, 1 to 2, 2 to 3; normal born at 0, up to 1).
+  - Propuesta: Acceptable teaching simplification. Not changed.
+- **w06** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w06.es.yaml, ppts/cpp/programacion-avanzada/en/w06.en.yaml` s17 pitfalls
+  - Error 01 says the missing class semicolon produces an error on the next line. That is true for MSVC (Visual Studio, the course's toolchain), but g++ and clang report it on the brace line itself.
+  - Evidencia: g++ and clang both report nosemi.cpp:11:2, the line of the closing brace. MSVC C2628 is reported at the following declaration. Kept as written because the course targets Visual Studio (C2248 codes, x64 folder).
+  - Propuesta: Not a defect for the stated toolchain; no change.
+- **w06** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w06.es.yaml, ppts/cpp/programacion-avanzada/en/w06.en.yaml` s13 divider
+  - The lede says the compiler enforcing access levels is 'la diferencia con otros lenguajes' / 'where C++ parts company with other languages'. Java and C# enforce access too; the real contrast is with Python, the students' previous language, where privacy is a convention.
+  - Evidencia: Read only. The figure note ('los tres los cobra el compilador') is correct.
+  - Propuesta: Left as is: it reads as a contrast with Python and is not false for the students' frame of reference. The instructor may want to name Python explicitly.
+- **w06** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w06.es.yaml` s3 objectives
+  - The es objectives title is 'Al terminar la sesión el alumno podrá…' (third person), while en uses 'you will be able to…' and the rest of the es deck speaks in tú.
+  - Evidencia: Grepped all decks: 145 es decks use 'el alumno podrá…', against 7 using podrás or 'vas a poder'. All cpp weeks w04 to w13 use the 'el alumno' form.
+  - Propuesta: Not changed: it is the course-wide convention, and changing only w06 would break consistency with the other 17 cpp decks. If wanted, it should be changed across all decks at once.
+- **w06** · auditoría · other · low · `ppts/cpp/programacion-avanzada/es/w06.es.yaml, ppts/cpp/programacion-avanzada/en/w06.en.yaml` sall
+  - Neither deck has any speaker notes, and the same is true of every cpp deck. So no answer key or distractor rationale for the quiz can be checked against notes.
+  - Evidencia: Counted 'notes:' occurrences: 0 in all 36 cpp YAML files. The quiz key was verified by compiling instead (A is correct, matching the answer trace on slide 19).
+  - Propuesta: No change; adding notes would mean inventing content.
+- **w07** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w07.es.yaml` s9 code_output
+  - Looks suspicious but is not a defect. `std::cout << (x = 6) << " " << x` modifies and reads x in one expression. GCC 13 warns "operation on 'x' may be undefined [-Wsequence-point]" even in C++20. Since C++17 (P0145), the operands of << are sequenced left to right, so "6 6" is guaranteed under the course's /std:c++20. Under C++14 (MSVC's default when the standard is not set) it would be undefined behavior.
+  - Evidencia: g++ -std=c++20 -Wall -Wextra prints "6 6" plus 2 -Wsequence-point warnings (a GCC false positive). clang++ -std=c++20 prints "6 6" with no warning. Same code in en (equals.cpp).
+  - Propuesta: No change: the output is correct for C++20, which w00/w01 have students set. The instructor could mention that it relies on C++17 ordering.
+- **w07** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w07.es.yaml` s14 code_output
+  - Not a defect, noted for completeness. The switch fallthrough example compiles with -Wimplicit-fallthrough warnings under GCC -Wextra. The slide does not deny any warning, and the output is correct.
+  - Evidencia: g++ -std=c++20 -Wall -Wextra with opcion=2 prints "dos\ntres" and warns twice that a statement may fall through. The en version prints "two\nthree". Both match the output panels.
+  - Propuesta: No change needed.
+- **w07** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w07.es.yaml` s3 objectives
+  - es "Al terminar la sesión el alumno podrá…" (third person) versus en "you will be able to". This looks like a register or parity mismatch, but it is the house convention.
+  - Evidencia: grep over ppts: 140 es decks use "el alumno podrá…" and only 12 use podrás or vas a poder. w06/w08 of this course use the same title.
+  - Propuesta: Left as is, because it is the course-wide convention.
+- **w08** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w08.es.yaml, ppts/cpp/programacion-avanzada/en/w08.en.yaml` s14 quiz
+  - The quiz shows exactly the code of slide 7 (do-while, j = 3), and slide 7's output panel already reads 'd3' under 'Salida con j valiendo 3'. The quick question is answered on the screen six slides earlier. The quiz itself is sound: A is the only correct option, B is the while confusion, C mixes up the start value with the run count, and D is repeat-until reasoning. The trace on slide 15 matches a real run step by step (d3, then j=4, then 4<3 false, exit).
+  - Evidencia: g++ and clang++: prints d3 once and ends with j=4. The same condition written as a while prints nothing, which confirms the verdict.
+  - Propuesta: Left as is. It may be intentional retrieval practice. Changing the quiz values would mean inventing a new question, which is the instructor's call.
+- **w08** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w08.es.yaml` s3 objectives
+  - The heading 'Al terminar la sesión el alumno podrá…' is third person, while the en deck says 'you will be able to' and the house rule asks for tú throughout. The same heading appears in all 18 es decks of this course.
+  - Evidencia: grep finds 18 matches for 'el alumno podrá' in es/*.yaml and 18 for 'you will be able to' in en/*.yaml.
+  - Propuesta: Not changed, because this is a course-wide convention. Editing one deck would break consistency. If wanted, change it in every deck at once, for example to 'Al terminar la sesión podrás…'.
+- **w08** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w08.es.yaml, ppts/cpp/programacion-avanzada/en/w08.en.yaml` s2 agenda
+  - 'Los tres ciclos del lenguaje' / 'The three loops in the language'. Since C++11, C++ also has the range-based for (`for (x : v)`), and the course uses C++20. Counting it as a form of for makes the claim a reasonable simplification, and the course never teaches range-for (the arrays week, w10, does not use it).
+  - Evidencia: [stmt.iter] in C++20 lists while, do, for and range-based for. grep finds no range-for in any deck of the course.
+  - Propuesta: Left as is. This is a defensible teaching simplification, flagged only because an expert reader may object.
+- **w09** · auditoría · figure · low · `ppts/kit/figures.py` s6 figure (hierarchy registry entry)
+  - The FIGURES registry metadata for 'hierarchy' describes 'a four-level chain', but the drawing function produces three levels. This is probably where the 'four' in the w09 titles came from.
+  - Evidencia: kit/figures.py around line 1230 has about='A two-level tree that works beside a four-level chain...'. hierarchy() draws only (hier_a, hier_b, hier_c).
+  - Propuesta: Out of scope for this agent. The 'about' text in ppts/kit/figures.py should say three-level chain. It is metadata only and does not change the image.
+- **w09** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w09.es.yaml` s12 table
+  - The row 'Qué hereda | Todo lo público y protegido' (EN 'What comes across | All public and protected') could be read as saying private members are not inherited. In C++ they are inherited: they are part of the derived object but cannot be accessed.
+  - Evidencia: Standard C++ semantics. The deck itself frames this as access (s7 'Con private no podría', s19 'llegan solos'), so as a teaching simplification it is defensible. The English header 'What comes across' is closer to the intent than the Spanish 'Qué hereda'.
+  - Propuesta: Not changed: it is a reasonable simplification, consistent across the deck. If the instructor wants it exact, a header like 'Qué puede usar' would fix it.
+- **w09** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w09.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' uses the third person while the rest of the deck addresses students as tú/ustedes.
+  - Evidencia: grep over ppts/ finds this exact title in about 140 Spanish decks, and in every week of this course. It is a house-wide convention, not a slip in w09. The English deck already says 'you will be able to'.
+  - Propuesta: Not changed: changing only w09 would break consistency across the course. If the instructor wants tú here, it has to change course-wide.
+- **w10** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml + en/w10.en.yaml` s13 code_output
+  - vocales.cpp / vowels.cpp compares int i < palabra.length(), which mixes signed and unsigned. The slide denies no warning and the output is correct, but students will see a warning in a deck whose theme is 'the compiler said nothing'.
+  - Evidencia: g++ 13 and clang++ with -std=c++20 -Wall -Wextra: '-Wsign-compare: comparison of integer expressions of different signedness: int and size_type'. Output: 5 for "programacion" (o,a,a,i,o) and 3 for "programming" (o,a,i), matching both panels. MSVC most likely reports C4018 at the default /W3 (not runnable here).
+  - Propuesta: Not changed: the code is correct and no warning is denied. If the instructor wants a warning-free example, std::size_t i or a range-for would remove it.
+- **w10** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml + en/w10.en.yaml` s10 code_output / 18 takeaways / 19 homework
+  - Three places say the overrun produces no message: s18 'No hay mensaje que lo denuncie' / 'No message reports it', and s19 asks students to explain 'por qué el compilador no dijo nada' / 'why the compiler said nothing'. That holds for the run time. At compile time, with a constant index like notas[6], clang warns by default and g++ warns at -O2 -Wall. For the loop in the quiz, neither compiler warns.
+  - Evidencia: fuera.cpp: clang++ -O0 and -O2 'warning: array index 6 is past the end of the array [-Warray-bounds]' (on by default). g++ -O2 -Wall: 'array subscript 6 is above array bounds of int [6]'. g++ -O0: no warning. recorrido.cpp (i <= 6): no warning from g++ or clang at -O0 or -O2. Runtime prints arbitrary values (-95206656, -1011562496, -1874831160, ...), which fits the label 'Una corrida, de muchas posibles'.
+  - Propuesta: Left as is: the course compiler is MSVC (Visual Studio 2026, per w00), where cl at /W3 is not known to warn on this read. Flagged in case the instructor wants 'en Visual Studio' added.
+- **w10** · auditoría · trace · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml + en/w10.en.yaml` s14 quiz / 15 trace
+  - The trace matches a real run step by step, and option A ('Siete, y la última lee fuera del arreglo') is the one defensible answer. The verdict 'El programa no falla' is categorical, though, while the behavior is undefined. One optimized build did crash, which is distractor D.
+  - Evidencia: recorrido.cpp and walk.cpp with g++ -O0, clang -O0 and clang -O2: '78 85 91 64 73 88 <garbage>', seven values, which matches the trace rows 0 to 4, 5, 6 and 7. g++ -O2: the loop did not stop at 7, printed hundreds of values and ended in a segmentation fault. Each distractor matches its confusion (B: bound equals size; C: invalid index skipped; D: expecting a bounds check). Neither deck has speaker notes, so the answer was checked against the s15 trace.
+  - Propuesta: Left as is: correct for the course's Visual Studio Debug build and for unoptimized builds. Flagged as undefined-behavior nuance.
+- **w10** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml + en/w10.en.yaml` s11 table
+  - The table says vector[i] does not check the index. That is true by the standard and in Release builds. In Visual Studio's default Debug configuration, the MSVC STL asserts 'vector subscript out of range', so students testing it in the course's IDE will see a message. Also, std::vector and exceptions have not been taught by week 10: no earlier deck has vector code (w09 only names it in prose), and exceptions are week 15.
+  - Evidencia: grep of es/w00 to w09: vector appears only in the w00 roadmap code, w03 prose and w09 prose. The table is informational, and the lab and homework do not need vector. The MSVC Debug assertion is from knowledge of _ITERATOR_DEBUG_LEVEL=2 and could not be run here.
+  - Propuesta: Not changed: standard-correct, and a forward mention on a content slide does not break the lab/quiz/homework rule. Flagged for the instructor.
+- **w10** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses the third person while the rest of the deck addresses the student directly. The English side uses 'you will be able to'.
+  - Evidencia: grep: the identical title is in all 18 Spanish decks of this course (w00 to w17), so it is a course-wide convention, not a w10 slip.
+  - Propuesta: Not changed: it needs a course-wide decision (e.g. 'Al terminar la sesión podrás…'), and editing one deck would break consistency.
+- **w10** · auditoría · language · low · `ppts/cpp/programacion-avanzada/en/w10.en.yaml` s1 cover, 5 divider, 7 code_output, 17 lab and others
+  - The English deck says 'marks' for grades and 'Term 2' for the semester. Both lean British, while 'grade' and 'semester' are the usual American terms.
+  - Evidencia: grep: 'marks' and 'Term 2' appear across all English decks of the course. 'marks' is also the identifier in the code (marks[6]) and in the generated figure img/en/array-memory.png.
+  - Propuesta: Not changed: course-wide vocabulary, and changing it needs the figure in kit/figures.py and the other decks.
+- **w10** · revisión · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w10.es.yaml + en/w10.en.yaml` s3 objectives / 7, 13, 14
+  - Objective 1 promises to walk an array 'con un for cuyo límite se calcula y no se escribe a mano'. No slide ever shows that loop over an array. s7 computes the count with sizeof but does not loop. s13 loops over a string with length(). The only array loop (s14/s15) uses the literal 6, and the fix in the s15 verdict keeps the literal. The lab then requires exactly this pattern.
+  - Evidencia: Listed every source block in both decks. The array loops are recorrido.cpp / walk.cpp only, with 'i <= 6'. There is no 'i < n' over an array with n = sizeof(notas)/sizeof(notas[0]).
+  - Propuesta: Not changed. It needs a new code_output slide (for example, summing notas with n computed once), or a change to an existing example, in both decks. That is a content decision for the instructor. The lab may be meant to have students combine s7 and s13 themselves.
+- **w10** · revisión · other · low · `ppts/kit (trace/table header rendering)` s15 trace
+  - The trace's first header is the loop variable 'i', but the kit draws headers in uppercase, so the slide shows 'I'. The code uses lowercase i.
+  - Evidencia: Rendered the built .pptx to PNG through LibreOffice: s15 header row reads 'I | ÍNDICE VÁLIDO | QUÉ IMPRIME | SIGUE' (en: 'I | VALID INDEX ...').
+  - Propuesta: This cannot be fixed in the YAML, because any header text is uppercased. It must be fixed in ppts/kit, which would need to leave code-like headers in their original case (another agent's area). Reported only.
+- **w11** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s17 lab
+  - Criterio: 'Que agregar un sexto alumno cueste una línea y no toque ningún ciclo'. With the only filling technique the deck shows (field-by-field assignment, s9), a sixth student costs one assignment per field plus a change to the declared size: about 6 lines. Doing it in one line takes aggregate brace initialization of records (Alumno grupo[] = { {"Ana", 1001, 90, 85, 77}, ... }) or reading input with std::cin, and no slide in the course shows either one. Same issue in en.
+  - Evidencia: Checked w11 and grepped earlier decks for std::cin and brace-initialized structs. None found. Array brace-init of ints is in w10.
+  - Propuesta: Left for the instructor: either show record brace initialization in w11 or reword the criterion (for example, 'adding a sixth student touches no loop').
+- **w11** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s7 code_output; 14 quiz; 15 trace
+  - The slides call 'Punto r = q;' an 'asignación' (title 'Asignar un registro copia…', quiz option A, trace title). Strictly, that line is copy-initialization (implicit copy constructor), not copy assignment ('r = q;'). The observable behavior (memberwise copy, output 3 99) is identical, so the result is correct and only the terminology is loose. Same in en.
+  - Evidencia: Compiled and ran both forms with g++ 13 and clang++ (-std=c++20 -Wall -Wextra). Both print '3 99'.
+  - Propuesta: Not changed. The fix would mean editing code on three slides for a distinction the course does not teach. Flagged for the instructor.
+- **w11** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s14 quiz
+  - The quiz shows the same program as s7 (same file name copia.cpp, same statements), and s7's output panel already displayed '3 99', so the quiz checks recall of a slide seen moments earlier rather than prediction. Neither deck has speaker notes, so no answer is stated in notes. The answer (A) is given by the s15 trace. The key itself is sound: exactly one correct option (A). B is reference semantics, C is a snapshot confusion and D is the C-array assignment confusion. Same in en.
+  - Evidencia: Ran the quiz source: prints '3 99' (option A). The s15 trace rows match step by step (q.x 3/3/3/3; r.x absent/3/99/99).
+  - Propuesta: Not changed. Changing the quiz needs new content (for example, a different starting value or a field-by-field variant). Suggest the instructor adds notes with the answer and varies the code.
+- **w11** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s16 pitfalls
+  - Error 01 says that without the semicolon after the struct's closing brace 'el error sale en la línea siguiente'. g++ 13 and clang report it on the brace line itself. MSVC, the course compiler (Visual Studio 2026), reports C2628 at the next token, so the claim holds for the course toolchain. Same in en.
+  - Evidencia: semi.cpp compiled with g++ 13 prints 'semi.cpp:5:2: error: expected ';' after struct definition', and clang prints 'semi.cpp:5:2: error: expected ';' after struct'. Both point at the brace line. MSVC could not be run here.
+  - Propuesta: No change. The claim is correct for MSVC, which is what the course uses.
+- **w11** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú and the en deck says 'you will be able to'. This is a course-wide convention, not a w11 slip: all 18 es decks of this course and 147 es decks repo-wide use the same title.
+  - Evidencia: grep across ppts/**/*.es.yaml: 147 'el alumno podrá', 5 'vas a poder'.
+  - Propuesta: Left for a course-wide decision. Changing only w11 would make it inconsistent with its siblings.
+- **w11** · auditoría · language · low · `ppts/cpp/programacion-avanzada/en/w11.en.yaml` s9 code; 10 table; 17 lab
+  - 'mark/marks' for a student's grade ('int mark;', 'Ten marks', 'three marks') is British usage. American English would say 'grade'. It is used the same way in w05, w10, w13 and w17 of this course.
+  - Evidencia: grep in en/: 'marks' in w05, w10, w11, w13 and w17.
+  - Propuesta: Not changed. Renaming the identifier in w11 alone would desync it from w10 and w13, which reuse this record. A course-wide decision.
+- **w11** · revisión · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w11.es.yaml` s19 homework
+  - The homework asks for a function that receives the array of records and its size without modifying it, and the rubric grades 'Recibe el arreglo sin copiarlo y no lo modifica'. That needs an array parameter, ideally const (const Alumno grupo[], int n). No slide from w00 to w11 shows an array parameter declaration. w10 only mentions in a pitfall that an array 'llega como dirección'. Same in en.
+  - Evidencia: grep for '[]' in parameter lists across es/w00 to w11: no hits. w10 covers arrays in functions only conceptually (pitfall Error 02 and takeaway 3).
+  - Propuesta: Needs an instructor decision: add one annotation or slide showing an array parameter (w10 or w11), or accept that students infer it. Not invented here.
+- **w12** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w12.es.yaml + ppts/cpp/programacion-avanzada/en/w12.en.yaml` s13 code_output / 17 quiz
+  - The deck never shows the class that defines areaNoVirtual/areaNonVirtual. The -1 comes only from slide 13's output panel, and the only Figura shown (slide 15) has a pure virtual area and no areaNoVirtual. The quiz on slide 17 is slide 13's code with '\n' changed to ' ', so its answer was on screen four slides earlier. The quiz still has exactly one defensible answer, A '9 -1', and slide 18 confirms it. The distractors match the confusions they name: B assumes every call is dynamic, C assumes every call is static, D doubts the upcast compiles.
+  - Evidencia: Scaffolded a Figura with virtual area and non-virtual areaNoVirtual returning -1, and a Cuadrado overriding both. Compiled with g++ and clang++ (-std=c++20 -Wall -Wextra). Slide 13 printed '9' / '-1' and the quiz printed '9 -1', both matching. The en Shape/Square version gave the same result.
+  - Propuesta: Not fixed: fixing it means adding a class definition (new content). The author could show Figura/Cuadrado with areaNoVirtual next to slide 13, or vary the quiz.
+- **w12** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w12.es.yaml + ppts/cpp/programacion-avanzada/en/w12.en.yaml` s19 pitfalls
+  - Error 04 warns about mixing delete and delete[] after new[]. Neither this deck nor any earlier week shows new[]/delete[]; w10 only says an array's bracket size is fixed at compile time. No lab or homework depends on it.
+  - Evidencia: grep for corchetes/new[]/delete[]/brackets in ppts/cpp/programacion-avanzada/{es,en}/*.yaml: the only hits are this pitfall and w10 line 215.
+  - Propuesta: Left as is: it is a warning, not an exercise requirement. A one-line new int[n] / delete[] example would need new content.
+- **w12** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w12.es.yaml + ppts/cpp/programacion-avanzada/en/w12.en.yaml` s15 code / 19 pitfalls
+  - The slides state flatly that deleting through a base pointer without a virtual destructor 'no llama al destructor de la hija' ('never calls the child's destructor'). Formally this is undefined behavior ([expr.delete]/3). The statement is what happens in practice, so it is not wrong for this audience, but an expert may notice.
+  - Evidencia: Built a Base/Hija test with a non-virtual ~Base. With g++ it prints only '~Base' and warns -Wdelete-non-virtual-dtor; clang warns -Wdelete-non-abstract-non-virtual-dtor.
+  - Propuesta: No change; recorded as suspicious-looking but acceptable.
+- **w12** · revisión · figure · low · `ppts/kit/figures.py (vtable, vt_call) + ppts/img/{es,en}/vtable.png` s14 figure (vtable.png)
+  - The figure's call site says 'figura->area()' / 'shape->area()'. The code on slides 13 and 17, which this figure explains, calls f->area(). This is the same kind of mismatch the auditor fixed on slide 7, but here it can only be fixed in the figure.
+  - Evidencia: figures.py line 78: vt_call='figura->area()'. The en dictionary has 'shape->area()' (visible in img/en/vtable.png). Slides 13 and 17 source: 'Figura* f = &c; ... f->area()'.
+  - Propuesta: Not fixed (kit file). Set vt_call='f->area()' in both languages when vtable() is redrawn with per-class tables.
+- **w13** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml + ppts/cpp/programacion-avanzada/en/w13.en.yaml` s11 table
+  - The good() row recommends it 'Como condición general' / 'As a general condition'. Used as a loop test, while(in.good()) has the same extra pass as the eof loop the deck warns against. The idiom the deck teaches is 'while (in >> x)', which tests !fail().
+  - Evidencia: A while(in.good()) probe on 3 records made 4 passes and repeated 'Marta 70'.
+  - Propuesta: Left as is. It is not false as a one-off status check, but it is ambiguous. The instructor may want 'Para revisar el estado, no en el ciclo'.
+- **w13** · auditoría · description-mismatch · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml + ppts/cpp/programacion-avanzada/en/w13.en.yaml` s11 table
+  - The eof() row says 'ver la nota' / 'see the note', but this deck, like the whole course, has no speaker notes. The only matching note is the 'Por qué así' / 'Why this way' margin annotation on slide 10.
+  - Evidencia: grep -c 'notes:' returns 0 for every es and en deck in the course.
+  - Propuesta: Left as is. A reader can take 'la nota' to be the slide-10 annotation, which explains exactly this. It could instead point to 'ver el error 02'.
+- **w13** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml + ppts/cpp/programacion-avanzada/en/w13.en.yaml` s19 homework
+  - The homework asks students to report a malformed line and keep reading the rest. The usual tools for that (in.clear()/ignore(), std::getline + stringstream) are not taught in weeks 1 to 13.
+  - Evidencia: grep in weeks 00 to 13 finds no getline, stringstream, clear( or ignore. The task can still be done with taught tools: read the grade as std::string (w03), check each char is between '0' and '9' with at(i) in a loop (w07, w08, w10), and convert by hand. A simpler version (stop and report the line) works with the eof() check this deck teaches, and I verified it prints 'linea mal formada: 2'.
+  - Propuesta: Left as is because a solution exists within weeks 1 to 13. I am flagging it so the instructor can confirm the intended approach.
+- **w13** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml` s3 objectives
+  - The Spanish objectives use the third person ('Al terminar la sesión el alumno podrá…', 'ya usa', 'lo que abrió'). The English uses 'you will be able to'. This is a register mismatch with the tú rule.
+  - Evidencia: All 18 Spanish decks of this course use the same 'el alumno podrá…' heading. Every other person-marked text in this deck is ustedes in the labs and homework, which is fine in Mexican Spanish.
+  - Propuesta: Not changed, because changing one deck would break consistency with the rest of the course. If the instructor wants tú, it should be a course-wide edit ('Al terminar la sesión podrás…').
+- **w13** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml + ppts/cpp/programacion-avanzada/en/w13.en.yaml` s17 lab
+  - The lab criterion contrasts the right behaviour with 'imprimir cero' / 'printing zero'. A program that skips the is_open check does not usually print zero.
+  - Evidencia: Probe: with sum/count and a missing file, a double average printed '-nan'. An int average would divide by zero and crash.
+  - Propuesta: Left as is. It reads as the desired behaviour versus one plausible wrong output, not as a factual claim.
+- **w13** · auditoría · quiz-key · low · `ppts/cpp/programacion-avanzada/es/w13.es.yaml + ppts/cpp/programacion-avanzada/en/w13.en.yaml` s14 quiz
+  - The quiz has no speaker notes, so no answer is stated there. The answer is on slide 15, and the quiz itself is sound.
+  - Evidencia: Real output is 7, which is option A. Distractor B (0) is the real C++11 rule for a parse failure on a good stream: an istringstream("abc") >> n probe gave 0. That rule does not apply here because the stream was already failed. Distractor D is false because the exceptions mask is 0, so no exception is thrown. Distractor C is the uninitialized-value confusion.
+  - Propuesta: No change needed. There is exactly one correct option, and the answer slide agrees with it.
+- **w14** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w14.es.yaml` s3 objectives
+  - The Spanish objectives title is in third person ('Al terminar la sesión el alumno podrá…'), while the English deck says 'you will be able to' and the rest of the Spanish deck uses tú. The same title appears in all 18 Spanish decks of this course, so it is a course-wide convention.
+  - Evidencia: grep 'title: Al terminar' es/*.yaml shows the identical title in w00 to w17.
+  - Propuesta: Not changed. Changing only w14 would make it differ from the other 17 decks. If the instructor wants tú ('Al terminar la sesión podrás…'), the change has to go into every es/w*.yaml of the course at once.
+- **w14** · auditoría · quiz-key · low · `ppts/cpp/programacion-avanzada/es/w14.es.yaml + en/w14.en.yaml` s13 quiz
+  - The quiz has no speaker notes, so no stated answer can be checked. The course has no notes in any deck. The answer is given on the following 'Respuesta' trace slide, which matches option A. Distractors B (one shared function), C (resolved at run time) and D (template counted as a function) each represent a real misconception.
+  - Evidencia: I compiled the quiz source with -O0 and ran nm -C: exactly two symbols, int mayor<int>(int, int) and double mayor<double>(double, double). With no calls, nm shows 0 mayor symbols, which also confirms the trace verdict ('una plantilla que nadie usa no cuesta nada').
+  - Propuesta: No defect. The key (A, two functions) is correct and the trace rows match the real instantiations.
+- **w15** · auditoría · description-mismatch · low · `ppts/cpp/programacion-avanzada/es/w15.es.yaml` s3 objectives
+  - Objective 2 (es and en) says students choose 'los de la cabecera stdexcept en lugar de lanzar cadenas sueltas'. No slide shows the <stdexcept> header or contrasts it with throwing a string literal. The table lists four types, and one of them (bad_alloc) lives in <new>, not <stdexcept>. The objective is only partly taught.
+  - Evidencia: Read all 19 slides in both decks. None includes #include <stdexcept> or throw "...". The table does not claim a header for its types, so the table itself is not wrong.
+  - Propuesta: Not fixed because the fix would mean inventing content. The instructor should either add a short throw "texto" vs throw std::invalid_argument contrast, or reword the objective to 'los de la biblioteca estándar'. The en side needs the same decision.
+- **w15** · auditoría · code-wrong · low · `ppts/cpp/programacion-avanzada/es/w15.es.yaml` s9 code_output / 14 quiz
+  - Two snippets, rango.cpp/range.cpp and orden.cpp/order.cpp (es and en), declare a catch parameter 'e' and never use it. g++ and clang++ accept this silently. Visual Studio, the course compiler, is known to report C4101 'unreferenced local variable' for this, so students may see warnings the slide does not mention. The slides do not claim the code compiles warning-free, so this is not a factual error.
+  - Evidencia: g++ 13 and clang++ with -std=c++20 -Wall -Wextra: no warnings and correct output. MSVC was not available to confirm C4101.
+  - Propuesta: Left as is. The optional fix is catch (const std::out_of_range&) and catch (const std::exception&) without a name, which needs no line-count change.
+- **w15** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w15.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the house rule asks for tú. The same wording appears in all 18 Spanish decks of this course (w00 to w17), so it is a course-wide convention, not a w15 defect. Changing only w15 would create an inconsistency.
+  - Evidencia: grep across es/*.yaml found the identical title in all 18 decks. The en decks all say 'you will be able to'.
+  - Propuesta: Not fixed. If the instructor wants tú here (for example 'Al terminar la sesión podrás…'), it should change in all 18 decks at once.
+- **w16** · auditoría · language · low · `ppts/cpp/programacion-avanzada/en/w17.en.yaml` s1 cover and others
+  - Outside my files: w17.en also uses 'how it is marked' (cover subtitle, an agenda card, a lede) and 'twenty per cent' (two places). My w16 closing now says 'graded', so the two decks word this slightly differently.
+  - Evidencia: grep -n 'marked\|per cent' en/w17.en.yaml: lines 15, 27, 113, 167, 187.
+  - Propuesta: Not my file. Needs fixing in ppts/cpp/programacion-avanzada/en/w17.en.yaml.
+- **w16** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w16.es.yaml` s10 pitfalls / 11 quiz / 12 trace
+  - 'No se cuelga como un ciclo' is true for unoptimized (Debug) builds, which students run by default in Visual Studio. With optimization it can fail: g++ -O2 turns 'n + cuenta(n - 1)' into a loop that hangs, and clang -O2 exploits the undefined behavior. The quiz answer A is still the only defensible one in the course's Debug setting.
+  - Evidencia: g++ -O2 sinbase.cpp: still running when killed after 5 s by timeout (exit 124). clang++ -O2: exit 48 with no output. -O0 on both compilers: SIGSEGV. Measured depth at -O0 with an 8 MB stack: about 261,700 calls ('miles' holds).
+  - Propuesta: Left as is because the course runs in VS Debug. Suggest that the instructor mention Release builds in class.
+- **w16** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w16.es.yaml` s3 objectives
+  - es says 'Al terminar la sesión el alumno podrá…' (third person) while en says 'you will be able to'. The house rule asks for one register across the deck.
+  - Evidencia: grep shows all 18 es decks of this course use 'el alumno podrá' and all en decks use 'you'. This is a course-wide convention, not a w16 slip.
+  - Propuesta: Not changed, to stay consistent with the other 17 decks. If the instructor wants tú here, change it course-wide.
+- **w16** · auditoría · pedagogy-order · low · `ppts/cpp/programacion-avanzada/es/w16.es.yaml` s17 lab
+  - The lab asks students to fix the output with a mutex. The session names mutex and lock_guard only on a concept slide and never shows their syntax (#include <mutex>, std::lock_guard<std::mutex>). Nothing comes from a later week, but the code is not shown anywhere.
+  - Evidencia: grep of the earlier decks finds no mutex or thread content. Checked that a lock_guard version removes all interleaving: 0 torn lines in 200 runs.
+  - Propuesta: No change, since adding a code slide would be new content. Flagged for the instructor.
+- **w16** · auditoría · parity · low · `ppts/cpp/programacion-avanzada/en/w16.en.yaml` s10 pitfalls
+  - The Error 03 title is 'Recalcular lo mismo mil veces' in es and 'Recomputing the same thing' in en. The difference is rhetoric only; the facts are the same.
+  - Evidencia: Compared the two YAML files side by side.
+  - Propuesta: Not a factual difference, left as is.
+- **w16** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w16.es.yaml` s15 concept, 17 lab, 19 homework
+  - 'entreverarse' / 'salida entreverada' is standard Spanish (RAE, no regional mark) but uncommon in Mexico, where 'revuelta' or 'mezclada' is more usual. A reader may find it odd, but it does not break a house rule.
+  - Evidencia: grep: these are the only uses of the word across all Spanish decks.
+  - Propuesta: Not changed. The instructor can switch to 'revuelta' if preferred.
+- **w16** · revisión · language · low · `ppts/cpp/programacion-avanzada/en/w00.en.yaml` sevaluation table (lines 210-212)
+  - Outside my files: the grading table gives the partial dates in British order ('Tuesday 8 September', 'Tuesday 20 October', 'Tuesday 17 November'). w08.en, w13.en, w17.en and now w16.en use 'Tuesday, Month D'.
+  - Evidencia: grep -n 'Tuesday [0-9]' en/*.yaml returns only w00.en lines 210-212 after my w16 fix.
+  - Propuesta: Not my file. Fix in ppts/cpp/programacion-avanzada/en/w00.en.yaml (e.g. 'Tuesday, September 8').
+- **w17** · auditoría · technical-claim · low · `ppts/cpp/programacion-avanzada/es/w17.es.yaml` s8 method (also 14 takeaways), both languages
+  - Slide 8 says 'Cuenten los new y los delete. Si no dan el mismo número, hay una fuga que encontrar' ('If the numbers differ, there is a leak to find'). As a textual count this is only a heuristic. Releasing on every exit path routinely gives one new and two deletes with no leak. Equal counts also do not rule out a leak: a non-virtual base destructor leaks even with matched counts, and w12 teaches exactly that.
+  - Evidencia: Wrote /tmp/claude-0/audit/scratch/cpp2-w17/count.cpp: one 'new int[n]' and two 'delete[]', one on an early return. Built it with g++ -std=c++20 -Wall -Wextra -fsanitize=address. It printed '-1 4' and exit=0, with no LeakSanitizer report. The deck's wording does match w12's teaching ('new y delete van en pareja', 'Cada new tiene su delete').
+  - Propuesta: Not changed. It is the author's deliberate rule of thumb and is consistent with w12. The instructor may want to soften it, for example to 'si no dan el mismo número, revisen cada camino hasta su delete'.
+- **w17** · auditoría · consistency · low · `ppts/cpp/programacion-avanzada/es/w17.es.yaml` s13 table (both languages)
+  - At session 17 of 17, 'Lo que queda del semestre' lists 'Tercer parcial, Martes 17 de noviembre' as still ahead. The rest of the course ties the third partial to session 16: the w15 closing says 'La próxima sesión, recursión e hilos, y el tercer parcial', and the w16 cover covers 'la logística del tercer parcial'. In the syllabus, the three dates fall exactly in weeks 6, 12 and 16 counted from Mon 3 Aug 2026 (the third is listed under week 16), so week 17 would come after 17 November.
+  - Evidencia: Checked with Python that 2026-09-08, 2026-10-20 and 2026-11-17 are all Tuesdays, six and four weeks apart. Syllabus text: week 16 '16.6 Repaso y tercer examen parcial', evidence 'Tercer examen parcial'. The decks' own week numbering does not map cleanly onto calendar weeks (w08 carries the 8 September logistics), so session 17 could still fall before the exam.
+  - Propuesta: Not changed, because the real calendar cannot be confirmed. If session 17 falls after 17 November, drop the row or retitle the table.
+- **w17** · auditoría · other · low · `ppts/cpp/programacion-avanzada/es/w17.es.yaml` s11 steps (both languages)
+  - The syllabus's week 17 includes '17.3 Comparación del lenguaje del curso con otros según el dominio de aplicación', and RAA08 says students present that comparison in the integrative project's presentation. The five-step presentation on slide 11 (problem, design, demo, one decision, questions) has no such step, and no slide mentions it.
+  - Evidencia: Read the COM103 syllabus text that another agent extracted, /tmp/claude-0/audit/scratch/cpp1-w00/syllabus-com103.docx.txt (read-only), for the week 17 row and RAA08. The rubric weights on slide 7 (40/25/20/15) match the syllabus exactly.
+  - Propuesta: Not changed, because the fix would mean inventing content. The instructor should decide whether the presentation needs a sixth item or a mention of the language comparison.
+- **w17** · auditoría · language · low · `ppts/cpp/programacion-avanzada/es/w17.es.yaml` s6 tiers, 8 method, 10 concept, 14 takeaways
+  - A reader checking the 'tú throughout' rule might flag the Spanish deck, because it addresses the teams with plural 'ustedes' imperatives ('Denle', 'Busquen', 'Cuenten', 'repartan', 'de ustedes'). I judged this not a defect.
+  - Evidencia: In Mexican Spanish, 'ustedes' is the only plural of 'tú', so this is the same informal register, with no usted singular and no vosotros. The same course uses it for team instructions elsewhere: w00 'Saquen los ejecutables', w01 lab 'Creen un proyecto... Encuentren el error'. The objectives keep the course-wide 'el alumno podrá…' heading, used in 144 decks.
+  - Propuesta: No change needed.
+
+## C# · Análisis y Diseño de Algoritmos
+
+105 entradas, de mayor a menor severidad.
+
+- **w01.1** · auditoría · technical-claim · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s22 stat
+  - The stat says '25 de 25 sondas del repositorio corren solo con dotnet run' and that the count is 'verificable con un script del propio repositorio'. The repository (github.com/davidowa/learning-hub, named on the closing slide) contains no probes and no such script, so the number cannot be checked and the claim about the script is false as things stand.
+  - Evidencia: git ls-files | grep -E '\.cs$|\.csproj$|\.ps1$|\.sh$|sonda|probe' returns nothing. A grep of the repo for probe or sonda scripts found only unrelated notebooks.
+  - Propuesta: Not edited, because the right fix lives outside the YAML. Either the instructor commits the 25 probes and the counting script to the repo, or the stat and its note get reworded. This is the instructor's decision.
+- **w01.1** · revisión · confirmado
+  - 5. slide 22 stat '25 de 25 sondas' / script in the repo does not exist
+  - Evidencia: git ls-files has no .cs, .csproj, .ps1 or .sh file and nothing named sonda or probe. No such file was ever deleted in history either. So the claim is unverifiable and the 'script del propio repositorio' part is false today. Whether to commit the probes or reword the stat is the instructor's call.
+- **w01.1** · revisión · confirmado
+  - 13. slide 21 trace program never shown; p.dll same name as failing project p
+  - Evidencia: This is real but minor. Fixing it means new content (a caption or a renamed project), and the rows are measured data, so I did not edit them. Left for the instructor.
+- **w01.1** · revisión · confirmado
+  - 15. divider 'each link unlocks the next' vs pitfall 01 'install the SDK while waiting'
+  - Evidencia: The SDK does not depend on the Student Pack, so this is a mild inconsistency in the author's framing. Left for the instructor.
+- **w01.1** · revisión · confirmado
+  - 16. slide 10 'only the SDK is required' vs slide 13 graded checklist requiring Rider licensed and Student Pack approved today
+  - Evidencia: This is a real contradiction. Slides 6 and 12 also say the verification can take days, yet it is graded today. It is a grading-policy decision for the instructor.
+- **w02** · auditoría · technical-claim · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s8 compare / 14 code / 15 code_output
+  - The model algorithm's abort branch can never run. The MIENTRAS (while) loop only exits once cama >= 60.0, so the next SI cama >= 60.0 test is always true and 'SI NO abortar' (and C#'s else Console.WriteLine(aborto)) is dead code. The note on slide 8 says the right-hand algorithm 'dice qué hacer si no se alcanza', and the Riesgo annotation on slide 14 says what really happens when heating fails: the loop never ends. So the plan does not handle the failure it claims to handle. A student applying the two-person test to this plan will find this.
+  - Evidencia: Built and ran the slide 15 C# verbatim (.NET 10). The output matches the panel, and after the loop cama is 70.0, so the else branch is unreachable for any start value (cama < 60 loops until >= 60). The same structure is in slide 8 (arranque.txt) and slide 14 (arranque_impresora.txt).
+  - Propuesta: Not fixed: the honest fix is new content, a bounded loop such as 'MIENTRAS cama < 60.0 Y intentos < N' plus a counter. It would touch three code blocks in each language, though the printed output stays the same. Needs the instructor's decision. The alternative is to soften the slide 8 note so it no longer claims the plan handles the not-reached case.
+- **w02** · auditoría · technical-claim · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml` s8 compare / 14 code / 15 code_output
+  - Same as the es finding above: 'ELSE abort' / else Console.WriteLine(abort) can never run, because the WHILE only exits at bed >= 60.0. Yet the slide 8 note says the algorithm 'says what to do if it is not reached'.
+  - Evidencia: Ran the slide 15 en program verbatim: bed ends at 70.0 and the else branch is unreachable for any start value.
+  - Propuesta: Not fixed, for the same reason as es: needs an attempt cap in the loop condition (new content), which is the instructor's call.
+- **w03** · auditoría · technical-claim · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s11 code_output (also 13)
+  - The slide says the generated Program.cs is only 'Console.WriteLine("Hello, World!");', 40 bytes and 1 line. The .NET 10 SDK available here (10.0.112) generates a 2-line, 103-byte file, whose first line is '// See https://aka.ms/new-console-template for more information'. With that file, slide 13's ImplicitUsings=disable error would be at (2,1), not (1,1). The course's w01.1 deck says it measured 40 bytes and 1 line with SDK 10.0.302, which I cannot run here, so I did not change it.
+  - Evidencia: dotnet new console -o banco (SDK 10.0.112, templates 10.0.12) gives Program.cs of 103 bytes and 2 lines. The template nupkg content includes the comment under csharpFeature_TopLevelProgram. With disable, the real template gives Program.cs(2,1): error CS0103. A 1-line file gives (1,1), as the slide shows. dotnet run prints Hello, World! and exits 0, which matches.
+  - Propuesta: Not changed. This is consistent with w01.1 ('Medido · SDK 10.0.302'). The instructor should confirm which SDK band the lab machines use. If it is 10.0.1xx, students will see 103 bytes and 2 lines, and the error at (2,1).
+- **w03** · auditoría · technical-claim · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/en/w03.en.yaml` s11 code_output (also 13)
+  - Same as in Spanish: 'this is ALL of the generated Program.cs', 40 bytes and 1 line, does not match SDK 10.0.112, which generates a 2-line, 103-byte file with the aka.ms comment.
+  - Evidencia: Same dotnet new test as for the Spanish deck.
+  - Propuesta: Not changed, because it depends on the SDK feature band (the author measured 10.0.302). Reported for the instructor to confirm.
+- **w08** · auditoría · description-mismatch · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w08.es.yaml + en/w08.en.yaml` s27 homework
+  - The homework brief asks only for a flowchart of the arming sequence and one justification paragraph. The format line asks for 'PDF y .cs', and the rubric gives 20 % to a 'Programa' that 'Corre con las tres entradas de clase y no lanza excepción'. The brief never asks for a program. The arming sequence reads no input, so 'the three class inputs' (abc, 999, 1502) belong to the slide 12 sample reader. The title 'Entrega en papel' also sits oddly with a Blackboard PDF and .cs.
+  - Evidencia: Slide 15's program has no Console.ReadLine. The three inputs appear only on slides 12 and 13 (output_label 'abc · 999 · 1502'). Weeks 6, 7 and 9 have homework briefs that name every rubric item.
+  - Propuesta: Not fixed because the right fix depends on what the instructor intended: either the brief also asks for the slide 12 reader as a .cs that survives abc, 999 and 1502, or the 'Programa' row is rewritten for the arming sequence (for example, it reproduces the trace on slide 16). Needs the instructor's decision in both es and en.
+- **w09** · revisión · confirmado
+  - pedagogy-order: struct[], class[], List<int> and checked are used in s12 and s25 before they are taught
+  - Evidencia: The terms are new, but the house rule only covers exercises. The homework uses only for and foreach, both taught this week. Students have seen the words class and struct (w02 previews them), and switch was taught in w07. This needs a content decision from the instructor (add a gloss or drop rows), not an audit fix.
+- **w10** · revisión · confirmado
+  - 1 cover: 'Tema 5.1' omits 5.2 although week 10 teaches it (not changed)
+  - Evidencia: Syllabus row 10 lists 5.1 and 5.2, and w14 uses a range ('Tema 6.2–6.3'), so 'Tema 5.1–5.2' would follow the course's own convention. The same heading is in ejercicios.es.md, soluciones.es.md, exercises.en.md and solutions.en.md, which are outside these two files. Fix it together in the two covers and the four md headings.
+- **w11** · auditoría · consistency · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` sw12 slides at YAML lines 225 and 473 (code_output title and takeaway); also en/w12.en.yaml same lines
+  - Week 12 says 'Math.Clamp es el ClampToLimit de la semana pasada' (en: 'last week's ClampToLimit'). Week 11 never defines a method called ClampToLimit: its clamps are ClampByRef (slides 10 and 12) and Probe.Clamp (slide 9).
+  - Evidencia: Searched the whole course for ClampToLimit: it appears only in w12.es and w12.en (lines 225 and 473). w11 has ClampByRef and Probe.Clamp.
+  - Propuesta: This must be fixed in w12.es.yaml and w12.en.yaml, which belong to another agent: rename the reference to ClampByRef, or to 'el Clamp de la semana pasada'. Not edited here.
+- **w11** · revisión · confirmado
+  - w12 refers to 'ClampToLimit', which w11 never defines
+  - Evidencia: The finding was correct when it was reported. At HEAD (commit 9ec0be4, another agent) w12.es and w12.en lines 225 and 473 now read 'ClampByRef', which matches w11 slides 10 and 12. Nothing is left to do in w11.
+- **w11** · revisión · confirmado
+  - en '20 %' / '40 %' spaced percent
+  - Evidencia: Strict American style is '20%', but the spaced form is the house convention: 97 against 1 in this course's English decks, and about 660 against 86 repo-wide. The auditor's 'only one does not' undercounts, because several rubrics elsewhere use '30%', but the conclusion stands. Changing it is a global decision, not a w11 fix.
+- **w13** · auditoría · description-mismatch · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s26 takeaways
+  - Takeaway 3 ('El += cuadrático tiene remedio: StringBuilder hace 160 000 append en 9 ms...') summarizes content the deck never shows. No slide presents StringBuilder or a 160 000-append measurement. Slide 21 only shows the cost of +=. The Spanish also uses the English word 'append' lowercase and uninflected.
+  - Evidencia: grep StringBuilder in the course YAMLs: only this takeaway (es and en). The 9 ms cannot be reproduced; here 160 000 appends of a 7-char piece took a median of 1 ms in Release on Linux. Fixing it means either adding a StringBuilder slide or replacing the takeaway with a slide-21 recap, which is an editorial choice for the instructor.
+  - Propuesta: Not fixed. Instructor decision: add a short StringBuilder code_output slide after slide 21 (that also needs the slide counts kept equal in es and en), or replace the takeaway with a slide-21 recap such as 'four times the pieces cost 15.7 times more in Release'.
+- **w13** · auditoría · description-mismatch · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s27 homework
+  - The brief and the Evidencia rubric row ask for 'los siete casos de prueba' / 'the seven test cases', but no slide defines seven cases. The class validator is tested against five inputs (slide 18), and ejercicios.es.md 13.2 also lists five.
+  - Evidencia: Slide 18 has 5 rows. ejercicios.es.md line ~505 says 'Pruébalo con cinco entradas'. Seven never appears elsewhere in the deck. The cases are probably 5 validator inputs plus 2 parse lines, but that is a guess, and inventing the two extra cases is out of scope.
+  - Propuesta: Not fixed. The instructor should either list the seven cases (e.g. in the brief or in ejercicios) or change 'siete' / 'seven' to the number actually defined.
+- **w16** · auditoría · code-wrong · medium · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w17.es.yaml (NOT my file)` sError 04 code_output (around line 319)
+  - w17.es repeats the same field-name error: it initializes a Sample with 'Estado = Status.Ok', but the Sample struct taught in w15.es has the field State, so the slide does not compile.
+  - Evidencia: Same CS1061 that I reproduced for w16.es with the w15.es struct.
+  - Propuesta: Must be fixed in es/w17.es.yaml: Estado = Status.Ok -> State = Status.Ok.
+- **w01.0** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s11 table (same in en)
+  - The title says 'El mismo programa, preguntado de cinco maneras' over a table with six rows. The sixth row, 'En hexadecimal' / 'In hexadecimal', sits under the header 'Cómo se pregunta' but is a notation, not a way of asking.
+  - Evidencia: Rows: PowerShell 7, cmd.exe, dotnet run, Git Bash, Desde .NET (5 ways), then En hexadecimal. The hex values are correct: 0xE0434352 = -532462766 as int32.
+  - Propuesta: Not changed. The five ways are counted correctly and the hex row is labelled as a notation. Flagged because a reader counting rows sees six. If the instructor wants it fixed, the cheapest change is to retitle to mention the hex row.
+- **w01.0** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck speaks to the reader as tú. The English deck says 'you will be able to'.
+  - Evidencia: grep shows the identical title in all 18 Spanish decks of this course and in the w01 decks of cpp, mysql, office, python and POO. It is the house formula, not a usted slip in this deck.
+  - Propuesta: Left as is: changing one deck would break consistency with every other Spanish deck. This is a course-wide decision for the instructor.
+- **w01.0** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s23 steps (same in en)
+  - 'La sonda corre frente al salón en cada sesión' / 'The probe runs in front of the room' uses the term 'sonda/probe' before it is defined. It first appears in w01.1 (the second half of the same week-1 session, slide 'output_label: La sonda').
+  - Evidencia: grep 'sonda' in es/*.yaml: first defining use is w01.1.es.yaml:273, plus w01.1:404.
+  - Propuesta: Left: it is defined later in the same session, and replacing it would change the author's course term. Flagged for the instructor.
+- **w01.0** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s24 lab / 26 homework (same in en)
+  - The lab says the sheet is handed in at the end of the session, but the homework asks to upload 'la hoja del diagnóstico' before the next session. The homework rubric's 'Explicación' asks why it 'salió distinto', while the lab explicitly allows 'Si no fallaste... por qué acertaste'.
+  - Evidencia: Lab block 'Entrega: La hoja al final de la sesión'; homework brief 'Sube la hoja del diagnóstico...'; format 'PDF o imagen'; rubric row 'Un renglón que diga por qué salió distinto'.
+  - Propuesta: Not changed. It can be read as paper in class for participation plus a photo upload for the homework grade. Flagged as a possible inconsistency for the instructor.
+- **w01.0** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s18 steps (same in en)
+  - The slide shows minute counts (first five minutes, minute five to fifteen, minute sixteen), which may look like it breaks the 'no durations on slides' rule.
+  - Evidencia: These numbers are the attendance policy, not activity durations. The same wording appears in the w01 decks of the Python, VBA and office courses.
+  - Propuesta: Not a defect: the rule covers session and activity durations, not stated policy.
+- **w01.0** · revisión · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s4 roadmap (same in en)
+  - Block 04 'Colecciones y proyecto: Arreglos, cadenas, ordenamiento, búsqueda y proyecto' leaves out Tema 7 (Estructuras: registros, enumeraciones), which the syllabus places in week 15. The w02 and w03 decks already add 'registros', and w04 to w17 retitle the block 'Colecciones, estructuras, proyecto'. The block 01 title also changes three times across the course: 'Pensamiento y herramientas', 'Pensar, y la cadena de herramientas', 'Pensar y la cadena de herramientas'. The instructor flagged this same kind of roadmap drift in VBA.
+  - Evidencia: I parsed the roadmap slide of all 36 decks in this course. The syllabus week 15 entry reads 'Tema 7. Estructuras ... registros, enumeraciones y arreglos de estructuras'.
+  - Propuesta: Not changed. w01.1, the second half of the same session and not assigned to me, has the identical roadmap, so changing only w01.0 would make the two halves disagree. This needs one course-wide roadmap text applied to w01.0 through w17 in both languages.
+- **w01.1** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s21 trace
+  - The program behind 'El mismo binario, tres lanzadores' is never shown in this deck. Its file, p.dll, has the same name as the project p that fails to build on slides 19 and 20, so a reader could think the failing project prints 'media ...'.
+  - Evidencia: No slide shows the source. I confirmed the rows with the reconstructed mean program from the previous finding.
+  - Propuesta: Not changed, because fixing it means adding source or renaming the project, which is new content. The instructor could add a one-line caption or give this project another name.
+- **w01.1** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s15 code
+  - The 'Lo que no está' / 'What is missing' annotation promises that the missing using lines, class and Main are generated and that 'hoy lo vamos a abrir'. This session only opens the using file (slide 18). The class and Main are synthesized by the compiler, not written to a file, and they are first shown in w03.
+  - Evidencia: Checked slides 17 and 18 here, and w03.es 'El archivo sí es una clase'.
+  - Propuesta: Left as is because it is loosely true for the using lines. Worth tightening if the instructor agrees.
+- **w01.1** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s5 divider / 6 steps / 12 pitfalls
+  - The divider says each link unlocks the next and that skipping one blocks the following one. Pitfall 01, however, says to install the SDK (link 05) while link 02 is still pending, because it needs no license. That contradicts the chain for the SDK.
+  - Evidencia: Read slides 5, 6 and 12 together.
+  - Propuesta: This is the author's framing, so I did not rewrite it. It is flagged for the instructor.
+- **w01.1** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s10 concept vs 13 steps
+  - Slide 10 says only the SDK is required and that Rider is not mandatory. Slide 13, the checklist graded today, requires Rider open with the academic license and the Student Pack approved, and slides 6 and 12 say that verification can take days.
+  - Evidencia: Read slides 6, 10, 12 and 13.
+  - Propuesta: This is a grading-policy decision, so it was not edited. It is reported for the instructor.
+- **w01.1** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s6 steps / 8 tiers / 13 steps
+  - Since October 2024, JetBrains has offered Rider free for non-commercial use. The deck presents the Student Pack academic license as the way to get Rider. That route still exists, so nothing on the slides is false, but it is no longer the only one.
+  - Evidencia: This is from my knowledge of JetBrains' licensing change (Rider and WebStorm became free for non-commercial use in October 2024). I did not re-fetch it.
+  - Propuesta: No edit, because nothing stated is false. The instructor may want to mention it.
+- **w01.1** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s7 method
+  - 'Con el personal el paquete no se aprueba' could look too absolute to a reader. I checked it and it is not a defect for UP.
+  - Evidencia: GitHub docs (apply-to-github-education-as-a-student.md, fetched): when recent applicants from a school verified with an academic email, later applicants from that school must also use one. The academic email can be added to an existing account.
+  - Propuesta: No change needed.
+- **w01.1** · revisión · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml + en/w01.1.en.yaml` s10 concept / 22 stat
+  - The phrase 'Rider es un IDE compatible, no el verbo obligatorio' / 'not the required verb' is unidiomatic in both languages, and a student is unlikely to know what 'verb' means here.
+  - Evidencia: Read slide 10 lead and slide 22 note in both decks.
+  - Propuesta: Not edited. It appears to be the author's deliberate phrase, repeated in two slides per deck. It is flagged for the instructor, who could use something like 'no una herramienta obligatoria' / 'not a required tool'.
+- **w02** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s14 code / 15 code_output / 16 compare
+  - Not a defect, though it looks like one: the strings 'iniciando impresion' and 'la cama no alcanzo el setpoint' have no accents, and degrees are written 'C'.
+  - Evidencia: Grepped all 18 es decks in this course: no Console string anywhere uses accented characters, so ASCII-only console output is a deliberate course convention. The pseudocode on slide 14 copies the program output so that the slide 16 diff ritual (expected vs real) still matches.
+  - Propuesta: Left as is (course convention, needed for the diff on slide 16).
+- **w02** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s3 objectives
+  - Not changed: the title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú (and the English says 'you will be able to').
+  - Evidencia: The same title appears in 146 es decks across all courses ('vas a poder' / 'podrás' appear only 6 times), including all 18 decks of this course. The instructor's known-defect list flags only the English 'the student'.
+  - Propuesta: Left as the house formula. Changing it would be a course-wide decision, not a per-deck fix.
+- **w02** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/en/w02.en.yaml` s7 table / 8 compare / 16 compare / 20 trace
+  - Not a defect, though it looks like one: the English deck quotes phrases with guillemets («Heat it until it looks right», «ready», «I designed it right», «Every loop needs an exit») instead of American quotation marks.
+  - Evidencia: The kit itself wraps every quote slide in «» for both languages (kit/deck.py line 866: f'«{text}»'). Guillemets also appear in English decks of mysql, python and csharp w16, so this is the house quote style.
+  - Propuesta: Left as is (house typographic convention set by the kit).
+- **w03** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s16 code_output (also 9 compare note)
+  - 'bin\Debug\net10.0 (0 archivos)' after the missing semicolon, and 'deja la carpeta de salida con cero archivos' on slide 9, are true only for a project that has never built. Slide 16's program is the slide 11 scaffold that was just run, and in that case the 5 old files remain.
+  - Evidencia: Never-built project: Build FAILED, and bin/Debug/net10.0 exists with 0 files (matches). Project that built earlier: 5 stale files remain. I verified the CS1002 at (2,35) and the 34-character line, and the caret in the comment does sit at column 35.
+  - Propuesta: Left as is because it is a measurement of a fresh project and is correct as such. The general claim in the takeaway (slide 25) was corrected instead.
+- **w03** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s13, 16, 19 code_output
+  - The output panels show the classic MSBuild logger summary ('Build FAILED.' / '0 Warning(s)' / 'N Error(s)'). On .NET 10, an interactive terminal uses the Terminal Logger by default and prints '<proj> net10.0 failed with N error(s)' and 'Build failed with N error(s) in Xs' instead. The classic text appears only with redirected output or -tl:off.
+  - Evidencia: dotnet build -tl:on printed 'Build failed with 1 error(s) in 1.2s'. Plain dotnet build with redirected output printed 'Build FAILED. ... 0 Warning(s) 1 Error(s)'. The error lines themselves (file(line,col): error CSxxxx: ...) are identical in both modes.
+  - Propuesta: Not changed. The diagnostics students must copy are the same either way. The instructor may want to tell students in class that their summary line will look different.
+- **w03** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s2 agenda / 20 pitfalls / 24 lab / 26 homework
+  - The deck keeps referring to 'los cinco errores de la sesión', but six distinct failing programs appear in Bloque 03: the missing semicolon (s16), int class (s19), and the four pitfalls (s20). The eyebrow 'Los otros cuatro' implies class plus four, but a student doing the lab could reasonably count the semicolon.
+  - Evidencia: I read all slides of both decks. Each of the six programs fails with its own first error (CS1002, CS1001, CS1001, CS0117, CS0103, CS1525), all verified by compiling.
+  - Propuesta: Not changed, because the count is defensible (s19 plus 'Los otros cuatro'). The instructor may want to name the five in the lab brief. The same applies to the en deck.
+- **w03** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s3 objectives
+  - The heading 'Al terminar la sesión el alumno podrá…' is in third person, while the sub-lines under it speak to tú ('lo que escribiste', 'escribió por ti'). This mixes registers within the slide. The same heading is used in every Spanish deck of this course (w01.0, w01.1, w02, w04, ...).
+  - Evidencia: grep across es/*.yaml shows 'el alumno podrá' in every deck. The English counterpart is 'you will be able to'.
+  - Propuesta: Not changed in w03 only. The known-defects list treats inconsistent objective titles across a course as a defect, so this has to be decided course-wide (e.g. 'Al terminar la sesión podrás…' in every deck).
+- **w03** · auditoría · parity · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s12 code
+  - The English ImplicitUsings annotation adds 'and that is measured on the next slide', and the Spanish one does not. No fact differs.
+  - Evidencia: I tried adding ', y eso se mide en la siguiente lámina' to the Spanish annotation. It grows to 3 lines and pushes the Nullable annotation to 9.81 in, past the 9.70 in limit (lint).
+  - Propuesta: Reverted my attempt. The difference is only a forward pointer, and the Spanish text has no room for it without shrinking type.
+- **w03** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s7 table
+  - The table title asks 'dónde cae C#', and slide 6 says C# lives on the high rung. Yet the 'Muy alto nivel' example is also C#: 'rpm.Sum() da 10478'. A reader may wonder whether C# is high or very high level. The example is LINQ, the declarative style from w02. The same applies to the en deck.
+  - Evidencia: rpm = {1480,1502,1495,1533,1471,1509,1488} from w02 sums to 10478 (checked). w02 uses rpm.Sum() as its 'Declarativo' example.
+  - Propuesta: Not changed. It is defensible as a declarative sub-language, but the instructor may want to add a sentence in class.
+- **w04** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w04.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person. The rest of the deck uses tú, and the English title says 'you will be able to'.
+  - Evidencia: All 18 Spanish decks in this course and 145 Spanish decks repo-wide use this exact title, so it is the institutional template. Changing only w04 would make it inconsistent with w03 and w05.
+  - Propuesta: Not changed. If tú is wanted, change it in one sweep across all decks, e.g. to 'Al terminar la sesión podrás…', which 3 decks already use.
+- **w04** · auditoría · quiz-key · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s25 quiz
+  - The quiz has no speaker notes, so no answer key and no stated distractor rationale to check. The whole course has zero notes. Answer B (n stays 0) is the only defensible option.
+  - Evidencia: `int n = 0; n = n++; Console.WriteLine(n);` built with 0 warnings and 0 errors and printed 0. So A (1) is wrong, C (does not compile) is wrong, and D (1 plus a build warning) is wrong on both counts.
+  - Propuesta: I did not invent notes. The instructor could add 'Respuesta: B' with the distractor rationale.
+- **w04** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s14 code_output vs 15 compare
+  - Slide 14 says the compound operator inserts a cast the long form lacks. The next slide shows `canal += 1` failing with CS0266. Both are true, but neither slide gives the rule that reconciles them, so a reader sees a contradiction. The rule: the implicit cast applies only when the right operand is implicitly convertible to the left type. Constant 100 or 1000 converts to byte or short, but an int constant never converts to char.
+  - Evidencia: Slide 14: `crc += 100; ventana += 1000;` build succeeded and printed 44 and -32536. The long forms `crc = crc + 100; ventana = ventana + 1000;` give 2 errors, which confirms the title. Slide 15: `canal += 1;` gives CS0266 Cannot implicitly convert type 'int' to 'char'.
+  - Propuesta: No factual error on the slides. Adding the rule would be new content, and the note box is already full. Left for the instructor.
+- **w05** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s5 divider
+  - The lede says you need not trust the slide for the list of statement kinds 'porque el compilador la enumera solo' (because the compiler lists them itself). The compiler message lists only expression-statement forms, not the seven kinds in the slide-8 table. The English lede has the same issue.
+  - Evidencia: CS0201 output as above. Of the seven kinds in the slide-8 table, only assignment and invocation appear in the message. This is rhetorical framing in the author's voice, and the measured claim was corrected on slide 7.
+  - Propuesta: Not changed, to keep the author's narrative. Suggested wording: '...porque el compilador dice él mismo qué expresiones cuentan' / '...because the compiler itself says which expressions count'.
+- **w05** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s8 table
+  - The salto (jump) row groups 'break continue return' under 'Semanas 8 y 9'. But return already appears in w06 and w07 inside local functions and is formally taught in week 10 with functions, and break first appears with switch in week 7. The English table is the same.
+  - Evidencia: grep: w06.es lines 315-318 use return, w07.es line 380 uses break in switch, and w08.es teaches break/continue in loops. This is approximate rather than false.
+  - Propuesta: Left as is because the right replacement range is the author's call. Something like 'Semanas 7 a 10' would be more exact.
+- **w05** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s21 trace
+  - The title 'Los espacios no son el problema, el tamaño sí' sits over a row where a space is the problem ('4 2' fails). Only the verdict narrows it to spaces at the ends. The English title is the same.
+  - Evidencia: Ran: int.TryParse("4 2") gives False and 0, int.Parse(" 42 ") gives 42, and "2147483648" gives OverflowException with Parse/Convert and False and 0 with TryParse. Every trace row matches. Convert.ToInt32 also trims, so 'los tres' holds.
+  - Propuesta: Left as is because the verdict explains it. A possible tightening would be 'Los espacios de los extremos no son el problema...'.
+- **w05** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s18 code
+  - Line 2 uses the null-coalescing operator ('Console.ReadLine() ?? ""'). No slide in this course names or explains it, before or after. Slide 19 shows why the warning appears without it, but students meet the operator unexplained. The English deck is the same.
+  - Evidencia: A grep of every es/en deck finds '??' only in w05. A compile of slide 18 confirms exactly two CS8600 warnings, on lines 5 and 9 (sMuestras and sLectura), and none on line 2, as the Riesgo annotation says.
+  - Propuesta: Not changed. Explaining the operator would mean adding content, and the annotation slots are full. Suggest a word in the speaker notes, or one line on slide 19.
+- **w05** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s25 lab / 27 homework
+  - Three checked conversions require converting canal (a char) with a TryParse. The deck only shows int.TryParse and double.TryParse, never char.TryParse. Also, 'revisar el bool' in week 5 can only mean printing it, because if arrives in week 6. Slide 18 says as much ('a partir de la semana 6 será una condición'). The English deck is the same.
+  - Evidencia: A grep of earlier weeks (w01.0 to w04) finds no TryParse, Parse or ReadLine. char.TryParse appears in no deck of the course.
+  - Propuesta: Not changed. It follows the same TryParse pattern, so it is defensible. The instructor may want to mention char.TryParse aloud.
+- **w06** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s22 quiz
+  - The quiz source uses an int[] initializer and foreach. Loops are weeks 8 and 9 and arrays are week 13. The question only asks the student to evaluate the condition `r <= 1480 || r >= 1520` on the seven readings, and || was taught in week 4.
+  - Evidencia: w02.es shows the same seven-reading int[] with for/goto/foreach in a demo, so students have seen the shape. No week 1 to 5 deck teaches foreach or arrays. I ran it and it prints 3, so option B is the only correct answer (A=2 is the inclusive count, C=0 and D=7 are wrong).
+  - Propuesta: Not changed. This is a read-and-predict question on a construct already shown in w02, and rewriting it without the loop would be a structural rewrite. Flagged for the instructor.
+- **w06** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s22 quiz
+  - The question says 'Con la regla exclusiva', but this deck never names the course rule 'inclusiva' or the other one 'exclusiva'. The stat slide calls it only 'la otra convención'. The name first appears in w13 ('la convención inclusiva').
+  - Evidencia: grep across the course finds 'inclusiva' only in w13. The quiz code shows the rule explicitly, so the question can still be answered.
+  - Propuesta: Not changed. The naming matches w13 and the code disambiguates it. Same situation in en ('Under the exclusive rule').
+- **w06** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s18 code
+  - 'El else final ... Sin él quedarían lecturas sin clasificar' is true as a design idea. For this exact return-based function, removing the else is a compile error, not silently unclassified readings.
+  - Evidencia: I removed `else return "sobrevelocidad";` and compiled. Result: error CS0161 'Banda(int)': not all code paths return a value. Same in en ('Without it some readings stay unclassified').
+  - Propuesta: Not changed. The annotation is about the ladder concept, not a claim about the compiler, and it is not false.
+- **w06** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú.
+  - Evidencia: Across all ppts/*.es.yaml, 140 decks use exactly this title, so it is the house formula. The instructor's known-defect list flags only the English 'the student' variant. The en side here correctly says 'you will be able to'.
+  - Propuesta: Not changed. It is a course-wide convention, and changing one deck would break consistency.
+- **w06** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s20 code_output
+  - The panel shows 'Build succeeded. / 0 Warning(s) / 0 Error(s)'. That is the classic MSBuild logger output. On .NET 10 in an interactive terminal, the terminal logger prints 'Build succeeded in N.Ns' instead.
+  - Evidencia: Redirected (non-TTY) dotnet build prints exactly the three lines shown, with 0 warnings and 0 errors for the reordered ladder, and the run prints 'Banda(-5) = en reposo' / 'Band(-5) = idle'. The same format is used in w02 and w03.
+  - Propuesta: Not changed. The output is genuine and the format is course-wide.
+- **w07** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w07.es.yaml + en/w07.en.yaml` s7 code vs 20 and 21 code_output
+  - Slide 7 says modo == 1 means 'modo automático' / 'automatic mode' (annotation 'Dilo en español primero'). Slides 20 and 21 use the same variable for the same machine, but there mode 1 is 'motor en jog' / 'drive jogging' and 'jog revisa'. A student could ask which one mode 1 is.
+  - Evidencia: Read slides 7, 20 and 21. The examples are independent and each one runs correctly. Only the meaning given to the value 1 differs.
+  - Propuesta: Not changed: aligning them means rewriting example code or inventing a new mode mapping. Left for the instructor to decide (for example, rename the jog case or call slide 7's mode 'modo 1').
+- **w07** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w08.es.yaml + en/w08.en.yaml` sw08 code annotation 'El primer break del curso' / 'The course's first break' (es line 279)
+  - w08 calls its do-while break 'the first break of the course'. But w07 (slides 20 to 22) already uses break and builds a whole method slide around it. It is the first loop break, not the first break.
+  - Evidencia: w07 slide 20 has 'break;' in a classic switch, and slide 22 is titled 'El break de hoy todavía no es el break del ciclo'. In w08.es, line 279 has the label 'El primer break del curso'.
+  - Propuesta: Lives in another deck (w08), so I did not touch it. Suggested fix there: 'El primer break de un ciclo' / 'The first loop break'.
+- **w07** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English deck says 'you will be able to'. It looks like a register break, but it is the convention across the repository.
+  - Evidencia: grep across all es decks: 131 use 'el alumno podrá…', 19 use 'podrás…' and 2 use 'vas a poder…'. Every C# es week uses 'el alumno podrá'.
+  - Propuesta: Not changed: changing one deck would break the convention of the whole course. If the instructor wants tú here, it is a course-wide change ('Al terminar la sesión podrás…').
+- **w08** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w08.es.yaml + en/w08.en.yaml` s14 code_output
+  - Not a defect, reported because a reader may check it. The panel rewraps the real first line of the exception over four lines and leaves out the three stack-trace lines.
+  - Evidencia: Real run with input abc: 'Unhandled exception. System.FormatException: The input string 'abc' was not in a correct format.' followed by 'at System.Number.ThrowFormatException...', 'at System.Convert.ToInt32(String value)' and 'at Program.<Main>$...'. The message text on the slide matches word for word (.NET 10).
+  - Propuesta: Kept as is. The panel is a word-for-word truncation of the real output. Adding the stack trace would overflow the panel and show machine-specific paths.
+- **w08** · auditoría · code-wrong · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w08.es.yaml + en/w08.en.yaml` s13 code_output
+  - Not a defect, reported because a reader may check it. The slide shows a three-line fragment (lines 9 to 11 of slide 12) that does not compile alone. Its output panel leaves out the lines the user types, which a real console would echo.
+  - Evidencia: I built and ran the full slide 12 program with stdin abc, 999, 1502. The output matches the panel exactly in both languages: rechazada 'abc', rechazada '999', aceptada 1502 en 3 intentos / accepted 1502 on attempt 3. The output_label names the three inputs.
+  - Propuesta: No change. The output is correct for the full program.
+- **w08** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w08.es.yaml + en/w08.en.yaml` s17, 19, 21, 22 code_output
+  - Not a defect, reported because a reader may check it. Slide 26 says for is week 9 material, yet slides 17, 19 and 22 use for loops and arrays.
+  - Evidencia: es/w02.es.yaml already shows for loops (lines 340 to 343) and the same rpm array summed with a for (lines 412 to 415). The quiz (slide 20) and the homework use only while, do-while, break and continue.
+  - Propuesta: No change. for and arrays were already shown in week 2, and nothing graded this week depends on them.
+- **w09** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w09.es.yaml` s12 table, 25 pitfalls
+  - The foreach table and pitfalls 03 and 04 rely on struct[], class[], List<int> and the checked keyword. None of these has been taught in weeks 1 to 9: w02 says struct arrives in week 15, there is no class or List before w09, and in w04 checked appears only inside a compiler error message. This is presented content, not an exercise, so the house rule on exercises is not broken, but students meet the terms with no introduction.
+  - Evidencia: Grepped es/w01*-w08: 'List<' gets no hits; 'struct' appears only as 'La semana 15 construye ... con struct'; 'class ' appears only as a keyword-as-identifier error (w03) and as an aside in w02; 'checked' appears only in the w04 CS0220 message.
+  - Propuesta: Not changed. Removing the rows would mean rewriting the slide. The instructor should decide whether to add a one-line gloss or drop rows 2, 3 and 5. The same applies to the English deck.
+- **w09** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w09.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in the third person, while the rest of the deck addresses the student as tú. The English deck says 'you will be able to'.
+  - Evidencia: Across ppts/, 147 Spanish decks use 'el alumno podrá…' and 5 use 'vas a poder…'. It is the course-wide convention (w08 and w10 identical).
+  - Propuesta: Left as is. Changing one deck would break consistency with the other 16 weeks of the course. This is a global decision for the instructor.
+- **w10** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: This exact title appears in 147 Spanish decks in the repo, against 5 that say 'vas a poder', and in all 18 decks of this course. The instructor's review only flagged the English 'the student will be able to' as a defect. Changing one week would break consistency across the course.
+  - Propuesta: Not changed. If the instructor wants tú here, it should be changed course-wide, for example to 'Al terminar la sesión podrás…'.
+- **w10** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w10.es.yaml + en/w10.en.yaml` s1 cover
+  - The cover unit says 'Tema 5.1'. The syllabus assigns week 10 both 5.1 (user-defined functions) and 5.2 (passing parameters by value), and the deck teaches 5.2 in block 3. 5.2 is named on no cover, since w11 is 5.3.
+  - Evidencia: Extracted syllabus-com101.docx, row 10: '5.1 Funciones definidas por el usuario (declaración y uso). 5.2 Paso de parámetros por valor.'
+  - Propuesta: Not changed, because the same 'Tema 5.1' heading is in ejercicios.es.md, soluciones.es.md, exercises.en.md and solutions.en.md, which I may not edit. Changing only the cover would desync them. If the instructor agrees, change it to 'Tema 5.1–5.2' in the cover and the four md headings together.
+- **w10** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w10.es.yaml + en/w10.en.yaml` s21 code_output
+  - This slide uses ref (ReplaceRef(ref src)) one week before ref is taught. That looks suspicious, but it is not a defect: it is a demo, not an exercise, and week 11 builds on it on purpose.
+  - Evidencia: w11.es says 'ref solo entra si vas a reemplazar el arreglo, como se midió la semana pasada' and has the slide 'El agujero que ya estaba abierto desde la semana pasada'. No lab, quiz or homework in w10 requires ref. The output 0, 0, -1 was verified by running it.
+  - Propuesta: No change needed; it is an intentional preview.
+- **w10** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w10.es.yaml + en/w10.en.yaml` s8, 10, 14 code_output
+  - The build panels show the classic MSBuild summary ('Build succeeded.' with Warning(s)/Error(s) counts). In an interactive terminal, .NET 10 uses the terminal logger by default and prints 'Build succeeded with 1 warning(s) in 4.8s' instead.
+  - Evidencia: dotnet build -tl:off (and redirected output) printed exactly the panel text: CS8321 at (1,13), CS8421 at (6,22), CS0103 at (2,19), with matching counts. dotnet build -tl:on printed the terminal-logger form. The diagnostics themselves match the panels word for word.
+  - Propuesta: Not changed. The panels equal real output under the classic logger, and every week of the course uses this format.
+- **w10** · revisión · other · low · `(process) ppts/csharp/analisis-y-diseno-de-algoritmos/{es,en}/w10.*.yaml` sn/a
+  - Process note, not a slide defect. The previous auditor committed its changes as 9c1c864 and pushed them to origin/main. So `git diff` on the working tree showed nothing, and I reviewed `git show 9c1c864` instead. My corrections are uncommitted working-tree edits on top of 9c1c864, limited to the two w10 YAML files. I ran no state-changing git command.
+  - Evidencia: git log shows 9c1c864 as the last commit touching these files. `git diff -- <the two files>` now shows only my edits.
+  - Propuesta: Nothing to fix in the decks. Whoever commits next should include these two files.
+- **w11** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s6 concept
+  - The panel note says that if the keyword is missing on either side 'el compilador se detiene' (en: 'the compiler stops'). Slide 9 deliberately shows an exception. When a by-value overload exists, Probe.Clamp(reading) without ref compiles silently and calls the other method. The headline claim, that nobody shares a variable by accident, still holds.
+  - Evidencia: Built slide 9's Probe code: 0 warnings and 0 errors, output 39.5 / 30. So leaving out ref at the call does not stop the compiler when an overload exists. Slide 10 (no overload) does give CS1620 as the note says.
+  - Propuesta: Not changed. The deck sets up the exception on purpose two slides later, and qualifying the panel would need new wording that I did not want to invent. The instructor may want to add 'salvo que exista una sobrecarga sin ref' / 'unless a non-ref overload exists'. Applies to both es and en.
+- **w11** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/en/w11.en.yaml` s25 homework
+  - The English deck writes '20 %' and '40 %' with a space. American style is '20%'.
+  - Evidencia: The spaced form is the convention in every English deck of the repo: about 676 '%' occurrences in *.en.yaml files use the space, and only one does not.
+  - Propuesta: Left as is so this deck stays consistent with the rest of the repo. Changing it should be a global decision.
+- **w11** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' refers to the student in the third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: This title appears in 147 Spanish decks across the repo, against 5 that use 'vas a poder'. It is the instructor's convention, and it is third person, not usted.
+  - Propuesta: Not changed, because it is a course-wide convention. Flagged in case the instructor wants tú everywhere.
+- **w11** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s26 closing
+  - The closing presents Math.Clamp's thirteen overloads as something that will 'aparece' next week, but the w10 table already listed Math.Clamp with 13 overloads.
+  - Evidencia: Counted with reflection on .NET 10: typeof(Math).GetMethods().Count(m => m.Name == "Clamp") = 13, so the number is right. w10.es line 379 already shows it.
+  - Propuesta: Not changed. The claim is true and reads as narrative; only the 'revelation' framing repeats w10. Same in en.
+- **w11** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s21 quiz
+  - The question begins 'keep vale 999'. It could look like the banned filler 'vale', but here it is the verb valer ('keep holds 999').
+  - Evidencia: Read in context: it is the verb, not an interjection.
+  - Propuesta: No change needed.
+- **w12** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s3 objectives
+  - The objective 'Elegir entre Convert y TryParse, según quién escribió el texto' has no slide behind it. Outside the objective itself, TryParse never appears in the deck. Slide 23 only shows how Convert fails (null gives 0, '3.7' throws). The same applies to the English 'Choose between Convert and TryParse'.
+  - Evidencia: In w12, grep TryParse matches only the objective line. TryParse was taught in w05 and w11, so the choice can be derived, but no w12 slide states it.
+  - Propuesta: Not changed, because the fix means either adding content (one line contrasting TryParse on slide 23) or rewording the author's objective. That is the instructor's call. The defect is in both es and en, slide 3 and/or slide 23.
+- **w12** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s28 closing
+  - 'Las siete lecturas de rpm por fin caben en un solo nombre' (en: 'finally fit under a single name') presents arrays as new. But the same seven readings already sit in int[] rpm = { 1480, 1502, ... } in w08, w09, w10 and w11, and slide 6 of this deck uses double[] v with seven values.
+  - Evidencia: grep 'int\[\] rpm' finds the array in es/w08 (lines 105, 341), w09 (112, 165, ...), w10 and w11. w13 slide 6 uses the same 'Por fin' framing.
+  - Propuesta: Not changed. This is a course-wide narrative choice shared with w13 ('Por fin · Las siete lecturas bajo un solo nombre'). Editing only w12 would make it disagree with w13. If wanted, reword both w12 and w13 together.
+- **w12** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s19 code_output
+  - The unseeded Random panel shows 'a1 = 3 5 / a2 = 5 3'. These are one sample run and change on every run. '100 de 100' is very likely but not guaranteed (about a 0.5 percent chance of a collision). The course has no speaker notes to say the values vary. The same applies to the English slide.
+  - Evidencia: Three runs under .NET 10 gave a1 = 4 1 / a2 = 5 6, a1 = 2 1 / a2 = 3 6, and a1 = 1 2 / a2 = 1 6. Every run gave 100 de 100.
+  - Propuesta: Not changed. Nondeterministic by design, and the point of the slide (different values, no shared seed) holds.
+- **w12** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s8 code_output
+  - Building this snippet produces warning CS1718 'Comparison made to same variable' twice, for nan == nan and nan != nan. The slide shows only the run output and makes no claim about warnings, but a student who types it in will see them. The same applies to the English slide.
+  - Evidencia: dotnet build (net10.0): Program.cs(..,14) and (..,27) warning CS1718. The run output matches the panel exactly: 1.4142135623730951 / 1.414 / NaN False True True.
+  - Propuesta: Not a defect. The slide does not deny warnings. Mentioning it would make a useful teaching point.
+- **w12** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s16 code_output
+  - Console.WriteLine(1.0 / 0) prints '∞' only under a real culture. Under the invariant culture it prints 'Infinity'.
+  - Evidencia: es_MX.UTF-8 and en_US.UTF-8 print ∞ / NaN / Attempted to divide by zero., matching the panel. With LANG unset (invariant culture) the first line is Infinity. The separate program Console.WriteLine(5 / 0); gives Program.cs(1,19): error CS0020: Division by constant zero and Build FAILED, matching the panel.
+  - Propuesta: Not a defect for students on es-MX or en-US machines.
+- **w12** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s15 code_output
+  - The eyebrow 'Bloque 02 · El tipo de retorno' ('The return type') sits over two errors. Only CS0266 (Math.Pow returns double) is about the return type. CS1503 (Math.Sqrt("9")) is about the parameter type. The title ('Dos líneas que parecen bien y ninguna de las dos compila') is accurate.
+  - Evidencia: Compiled each line as its own program: Program.cs(1,16): error CS0266 ... 'double' to 'int'. An explicit conversion exists (are you missing a cast?) and Program.cs(1,29): error CS1503: Argument 1: cannot convert from 'string' to 'double'. Both match the panel, including line and column.
+  - Propuesta: Left as is. The eyebrow names the slide's main point and is incomplete rather than false.
+- **w12** · auditoría · quiz-key · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s24 quiz
+  - No speaker notes state the answer, and no deck in this course has notes (0 in all 36 files). The key itself is sound: exactly one option is defensible, B (39.5, Clamp returns and modifies nothing). A matches the ClampByRef habit from w11. C is wrong because Math lives in System, which implicit usings bring in. D has no basis.
+  - Evidencia: Ran the quiz source on .NET 10: it prints 39.5, and discarding Math.Clamp's result gives no compiler warning. This holds in both es and en.
+  - Propuesta: Nothing to fix. The answer is defensible, and adding notes would invent content.
+- **w12** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' uses the third person while the rest of the deck uses tú.
+  - Evidencia: This is the house-wide Spanish formula: 146 es decks use exactly this title, including all 18 decks of this course.
+  - Propuesta: Left as is because it is a house convention, not a w12 defect.
+- **w13** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s21 trace
+  - The verdict says 'la configuración y el tamaño de la pieza van escritos junto al número', but the table shows configuration and n only. The piece size (length of each appended string) is not on the slide.
+  - Evidencia: Ratios check: 658/42 = 15.67 (15.7), 626/63 = 9.94 (9.9). My benchmark (7-char piece, Release, Linux container) gave 84 ms and 1580 ms, a ratio of 18.8, which confirms only the quadratic shape. The piece size is the instructor's measurement parameter and cannot be inferred.
+  - Propuesta: Not fixed: the piece size needs to come from the instructor's benchmark. Add it to the title or a column header (e.g. 'n piezas de K caracteres'), or drop 'y el tamaño de la pieza' from the verdict.
+- **w13** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s16 trace
+  - The table calls id.StartsWith(...), id.Contains("") and raw.Replace(';', ',') without saying what id and raw hold. A reader has to infer id = "SNS-4471-A" (it only appears on slide 17) and raw = "20.1;21.5;22.9".
+  - Evidencia: The trace layout has no lead or caption field (kit/deck.py: trace(eyebrow, title, headers, rows, verdict)). With those inferred values, every row reproduces.
+  - Propuesta: Not fixed: there is no slot for the values without restructuring. Optionally put the literals in the title or verdict.
+- **w13** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is in third person while the rest of the deck uses tú ('Puedes llevar', 'ya conoces'). The English says 'you will be able to'.
+  - Evidencia: The same title is in all 18 Spanish decks of this course (grep count 18) and in 146 decks repo-wide, so it is a template convention, not a w13 slip. Changing only w13 would make the course inconsistent.
+  - Propuesta: Not fixed. If the instructor wants pure tú, change it course-wide (e.g. to 'Al terminar la sesión vas a poder…', which 5 other decks already use).
+- **w13** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s9 code_output
+  - The output panel contains a double hyphen ('assigned to -- it is read only'), which looks like a breach of the no-double-hyphen rule.
+  - Evidencia: It is the verbatim compiler text. dotnet build (.NET 10) printed exactly: Program.cs(3,23): error CS1955: Non-invocable member 'Array.Length' cannot be used like a method. / Program.cs(4,1): error CS0200: Property or indexer 'Array.Length' cannot be assigned to -- it is read only. Line and column numbers match the panel, and preflight accepts it.
+  - Propuesta: No change needed: it is verbatim compiler output and must stay as is.
+- **w13** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w13.es.yaml + en/w13.en.yaml` s10 code_output
+  - The panel shortens the real crash output (the ' at Program.<Main>$(...)' stack-trace line is omitted) and adds Windows shell exit codes that are not program output.
+  - Evidencia: Ran it: 1495 / 2 / Unhandled exception. System.IndexOutOfRangeException: Index was outside the bounds of the array. followed by a stack-trace line, and the build had no warnings ('el compilador no dijo nada' holds). Exit code on Linux is 134. On Windows, 0xE0434352 as int32 is -532462766 (PowerShell $LASTEXITCODE), and MSYS/Cygwin maps exit statuses >= 0xC0000000 to 127 (Git Bash). Both are consistent with w01.0.
+  - Propuesta: No change needed: the abbreviation is acceptable and the Windows exit codes are consistent (not executable here).
+- **w14** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w14.es.yaml, ppts/csharp/analisis-y-diseno-de-algoritmos/en/w14.en.yaml` s1 cover
+  - The subtitle calls this 'la primera sesión del semestre en la que dos programas correctos no valen lo mismo'. But w13 already measured two correct programs with different costs (a += string build that costs n squared against StringBuilder), so a reader may question 'first'.
+  - Evidencia: w13.es slides 'Armar el reporte con += cuesta al cuadrado' and the StringBuilder takeaway. The w13 closing makes the same promise about w14, so changing only w14 would break that hand-off.
+  - Propuesta: Not changed. This is the instructor's framing and it is echoed in w13's closing, which is outside my files. If it is reworded, w13's closing needs the same edit.
+- **w14** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w14.es.yaml` s3 objectives
+  - The objectives title says 'Al terminar la sesión el alumno podrá…' (third person), while EN says 'you will be able to'. The rule asks for tú throughout.
+  - Evidencia: Grep shows all 18 Spanish decks of this course use exactly 'el alumno podrá…'.
+  - Propuesta: Not changed. It is a course-wide convention, and changing only w14 would make w14 the odd one out. If the instructor wants 'podrás', it should change in all 18 Spanish decks.
+- **w14** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w14.es.yaml, ppts/csharp/analisis-y-diseno-de-algoritmos/en/w14.en.yaml` s27 homework
+  - The brief says 'Instrumenta dos de los cuatro ordenamientos', yet it always asks for a Shell gap sequence and its citation, worth 30% of the rubric. It does not say whether Shell must be one of the two.
+  - Evidencia: Read the brief and rubric. A student who picks bubble and selection still has to cite a Shell gap sequence that they do not use.
+  - Propuesta: Not changed. This is an assignment-design decision for the instructor, for example 'dos de los cuatro, uno de ellos Shell'.
+- **w14** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w14.es.yaml, ppts/csharp/analisis-y-diseno-de-algoritmos/en/w14.en.yaml` s3 objectives
+  - Objective 2 ('Recorrer una rejilla por renglón y por columna con GetLength(0) y GetLength(1)') has no worked example in the deck. Only slide 7 prints the GetLength values; the nested row/column loop first appears as the lab's requirement.
+  - Evidencia: Read all 28 slides. Each piece the lab needs was taught before: [r, c] indexing (slide 6), GetLength (slide 7), nested for loops (weeks 8 to 9). So the lab does not use anything untaught, but there is no example traversal.
+  - Propuesta: Not changed. Adding a slide would be new content. Reported for the instructor.
+- **w15** · auditoría · code-wrong · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml + en/w15.en.yaml` s18 code_output, 20 code_output
+  - Both slides iterate over 'trio', which no slide declares or fills. A student cannot reproduce the printed sum 141.9 without guessing the two values next to the 99.9 sensor.
+  - Evidencia: Scaffolded trio = {a, 99.9, c} with a+c = 42 for six combinations (20/22, 21/21, 19/23, 20.5/21.5, 18/24, 22/20). Every one reproduces both panels exactly: slide 18 prints 99.9 then 100.9 with no warning for the silent local copy, and slide 20 prints 141.9, 47.300000000000004, 47.30. So the outputs are right, but the data is not on any slide.
+  - Propuesta: Not fixed. Adding a declaration would mean inventing the two missing readings, and slide 18 has no room for another line. The instructor should put the trio's values in the speaker notes or on the slide.
+- **w15** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' speaks of the student in third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: This exact title appears in 142 Spanish decks across the repo, against 6 with 'podrás'. The instructor's known-defects list does not flag it in Spanish. It is the house heading, not a slip in this deck.
+  - Propuesta: Left as is so this deck stays consistent with the rest of the course. Changing it should be a course-wide decision.
+- **w15** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml + en/w15.en.yaml` s22 trace
+  - The verdict says the Name field 'did not move because a string cannot be edited in place'. Strictly, t1.Name is unchanged because 't2.Name = "RUN-B"' reassigns t2's own copy of the reference. Reassigning t2.Samples would not have moved t1 either. Immutability is only why reassignment is the sole option for a string.
+  - Evidencia: Ran the quiz code with 'struct Trace { public string Name; public double[] Samples; }' as scaffolding. Output: RUN-A, 99.9 (t2: RUN-B, 99.9). Option B is the single correct answer, the trace table matches, and each distractor is a distinct confusion (deep copy, class semantics, inverted sharing). The instructor's solutions.en.md 15.1 uses the same immutability framing and adds the reassignment explanation.
+  - Propuesta: Not changed. It is the instructor's own framing and defensible as a shortcut. Notes could add the reassignment nuance.
+- **w15** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml + en/w15.en.yaml` sall
+  - Neither deck has any speaker notes, so the quiz answer and the distractor rationale exist only on the answer slide (22), not in notes.
+  - Evidencia: grep -c notes: gives 0 in both files, and also in w13, w14, w16 and w17 of this course. Slide 22 gives answer B, which matches the real run.
+  - Propuesta: No notes added, to avoid inventing content. Reported for the instructor.
+- **w15** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml + en/w15.en.yaml` s8 code_output, 13 code_output
+  - The output panels show the classic MSBuild summary ('Build succeeded.' / '3 Warning(s)' / '0 Error(s)'). The course targets .NET 10, where an interactive 'dotnet build' uses the Terminal Logger by default and prints 'Build succeeded with N warning(s) in Xs'.
+  - Evidencia: dotnet 10.0.112: 'dotnet build -tl:off' (or redirected output) prints the classic block shown on the slides, and '-tl:on' prints the terminal-logger form. The warning text, codes and counts on both slides match the real build: 3x CS0649 with 'default value 0' for SensorId; CS8524 then SwitchExpressionException 'Unmatched value was 7.'. The same classic format is used from w02 to w10, so this is a course-wide convention.
+  - Propuesta: Not changed, to stay consistent with the rest of the course. The instructor may want to note '-tl:off' or that students will see the newer summary.
+- **w15** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w15.es.yaml + en/w15.en.yaml` s3 objectives, 5 divider, 26 homework
+  - 'Registro' / 'record' is used in the general data-structure sense and the code is always a struct. C# also has a 'record' keyword (C# 9, plus 'record struct' in C# 10) with different semantics, which an English-reading student searching 'C# record' will run into.
+  - Evidencia: The syllabus unit is 'Tema 7.1 · Registros y enumeraciones'. No slide uses or mentions the record keyword.
+  - Propuesta: Not changed, because the term comes from the syllabus. A one-line disambiguation in the notes or on slide 6 would prevent the confusion.
+- **w16** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w16.es.yaml + en/w16.en.yaml` s2 agenda
+  - Card 4, 'El día de la demo: El camino feliz, una entrada rota a propósito y dos preguntas', promises a demo-day format that no slide teaches. Block 03 has the rehearsal table and the lab's 'teclea letras' test, but nothing about the happy path or the two questions. The agenda title also calls it a moment of this session.
+  - Evidencia: I read all 27 slides. 'dos preguntas' / 'two questions' appears only on the agenda card.
+  - Propuesta: Not changed: fixing it means either inventing demo-day content or rewriting the card. The instructor should decide.
+- **w16** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w16.es.yaml + en/w16.en.yaml` s26 homework
+  - The log is due 'Con el proyecto en la semana 16' and should hold one dated feature per sitting. The same deck says the topic is chosen today ('Hoy se elige el tema'), which is also week 16, and the next session is the final exam. The timeline only works if week 16 holds several sittings before delivery.
+  - Evidencia: The syllabus puts project delivery in week 16 and makes week 16 'Integración de contenidos y desarrollo del proyecto final'. Slide 20 lede: 'Hoy se elige el tema, se arma el esqueleto'.
+  - Propuesta: Not changed: this is a course-calendar decision that comes from the syllabus.
+- **w16** · auditoría · quiz-key · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w16.es.yaml + en/w16.en.yaml` s18 quiz
+  - Neither deck has any speaker notes, so nothing states the quiz answer or explains the distractors. The quiz itself is sound: exactly one correct option (B, FormatException). The distractors map to TryParse (-1), the null case (0) and Convert.ToInt32(char) (character code).
+  - Evidencia: I ran the quiz function verbatim. A letter gives System.FormatException ('The input string 'a' was not in a correct format'); '3.7' and empty input also give FormatException; closed stdin (null) returns 0. Under Nullable it also gives warning CS8600, which the slide does not deny. Answer slide 19 rows match (Convert: FormatException x3 and null -> 0; TryParse: False, v=0 x4).
+  - Propuesta: Not changed: adding notes would mean inventing the instructor's script.
+- **w16** · auditoría · consistency · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w16.es.yaml + en/w16.en.yaml` s23 table
+  - The row 'Índice fijo | rpm[3] compila y luego revienta | w13' does not match w13's demo, which indexes fijo[3] / fixedLen[3]. On w13's main rpm array of seven readings, rpm[3] is valid (1533). The row is defensible for a three-reading rpm array, but a reader checking w13 may be confused.
+  - Evidencia: es/w13.es.yaml line 190: Console.WriteLine(fijo[3]). en/w13: fixedLen[3]. w13 line 86: int[] rpm with 7 values.
+  - Propuesta: Left as is (defensible); reported for the instructor.
+- **w16** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/en/w16.en.yaml` s7 method, 16 compare
+  - English text uses French-style guillemets «...». American English uses double quotes.
+  - Evidencia: Three occurrences in w16.en and five in w02.en; no other English deck in the course uses any curly quotes, so it looks like a course convention.
+  - Propuesta: Not changed, to stay consistent with w02.en. If the instructor wants American quotes, both decks should change together.
+- **w16** · auditoría · other · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w16.es.yaml + en/w16.en.yaml` s24 lab
+  - 'La regla de los 15' mentions fifteen minutes. This is a working rule for students, not a slide or agenda duration, so I do not count it as breaking the 'no durations on slides' rule. Reported only because a reader may flag it.
+  - Evidencia: The rule targets session timings, such as agenda minutes. This is content.
+  - Propuesta: No change needed.
+- **w16** · auditoría · technical-claim · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/solutions.en.md + soluciones.es.md (NOT my files)` sWeek 16 solution 16.1
+  - The solutions say Git Bash reports 127 'because POSIX shells trim the status to eight bits'. The reason is wrong: trimming 0xE0434352 to eight bits gives 0x52 = 82. The 127 comes from the Cygwin/MSYS2 runtime, which maps native exit codes at or above 0xC0000000 to 127 (status_exit default case). The deck itself only states the measured numbers, which are consistent.
+  - Evidencia: unchecked((int)0xE0434352) = -532462766, verified in C#. 0xE0434352 & 0xFF = 82.
+  - Propuesta: Must be fixed in the solutions files, which are outside my assignment.
+- **w17** · auditoría · language · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú, and the English twin says 'you will be able to'. All 18 Spanish decks of this course use this exact formula.
+  - Evidencia: grep: every es/w*.es.yaml in the course has 'title: Al terminar la sesión el alumno podrá…'.
+  - Propuesta: Not changed: it is the course-wide Spanish formula, so changing only w17 would break cross-deck consistency. The instructor should decide for all 18 decks at once (e.g. 'Al terminar la sesión podrás…').
+- **w17** · auditoría · output-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s9 code_output
+  - The output panel has 5 lines but the source shows 4 WriteLine calls. The first line, 'leidas 7, rechazadas 1', is printed by slide 7's code.
+  - Evidencia: Ran the full review program: the output panel equals the real cumulative run of Repaso.cs up to that point. Slides 10 and 11 show only their own lines.
+  - Propuesta: Deliberate: slide 7 is a code layout with no output panel, so its one printed line first appears here, labelled 'La corrida'. Not a defect. Same in en.
+- **w17** · auditoría · description-mismatch · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s8 code
+  - The annotation 'Tres acumuladores, una pasada' may make a reader count only suma and fuera.
+  - Evidencia: Under w09's definition (variables that live outside the loop and are written inside it), banco is the third, alongside suma and fuera.
+  - Propuesta: Left as is; defensible. Same in en ('Three accumulators').
+- **w17** · auditoría · pedagogy-order · low · `ppts/csharp/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s22 quiz
+  - Slide 21 (compare) states the quiz answer just before the quiz: ciclos + 1 compiles with 0 warnings and prints -2147483648.
+  - Evidencia: Quiz verified: option B is the only correct one (.NET 10 prints -2147483648, 0 warnings, 0 errors). A = checked confusion, C = saturation confusion, D = confusion with the constant literal (CS0220). There are no speaker notes anywhere in this course, so no notes answer to check; slide 23 'Respuesta' gives the answer.
+  - Propuesta: Not changed: in a review session a check right after the demonstration is a plausible choice. Flagged for the instructor. Same in en.
+
+## MySQL · Introducción a las Bases de Datos
+
+111 entradas, de mayor a menor severidad.
+
+- **w01** · auditoría · code-wrong · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s17 code_output vs 7 code
+  - Two incompatible tables named inscripcion appear in the same deck. Slide 7 declares five columns (inscripcion_id INT PK, alumno_id INT, materia_id INT, periodo, calificacion). The ROLLBACK script on slide 17 runs INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI'), which has three values and natural keys. Against the slide-7 table that INSERT fails with ERROR 1136. The output panel is still right only because the counts are taken on materia.
+  - Evidencia: Scaffold A: slide-7 table plus materia(clave CHAR(6) PK, nombre) with 2 rows, then slide 17 verbatim. Result: 'ERROR 1136 (21S01): Column count doesn't match value count', counts 3 then 2. Scaffold B: a three-column inscripcion (matricula, clave, periodo) with FKs. Result: no error, counts 3 then 2, inscripcion back to 0 rows. That matches the panel exactly. w08 reuses the same three-value INSERT, so the course server's table is evidently three-column.
+  - Propuesta: Not fixed: the course server's real schema can't be checked from here, and the panel output is correct for it. The instructor should either show the course-server inscripcion shape or align slide 7's declared table with it.
+- **w01** · revisión · code-wrong · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml + en/w08.en.yaml (not my files)` s15 code_output
+  - w08 replays the week-1 transaction with the same column-list-less 'INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI')'. On the course's four-column inscripcion (matricula, clave, periodo, calificacion) it fails with ERROR 1136, which the panel does not show.
+  - Evidencia: The same INSERT against a matricula/clave/periodo/calificacion table in MariaDB 10.11 gives ERROR 1136 (21S01). With '(matricula, clave, periodo)' it runs clean and still prints 3 then 2.
+  - Propuesta: Must be fixed in w08.es/en slide 15 by its owner: write 'INSERT INTO inscripcion (matricula, clave, periodo)' on the first line, as w01 and w02 now do.
+- **w01** · revisión · confirmado
+  - 16. slide 18 code_output: datadir shows the authoring sandbox path
+  - Evidencia: Real but low. The eyebrow already says the path depends on the install, and inventing a path would be a fabricated measurement. The instructor should re-measure on the course server. Page size 16384 verified.
+- **w01** · revisión · confirmado
+  - 18. slides 3/20: connecting to the server is an objective and a lab step, but no slide shows how
+  - Evidencia: Agreed. The host, port and accounts are the instructor's to supply, and no deck states them (w02 uses 127.0.0.1:3399 as root, which looks like a local install). Left for the instructor.
+- **w02** · auditoría · technical-claim · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s14 code_output
+  - The inventory gives INDEX 3. The deck's own constraints (CONSTRAINT 8 = 4 PRIMARY KEY + UNIQUE + CHECK + 2 FK) mean four tables with a PRIMARY index plus uq_alumno_correo and fk_ins_materia, so 6 indexes counted per table. 3 only comes out of COUNT(DISTINCT INDEX_NAME) over the whole schema, which merges the four PRIMARY indexes into one. ejercicios.es.md 02.1 tells students to count 'nombres distintos por tabla', and the homework asks them to compare against this count. The INDEX query is never shown.
+  - Evidencia: Rebuilt the schema in MariaDB. TABLE 4, VIEW 2 and CONSTRAINT 8 reproduce exactly. COUNT(DISTINCT INDEX_NAME) over the schema = 3; COUNT(DISTINCT TABLE_NAME, INDEX_NAME) = 6. The applies to en as well.
+  - Propuesta: Not changed: I cannot see the counting query used on the real server. The instructor should show the INDEX query or recount per table (6) in es and en.
+- **w02** · auditoría · pedagogy-order · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s23 homework
+  - The homework asks students to create their own database with a table, a view and a trigger, then run 'la misma consulta del inventario'. CREATE VIEW is shown in neither w01 nor w02 (the roadmap puts views in weeks 12 to 14). Only the TABLE row of the inventory query is shown, so the VIEW, TRIGGER, EVENT, ROUTINE, CONSTRAINT and INDEX queries (including how indexes are counted) must be guessed. The same applies to en.
+  - Evidencia: grep of w01 and w02: CREATE TABLE appears on w01 s7, CREATE TRIGGER on w02 s16, CREATE VIEW nowhere. ejercicios.es.md 02.1 avoids the problem by handing students a ready-made taller.sql.
+  - Propuesta: Not changed: fixing it means redesigning the assignment, for example supplying the script or the full inventory query. The instructor needs to decide.
+- **w03** · auditoría · consistency · medium · `both` s12 and 14 code_output (vs 10 divider, 11 diagram, 21 lab)
+  - The deck measures the conceptual level on schema agente_intro01 and the tablespace files on schema db_backup. Meanwhile the divider and diagram promise 'una sola sesión' and the lab's Restricción says 'Una sola sesión y una sola base. Si cambias de base a media consulta, el listado de archivos ya no corresponde al catálogo'. The demo breaks the rule the lab enforces, and slide 14's 'la vista no aparece' refers to a view from another schema.
+  - Evidencia: Slide 12 WHERE TABLE_SCHEMA = 'agente_intro01'; slide 14 WHERE NAME LIKE 'db_backup/%'; the takeaway's 376,832 = 131072+131072+114688 comes from db_backup; w17 confirms db_backup holds alumno 5, materia 3, inscripcion 7 rows.
+  - Propuesta: Not fixed: aligning the schemas needs a re-measurement on one schema (space IDs, file sizes, catalog rows). Changing either query by hand would fabricate output. The instructor should re-run slides 12, 14 (and the takeaway number) on a single schema.
+- **w03** · auditoría · description-mismatch · medium · `both` s11 diagram
+  - The diagram title says 'Tres niveles, tres consultas' and describes the external level ('La vista devuelve sus cuatro columnas'), but no slide shows the external-level query or its output. Only the conceptual (12) and internal (13) queries are measured, and the lab asks students to start with the view.
+  - Evidencia: Slides 12 to 19 contain no SELECT on v_alumno_activo; the divider promises four heights and the deck shows three (catalog, variables, tablespaces/od).
+  - Propuesta: Not fixed: adding the missing slide would require an output that was never measured. The instructor should add a code_output with SELECT * FROM v_alumno_activo measured on the same server.
+- **w04** · auditoría · consistency · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w04.es.yaml` s7 table / 16 table / 17-19 code_output
+  - The running schema is inconsistent. In slide 7, alumno is identified by matricula and materia by clave, yet inscripcion's identifier is 'alumno_id + materia_id' and credencial's is 'alumno_id', columns no entity has. Slides 17-18 call the N:M table alumno_materia, while slide 7 and slide 19 call it inscripcion. Slide 16 maps 0:1 'Alumno tiene Credencial' to 'FK nullable más UNIQUE', but slide 7 makes alumno_id credencial's identifier, which cannot be nullable. Same in en.
+  - Evidencia: I read slides 7, 16, 17, 18 and 19 side by side. Later weeks mix both conventions too: w06 uses inscripcion(inscripcion_id, alumno_id); w07 and w08 use alumnos(matricula).
+  - Propuesta: Not fixed: resolving it needs an authorial choice (natural or surrogate keys, which side carries the 0:1 FK, one name for the N:M table) that affects w05 to w08. Only the runnable part was fixed (the slide 19 COUNT column).
+- **w07** · auditoría · consistency · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml` s10 code
+  - The CHAR(9) annotation defends the type with 'Nueve caracteres, siempre' (en: 'A student number is nine characters, always'). Every matrícula this deck uses has fewer: '100011', '100001', '100013' (6) and '2001' (4). w08 continues with 6-digit values plus '2001', and w06 used '0245790' in the same CHAR(9) column. The deck's own data contradicts the one defense it gives for CHAR.
+  - Evidencia: grep of w07 and w08 for matricula values: 100011, 100001, 100013, 100003, 999999 and 2001. w06 line 274 uses '0245790'. None is 9 characters.
+  - Propuesta: Not fixed: no consistent fix fits inside my files. It needs an instructor decision, either 9-character matrículas across the w06 to w08 examples (w08 is another deck) or a different type and annotation in w07 and w08 together.
+- **w08** · auditoría · consistency · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s23 homework
+  - The brief says the midterm covers 'los bloques A y B completos' (w01 grading table says the same). The rubric weights only weeks 4 to 6 (30 %), week 7 (30 %) and DML (40 %), so block A (weeks 1 to 3) gets no weight. Same in English.
+  - Evidencia: Read the rubric rows and w01 line 328 ('Bloques A y B, más las semanas 7 y 8').
+  - Propuesta: Not fixed: fixing it means choosing new exam weights, which is the instructor's call. Either add a block A row and rebalance, or say block A is not graded separately.
+- **w10** · revisión · confirmado
+  - w10.es/en s22 lab: 'cuáles materias pasaron de su cupo' needs a cupo that neither of the two tables has
+  - Evidencia: The brief is inconsistent. 'Las cinco salen de dos tablas' does not hold, because capacity would need a third table (materia) and a JOIN or a correlated subquery. Fixing it needs an instructor decision that would invent schema or a threshold: either a fixed cap via HAVING COUNT(*) > N, or a 'more enrollments than the average' figure like s19. It stays flagged for the instructor.
+- **w10** · revisión · confirmado
+  - w09.es uses usted (outside the assigned files)
+  - Evidencia: It was true when audited. w09.es.yaml has since been edited by its owner, and a grep for usted, arme, escriba, Cuente and encontró now finds nothing. That deck needs no further action.
+- **w11** · auditoría · consistency · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w11.es.yaml` s12 code_output (vs 7, 10, 19)
+  - Slide 12 says alumnos has 12 rows ('12 alumnos y 8 profesores', UNION ALL = 20). Slide 10's ON variant returns 6 rows from 'alumnos a LEFT JOIN ...'. A LEFT JOIN returns at least one row for every row of alumnos, so that table has at most 6 rows. Slides 7 (5 x 4) and 19 (full outer = 6) fit a 5-student table. The same table name cannot satisfy both claims. The same holds in en (identical numbers).
+  - Evidencia: Built a 5-student dataset (two students named 'Ana Rivera' in the same subject, one student with no enrollments, 5 enrollments, 4 subjects). It reproduces slides 7, 9, 10 and 19 exactly: 20 rows, anti-join 1 row, COUNT 1/0, 3 against 6 rows, 5 against 6 rows. Slide 12's 12+8 -> 20/17 needs a different alumnos table with 12 rows. The author's dataset is not in the repo (grep for esc_inscritos, pagos_norte, lms_cuentas finds only these two YAML files).
+  - Propuesta: Not fixed: correcting it needs the instructor's real data (either name a different table or database for the email example, or remeasure). Applies to both es and en slide 12.
+- **w12** · auditoría · pedagogy-order · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s21 lab
+  - The Restricción block requires the coordinator view to come from week 11's JOIN and rules out a single-table view. That spoils the experiment. A newly inserted alumno has no inscripciones, so he vanishes from an INNER JOIN view whatever his carrera. The 'lost row' therefore comes from the JOIN, not from the carrera filter that WITH CHECK OPTION is meant to guard. Two more mismatches: the companion exercise 12.2 (ejercicios.es.md / soluciones.es.md) builds the coordinator view from a single table (FROM equipo WHERE linea_id = 1), and the 'La prueba' block asks for an UPDATE that the brief never mentions.
+  - Evidencia: MariaDB test with a JOIN view alumnos+inscripciones+materias WHERE carrera='Ingenieria'. Without the clause, an INSERT of another carrera and an INSERT of the same carrera both returned 0 rows in the view. With WITH CHECK OPTION, both INSERTs failed with ERROR 1369, including the same-carrera one. MySQL may evaluate only the WHERE, but the confound is still there. With a single-table view, the documented result is 0 in the view and 1 in the table.
+  - Propuesta: Not fixed: the right fix means choosing new lab content (drop the JOIN requirement to match exercise 12.2, or turn the lab into an UPDATE-through-JOIN task). The instructor needs to decide.
+- **w15** · auditoría · output-mismatch · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s6 code_output
+  - The plan panel contradicts the rest of the deck. 'type=ALL rows=199343' fits neither table: the comment says 100 000 inscripciones and 50 000 alumnos, slide 9 estimates the same inscripciones_big at 99847 rows, and slide 10's rows=9984 is 10% of about 99.8k. The before label 'sin indice en la union' also does not describe what changes. The index created is idx_apellido, which is not a join column, and idx_apellido alone repairs the JOIN only if inscripciones_big.matricula is already indexed. Slide 7 shows idx_mat_fecha, but slide 9 creates it. Applies to en as well.
+  - Evidencia: MariaDB repro with 100k inscripciones and 50k alumnos (PK matricula). Without any index on i.matricula: i ALL 100224 + a eq_ref, both before and after idx_apellido, so the JOIN is not repaired. With idx_mat_fecha present: a ALL 49972 becomes a ref 25 and i ref idx_mat_fecha. No consistent scenario produces ALL 199343 next to ref 25 on these table sizes. The course's own soluciones.es.md 15.2 gets ~199963 only for a 200k-row table.
+  - Propuesta: Not fixed: I cannot run MySQL 9.7.2, so I cannot tell whether the comment (100 000) or the measured row count is wrong. The instructor needs to re-measure and align the comment, the label and the numbers in both decks.
+- **w15** · auditoría · output-mismatch · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s9 code_output
+  - 'la derecha sola ... possible_keys=NULL' is probably wrong on 9.7.2. Since MySQL 8.0.13, skip-scan key collection adds an index that covers the query to possible_keys even when the optimizer then rejects the skip scan for cost. The full index scan would then show possible_keys=idx_mat_fecha. Applies to en as well.
+  - Evidencia: The course's own 9.7.2 run in soluciones.es.md 15.1, same query shape (WHERE second column only, covering composite index), shows 'index idx_eq_fecha idx_eq_fecha ... 199963'. possible_keys is filled there. The MySQL 8.0 manual's skip-scan example lists possible_keys: PRIMARY for a predicate on the second key part. MariaDB 10.11, which has no skip scan, gives possible_keys NULL, which is the slide's value, so the slide may come from a non-skip-scan server.
+  - Propuesta: Not fixed because it cannot be executed on 9.7.2 here. Recommend re-running EXPLAIN FORMAT=TRADITIONAL on 9.7.2 and correcting possible_keys in both decks. The lesson still holds through type=index and rows≈table size.
+- **w17** · auditoría · consistency · medium · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s17 divider (also en)
+  - The lede says the two logs from week 3 (redo log and binlog) "se gastan las dos" today. The deck only uses the binlog (slide 20). The redo log never appears. w03 s? Error 02 also promises "La semana 17 usa los dos".
+  - Evidencia: grep finds no redo or innodb_log mention in w17. w03.es.yaml line 326: "El redo log da durabilidad ante una caída; el binlog da recuperación ... La semana 17 usa los dos."
+  - Propuesta: Needs an instructor decision. Either add redo-log content to w17, or reword this lede and w03's promise (w03 belongs to another agent).
+- **w01** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s7 code
+  - The comment '-- la misma informacion, declarada' sits over a table whose alumno_id and materia_id are INT, but the CSV ids are alphanumeric (A0000001, BD1001). Under the strict sql_mode shown on slide 16, those values cannot be stored in it.
+  - Evidencia: INSERT INTO inscripcion VALUES (1,'A0000001','BD1001','26PRI',8.5) -> ERROR 1366 (22007): Incorrect integer value: 'A0000001' for column alumno_id. The INT surrogate-key design does match w04 and w06 (alumno_id/materia_id INT, inscripcion_id INT PK), so it can be read as a normalized design that previews those weeks.
+  - Propuesta: Left as is, to keep it consistent with the w04/w06 model. Flagged as a suspicious read.
+- **w01** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s18 code_output
+  - The datadir panel shows '...\scratchpad\mydb\data\', which is the authoring sandbox where the deck was measured. It is not the course server or a default install (Windows default is C:\ProgramData\MySQL\MySQL Server 9.7\Data\), and students will never see a path like it.
+  - Evidencia: MariaDB here returns /var/lib/mysql/ and 16384. The page size is right, and the eyebrow does say the path depends on the install.
+  - Propuesta: Not fixed: I won't invent a measured path. The instructor should re-measure on the course server.
+- **w01** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s11 diagram, 12 table
+  - The disk is dated '1960'. The first commercial hard disk (IBM 350 RAMAC) shipped in 1956, so '1960' only holds as a decade label. On a slide whose job is correcting dates, a reader may take it as an error.
+  - Evidencia: IBM 350 RAMAC, 1956. Hierarchical (IMS, 1966-68), network (IDS, 1963-64) and SABRE (1960-64) do fit the 1960s.
+  - Propuesta: Left as a decade label.
+- **w01** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s3 objectives, 20 lab
+  - The objective 'Conectarse al servidor' and the lab ('Conéctate al servidor del curso desde tu máquina') assume students know how to connect, but no slide shows the client, host, port or account. The first connection command appears in w02 (mysqladmin -h 127.0.0.1 -P 3399).
+  - Evidencia: Read all 23 slides; no connection instructions. The lab's transaction script also needs INSERT privilege on materia/inscripcion on the shared server.
+  - Propuesta: Not fixed: the course-server host, port and accounts are the instructor's to supply. Presumably they are given live.
+- **w01** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú. The en side says 'you will be able to'.
+  - Evidencia: The same title appears in every es deck of this course (17/17) and in about 130 es decks repo-wide, so it is the template convention. The instructor's known list does not flag it for Spanish.
+  - Propuesta: Left to keep the course-wide convention. Changing it is the instructor's call across all decks.
+- **w01** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml + en/w01.en.yaml` s1 cover
+  - 'Los datos llevan cuatro mil años cambiando de soporte' understates the age of written records: cuneiform accounting tablets are about 5,200 years old. It is not false, since data has been changing medium for at least 4,000 years, but it is loose on a deck about getting dates right.
+  - Evidencia: Proto-cuneiform tablets (Uruk), about 3200 BCE.
+  - Propuesta: Left as rhetoric.
+- **w01** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/en/w01.en.yaml` s19 table, 22 homework
+  - Percentages are written '20 %' with a space, which is SI/European style. American style is '20%'.
+  - Evidencia: Every en deck of the course uses '20 %'.
+  - Propuesta: Left for course-wide consistency. The house rule names the spelling 'percent', which is fixed in the title.
+- **w02** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s8 code_output
+  - KILL CONNECTION 1028 targets an id that is not in the processlist shown (operador is 1118); the comment says 'en otra corrida'. The ERROR 2013 printed in root's panel is what the killed operador session reads on its next statement; root's KILL itself returns Query OK. The same applies to en.
+  - Evidencia: MariaDB two-session run: the KILL caller got no error, and the killed session got its error on the next statement (ERROR 2006 Server has gone away in MariaDB's batch client). I could not check whether MySQL 9.7.2 reports 2013 or 2006.
+  - Propuesta: Not changed: the author explicitly marks it as another run. A clearer version would kill 1118 and attribute the error to the operador session.
+- **w02** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s7 code_output
+  - The mysqladmin version output is shortened with no marker. The real output's first line continues with 'for Win64 on x86_64 (MySQL Community Server - GPL)', a copyright block follows it, and a 'Threads: ... Queries per second avg' line ends it. The same applies to en.
+  - Evidencia: Known format of mysqladmin version in MySQL 8 and later. I could not run the MySQL 9.7.2 binary here.
+  - Propuesta: Not changed: I cannot reproduce the exact 9.7.2 text. Consider adding an ellipsis.
+- **w02** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s1 cover, 5 divider, 6 diagram
+  - 'Una base de datos son tres piezas de software' and 'Tres piezas de software, no una' conflict with the diagram, which defines the Base de datos block as 'Los archivos donde viven los datos'. Files are not software. The same applies to en.
+  - Evidencia: Read slides 1, 5 and 6.
+  - Propuesta: Not changed: this is the author's framing of the source's 'macro partes', so I am reporting it for the instructor.
+- **w02** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s11 table
+  - The 'Dónde se cobra' column uses internal codes (H-01-2, H-17-2, H-04-3, H-04-1) that no slide explains. 'H-01-2 hoy' also reads oddly next to slide 12, which says that measurement was taken 'la semana pasada'. The same applies to en.
+  - Evidencia: grep over the course: the H-xx-y codes appear only here and in w03 s7, never defined.
+  - Propuesta: Not changed: these are the author's course-wide codes.
+- **w02** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w02.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú.
+  - Evidencia: grep shows the same title in all 17 es decks of the course, so it is the course convention, not usted.
+  - Propuesta: Not changed: changing one week would break consistency across the course. The instructor should decide course-wide.
+- **w02** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w01.es.yaml` s17 code_output
+  - w01's transaction slide runs INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI') with 3 values. w02 slide 9 shows inscripcion has a calificacion column. If the schema is the same, the w01 INSERT fails with ERROR 1136. The same applies to en/w01.en.yaml.
+  - Evidencia: MariaDB: a 3-value INSERT into the 4-column inscripcion gives ERROR 1136.
+  - Propuesta: Outside my files; it must be checked and fixed in w01.es.yaml and w01.en.yaml, for example with a column list.
+- **w03** · auditoría · language · low · `en/w03.en.yaml` sthroughout (1, 9, 20, 21, ...)
+  - English text quotes with guillemets «...» rather than American double quotes.
+  - Evidencia: grep: «» appear in 9 of the 17 en decks of this course, so it is a course-wide authoring convention, not specific to w03.
+  - Propuesta: Left as is: changing it in one deck would make the course inconsistent. The instructor should decide course-wide.
+- **w03** · auditoría · other · low · `both` s7 table
+  - Cell 'Hoy · H-03-4' carries an internal code that the deck never explains to students.
+  - Evidencia: Same convention in w02 ('H-01-2 hoy · H-17-2 luego', 'Semana 4 · H-04-3'); no definition anywhere in the course decks.
+  - Propuesta: Left as is (course-wide convention, meaning unknown); flagged for the instructor.
+- **w03** · auditoría · code-wrong · low · `both` s15 code_output
+  - A shell command (od) is shown with an SQL-style '-- ya no es SQL, es el disco' comment line under lang: sql. Pasted into a terminal, that line would run as a command.
+  - Evidencia: Course-wide convention (w02 mysqladmin slide, w17 mysqldump slides use the same '-- ' comments in shell). The od invocation itself is correct: on a synthetic page header, od -A n -t x1 -N 64 prints 16 bytes per line; the slide wraps at 8 and elides with '…'. Bytes 8 to 11 '00 01 62 4e' = 90702 = the FIL_PAGE_SRV_VERSION stamp for 9.7.2, so the dump is consistent with a real file.
+  - Propuesta: Left as is (course-wide convention).
+- **w04** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w04.es.yaml` s19 code_output
+  - The query has no HAVING, yet the output shows a single row (11 Calculo 0). That is real output only if materia holds just Calculo. Slide 18 inserts into materia 10, so on a shared dataset a second row would appear.
+  - Evidencia: With materia = {10, 11} the query printed two rows. With materia = {11} it printed exactly the panel. The deck never shows its seed data.
+  - Propuesta: Left as is: it is consistent with a plausible dataset, and adding rows or a HAVING would invent content. The instructor may want to show the seed data in the notes.
+- **w04** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w04.es.yaml` s18 code_output
+  - Two INSERTs are shown, but the panel shows only the error. In the interactive client the first one prints 'Query OK, 1 row affected' before the error.
+  - Evidencia: In MariaDB with -vvv, the first INSERT printed Query OK and the second Duplicate entry '1-10'. MariaDB says for key 'PRIMARY'; MySQL 8.0.19+ (and so 9.7) prints 'alumno_materia.PRIMARY' exactly as on the slide. w06 shows errors the same way, so it is a course convention.
+  - Propuesta: Not changed: it is a course-wide presentation convention, and the error text itself is correct for MySQL.
+- **w04** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w04.es.yaml` s3 objectives / 6 concept
+  - es objectives say 'el alumno podrá…' where en says 'you will be able to…'. The concept panel (es and en) says 'la primera que el alumno lee' / 'the first one the student reads'.
+  - Evidencia: All 17 es decks of this course use 'Al terminar la sesión el alumno podrá…'; the known-defects list flags only w10.es usted and w17.en 'the student will be able to'. The concept panel refers to a reader of the old deck in the third person; it does not address the reader.
+  - Propuesta: Left as is: the objectives title is the course convention, and the panel phrase is a third-person description, not a change of register.
+- **w04** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w04.es.yaml` s21 lab
+  - 'La prueba' says that with an N:M and fewer than three tables the conversion is incomplete. The lab already starts from six entities, so any list has at least six tables and the test can never fail as worded.
+  - Evidencia: Slide 7 lists six entities, and the lab asks for all six.
+  - Propuesta: Not changed: the intent (an N:M needs its own third table) is clear, and rewording it would change the author's exercise.
+- **w04** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/en/w04.en.yaml` s23 homework
+  - 'Part of the 20 % homework' and the rubric '25 %' put a space before % (Spanish style). American style is 20%.
+  - Evidencia: Every en deck in this course (w01-w16) uses '20 %'. It may be a kit or course formatting convention.
+  - Propuesta: Not changed, to keep it consistent with the other 16 en decks. If it should change, change it course-wide.
+- **w05** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w05.es.yaml + en/w05.en.yaml` s18 code_output (and 14 compare)
+  - Slide 18 inserts into a detalle_pedido with only (cantidad, precio, total). Slide 14 defined detalle_pedido with PRIMARY KEY (pedido_id, linea). If you add the generated column to slide 14's table, slide 18's INSERT fails. Slide 14's 'after' card is also labeled pedido_1fn.sql, the same file name as the rejected design on slide 13.
+  - Evidencia: Slide 14's table plus ALTER ADD cantidad, precio, total AS (cantidad*precio) STORED: the INSERT (cantidad, precio) gives ERROR 1364 Field 'pedido_id' doesn't have a default value. With a minimal table of its own, slide 18 matches: total = 750.00. The explicit total gives MySQL ERROR 3105 (HY000) with the exact text shown; MariaDB returns 1906 '... has been ignored' instead, which is a dialect difference.
+  - Propuesta: Not changed: the panel is correct with its own table, and making the two slides consistent would mean rewriting code on two slides. Suggestion: give slide 18's table a different name, or include pedido_id and linea in its INSERT.
+- **w05** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w05.es.yaml + en/w05.en.yaml` s16 divider
+  - The block 3 lede says the server 'acepta el total escrito a mano' and that 'ninguna de las tres cosas te avisa'. Two slides later, slide 18 shows the server rejecting a hand-written total with ERROR 3105. The 'dato que no se puede buscar' was shown in block 2, not block 3.
+  - Evidencia: Read the lede against slides 17 and 18. The lede is true for an ordinary column, and slide 18 shows the remedy, so it is defensible but may look contradictory to a reader.
+  - Propuesta: Left as the author's framing (the cost, then the cure). Flagged for the instructor.
+- **w05** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w05.es.yaml + en/w05.en.yaml` s8 code_output; 3 objectives
+  - 'La unicidad no es parte de la primera forma normal, y el servidor lo demuestra' depends on the definition. It holds for the Elmasri/Navathe and Silberschatz definition (atomic domains only). Under C. J. Date's definition, 1NF includes 'no duplicate rows'. And MySQL accepting a keyless table shows only that MySQL does not enforce a key; it proves nothing about 1NF.
+  - Evidencia: In MariaDB the keyless CREATE and the SHOW CREATE with no PRIMARY KEY line behave as on the slide. MariaDB has no sql_require_primary_key (ERROR 1193). The ERROR 3750 (HY000) text matches MySQL's ER_TABLE_WITHOUT_PK (8.0.13+), truncated with '...'.
+  - Propuesta: Not changed: defensible under the mainstream textbook definition. Flagged so the instructor can soften 'lo demuestra' if wanted.
+- **w05** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/en/w05.en.yaml` s23 homework
+  - '20 %', '60 %' etc. have a space before the percent sign, which is not American style ('20%').
+  - Evidencia: Every English deck in the course uses '20 %' (for example the w01.en grading table), copied from the Spanish convention.
+  - Propuesta: Left for course-wide consistency. Changing only w05 would make it differ from the other 16 English decks; best fixed course-wide.
+- **w05** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w05.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person while the rest of the deck uses tú.
+  - Evidencia: All 17 Spanish decks of the course use the same title. The instructor's list flags only w17.en for 'the student'.
+  - Propuesta: Not changed: this is a course-wide convention, not a w05 defect.
+- **w06** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w06.es.yaml` s2 agenda / 5 divider / 6 table
+  - The divider title 'Las cuatro reglas de mapeo' and the agenda card 'Las cuatro reglas...' (English: 'The four mapping rules') are followed by a mapping table with five rows: 1:N, 1:1, N:M, Ternaria and Recursiva. One defensible reading is four rules with Recursiva as a 1:N to its own table, but a reader counts five.
+  - Evidencia: Slide 6 has five rows. The w05 closing (es line 469, en line 468) also promises 'Cuatro reglas de mapeo', so changing the count here alone would contradict w05.
+  - Propuesta: Not changed because this needs an instructor decision. Either say the recursive row is the 1:N rule applied to the same table, or change the count in w06 (es and en: divider, agenda and homework) and in the w05 closing together.
+- **w06** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w05.es.yaml` sw05 closing (w06 slide 16 code_output)
+  - The w05 closing promises 'una llave foránea que se niega a nacer de cuatro maneras distintas' (English: 'refuses to be born in four different ways'). Week 6 shows only two foreign key refusals on slide 16 (6125 for a missing unique parent key, 3780 for an incompatible type), and the w06 objective says two.
+  - Evidencia: es/w05.es.yaml line 470 and en/w05.en.yaml line 469, compared with w06 slide 16 and objective 4.
+  - Propuesta: The fix belongs in the w05 closing (for example 'de dos maneras distintas'). w05 is another agent's file, so I did not edit it.
+- **w06** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w06.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' refers to the student in the third person, while the deck uses tú and the English says 'you will be able to'. The instructor flagged the English equivalent ('the student will be able to') in w17.en.
+  - Evidencia: All 17 Spanish mysql decks use 'el alumno podrá', so this is the course convention.
+  - Propuesta: Left as is to keep the course consistent. If the instructor wants tú here, change it in all 17 Spanish decks ('Al terminar la sesión podrás…').
+- **w06** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w06.es.yaml` s16 code_output
+  - The SQL comment '-- depto.id tiene indice normal, no UNIQUE' is missing the accent on 'índice'.
+  - Evidencia: The course writes SQL comments in plain ASCII on purpose: w08 'ya esta', w14 'despues', w15 'su indice', w16 'aqui', w17 'entro despues'.
+  - Propuesta: Left as is because it follows the course-wide ASCII convention for code comments.
+- **w06** · auditoría · code-wrong · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w06.es.yaml` s13 code_output
+  - The fragment 'INSERT INTO profesor (edad, antiguedad) VALUES (30, 20)' needs a profesor table with edad and antiguedad columns and defaults on every other NOT NULL column. Slide 7's profesor has neither column and has profesor_id PK, nombre NOT NULL and departamento_id NOT NULL with no defaults. Run against that table, it gives ERROR 1054 or 1364, not 3819. The output also names 'dom_edad' and 'chk_isir', which never appear in the source comments, and 'chk_isir' has no visible meaning. The same applies to the English deck.
+  - Evidencia: With a profesor_s(AUTO_INCREMENT id, edad, antiguedad, CONSTRAINT chk_isir CHECK (edad > antiguedad + 22)) the insert is rejected by the CHECK (MariaDB 4025, MySQL 3819). With a NOT NULL nombre column and no default, the same insert gave 'ERROR 1364: Field profesor_id doesn't have a default value' first.
+  - Propuesta: Left as is because the fragment is correct on the schema its comment implies. Spelling out CONSTRAINT names in the comments would push the code card past its width. The instructor could rename the demo table or show the constraint names.
+- **w06** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w06.es.yaml` s9 code_output
+  - The SHOW INDEX panel shows Key_name before Non_unique and omits the other 13 columns. The real output puts Non_unique first. The values themselves are correct (PRIMARY 0, alumno_id 1). The same applies to the English deck.
+  - Evidencia: MariaDB SHOW INDEX FROM inscripcion: Non_unique 0 PRIMARY and Non_unique 1 alumno_id, with the auto-created index named alumno_id as on the slide.
+  - Propuesta: Left as is. It is a deliberate two-column excerpt and does not mislead.
+- **w06** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/en/w05.en.yaml` svarious (w04, w07, w08, w09, w14 en decks)
+  - Other English decks in this course still have British spellings: Recognise (w05, w07, w08, w09), enrol/enrolment(s) (w05, w08, w14) and catalogue (w07, w14).
+  - Evidencia: grep -E 'normalis|enrol|catalogue|recognis' en/*.yaml
+  - Propuesta: These decks belong to other agents. Fix them there.
+- **w07** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml + en/w07.en.yaml` s10 code (and 19)
+  - The slide is titled 'Las mismas tablas' and labelled 'El guion de la semana 6, con tipos'. The w06 instructor script uses other tables (departamento, profesor, alumno with alumno_id INT, inscripcion, materia), not alumnos/inscripciones with matricula. The DDL shown here also has no FOREIGN KEY, yet slide 19's ERROR 1701 relies on inscripciones_ibfk_1.
+  - Evidencia: Read es/w06.es.yaml slides 6 to 16. Running slide 10's DDL alone gives no FK; I had to add one as scaffolding to reproduce slide 19.
+  - Propuesta: Not fixed. Adding an FK line overflows the card, and the inline 'REFERENCES' form behaves differently across MySQL versions. Flagged for the instructor.
+- **w07** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml + en/w07.en.yaml` s2 agenda / 16 divider
+  - Agenda card 3 and the block 3 lede promise CREATE, ALTER, DROP and TRUNCATE. DROP is never shown or explained anywhere in the deck. ALTER appears only as a commented-out line (slide 8) and in the ENUM steps.
+  - Evidencia: grep DROP: it appears only in the slide 6 table row and the agenda card.
+  - Propuesta: Not fixed: covering DROP would need new content. Reported for the instructor.
+- **w07** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml + en/w07.en.yaml` s13 code_output / 22 takeaways
+  - 'ahorra memoria' / 'saves memory' is measured with DATA_LENGTH, which is on-disk table size, not RAM. Defensible, because InnoDB pages also take buffer-pool space and 'memoria' is colloquial for storage in Spanish, but 'space' would be more precise in English.
+  - Evidencia: The information_schema.TABLES DATA_LENGTH definition. My MariaDB reproduction with CHAR(50) vs VARCHAR(50) gave 8929280 vs 3686400 bytes.
+  - Propuesta: Left as written; looks suspicious but is defensible.
+- **w07** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml + en/w07.en.yaml` s10 code
+  - The DECIMAL annotation says 'Ese mismo promedio en FLOAT sale 8.700000127156576', but the slide shows no average. FLOAT(8.7) alone is 8.699999809265137, so a reader may think the number is wrong.
+  - Evidencia: Brute-forced FLOAT32 averages. AVG of three FLOAT grades averaging 8.7 (e.g. 7.0, 9.1, 10.0) gives exactly 8.700000127156576. MariaDB returned AVG(c)=8.700000127156576 for FLOAT and 8.700000 for DECIMAL(4,2).
+  - Propuesta: Number verified as correct; the unstated referent is left to the author.
+- **w07** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w07.es.yaml + en/w07.en.yaml` s18 table
+  - 'AUTO_INCREMENT: sigue en 4 / vuelve a 1' refers to a 3-row demo that is never shown. Slide 17's t_prueba has 6 rows, so a reader may expect 7.
+  - Evidencia: MariaDB, 3-row AUTO_INCREMENT table: next id after DELETE = 4, after TRUNCATE = 1. Matches the slide.
+  - Propuesta: Correct as a fact; not changed.
+- **w08** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s13 code_output
+  - s13 gives materias the columns precio_lista and costo_interno, but s17 runs INSERT INTO materias VALUES ('HIS100','Historia',6), a three-value insert with no column list (w07 uses the same three-column shape). Both cannot be true of one table. s13's output also shows the result of an INSERT that is not in the source (only a comment stands in for it).
+  - Evidencia: MariaDB confirms the SELECT gives NULL plus Warning 1365 and INSERT ... SELECT / INSERT VALUES(x/0) give ERROR 1365 (22012), on a separate table I built with those columns. The schema clash comes from reading the two slides.
+  - Propuesta: Not fixed: needs a decision on which table the margin example uses. The output values themselves are correct.
+- **w08** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s6 code vs 15/17/18
+  - s6 tells students to always write the column list ('Escribirla siempre'), but the INSERTs on s15, s17 and s18 leave it out. s15 is the week 1 run reproduced verbatim.
+  - Evidencia: Read the four sources.
+  - Propuesta: Reported only. The demos work as written, and changing them would rewrite measured runs.
+- **w08** · auditoría · other · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s8 and 12 code_output
+  - s8's real FK error names the database `db_ops_wk141516`, which suggests it was measured in the weeks 14 to 16 operations database (w07 shows `db_tipossql`). s12 cuts error 1451 after 'constraint fails' with no ellipsis; the real message continues with the same (`db`.`inscripciones`, CONSTRAINT `fk_ins_alumno` ...) clause s8 shows.
+  - Evidencia: MariaDB prints the full 1451 message with the parenthetical (same FK as s8). The database name in the panel depends on where it was run.
+  - Propuesta: Left as is: the text shown is a correct prefix of the real error, and renaming the database would be invented.
+- **w08** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s16 code_output
+  - The SAVEPOINT panel lists counts after each step (6, 5, 4, 5, 6), but the script has only one SELECT COUNT(*), at the end, so the intermediate lines are narration, not output.
+  - Evidencia: Ran the script with a COUNT after each step on MariaDB: 6, 5, 4, 5, 6. Every value on the slide is correct, and the final count is 6.
+  - Propuesta: Values verified. Kept as a teaching trace, since it is correct and the English version is properly translated.
+- **w08** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s19 method
+  - 'las tres que ya viste correr': no slide in the deck actually runs condition 1 (a ROLLBACK with no open transaction). s15 only shows @@autocommit = 1 next to a transaction that works.
+  - Evidencia: Read s15 to s18. Ran it separately: DELETE then ROLLBACK under autocommit, and the row stays deleted (6 -> 5).
+  - Propuesta: Reported only. The behavior is described correctly in s19 and s20, and adding a demo slide would be new content.
+- **w09** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w09.es.yaml` s14 table (also en 14)
+  - This looks suspicious but is not changed. The 'logical order' table puts HAVING at step 4 and says it sees 'Grupos y sus alias', yet aliases are 'born' at step 5 (SELECT). A student may read this as contradicting the rule the slide is meant to derive. GROUP BY is also listed as seeing only table columns, although MySQL accepts SELECT aliases there too.
+  - Evidencia: Both statements are true MySQL behavior (an extension to standard SQL), and w10 slide 'having.sql' explicitly teaches that HAVING accepts the alias. Not changed because the cell is factually correct for MySQL. The instructor may want to add a word such as 'por extensión de MySQL'.
+  - Propuesta: Not changed: the cell is correct for MySQL. Flagged for the instructor.
+- **w09** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w09.es.yaml` s20 code_output (also en 20)
+  - This looks suspicious but is not changed. The source runs plain EXPLAIN, but the panel shows TREE-format lines ('-> Covering index scan on alumno using ix_grupo'). That only holds if @@explain_format defaults to TREE.
+  - Evidencia: w03.es slide 'plan.sql' states that @@explain_format is TREE on MySQL 9.7.2, so the deck agrees with the course. MariaDB 10.11 printed the traditional grid (type=index, key=ix_grupo, Using index / type=ALL), which confirms the plan itself: a covering index scan for grupo and a table scan for nombre. The default explain_format on 9.7.2 could not be checked here.
+  - Propuesta: Not changed. If 9.7.2 actually defaults to TRADITIONAL, the source should read EXPLAIN FORMAT=TREE.
+- **w09** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w09.es.yaml` s16, 18 code_output (also en)
+  - These look suspicious but are not changed. The instructor demos use COUNT, a derived table with alias t (slide 16) and GROUP BY (slide 18) one week before w10 formally teaches aggregates, subqueries and GROUP BY. The lab and homework do not require any of them.
+  - Evidencia: w10 introduces the five aggregates, GROUP BY and derived-table aliases (cte.sql: 'por qué el PDF escribe una t después del paréntesis'). The w09 lab and homework need only WHERE, LIKE, ORDER BY and LIMIT/OFFSET.
+  - Propuesta: Not changed: these are demonstrations, not exercises. Slide 18 could use SELECT DISTINCT grupo ... ORDER BY grupo if the instructor prefers.
+- **w10** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w10.es.yaml` s22 lab
+  - One of the five figures is 'cuáles materias pasaron de su cupo' ('which subjects went over capacity'). The brief also says all five come from two tables (alumno and inscripcion) with no JOIN. No slide in w10 shows a cupo column in either table. In the course, cupo only appears in w16, as a column of materia. If the capacity lives in materia, this figure needs a third table and a JOIN or correlated subquery. The EN side has the same issue.
+  - Evidencia: Grepped all decks for cupo and capacity. The only hits are this lab and w16 (BD1001 tiene cupo 2). The escolares schema is not in the repo, so I could not confirm where the capacity is stored.
+  - Propuesta: Not changed, because the fix would mean inventing schema facts. The instructor should either state a fixed cap (for example HAVING COUNT(*) > N) or name the table that holds cupo.
+- **w10** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w10.es.yaml` s5 divider
+  - The lede says four of the five functions skip NULLs and 'la quinta los cuenta todos' ('the fifth counts every row' in EN). The fifth function is COUNT, but COUNT(col) also skips NULLs: s7 shows COUNT(calificacion) = 14 of 20. Only COUNT(*) counts every row. It reads as slightly loose.
+  - Evidencia: The s6 table and the s23 takeaway both say clearly that only COUNT(*) counts everything, so the deck as a whole is correct.
+  - Propuesta: Left as is: it is rhetorical shorthand that the next slide resolves.
+- **w10** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w10.es.yaml` s25 closing
+  - The closing teaser says two things from today break with JOIN: 'el COUNT que devuelve uno' and 'la agrupación que fusiona a dos personas'. In w11 the COUNT(*) = 1 after a LEFT JOIN matches. The merging of two people, though, comes from UNION deduplication in the FULL OUTER JOIN recipe (w11 objective: 'para que la receta no fusione a dos personas distintas'), not from today's GROUP BY. The EN side has the same wording.
+  - Evidencia: Grepped w11.es. It has one GROUP BY a.alumno_id, used for the COUNT demo. The 'fusione a dos personas' sentence is about the UNION recipe.
+  - Propuesta: Left as is: it is a forward-looking teaser and 'agrupación' loosely covers deduplication. The instructor may prefer 'la receta que fusiona a dos personas'.
+- **w10** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w10.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the house rule asks for tú throughout. All 17 ES decks in this course use this exact title, and the instructor's list does not flag it.
+  - Evidencia: grep 'title: Al terminar' es/*.yaml returned the identical string in w01-w17.
+  - Propuesta: Not changed: it is a course-wide convention. Changing one deck would break consistency, so a decision should cover all 17 decks.
+- **w10** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w09.es.yaml` s3 objectives, 9 divider, 22 lab (w09)
+  - This is outside my files. The known list says the rest of the course uses tú, but w09.es also uses usted: 'donde usted quiera', 'antes de que usted llegara', and in the lab 'arme', 'escriba', 'Cuente', 'ya encontró'.
+  - Evidencia: Read w09.es.yaml in full (read-only) to check this week's references back to week 9.
+  - Propuesta: Must be fixed in ppts/mysql/introduccion-a-las-bases-de-datos/es/w09.es.yaml by the agent that owns w09.
+- **w11** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w11.es.yaml` s7 table, 18-19 code_output, 21 lab
+  - RIGHT JOIN is never introduced. The taxonomy slide ('Las seis escrituras') lists INNER, LEFT, CROSS ... ON, INNER without ON, USING and FULL OUTER, but not RIGHT JOIN. The recipe (s18), the trap (s19) and the lab all depend on it. The concept slide's left/right rule only implies it. The same holds in en.
+  - Evidencia: grep 'RIGHT' in both decks: first appearance is slide 18. Earlier weeks (w07 to w10) do not teach joins.
+  - Propuesta: Not fixed, to avoid inventing content. Adding a seventh row ('RIGHT JOIN … ON', 'todas las del JOIN, casen o no') would exceed the six the title names, so the instructor should decide.
+- **w11** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/en/w11.en.yaml` s1 cover, 6 concept, 23 homework
+  - The English deck uses guillemets «…» for quotations (cover subtitle, concept panel) and a spaced '20 %' / '40 %'. US English would use “…” and '20%'. Both conventions run course-wide (guillemets in en w01, w03-w07, w12, w15-w17; '20 %' in the en w01 grading table).
+  - Evidencia: grep -c '«' en/*.yaml and grep '[0-9] %' en/*.yaml.
+  - Propuesta: Left as is so the week matches the rest of the course. If the instructor wants US typography, it should be changed in every en deck at once.
+- **w12** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s1 cover, 6 concept
+  - The cover subtitle and concept panel say a view is 'la primera consulta que escribes en este curso que sobrevive a la sesión' and 'Hasta la semana pasada, cada consulta que escribías se iba con la conexión'. But the week 2 homework already told students to create a view and a trigger.
+  - Evidencia: w02.es.yaml homework brief: 'Crea una base propia con al menos una tabla, una vista y un trigger'. The en deck matches.
+  - Propuesta: Not fixed here. The root problem is week 2 asking for a view and a trigger ten weeks before they are taught (pedagogy order). The fix belongs in w02.es/w02.en homework, or w12 can soften 'primera'.
+- **w12** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s7 code (Riesgo annotation), 6 concept panel
+  - 'el bloque 03 lo mide y la semana 17 lo cobra' and the panel note about restoring a view on another server both promise that week 17 deals with the DEFINER. Neither w17 deck mentions DEFINER or SQL SECURITY.
+  - Evidencia: grep -i 'definer|security' on es/w17.es.yaml and en/w17.en.yaml: no hits on views (w17 covers GRANT and mysqldump/restore without DEFINER). w13.es does mention 'SQL SECURITY DEFINER, igual que las vistas de la semana 12'.
+  - Propuesta: Not fixed: either w17 adds the DEFINER-on-restore point, or this promise is dropped. That is the instructor's call, and w17 is outside my files.
+- **w12** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s3 objectives
+  - Objective 4 is 'Leer el DEFINER de una vista y saber qué implica', but no slide says what SQL SECURITY DEFINER implies: the view runs with its creator's privileges, not the reader's. Slide 17 only calls the default 'peligroso', and the course has no speaker notes.
+  - Evidencia: Read slides 7, 16 and 17 in both decks. The implication appears only in soluciones.es.md 12.3.
+  - Propuesta: Not fixed: it needs one new sentence of content (for example on slide 17), which the instructor should write.
+- **w12** · auditoría · other · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s12 code_output (title)
+  - The title 'La fuente prohíbe los joins que funcionan y permite el que no' conflicts with the source quote on slide 10 ('Una vista no es actualizable si contiene JOIN'). That rule would forbid the LEFT JOIN too, so the source would not 'allow' it.
+  - Evidencia: The course source document is not in the repo, so I cannot check what it says about outer joins.
+  - Propuesta: Not fixed: unverifiable without the source. Flagged for the instructor.
+- **w12** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s19 code_output
+  - Looks suspicious but is not a defect. The view joins three tables, yet the EXPLAIN FORMAT=TREE panel shows only i and m.
+  - Evidencia: MariaDB EXPLAIN of the same query shows a: const (PRIMARY, ref const), i: ref fk_i_alumno, m: eq_ref PRIMARY. alumno_id = 1 propagates through a.alumno_id = i.alumno_id, so alumnos becomes a const table read during optimization, and MySQL's TREE format leaves const tables out. The fk_i_alumno index name is confirmed by SHOW INDEX. The (cost=… rows=…) parts are left out for width, and no claim depends on them.
+  - Propuesta: No change needed.
+- **w12** · auditoría · code-wrong · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml + en/w12.en.yaml` s11, 12, 13, 15 code_output
+  - The catalog queries filter on TABLE_NAME only, with no TABLE_SCHEMA. On a server where another schema has a view with the same name they return several rows, and the panel shows one. Slide 17 does use TABLE_SCHEMA = DATABASE().
+  - Evidencia: On the shared MariaDB, SELECT IS_UPDATABLE ... WHERE TABLE_NAME='v_insc_join' returned two rows (YES, YES) because another schema had the same view. CHECK_OPTION for v_ing returned two rows too.
+  - Propuesta: Not fixed: on the author's single-schema setup the panels are correct. Adding AND TABLE_SCHEMA = DATABASE() is optional hardening.
+- **w12** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w12.es.yaml` s3 objectives (title)
+  - Looks suspicious but is not a defect. The Spanish heading 'Al terminar la sesión el alumno podrá…' is third person, while the English says 'you'.
+  - Evidencia: All 17 Spanish mysql decks, and 146 Spanish decks across the repo, use this exact heading. It is the house heading, not a switch to usted. The rest of w12.es uses tú throughout (Vuelves, Agregas, Construye, Corre, Escribe).
+  - Propuesta: No change: course-wide convention.
+- **w13** · auditoría · code-wrong · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s8 code_output / 20 code_output
+  - sp_malo and sp_inscribir_estricto are shown as CREATE PROCEDURE ... BEGIN ... END with semicolons inside and no DELIMITER. Pasted as displayed into the mysql client, they fail with 1064, which slide 9 itself explains. The course convention (also w14) is to show DELIMITER once in full and then show bodies as fragments.
+  - Evidencia: Fed the literal sp_malo source to the client: 'ERROR 1064 (42000) ... near '' at line 5'. With DELIMITER added, sp_malo prints 5 rows with alumno_id = 1, no warning, and the p_ version prints 2 rows, matching the panel. sp_inscribir_estricto prints 'ERROR 3101 (23000): El alumno o la materia no existen en el catalogo', matching the panel.
+  - Propuesta: Not changed: course-wide fragment convention, and adding DELIMITER lines would lengthen code cards. Flagged for the instructor.
+- **w13** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s2 agenda / 3 objectives / 18-19 code
+  - The agenda says CONDITION/HANDLER/... run 'sobre ese mismo procedimiento', and objective 5 says 'aplicados al procedimiento que quedó a medias'. Block 3 actually uses sp_inscribir on a different schema (matricula/clave_materia, database db_ops_wk141516, fk_ins_alumno). Block 2's sp_dos_pasos uses alumno_id/materia_id in agent_jvst with fk_i_materia. The outputs also expose the author's harness database names (agent_jvst, db_ops_wk141516), which students will not have.
+  - Evidencia: Compared the measured outputs on slides 10, 12 and 19. Error text format confirmed on MariaDB: 'rechazado [23000/1452] Cannot add or update a child row ... CONSTRAINT `fk_ins_alumno` ...', 212 characters with the slide's database name.
+  - Propuesta: Not changed: these are real measured outputs, and unifying them would mean re-measuring and rewriting slides.
+- **w13** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s22 takeaways / 3 objectives
+  - The takeaway says 'MYSQL_ERRNO es lo único que tu aplicación puede distinguir' ('the only thing your application can tell apart'). That overstates it: clients also receive the SQLSTATE, and different SQLSTATEs (45000 vs 22012) are distinguishable. Only a custom 23000 and a real 23000 cannot be told apart by SQLSTATE.
+  - Evidencia: The slide 13 output itself shows five distinct SQLSTATEs reaching the client.
+  - Propuesta: Left as the author's pedagogical simplification; reported for the instructor's judgment.
+- **w13** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s2 agenda / 5 method
+  - The agenda lists 'El parcial' as the fourth moment, but the midterm slide (method) is slide 5, before block 1.
+  - Evidencia: Slide order in both decks. 'nada de lo que veas esta mañana' suggests the exam takes place after the lesson, so the agenda may be chronological and slide 5 a preview.
+  - Propuesta: Not changed: plausible as a preview slide; moving slides would be a structural edit.
+- **w13** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s3 objectives
+  - The Spanish objectives title is in third person ('Al terminar la sesión el alumno podrá…'), while English says 'you will be able to'. It is the same title in all 17 Spanish decks of the course.
+  - Evidencia: Grep: w11, w12 and w14 es use the identical title.
+  - Propuesta: Not changed: course-wide convention. Changing one deck would break consistency.
+- **w13** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w13.es.yaml` s9,12,13,15,16,19,20 code
+  - Spanish SQL comments and string literals carry no accents: 'oido', 'Aqui', 'catalogo', 'seccion', 'matricula', 'Operacion', 'Division', 'Calificacion'.
+  - Evidencia: Grep across the course: no accented SQL comment in any of the 17 Spanish decks. This is a deliberate ASCII-in-code convention. Changing the string literals would also change the measured error outputs.
+  - Propuesta: Not changed: course-wide code convention.
+- **w14** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w14.es.yaml and en/w14.en.yaml` s15 code_output, 18 compare
+  - Slide 7 teaches the long name convention and says 'Es largo a propósito, para que un SHOW TRIGGERS se lea sin abrir el cuerpo'. Slide 15's SHOW TRIGGERS output then lists abbreviated names (trg_insc_bi_valida, trg_insc_bi_periodo), and the slide 18 template uses trg_tabla_bi_regla.
+  - Evidencia: Read slides 7, 15 and 18. The abbreviated names still follow table, timing+event, purpose order. Slide 15 is a measured output: re-created both triggers in MariaDB, they fire in creation order (ACTION_ORDER 1, 2), and the second raises 1644 'Periodo con formato invalido' as shown.
+  - Propuesta: Not changed. Slide 15 shows the names of a measured run, so renaming would invent output. Worth an instructor decision on whether the deck should model the long form throughout.
+- **w14** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w14.es.yaml and en/w14.en.yaml` s13 code_output, 20 code_output
+  - If read as one continuous session the counts look odd. Slide 13 reports the audit log at 0 rows right after slide 12 wrote one UPDATE row. Slide 20 reports information_schema.EVENTS empty, although slide 19 created ev_latido EVERY 1 SECOND and never dropped it.
+  - Evidencia: Each measured slide is a separate fresh run. Reproduced slide 13 with an emptied log: 1 child row became 0 after the cascade, and the log stayed at 0 after both the cascade and TRUNCATE. Reproduced slide 20 in an empty schema: Note 1588, catalog count 0. The behavior shown is correct.
+  - Propuesta: Not a defect in behavior; left as is. If the instructor wants it airtight, slide 20 could filter with WHERE EVENT_NAME = 'ev_una_vez'.
+- **w14** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w14.es.yaml and en/w14.en.yaml` s8, 13, 14, 15 code_output
+  - The deck mixes two shapes of the student key. Slides 8, 14 and 15 insert by matricula; slide 13 deletes FROM alumnos WHERE alumno_id = 3.
+  - Evidencia: The same mix runs through w11, w12 and w13 (alumno_id in the JOINs and sp_creditos; matricula in sp_inscribir and RESIGNAL), so it is course-wide rather than specific to w14.
+  - Propuesta: Not changed. Unifying it needs a course-level decision on the schema.
+- **w14** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w14.es.yaml and en/w14.en.yaml` s13 code_output, 22 lab
+  - The lab depends on a foreign key with ON DELETE CASCADE. No deck from w01 to w13 shows the ON DELETE clause; w14 only names it in a comment on slide 13 and never shows the syntax.
+  - Evidencia: grep 'ON DELETE|ON UPDATE' over es/w01 to w13 finds nothing. The only CASCADE hit is w12's CHECK_OPTION = CASCADED.
+  - Propuesta: Not changed. Showing the clause would mean adding content to a slide. Flagged for the instructor, who could add the FK line to slide 13's comment or to the lab brief.
+- **w14** · auditoría · other · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w14.es.yaml and en/w14.en.yaml` sall
+  - Neither deck has speaker notes, though the README says each lesson names its sources in the cover notes and that durations belong in the notes.
+  - Evidencia: grep -c 'notes:' is 0 for all 17 es decks of this course (and the en decks match), so this is course-wide.
+  - Propuesta: Not changed. Writing notes would invent content.
+- **w15** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s19 code_output
+  - The REGEXP line shows 'type=index ... possible_keys=NULL' with a full-column B-tree on titulo. type=index proves the index covers the query. Under the same 8.0.13+ skip-scan key collection, possible_keys would list idx_titulo. The solutions file shows NULL only with a prefix index titulo(60), and there the type is ALL, not index. Applies to en as well.
+  - Evidencia: MariaDB, same setup: range 3750, then index 59711, then index 59711 with possible_keys NULL, which matches the slide's shapes. soluciones.es.md 15.3 (9.7.2, prefix index) shows the REGEXP plan as 'ALL NULL NULL ... 59855'. The rest of the panel (range for the anchored LIKE, no index use for REGEXP even when anchored) is correct.
+  - Propuesta: Not fixed; it needs a 9.7.2 re-run. The diagram note on slide 20 ('Ni con ancla usa el índice') stays true either way.
+- **w15** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s7 code_output
+  - The plan shows 'using idx_mat_fecha' and key=idx_mat_fecha two slides before slide 9 creates that index. A reader meets a name with no definition. Applies to en as well.
+  - Evidencia: Slide 7 output against the slide 9 source 'CREATE INDEX idx_mat_fecha ON inscripciones_big (matricula, fecha_alta);'. Re-running slide 7 in MariaDB only reproduced the plan after creating idx_mat_fecha first.
+  - Propuesta: Left as is, since a fix means reordering slides or re-measuring. Suggest a source comment on slide 7 or moving the CREATE INDEX earlier.
+- **w15** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s11 divider
+  - The lede says 'Faltan seis tipos' (en: 'Six kinds are missing'). The next slide is titled 'Siete índices, no dos', which reads as 7 - 2 = 5 missing. Six is correct only if one of the source's two kinds is outside the seven, for example PRIMARY KEY, and the deck never says so.
+  - Evidencia: Slide 12 table has exactly 7 rows. I found no listing of the 5.7 source's index kinds anywhere in the repo.
+  - Propuesta: Not changed because I cannot see the source's list. The instructor should either say which two kinds the source lists or change the count to five.
+- **w15** · auditoría · description-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s20 diagram
+  - Rama 01 cites "LIKE 'Ramirez%' ... type=range, 5000 filas", a measurement that appears on no slide. The anchored LIKE the deck actually measured (slide 19) is 'Duda sobre normalizacion%' with rows=3750. Branch 02 reuses slide 15's numbers, so branch 01 stands out. Applies to en as well.
+  - Evidencia: Searched both decks: 5000 appears only here. Slide 6's data uses apellidos of the form 'Ramirez-N' (25 rows for 'Ramirez-7'), so the 'Ramirez%' range size cannot be derived.
+  - Propuesta: Not changed: I cannot verify the number, and swapping in slide 19's example would be a rewrite. Flagged for the instructor.
+- **w15** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s24 homework
+  - The brief says 'Uno de los cuatro se cae entero' (en: 'One of the four falls entirely'). The pitfalls slide's own refutations make at least two of the four fall entirely: «No use campos nulos» (IS NULL uses the index, UNIQUE takes many NULLs) and «Usar LIMIT para una muestra» (LIMIT without ORDER BY is not a sample). That leaves the hint ambiguous for grading.
+  - Evidencia: Slide 21 texts. MariaDB confirmed the facts: IS NULL gives type=ref key=idx_correo rows=4; UNIQUE accepted extra NULL rows and rejected a real duplicate with 1062; LIMIT 10 OFFSET 90000 read 90010 rows; a VARCHAR column compared with a number gives a full index scan of about 49.6k rows.
+  - Propuesta: Left for the instructor to decide which single advice is meant to fall.
+- **w15** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s16 code_output (also 14, 18)
+  - Some panel lines do not come from the displayed source. 'INNODB_FT_INDEX_TABLE 72 tokens distintos' (16) needs SET GLOBAL innodb_ft_aux_table and a query that are not shown. '60 000 filas -> 4231.8 ms' (14) and the 'FULLTEXT, 10 000 filas' timings (18) also have no timing code. Separately, the title 'Treinta y seis palabras vacías' counts rows: the default list has 36 rows, but 'the' appears twice, so there are 35 distinct words. Applies to en as well.
+  - Evidencia: MariaDB: COUNT(*) FROM INNODB_FT_DEFAULT_STOPWORD = 36, and GROUP_CONCAT shows 'the' twice; @@innodb_ft_min_token_size = 3; MATCH AGAINST('la') = 0 and LIKE '% la %' = 60000 on my synthetic data; de, en and la are in the list, as the panel says.
+  - Propuesta: Not changed. The panels are the author's curated summaries, and the stated values are correct. Noted so the instructor can add the missing query or a comment if raw-output fidelity is required.
+- **w15** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú, and the English says 'you will be able to'.
+  - Evidencia: Every es deck w08 to w17 in this course uses the same title, so it is the course convention, not a w15 slip.
+  - Propuesta: Not changed, to keep the course consistent. If the instructor wants tú here ('Al terminar la sesión podrás…'), it should change course-wide.
+- **w15** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s21 pitfalls
+  - The titles «No use ORDER BY», «No use campos nulos» and «Use índices en las llaves» are usted imperatives. They are quotations of the 2015 inherited deck, so they are not the deck's own register.
+  - Evidencia: The eyebrow 'Auditoría del deck heredado' and the «» quotes mark them as citations. The descriptions underneath use neutral or tú forms.
+  - Propuesta: Not a defect. Changing them would misquote the advice being audited.
+- **w15** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w15.es.yaml` s1 cover, 5 divider
+  - The cover ('Hace cuatro semanas un JOIN tardaba a la vista') and the divider ('El JOIN de la semana 11 tardaba y nadie supo decir por qué') refer back to a slow JOIN in week 11. The w11 deck shows no slow JOIN, timing or large table. Applies to en as well.
+  - Evidencia: grep over es/w09, w10 and w11 for lento/tarda/segundos/_big/índice: no match except EXPLAIN FORMAT=TREE on UNION.
+  - Propuesta: Left as is because this may be a classroom callback. Flagged so the instructor can confirm or soften it.
+- **w16** · auditoría · technical-claim · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml` s19 method (also en/w08.en.yaml slide 19)
+  - Outside my files. w08 'Condición 3' says the ROLLBACK on MyISAM 'no hace nada y tampoco dice nada' ('does nothing and ... says nothing' in en). It does say something: warning 1196 ER_WARNING_NOT_COMPLETE_ROLLBACK. This is the same fact I corrected in w16 pitfall 03.
+  - Evidencia: MariaDB: ROLLBACK after a MyISAM INSERT returns '1 warning'; SHOW WARNINGS shows 1196 'Some non-transactional changed tables couldn't be rolled back'.
+  - Propuesta: Not fixed because it is another deck. Must be fixed in ppts/mysql/introduccion-a-las-bases-de-datos/es/w08.es.yaml and en/w08.en.yaml, slide 19.
+- **w16** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w16.es.yaml` s23 homework (also en)
+  - The homework asks students to run the scripts 'con NOW(6)'. No slide in w01 to w16 shows NOW with a fractional-seconds argument; earlier weeks only use NOW(). The microsecond timestamps appear only in the output panels of slides 6 and 15.
+  - Evidencia: Grepped es/w01..w16 for 'NOW(6)', '(6)', 'DATETIME(6)'. Only the w16 homework uses NOW(6). The homework spells out the exact call, so a student can follow it.
+  - Propuesta: Left as is: the brief names the call explicitly. The instructor may want a one-line mention of NOW(6) on slide 6 or in the brief.
+- **w17** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s13 code_output (also en)
+  - The header reads "-- Host: 127.0.0.1", but the command shown has no -h. mysqldump prints current_host or "localhost", so the command as written gives "Host: localhost" unless an option file sets host.
+  - Evidencia: mariadb-dump (same header code as mysqldump) with no -h printed "-- Host: localhost Database: db_backup".
+  - Propuesta: Not changed. The real run probably used -h 127.0.0.1 or a my.ini [client] host, and I won't invent either. The instructor should add -h 127.0.0.1 to the command or re-measure.
+- **w17** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s1 cover, 5 divider, 20 code_output (also en)
+  - The deck credits week 2 with the promises it pays off today ("La semana 2 prometió «Seguridad de acceso y auditoría» y nunca volvió al tema", "Las dos últimas promesas de la semana 2", "los dos niveles que la semana 2 prometió"). In this course's decks, the table that sends Seguridad and Respaldo to week 17 is in w03. w02 has no such quote, and w02 does cover CREATE USER and GRANT (slide "Crear una cuenta no le da acceso a un solo dato").
+  - Evidencia: grep "Seguridad de acceso" across the repo finds only w17. w03.es.yaml lines 121-122 have Seguridad → 17 and Respaldo → 17. w02.es.yaml line 337 has CREATE USER/GRANT.
+  - Propuesta: Not changed. The quote may come from the inherited source's week 2, which is not in the repo. Instructor to confirm.
+- **w17** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s22 method (also en), 17 divider
+  - "La semana 6 dice que el índice es «un detalle agregado»" and "la contradicción que ha venido cargando a propósito desde la semana 6": w06 contains no such phrase. It says the foreign key creates the child index. The 3.71 figure does match w15 (52592640/14172160).
+  - Evidencia: grep -i "detalle agregado" / "added detail" across es/ and en/ finds only w17. w15.es.yaml line 357 has 3.71 veces.
+  - Propuesta: Not changed. This probably quotes the inherited source. Instructor to confirm.
+- **w17** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` swhole deck (also en)
+  - w12 promises that week 17 will cover the automatically written DEFINER ("El DEFINER se escribió solo ... la semana 17 lo cobra"). w17 never mentions DEFINER.
+  - Evidencia: w12.es.yaml line 137-138 and w12.en.yaml line 136. grep DEFINER in w17 finds nothing.
+  - Propuesta: Fix belongs in w12 (drop the promise) or needs new w17 content. Reported for the instructor.
+- **w17** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s1 cover vs 12 divider (also en)
+  - The cover says the backup "se abre en cualquier editor y se lee de principio a fin". The block 2 divider says the full backup has a 1,044,220-character line and "Las herramientas de este bloque son grep, head y tail, no un editor".
+  - Evidencia: Read both slides. The cover wording echoes the w16 closing teaser ("el respaldo que se abre en cualquier editor").
+  - Propuesta: Left as is. It reads as an intentional tension (the 7 KB file vs the 52 MB one), but a reader may see a contradiction.
+- **w17** · auditoría · code-wrong · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s15 code_output (also en)
+  - The comment says "las dos corridas llevan --set-gtid-purged=OFF", but the mysqldump line shown leaves that flag out. A student copying the line on a GTID server gets the 3 warnings and a larger file.
+  - Evidencia: Read the source. The sizes 6963 and 9542 only hold with the flag (Trap 01: 7,249 → 6,963).
+  - Propuesta: Not changed. The comment states the elision explicitly, and adding the flag would push the code card past its width.
+- **w17** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s24 takeaways (also en)
+  - The second takeaway cites "mysqldump --no-data devuelve el esquema solo en 5,643 bytes". No slide in the deck shows --no-data or that number.
+  - Evidencia: grep no-data finds it only in the takeaway. It is practiced in exercise 17.2.
+  - Propuesta: Not changed. It is a small new fact in a summary slide. The instructor may move it to a slide or drop it.
+- **w17** · auditoría · pedagogy-order · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s9 and 10 code_output (also en)
+  - wk15_tutor and wk15_reportes receive GRANTs without a CREATE USER on screen. This comes right after slide 7 teaches that granting to an account that doesn't exist gives ERROR 1410.
+  - Evidencia: Read the sources. The outputs show success, so the accounts were created off-slide.
+  - Propuesta: Not changed. Plausible off-slide setup. The instructor may want to say so aloud.
+- **w17** · auditoría · output-mismatch · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s14 code_output (also en)
+  - `cat dump_err.txt` would print the full GTID warnings, starting with "Warning: A partial dump from a server that has GTIDs ...". The panel shows only the two "pass ..." sentences.
+  - Evidencia: From the mysqldump 8.x source text of the warnings. It cannot be reproduced on MariaDB, which has no gtid_mode and no such warnings.
+  - Propuesta: Not changed. The eyebrow "dos de las tres advertencias" signals an excerpt, and the full text would not fit 10 lines.
+- **w17** · auditoría · consistency · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s4 roadmap (also en)
+  - Phase C reads "Tipos y DDL, DML, agrupación y JOIN" (EN: "Types and DDL, DML, grouping and JOIN"). It drops SELECT and UNION, which every other week's roadmap lists (w16: "Tipos y DDL, DML, SELECT, agrupación, JOIN y UNION").
+  - Evidencia: Compared roadmap phase text across es/w01 to w17 and en/w01 to w17.
+  - Propuesta: Not changed. It is not wrong, and roadmap wording already varies week to week. Worth normalizing course-wide.
+- **w17** · auditoría · language · low · `ppts/mysql/introduccion-a-las-bases-de-datos/es/w17.es.yaml` s21 pitfalls
+  - Trap 02 says "La delación es que el archivo no termina...". "Delación" means informing on someone, so it reads oddly as "the telltale sign". "Lo que lo delata" or "La señal" would be more natural.
+  - Evidencia: Read it. The technical content is verified: mysqldump with a missing table exits 6, and the last line is a header SET, not "Dump completed" (private MariaDB: exit=6, header only). 796 bytes is consistent with the solutions' 793 for the 3-character-shorter schema name "taller".
+  - Propuesta: Left as the author's word choice. Flagged for the instructor.
+
+## Office · Manejo y Análisis de la Información (TIA501)
+
+88 entradas, de mayor a menor severidad.
+
+- **w01** · auditoría · technical-claim · medium · `ppts/office/manejo-y-analisis-de-la-informacion/es/w01.es.yaml + en/w01.en.yaml` s5 divider, 15 divider, 16 concept, 19 takeaways
+  - The deck's premise is that the certification grades how the sheet was produced and that only one route answers the item. MOS 365/2019 exams are live-in-the-application tests, and they are generally understood to score the resulting file state. If the ribbon route and the dialog route leave an identical file, it is not clear how a task could tell them apart. I could not verify Certiport's grader internals.
+  - Evidencia: A web search (Certiport MOS 365 tutorial, MOS FAQ pages) found the live-in-the-application format and the 700/1000 scale, but nothing saying that the method rather than the result is scored. The claim runs through the whole course (procedures.*.md 2.2.6, w02), so changing it is the instructor's call.
+  - Propuesta: Not changed. The instructor should confirm against Certiport's scoring documentation.
+- **w01** · auditoría · consistency · medium · `ppts/office/manejo-y-analisis-de-la-informacion/es/w02.es.yaml + en/w02.en.yaml (not my files)` scompare slide (around line 255) of w02
+  - The w02 compare slide repeats the w01 defects. It pairs All Borders / Todos los bordes with Outline / Esquema and Light yellow / Amarillo claro with yellow, so the routes do not give the same sheet, and es uses 'Esquema' instead of 'Contorno'. Its title 'Tres operaciones contra una' / 'Three operations against one' sits over four ribbon operations, and the note itself says 'Cuatro operaciones'.
+  - Evidencia: Read es/w02.es.yaml lines 255-280 and en/w02.en.yaml lines 255-280.
+  - Propuesta: Must be fixed in w02.es.yaml and w02.en.yaml by the agent that owns them. I did not edit them.
+- **w02** · auditoría · consistency · medium · `other files (w03.en/es, procedures.en.md, labs/ex01.en.md)` sw03 s3 objectives and Series slide; procedures 2.1.2, 2.2.7
+  - The false claims fixed in w02 are still in the neighbouring materials: 'Weekday skips Saturday and Sunday, which no drag will do for you' and 'Fill a series the handle cannot produce: Growth, weekdays...' (w03), 'cannot do Growth' (procedures 2.1.2 short route), the second-value seed (procedures 2.1.2 step 1, ex01), and 'cells formatted by hand do not move' (procedures 2.2.7).
+  - Evidencia: I grepped en/w03.en.yaml (lines 50-51, 173) and read procedures.en.md 2.1.2 and 2.2.7.
+  - Propuesta: Outside my files. Must be fixed in w03.es/en and procedures.en/es.md.
+- **w03** · auditoría · consistency · medium · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w11.en.yaml` sw11 lines 33 and 452 (es) / 33 and 444 (en)
+  - Week 11 repeats the wrong count ('seis nombres definidos muertos' / 'six dead defined names'). This is outside my files.
+  - Evidencia: Same source as above (labs/ex18.en.md): five broken names plus BD, which works. grep shows 'seis'/'six' at es/w11 lines 33 and 452 and en/w11 lines 33 and 444.
+  - Propuesta: Must be fixed in w11.es.yaml and w11.en.yaml (six -> five), by whoever owns those decks.
+- **w12** · auditoría · technical-claim · medium · `ppts/office/manejo-y-analisis-de-la-informacion/es/w12.es.yaml + en/w12.en.yaml` s11 concept (also 8 method, 9 pitfalls, 25 takeaways)
+  - The deck contradicts itself on how a MOS exam is graded. Slide 11 says the grader 'no puede verte trabajar, solo lo que el trabajo dejó en el archivo', and the takeaway says 'nadie te ve trabajar'. Yet the same panel says the ribbon and Format Cells 'producen la misma celda de color' and that only one of them 'deja la evidencia'. Two identical cells cannot leave different evidence in the file. Slide 8 also says the midterm grades 'la manera en que llegaste ahí'. Across the course, w01 slide 'Qué mide en realidad el examen' says the exam measures 'la secuencia de clics', while w12 says 'se lee el archivo, no a ti'. As far as I know, MOS 2019 tasks are scored on the final file state, so the fill-color example as written is not true.
+  - Evidencia: Read slides 8, 9, 11 and 25 and w01 (read-only). A ribbon fill and a Format Cells fill with the same theme color produce the same cell style in the saved file. Some other examples do leave a trace: a multi-level sort is saved as a sortState, and a table total row is stored with the table.
+  - Propuesta: Not changed because this is the instructor's course-wide framing (w01 and w12). It needs a decision: either say the route matters only where it changes the file, or drop the 'misma celda de color' example, which is the weakest one.
+- **w15** · auditoría · other · medium · `ppts/office/manejo-y-analisis-de-la-informacion/es/w15.es.yaml` s8 code
+  - The example criterion <>Azcapotzalco uses the correct spelling of the borough, but the exercise 24 workbook spells it Azcapozalco, without the t. Against that data the criterion excludes nobody, so filter 6 silently lets the five Azcapozalco employees through. The same applies to the English deck.
+  - Evidencia: Simulation: <>Azcapotzalco keeps 27 of 27 records, while <>Azcapozalco keeps 22. labs/ex24.en.md documents the misspelling and recommends fixing the data.
+  - Propuesta: Left the slide's correct spelling as it is and added a speaker note in both decks telling the instructor to fix the data or match the workbook's spelling. The real fix is in the exercise 24 workbook and data, which are outside my files.
+- **w15** · auditoría · other · medium · `ppts/office/manejo-y-analisis-de-la-informacion/labs/ex24.en.md` sn/a (outside assigned files)
+  - The exercise doc gives *8 as the criterion for filter 14 ('ends in 8') and expects 4 rows, yet a few lines later says a plain text criterion behaves as 'begins with'. With that rule, *8 returns 7 rows. Its AVERAGE note also says the criteria cell 'will display FALSE' for row 3, but J3 (7876.85) is above the average (4724.34), so the cell shows TRUE.
+  - Evidencia: Same simulation: *8 gives 7 codes under begins-with matching, and J3 = 7876.85 > 4724.34.
+  - Propuesta: Not my file. It should be fixed in labs/ex24.en.md: criterion ="=*8" for filter 14, and 'TRUE' in the AVERAGE note.
+- **w16** · auditoría · technical-claim · medium · `ppts/office/manejo-y-analisis-de-la-informacion/labs/ex25.en.md` sn/a (lab handout, Model 2 checks)
+  - The handout says: 'If payment times term comes out below the amount borrowed, the annual rate went in undivided or the term went in as years.' This is the same flawed check as pitfall 04. At any positive rate the payment times the term is never below the amount, and an undivided rate makes it far larger, not smaller.
+  - Evidencia: PMT(0.154;24;250000) = -39,778.53, and x24 = 954,685, which is above 250,000. All the undivided cases I computed come out 1.6 to 6 times the loan.
+  - Propuesta: Outside my files. It must be fixed in labs/ex25.en.md (and solutions.en.md if it is copied there).
+- **w01** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w01.es.yaml + en/w01.en.yaml` s8 concept, 19 takeaways
+  - 'Los dominios de 2019 son el temario más completo' / 'La lista de 2019 es la más larga' / 'the longer list'. COBERTURA.md says MO-210 and MO-211 add 11 objectives, drop only the 2 language objectives and replace 'Format data', and gives the total as 'Once objetivos nuevos sobre ciento doce'. That puts the 365 pair at about 112 objectives against 107 for 2019, so the 2019 list may be the shorter one.
+  - Evidencia: COBERTURA.md line 29 ('Once objetivos nuevos sobre ciento doce') and its section on what 365 removes. The official 365 objective PDFs could not be fetched because the proxy blocked them.
+  - Propuesta: Not changed. The instructor needs to confirm the 365 objective totals before the 'longest list' rationale can be kept or reworded.
+- **w01** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w01.es.yaml + en/w01.en.yaml` s3 objectives
+  - Objective 6, 'Decir qué no enseña este curso: Grabar macros le toca a TIA503', is not covered by any slide in the deck. Macros and TIA503 appear only on the objectives slide.
+  - Evidencia: Searched both decks for macro and TIA503: the only hit is the objectives slide.
+  - Propuesta: Not changed because a fix would mean inventing a slide. Either the presenter covers it orally or the objective should be dropped.
+- **w02** · auditoría · technical-claim · low · `both` s26 table (2.1.4)
+  - 'The button face: It shifts down and never asks' may be wrong. Range.Insert with no Shift argument picks the direction from the selection's shape, and one web source says the button face shifts right. I couldn't settle it without Excel.
+  - Evidencia: procedures.en.md 2.1.4 says it shifts down. The VBA docs say Excel 'decides based on the shape of the range'. Web search results conflict, and Microsoft pages are blocked by egress.
+  - Propuesta: Left as written. Should be confirmed on the lab build with a tall selection (e.g. B2:B5).
+- **w02** · auditoría · parity · low · `es/w02.es.yaml` s3 objectives
+  - The Spanish title 'Al terminar la sesión el alumno podrá…' uses third person, while the English says 'you will be able to…'.
+  - Evidencia: 147 Spanish decks across the repo use exactly 'el alumno podrá', and all 17 decks of this course do. It's the house-wide objectives title.
+  - Propuesta: Not changed: changing one deck would break consistency with the other 16. The instructor should decide course-wide.
+- **w02** · auditoría · language · low · `es/w02.es.yaml` s30 lab, 32 homework
+  - The lab and homework use plural imperatives (Abran, Seleccionen, Terminen, entreguen), while the rest of the deck uses tú.
+  - Evidencia: In Mexico 'ustedes' is the plural of tú (there is no vosotros), not formal usted. Labs and homework in w03, w04 and w05 of this course address the group the same way.
+  - Propuesta: Not a defect. It's the course convention for addressing the group.
+- **w02** · auditoría · consistency · low · `other files (labs/*.md)` sn/a
+  - labs/ex01.en.md and most homework briefs say submissions go to Moodle, while every deck (including this one) says Blackboard.
+  - Evidencia: grep -l Moodle finds ex02 to ex04 and hw01 to hw03, hw05, hw07 to hw09. The decks say Blackboard.
+  - Propuesta: Outside my files. Report only.
+- **w03** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w03.en.yaml` s3 objectives / 10 steps item 04
+  - Residual problem after the fix above. The objective still lists 'una tendencia' / 'a trend' among things a plain drag cannot produce, but a plain left drag of 1, 3, 5 already extends the linear best-fit trend to 7, 9, 11. Only the Growth curve needs the dialog or a right-drag. 'Tu propia lista' / 'custom list' is also followed by the handle once defined (slide 10 item 05 says so).
+  - Evidencia: Microsoft 'Project values in a series': dragging the fill handle over two or more numbers fills a linear best-fit trend. TREND in LibreOffice gives 7, 9, 11 for 1, 3, 5. Week 2's takeaway and procedures.en.md line 2940 ('no trend') share the same framing.
+  - Propuesta: Not changed. Rewording the objective's list is the author's call, and the framing runs through w02 and procedures.en.md.
+- **w03** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w03.en.yaml` s13 table
+  - The third column header is 'Por qué no el Cuadro de nombres' / 'Why not the Name Box', but rows 4 and 5 don't answer it. They list the Formulas sub-options ('Números, Texto, [Logicals], Errores') and a forward reference ('Vuelve en las semanas 5 y 9').
+  - Evidencia: Read rows 1 to 5. Only rows 1 to 3 answer the header. The forward reference itself checks out: week 5 covers conditional formatting rules, and week 9's Exercise 15 sorts and filters by them.
+  - Propuesta: Left as is. Making the column answer its header on every row means rewording the author's table.
+- **w03** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/en/w03.en.yaml` s18 concept (and 17 code_output)
+  - '05/03/2024 is stored as 45356' is correct only for day/month/year entry (5 March 2024), as on the lab machine's es-MX locale. An American English reader typing 05/03/2024 into an en-US Excel gets 3 May 2024 = 45415.
+  - Evidencia: LibreOffice: DATE(2024,3,5)*1 = 45356. 3 May 2024 is serial 45415. The cover notes say the install language is Spanish (Mexico).
+  - Propuesta: Not changed. The value is correct for the machine it was measured on. A note or an unambiguous date would be the author's choice.
+- **w03** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w03.en.yaml` s14 steps
+  - 'Tiene que ser absoluta' / 'It has to be absolute' states a requirement for Refers to that Excel doesn't enforce. A name can hold a relative reference, resolved against the active cell.
+  - Evidencia: Excel's Define Name accepts relative references. The rubric and exam tasks want absolute references, so the line reads as guidance rather than a product rule.
+  - Propuesta: Left as prescriptive exam guidance, consistent with the homework rubric.
+- **w03** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml` s21 code_output
+  - The deck writes the Spanish #N/A error as '#N/D'. My recollection is that Spanish-language Excel shows #N/A (Portuguese and Italian use #N/D), but I could not verify this here.
+  - Evidencia: The course glossary (procedures.es.md line 566: '#N/A | #N/D | M26') cites Microsoft's Spanish 'detectar errores' page, and w04, w12 and w13 use #N/D consistently. No Spanish Excel is available to check.
+  - Propuesta: Not changed, to keep the course consistent with its cited glossary. Should be confirmed on a Spanish Excel.
+- **w03** · auditoría · pedagogy-order · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w03.en.yaml` s27 lab
+  - 'Rastreen precedentes en la esquina lejana..., cuenten dos generaciones de flechas.' In the slide-23 grid the far corner reads only constant headers (F5, J1), so the second Trace Precedents click adds no arrows.
+  - Evidencia: J5 =$F5*J$1, and both precedents are typed constants. Exercise 03.2 step 6 in exercises.en.md asks the same question deliberately ('how many the second one adds'), so this reads as intended. Everything else in the lab and homework uses only this week's material.
+  - Propuesta: No change. Consistent with the course exercise. Flagged only because a reader may expect two visible generations.
+- **w04** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w04.es.yaml` s3 objectives
+  - The Spanish objectives title says 'Al terminar las dos sesiones el alumno podrá…', which is third person. The rest of the deck addresses the student as tú, and the English deck says 'you will be able to'. This is the same register issue the instructor flagged for mysql w17.en.
+  - Evidencia: grep shows the same title in all 17 Spanish office decks, w01 to w17, so it is a course-wide convention. The instructor's known list also treats a deck that changes the objectives title as a defect (VBA w13 to w17).
+  - Propuesta: Not changed. Editing w04 alone would break the course-wide consistency that the instructor enforces. To fix it, change all 17 Spanish office decks together, e.g. to 'Al terminar las dos sesiones podrás…'.
+- **w04** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s21 concept, 25 pitfalls, 1 notes
+  - The deck says the Office install language decides that TEXT(D2,"dddd") returns 'martes' and that the year code is aaaa rather than yyyy ('Decide el idioma de instalación, no la cinta de opciones'). Excel documents locale-dependent format codes as following the Windows regional format, not the Office install language. The deck also conflicts with the course's own sources. procedures.en.md line 2864 reports that '[$-es-MX]dddd, d "de" mmmm "de" yyyy' displayed '... de 2026' on the same professor's build, so yyyy worked there. labs/ex13.en.md uses yyyy in TEXT and in custom formats.
+  - Evidencia: Read procedures.en.md 2820-2870 and labs/ex13.en.md steps 9, 16 and 17. This cannot be executed here: LibreOffice in an en-US locale returns 'Tuesday' and 'March'. 5 March 2024 is a Tuesday, so the 'martes' value itself is consistent.
+  - Propuesta: Not changed, because it depends on the professor's machine. The instructor should re-check on that build whether dd/mm/yyyy really prints a literal yyyy. Then either keep the slide and fix procedures.en.md and labs/ex13.en.md, or reword slide 25 Error 01. Separately, consider replacing 'idioma de instalación' with 'configuración regional' on slide 21.
+- **w04** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s7, 20 code_output eyebrows; 25 pitfalls; 21 concept
+  - Eyebrows and Error 01 say 'Medido en la máquina del laboratorio' / 'Measured on the lab build'. The cover notes say every result was run on the professor's Excel, and slide 21 says the lab machines still have to be checked for the language behavior. A reader can take these as contradicting each other.
+  - Evidencia: grep shows 'máquina del lab' and 'lab build' used course-wide (w02 and w03) as the name for the professor's reference build. procedures.en.md uses 'professor's build'.
+  - Propuesta: Not changed, because it is course-wide terminology. If the instructor wants, rename it to 'máquina del profesor' / 'professor's build' across the course.
+- **w04** · auditoría · pedagogy-order · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s29 homework
+  - The homework asks for DIASEM/WEEKDAY and DIA.LAB/WORKDAY, which no session teaches. That looks like a pedagogy-order break, but it is deliberate.
+  - Evidencia: COBERTURA.md section 4 sends Expert 3.3.2 to a take-home with a commented solution on the Exercise 13 file, and the slide says so. The rubric check holds: WORKDAY on Friday 14 Aug 2026 plus 1 gives serial 46251, which is Monday 17 Aug 2026 (computed in LibreOffice). F4 for the Holidays range was taught in w03.
+  - Propuesta: No change. It is a documented design decision, not a defect.
+- **w05** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w05.es.yaml` s9 table
+  - The column is headed 'Entrada del menú', but the last row says 'Admin. de reglas...'. The menu entry is actually 'Administrar reglas...', and the deck uses that name elsewhere on slide 16.
+  - Evidencia: I tried the full name. check.sh then reported that slide 09's table runs to 9.97 in. and crosses the footer rule. I reverted to the author's abbreviation, which was there to fit.
+  - Propuesta: Left as is. Writing the full menu name needs a shorter text in another cell, which is the instructor's call.
+- **w05** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w05.es.yaml` s3 objectives
+  - The objectives title says 'el alumno podrá…' and item 2 says 'su propia regla', in third person. The rest of the deck uses tú, and the English deck says 'you will be able to'.
+  - Evidencia: All Spanish office decks from w01 to w09 use 'el alumno podrá…' in this title, so w05 matches the course.
+  - Propuesta: Not changed. This is a course-wide convention; changing only w05 would make it the odd one out. To fix it, change every week at once.
+- **w05** · auditoría · pedagogy-order · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w05.es.yaml` s12 code
+  - Line 2 uses RESIDUO and FILA (MOD/ROW), which no deck in the course teaches. The 'Líneas 4 a 7' annotation flags only Y and CONTAR.SI as later material. The same applies to the English deck.
+  - Evidencia: grep across es/*.yaml finds RESIDUO and FILA() only in w05. DIASEM was a week 4 homework and HOY was taught in week 4. This is a reference slide, not an exercise, and its Line 2 annotation explains the formula. exercises.en.md 05.1 also uses =MOD(ROW(),2)=0 this week.
+  - Propuesta: Not changed. This is a reference pattern with its own explanation, not a lab, quiz or homework.
+- **w05** · auditoría · figure · low · `ppts/office/manejo-y-analisis-de-la-informacion/en/w05.en.yaml` s15 figure
+  - The side note says 'Edit Rule, Delete Rule and the two arrows stay gray until a rule is selected'. The screenshot also shows Duplicate Rule grayed out. The note is not wrong, just incomplete. The same applies to the es side note.
+  - Evidencia: Read img/en/cf-rules-manager.png: New Rule is active; Edit Rule, Delete Rule, Duplicate Rule, both arrows and Apply are grayed.
+  - Propuesta: Not changed; the statement is true as written.
+- **w05** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w05.es.yaml` s17 pitfalls
+  - The title 'Cuatro maneras de perder una regla que ya tenías' fits Errors 02 and 03. Error 01 (the header inside the range) and Error 04 (painting by hand, where no rule exists) are not ways to lose a rule. The en title 'Four ways to lose a rule you already had' has the same issue.
+  - Evidencia: Read all four pitfall cards against the title.
+  - Propuesta: Not changed; the title is a rhetorical framing. Flagged for the instructor.
+- **w05** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/en/w05.en.yaml` s1 cover
+  - The English cover kicker is in Spanish ('Facultad de Empresariales · 2026') and the code line says 'TIA501 · Empresariales'.
+  - Evidencia: All 17 English office decks use exactly this kicker, so w05 is consistent with its course. The known-defects list raises a similar kicker issue for VBA.
+  - Propuesta: Not changed. If the instructor wants an English kicker, it is a course-wide decision.
+- **w05** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w05.es.yaml` s10 steps
+  - Step 03 says the formula box 'abre en modo [Point]'. In Excel the status bar usually reads Enter when the box opens and switches to Point when an arrow key inserts a reference. The advice to press F2 first is correct either way.
+  - Evidencia: Checked by reading only; Excel's status bar cannot be observed here. TERMINOS-PENDIENTES.md already lists 'Point' as pending a human decision.
+  - Propuesta: Not changed; listed under unverifiable.
+- **w06** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w06.es.yaml` s3 objectives
+  - The title 'Al terminar las dos sesiones el alumno podrá…' is third person, while the English says 'you will be able to' and the house rule asks for tú. Every one of the 17 es decks in this course uses the same formula.
+  - Evidencia: grep over es/*.yaml: all 17 objectives titles say 'el alumno podrá'. The instructor's known-defect list does not flag it for office.
+  - Propuesta: Not changed, because changing one week would break a course-wide title. If tú is wanted, change all 17 decks at once to 'Al terminar las dos sesiones podrás…'.
+- **w06** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w06.es.yaml + en/w06.en.yaml` s8 code_output
+  - The eyebrow says 'una celda, siete lecturas' and the title 'La misma prueba, escrita de siete maneras'. However, line 7 is read with B2 = 50 instead of 70, and lines 2 to 4 use different operators. A strict reader may object.
+  - Evidencia: All seven outputs were recalculated in LibreOffice (B2=70: Pass, Fail, Pass, Fail, Pass, Fail; B2=50: FALSE) and match the panel exactly. The output panel labels the B2 = 50 case openly.
+  - Propuesta: Output is correct and the change of value is labeled on the slide, so it was left as written.
+- **w06** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w06.es.yaml` s22 steps
+  - Step 03 shows the bracketed English UI term '[Formula result]' on a Spanish slide.
+  - Evidencia: TERMINOS-PENDIENTES.md lists 'Formula result' as unverified, with the candidate 'Resultado de la fórmula =' marked DECIDIR HUMANO. Brackets are the course's deliberate marker for this.
+  - Propuesta: Left as is, pending the instructor's check in a Spanish Excel.
+- **w06** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w06.es.yaml` s23 lab, 25 homework
+  - The lab check ('Denle… pídanle') and homework ('sus propias palabras… tuvieron… Lleven') address the group with ustedes, while the rest of the deck uses singular tú.
+  - Evidencia: In Mexican Spanish ustedes is the plural of tú, and the w02-w05 labs and homework use the same plural ('Abran', 'Entreguen', 'Trabajen').
+  - Propuesta: Not changed, because it matches the course convention and is not usted.
+- **w06** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/COBERTURA.md` sn/a (source for slides 2, 13, 23)
+  - COBERTURA.md line 132 says week 6 is a 'repaso de los ejercicios 1 a 7'. By its own week-by-week list the block's exercises are 1, 2, 5, 6, 13, 3 and 7, and exercise 4 is week 17.
+  - Evidencia: COBERTURA.md lines 65, 87, 104, 122, 132 and 305.
+  - Propuesta: Outside my assigned files. Fix it in COBERTURA.md to 'los siete ejercicios del bloque (1, 2, 3, 5, 6, 7 y 13)'.
+- **w07** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w07.es.yaml` s3 objectives
+  - The objectives title uses third person ('el alumno podrá…') while the rest of the deck uses tú and the en deck says 'you will be able to'.
+  - Evidencia: grep across the course: 15 es decks say 'Al terminar las dos sesiones el alumno podrá…' and 2 say 'la sesión el alumno podrá…'. This is a course-wide convention. Changing one deck would make it inconsistent with the other 16.
+  - Propuesta: Not changed. If the instructor wants tú, the fix belongs in all 17 es decks at once (for example 'Al terminar las dos sesiones podrás…').
+- **w07** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w07.es.yaml` s24 steps, 25 table
+  - English terms remain in brackets on the Spanish slides: [Help on this Error], [Edit in Formula Bar], [Numbers as text], [Omitted cells], [Empty reference], [Formula error].
+  - Evidencia: procedures.es.md says unverified captions stay in English in brackets ('Traducir un caption sin verificar es peor que dejarlo en inglés'). TERMINOS-PENDIENTES.md lists 'Edit in Formula Bar', 'Help on this Error', 'Numbers as text' and 'Empty reference' as needing a human decision or a product screenshot.
+  - Propuesta: Left as is under the author's documented policy. A person needs to decide them from a Spanish Excel.
+- **w07** · auditoría · quiz-key · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w07.es.yaml` s26 quiz
+  - The quiz has no speaker notes stating the answer or the distractor rationale, in either language. Option B ('C para el primero y F para el segundo') is the only correct option. Distractors: A assumes the best band wins, C assumes the first test catches everything, D assumes overlapping tests raise an error.
+  - Evidencia: LibreOffice: =IF(B2>=70,"C",IF(B2>=80,"B",IF(B2>=90,"A","F"))) gives 95→C and 65→F. No quiz in this course carries notes (checked w05, w06, w08, w09).
+  - Propuesta: Not changed; this follows the course convention. The answer key is B.
+- **w07** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w07.es.yaml` s29 homework
+  - The brief asks for three wildcard criteria 'sobre una columna que el ejercicio no toca' (en: 'over a column the exercise does not touch') on the Exercise 10 sheet. Per the lab spec, the WILDCARDS sheet has only one data column (A2:A24 place names), and the exercise already counts it nine ways, so it is unclear which column is meant.
+  - Evidencia: labs/ex10.en.md describes WILDCARDS as A1:A24 names, C2:D10 criteria, E2:E10 counts and a G2:H3 legend. The workbook itself is not in the repo.
+  - Propuesta: Needs the author to name the column or the sheet. Not changed, to avoid inventing content.
+- **w07** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w07.es.yaml` s25 table
+  - '[Empty reference]' / 'Empty reference' is listed among the rules behind the green triangle. In default Excel settings, the rule 'Formulas referring to empty cells' is unchecked, so no triangle appears unless it is turned on. That is consistent with 'SI contesta FALSO y no dice nada', but a reader may expect a triangle.
+  - Evidencia: From Excel Options > Formulas default state (not executable here). procedures.en.md lists the rule but not its default.
+  - Propuesta: Not changed. The author may want a speaker note saying the rule must be enabled first.
+- **w07** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w03.es.yaml` sw03.es line 201 (another deck)
+  - w03.es also gives Ctrl+F for the Find dialog, and w02.es line 437 uses English fill shortcuts (Ctrl+D down, Ctrl+R right). These are inconsistent with the course glossary (Ctrl+B / Ctrl+L for Buscar y reemplazar; Ctrl+J for Rellenar hacia abajo, confidence baja).
+  - Evidencia: grep 'Ctrl+' in es/*.yaml and GLOSARIO-DOC.es.md.
+  - Propuesta: Outside my files. It must be fixed in es/w03.es.yaml (and checked in es/w02.es.yaml) by the agent who owns those decks.
+- **w08** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w08.es.yaml` s3 objectives
+  - The title 'Al terminar las dos sesiones el alumno podrá…' is third person, while the deck otherwise uses tú and the English says 'you will be able to'.
+  - Evidencia: grep: all 17 Spanish decks of this course (w01 to w17) use 'el alumno podrá', so this is a course-wide convention rather than a slip in this deck. The instructor's known list does not flag it for office.
+  - Propuesta: Not changed: editing one deck would break consistency with the other 16. If the instructor wants tú here, it should be changed to 'podrás' in all 17 es decks at once.
+- **w08** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w08.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w08.en.yaml` s4 roadmap
+  - Phase C ends with 'la familia SI.CONJUNTO' / 'the IFS family'. SI.CONJUNTO (IFS) is a different function, the logical one from week 7, and COBERTURA.md warns about exactly this name collision. The family taught here is *.SI.CONJUNTO (SUMIFS etc.).
+  - Evidencia: COBERTURA.md, week 7: 'Ojo con la colisión de nombres: la semana 8 enseña la familia *.SI.CONJUNTO, que es otra cosa.' The same roadmap string appears in w07, w09, w10 and w11.
+  - Propuesta: Not changed: the roadmap text is shared by every deck in the course. Suggested course-wide wording: 'la familia .SI.CONJUNTO' / 'the *IFS aggregates'.
+- **w08** · auditoría · parity · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w08.es.yaml` s23 code
+  - English annotation 1 has two sentences ('... exactly like SUMIFS. Knowing the plural shape is knowing these two.'). The Spanish keeps only the first on the slide and moves the second to speaker notes ('Saber la forma plural es saberse estas dos.').
+  - Evidencia: Compared the YAML side by side. The Spanish slide was already at its height limit; check.sh flagged it.
+  - Propuesta: Left as is: the fact is preserved in the notes, and putting it back on the slide would overflow it again.
+- **w08** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w08.es.yaml, ppts/office/manejo-y-analisis-de-la-informacion/en/w08.en.yaml` s22 code
+  - Within one file (criterios.xlsx), H1 plays three roles: an amount threshold on line 1 (">"&H1 over E), a lower date bound on line 2, and a month label on line 3. A reader who takes the five lines as one sheet may be confused.
+  - Evidencia: Each line runs correctly on its own in LibreOffice: line 1 -> 3, line 2 with real date serials -> 1200, line 3 -> 2, line 4 -> 1600, line 5 -> 3.
+  - Propuesta: Not changed: the lines read as independent examples and all the line annotations are correct.
+- **w10** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w10.es.yaml` s3 objectives
+  - 'Al terminar las dos sesiones el alumno podrá…' uses third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: Grep: all 17 Spanish decks of this course use the same title, and all English decks say 'you'.
+  - Propuesta: Left alone so this week stays consistent with the other 16. Should be changed course-wide (for example 'Al terminar las dos sesiones podrás…') by whoever owns all decks.
+- **w10** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w10.es.yaml` s25 lab, 27 homework
+  - The lab and homework address the group in plural ustedes (Abran, Agreguen, conserven), while the rest of the deck uses tú.
+  - Evidencia: w09 and w11 labs do the same ('Importen', 'Calculen'). Plural ustedes is the only plural in Mexican Spanish, so this is not formal usted.
+  - Propuesta: Left as the course-wide convention for briefs addressed to the group.
+- **w10** · auditoría · quiz-key · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w10.es.yaml` s24 quiz
+  - The quiz has no speaker notes stating the answer. In this course only the cover has notes, and the English deck is the same.
+  - Evidencia: Checked the key by hand and with model.py. A (a typed SUM does not react to a filter) is the only defensible answer. B is wrong because SUBTOTAL(9) also skips filter-hidden rows, so the total would move. That is the 9-versus-109 confusion from slide 16. C and D are false.
+  - Propuesta: No notes added, to follow the course pattern. The intended key is A.
+- **w10** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w10.es.yaml` s15 code
+  - The code comments and the lab use Spanish total-row names (Promedio, Recuento), but the annotations list the ten entries in English without brackets (None, Average, Count, Count Numbers...) and label one 'Count contra Count Numbers'.
+  - Evidencia: Read the slide. Elsewhere the course puts English UI names in [brackets] when it does not use the Spanish string.
+  - Propuesta: Not changed, because I could not verify the exact Spanish strings for all ten entries (Contar números, Máx., Desvest...). Suggest either the Spanish UI names or the [bracket] convention.
+- **w10** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/labs/ex16.en.md` sn/a (source doc, not my file)
+  - The lab doc for Exercise 16 makes two doubtful claims. It says dragging fills the formula with $C$3:$C$32, when by default a whole-column selection writes a structured reference. It also says the Total Row puts =SUBTOTAL(109,[Status]) on the text column Status, when for text Excel normally writes 103 (count).
+  - Evidencia: Same Excel behavior described in the slide-13 finding. This file is outside my assignment.
+  - Propuesta: Must be fixed in labs/ex16.en.md by its owner. The slides no longer repeat the $-address claim.
+- **w11** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml + en/w11.en.yaml` s3 objectives, 2 agenda, 7 tiers
+  - The deck speaks of 'the six [types] the Expert exam names'. The course's Expert spine is MO-201 (2019), whose objective 4.1.2 names seven (Box & Whisker, Combo, Funnel, Histogram, Map, Sunburst, Waterfall). Six is the MO-211 (365) count. The tiers slide mentions Map and says MO-211 dropped it.
+  - Evidencia: The procedures.en.md 4.1.2 heading lists seven types. w01.en says MO-201 is 'the spine'. COBERTURA counts six. Changing to seven would also make 'Four galleries hold all of them' false, because Map sits in a fifth (Maps) gallery. This is a framing decision for the instructor.
+  - Propuesta: Not changed; reported for the instructor to decide.
+- **w11** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml + en/w11.en.yaml` s9 steps
+  - Step 02 says Recommended Charts 'will ... never show you the Combo entry'. That route opens the same Insert Chart dialog, which has an All Charts tab with Combo, and Recommended Charts often proposes a 'Clustered Column - Line on Secondary Axis' combo when the magnitudes differ.
+  - Evidencia: Checked against product knowledge only; Excel cannot be run here. procedures 4.1.1 supports the advice not to use Recommended Charts, but not the 'never' claim.
+  - Propuesta: Not changed. The instructor should confirm on the lab build and soften 'never show you the Combo entry' if needed.
+- **w11** · auditoría · quiz-key · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml + en/w11.en.yaml` s25 quiz
+  - The quiz has exactly one defensible answer, B (Locked cleared on the whole sheet and never put back on the salary cells). A and D are false, and C contradicts the stem's 'you protected the sheet'. But no speaker notes give the answer or say what each distractor represents.
+  - Evidencia: Hand check of the four options. The rest of the course's quizzes also carry no notes (w10, w12), so adding notes here would be new content.
+  - Propuesta: Not changed. The key is B; suggest adding notes course-wide.
+- **w11** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml + en/w11.en.yaml` s1 cover notes vs 26 lab
+  - The cover notes tell the instructor to clean the six dead #REF! defined names before handing the file out. The lab's 'Watch for' block tells students to find and delete them. If the instructor follows the note, the lab instruction has nothing to act on.
+  - Evidencia: Notes lines 33 to 35 against the lab blocks on s26, in both languages.
+  - Propuesta: Not changed; the instructor has to pick one.
+- **w11** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml` s3 objectives
+  - The objectives title 'Al terminar las dos sesiones el alumno podrá…' is third person, while the English says 'you will be able to' and the house rule asks for tú throughout.
+  - Evidencia: Repo-wide this exact phrasing is the Spanish convention: 147 + 15 Spanish decks use 'el alumno podrá', against 5 that use 'vas a poder'. Changing one deck would break consistency.
+  - Propuesta: Not changed. If tú is wanted, do it as a course-wide change.
+- **w11** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml` s19 steps
+  - Step 05 keeps '[Protect worksheet and contents of locked cells]' bracketed in English, although the product-read glossary has the Spanish string 'Proteger hoja y contenido de celdas bloqueadas'.
+  - Evidencia: procedures.es.md IMG row 'Protect worksheet and contents of locked cells | Proteger hoja y contenido de celdas bloqueadas'. TERMINOS-PENDIENTES.md still lists it as pending (line 138).
+  - Propuesta: Not changed, so the bracket pipeline (TERMINOS-PENDIENTES counts, procedures.es.md) stays in sync. Substitute it across all files in one pass.
+- **w11** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w11.es.yaml + en/w11.en.yaml` s22 steps
+  - Step 04 'Enabling macros on a file you were sent' promises the yellow bar. Step 05 says a file from the internet gets the red bar with no button, and per procedures 1.1.3 that includes email attachments, which is the usual way a file is 'sent'.
+  - Evidencia: procedures.en.md 1.1.3 step 6: 'If the file came from the internet or from email, the banner is red'.
+  - Propuesta: Not changed. Steps 04 and 05 together cover both cases, so this is wording only.
+- **w12** · auditoría · output-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w12.es.yaml + en/w12.en.yaml` s19 code_output
+  - The panel is labelled 'Lo que regresa' / 'What comes back' and shows Monto vendido, Diferencia and Diferencia % for each person. The two formulas on the slide only return the base salary and the sales goal. The other lines are an input column and downstream formulas (J, K) that the slide does not show.
+  - Evidencia: A Python VLOOKUP simulation over the ex19 CSVs gives 50,000 / 20,000,000 for row 3 and 20,000 / 5,000,000 for row 11. The extra lines are also correct: 22,000,000 - 20,000,000 = 2,000,000, which is 10.0 %, and 2,000,000 - 5,000,000 = -3,000,000, which is -60.0 %.
+  - Propuesta: Left as is because every value is correct and the extra lines read as context from the report row. If the instructor wants the panel to show only what the two formulas return, cut it to the name and type line plus the 'Meta de ventas' line for each person.
+- **w12** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w12.es.yaml + en/w12.en.yaml` s26 homework
+  - The brief lists an approximate VLOOKUP only for 'el rango del bono'. Exercise 19 needs two approximate lookups: the bonus-above-goal band (column L) and the seniority band (column O).
+  - Evidencia: labs/ex19.en.md: 'the bonus band and the seniority band come out of two more tables with an approximate one', tasks 10 and 13.
+  - Propuesta: Not changed. The brief is incomplete rather than wrong, since 'bono' can cover both bonuses. If wanted: 'BUSCARV aproximado para los rangos del bono y de la antigüedad'.
+- **w12** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w12.es.yaml + en/w12.en.yaml` s12 table vs 14 method
+  - Slide 12 counts the two language objectives (Expert 1.3.1 and 1.3.2) as 'Fuera de alcance' / 'Out of scope here'. Slide 14 and the cover notes say they 'viven' in the INNOVATIQ self-paced component, so the course does carry them.
+  - Evidencia: Arithmetic checked: 100 + 1 + 6 = 107 = 59 + 48. The 6 is the macro objectives 3.6.1 to 3.6.3 and 1.1.1 (1.1.3 is taught in w11, per w11's notes) plus the 2 language objectives. COBERTURA gives the same counts.
+  - Propuesta: Numbers are correct. Only the 'out of scope' label clashes with the INNOVATIQ anchoring, and the wording is the instructor's call.
+- **w12** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w12.es.yaml + en/w12.en.yaml` s17 code / 21 table
+  - 'Vacío quiere decir VERDADERO' / 'Empty means TRUE' holds when the fourth argument is omitted or the dialog box is left empty. A typed formula with a trailing empty argument, =BUSCARV(D3,$A$15:$C$18,2,), is treated as FALSO (exact match).
+  - Evidencia: Known Excel argument semantics: an omitted optional argument takes its default, but a present-and-empty argument is 0/FALSE. The deck's examples (the dialog box, and 'Deja fuera el cuarto argumento') are all the omitted case, so they are correct.
+  - Propuesta: Left as is because the claim is right for every case the deck shows. Worth a spoken caveat.
+- **w12** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/en/w12.en.yaml` s1 cover
+  - The English cover kicker reads 'Facultad de Empresariales · 2026' and the meta reads 'TIA501 · Empresariales', which is Spanish in the English deck.
+  - Evidencia: en/w11 and en/w13 use the same strings, so it is a course-wide convention and consistent across this course.
+  - Propuesta: Not changed because it is consistent course-wide. If it changes, all 17 English covers of this course need the same edit.
+- **w12** · auditoría · pedagogy-order · low · `ppts/office/manejo-y-analisis-de-la-informacion/labs/ex19.en.md` s26 homework (source exercise)
+  - The Exercise 19 instructions that the deck assigns in week 12 suggest =INT(YEARFRAC(C3,$N$1)) and ask students to wrap the approximate lookup for below-goal rows. YEARFRAC (FRAC.AÑO) appears in no deck up to w12, and SI.ERROR first appears in w13. The deck's own wording ('aritmética de fechas', which w04 taught with AÑO/HOY) does not require either, and the wrapper can be built with SI.
+  - Evidencia: grep FRAC.AÑO/YEARFRAC/SI.ERROR over es/w01 to w11 returns nothing; SI.ERROR first appears in es/w13.es.yaml.
+  - Propuesta: Outside my files. If needed, fix it in labs/ex19.en.md, for example by offering the AÑO/HOY approach from w04 or saying SI is enough for the wrapper.
+- **w13** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w13.es.yaml + en/w13.en.yaml` s1 cover
+  - Not fixed. The subtitle ('la única situación en la que cada una de ellas es la que sirve' / 'the one situation in which each of them is the only one that works') overclaims, because INDEX with MATCH works in all three layouts. I read it as cover rhetoric and left it unchanged.
+  - Evidencia: See the lab finding: INDEX/MATCH reproduces the VLOOKUP results in the simulation.
+  - Propuesta: Left for the instructor to decide. A softer wording would be 'y la situación para la que existe cada una' / 'and the situation each of them is built for'.
+- **w13** · auditoría · parity · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w13.es.yaml` s21 code
+  - Not fixed. The Spanish Riesgo note says 'Las nuevas versiones abren Vínculos de libro'. The English says the button is relabeled and opens a pane. The facts match closely enough, but the Spanish leaves out the word 'panel'.
+  - Evidencia: Adding 'el panel' made the text end at 10.01", past the 9.70" limit (check.sh NOT-CLEAN). House rules forbid shrinking type, so I reverted. 'Vínculos de libro' matches GLOSARIO-DOC.es.md.
+  - Propuesta: Reverted to the original wording, which is accurate.
+- **w13** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w13.es.yaml` s4 roadmap
+  - Not fixed. Phase A is titled 'Word, luego la cinta' here, but 'Word, y luego la cinta' in w11 and w14 and 'Word, y después la cinta' in w12. The wording varies across the course's weeks.
+  - Evidencia: grep across es/w*.yaml roadmaps.
+  - Propuesta: Not a content error. Course-wide normalization belongs to whoever owns the other weeks.
+- **w14** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml` s3 objectives
+  - The objectives title 'Al terminar las dos sesiones el alumno podrá…' is in the third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: All 17 Spanish decks in this course use 'el alumno podrá' (checked w01-w17), so this is a course-wide convention. Changing only w14 would break consistency between weeks.
+  - Propuesta: Left as is: changing it is a course-wide decision for the instructor (all es decks).
+- **w14** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/en/w14.en.yaml` s1 cover
+  - The English cover keeps the Spanish 'Facultad de Empresariales · 2026' as kicker and 'TIA501 · Empresariales' as the code.
+  - Evidencia: All 17 office English decks do the same, so this is consistent across the course. Similar English covers in the VBA course were flagged by the instructor.
+  - Propuesta: Left as is: changing it is a course-wide decision across all office English covers.
+- **w14** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml + en/w14.en.yaml` s1 cover (notes)
+  - The notes and the lab use exercise 23 version 2 (the restaurant data) in week 14. COBERTURA.md places 23 version 1 (recruitment, 31 rows) in week 14 and version 2 in week 15, and labs/ex23.en.md says Part B belongs in week 15.
+  - Evidencia: COBERTURA.md lines 256 and 273-279, which also note a 'Decisión pendiente' on which version is official. The deck's own lab, homework and code slide all consistently use version 2.
+  - Propuesta: Left as is: this is the instructor's pending decision, and the deck agrees with itself.
+- **w14** · auditoría · quiz-key · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml + en/w14.en.yaml` s24 quiz
+  - The quiz has no notes giving the answer, which is the course's convention. Exactly one option holds up: A. B is wrong because range versus table changes which rows enter, not the format. C is the reverse confusion: if 'Preserve cell formatting on update' is ticked, the format is kept. D is irrelevant.
+  - Evidencia: Checked each option by reasoning, since it is not executable. The Spanish caption 'Mantener el formato de la celda al actualizar' has high confidence in GLOSARIO-DOC.es.md.
+  - Propuesta: Nothing to fix. There is no notes key to check against.
+- **w14** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml + en/w14.en.yaml` s9 code
+  - The annotation 'los códigos 9 solo ignoran las filtradas' / 'the 9 codes ignore only filtered ones' reads oddly; it means codes 1 to 11. The claims themselves are correct.
+  - Evidencia: LibreOffice recalculation of a test sheet with one row hidden by hand: SUBTOTAL(9,D2:D48) = 2387, which includes the hidden row, and SUBTOTAL(109,D2:D48) = 2369, which equals SUM(D3:D48). The grand total SUBTOTAL(9,D2:D98) = 5184 does not count the nested subtotals, while SUM(D2:D98) = 10368, exactly double.
+  - Propuesta: Left the wording alone: the claim is correct and the label is '9 contra 109'.
+- **w14** · auditoría · code-wrong · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml + en/w14.en.yaml` s23 code
+  - Checked the calculated-field claims against the real data. They hold, so this is not a defect.
+  - Evidencia: pandas on ex23-orders.csv. For every category, Sum(Price)-Sum(Cost) equals Sum(Price-Cost) (largest difference 1.5e-11). Sum(Price)*Sum(Tip) is nonsense: for Beer it gives 99,966,398.40 against a real 18,728.60. SUMPRODUCT(I2:I26609,K2:K26609) = 218,684.80, against 5,859,853,667.47 from the calculated field's grand total. Columns I=Price and K=Tip are correct, and Tip is a 0.05-0.20 rate.
+  - Propuesta: No change needed.
+- **w14** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w14.es.yaml + en/w14.en.yaml` s21 table
+  - 'By 500' gives bands written 0-499 only if Starting at is typed as 0. By default Excel starts at the data minimum, for example 18 for Price, which gives bands like 18-517.
+  - Evidencia: In the Grouping dialog, Starting at is filled in with the minimum of the data, as slide 20 step 03 itself says.
+  - Propuesta: Left as is: it reads as an example label format, and slide 20 already covers changing Starting at.
+- **w15** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/procedures.es.md` sn/a (outside assigned files)
+  - The Spanish route for 2.2.5 (line 4212) still uses the help-page wording 'Copiar a otra ubicación' and a lowercase 'solo registros únicos'. The file's own IMG glossary gives 'Copiar a otro lugar'.
+  - Evidencia: procedures.es.md line 4212 compared with lines 722 and 788.
+  - Propuesta: Not my file. It should be aligned in procedures.es.md.
+- **w15** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w15.es.yaml` s26 homework
+  - The rubric row 'Los objetos: Segmentación, escala de tiempo y gráfico dinámico conectados' grades a timeline, but the brief only asks for 'un gráfico dinámico con una segmentación' on the student's own data set. The timeline may be meant to come from exercise 23, so the intent is unclear. The same applies to the English deck.
+  - Evidencia: The homework brief compared with its rubric, in both decks.
+  - Propuesta: Left unchanged because the intent is ambiguous. The instructor should either add the timeline to the brief or drop it from the rubric.
+- **w15** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w15.es.yaml` s3 objectives
+  - The title 'Al terminar las dos sesiones el alumno podrá…' is in the third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: All 17 Spanish decks of this course use exactly this title (grep), so it is a course-wide convention, not a slip in w15.
+  - Propuesta: Not changed, to keep w15 consistent with the other 16 decks. If the instructor wants tú here, it should change course-wide ('Al terminar las dos sesiones podrás…').
+- **w15** · auditoría · other · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w15.es.yaml` s7 table
+  - 'Azca con Logistics' abbreviates the branch name. 'Azca' is not a standard short form, and the data spells it 'Azcapozalco'. The same applies to the English deck ('Azca plus Logistics').
+  - Evidencia: Data: Azcapozalco. As a criterion, 'Azca' would happen to match by begins-with, so the cell is not wrong in practice.
+  - Propuesta: Left as the author's abbreviation, which works in a table cell.
+- **w15** · auditoría · other · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w15.es.yaml` s17 steps / 20 method / 22 concept
+  - The slides carry author-facing verification remarks: 'Las dos leyendas están por confirmar', 'falta confirmarla en uno dinámico', 'en la versión de la que se leyó esto'. The English deck has the same remarks.
+  - Evidencia: They mirror the TO CONFIRM flags in procedures.en.md (items 28, 29, 30, 36, 37). They are not false, just unusual on a student slide.
+  - Propuesta: Left in place. They should go once the Spanish captions are checked against the product.
+- **w16** · auditoría · consistency · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w16.es.yaml` s7 code, 14 code, 20 code
+  - The slides title these 'Ejercicio 25, el primer/segundo modelo' but use a different cell layout from the lab handout. Churrumpin on the slides: units B2, price B3, cost B4, fixed cost B11, rate B13, giving TABLE(,B2). Handout: units B3, price B4, cost B5, fixed cost B6, tax B7, giving {=TABLE(,B3)}. Credit on the slides: rate B2, term in years B3*12, amount B4. Handout: price B3, rate B4, term in months B5. Each slide is internally consistent, but a student following the handout will see different addresses.
+  - Evidencia: Compared against labs/ex25.en.md, the Model 1 and Model 2 tables.
+  - Propuesta: Not changed. Aligning means rewriting the code cards in both decks or the handout; the instructor should choose. Handout: ppts/office/manejo-y-analisis-de-la-informacion/labs/ex25.en.md.
+- **w16** · auditoría · quiz-key · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w16.es.yaml` s23 quiz
+  - The quiz has no speaker notes, so no answer key is stated. I checked it: A (tolerance) is the only defensible answer. B (display format of the changing cell) does not change stored values. C (circular reference) would raise a warning. D (iterative calculation off) does not matter, because Goal Seek uses the Maximum Change and Maximum Iterations values whether or not the box is checked.
+  - Evidencia: Reasoned against Excel's Goal Seek behavior. Most quizzes in this course also have no notes; w15 is the exception.
+  - Propuesta: Left as is. Adding an answer note would add new content; the instructor can add 'Respuesta: A' like w15.
+- **w16** · auditoría · description-mismatch · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w16.es.yaml` s11 divider
+  - 'Una pregunta, veinte respuestas de golpe' ('One question, twenty answers at once'): no table in the deck has twenty results. The one-variable example has 11 inputs, the lab sweep has 9 and the two-variable example has 55 cells.
+  - Evidencia: Counted D10:D20 (11), H10:H20 x I9:M9 (55) and the 30,000 to 70,000 sweep in steps of 5,000 (9).
+  - Propuesta: Read as a rhetorical title for a divider and left unchanged in both decks. Flagging it for the instructor.
+- **w16** · auditoría · language · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w16.es.yaml` s3 objectives
+  - The objectives title is 'Al terminar las dos sesiones el alumno podrá…' (third person), while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: The wording is a repo-wide convention: 147 es decks use 'el alumno podrá' and 20 use 'podrás'. All 17 es decks in this course use it.
+  - Propuesta: Not changed, so this week stays consistent with the other 16. A switch to 'podrás' should be made course-wide.
+- **w16** · auditoría · technical-claim · low · `ppts/office/manejo-y-analisis-de-la-informacion/es/w16.es.yaml` s25 takeaways
+  - Takeaway 1 says a typed result cell makes all three tools 'no reporten nada'. Slide 6 says, correctly, that Goal Seek does report an error ('la celda debe contener una fórmula').
+  - Evidencia: Compared slide 6 panel note with slide 25 item 1, in both languages.
+  - Propuesta: Left as is: read as 'nothing useful'. Mild rhetorical inconsistency.
+- **w17** · auditoría · trace · low · `both` s17 trace
+  - I checked the freeze trace against the file format. A2 gives 1 row and 0 columns, B1 gives 0 and 1, B3 gives 2 and 1, A1 freezes nothing. The B3 and A1 'Reads back as' cells are prose rather than SplitRow / SplitColumn values like the rows above them, which is stylistic, not wrong.
+  - Evidencia: verify.py: openpyxl freeze_panes for each anchor wrote these pane values. A2: SplitRow 1, SplitColumn 0. B1: 0 and 1. B3: 2 and 1. A1: no pane. Also C2: 1 and 2, and B4: 3 and 1, which match the lab and the solutions.
+  - Propuesta: No change needed; the values are correct.
+- **w17** · auditoría · technical-claim · low · `both` s12 table
+  - The &D and &T samples (18/08/2026, 14:20) are day-first and 24-hour even in the American English deck.
+  - Evidencia: Every English deck in this course (w03, w04) uses dd/mm/yyyy, because the lab machines run Mexican regional settings. &D and &T print in the system locale, not the UI language.
+  - Propuesta: Left as is: it follows the course convention and the lab locale.
+- **w17** · auditoría · language · low · `es/w17.es.yaml` s3 objectives
+  - The title 'Al terminar las dos sesiones el alumno podrá…' is third person, while the English says 'you will be able to'.
+  - Evidencia: All 17 Spanish decks in this course use 'el alumno podrá' and all 17 English decks use 'you'. It is a course-wide pattern, not something this week introduced, and it is not usted register.
+  - Propuesta: Not changed, so week 17 does not diverge from weeks 1 to 16. If the instructor wants tú here, it should be changed in all 17 decks at once.
+- **w17** · auditoría · description-mismatch · low · `both` s21 table
+  - For .xltx, the 'What it drops / Qué pierde' column says 'It lands in the templates folder', which is a side effect rather than something the format drops. The format also drops macros, like .xlsx.
+  - Evidencia: The header is 'What it drops' and the eyebrow is 'What each format gives up'. Solutions 17.3 uses the same templates-folder point on purpose.
+  - Propuesta: Left in the author's voice; it reads as 'gives up its location'. A reader may stumble on it.
+
+## Python · Análisis de Datos
+
+129 entradas, de mayor a menor severidad.
+
+- **w15.1** · auditoría · consistency · high · `ppts/python/analisis-de-datos/es/w15.2.es.yaml` s6, 7, 9 (compare, code, code_output)
+  - Outside my files. The w15.2 deck of THIS course (analisis-de-datos, a copy of the algorithms course) filters by ventas['amount'], a column that sales.csv does not have and no slide creates. This is the same known defect the instructor listed for 'Algoritmos en Python' w15.2; the en deck very likely has it too.
+  - Evidencia: Read lines 77-146 of analisis-de-datos/es/w15.2.es.yaml: ventas['amount'] > 50000 appears in the compare, mascara and filtrar slides. The sales.csv header is date,region,channel,product,units,unit_price.
+  - Propuesta: Must be fixed in ppts/python/analisis-de-datos/{es,en}/w15.2.*.yaml by the agent assigned to w15.2.
+- **w01.0** · auditoría · consistency · medium · `ppts/python/analisis-de-datos/es/w01.0.es.yaml` s19 lab, 21 homework (vs 17 pitfalls)
+  - Slide 17 warns that handing in only screenshots loses points, and the syllabus grades a file made only of images as zero. Yet the lab deliverable is a screenshot, and the homework format is 'Blackboard · imagen .png' / '.png image'. A student sees both instructions in the same deck.
+  - Evidencia: es lines 233-234 vs 258 and 281; en is the same. The same .png week-1 format appears in python/analisis-y-diseno-de-algoritmos w01.0 and csharp w01.1, so it looks like a deliberate convention.
+  - Propuesta: Not fixed: this is a policy decision. Either the homework format has to include text (for example a .pdf with the screenshot and a line of explanation), or the pitfall needs to say it applies to documents only. The instructor has to choose.
+- **w01.0** · revisión · confirmado
+  - 5. The lab and homework ask for a .png screenshot while pitfall 03 says screenshots alone lose points
+  - Evidencia: This is a real contradiction, and the syllabus makes it stronger. Besides the images rule, it says 'Documents are submitted as .pdf or .docx'. A homework that is a single .png is literally 'a file made only of images'. Resolving it is a policy choice for the instructor: change the format to a .pdf or .docx that holds the screenshot plus a line of text, or scope the pitfall to documents. I left it unfixed.
+- **w01.0** · revisión · confirmado
+  - 8. The homework rubric asks for a visible Python version and an active DataCamp account that the brief and the slides don't cover
+  - Evidencia: The line numbers (278 to 286) are correct in both files. No slide shows how to display the Python version in Colab, and whether a DataCamp screenshot is expected inside the single .png is ambiguous. Fixing either would mean inventing deliverables, so the instructor has to decide.
+- **w01.1** · revisión · confirmado
+  - Figure ct-09 does not show the spreadsheet on the rung the title names (slide 10)
+  - Evidencia: I looked at both PNGs. The top label is only 'Python / JS / C#', and the caption carries the spreadsheet. Fixing it means adding the spreadsheet to ct09 in ppts/kit/ct.py and regenerating img/es and img/en ct-09.png, which is outside these files. Severity is low because the caption makes the claim correctly.
+- **w02** · auditoría · figure · medium · `ppts/python/analisis-de-datos/es/w02.es.yaml` s14 figure
+  - In flow-connector.png the decision diamond '¿válidos?' ('valid?' in en) has a single exit with no Sí/No labels. Slide 12 defines the rhombus as 'Una decisión con dos salidas', and the homework rubric (slide 24) grades 'El rombo tiene sus dos salidas etiquetadas y ambas llevan a algún lado'. The deck's own figure breaks the rule it grades. The left fragment also starts at 'LEER datos' with no INICIO terminal.
+  - Evidencia: Viewed img/es/flow-connector.png and img/en/flow-connector.png, and the rendered slide 14 preview in both languages. Both figures show one arrow out of the diamond, going down to 'limpiar' / 'clean'.
+  - Propuesta: Must be fixed in ppts/kit/figures.py, flow_connector() (around line 1049; labels at around line 141). Add a labeled No exit (for example to a discard step or back to LEER) and a Sí label on the existing arrow, then regenerate img/es and img/en/flow-connector.png. The YAML caption is correct.
+- **w02** · revisión · confirmado
+  - s14 flow-connector.png: decision diamond has one unlabeled exit; no INICIO
+  - Evidencia: Viewed img/es and img/en/flow-connector.png. One exit, no Sí/No labels, which contradicts s12 ('dos salidas') and the s24 rubric. This must be fixed in ppts/kit/figures.py flow_connector(), now at line 1061 (diamond at lines 1074-1076; labels fc_valid at line 141 es and line 259 en), then the PNGs regenerated. The YAML caption is correct.
+- **w02** · revisión · confirmado
+  - s13 flow-symbols.png: 'datos almacenados / stored data' drawn as a cylinder (magnetic disk / database)
+  - Evidencia: Confirmed in ppts/kit/figures.py lines 1015-1024: it is two ellipses and two sides. ISO 5807 and the Office 'Stored Data' shape have a convex left side and a concave right side. Low severity. The fix goes in figures.py (labels fs_db at line 132 es and line 250 en), or the cylinder and the caption are relabeled 'base de datos'.
+- **w03** · revisión · confirmado
+  - 13. Other en decks of the course still say 'visualisation' in the shared roadmap card and keep other British forms
+  - Evidencia: Outside my files. It must be fixed in each of those weeks' en decks (w02, w04-w10, w14-w17), by the agents assigned to them.
+- **w03** · revisión · confirmado
+  - 16. s21 homework differs from syllabus row 3 (research task on languages)
+  - Evidencia: Confirmed from syllabus-tia502.xlsx, row 3: 'Short research task on languages used for data analysis' / 'Language comparison report. First program running.' Which homework to set is the instructor's planning decision, so I did not rewrite it. Reported for the instructor (es and en).
+- **w04** · revisión · confirmado
+  - 8. en '20 %' / '40 %' spaced percent
+  - Evidencia: It is a repo-wide convention, not a w04 slip. Across all *.en.yaml decks there are 660 spaced '% ' against 86 unspaced, and every en deck of this course uses 'Part of the 20 %'. Changing only w04 would make it inconsistent. The instructor should decide this course-wide.
+- **w04** · revisión · confirmado
+  - 9. 'tasa de conversión' used for clics/impresiones (marketing calls that CTR)
+  - Evidencia: Terminology is accurate for marketing: clicks/impressions is CTR. But w05 (conversion = clics / impresiones) and w06 define the term the same way, so a rename must be made in every deck at once. A related gap: w04 never states the formula for this rate. Students can only infer it from s7 (0.0342) together with s8 (5074 and 148230).
+- **w05** · revisión · confirmado
+  - 14. s21 homework / exercises: 05.3 needs :<22 and 05.1 uses :>12, but the deck never teaches '<' or width combined with thousands
+  - Evidencia: Confirmed in ejercicios.es.md lines 238-282 and in exercises.en.md lines 255 and 278. The same gap reaches the slides: w08.es/en lines 121 and 140 use :<12, w13 uses :<4 and w14 uses :<10, and no deck teaches '<'. This has to be fixed in ppts/python/analisis-de-datos/ejercicios.es.md and exercises.en.md (05.1, 05.3). Alternatively, the instructor can decide to add a ':<' row to the w05 format table (slide 13). A left-aligned output cell would show only invisible trailing spaces, so that is a design decision and I did not make it silently.
+- **w06** · revisión · confirmado
+  - en: spaced percent '3.42 %', '6 %', '20 %'
+  - Evidencia: Strict American style is '3.42%'. But grep shows the spaced form in prose in all 21 en decks of the course, so it is a course-wide typographic convention. Changing only w06 would make the course inconsistent. If the instructor wants it changed, it has to change in every en deck at once.
+- **w09** · auditoría · pedagogy-order · medium · `ppts/python/analisis-de-datos/es/w09.es.yaml` s21 homework
+  - The homework asks 'cuántas superan la meta de conversión' for 'las cuatro campañas'. In this course, conversion is clics / impresiones (w05, w06, target 0.03). The four class campaigns (w08: campanas, clics, inversion) have no impressions list, and no deck provides one. The only impressions value is 148230, for Instagram alone. As given, the counter part of the homework cannot be computed from class data. The EN deck has the same gap ('how many beat the conversion target').
+  - Evidencia: Searched every deck in es/ and en/ for impresiones/impressions. The only hits are the single value 148230 in w04 to w06; the w08 data has clics=[5074, 3820, 6910, 1240] and inversion=[38500, 29800, 51200, 9600]. No data file such as campanas.xlsx exists in the repo.
+  - Propuesta: Not fixed, because any fix means inventing data or changing the assignment. The instructor needs to either give a four-value impressions list (for example in the brief or on Blackboard) or swap the counter for a metric the class data supports. Applies to both es and en slide 21.
+- **w12** · auditoría · figure · medium · `ppts/python/analisis-de-datos/es/w12.es.yaml` s9 figure
+  - In slicing.png (img/es and img/en) the arrow pointing to the cut line strikes through the '3' index label, the very index the slide explains ('el 3 no entra'). This is the same defect the instructor reported for the shared slicing figure in other courses.
+  - Evidencia: Viewed both PNGs and the rebuilt preview. In kit/figures.py slicing(), the arrow runs from (cut+300, y0-96) to (cut+12, y0-14). At x=925, where the '3' label is centred at y=264, the line sits at y of about 255, which is inside the 30 px glyph.
+  - Propuesta: Not fixable in the YAML. It must be fixed in ppts/kit/figures.py slicing() (move the arrow start or end, or the label, off the index row), then img/es/slicing.png and img/en/slicing.png must be regenerated. Applies to both es and en s9.
+- **w12** · revisión · confirmado
+  - slicing.png arrow strikes through the '3' index label (s9, es and en)
+  - Evidencia: The defect was real and it lives in kit/figures.py. It has since been fixed upstream: slicing() now draws a vertical arrow at the cut (p.arrow(cut, y0-116, cut, y0-12)). img/es/slicing.png and img/en/slicing.png were regenerated, and I viewed both PNGs and the rebuilt slide 9. The arrow now sits in the gap between the 2 and the 3 and touches no label. Nothing is left to do in the YAML.
+- **w12** · revisión · confirmado
+  - es slicing.png keeps the English identifier `course`
+  - Evidencia: Low severity, kit-only. figures.py slicing() hardcodes 'course = "PYTHON"' for both languages. The slide's code does not use this variable, so nothing contradicts the code, but every other identifier in the es deck is Spanish. The fix would go in ppts/kit/figures.py, with a regenerated img/es/slicing.png.
+- **w12** · revisión · confirmado
+  - s23 homework: 'las que superan la meta' has no defined target; sort-by-spend feasibility
+  - Evidencia: I agree that w08, w09 and this deck give no numeric target. w09 uses 'meta' just as loosely. Also, 'Meta' is one of the w08 campaign names, so 'superan la meta' can be misread. Only the instructor can set the value, and inventing one would break the house rule against changing facts silently. I partly refute one sub-claim: sorting names by spend does not strictly need key= or tuples. Sort the inversion values with sort() plus reverse() and map each back with inversion.index(v), all taught by week 12, as long as the values are unique. Applies to en s23 too.
+- **w13** · revisión · confirmado
+  - en/w09.en.yaml still uses 'Centre' (out of assignment)
+  - Evidencia: This was a real cross-deck inconsistency, but the w09 agent has already fixed it in the working tree: en/w09.en.yaml lines 207, 234 and 235 now read 'Center'. Nothing is left to do.
+- **w13** · revisión · confirmado
+  - en '20 %' with a space instead of '20%'
+  - Evidencia: American style is '20%', but '20 %' is the convention in about 135 en decks across every course. Changing one deck would break consistency, so it needs a repo-wide decision.
+- **w14** · auditoría · pedagogy-order · medium · `ppts/python/analisis-de-datos/es/w14.es.yaml` s1 cover / 3 objectives / 13 divider / 16 pitfalls / 18 lab
+  - The deck promises that students will write an output file: the cover subtitle ('volver a guardarlo'), objective 5 ('Escribir un archivo de salida'), divider 3 ('Convertir y guardar') and pitfall 04 (newline). The lab requires 'un resumen por categoría escrito en un archivo nuevo'. No slide in this deck or any earlier one shows how to write: no f.write, csv.writer or DictWriter, and no example of newline=''. The only coverage is the 'w' row in the modes table.
+  - Evidencia: grep for open(, write, writer, DictWriter and newline across w01.0 to w13 (es) finds nothing. The only file-writing material in this deck is table row 'w' and pitfall 04. The repo's A04 scripts do not write either.
+  - Propuesta: Not fixed. The fix means adding a new code slide, which would be new content, so the instructor should decide. Suggested: after slide 15, add a code slide in both decks that writes the summary with open(..., 'w', newline='', encoding='utf-8') and csv.writer/DictWriter.
+- **w14** · auditoría · pedagogy-order · medium · `ppts/python/analisis-de-datos/en/w14.en.yaml` s1 cover / 3 objectives / 13 divider / 16 pitfalls / 18 lab
+  - Same gap in English: the deck promises 'Write an output file' and the lab requires it, but no slide shows how to write a file or a CSV.
+  - Evidencia: Same grep as the Spanish deck, over the en decks w01.0 to w13.
+  - Propuesta: Not fixed. A matching code slide needs to be added to both decks (instructor decision).
+- **w14** · revisión · confirmado
+  - es s15: por_region totals depend on region title-casing and dedupe that no w14 slide shows
+  - Evidencia: I confirmed it: the raw grouping gives 8 region keys. The slide matches the A04 script that the homework runs, and w15.1/w15.2 ('Cuatro regiones capturadas de ocho formas') cover the spellings explicitly. Explaining it here would mean adding more content, so I left it for the instructor.
+- **w15.1** · revisión · confirmado
+  - Routine 'head, info, shape y describe' repeated, but info and describe are never shown
+  - Evidencia: Real mismatch. Neither real output fits a panel (info is 13 lines; describe is 9 lines but needs its own slide), and the routine is the A05 doc's. Whether to add a describe slide or reword the routine is the instructor's call. Students do see both via the homework script 02.
+- **w15.1** · revisión · confirmado
+  - w15.2 (outside files) filters by ventas['amount'], a column sales.csv lacks
+  - Evidencia: Confirmed: at 7dfc5a5, es and en w15.2 each had 4 'amount' references. In the current tree both have 0, so the w15.2 agent has already fixed it. Nothing to do in w15.1.
+- **w15.2** · auditoría · pedagogy-order · medium · `ppts/python/analisis-de-datos/es/w15.3.es.yaml (and en) / docs A05 04_clean.py` sw15.3 s6+ (cross-deck)
+  - w15.3 groups by `amount` from its first code slide, but neither w15.2 nor w15.3 shows where the column comes from. Only script 04 (sales['amount'] = units * unit_price, after cleaning) creates it, and the w15.2 homework asks for 'el total del año', which also needs it.
+  - Evidencia: Grepped amount: it appears in w15.3 and w16.2 and in no slide of w14 or w15.2 now. docs/.../A05 - Pandas/04_clean.py line 'sales["amount"] = sales["units"] * sales["unit_price"]' is its only origin.
+  - Propuesta: Not changed. It needs either an extra line on a w15.2 cleaning slide (which would change that slide's topic) or a setup line in w15.3, which is another agent's deck. That is the instructor's call.
+- **w15.2** · revisión · confirmado
+  - 9. w15.3 groups by `amount`, which no slide creates (cross-deck)
+  - Evidencia: Real. amount is created only in 04_clean.py. A fix needs either a setup line in w15.3 (another agent's deck) or a new line on a w15.2 cleaning slide, which would change that slide's topic. That is the instructor's call.
+- **w15.2** · revisión · confirmado
+  - 10. 04_clean.py comments say chained assignment is a 'silent no-op'
+  - Evidencia: Real: the warning prints under pandas 3.0.6. The fix belongs in docs/en/courses/python-course/06 - Advanced/A05 - Pandas/04_clean.py (the comment above the demo and 'what to remember' item 4), not in my files.
+- **w16.1** · revisión · confirmado
+  - 12. en slides 13 and 21: '20 %' with a space instead of US '20%'
+  - Evidencia: I counted 102 prose occurrences of 'N %' in this course's en decks and 135 en files repo-wide using the spaced form. The only unspaced forms are code output. Changing one deck would break consistency, so this needs a single course-wide decision by the instructor.
+- **w01.0** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w01.0.es.yaml` s18 quiz
+  - The Spanish formula uses semicolons, '=SI(D2>50000; "meta"; "abajo")'. That is the Spain/es-ES list separator. Excel under Mexican regional settings (decimal point '.') uses commas, which is how the office course from the same instructor writes SI and BUSCARV.
+  - Evidencia: In the office course, w05 and w08 use '=SI(B2>=70,"Aprobado","Reprobado")' and '=SUMAR.SI(...,...)'. The py-datos decks w01.1, w06, w13 and w15.3 all use semicolons.
+  - Propuesta: Not fixed here. Changing only w01.0 would show the same formula two ways in consecutive sessions, because w01.1 repeats it. If the instructor wants Mexican Excel syntax, all five py-datos Spanish decks (and the sibling algorithms course) should be swept together.
+- **w01.0** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w01.0.es.yaml` s18 quiz
+  - The quiz has no speaker notes stating the answer or what each distractor represents. No deck in this course has notes. B ('abajo' / 'below', strictly greater) is the only defensible answer. D ('depende del formato') would hold only if D2 stored the text '50000', and 'vale exactamente 50000' rules that out.
+  - Evidencia: Excel can't run here: LibreOffice Calc isn't installed (headless conversion fails with 'source file could not be loaded'). I emulated the logic in Python: D2=50000, D2>50000 is False, so 'abajo'/'below'. Same result by hand.
+  - Propuesta: Not fixed: writing notes would be inventing content. The answer key B is correct in both languages.
+- **w01.0** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w01.0.es.yaml` s21 homework
+  - Two gaps between the rubric and what the deck asks or teaches. The rubric gives 30 % to 'La cuenta institucional aparece activa', but the brief only asks for a screenshot of the program running. The rubric also requires the Python version to be visible, and no slide shows how to display it in Colab (for example !python --version).
+  - Evidencia: es lines 278-286, en lines 278-286. The DataCamp item may be checked by the instructor in the institutional DataCamp dashboard, which would make the brief consistent.
+  - Propuesta: Not fixed because it's ambiguous and fixing it would mean inventing deliverables. The instructor should confirm whether a DataCamp screenshot is expected.
+- **w01.0** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w01.0.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú. The English says 'you will be able to'.
+  - Evidencia: 147 Spanish decks across all courses use exactly this title (5 use 'vas a poder'). Every py-datos deck uses it.
+  - Propuesta: Not fixed: it is the course-wide institutional formula, not usted. Changing one deck would break consistency.
+- **w01.0** · revisión · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s5 divider
+  - The sibling course deck still has the ustedes lede 'No para convertirlos en programadores. Para que dejen de depender…', the same defect the auditor fixed in py-datos w01.0. Its English still says 'into programmers'.
+  - Evidencia: grep -n convertirlos gives line 73 of that file. The sibling's working-tree diff does not touch it.
+  - Propuesta: Not my file. It must be fixed in ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml line 73 ('convertirte en programador… dejes de depender'), with the en parity change in en/w01.0.en.yaml.
+- **w01.0** · revisión · consistency · low · `ppts/python/analisis-de-datos/es/w13.es.yaml` sBUSCARV code slide (line 84)
+  - The w13 code card still uses Spain's semicolon separator, '=BUSCARV(B2; Catalogo; 2; FALSO)'. Every other py-datos Spanish formula (w01.0 now, w01.1, w06, w15.3) uses the Mexican comma separator.
+  - Evidencia: grep 'BUSCARV(B2;' gives es/w13.es.yaml:84. w15.3 was changed in the working tree to '=BUSCARV(B2, Regiones, 2, FALSO)'.
+  - Propuesta: Not my file. It must be changed in ppts/python/analisis-de-datos/es/w13.es.yaml line 84 to '=BUSCARV(B2, Catalogo, 2, FALSO)'.
+- **w01.1** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w01.1.es.yaml and ppts/python/analisis-de-datos/en/w01.1.en.yaml` s14 quiz
+  - The quiz has no speaker notes stating the answer (C) or what each distractor represents. Neither deck has notes on any slide.
+  - Evidencia: grep -c 'notes:' returns 0 for all 42 YAML files in python/analisis-de-datos, so this is course-wide. Writing notes would be new content. The answer and the distractor meanings exist in notebooks/kit/lessons/da_w01_1.py around lines 217 to 241.
+  - Propuesta: Not changed. If the instructor wants notes in this course, the answer key can be copied from the notebook.
+- **w01.1** · auditoría · figure · low · `ppts/python/analisis-de-datos/es/w01.1.es.yaml and ppts/python/analisis-de-datos/en/w01.1.en.yaml` s10 figure
+  - The title 'Los dos viven en el mismo peldaño' / 'Both live on the same rung' says the spreadsheet and Python share a rung. The figure img/{es,en}/ct-09.png only labels 'Python / JS / C#' at the top and 'Ensamblador / Código máquina' at the foot. The spreadsheet does not appear, so only the caption connects the figure to the title.
+  - Evidencia: I looked at both PNGs. The figure comes from kit/ct.py ('ct-09': ct09). The caption does say both are high-level languages, so the slide is not false, but the picture does not show what the title says.
+  - Propuesta: Not changed. Fully fixing it means adding the spreadsheet to the top rung in ppts/kit/ct.py (ct09) and regenerating img/es and img/en ct-09.png, which is outside my files.
+- **w01.1** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w01.1.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck speaks to tú and the English says 'you will be able to'.
+  - Evidencia: The same formula appears in about 140 Spanish decks across every course (grep count), so it is the institutional wording, not a slip in this deck. Changing only this deck would break consistency.
+  - Propuesta: Not changed. The instructor should decide this course-wide.
+- **w01.1** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w01.1.en.yaml` s21 homework
+  - The English uses '20 %' and '50 %' with a space before the sign. American style is '20%'.
+  - Evidencia: 678 of 742 percent figures across all English decks use the spaced form, so this is a repo convention rather than a slip here.
+  - Propuesta: Not changed, to keep the repo-wide convention. Flagged for the instructor.
+- **w02** · auditoría · figure · low · `ppts/python/analisis-de-datos/es/w02.es.yaml` s13 figure
+  - In flow-symbols.png, 'datos almacenados' / 'stored data' is drawn as a cylinder. In ISO 5807 / ANSI and in the Office flowchart shapes the cylinder is magnetic disk (database). The stored-data symbol is the shape with curved left and right sides.
+  - Evidencia: Viewed img/es/flow-symbols.png and img/en/flow-symbols.png: the middle cell is a cylinder labeled ventas.csv / sales.csv. The caption on the slide just repeats the figure's label.
+  - Propuesta: Fix in ppts/kit/figures.py, flow_symbols() (around line 962; label fs_db at around line 132). Either draw the stored-data shape or relabel the cylinder 'base de datos' / 'database' and update the caption in both decks to match.
+- **w02** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w02.es.yaml` s7 figure
+  - The title ('Una receta numerada, sin espacio para interpretar') and the caption ('Cada paso dice exactamente qué hacer…') claim full precision. The figure shows one-word steps: reúne, mezcla, hornea, sirve, disfruta (gather, mix, bake, serve, enjoy). 'hornea' with no time or temperature is the kind of instruction slide 9 calls ambiguous, and 'disfruta' is not an executable step.
+  - Evidencia: Viewed img/es/ct-04.png and img/en/ct-04.png. The steps come from ppts/kit/ct.py line 28.
+  - Propuesta: I left this alone because the honest fix is the illustration, not the slide text. In ppts/kit/ct.py ct04 (steps list at line 28), give the steps concrete parameters, or have the instructor soften the caption in both decks.
+- **w02** · auditoría · consistency · low · `ppts/python/analisis-de-datos/es/w02.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person. The rest of the deck uses tú ('Tu turno', 'Elige', 'escríbelo') and the English side says 'you will be able to'.
+  - Evidencia: 147 es decks across the repo use exactly this title, including every week of this course. The instructor's known-defect list flags 'the student' only in English. This is a course-wide convention, not a usted slip.
+  - Propuesta: Not changed. Changing one deck would break consistency with the other 20 weeks; this is a course-wide decision for the instructor.
+- **w02** · auditoría · parity · low · `ppts/python/analisis-de-datos/en/w02.en.yaml` s23 takeaways
+  - The second takeaway title is 'Condition order is a business decision' in English but 'El orden de las condiciones decide' in Spanish. The framing differs; the facts do not, and the desc lines match.
+  - Evidencia: Compared the two slides side by side. Both are true, and the desc ('changes who gets paid') supports either one.
+  - Propuesta: Not changed, since there is no factual disagreement. Align them only if the instructor wants a literal parallel.
+- **w02** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w02.es.yaml` s8 table
+  - Looks contradictory to a reader: 'Con entrada' says 'Recibe cero o más datos' (Knuth's zero or more inputs), but the failure column says 'Un cálculo sin origen de sus números'. Zero inputs is allowed; what breaks the property is using numbers that are never declared as input.
+  - Evidencia: Checked against Knuth's five properties (finiteness, definiteness, input: zero or more, output: one or more). The other four rows are accurate. The en row 'A calculation with no source' has the same wording.
+  - Propuesta: Not changed. It is defensible as written. A clarifying edit would be 'Usa números que nunca se declaran como entrada', if the instructor wants one.
+- **w02** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w02.en.yaml` s20 quiz, 24 homework
+  - '20 %' with a space is not American style, which is '20%'.
+  - Evidencia: Across all en decks in the repo there are 676 '\d %' against 66 '\d%', so the spaced form is the repo convention.
+  - Propuesta: Not changed, to keep the repo-wide convention. Change it globally if the instructor wants strict American style.
+- **w02** · revisión · figure · low · `ppts/python/analisis-de-datos/es/w02.es.yaml` s13 figure
+  - In flow-symbols.png the 'despliegue' / 'display' symbol is mirrored. The figure draws a curved left side and a pointed right side. The standard display symbol (ISO 5807 / ANSI, Office flowChartDisplay) has a pointed left side and a curved right side. Applies to both img/es and img/en.
+  - Evidencia: Viewed img/es and img/en/flow-symbols.png. ppts/kit/figures.py lines 1043-1050: the right vertex is at (cx+145, cy) and the arc points are on the left at (cx-128..cx-140). The Office preset geometry for flowChartDisplay is moveTo(0,h/2), lnTo(w/6,0), then arcTo on the right side.
+  - Propuesta: Must be fixed in ppts/kit/figures.py flow_symbols() section '# 8 · display' (lines 1043-1050) by swapping the pointed and curved sides, then the PNGs regenerated. No YAML change is needed.
+- **w03** · auditoría · consistency · low · `ppts/python/analisis-de-datos/en/w02.en.yaml` s4 roadmap (and other weeks)
+  - The roadmap card shared by every week still says "visualisation" in other en decks of this course, while w03 now says "visualization". Other British forms also remain in w02, w04-w10 and w14-w17.
+  - Evidencia: grep counts of British forms: w02 1, w04 2, w05 1, w06 2, w07 2, w08 2, w09 5, w10 2, w14 3, w15.x 2-3, w16.x 2-5, w17 3.
+  - Propuesta: Outside my files. It has to be fixed in each of those weeks' en decks.
+- **w03** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w03.es.yaml` s11 table
+  - In the compile vs interpret table, the row "Cuándo avisa del error" gives the interpreted column as "Al llegar a la línea que falla", and the title says "dónde cae Python". For Python this holds for runtime errors but not for syntax errors, which CPython rejects before running anything.
+  - Evidencia: The line 11 SyntaxError run above: nothing prints. As a generic textbook description of interpreters the row is defensible, and the corrected takeaway on slide 20 now states how Python actually behaves.
+  - Propuesta: Left as the author's generic simplification, now clarified by takeaway 2. The en row ("On reaching the line that fails") is the same.
+- **w03** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w03.es.yaml` s21 homework
+  - The homework (translate the bonus pseudocode to Python, "incluido el orden de las condiciones") needs if/elif/else and float multiplication. Selection is formally taught in w06 and operators in w04.
+  - Evidencia: w02.es slide 16 (compare, "Del plan al lenguaje, casi línea por línea") already shows the exact Python if/elif/else translation. w03 slide 15 adds the colon and indentation rules. So the construct has been shown, and the homework is defensible. The same applies to en.
+  - Propuesta: No change. Flagged for the instructor in case "shown on a compare slide" is not meant to count as taught.
+- **w03** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w03.es.yaml` s21 homework
+  - The deck's homework differs from the syllabus for week 3. The syllabus row 3 lists "Short research task on languages used for data analysis" with evidence "Language comparison report. First program running."
+  - Evidencia: Read from syllabus-tia502.xlsx, row 3.
+  - Propuesta: An instructor planning decision, so not changed. Same in en.
+- **w03** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w03.es.yaml` s3 objectives
+  - The title "Al terminar la sesión el alumno podrá…" uses the third person, while the rest of the deck uses tú.
+  - Evidencia: 147 es decks in the repo use exactly this title and only 5 use "vas a poder", so it is the house convention for Spanish objectives. Changing one deck would break course-wide consistency.
+  - Propuesta: Not changed. If the instructor wants tú, it is a repo-wide change.
+- **w03** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w03.es.yaml` s7 table
+  - Excel appears under two paradigms: "hojas de cálculo" under Funcional and "fórmulas de Excel" under Declarativo. A reader might see this as a contradiction.
+  - Evidencia: Functional programming is a subset of declarative programming, so both placements are correct. en has the same rows.
+  - Propuesta: Not a defect, so no change.
+- **w04** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w04.en.yaml` s24 homework
+  - The English meta and rubric write '20 %' and '40 %' with a space, which is French/Spanish style. American style is '20%'.
+  - Evidencia: The spaced form is used in every en deck of the course (e.g. 'Part of the 20 % for assignments' appears 19 times).
+  - Propuesta: Left as is: this is a course-wide convention, and changing only w04 would make it inconsistent. If wanted, it should be decided and changed course-wide.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w04.es.yaml + en/w04.en.yaml` s7 table, 22 lab, 24 homework
+  - 'tasa de conversión' / 'conversion rate' is used for clics / impresiones (0.0342 = 5074/148230). In marketing, that ratio is the click-through rate (CTR); conversion rate is conversions / clicks.
+  - Evidencia: 5074/148230 = 0.03423. w05.es line 195 and w06.es line 159 define conversion = clics / impresiones, so the whole course uses the term this way.
+  - Propuesta: Not changed: renaming it is a course-wide terminology decision across w04 to w06+, beyond a minimal edit. The instructor should decide.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w04.es.yaml + en/w04.en.yaml` s15 code
+  - The 'El mismo orden' / 'The same order' annotation says Python's precedence is Excel's and there is 'nada nuevo que memorizar'. One classic exception exists: Excel applies unary negation before ^ (=-2^2 is 4), while Python gives -2**2 = -4.
+  - Evidencia: Python 3.11: -2**2 = -4. Excel's documented precedence puts negation (-) above percent and exponentiation (^). The claim does hold for the four levels in the slide's comment line.
+  - Propuesta: Not a defect for what the slide shows, so left unchanged. Flagged in case the instructor wants a note.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w04.es.yaml + en/w04.en.yaml` s18 concept
+  - The lead lists 'espacios' among the reasons text-to-number is ambiguous. A student who tries int(' 5074 ') will see it work.
+  - Evidencia: int(' 5074 ') = 5074 (surrounding whitespace is stripped), but int('5,074') raises ValueError, as would an inner space such as '5 074'.
+  - Propuesta: Defensible as written (inner spaces used as thousands separators do fail), so left unchanged.
+- **w04** · revisión · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w04.es.yaml + en/w04.en.yaml` s15 code / 22 lab / 24 homework
+  - The lab and the homework require rounding, but round() is never explained in weeks 1 to 4. It only appears without annotation in the s15 code (round(cpc_mal, 2)) and is formally taught in w11 (built-in functions table). Students can copy the visible round(x, 2) pattern, so the exercise is doable, but the function is shown rather than taught.
+  - Evidencia: grep 'round' over es/*.yaml finds it first at w04.es line 199 (s15 code), with no annotation. It is next taught in w11.es lines 43 and 138. s15 already has the maximum of four annotations.
+  - Propuesta: Left unchanged. The syntax needed is shown verbatim on s15, and adding an explanation would mean dropping one of s15's four annotations. The instructor may prefer to name round(valor, n) aloud or in a notes line.
+- **w05** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w05.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the English says 'you will be able to'. This may look like a register slip against the 'tú throughout' rule.
+  - Evidencia: grep across ppts/: 147 Spanish decks use exactly 'Al terminar la sesión el alumno podrá…', including all 21 decks of this course. Only 5 use 'vas a poder'. It is the course-wide house formula, not usted, so changing one deck would break consistency.
+  - Propuesta: Not changed. If the instructor wants 'vas a poder…', it should be changed course-wide.
+- **w05** · auditoría · consistency · low · `ppts/python/analisis-de-datos/es/w05.es.yaml` s17 pitfalls
+  - 'Error 01 · Olvidar la f' says 'No es un error, es una salida silenciosamente inútil' (en: 'It is not an error'). It sits under a slide titled 'Cuatro errores', so a reader may see a contradiction. The intended meaning is that Python raises no exception.
+  - Evidencia: Ran print('Conversión: {conversion:.2%}'): it prints the braces literally with no exception, so the technical claim is correct.
+  - Propuesta: Left as the author's phrasing because it is technically accurate. A possible wording is 'No lanza ningún error' / 'It raises no error'.
+- **w05** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w05.es.yaml` s21 homework
+  - Not a slide defect, but it is outside my files: exercise 05.3 in ppts/python/analisis-de-datos/ejercicios.es.md (and probably exercises.en.md) asks for labels left-aligned in 22 spaces (:<22) and 05.1 uses :>12,. The w05 deck teaches only right alignment (:>10) and never shows '<' or the combined width-and-thousands spec.
+  - Evidencia: Read ejercicios.es.md lines 238 to 282. The deck's format table (slide 13) has exactly :, :.2f :,.2f :.1% :>10.
+  - Propuesta: Must be fixed outside my files: either the exercises file or a format-table row. I did not touch it.
+- **w06** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w06.es.yaml; ppts/python/analisis-de-datos/en/w06.en.yaml` s18 quiz
+  - The quiz has exactly one defensible answer, B (Revisar/Review): 0.03 > 0.03 is False, so the else branch runs. The distractors map to clear confusions: A is the boundary (> vs >=), C wrongly thinks elif is required, D wrongly thinks both branches run. However, no speaker note states the answer, so the 'answer stated in the notes' cannot be checked.
+  - Evidencia: Ran limite.py and boundary.py: they print 'Revisar' and 'Review'. Neither deck has any notes, and grep finds notes: 0 in all 42 decks of the course, so this is a course-wide choice.
+  - Propuesta: Not changed: adding notes only here would break the course's uniform no-notes convention. If the instructor wants answer keys, add 'notes: Respuesta B…' course-wide.
+- **w06** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w06.es.yaml; ppts/python/analisis-de-datos/en/w06.en.yaml` s6 table
+  - 'conversion == 0.0342 gives True' is correct for the literal conversion = 0.0342 (used on s8 and s15). But s11 computes conversion = 5074 / 148230 = 0.0342305876..., and for that value the same comparison gives False. The deck uses == on a float without warning about it, which a student could trip over.
+  - Evidencia: Evaluated with the w04 values (canal = 'Instagram', clics = 5074, inversion = 38500, conversion = 0.0342): all six rows match (True, True, True, False, True, True). With 5074/148230, 'conversion == 0.0342' gives False.
+  - Propuesta: Left as is because it is correct as written. Optional: use clics == 5074 as the == example.
+- **w06** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w06.en.yaml` s12, 15, 16, 21 (titles, verdict, homework)
+  - The English deck writes percentages with a space ('3.42 %', '6 %', '20 %'). American style is '3.42%', and the code output on the same slides prints '3.42%'.
+  - Evidencia: grep: the spaced form is used in every en deck of this course (for example, the w01.0 grading table '20 %'), so it is a course-wide typographic choice, not a slip in w06.
+  - Propuesta: Not changed, to stay consistent with the rest of the course. If it changes, it should change in all en decks at once.
+- **w07** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w07.es.yaml` s10 table, 11 compare, 12 code_output
+  - List literals (['Meta', 'Google'], [1, 2, 3]) appear here, but the roadmap and w12 ('Tema 6 · Listas y tuplas') teach lists later. The lab requires 'in', and so does the homework through the same policy.
+  - Evidencia: grep: w08 and w09 also use lists informally before w12, so the course introduces list syntax as a black box on purpose. Since this session itself shows 'in' over a list, the lab and homework only use what this session taught. 'in' also works on strings from w04. Not changed.
+  - Propuesta: No change: this is a course-wide design choice, and the lab only uses what this session shows.
+- **w07** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w07.es.yaml` s10 table
+  - The Result column relies on values the reader must infer: canal = 'Instagram' comes from slide 8, and costo = None is never shown on any slide.
+  - Evidencia: Ran the four examples with canal='Instagram' and costo=None: False, True, True, False, matching the table. The same holds for the English deck.
+  - Propuesta: No change: the results are correct with the implied values, and adding a caption would mean inventing content.
+- **w07** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w07.es.yaml` s14 concept, 20 takeaways
+  - 'Convierte cuatro niveles de sangría en una línea legible' and 'convierte cuatro niveles en uno' overstate the case. Collapsing one nested if into an and removes one level. The same wording appears in English.
+  - Evidencia: Read against the slide 15 example, which has two indentation levels.
+  - Propuesta: No change: the phrasing is rhetorical and consistent across both slides. The instructor may want to soften it.
+- **w07** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w07.es.yaml` sall
+  - Neither deck has speaker notes (no deck in this course does), so the quiz answer and the distractor rationale are not stated anywhere.
+  - Evidencia: grep -c 'notes:' returns 0 for every es and en deck in analisis-de-datos.
+  - Propuesta: No notes added, since that would mean inventing content. The answer is B in both languages.
+- **w07** · revisión · language · low · `ppts/python/analisis-de-datos/en/w07.en.yaml` s16 trace, 21 homework
+  - English writes percentages with a space ('6 %', '20 %', '40 %'), which is the Spanish convention; American English writes '6%'. All 21 en decks in this course do the same, and they also share the calque 'Four moments in the session'. Changing only w07 would break consistency with the rest of the course.
+  - Evidencia: grep '[0-9] %' en/*.yaml matches every en deck. grep on the agenda title finds 'Four moments in the session' in 21 of 21 en decks.
+  - Propuesta: Not changed. This needs one decision for the whole course, applied to all en decks of analisis-de-datos (and probably other courses), not a fix to w07 alone.
+- **w08** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w08.es.yaml` s3 objectives / 8 divider
+  - The objective 'Recorrer una lista con for: Elemento por elemento' and the for divider describe item-by-item iteration, but every for loop in the deck walks positions with range(len(...)). w09 introduces direct iteration over a list as something new ('Sin índice: ... el for puede recorrer la lista directamente').
+  - Evidencia: Every for on slides 6, 9, 10 and 17 iterates over range(...); w09.es 'Sin índice' annotation. Left unchanged because the loop still visits every element, so it is defensible. Rewording to 'posición por posición' is the instructor's call. The English version has the same issue.
+  - Propuesta: Not changed; flagged for the instructor.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w08.es.yaml` s20 homework
+  - The homework, due before week 9, asks for the best and worst CPC and the global CPC. Those are the accumulator and running-best patterns that w09 teaches formally (w09's homework again asks for 'la mejor de todas'). Pitfall 03 on slide 15 also uses the word 'acumulador' before w09 defines it.
+  - Evidencia: It is still solvable with what has been shown: sum() and max() in the w01.1 bridge, if from w06, and variables updated inside a loop (presupuesto and dia on slide 13). So I did not treat it as a hard violation. The English version has the same issue.
+  - Propuesta: Not changed. The instructor should confirm the homework is intended as a preview of w09.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w08.es.yaml` s18 lab
+  - The lab asks for a while loop that counts how many records exceed a threshold. That means walking a list of known length, which the deck's own table (slide 7) assigns to for. It also mentions 'las dos versiones' although the brief describes two different tasks.
+  - Evidencia: Slide 7: for when 'tienes algo que recorrer', while when 'No sabes cuántas'. It looks like a deliberate exercise to practise while syntax. The English version has the same wording.
+  - Propuesta: Not changed; author's design choice.
+- **w08** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w08.en.yaml` s16 table / 20 homework
+  - '20 %' with a space before the percent sign is Spanish/European typography; American English writes '20%'.
+  - Evidencia: Every English deck in this course uses '20 %' (for example w01.0.en has 11 occurrences), so this is the course convention, and the house rule only names the spelling 'percent'.
+  - Propuesta: Not changed, to stay consistent with the rest of the course; a course-wide decision.
+- **w08** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w08.es.yaml` s6 compare
+  - The Excel card contains '# y arrastras hasta la fila 500'. Excel has no comment syntax, so this line is a pseudo-comment inside formula code.
+  - Evidencia: In kit/highlight.py, _excel treats '#' as an error-value opener only before uppercase letters, so this line is tokenized as an operator plus words. The preview renders it as muted text, which reads as an aside. The English version has the same line.
+  - Propuesta: Not changed; the line reads clearly as an aside.
+- **w09** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w09.es.yaml` s21 homework
+  - 'y la mejor de todas' / 'which is the best of them all' does not say best by which metric (CPC, conversion, clicks). The w08 homework said 'mejor costo por clic' explicitly. Students will ask.
+  - Evidencia: Read the w08 homework brief ('cuál tiene el mejor costo por clic'). w09 gives no criterion.
+  - Propuesta: Left for the instructor, since the intended criterion is not stated anywhere. A likely fix is 'la de mejor costo por clic' in es and en.
+- **w09** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w09.es.yaml` s3 objectives
+  - Objective 'Usar una bandera… sin recorrer de más' / 'without walking any further' promises that the flag avoids extra passes. The flag example (slide 8, hay_cara) walks all four campaigns, and no slide combines a flag with break. Early exit is only shown in block 2, with break and for-else rather than a flag.
+  - Evidencia: Slide 8 code has no break. Slide 12 uses break with for-else and no flag variable.
+  - Propuesta: Not changed. Taken together, the deck does teach the idea (flag in block 1, break in block 2), so I did not treat it as wrong. A reader may still notice the gap.
+- **w09** · auditoría · consistency · low · `ppts/python/analisis-de-datos/en/w09.en.yaml` s21 homework
+  - The EN deck writes percentages as '20 %' and '40 %', with a space, which is not American style ('20%'). Every EN deck in this course uses the spaced form, so changing only w09 would make it inconsistent with the rest of the course.
+  - Evidencia: grep shows '20 %' in w06, w07 and w08 EN, and 75 EN decks repo-wide with 'Part of the 20 % for assignments'.
+  - Propuesta: Left as is so it matches the rest of the course. If the instructor wants American style, change it course-wide in one pass.
+- **w10** · auditoría · output-mismatch · low · `ppts/python/analisis-de-datos/es/w10.es.yaml` s15 code_output
+  - The panel shows "NameError: name 'comision'" / "is not defined" on two lines and leaves out the Traceback and File lines. The real stderr is one error line after a 4-line traceback.
+  - Evidencia: Ran ambito.py: 255000.0, then the traceback, then "NameError: name 'comision' is not defined". kit wrap_lines puts that 41-character line at 2 lines at 20.25 pt, so the manual split is forced by the panel width. w12.es s15 uses the same convention (TypeError split over two lines). The values themselves are correct.
+  - Propuesta: Not changed: the split is the course-wide display convention and the panel content is right. The alternative would be shrinking type, which is forbidden.
+- **w10** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w10.es.yaml` s11 code_output (also en)
+  - The loop iterates over 'creditos' / 'loans', which no slide defines, and unpacks 3-tuples ('for capital, tasa, meses in ...'). Tuples are taught in w12. w08 and w09 always show the data lists on a code slide before the code_output that reuses them.
+  - Evidencia: The code only runs with an added creditos list of tuples. grep of w04 to w09: loops use range(len(lista)) or a plain 'for x in lista'; no tuple unpacking appears.
+  - Propuesta: Not changed: this is a demo slide, not an exercise, and the output is right. Showing the data or switching to the w08 parallel-list pattern is a rewrite that does not fit the card at 18 pt or more. The instructor should decide.
+- **w10** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w10.es.yaml` s20 homework (also en)
+  - The second function must 'reportar el total pagado y los intereses' while the rubric says both functions return and neither prints. Returning two values (a tuple) is only taught in w12, and w10 shows only single-value return.
+  - Evidencia: Read the w10 code slides (one return value each). w12.es is the first deck with tuples. Students can meet the rubric with what w05 taught by returning an f-string report, so the homework is doable but ambiguous.
+  - Propuesta: Not changed: making the deliverable explicit (for example 'devuelve un texto con...') would add a requirement the instructor did not write. Flagged for the instructor.
+- **w10** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w10.es.yaml` s10 table (also en)
+  - The row 'Cuerpo / Las tres líneas de adentro' may look off: the function body has four non-blank lines (docstring, i, factor, return).
+  - Evidencia: return has its own row in the table, so docstring + i + factor is three. Reading the 'cálculo' as i + factor + return also gives three. The count holds either way.
+  - Propuesta: No change needed. Reported only because a reader may count four.
+- **w11** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w11.es.yaml + en/w11.en.yaml` s18 quiz
+  - No answer key is stated anywhere. Neither deck has speaker notes, so the quiz answer and what each distractor represents cannot be checked against notes.
+  - Evidencia: grep 'notes:' over the whole es folder of this course gives 0. The quiz layout in kit/deck.py has no answer field. I confirmed by running the code that B is the single correct option.
+  - Propuesta: Not fixed. Adding notes would invent content, and the course has no notes in any deck. The instructor may want a note: 'Answer B. A = 50 taken as envio, C = all params required, D = 50 as an absolute tax amount'.
+- **w11** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w11.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú and the en deck says 'you will be able to'. A reader may see this as a register break.
+  - Evidencia: 147 es decks across the repo use 'el alumno podrá'. Only VBA w13 to w17 use 'vas a poder', and the instructor's known-defects list flags those VBA decks as the ones that deviate. So this is the house convention.
+  - Propuesta: Not a defect under the course convention. Left as is.
+- **w11** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w11.es.yaml + en/w11.en.yaml` s13 concept
+  - The panel says pandas 'se importa exactamente igual' / 'is imported in exactly the same way', but the course imports it as `import pandas as pd`. That alias form is not one of the two import forms taught on slide 15.
+  - Evidencia: w15.1, w15.2 and w15.3 use `import pandas as pd`. w11 never shows `as`.
+  - Propuesta: Not changed. The mechanism really is the same, and the alias can be explained when pandas arrives. Flagged for the instructor.
+- **w11** · auditoría · output-mismatch · low · `ppts/python/analisis-de-datos/es/w11.es.yaml + en/w11.en.yaml` s16 code_output
+  - The panel prints 7737.2 for round(mean(pagos), 2), not 7737.20. This may look like a typo to a reader, but it is the real output.
+  - Evidencia: Ran it with the pagos list from slide 11 added as scaffolding: 7737.2 / 7220.66 on Python 3.11 and 3.12, matching the panel. mean is 7737.196, and round drops the trailing zero.
+  - Propuesta: Not a defect. The slide matches real output.
+- **w12** · auditoría · figure · low · `ppts/python/analisis-de-datos/es/w12.es.yaml` s9 figure
+  - The Spanish slicing.png keeps the English variable name `course = "PYTHON"` / `course[0:3]`, while the other figure in this deck (reference-vs-copy) is localized (numeros, copia) and the slide code uses Spanish names (pagos).
+  - Evidencia: Viewed img/es/slicing.png. figures.py slicing() hardcodes 'course' for both languages.
+  - Propuesta: Not changed. If wanted, localize the variable name in ppts/kit/figures.py slicing() for lang == 'es' and regenerate the figure.
+- **w12** · auditoría · output-mismatch · low · `ppts/python/analisis-de-datos/es/w12.es.yaml` s18 code_output
+  - The tupla.py panel shows '0.18' and then only the last traceback line, split across two lines. The real run prints a 'Traceback (most recent call last):' block of four lines before the TypeError, and the message is on a single line.
+  - Evidencia: python3.11 tupla.py printed 0.18, then 'Traceback (most recent call last):', the File line, the source line and the caret line, then "TypeError: 'tuple' object does not support item assignment". The English tuple.py behaves the same.
+  - Propuesta: Left as is. This is the course's convention for exception panels (w10 shows its NameError the same way), and the full 58-character message cannot fit the panel width at 18 pt. The panel is still accurate about which exception occurs. Same in en s18.
+- **w12** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w12.es.yaml` s23 homework
+  - The brief asks for the campaigns from week 8 'que superan la meta', but no target value exists in the w08 lists (campanas, clics, inversion) or in this deck. w09 mentions a 'meta de conversión' without a number or any conversion data. 'Ordénala de mayor a menor inversión' is also ambiguous: if the new list holds campaign names, sorting them by spend needs key= or tuples, which have not been taught by week 12.
+  - Evidencia: Read w08.es s11 and s12 (the three parallel lists) and grepped w09, w10 and w11 for 'meta' and 'conversión': there is no numeric target. Today's tools (filtering into a new list with for, if and append, then sort with reverse) do work if the new list holds the inversion values.
+  - Propuesta: Not changed, since fixing it would mean inventing a target value. The instructor should state the target (and which value the new list holds) in the brief. Same in en s23.
+- **w12** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w12.es.yaml` sall (20 quiz, 1 cover)
+  - Neither deck has any speaker notes, so the quiz answer is not recorded anywhere, and the cover has no source note (README: 'Each lesson names its sources in the cover speaker notes'). This is true of the whole course.
+  - Evidencia: grep 'notes:' finds nothing in any analisis-de-datos deck. The quiz itself is sound: metodos.py and methods.py print None, so B is the only correct option. Distractors: A assumes sort returns the sorted list, C assumes nothing changed, D assumes sort needs an argument.
+  - Propuesta: Not added, to avoid inventing course-wide content. The instructor may want a note on s20 stating 'Correct answer: B'.
+- **w12** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w12.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú and the English slide says 'you will be able to'.
+  - Evidencia: This is the house-wide template: 147 Spanish decks use 'el alumno podrá…' and only 5 use 'vas a poder…'.
+  - Propuesta: Left alone. Changing one deck would break consistency across the course; it is the instructor's call whether to switch every deck to 'podrás…'.
+- **w12** · revisión · language · low · `ppts/python/analisis-de-datos/en/w12.en.yaml` s3 objectives, 9 figure
+  - 'which is why sizes come out round' and 'the sizes always come out round' are a literal calque of the Mexican idiom 'salen redondos', which means the sizes come out exact (stop minus start). To an American reader 'round' suggests round numbers.
+  - Evidencia: Read it against es s3 and s9. The Spanish is idiomatic, the English is not. The same wording appears in ppts/python/analisis-y-diseno-de-algoritmos/en/w12.en.yaml.
+  - Propuesta: Left as is because it is author voice, not a factual error. If the instructor wants it changed, a possible wording is 'which is why the size is the second index minus the first'. The sister course deck would need the same change.
+- **w13** · auditoría · consistency · low · `ppts/python/analisis-de-datos/en/w09.en.yaml` sw09.en code/output with regions
+  - With w13.en now saying 'Center', w09.en still uses 'Centre' for the same region list (regions = ["North", "Centre"] and the 'Centre · Retail/Online' output). That deck is outside my assignment.
+  - Evidencia: grep: en/w09.en.yaml:207, 234, 235 contain 'Centre'.
+  - Propuesta: Must be fixed in en/w09.en.yaml (another agent's deck): change Centre to Center in the code and output.
+- **w13** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w13.es.yaml` s6 compare
+  - The BUSCARV formula separates arguments with ';' (=BUSCARV(B2; Catalogo; 2; FALSO)). With default Windows es-MX regional settings (decimal point), Excel's list separator is ',', so a Mexican student who types it as shown may get a formula error. The course itself is split on this.
+  - Evidencia: w01.1.es uses commas (=SI(D2>50000, "meta", "abajo")). w01.0.es, w06.es and w15.3.es use semicolons. This depends on the students' locale, so I did not fix it.
+  - Propuesta: Not changed. The instructor should pick one separator for the whole course. If it is the es-MX default (comma), this line becomes =BUSCARV(B2, Catalogo, 2, FALSO).
+- **w13** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w13.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck speaks to the student as tú. The English deck says 'you will be able to'.
+  - Evidencia: This is the template used repo-wide: 147 decks say 'el alumno podrá…' and only 5 say 'vas a poder…'. Changing one deck would break consistency with the rest of the course.
+  - Propuesta: Left as is. It needs a course-wide (or repo-wide) decision, for example 'Al terminar la sesión vas a poder…'.
+- **w13** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w13.es.yaml` s5 divider, 6 compare, 21 takeaways (and en same slides)
+  - The 'columna número tres' / 'column number three' metaphor sits right next to a formula whose column index is 2. A reader can take it to mean VLOOKUP's third argument or a third column, and both readings clash with the '2' on screen.
+  - Evidencia: Compare slide formula: =BUSCARV(B2; Catalogo; 2; FALSO). Note: 'La columna número tres no existe porque no hace falta.' (en: 'Column three does not exist.'). It is coherent if read as 'a dictionary has only two columns', and it is used the same way in both languages.
+  - Propuesta: Not changed (author's metaphor, used consistently on three slides). Flagged in case the instructor wants clearer wording.
+- **w13** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w13.es.yaml` s22 homework (and en)
+  - The homework asks for a dictionary built from the course lists, not typed by hand. That needs an empty dict plus d[key] = value inside a range(len()) loop (w08). Inserting a new key only appears in this deck's quiz (conteo["Este"] = 2), not on a teaching slide, and dict(zip(...)) is never taught.
+  - Evidencia: I grepped w01 to w12: no zip and no dict() constructor. range(len(campanas)) is in w08. Key insertion appears only in the quiz source on slide 19.
+  - Propuesta: Not changed. It is doable with the quiz plus w08 loops. The instructor may want to say explicitly in class that assigning to a missing key adds it.
+- **w13** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w13.en.yaml` s18 table, 22 homework
+  - English writes '20 %' with a space. American style is '20%'.
+  - Evidencia: The whole en course (w01.0 to w12) uses '20 %', and other auditors left it, so I kept it for consistency.
+  - Propuesta: Not changed. If wanted, this is a course-wide replace.
+- **w14** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s15 code_output
+  - The four totals come from summarise_by_hand.py after it title-cases the regions and drops exact duplicates. Neither step appears on any w14 slide, and the Riesgo annotation on slide 11 mentions duplicates and blanks but not the inconsistent region spellings. A student who builds por_region from the slides alone gets eight region keys (' North', 'NORTH', 'north', 'North ', ...) and North = 4,584,830.40.
+  - Evidencia: I grouped the raw rows without cleaning and got sorted keys [' North','Centre','NORTH','North','North ','South','West','north']. Without dedupe, North comes to 4,584,830.40 and West to 3,070,779.45.
+  - Propuesta: Not changed. The numbers are correct for the module script, w15.1, w15.2 and w15.3 cover the region spellings, and adding a caption would be new content.
+- **w14** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s16 pitfalls
+  - Error 02 is a plain YAML scalar 'C:\\Users\\tu_nombre\\datos.csv', so the slide shows doubled backslashes. That is the escaped Python-literal form, not a Windows path as typed. The same applies to the English slide (C:\\Users\\your_name\\data.csv).
+  - Evidencia: The built pptx text frame on slide 16 contains two backslash characters at each separator. The twin course analisis-y-diseno-de-algoritmos w14 has identical text.
+  - Propuesta: Left as is. It may be deliberate (how the path would be written in Python source). If a plain Windows path is wanted, use single backslashes in both decks.
+- **w14** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s7 code
+  - The encoding annotation says that without encoding= a file with accents is read differently on Windows and on Mac. This is true for Python 3.12 to 3.14, but PEP 686 makes UTF-8 mode the default from Python 3.15, and the course says 'Python 3.12 o superior'. The same applies to the English slide.
+  - Evidencia: From Python documentation semantics: the locale encoding is cp1252 on Windows and UTF-8 on macOS before PEP 686. I could not test on Windows or on 3.15 here (only Python 3.11 is installed).
+  - Propuesta: Not changed. The claim holds for the versions students most likely run, and stating encoding explicitly is still best practice.
+- **w14** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s11 code
+  - DATOS = Path(__file__).resolve().parent / 'data' only works for a script sitting next to data/, i.e. in '06 - Advanced/'. The repo's A04 scripts use parent.parent, so leer_csv.py dropped into the A04 folder raises FileNotFoundError. The same applies to the English slide.
+  - Evidencia: With data/ next to it, the slide code runs and prints 324 / South 15 / <class 'str'>, which matches slide 12. I read the repo scripts to confirm they use parent.parent.
+  - Propuesta: Not changed. The slide is self-consistent as a standalone example.
+- **w14** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s17 quiz
+  - There are no speaker notes, so no answer key is stated (no deck in this course has notes). I verified the key independently: B is the only correct option. C reflects the mode x confusion (FileExistsError), D the mode a confusion, and A not knowing what w does. The same applies to the English quiz.
+  - Evidencia: Execution as in the quiz finding above.
+  - Propuesta: No notes added. The course carries none, and notes are the instructor's to add.
+- **w14** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the English says 'you will be able to'. All 21 Spanish decks of this course use the same formula.
+  - Evidencia: grep across es/*.yaml: line 36 is identical in every deck.
+  - Propuesta: Not changed. It is a course-wide convention, and changing only w14 would make the course inconsistent. If tú is wanted ('podrás'), it should change in all 21 decks.
+- **w14** · revisión · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w14.es.yaml` s20 pitfalls / 23 homework (twin course, not my file)
+  - The twin course's Spanish w14 still has two problems fixed here. Its pitfall 04 says 'entre cada dato', while its own new save slide says 'entre cada registro'. Its homework still says 'Clona el módulo A04 del repositorio'; the en twin also says 'Clone module A04'.
+  - Evidencia: diff of analisis-de-datos/es/w14.es.yaml against analisis-y-diseno-de-algoritmos/es/w14.es.yaml.
+  - Propuesta: Not my file. It should be fixed in ppts/python/analisis-y-diseno-de-algoritmos/{es,en}/w14.*.yaml by the agent that owns that course.
+- **w15.1** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w15.1.es.yaml` s2 agenda, 3 objectives, 17 pitfalls, 20 takeaways
+  - The deck repeats the routine 'head, info, shape y describe, siempre en ese orden' ('Los cuatro comandos que se corren siempre'), but no slide runs info() or describe(). Block 03 shows head, dtypes, shape, value_counts, isna and duplicated (same in en).
+  - Evidencia: Searched the source fields: there is no .info( or .describe( call. Both are only demonstrated in A05 script 02, which the homework asks students to run. Neither real output fits a panel (info is 14 lines up to 40 characters).
+  - Propuesta: Not changed: adding slides would mean inventing content. The instructor may want to add a describe slide, or say in the slides that dtypes is the type column of info.
+- **w15.1** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w15.1.es.yaml` s7 code
+  - The annotation 'Sin ciclo: mensual * 1.16 aplica el impuesto a los cuatro meses de golpe' describes an expression that is not in the displayed source. The 'Los métodos' annotation also names mean and max, which the code does not call (same in en).
+  - Evidencia: Ran mensual * 1.16: it gives 48720.0, 59740.0, 45124.0, 69716.0 (float64). mean is 48125.0 and max is 60100. The claims are true; only the expression is missing from the card.
+  - Propuesta: Left as is: the claims are correct and illustrative. Adding the line would also change the next slide's excerpt.
+- **w15.1** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w15.1.es.yaml` s18 quiz (was 17)
+  - The quiz has exactly one defensible answer, B (NaN needs float). There are no speaker notes in this deck (or anywhere in the course), so no stated answer key or distractor rationale exists to check against.
+  - Evidencia: Ran the quiz source: float64 and 11. The raw units column has no non-integer values, so A is false. read_csv on the first 5 rows (no NaN) infers int64, so C is false. D is unrelated. Same result in en.
+  - Propuesta: No change: the options are correct. An answer key could go in the notes if the instructor wants one.
+- **w15.1** · auditoría · language · low · `ppts/python/analisis-de-datos/es/w15.1.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú. en says 'you will be able to'.
+  - Evidencia: This is the house formula: 146 Spanish decks across the repo use exactly this title, against 6 that use tú.
+  - Propuesta: Kept for consistency with the rest of the repo.
+- **w15.1** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w15.1.es.yaml` s12 divider, 17 pitfalls, 20 takeaways
+  - 'Dos minutos de inspección', 'cuestan dos minutos' and 'Dos minutos que evitan…' mention minutes on slides.
+  - Evidencia: These are rhetorical claims about the habit, not session or activity durations (the agenda has none), so they are not the timing the 'no durations' rule targets.
+  - Propuesta: Left as is; flagged for the instructor to judge.
+- **w15.2** · auditoría · technical-claim · low · `docs/en/courses/python-course/06 - Advanced/A05 - Pandas/04_clean.py` sn/a (source script)
+  - The source script the slides were taken from says the chained assignment is a 'silent no-op' where 'Nothing is raised'. Under pandas 3.0 it prints ChainedAssignmentError, the same false claim I fixed in the decks.
+  - Evidencia: Ran the script's chained-assignment pattern under pandas 3.0.6 and the warning is printed.
+  - Propuesta: Outside my files. The comment block before the demo in 04_clean.py should say that only a warning appears.
+- **w15.2** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w15.2.es.yaml + en/w15.2.en.yaml` s14 code_output
+  - The output 306 only holds if drop_duplicates has already run (324 - 7 - 11), and no slide shows that code. Without it the result would be 313.
+  - Evidencia: Pipeline run: 324 rows, then 317 after drop_duplicates (11 NaN units still present), then 306 after dropna. The plan table (slide 11) lists drop_duplicates first, so the order is implied, and it matches script 04.
+  - Propuesta: Not changed. The output is correct for the documented order of repairs.
+- **w15.2** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w15.2.es.yaml + en/w15.2.en.yaml` s15 divider
+  - 'Desde pandas 3.0' is accurate for chained assignment as a whole (CoW makes it never work). The particular form on the slides, df[mask]['col'] = v, already wrote nothing in pandas 1.x and 2.x, because boolean indexing always returned a copy (SettingWithCopyWarning). A reader who knows pandas 2 may find the claim odd.
+  - Evidencia: Known pandas semantics. Under 3.0.6 the demo writes nothing and warns, as tested.
+  - Propuesta: Kept as is. The general statement about chained assignment is true for 3.0.
+- **w15.2** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w15.2.es.yaml + en/w15.2.en.yaml` s12 code
+  - The annotation 'Por qué importa' mentions groupby, which is only taught in w15.3.
+  - Evidencia: groupby first appears in w15.3 block 01.
+  - Propuesta: Kept as is. It is a forward reference inside an explanation, not something students are asked to do.
+- **w15.2** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w15.2.es.yaml + en/w15.2.en.yaml` s19 quiz
+  - Neither deck has speaker notes, so no answer key or distractor rationale is stated. After the fix, B ('Nada cambia, y solo aparece una advertencia') is the only correct option. A (assumes chained assignment works), C (channel exists, so no KeyError) and D (channel already exists, and the write lands on a temporary copy) are plausible wrong answers.
+  - Evidencia: Ran the quiz source on sales_clean.csv: value_counts is unchanged and a ChainedAssignmentError warning is printed.
+  - Propuesta: I did not add notes, to avoid inventing content.
+- **w15.2** · revisión · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w15.2.es.yaml + en/w15.2.en.yaml` s20 lab, 22 homework
+  - The lab ('Compara el total antes y después') and the homework ('el total del año antes de limpiar...') ask for totals, which need units * unit_price. No w15.2 slide builds that column, and a total 'before cleaning' cannot be computed until unit_price is converted from text.
+  - Evidencia: pd.Series(['$ 690.00']).astype(float) raises ValueError. w15.1 teaches Series arithmetic (mensual * 1.16), so the student can derive amount, but no slide shows it. This is linked to the auditor's finding 9 about w15.3.
+  - Propuesta: Not changed. This is the instructor's design choice, tied to where amount gets introduced (w15.2 vs w15.3). Report to the instructor together with finding 9.
+- **w15.3** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w15.3.es.yaml` s6 compare (and 20 takeaways)
+  - The title 'Ochenta líneas, u ocho' sits over a 6-line before panel and a 3-line after panel, and the takeaway repeats 'las ochenta líneas de la semana 14, en ocho'. The figures come from the A04/A05 script comments. summarise_by_hand.py has 122 lines, 58 of them code, and it also does cleaning that pandas does in 04_clean.py.
+  - Evidencia: wc and grep on docs/.../A04 - Tabular Data/summarise_by_hand.py. The narrative matches the w14 closing ('en ocho líneas') and the module comments, so it reads as rhetoric about the whole scripts.
+  - Propuesta: Left as is: course-wide framing, and the panels are labelled excerpts. Reported so the instructor can decide.
+- **w15.3** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/en/w15.3.en.yaml` s6 compare (and 20 takeaways)
+  - 'Eighty lines, or eight' over 6-line and 3-line excerpts. Same framing as the Spanish deck.
+  - Evidencia: As in the Spanish deck.
+  - Propuesta: Left as is, matching the Spanish deck.
+- **w15.3** · revisión · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w14.es.yaml` s6 compare (w15.3 es and en), defect lives in w14 es/en code_output slide
+  - The w15.3 'before' panel is labeled 'Semana 14, a mano' / 'Week 14, by hand' and shows defaultdict(float) plus a += loop. No slide in the course teaches defaultdict, and w14 (es and en) never shows how por_region / by_region is built: its 'Lo mismo que hace una tabla dinámica, a mano' slide just iterates an already-built dictionary. The panel itself matches the source script summarise_by_hand.py, which is what week 14 ran.
+  - Evidencia: grep -rn defaultdict over ppts/python/analisis-de-datos/{es,en} finds it only in w15.3. In w14.es.yaml and w14.en.yaml, por_region/by_region appears only at lines 224 and 244 (iteration and writing), never where it is built.
+  - Propuesta: Not changed in w15.3, because the panel faithfully quotes the week-14 source script and is not an exercise. If the instructor wants the gap closed, it has to be fixed in w14.es.yaml / w14.en.yaml by showing the grouping loop, which is another agent's deck.
+- **w16.1** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s14 code (both decks)
+  - The annotation label "El resto en gris" / "The rest in gray" calls the other bars gray, but the code paints them #C7D6E8, a pale blue.
+  - Evidencia: #C7D6E8 = RGB(199,214,232). HSV saturation is 14%, so it is a strongly desaturated, grayed-out tint. I read "gris" as figurative for "muted" and kept the author's wording.
+  - Propuesta: Not changed. If the instructor wants it literal, "El resto, apagado" / "The rest, muted" would do.
+- **w16.1** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s14 code (both decks)
+  - The "Por qué" annotation ("2567118.5 obliga a contar dígitos. 2.6M se lee sin pensarlo") could suggest that the axis shows 2567118.5 without the formatter. It does not.
+  - Evidencia: I rendered the bar chart with matplotlib 3.11.2. Without the formatter the ticks are 0.0 to 3.0 with a '1e6' offset. With the slide's FuncFormatter they are '0.0M'..'3.0M'. 2567118.5 is the real December revenue, and f"{2567118.5/1e6:.1f}M" == '2.6M'. Read as a statement about what the lambda does to a value, the annotation is accurate.
+  - Propuesta: Not changed. Every number is correct; only the implied default-axis picture is loose.
+- **w16.1** · auditoría · technical-claim · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s7 concept (both decks)
+  - The panel "Las barras y las líneas empiezan en cero" states the zero baseline as a rule for lines too. In standard data-visualization practice, zero is mandatory for bars (length encodes value) but optional for line charts.
+  - Evidencia: This is the course's deliberate convention. Script A06/01_matplotlib_basics.py says "a bar or line chart starts at zero, or it lies" and the notebook repeats it. The lab constraint and the homework rubric depend on it.
+  - Propuesta: Not changed. It is a course convention and the slides stay consistent with it.
+- **w16.1** · auditoría · description-mismatch · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s8 compare (both decks)
+  - The "after" card is labeled "Barras ordenadas" / "Sorted bars", but ax.barh(nombres, valores) does no sorting. The order only comes from data that was already sorted upstream, which is the same data the pie uses.
+  - Evidencia: I ran it with partes sorted descending, as in notebook cell 16. The bars come out ordered (largest at the bottom), so the slide is not wrong, but a reader cannot see where the sorting happened.
+  - Propuesta: Not changed. The code runs and is consistent with "con los mismos datos".
+- **w16.1** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s18 quiz (both decks)
+  - Option B is the only one that carries a justification ("porque muestra el reparto de una columna"), and it repeats the question's wording ("cómo se reparten"), so it gives the answer away. Only B is defensible. The distractors stand for the bar-versus-histogram confusion, line over non-temporal data, and pie. The course strips speaker notes, so no stated answer exists to check against.
+  - Evidencia: I read the question and options against slides 6, 7, 8 and 17. B (histogram) is the only answer the deck supports.
+  - Propuesta: Not changed. This is a style weakness, not an error, and fixing it would mean rewriting options.
+- **w16.1** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w16.1.en.yaml` s13 compare, 21 homework
+  - The English deck writes "20 %" with a space, both in the title string and in the homework meta and rubric. US style is "20%".
+  - Evidencia: Every en deck in the course uses "20 %" (w01.0 grading table, every homework meta), so it is a course-wide convention.
+  - Propuesta: Not changed. Changing only this deck would break consistency; it needs one course-wide decision.
+- **w16.1** · revisión · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w16.1.es.yaml` s8 compare (also en slide 8)
+  - Block 1's pie-against-bars slide shows ax.pie(...) and ax.barh(...) two slides before slide 10 introduces fig, ax = plt.subplots() and explains what ax is. No earlier deck in the course (w01 to w15) uses matplotlib or ax, so a student meets the object before it is explained.
+  - Evidencia: grep for 'ax.', 'plt.', 'matplotlib' and 'subplots' over es/w0*.yaml and es/w1[0-5]*.yaml returns only a w11 table row naming matplotlib for week 16. Slide order: 8 compare (ax.pie / ax.barh), 9 divider 'Cómo se construye', 10 code (fig, ax = plt.subplots). The es notebook (da_w16_1.py) follows the same block order, drawing with fig, ax in Bloque 1 before Bloque 2 explains them.
+  - Propuesta: Not changed. The one-line snippets read as 'draw a pie / bars' without needing the object model, and the order mirrors the notebook and the agenda's block structure. Reordering would break Bloque 01. If the instructor wants it fixed, a one-line note on slide 8 ('ax es donde se dibuja; lo vemos en el bloque 2') would do it.
+- **w16.2** · auditoría · other · low · `ppts/python/analisis-de-datos/es/w16.2.es.yaml` s16 method, 19 lab
+  - "Los tres minutos" and "Tres minutos por equipo" put minutes on a slide. That looks like the no-durations rule, but it is the length limit of the students' own presentation, not a timing for the session. The English has the same.
+  - Evidencia: The README rule is about session timings (agenda cards). This is a task constraint students need on screen.
+  - Propuesta: Not changed; judged not a defect. Flagged only so the instructor can confirm.
+- **w16.2** · auditoría · quiz-key · low · `ppts/python/analisis-de-datos/es/w16.2.es.yaml` s18 quiz
+  - Neither deck has speaker notes (no deck in this course has any), so there is no stated answer key or distractor rationale to check. Running the code confirms B (the mean) is the only defensible option. A, C and D are wrong.
+  - Evidencia: Ran sns.barplot(data=ventas, x="region", y="amount", ax=ax). Bar heights are the region means (22838, 39869, 55985, 47304), with 4 CI error lines and no exception. The same holds for en.
+  - Propuesta: No change. The quiz itself is correct. I did not write notes, so as not to invent content.
+- **w17** · auditoría · pedagogy-order · low · `ppts/python/analisis-de-datos/es/w17.es.yaml` s12 lab
+  - The integrative lab asks students to group sales.csv by region and channel and to justify with two figures. The course's grouping examples (w15.3.es/en, 8 uses each) aggregate an 'amount' column. That column is not in sales.csv (date, region, channel, product, units, unit_price), and no deck in this course creates it (e.g. ventas['amount'] = units * unit_price). Students who copy the taught pattern will get a KeyError. This is the same gap the instructor reported for Algoritmos w15.2.
+  - Evidencia: read_csv(sales.csv).columns = ['date','region','channel','product','units','unit_price']. A grep for a '"amount"] =' assignment across es/ and en/ of this course finds nothing, while w15.3 uses "amount" 8 times.
+  - Propuesta: Must be fixed outside my files: add the amount column (units * unit_price) after the cleaning in w15.2 or at the start of w15.3, es and en. The w17 lab text never names amount, so it needs no change.
+- **w17** · auditoría · language · low · `ppts/python/analisis-de-datos/en/w17.en.yaml` s11 table
+  - '20 %' with a space before the percent sign is not American typography (20%). Not changed: the whole course writes it this way (w01.0.en, w01.1.en, w02.en grading tables), and the word 'percent' is not misspelled.
+  - Evidencia: grep '%' en/*.yaml shows '20 %' throughout the course.
+  - Propuesta: Left as is for course-wide consistency. If wanted, change it across every English deck in the course at once.
+
+## Python · Análisis y Diseño de Algoritmos
+
+120 entradas, de mayor a menor severidad.
+
+- **w01.0** · revisión · consistency · medium · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml (and the other 19 Python COM101 decks, es and en: w01.1, w02 to w14, w15.1 to w15.3, w16.1, w16.2, w17)` s1 cover
+  - The other 20 Python COM101 decks still say 'COM101 · Semestre 2' / 'Term 2' on the cover. Now that w01.0 is fixed, the course is inconsistent until their owners change '2' to '1' in each.
+  - Evidencia: grep counts 21 '[Clave, COM101 · Semestre 2]' lines and 21 '[Code, COM101 · Term 2]' lines before my fix, all under python/analisis-y-diseno-de-algoritmos.
+  - Propuesta: Not my files. Each deck owner should change the cover meta to 'COM101 · Semestre 1' / 'COM101 · Term 1'.
+- **w01.1** · revisión · confirmado
+  - 4. Other es decks of the course still use ';' in SI/BUSCARV
+  - Evidencia: Outside my files. Other agents have since fixed it: grep finds only commas in es/w01.0, w06, w13 and w15.3.
+- **w01.1** · revisión · confirmado
+  - 10. British spellings across ~20 other en decks of the course
+  - Evidencia: Outside my files. Already fixed by others: the same grep over en/*.yaml returns no files, and w02.en's roadmap now says 'visualization'.
+- **w01.1** · revisión · confirmado
+  - 16. slide 10 figure ct-09 does not draw the spreadsheet on the top rung
+  - Evidencia: Viewed the es figure (en per the auditor): the top label is only 'Python / JS / C#'. The figure does not contradict the title, and the caption carries the claim, so this is low severity. A real fix (add the spreadsheet to the top label) lives in ppts/img or kit/figures.py, not the YAML.
+- **w02** · auditoría · figure · medium · `ppts/kit/figures.py (flow_connector), used by es+en w02` s14 figure
+  - In flow-connector.png the decision diamond '¿válidos?' / 'valid?' has only one exit, with no Sí/No labels, and the chart starts without an Inicio terminal. That contradicts the deck's own rule on slide 12 ('Rombo: una decisión con dos salidas') and the homework rubric on slide 24 ('El rombo tiene sus dos salidas etiquetadas y ambas llevan a algún lado').
+  - Evidencia: Viewed img/es/flow-connector.png and img/en/flow-connector.png. kit/figures.py flow_connector draws p.diamond followed by a single p.arrow downward, with no second branch or label.
+  - Propuesta: Must be fixed in ppts/kit/figures.py flow_connector: add a labeled second exit (No) and a Sí label on the existing exit, optionally an INICIO terminal, then regenerate img/es and img/en flow-connector.png. Outside my files.
+- **w02** · revisión · confirmado
+  - flow-connector.png: decision diamond with a single exit and no Sí/No labels (slide 14)
+  - Evidencia: I viewed img/es and img/en flow-connector.png and read kit/figures.py flow_connector (around lines 1074-1076). It draws p.diamond followed by a single p.arrow downward. That contradicts slide 12 ('Rombo: una decisión con dos salidas') and the homework rubric. The fix belongs in kit/figures.py and regenerating img/{es,en}/flow-connector.png. The figure is also used by python/analisis-de-datos w02.
+- **w02** · revisión · confirmado
+  - flow-symbols.png captions 'una función que ya escribiste' and input()/print() in week 2 (slide 13)
+  - Evidencia: Confirmed by viewing both images. It is low severity: these are figure labels, not an exercise. The auditor named the wrong key. The text is fs_sub_e (kit/figures.py line 128 for es, and the matching en dict entry), not fs_pre_e. fs_min_e and fs_disp_e carry input() and print(). The fix belongs in kit/figures.py. The figure is shared with analisis-de-datos w02.
+- **w04** · revisión · confirmado
+  - 'Tasa de conversión' computed as clicks/impressions is really CTR
+  - Evidencia: The terminology point is real. The same definition (conversion = clics / impresiones, thresholds 0.03/0.05) is used in w05, w06 and w07, so it must be decided course-wide, not only in w04.
+- **w06** · revisión · confirmado
+  - en: '3.42 %', '6 %', '20 %' with a space before %
+  - Evidencia: US style would be '3.42%'. But 135 en decks across the repo use the spaced form (including w05 and w07 of this course), so it is a repo-wide typographic choice for the instructor, not a defect in this deck. Left as is.
+- **w09** · auditoría · pedagogy-order · medium · `ppts/python/analisis-y-diseno-de-algoritmos/es/w09.es.yaml` s21 homework
+  - The homework says to walk 'las cuatro campañas' and count 'cuántas superan la meta de conversión'. Conversion is clics / impresiones (w05). The four campaigns' data (w08 cpc.py: campanas, clics, inversion) has no impressions list, and no slide in w04 to w09 gives impressions for Meta, Google or TikTok. Only the single Instagram campaign had impresiones = 148230. The count cannot be computed from data the course has given. 'La mejor de todas' also names no criterion; w08's homework used 'mejor costo por clic'.
+  - Evidencia: grep 'impresiones' over es/w04 to w12 (and 'impressions' over en/w05 to w08) found only scalar values for one campaign. The w08 lists hold clics and inversion only.
+  - Propuesta: Not fixed: any fix means inventing impression data or changing the instructor's criterion. Fix in both w09 decks by either adding an impresiones list for the four campaigns or replacing the conversion count with a criterion the w08 data supports, and naming the metric behind 'la mejor' (for example, lowest cost per click).
+- **w09** · auditoría · pedagogy-order · medium · `ppts/python/analisis-y-diseno-de-algoritmos/en/w09.en.yaml` s21 homework
+  - Same issue in English: 'how many beat the conversion target' needs impressions that the four-campaign data never provides, and 'the best of them all' has no metric.
+  - Evidencia: en/w08.en.yaml cpc.py defines campaigns, clicks and spend only. The en decks contain only impressions = 148230, for one campaign.
+  - Propuesta: Not fixed. The instructor needs to decide, as for the Spanish deck.
+- **w11** · revisión · confirmado
+  - w15.3 slide 6 compare: 'Semana 14, a mano' uses defaultdict that w14 never taught
+  - Evidencia: Verified in the current working tree: w15.3.es has 'from collections import defaultdict' in the w14 panel, and w14.es only iterates sorted(por_region.items()). The fix belongs in w15.3 es/en (owned by another agent).
+- **w12** · auditoría · figure · medium · `ppts/python/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s9 figure
+  - This is a known defect from the instructor's list. In slicing.png the 'el 3 no entra' arrow runs through the index label 3, the very index the slide explains. The English image has the same problem with 'index 3 is excluded'.
+  - Evidencia: Viewed ppts/img/es/slicing.png and ppts/img/en/slicing.png: the arrow tip crosses the '3' above the H tile. The YAML caption ('la rebanada de 0 a 3 devuelve tres elementos') is correct: course[0:3] gives 'PYT', which has length 3.
+  - Propuesta: Must be fixed in ppts/kit/figures.py (slicing figure) and the image regenerated. That is outside my files. The same image is used in POO w01.1 and Análisis de Datos w12.
+- **w12** · revisión · confirmado
+  - es s9: the Spanish slicing.png uses the English identifier course = "PYTHON"
+  - Evidencia: Confirmed. figures.py hard-codes 'course = "PYTHON"' and 'course[0:3]' for every language, while the Spanish reference-vs-copy.png uses numeros/copia. This is cosmetic and would have to be localized in ppts/kit/figures.py (slicing()), which other decks (POO w01.1, Datos w12) share. I did not touch it.
+- **w13** · revisión · confirmado
+  - collections.png labels (lista 'ordenada', tupla 'inmutable'...) imply single distinguishing properties
+  - Evidencia: The registry in ppts/kit/figures.py (line 1140) says each box shows 'the property that separates it from the other three'. But 'ordenada/ordered' does not separate a list from a tuple, or from a dict (insertion order, Python 3.7+). This is low severity, and the slide caption is correct. It has to be fixed in kit/figures.py collections() and its t['ordered'] label, not in the YAML. Separately, the '·' separators between the boxes render as tiny stray ticks (also in figures.py, cosmetic only).
+- **w15.1** · revisión · confirmado
+  - es s2/s3/s17/s20 habit 'head, info, shape y describe' but no slide runs info or describe
+  - Evidencia: Real gap, but a content decision for the instructor. info() (15 lines, 39 characters) cannot fit a code_output panel (10 lines, about 37 characters) without shrinking type. The habit is quoted verbatim from script 02, which the homework has students run.
+- **w16.1** · auditoría · consistency · medium · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.2.es.yaml` scode slide at lines 168 and 173 (seaborn boxplot)
+  - This is not one of my files. w16.2.es uses the same nonexistent column, groupby("area")["sueldo_mensual"] and y="sueldo_mensual". Against employees.csv this code raises KeyError, while w16.2.en uses monthly_salary. Now that w16.1.es is fixed, w16.2.es needs the same edit to stay consistent.
+  - Evidencia: grep -n sueldo_mensual found it only in es/w16.1 (now fixed) and es/w16.2, lines 168 and 173, in this course. employees.csv contains monthly_salary only.
+  - Propuesta: Must be fixed in es/w16.2.es.yaml by its owner: change "sueldo_mensual" to "monthly_salary" on lines 168 and 173. Not edited here because it is outside my assignment.
+- **w01.0** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in the third person. The rest of the deck addresses the student as tú, and the English deck says 'you will be able to'.
+  - Evidencia: This is a course-wide formula: grep finds it in 147 Spanish decks, against 5 that say 'vas a poder'. Changing only this deck would make it the odd one out in COM101.
+  - Propuesta: Not changed. The instructor should decide this across all courses.
+- **w01.0** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s3 objectives, 6 stat, 20 takeaways
+  - The objective promises 'Los tres problemas concretos que una hoja de cálculo deja sin resolver', and the stat slide says 'esa es solo la primera de tres razones'. The deck never lists three. The second and third (the procedure is not recorded; the analysis cannot be re-run on new data) are both folded into the slide 7 concept, and the takeaway names only two ('techo de filas y de trazabilidad'). Same in the English deck.
+  - Evidencia: I read every slide of block 01 (slides 5 to 8). The three reasons can only be found by reading slide 7 as two separate reasons.
+  - Propuesta: Left as is: a reasonable reading finds three. The instructor may want to name the third reason explicitly on slide 7 or slide 20.
+- **w01.0** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s17 pitfalls
+  - Error 02 'Subir el ejecutable comprimido' (en 'Zipping the executable in') looks carried over from the C#/C++ decks. A Python course in Colab produces .ipynb or .py files, not executables. Error 03 'Entregar solo capturas de pantalla' also sits beside a lab (slide 19) whose only deliverable is a screenshot. The pitfall is about the report document, but a reader may see a contradiction.
+  - Evidencia: The same Error 02 card appears in python/analisis-de-datos w01.0. The course tools on slide 14 are Colab, VS Code and PyCharm, and none of them builds an executable in this course.
+  - Propuesta: Not changed, because replacing the card needs content from the instructor.
+- **w01.0** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s2 agenda
+  - The agenda puts 'El plan del semestre' fourth, but the deck shows the plan at the start (roadmap on slide 4, tiers on slide 8 inside block 01). The closing part (diagnostic, environment lab, homework) is not in the agenda. Same in the English deck.
+  - Evidencia: Slide order: agenda, objectives, roadmap, then blocks 01, 02 and 03, then quiz, lab, takeaways, homework.
+  - Propuesta: Not changed: this is a structural choice, and every card's content does appear in the deck.
+- **w01.0** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s18 quiz
+  - Distractor D 'Depende del formato de la celda' can be argued. If D2 is formatted as Text before typing, Excel stores the string "50000", and because Excel ranks any text above any number, D2>50000 returns TRUE ('meta'). The premise 'vale exactamente 50000' means a numeric value, so B stays the only defensible key. There are no speaker notes to confirm the key or what each distractor represents: the whole course had its notes stripped in commit 6818abb.
+  - Evidencia: Checked against Excel's comparison semantics (text ranks above numbers), with a Python emulation of the numeric case: 50000 gives abajo, 50001 gives meta. Slide 8 itself mentions 'números guardados como texto'.
+  - Propuesta: Not a defect: B is the single correct option. Flagged only because a sharp student could argue D.
+- **w01.1** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s(other decks) w06 s? compare, w13, w15.3
+  - Other Spanish decks in this course still use Spain-locale semicolons in Excel formulas: w06.es (=SI(D2>=0.03; ...)), w13.es (=BUSCARV(B2; Catalogo; 2; FALSO)) and w15.3.es (three BUSCARV). analisis-de-datos w01.0/w06/w13/w15.3 do the same. After this fix, w01.1 uses commas and those decks do not.
+  - Evidencia: grep '=SI(\|=BUSCARV(' with ';' across ppts/python/*/es/*.yaml.
+  - Propuesta: Outside my files. Change ';' to ',' in those decks if the course targets Mexican Excel.
+- **w01.1** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w01.0.en.yaml` s(other decks) roadmap and others
+  - The same British spellings (visualisation in the shared roadmap, summarise, recognise, colour/behaviour forms) appear in about 20 other en decks of this course. The roadmap in w01.1 now says 'visualization' and the neighbouring weeks still say 'visualisation'.
+  - Evidencia: grep -rln 'visualisation|summaris|recognis|catalogue|colour|behaviour' en/*.yaml lists w01.0 to w17.
+  - Propuesta: Outside my files. A course-wide en spelling pass is needed.
+- **w01.1** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is in the third person, while the rest of the deck uses tú and the en deck says 'you will be able to'. This is the exact title in all 61 Spanish decks of the Python/C++ courses, so it is a house template, not a slip in this deck.
+  - Evidencia: grep -A2 'objectives:' over es decks: 61 identical titles.
+  - Propuesta: Left as is so this deck stays consistent with every other deck. If the instructor wants tú here, change it course-wide (e.g. 'Al terminar la sesión podrás…').
+- **w01.1** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml` s7 table (es and en)
+  - The row 'PROMEDIO sobre un rango -> mean() sobre una lista' (en: 'mean() over a list') looks wrong to a reader: mean is not a builtin, and the deck itself computes the average as total / len(...). It is defensible because w03 teaches 'from statistics import mean'.
+  - Evidencia: python3.11: mean([1,2]) -> NameError; statistics.mean([1,2]) -> 1.5. es/w03.es.yaml:143 has 'from statistics import mean'.
+  - Propuesta: Not changed. If wanted, write statistics.mean().
+- **w01.1** · auditoría · figure · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml` s10 figure (es and en)
+  - The title says 'Los dos viven en el mismo peldaño' (the sheet and Python), but ct-09.png only labels 'Python / JS / C#' at the top and assembler/machine code at the foot. The spreadsheet is not drawn, so only the caption carries the claim.
+  - Evidencia: Viewed ppts/img/es/ct-09.png and ppts/img/en/ct-09.png.
+  - Propuesta: The fix belongs in the figure (ppts/img or kit/figures.py): add the spreadsheet to the top rung. Otherwise retitle. Not touched.
+- **w01.1** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.1.es.yaml` s14 quiz (es and en)
+  - The question asks what meses[12] 'devuelve' / 'return(s)', but the correct option is an exception, not a return value. Exactly one option (C, IndexError) is defensible. A is the off-by-one confusion, B is wrap-around (only negative indices wrap), D is 'missing = None'. There are no speaker notes, so the key and the distractor rationale cannot be checked against notes.
+  - Evidencia: Ran quiz_es.py and quiz_en.py: IndexError: list index out of range.
+  - Propuesta: Not changed. The wording is common quiz phrasing and the key is unambiguous.
+- **w01.1** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w01.1.en.yaml` s21 homework
+  - '20 %' and '50 %' with a space before the percent sign is not American style (20%). The same spacing appears 678 times across the en decks, so it is a house convention.
+  - Evidencia: grep -rhoE '[0-9]+ %' --include=*.en.yaml: 678 hits vs 64 without the space.
+  - Propuesta: Left as is to stay consistent with the course. Change it course-wide if wanted.
+- **w01.1** · revisión · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml` s1 cover (w01.0 es/en; affects w01.1 and w02-w17)
+  - Another agent's uncommitted edit changed the cover meta of w01.0 from 'COM101 · Semestre 2' / 'Term 2' to 'Semestre 1' / 'Term 1'. w01.1 and w02 to w17 still say 'Semestre 2' / 'Term 2', so the two week-1 sessions now disagree. The evidence goes both ways. syllabus-com101.docx lists COM101 as 'Sem 1' in 10 of 12 programs, ejercicios.es.md says 'primer semestre', and the C# COM101 decks say 'Semestre 1'. But 'Semestre 2' may mean the 2026 academic period, and COM102 and COM103 also say 'Semestre 2'.
+  - Evidencia: git diff of es/w01.0.es.yaml and en/w01.0.en.yaml shows the change. Clave lines across the course: 1 'Semestre 1', 20 'Semestre 2'. I extracted the syllabus docx text: the 'Dónde se imparte' table has Sem 1 for 10 programs, Sem 2 for one and Sem 4 for one.
+  - Propuesta: Not changed in w01.1 because the meaning of 'Semestre N' is ambiguous. The instructor or orchestrator should decide once and apply it to all 21 COM101 Python decks, es and en, either reverting w01.0 or updating w01.1 and w02 to w17.
+- **w02** · auditoría · pedagogy-order · low · `ppts/kit/figures.py (flow_symbols text keys), used by es+en w02` s13 figure
+  - The flow-symbols figure's sub-captions say 'una función que ya escribiste' / 'a function you already wrote' (predefined process) and cite input(), in a week-2 deck. No function has been written by then (functions are weeks 10 to 13), and input() does not appear in w01.0, w01.1 or w03.
+  - Evidencia: Viewed img/es|en/flow-symbols.png. Grepped es/w01.0, w01.1 and w03: input( 0 hits, def 0 hits in w01.1 (print( does appear in w01). The text comes from kit/figures.py fs_pre_e / fs_min_e keys.
+  - Propuesta: If wanted, reword fs_pre_e (e.g. 'un proceso definido en otro lado') and drop input() from fs_min_e in kit/figures.py. Outside my files.
+- **w02** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú (tu área, Elige, escríbelo, ya sabes) and the en side says 'you will be able to'.
+  - Evidencia: grep across ppts: 'el alumno podrá' is the objectives title in about 140 Spanish decks of every course, including all 21 decks of this course. Only 3 decks use 'vas a poder'. The instructor's known-defects list does not flag the Spanish form.
+  - Propuesta: Left as is: it is the course-wide convention, and changing only w02 would make it inconsistent with the other weeks. If tú is wanted, change it globally (e.g. 'Al terminar la sesión vas a poder…').
+- **w02** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s7 figure
+  - The caption 'Cada paso dice exactamente qué hacer y en qué orden' (en: 'Every step says exactly what to do') sits over ct-04, whose steps are single verbs (reúne, mezcla, hornea, sirve, disfruta). 'hornea' has no time or temperature, and 'disfruta' is not an executable step, so the figure does not literally show precise steps.
+  - Evidencia: Viewed img/es/ct-04.png and img/en/ct-04.png. The figure is the shared computational-thinking icon from kit/ct.py ('a numbered recipe with no ambiguity').
+  - Propuesta: Not changed: the slide reads as a metaphor for a recipe in general. Flagged for the instructor in case they prefer a caption that does not overclaim, or want to use 'hornea' as an ambiguity example.
+- **w02** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w02.es.yaml` s9 compare vs 15 code
+  - The same bonus algorithm is written in two pseudocode notations: slide 9 uses 'SI ... :' / 'SI NO, SI ... :' with colons and the unit 'meses', and slides 15, 16 and 20 use 'SI ... ENTONCES' / 'SI NO SI'. The en deck mirrors this.
+  - Evidencia: Translated both notations to Python and compared them over 200 input combinations: the outputs are identical (True). The logic agrees.
+  - Propuesta: Not a defect: the deck itself says pseudocode has no fixed syntax. Noted only because a reader may see two styles.
+- **w02** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w02.en.yaml` s8 table
+  - 'Definite: Same data, same result' and 'Precise: No step admits a second reading' follow the Spanish textbook tradition (Joyanes: preciso / definido / finito). In Knuth's English terminology, definiteness means 'unambiguous', which is what this table calls Precise.
+  - Evidencia: Compared against Knuth TAOCP vol. 1 (finiteness, definiteness, input, output, effectiveness) and Joyanes. The es and en decks agree with each other.
+  - Propuesta: Left as is: defensible, and parity holds. Noted for an English reader who knows Knuth.
+- **w02** · revisión · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w01.0.es.yaml (not my file)` s1 cover
+  - The w01.0 cover meta says 'COM101 · Semestre 1' / 'Term 1', while w01.1, w02, w03 and the later weeks say 'Semestre 2' / 'Term 2'. Either w01.0 or all the other weeks are wrong.
+  - Evidencia: grep: es/w01.0 line 18 '[Clave, COM101 · Semestre 1]' and en/w01.0 '[Code, COM101 · Term 1]'. w01.1, w02 and w03 have 'Semestre 2' / 'Term 2'. HEAD has the same value.
+  - Propuesta: Not changed: outside my assignment. The instructor must decide which semester is correct and then fix w01.0 or the rest of the course.
+- **w03** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w03.es.yaml + en/w03.en.yaml` s11 table
+  - This one may look suspicious to a reader. Row 'Cuándo avisa del error' gives the interpreted column as 'Al llegar a la línea que falla', and the Ejemplos row puts Python there. For Python that only holds for runtime errors. Syntax and indentation errors are caught before anything runs, as slide 15 itself says.
+  - Evidencia: Same parB/printLast runs as for slide 20. The table describes the textbook compiled-versus-interpreted model, which is correct for a pure interpreter.
+  - Propuesta: I left it because it is the standard textbook simplification and the Python-specific overclaim (slide 20) is now fixed. If the instructor wants full precision, the interpreted cell could read something like 'Casi siempre, al llegar a la línea que falla'.
+- **w03** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w03.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú. The English title already says 'you'.
+  - Evidencia: 147 Spanish decks across ppts/ use exactly this title, including all 21 in this course, so it is the house convention, not something this deck got wrong.
+  - Propuesta: Not changed: editing one deck would make it differ from its 20 siblings. If the instructor wants tú here, it should be changed in every deck at once (for example to 'Al terminar la sesión vas a poder…', which 5 decks already use).
+- **w03** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w03.es.yaml + en/w03.en.yaml` s12 code / 16 pitfalls
+  - 'Un cálculo sin print corre igual, y no muestra nada' (slide 12) and the Error 04 card (slide 16) are true for a .py script. In Colab, the course environment, a bare expression on a cell's last line is echoed without print. Assignments, like the ones in the slide's program, are not echoed in either.
+  - Evidencia: This is standard IPython display behavior. The slide frames the program as a .py run in a terminal, and the lab asks for a .py file, so the claim holds in the stated context.
+  - Propuesta: No change. A note for the instructor to mention aloud for students who work in Colab cells.
+- **w03** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w03.es.yaml + en/w03.en.yaml` s21 homework
+  - This one may look suspicious to a reader. The week-3 homework asks students to translate the bonus pseudocode into Python, which needs if/elif/else, and selection is formally taught in w06.
+  - Evidencia: The w02 compare slide 'Del plan al lenguaje, casi línea por línea' shows the exact Python if/elif/else translation of this pseudocode. Slide 15 here also covers the colon rule for conditions. So weeks 1 to 3 have already shown the syntax the homework needs.
+  - Propuesta: No change. Not a violation, because the needed syntax was shown in w02.
+- **w04** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w04.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses a third-person register, while the rest of the deck uses tú. The EN title says 'you will be able to'.
+  - Evidencia: This is the repo-wide formula: 147 Spanish decks use 'el alumno podrá', and only 5 use 'vas a poder'. Every Spanish deck of this course (w01.0 to w17) uses it.
+  - Propuesta: Not changed. Editing only w04 would break consistency with the other 20 decks of the course. If the instructor wants 'podrás' / 'vas a poder', it should be one global change.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s7 table, 22 lab, 24 homework
+  - 'Tasa de conversión' / 'conversion rate' is computed as clicks / impressions (tasa_conversion = 0.0342 = 5074/148230). In digital marketing that ratio is the click-through rate (CTR). Conversion rate is usually conversions / clicks.
+  - Evidencia: 5074/148230 = 0.03423. w05.es.yaml line 200 uses the same definition: conversion = clics / impresiones.
+  - Propuesta: Not changed. The definition is shared with w05 (and possibly later weeks), so renaming it only here would make the course inconsistent. The instructor should decide course-wide.
+- **w04** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s9 code_output
+  - The title 'Lo que Python entendió de cada dato' / 'What Python understood about each value' sits over prints of 4 of the 5 variables (clics/clicks is never printed). The source is also a 2-line excerpt of campana.py that only runs together with s8.
+  - Evidencia: Ran the full s8 program. Its output equals the panel exactly: "<class 'str'> <class 'int'>" / "<class 'float'> <class 'bool'>". type(clics) would be int, the same as impresiones.
+  - Propuesta: Not changed. The title reads naturally as referring to the values queried, and the output is correct.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s15 code
+  - The 'El mismo orden' annotation says Python's precedence is Excel's, with 'nada nuevo que memorizar'. That holds for the binary operators listed in the comment. Excel differs on unary minus, though: =-2^2 gives 4 in Excel, while Python's -2**2 gives -4.
+  - Evidencia: Ran: -2**2 -> -4 in Python. Excel applies negation before ^ (documented operator precedence).
+  - Propuesta: Not changed. The slide only lists binary operators, and for those the claim is true.
+- **w04** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w04.es.yaml + en/w04.en.yaml` s18 concept
+  - The lead says turning "5074" into a number is ambiguous because the text 'podría venir con espacios, comas o un símbolo de moneda'. A reader who tests it will find that int() already handles surrounding spaces.
+  - Evidencia: Ran: int(' 5074 ') -> 5074; int('5,074') and int('$5074') -> ValueError.
+  - Propuesta: Not changed. The sentence explains why Python does not convert implicitly. It never claims int() rejects spaces, so it is not false.
+- **w05** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' refers to 'el alumno' in the third person. The rest of the deck addresses the student as tú, and the English says 'you will be able to'.
+  - Evidencia: grep: all 21 Spanish decks of this course use exactly 'Al terminar la sesión el alumno podrá…', so this is a course-wide convention, not a slip in w05. Changing only w05 (for example to 'Al terminar la sesión podrás…') would make it differ from every other week.
+  - Propuesta: Not changed. The instructor needs to decide this for the whole course: either keep 'el alumno podrá' everywhere or switch every Spanish deck to 'podrás'.
+- **w05** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w05.es.yaml` s18 quiz
+  - Neither deck has speaker notes (no deck in the course does), so no stated answer or distractor explanation exists to check against. I checked the key myself.
+  - Evidencia: Ran f"Conversión: {0.0342:.1%}", which gives 'Conversión: 3.4%' (option B, the only correct one). Distractors: f'{0.0342:.1f}%' gives '0.0%' (A, reading .1 as a fixed decimal), C '0.034%' (thinking % only appends the sign), D '34.2%' (wrong scale). Each is wrong and plausible. The English quiz is the same.
+  - Propuesta: No defect. Exactly one option is correct in both languages.
+- **w05** · revisión · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w05.en.yaml` s21 homework
+  - The English deck writes percentages with a space before the sign ('Part of the 20 % for assignments' and the rubric '40 %', '40 %', '20 %'). That is Spanish/SI typography, not American English, which writes 20%.
+  - Evidencia: grep finds '[0-9] %' in 135 of the 167 English decks across all courses, so it is a deck-wide convention and not a slip in w05. The slide code itself writes 3.4% with no space.
+  - Propuesta: Not changed. Fixing it only in w05.en would make it differ from every other English deck. If the instructor wants American style, it is a course-wide find-and-replace in the en decks (homework meta and rubric rows, and grading tables).
+- **w06** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person. The rest of the deck addresses the student as tú, and the English title says 'you will be able to'. This conflicts with the 'one register, tú throughout' rule.
+  - Evidencia: grep: the exact title 'Al terminar la sesión el alumno podrá…' appears in 140+ Spanish decks across all courses. Only 3 say 'vas a poder'. Changing this deck alone would make it the odd one out in its course.
+  - Propuesta: Not changed. The phrase is a repo-wide convention, so the instructor must decide whether to switch every Spanish deck to 'Al terminar la sesión podrás…'.
+- **w06** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w06.en.yaml` s12, 16, 21 (titles, trace verdict, homework)
+  - English writes the percent sign with a space ('3.42 %', '6 %', '20 %'). US style is '3.42%'.
+  - Evidencia: Every en deck in the course does the same, for example the w01.0 grading table ('20 %') and the w01.0/w01.1 homework weights. It is a course-wide typographic convention, not specific to this deck.
+  - Propuesta: Left as is, to stay consistent with the course. If wanted, it needs a course-wide change.
+- **w06** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s6 table
+  - The row 'conversion == 0.0342 -> True' assumes conversion = 0.0342 (as in comparacion.py on slide 8 and categorias.py on slide 15). On slide 11, conversion = 5074/148230 = 0.034230587..., for which == 0.0342 is False. A reader may notice the mismatch. The en deck has the same row.
+  - Evidencia: Python: 5074/148230 == 0.0342 -> False. With conversion=0.0342, canal='Instagram', clics=5074, inversion=38500 (the w04 values), all six rows evaluate as the table shows (True True True False True True).
+  - Propuesta: Not a defect in context: the table rows are correct for the literal 0.0342 used on slides 8 and 15. Left unchanged.
+- **w06** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w06.es.yaml` s11 code (La sangría), 20 takeaways (item 2)
+  - 'Los cuatro espacios son lo único que dice qué líneas pertenecen a cada rama'. Python accepts any consistent indentation. Four spaces is the PEP 8 convention, not a language requirement. The en deck says the same.
+  - Evidencia: Language reference: a block is any consistent increase in indentation. The wording describes the code shown, which uses four spaces.
+  - Propuesta: Left as is: an acceptable simplification for week 6 that matches the code on screen. The takeaway title 'La sangría es la estructura' is correct.
+- **w07** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s10 table (also en)
+  - The Resultado column (False, True, True, False) is correct only if canal = 'Instagram' (set in s8 politica.py) and costo = None. No slide ever assigns costo/cost.
+  - Evidencia: I evaluated all 4 expressions per language with canal='Instagram', costo=None and got exactly False/True/True/False. That matches the slide.
+  - Propuesta: Not changed. The values are consistent with the implied context, and the table layout has no caption field to state them without inventing content. The instructor may want to say it aloud.
+- **w07** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s9 divider (also en)
+  - Lede says the membership operators save you writing 'la misma comparación cinco veces' / 'five times over', while the compare slide (now correctly titled) shows four.
+  - Evidencia: Read as a figure of speech, like the agenda's 'sin escribir diez comparaciones'. Left alone to avoid rewriting a correct slide.
+  - Propuesta: Not changed. Optional: change to 'cuatro veces' / 'four times over' if the instructor wants a literal echo.
+- **w07** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s2 agenda (also en)
+  - Card 1 says 'and, or y not, con su tabla de verdad completa', but the truth-table slide (s7) only covers and/or. not appears only as 'Invierte el resultado' in s6.
+  - Evidencia: s7 headers are [A, B, A and B, A or B]. I ran the truth table in Python and all 4 rows match.
+  - Propuesta: Not changed. Trivial for not (two rows) and arguably covered by s6. Flagged only because a strict reader may notice.
+- **w07** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s18 quiz (also en)
+  - No speaker notes carry the quiz answer (no deck in this course has notes). The key itself is sound: B is the only defensible option. D gives the right output for the wrong reason, and its reason contradicts its own output.
+  - Evidencia: Ran trampa.py / trap.py: prints 'Coincide' / 'Match'. canal == 'Meta' or 'Google' evaluates to 'Google' (truthy). A = the 'compares with both' misreading, C = a syntax-error belief, D = right output with the wrong mental model.
+  - Propuesta: No change. Did not invent notes, because the course has none anywhere.
+- **w07** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person while the rest of the deck uses tú.
+  - Evidencia: grep across ppts: 145 es decks use exactly this title (including w06/w08 of this course), against 7 with a tú form. It is the course convention, not usted.
+  - Propuesta: Left as the course-wide convention. Changing it in one week would make w07 the odd one out.
+- **w07** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s8 code (also en)
+  - Line 3 canal = "Instagram" is never used in politica.py / policy.py.
+  - Evidencia: Ran both files and they print 'La campaña califica para más presupuesto.' / 'The campaign qualifies for more budget.' (0.0342 >= 0.03 and 5074 > 1000). canal is the context that s10's Result column and the s18 quiz rely on, so it is intentional setup.
+  - Propuesta: Not a defect. No change.
+- **w07** · revisión · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w07.es.yaml` s18 quiz (also en)
+  - The correct answer B rests on 'un texto no vacío se evalúa como verdadero' (truthiness). No slide in weeks 1 to 7 teaches it: the only occurrence in the whole course is option B itself. Pitfall 02 only says the expression 'no hace lo que parece'. The quiz can still be solved by elimination (pitfall 02 rules out A, and D contradicts itself), so it works as a predict-then-reveal question.
+  - Evidencia: grep -i 'vac[ií]|se evalúa como|truthy' over all es decks of the course gives a single hit, w07 s18 option B.
+  - Propuesta: Not changed. This is a judgment call for the instructor: explain truthiness when revealing the answer, or add the reason to pitfall 02 (for example '...porque "Google" por sí solo cuenta como verdadero'), which would make the quiz pure recall.
+- **w08** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: grep across ppts/: 145 Spanish decks use exactly 'Al terminar la sesión el alumno podrá…'. Every deck in this course uses it, including w07 and w09. It reads as a deliberate course-wide formula, not a tú/usted switch. Changing only w08 would make w08 the odd one out, so it needs a course-wide decision by the instructor.
+  - Propuesta: Not changed. If the instructor wants tú here, it should be changed in every deck ('Al terminar la sesión podrás…').
+- **w08** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s6 compare
+  - The Excel panel (lang: excel) contains '# y arrastras hasta la fila 500' / '# and you drag it down to row 500' as if it were a comment. Excel has no comment syntax, and the kit's Excel scanner colours each word as a keyword rather than as a comment.
+  - Evidencia: kit.highlight.highlight(src,'excel') returns ('#','op'), ('y','kw'), ('arrastras','kw')... The kit docstring says 'Excel has no comment syntax'. The rendered preview shows the line as part of the formula card. It is clearly meant as narration, and the slide note refers back to 'la fila 500'.
+  - Propuesta: Left as the author's illustrative device. Removing the line would orphan 'la fila 500' in the note.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s15 pitfalls
+  - Error 03 ('Definir el acumulador dentro', total = 0 inside the loop) warns about an accumulator. Accumulators are formally taught next session (w09 objective 'Escribir un acumulador'), and no slide in w08 shows one.
+  - Evidencia: w09.es.yaml: line 81 table 'Acumulador ... total += valor', and line 243 has the same pitfall. w08 has no 'total' anywhere in its code. w04 did teach '+='.
+  - Propuesta: Not changed. The card is understandable on its own, but it duplicates the w09 pitfall. The instructor may want to move it to w09 only.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s20 homework
+  - The homework asks for the best and worst CPC and the combined CPC before w09 teaches accumulators and the best-so-far pattern (the w09 lab asks for 'la mejor de todas').
+  - Evidencia: It is still solvable with what was taught up to w08: sum(), max() and .index() were shown in w01.1 (lines 132, 211-213), if in w06, += in w04, and for in w08. So it is not a hard violation.
+  - Propuesta: Not changed. Flagged for the instructor.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s18 lab
+  - The lab asks for a while loop that counts how many of six records exceed a threshold. That needs an index-driven while (i = 0; while i < len(...); i += 1), which no slide shows. It also goes against the deck's own rule that you use for when you have a list to walk.
+  - Evidencia: The w08 while example only counts days against a budget. It never indexes a list. The 'Cuál usar' table and takeaway 2 say for is for walking a list.
+  - Propuesta: Not changed: it is the author's design. Flagged in case the instructor wants a while problem that has an unknown count.
+- **w08** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s9 code
+  - The code uses the left-align format spec '{campanas[i]:<12}' and the combined '{cpc:>6.2f}'. The w05 format table taught only ':>10', ':.2f', ':,' and ':.1%', and no annotation explains '<'. The lab then asks for aligned output.
+  - Evidencia: grep w05.es.yaml: only ':>10' (right alignment) appears. There is no ':<'.
+  - Propuesta: Not changed. It is shown on this slide and can be inferred from ':>'. This is a note for the instructor.
+- **w08** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w08.es.yaml, ppts/python/analisis-y-diseno-de-algoritmos/en/w08.en.yaml` s13 code
+  - 'Control C lo detiene' is true when presupuesto.py runs in a terminal. In Google Colab, which w01.0 calls the course environment, Ctrl+C does not interrupt a cell: you use the stop button or Ctrl+M I.
+  - Evidencia: The deck's file is a .py, and w03 shows output 'en la terminal', so the claim fits how the course runs scripts. I confirmed that the infinite loop and its counter logic behave as described.
+  - Propuesta: No change needed for .py in a terminal. The instructor may want to mention the Colab stop button in class.
+- **w08** · revisión · technical-claim · low · `ppts/python/analisis-de-datos/es/w08.es.yaml, ppts/python/analisis-de-datos/en/w08.en.yaml` s6 compare
+  - The other course's w08 has the same Excel panel line '# y arrastras hasta la fila 500' / '# and you drag it down to row 500', which presents a comment syntax that Excel does not have.
+  - Evidencia: grep -A4 'lang: excel' found the same line at line 85 of both analisis-de-datos w08 decks.
+  - Propuesta: Out of scope (another deck). Should be fixed there the same way: '=C2/B2', '=C3/B3', '…', '=C500/B500'.
+- **w09** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w09.es.yaml` s8 code / 9 code_output / 12 code
+  - patrones.py and buscar.py use campanas, clics and inversion without defining them. The lists come from w08 cpc.py. A reader who did not see w08 may find this odd, but the code is correct with that data, and adding the lists would grow the code card.
+  - Evidencia: I added the w08 lists as scaffolding and ran both files (patrones_es.py, buscar_es.py, plus the en equivalents). Output: '$129,100', '2', 'True', which matches the panel exactly. The search printed 'Primera cara: Meta' and the else did not run.
+  - Propuesta: Not a defect. The decks continue w08's data, so I left them unchanged.
+- **w09** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w09.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú. The English equivalent ('the student will be able to') is a known defect elsewhere. In Spanish, though, this exact title is the house convention: 145 decks use it, against 7 with 'podrás' or 'vas a poder'.
+  - Evidencia: grep across all ppts/*.yaml for 'title: Al terminar'.
+  - Propuesta: Left as is to stay consistent with the other Spanish decks. Change it only as a global convention change.
+- **w10** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s11 code_output (also en)
+  - The demo loop 'for capital, tasa, meses in creditos' unpacks tuples from a list of tuples, and tuples are taught in w12. The list 'creditos' (which holds the 80,000 at 15% loan that appears only in the output) is never shown. Earlier weeks only used parallel lists with range(len(...)) or 'for x in lista'.
+  - Evidencia: Searched w04-w09 for loops: w08/w09 use 'for i in range(len(campanas))' and 'for region in regiones', with no tuple unpacking anywhere. w12 unit is 'Listas y tuplas'. This is a demonstration slide, not an exercise, so the strict house rule does not apply.
+  - Propuesta: Not changed. Fixing it would mean rewriting the example (parallel lists plus range(len())) and the author's structure. Flagged for the instructor; the same applies to the en deck (loans).
+- **w10** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s20 homework (also en)
+  - The second function must 'reportar el total pagado y los intereses', and the rubric says both functions return and neither prints. A reader may expect 'return total, intereses', which is tuple packing taught in w12.
+  - Evidencia: Wrote a solution that only uses w05 f-strings: reporte_credito returns f'Total: ${total:,.2f} · Intereses: ${total - capital:,.2f}' and calls pago_mensual. It runs: 'Total: $325,371.56 · Intereses: $75,371.56'. So the task can be solved with material taught by w10.
+  - Propuesta: Not a defect: the task is solvable without tuples. Reported only because it reads as if two return values were expected.
+- **w10** · auditoría · parity · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w10.en.yaml` s6 concept
+  - The title 'A calculation with a name and an address' translates 'Un cálculo con nombre y con dirección'. In context (what it receives and what it hands back), 'dirección' reads as direction (in, then out). 'Address' suggests a memory address, which the slide never discusses.
+  - Evidencia: Read the lead of both decks: they describe inputs and outputs, not location.
+  - Propuesta: Not changed, because the author's intent for 'dirección' is ambiguous. Suggest 'with a name and a direction' or 'with a name, inputs and an output' if the instructor agrees.
+- **w10** · auditoría · output-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s15 code_output (also en)
+  - The panel shows '255000.0', then 'NameError: name 'comision'' and 'is not defined' on two lines. The real run prints a Traceback before the NameError line and keeps that line whole.
+  - Evidencia: Ran under Python 3.11.15: '255000.0', 'Traceback (most recent call last): ... NameError: name 'comision' is not defined' (en: 'fee'). There is no 'Did you mean' suggestion. The one-line message is 41 characters; at the kit's 20.25 pt Courier the 6.33 in panel fits about 37, so the manual break is a layout necessity.
+  - Propuesta: Not a defect: the traceback is abbreviated and the message wrapped for width; the content is correct. Left as is.
+- **w10** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s2 agenda (also en)
+  - Agenda card 1 speaks of 'el mismo cálculo escrito en cinco lugares', while the cost slide shows two copies.
+  - Evidencia: Compared agenda card 1 with slide 7, which after the fix is titled 'dos veces'.
+  - Propuesta: Left as is: 'cinco lugares' reads as a rhetorical generalization in a session overview, not a description of the slide's code.
+- **w11** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: 147 Spanish decks across all courses use this exact title; only 5 use 'vas a poder'. The instructor's known-defects list flags the VBA decks for changing the objectives title, so it is treated as a fixed course-wide formula.
+  - Propuesta: Not changed. Changing one deck would break the course-wide formula the instructor enforces. If tú must apply here too, it is a global decision across every es deck.
+- **w11** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s18 quiz
+  - The quiz has no speaker notes, so no answer or distractor rationale is stated. No deck in this course has any notes. Both decks.
+  - Evidencia: I ran omision.py and defaults.py: '1160.0' then '51000'. The positional 50 binds to iva/tax, so 1000*(1+50)+0 = 51000. Only option B is correct. A (1210.0) = 50 taken as envio, C = belief that every parameter must be supplied, D (1050.0) = 50 added as shipping with tax lost. Each is a distinct, plausible confusion.
+  - Propuesta: The key is correct and unambiguous. I did not add notes because the course carries none and adding them would be new content. The answer is B in both languages.
+- **w11** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s6 table
+  - The 'Por nombre' example f(capital=250000, meses=36) passes two values while the positional row passes three, so a reader might think the rate was dropped. Same in en (principal/months).
+  - Evidencia: Each row uses a generic f; row 3 'def f(seguro=0.0)' shows a one-parameter f, so the rows are not the same function.
+  - Propuesta: Left as is. It is illustrative syntax, not a call to pago_mensual.
+- **w11** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w11.es.yaml` s3 objectives
+  - The objective 'Leer la documentación oficial' has no teaching slide. Only the homework (slide 21) practices it. Same in en.
+  - Evidencia: No slide shows docs.python.org. The homework brief asks students to find a statistics function there and cite the page, and the rubric grades the source at 40 %.
+  - Propuesta: Left as is. The objective is reached through the session's homework.
+- **w11** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.3.es.yaml` s6 compare
+  - Outside my files, noticed while checking the module table: the 'Semana 14, a mano' panel uses 'from collections import defaultdict', but w14 never imports collections or defaultdict.
+  - Evidencia: grep for defaultdict/collections in es/w13 and es/w14 found no import. w14 only iterates por_region.items().
+  - Propuesta: Not my file. Must be checked and fixed in w15.3 (es and en) or w14 by that deck's owner.
+- **w12** · auditoría · figure · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s9 figure
+  - The Spanish slicing.png uses the English variable name `course = "PYTHON"`, while the Spanish reference-vs-copy.png uses Spanish names (numeros, copia) and the deck's code uses pagos and terminos.
+  - Evidencia: Viewed ppts/img/es/slicing.png: the heading reads course = "PYTHON" and the bracket reads course[0:3].
+  - Propuesta: Cosmetic. If wanted, localize the variable name in ppts/kit/figures.py (for example curso). Outside my files.
+- **w12** · auditoría · output-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s18 code_output
+  - The output panel shows '0.18' and then only the last line of the traceback, split by hand over two lines ('TypeError: 'tuple' object does' / 'not support item assignment'). The real run also prints 'Traceback (most recent call last):' and the file and line lines.
+  - Evidencia: Ran tupla.py and tuple.py under Python 3.11.15. Output is 0.18, then a Traceback block, then "TypeError: 'tuple' object does not support item assignment". The printed value and the exception message match the slide word for word.
+  - Propuesta: Not changed. This abbreviation is the course convention (w10 shows a NameError the same way), the 54-character message cannot fit the fixed-width output panel on one line at code size, and the slide does not misstate anything. The English deck s18 is the same.
+- **w12** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English deck says 'you will be able to'.
+  - Evidencia: A repo-wide search finds 'el alumno podrá' in 147 Spanish decks (plus 15 'las dos sesiones' variants) and 'vas a poder' in only 5. Every deck in this course uses 'el alumno podrá'.
+  - Propuesta: Left as is. This is a course-wide and repo-wide convention, so changing one deck would make it inconsistent with its neighbors. If the instructor wants tú here, change it across all decks at once ('Al terminar la sesión vas a poder…').
+- **w12** · revisión · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w12.es.yaml` s23 homework
+  - The homework asks for the week 8 campaigns 'que superan la meta' (en: 'that beat the target'), with a definite article, as if the target were known. No slide in w08 or w09 defines one. w08 has campanas, clics and inversion. w09 only uses thresholds of 5000 clicks and 7.75 cost per click, and its homework mentions an equally undefined 'meta de conversión'. The task is doable with weeks 1 to 12 (filter with for/if/append, sorted then reverse, and index to map values back to names, which I checked by running it). But which target to use is left to guesswork. The English deck has the same wording.
+  - Evidencia: Grepped es/w08.es.yaml and es/w09.es.yaml for meta/umbral/conversi and read w09's code slides: no numeric target is ever stated. A sample solution using only w08 to w12 tools runs and prints [51200, 38500, 29800] / ['Google', 'Instagram', 'Meta'] for a click target of 3000.
+  - Propuesta: Not changed, because picking the target is the instructor's call. Suggested wording if wanted: 'las que superan una meta de clics que tú fijes' / 'those that beat a click target you set', in both es and en s23.
+- **w13** · auditoría · figure · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w13.es.yaml` s15 figure (also en)
+  - collections.png captions each box with a single property: lista 'ordenada', tupla 'inmutable', conjunto 'sin repetidos', diccionario 'por llave'. The figure registry says each is 'the property that separates it from the other three', but tuples are also ordered, dicts keep insertion order (Python 3.7+), and dict keys also have no repeats. A reader can infer that tuples are unordered. The slide caption itself is correct.
+  - Evidencia: Viewed img/es/collections.png and img/en/collections.png, and read collections() in kit/figures.py (labels t['ordered'], t['immutable'], t['unique'], t['bykey']).
+  - Propuesta: Not fixed: the labels live in ppts/kit/figures.py (collections) and its translation table, which I was not allowed to edit. A possible label for the list is 'ordenada y mutable' / 'ordered, mutable'.
+- **w13** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w13.es.yaml` s18 table (also en)
+  - The second midterm covers 'Unidades 4, 5 y 6: repetición, ...', and the first midterm (w08) also covered 'Unidades 1 a 4 ... repetición'. This looks like the overlap the instructor flagged in cpp w13, but here it is consistent with the syllabus.
+  - Evidencia: es/w01.0.es.yaml lines 130-131: 'Parcial 1, Unidades 1, 2, 3 y 4, Semana 8' and 'Parcial 2, Unidades 4, 5 y 6, Semana 13'. Repetition (topic 4.5) runs through w08 and w09, so unit 4 straddles both midterms.
+  - Propuesta: Not a defect. It matches the course syllabus, so I left it unchanged.
+- **w13** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w13.es.yaml` s22 homework (also en)
+  - The homework requires building a dictionary from the campaign lists rather than writing it by hand. No slide in w13 shows creating an empty dict and filling it in a loop (or zip). Adding a new key by assignment appears only implicitly, as the correct answer of the quiz (conteo["Este"] = 2).
+  - Evidencia: grep over es/w01-w12 for 'zip(', 'dict(', '= {}' found nothing. Indexed loops over parallel lists (campanas[i]) are taught in w08, and sum() in w11. The quiz on slide 19 runs to 3, which shows that assignment adds a key.
+  - Propuesta: Left as is. It can be done with w08 loops plus the key assignment shown in the quiz, and adding a worked example would be new content. The instructor may want to say this out loud in class.
+- **w13** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w13.es.yaml` s3 objectives
+  - The objectives title is 'Al terminar la sesión el alumno podrá…' (third person), while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: grep across all Spanish decks: 147 use 'Al terminar la sesión el alumno podrá…', 15 use the two-session variant, and only 5 use 'vas a poder'. It is the repo-wide formula, not usted.
+  - Propuesta: Left unchanged so it stays consistent with the rest of the repo. If the instructor wants 'vas a poder', it is a repo-wide change.
+- **w14** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w14.es.yaml + en/w14.en.yaml` s11 code annotation 'Riesgo' and 15 code_output
+  - The four totals on the summary slide only come out after two steps no slide shows. First, the region is normalized with strip().title(). Second, the 7 duplicates are dropped. sales.csv also spells the region inconsistently ('north', 'NORTH', ' North', 'North '), and the 'Riesgo' annotation does not mention it. A student who builds por_region from the slides gets 8 region keys and different amounts. The numbers come from A04/summarise_by_hand.py, which does both steps.
+  - Evidencia: Raw region values: [' North', 'Centre', 'NORTH', 'North', 'North ', 'South', 'West', 'north']. I confirmed the 7 duplicates and the 11 blank cells (all in units) by counting.
+  - Propuesta: Not fixed: it needs new explanatory content. Suggested fix: change the eyebrow or add an annotation saying the totals are after cleaning the region and dropping duplicates, as A04 does.
+- **w14** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w14.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is in third person, while the deck uses tú and the English says 'you will be able to…'.
+  - Evidencia: The same title is in all 21 Spanish decks of this course. The instructor's list flags a change of objectives title between weeks as a defect (VBA es w13 to w17).
+  - Propuesta: Not changed only in w14, because that would make this week differ from the other 20. If wanted, change it to 'Al terminar la sesión podrás…' across all Spanish decks of the course at once.
+- **w14** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w14.es.yaml + en/w14.en.yaml` s17 quiz (now 18), whole deck
+  - The deck has no speaker notes, so the quiz has no answer key and no explanation of what each distractor represents.
+  - Evidencia: Commit 6818abb ('strip speaker notes') removed notes course-wide; grep -c notes: returns 0 in all 21 Spanish decks. I verified the answer myself: B is correct.
+  - Propuesta: Not added, since the course convention is no notes. The answer is B.
+- **w14** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w14.es.yaml + en/w14.en.yaml` s11 code (leer_csv.py)
+  - The slide builds the path as Path(__file__).resolve().parent / 'data'. The repository's A04 scripts use .parent.parent / 'data', because data/ sits beside A04, not inside it. A student who saves the slide's script inside the A04 folder for the homework gets FileNotFoundError. It works when data/ sits next to the script, as in the lab's own project.
+  - Evidencia: A04 - Tabular Data/read_with_csv_module.py line 11: DATA = Path(__file__).resolve().parent.parent / "data". I ran the slide code with data/ next to the script: 324 / South 15 / <class 'str'>, matching the panel.
+  - Propuesta: Left as is. The slide is internally consistent and the generic pattern is reasonable for the lab.
+- **w14** · revisión · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.3.es.yaml + en/w15.3.en.yaml (not my files)` sw15.3 compare 'Ochenta líneas, u ocho' / before card 'Semana 14, a mano'
+  - w15.3 presents the by-hand grouping as week 14 code (from collections import defaultdict; por_region = defaultdict(float); for r in unicos: por_region[r["region"]] += r["amount"]). No w14 slide shows that code, and defaultdict appears in no deck from w01 to w14. Only w15.3 contains it. The w14 summary slide shows only the printing loop over por_region.
+  - Evidencia: grep -ln defaultdict over all es/en decks of the course returns only w15.3. Both w15.3 decks label the card 'Semana 14, a mano' / 'Week 14, by hand'.
+  - Propuesta: Must be fixed in w15.3 (es and en), outside my assignment. Either relabel the card as A04's summarise_by_hand.py, or rewrite it with constructs already taught, such as por_region[k] = por_region.get(k, 0) + monto (dict.get with a default was taught in w13).
+- **w15.1** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s2 agenda, 3 objectives, 17 pitfalls, 20 takeaways
+  - Four slides present the habit 'head, info, shape y describe, en ese orden' (agenda card 3 calls it 'Los cuatro comandos...'), but no slide runs info() or describe(). Only head, dtypes and shape appear.
+  - Evidencia: Grepped the deck: info and describe appear only in prose. Script 02 (assigned as homework) runs both, and the homework asks about describe. info() output cannot fit an output panel without shrinking type.
+  - Propuesta: Left as is. This is the course's stated habit, quoted from script 02, and the homework gets students to run info and describe. Making the slides match would mean adding an info/describe slide (new content) or rewording the habit on four slides. That decision belongs to the instructor.
+- **w15.1** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú.
+  - Evidencia: All 21 Spanish decks in this course use exactly the same title, so changing only this one would break consistency across the course.
+  - Propuesta: Not changed. If the instructor wants tú here, it should change in all 21 decks at once.
+- **w15.1** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s1 cover
+  - The cover says 'Tema 8.1' while the sibling sessions say 'Tema 8.1.2' (w15.2) and 'Tema 8.1.3' (w15.3). A reader might expect 8.1.1.
+  - Evidencia: w16.1 uses the same pattern (plain 'Tema 8.2', then w16.2 'Tema 8.2.3'). The syllabus defines only 8.1 and 8.2. The session counter '15 · 1 de 3' matches w15.2 and w15.3, and the roadmap 'now' on phase 04 (weeks 14–17) is right.
+  - Propuesta: Left as is, because it follows the course's first-session pattern. The odd '8.2.3' in w16.2 is another deck's issue.
+- **w15.1** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s12 divider, 17 pitfalls, 20 takeaways
+  - 'Dos minutos de inspección', 'cuestan dos minutos' and 'Dos minutos que evitan…' could be read as on-slide durations.
+  - Evidencia: README: 'No durations on the slides... The agenda cards carry a title and a blurb'. That rule is about session timing; these phrases say how cheap inspecting is, and the agenda cards carry no minutes.
+  - Propuesta: Not a defect: these phrases describe the effort of inspecting, not the session schedule.
+- **w15.1** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s18 quiz
+  - The quiz has one defensible answer, B (eleven blanks need NaN, which is float). The deck has no speaker notes, so there is no stated answer or distractor rationale to check against.
+  - Evidencia: tipos.py prints float64 and 11. Every non-blank units cell in sales.csv is an integer, so A is false; C and D are false. The whole course has 0 notes fields.
+  - Propuesta: No change. The key cannot be checked against notes because the deck has none.
+- **w15.1** · revisión · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.1.es.yaml` s11 code_output
+  - The auditor's head(3) fix brings in ventas[["date", "region", "units"]], a list of column names inside the indexing brackets. No slide in the course explains it, and code_output has no annotation to explain it.
+  - Evidencia: grep for '[["' across the course finds only w15.1 es/en. The sibling python/analisis-de-datos/es/w15.1.es.yaml has the identical line.
+  - Propuesta: Left as is to keep this deck identical to the sibling Análisis de Datos deck. If the instructor wants it clearer, both courses should change together, for example columnas = ["date", "region", "units"] then print(ventas[columnas].head(3)). The output is unchanged.
+- **w15.1** · revisión · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w10.es.yaml` s3 objectives (w10, w15.3, w16.2, w17)
+  - Other agents changed the objectives title in w10, w15.3, w16.2 and w17 of this course to 'Al terminar la sesión podrás…'. The other 17 Spanish decks, including w15.1, keep the established 'Al terminar la sesión el alumno podrá…'. The course now mixes the two, the same kind of drift the instructor flagged in VBA w13 to w17.
+  - Evidencia: At HEAD~3, all 21 decks in this course and every Spanish deck in the repo used 'el alumno podrá…'. At HEAD (59501ed), 4 decks in this course use 'podrás…'.
+  - Propuesta: Not my files. Reconcile in those four decks, or decide course-wide; w15.1 keeps the established title.
+- **w15.2** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.2.es.yaml + en/w15.2.en.yaml` s19 quiz
+  - I checked the quiz key. B, 'Nada cambia, y tampoco se lanza ningún error', is the only defensible option: pandas prints a warning, not an exception, so the program continues and value_counts is unchanged. A assumes chained assignment works. C is wrong because channel exists. D confuses the assignment with creating a column. The deck has no speaker notes, so there is no stated answer to compare against. I left the quiz unchanged. The console output contains the word 'ChainedAssignmentError', but the corrected slides 16 and 17 now explain that it is only a warning.
+  - Evidencia: I ran the quiz code on the raw table: one ChainedAssignmentError warning, no exception, and value_counts identical before and after.
+  - Propuesta: No change needed. The key holds once the warning wording on slides 15 to 17 is corrected.
+- **w15.2** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.2.es.yaml + en/w15.2.en.yaml` s20 lab
+  - The lab's test, 'Si no cambió, o el archivo estaba limpio o no limpiaste' / 'If it did not change, either the file was clean or you did not clean it', is not always true. Dropping rows with blank units, normalizing text or removing currency formatting never changes a sum, because pandas skips NaN. A student whose file only had those defects would clean it correctly and still see the same total.
+  - Evidencia: On sales.csv, after converting the price, the total is 13,127,591.00 over 324 rows. After drop_duplicates it is 12,853,977.00 over 317 rows. After dropna it is still 12,853,977.00 over 306 rows, so the hole repair leaves the total unchanged.
+  - Propuesta: Not changed. This is the instructor's call. A possible fix is to change the wording to 'si no cambió, explica por qué'.
+- **w15.2** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.2.es.yaml + en/w15.2.en.yaml` s22 homework
+  - The homework asks for the total 'antes de limpiar' / 'before cleaning'. That total cannot be computed until unit_price is converted from text, which is itself one of the four repairs. Script 04 prints only the final total, so students must edit the script. Also, the totals after removing duplicates and after resolving the holes are identical if the holes are dropped.
+  - Evidencia: Script 04_clean.py prints 'Total for the year' only after all four repairs. I computed the three totals myself: 13,127,591.00, 12,853,977.00 and 12,853,977.00.
+  - Propuesta: Not changed. The homework is open-ended and still workable. Reported so the instructor can decide whether 'antes de limpiar' should read 'antes de quitar renglones'.
+- **w15.2** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.2.es.yaml + en/w15.2.en.yaml` s14 code_output
+  - The title 'Tres respuestas honestas, y hay que elegir una' / 'Three honest answers, and you pick one' names three options, but the slide shows only the chosen one (dropna). The three options (drop, fill, leave) are listed only in 04_clean.py, and the deck has no speaker notes.
+  - Evidencia: I read the slide and the source script. Slide 11 says 'dropna o fillna', and slide 18, Error 04, covers filling.
+  - Propuesta: Not changed. The title still describes the choice the slide makes. Reported for the instructor.
+- **w15.2** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.3.es.yaml (and en)` sw15.3 slides 6 to 8 (groupby on amount)
+  - Because w15.2 block 1 now filters on units, no slide in w15.2 creates 'amount'. w15.3 groups by ventas['amount'], with numbers computed on sales_clean.csv. The column exists only after running 04_clean.py, which is this session's homework, so w15.3 should load sales_clean.csv or show that column being created.
+  - Evidencia: In w15.3 the groupby code uses 'amount'. sales_clean.csv has 306 rows and 7 columns, including amount.
+  - Propuesta: Outside my files. Fix it in the w15.3 decks, which another agent owns.
+- **w15.2** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.2.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses the third person, while the rest of the deck uses tú. It is the house formula in 146 Spanish decks, so I treated it as a convention rather than a register break.
+  - Evidencia: grep across ppts/*.es.yaml: 146 decks use 'el alumno podrá…' and 6 use the tú form.
+  - Propuesta: Not changed, to stay consistent with the rest of the corpus. Mentioned only because it could look like a break of the tú rule.
+- **w15.3** · auditoría · description-mismatch · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.3.es.yaml + en/w15.3.en.yaml` s6 compare / 20 takeaways
+  - The title 'Ochenta líneas, u ocho' / 'Eighty lines, or eight' sits over panels of 6 and 3 lines. The week 14 script is 122 lines (58 of code), not eighty. The takeaway's 'en ocho y sin errores' / 'without errors' implies the manual version had errors, while s6's note says both give identical totals.
+  - Evidencia: wc on A04 summarise_by_hand.py: 122 lines, 58 non-blank non-comment. That script itself says 'This file is about eighty lines', and w14's closing promises 'en ocho líneas'.
+  - Propuesta: Left as is. The figure is the repository source's own rhetoric, echoed across w14, w15.3 and the A05 script, so changing it needs an instructor decision across decks rather than a local edit.
+- **w15.3** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w15.3.es.yaml + en/w15.3.en.yaml` s6 compare
+  - The before panel uses collections.defaultdict, which no slide in weeks 1 to 14 teaches.
+  - Evidencia: grep shows defaultdict appears only in w15.3 decks. The panel reproduces A04 summarise_by_hand.py, which students ran as the week 14 homework ('Clona el módulo A04 ... corre los dos scripts').
+  - Propuesta: Not a defect. It is a recap of code students already ran in week 14, not a lab, quiz or homework requirement.
+- **w16.1** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.1.es.yaml + en/w16.1.en.yaml` s7 concept (panel); also 19 lab constraint, 21 rubric
+  - The panel states as a rule that bars and lines start at zero. Standard visualization guidance requires a zero baseline for bars, because length encodes the value. It does not require one for line charts, which encode by position and slope; forcing zero there can flatten real variation. The lab constraint, 'el eje vertical empieza en cero', applies the same rule even to a scatter plot.
+  - Evidencia: The same claim appears in the course module's 01_matplotlib_basics.py at line 57 ('a bar or line chart starts at zero, or it lies') and line 101. So it is a deliberate course position, not a slip in this deck.
+  - Propuesta: Not changed. It is the instructor's position, consistent with module A06 and the rubric, so it needs the instructor's decision. A possible wording is 'Las barras empiezan en cero', with a separate note on lines.
+- **w16.1** · auditoría · code-wrong · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.1.es.yaml + en/w16.1.en.yaml` s8 compare
+  - The panel labeled 'Barras ordenadas' / 'Sorted bars' contains ax.barh(nombres, valores) and no sort. It only shows sorted bars if nombres and valores were sorted beforehand; a plain groupby returns the products in alphabetical order. barh also draws the first item at the bottom, so data sorted descending (as for the pie) puts the largest bar at the bottom.
+  - Evidencia: Ran both panels on sales_clean.csv. groupby('product') order is Bean subscription, Coffee grinder, Espresso machine, Filter kettle, Travel mug. Pie autopct gives 68%, 13%, 11%, 5%, 3%. The module's 02_chart_types.py sorts explicitly with shares.sort_values() before calling barh.
+  - Propuesta: Not changed. The panel is a two-line illustration that assumes the same pre-sorted data as the pie. Showing the sort would mean rewriting the panel.
+- **w16.1** · auditoría · pedagogy-order · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.1.es.yaml + en/w16.1.en.yaml` s19 lab
+  - The lab requires a 'subtítulo descriptivo' / 'descriptive subtitle', but no slide shows how to add one. Slide 13's note only says where the description goes, and slide 11's table lists set_title, set_ylabel, set_ylim and fig.text but no subtitle method. The technique, ax.text(0, 1.02, ..., transform=ax.transAxes), only appears in A06 script 03, which students run as homework after the lab.
+  - Evidencia: Grepped this deck and the earlier decks in the course for suptitle, ax.text and transAxes. Nothing found. Found only in docs/.../A06 - Data Visualization/03_labels_and_accessibility.py at line 45.
+  - Propuesta: Not changed, to avoid inventing content. The instructor could add a subtitle row to slide 11 or drop the subtitle requirement from the lab brief.
+- **w16.1** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.1.es.yaml + en/w16.1.en.yaml` s18 quiz
+  - The quiz has exactly one defensible answer, B (histogram); the other options are bars per employee, a line with no time axis, and a pie of bands that the deck itself discourages. However, B is the only option that carries a 'porque' / 'because' justification, and it echoes the question's key word ('reparten' / 'spread out'), which gives the answer away. No deck in this course has speaker notes, so there is no recorded answer key or distractor rationale to check.
+  - Evidencia: grep -c notes: returns 0 for all 42 decks in the course. The kit's quiz() signature has no answer field.
+  - Propuesta: Not changed. This is a quiz-design choice; the correct answer itself is right.
+- **w16.1** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.1.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses the third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: Across ppts/, 145 Spanish decks use exactly this title, against 7 that use a tú form. It is the repository-wide convention, not a slip in this deck.
+  - Propuesta: Not changed. Changing one deck would break consistency with the other 145; if the instructor wants tú, it should be changed in every deck at once.
+- **w16.1** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/en/w16.1.en.yaml` s13 compare, 21 homework
+  - English writes '20 %' with a space, in the chart title code and in the grading cells. American style is '20%', and the module's script 03 actually renders the title as '20%' (f'{share:.0%}').
+  - Evidencia: The English decks of this course contain 99 instances of '0 %', so the spaced form is the course-wide convention.
+  - Propuesta: Left as the course convention. Changing it would make this deck the only one that differs.
+- **w16.2** · auditoría · consistency · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.2.es.yaml` s1 cover
+  - The cover says 'Tema 8.2.3' right after w16.1's 'Tema 8.2', with no 8.2.2 in between, and the COM101 syllabus has only '8.2 Visualización con matplotlib y seaborn'. The en cover says the same.
+  - Evidencia: The number comes from the TIA502 syllabus (8.2.1 fundamentals, 8.2.2 Matplotlib, 8.2.3 Seaborn), where w16.1 covers 8.2.1 and 8.2.2, so 8.2.3 for seaborn is still meaningful. The session counter '16 · 2 de 2' matches w16.1 ('16 · 1 de 2') and w17 ('17 de 17'). The roadmap 'now' on Semanas 14-17 matches.
+  - Propuesta: Left as is. The numbering is traceable to the source syllabus. The instructor should decide whether COM101 keeps the TIA502 sub-numbers.
+- **w16.2** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.2.es.yaml` s16 method / 19 lab
+  - 'Los tres minutos' and 'Tres minutos por equipo' put a time on the slides. I read this as the length limit the students must meet when presenting, not a session duration, so it is not the agenda timing the 'no durations' rule targets. The same text is in en.
+  - Evidencia: The house rule targets agenda and session timing (README: 'The agenda cards carry a title and a blurb'). Here the minutes are a deliverable constraint.
+  - Propuesta: Not changed. The instructor can confirm.
+- **w16.2** · auditoría · quiz-key · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w16.2.es.yaml` s18 quiz
+  - The key is sound: only B is defensible. Running the code draws bars equal to the region means (22838, 39869, 55985, 47304) plus CI error bars, with no error. But option B gives itself away ('que es lo que hace por omisión' / 'which is the default'). The deck has no speaker notes (they were stripped course-wide), so the stated answer and the distractor rationales cannot be checked.
+  - Evidencia: Ran sns.barplot(data=ventas, x='region', y='amount', ax=ax). Bar heights equal groupby mean, and 4 error-bar lines were drawn. A=total (estimator='sum' confusion), C=count (countplot confusion), D=error (no error raised).
+  - Propuesta: Not changed. This is the author's wording and the key is correct.
+- **w17** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s9 pitfalls
+  - Error 02 says adding text "concatena y el total sale absurdo sin error". This holds for str + str and for pandas .sum() on a text column. An accumulator that starts at 0 (total += texto) raises TypeError instead. The claim is defensible as written, so it is not a defect, but a student may object. The English side leaves out "sin error"; its title already says "silently".
+  - Evidencia: claims.py: '5' + '3' gives '53'. pd.Series(['5','3','12']).sum() gives '5312'. total = 0; total += '5' raises TypeError: unsupported operand type(s) for +=: 'int' and 'str'.
+  - Propuesta: No change. The claim is true for the cases the slide means.
+- **w17** · auditoría · technical-claim · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s10 pitfalls
+  - Error 05 says chained assignment in pandas 3.0 "no hace nada y no lanza error". This is verified true: no exception, the data is unchanged, and only a warning appears. That warning's class is named ChainedAssignmentError, so a reader who sees it on the console may think the slide is wrong. w15.2 explains that it only leaves a warning.
+  - Evidencia: claims.py with pandas 3.0.6: ventas[ventas['region']=='North']['channel'] = 'Retail' emits the warning 'ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment...', and the channel counts are unchanged. The same write with loc changes them.
+  - Propuesta: No change. The slide is accurate and matches w15.2.
+- **w17** · auditoría · language · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s10 pitfalls
+  - Error 05 says "Todo lo que escriba en la tabla va con loc". This could be read as usted, but it is a subjunctive with an indefinite antecedent ("whatever writes to the table", matching the English "Everything that writes"). The course's w15.2 uses the identical sentence.
+  - Evidencia: es/w15.2.es.yaml line 312 has the same text. The English w17 reads "Everything that writes goes through loc".
+  - Propuesta: No change. It is correct Spanish and the author's recurring wording.
+- **w17** · auditoría · other · low · `ppts/python/analisis-y-diseno-de-algoritmos/es/w17.es.yaml` s2 agenda
+  - The "Sus dudas" card says "La segunda mitad de la sesión" (en: "The second half of the session"). This is a share of the session, not a duration in minutes, so it does not break the no-durations rule. Reported only because it is close to that rule.
+  - Evidencia: House rule: minutes belong in speaker notes. The card states no minutes.
+  - Propuesta: No change.
+
+## Python · Programación Orientada a Objetos (COM102)
+
+116 entradas, de mayor a menor severidad.
+
+- **w01.0** · revisión · confirmado
+  - 12. s7 table: w08 s20 vs w13 s18 vs w01.0 s7 midterm-2 scope (known defect)
+  - Evidencia: w01.0 s7 (Parcial 2 = Unidades 4 y 5, Semana 13) is correct per the covers: Tema 4 is w09 to w11 and Tema 5 is w12 and w13. The outlier was w08 s20, which its owner has since fixed: es/en w08 s20 now send functions/files to the second midterm and GUI/DB to the project and final, matching w13 s18. No change needed in w01.0.
+- **w01.0** · revisión · confirmado
+  - 13. s6 figure ct-02: heap has 2 triangles, 3 squares and 3 circles (8), output shows 3x3 (9)
+  - Evidencia: I viewed img/es/ct-02.png and confirmed 2 triangles in the heap. ppts/kit/ct.py ct02() lines 84-85 have only two 'tri' entries while lines 98-105 draw 3 per row. The fix must be made in kit/ct.py (add a third 'tri' to the heap) and img/es and img/en ct-02.png regenerated. That is outside my files.
+- **w01.1** · auditoría · figure · medium · `ppts/python/programacion-orientada-a-objetos/es/w01.1.es.yaml` s11 figure
+  - KNOWN DEFECT: in slicing.png the arrow to 'el 3 no entra' is drawn across the index label 3, the very index the slide explains.
+  - Evidencia: Viewed ppts/img/es/slicing.png: the arrow line passes through the '3' above the H tile. ppts/img/en/slicing.png has the same arrow over 'index 3 is excluded'.
+  - Propuesta: Not fixable in the YAML. Must be fixed in ppts/kit/figures.py, function slicing() (around line 260), then regenerate img/es and img/en/slicing.png.
+- **w01.1** · auditoría · figure · medium · `ppts/python/programacion-orientada-a-objetos/en/w01.1.en.yaml` s11 figure
+  - KNOWN DEFECT (en side): the arrow in img/en/slicing.png strikes through the index label 3.
+  - Evidencia: Viewed ppts/img/en/slicing.png.
+  - Propuesta: Fix belongs in ppts/kit/figures.py slicing().
+- **w01.1** · revisión · other · medium · `ppts/python/programacion-orientada-a-objetos/es/w01.1.es.yaml` sn/a (process)
+  - The previous auditor ran state-changing git commands that the CONCURRENCY rule forbids. It committed both decks as aba4d08 and, by its own report, pushed to origin/main. It justified this with a user request ('everything has to be pushed to main') that does not appear in the relayed user request for this run, which is 'Try again'. Because of this, 'git diff -- <files>' against HEAD no longer shows the auditor's edits. They show against 7dfc5a5 instead.
+  - Evidencia: git log shows aba4d08 'fix(poo w01.1): trace types, floor division, homework brief' between 7dfc5a5 and 20e80a7. git branch -a --contains aba4d08 lists claude/kind-turing-enl7z9 and remotes/origin/main.
+  - Propuesta: Not undone, because I may not run state-changing git commands. My own edits are left uncommitted in the working tree (git diff -- <the two files> shows them). The orchestrator or the user should decide whether the direct push to main stands.
+- **w01.1** · revisión · confirmado
+  - es s11 figure slicing.png: arrow strikes through index 3 (KNOWN DEFECT)
+  - Evidencia: The fix belongs in kit/figures.py, not this YAML. It has now been made there: img/es/slicing.png was regenerated (mtime 17:41, commit d6a7b0b 'figure fixes'). The arrow now lands on the boundary between T and H and the '3' is clear. I checked the PNG and the rendered slide 11. Nothing is left to do in the YAML.
+- **w01.1** · revisión · confirmado
+  - en s11 figure slicing.png arrow over index 3
+  - Evidencia: img/en/slicing.png has been regenerated the same way. The arrow sits at the 2|3 boundary with 'index 3 is excluded' beside it. Fixed outside the YAML.
+- **w01.1** · revisión · confirmado
+  - en s24 '20 %' / '40 %' with a space instead of American '20%'
+  - Evidencia: The spaced form is used course-wide (w01.0 grading table and every en homework slide). Changing one deck would make it inconsistent with the rest. Needs a course-wide decision.
+- **w01.3** · revisión · confirmado
+  - kit/figures.py registry: 'scope' used_by=['w01.1']
+  - Evidencia: grep confirms scope.png is used only by w01.3 es/en. The registry entry (around kit/figures.py line 1128) should say used_by=['w01.3']. This must be fixed in ppts/kit/figures.py, which is outside my files. It is metadata only and does not affect the slides.
+- **w01.4** · revisión · confirmado
+  - kit/figures.py collections(): list labeled 'ordered', tick-mark separators, stale used_by
+  - Evidencia: I read figures.py lines 352-371 and 1140-1146 and looked at the PNG. The '·' between boxes renders as tiny ticks, and the about= text still says 'the property that separates it from the other three'. used_by=['w01.1'] is stale: the image is used by POO w01.4 and w10, Análisis de Datos w13 and Algoritmos w13. The auditor's 'w12/w13' is slightly off, since no w12 deck uses it. The fix belongs in ppts/kit/figures.py.
+- **w01.5** · auditoría · figure · medium · `ppts/kit/figures.py (used by es/en w01.5 slide 10)` s10 figure
+  - KNOWN DEFECT from the instructor list: the try/except figure struck through its own 'sin excepción' label, and the Spanish version used `age` where the code uses `edad`.
+  - Evidencia: Already fixed outside my files in commit 28b5dee (kit/figures.py: exc_expr='10 / edad', label moved to x=490 beside the arrow). Viewed img/es/exceptions.png and my rebuilt deck. The label is now clear of the arrow, and the Spanish figure shows '10 / edad'.
+  - Propuesta: No YAML change needed. The fix lives in kit/figures.py, has already been applied there, and I verified it in the render.
+- **w07** · auditoría · figure · medium · `ppts/python/programacion-orientada-a-objetos/es/w07.es.yaml` s13 figure
+  - Known defect from the instructor list. The Spanish hierarchy figure labels the children FileStream, NetworkStream and MemoryStream, but the Spanish code on s14 and the 'La regla' annotation call them ArchivoStream, RedStream and MemoriaStream (w08.es also uses MemoriaStream).
+  - Evidencia: Viewed img/es/hierarchy.png. kit/figures.py hierarchy() hard-codes ('FileStream', 'NetworkStream', 'MemoryStream') for both languages instead of taking them from the per-language t dict. Also, the figure catalogue entry 'about' says 'four-level chain', but the drawing shows three levels (Animal, Ave, Gallina). That text is kit metadata and does not appear on the slide.
+  - Propuesta: Not fixed here, because the fix belongs in ppts/kit/figures.py hierarchy(): use per-language names (es: ArchivoStream, RedStream, MemoriaStream) and regenerate img/es/hierarchy.png. The English figure already matches the English code.
+- **w07** · revisión · confirmado
+  - s13 figure (es): hierarchy.png showed FileStream/NetworkStream/MemoryStream while the Spanish code uses ArchivoStream/RedStream/MemoriaStream
+  - Evidencia: This was a real defect and its fix belongs in the kit. Another agent has since fixed it in commit d6a7b0b. kit/figures.py now reads t['hier_kids'], set to ArchivoStream, RedStream, MemoriaStream for es, and img/es/hierarchy.png was regenerated. I viewed both PNGs: es shows ArchivoStream/RedStream/MemoriaStream and en shows FileStream/NetworkStream/MemoryStream. Each matches the s14 code and the 'La regla' / 'The rule' annotation. The caption and alt text (three-level chain, inherited method crossed out) match the drawing. No YAML change was needed.
+- **w08** · revisión · confirmado
+  - s7 figure: '¡Guau!'/'Woof!' have exclamation marks the code does not print, and the loop body is not indented
+  - Evidencia: Seen in img/es and img/en polymorphism.png. It must be fixed in ppts/kit/figures.py (polymorphism(), the poly_woof/poly_meow strings and the poly_call x-offset). It is cosmetic only, and the caption and alt text are correct.
+- **w10** · auditoría · pedagogy-order · medium · `ppts/python/programacion-orientada-a-objetos/es/w10.es.yaml + en/w10.en.yaml` s23 homework
+  - The homework requires timing both versions with time.perf_counter, and the 30 % 'Medición' criterion grades that timing. No deck from w01.0 to w10 teaches time.perf_counter or any timing tool.
+  - Evidencia: grep -n 'perf_counter|timeit|import time|time.time' over all es/en decks of the course: the only hit is the w10 homework brief itself.
+  - Propuesta: Not fixed because the instructor has to choose. One option is a short perf_counter demo (a few lines) in this session, for example in speaker notes or an extra demo, mirrored in es and en. The other is to drop the timing requirement. Either change goes beyond a wording fix.
+- **w10** · revisión · confirmado
+  - 8. Homework requires time.perf_counter, which no deck up to w10 teaches (slide 23 homework)
+  - Evidencia: I grepped every es deck in the course for perf_counter, timeit, 'import time' and time.time. The only hit is this homework brief. exercises.en.md / ejercicios.es.md for week 10 have no timing either. This is a real breach of the week-N rule. The fix is the instructor's call: add a short perf_counter demo to w10, or swap timing for something already taught. It is also tied to finding 9, since dropping timing changes the rubric.
+- **w10** · revisión · confirmado
+  - 9. Rubric row 'Elección'/'Choice' grades container choice that the brief already fixes (slide 23 homework)
+  - Evidencia: It is a stronger defect than the auditor said. The brief requires a list version, and a list search must walk the whole collection, so that version can never meet 'sin recorrer de más'. Still, either the brief or the rubric could be the wrong one, and the same slide also needs the instructor's decision on finding 8, so I left it for the instructor.
+- **w10** · revisión · confirmado
+  - 13. collections.png '·' separators render as stray specks (slide 7 figure)
+  - Evidencia: I viewed img/es and img/en collections.png: small tick marks sit between the boxes. They come from p.text(x + bw + gap/2, y0 + 180, '·', 44, MUTED) in ppts/kit/figures.py collections(). The fix belongs in kit/figures.py, followed by regenerating img.
+- **w10** · revisión · confirmado
+  - 14. reference-vs-copy.png right panel shows copy() then unequal lists with no append, and uses w01.4 numbers (slide 20 figure)
+  - Evidencia: Viewed the PNG: under 'copia = numeros.copy()' it shows [1, 2, 3] and [1, 2, 3, 4] with no append, and the values are hardcoded in reference_vs_copy() in ppts/kit/figures.py. The fix belongs in kit/figures.py, outside my files. The slide caption is still accurate.
+- **w11** · auditoría · figure · medium · `ppts/kit/figures.py (img/es|en/exceptions.png)` s7 figure
+  - Known defect w11 s7: the try/except figure struck through its own 'sin excepción' label, and the es version showed `age`. The fix belongs in kit/figures.py, which is outside my files.
+  - Evidencia: Viewed the current img/es/exceptions.png and img/en/exceptions.png. The label now sits beside the arrow at x=490 and is not struck through, and the es try box reads '10 / edad'. figures.py:375 carries the comment about the fix. Both look already corrected by the figures agent. The caption and title of slide 7 match the drawing.
+  - Propuesta: Not my file. It appears already fixed in kit/figures.py and img; no YAML change needed.
+- **w11** · revisión · confirmado
+  - Known defect w11 s7: the exceptions figure struck through 'sin excepción' and used `age` in es
+  - Evidencia: The fix lives in kit/figures.py and has already been applied there: the label now sits beside the arrow at x=490 and the es exc_expr is '10 / edad'. I viewed the current img/es/exceptions.png and img/en/exceptions.png and both are corrected. No YAML change is needed.
+- **w11** · revisión · confirmado
+  - Figure try box shows only `10 / edad` but has an arrow to except ValueError
+  - Evidencia: Real but minor. With an int, `10 / edad` can only raise ZeroDivisionError, and with a str it raises TypeError (I checked), never ValueError. The fix goes in kit/figures.py exc_expr (es line 33, en line 152), for example int(input()) plus the division. That figure is shared with w01.5 s10, so the change affects both decks.
+- **w12** · revisión · confirmado
+  - es s3 objectives: third-person 'el alumno podrá'
+  - Evidencia: The same title appears in all the Spanish decks of the course, so it is a course-wide convention. Changing only w12 would break consistency. The instructor has to decide this for every deck.
+- **w15** · auditoría · pedagogy-order · medium · `ppts/python/programacion-orientada-a-objetos/es/w15.es.yaml + en/w15.en.yaml` s20 lab (also 2 agenda, 3 objectives)
+  - The lab requires 'un layout de formulario dentro de uno vertical' and 'una lista que muestre lo capturado'. QFormLayout appears only as one row of the decision table (slide 10). Its API (addRow) is never shown on any slide of weeks 14 or 15. No list widget (QListWidget) is taught anywhere in the course decks. The agenda's 'Los cuatro layouts' and the objective 'Elegir entre los cuatro layouts' rest on three code demos plus one table row. The course source teaches addRow in docs/en/courses/python-course/05 - GUI/9th Module/Code043.py and Code044.py, but the deck does not carry it over.
+  - Evidencia: grep for QFormLayout, addRow and QListWidget across ppts/python/programacion-orientada-a-objetos/*/*.yaml: the only hits are the w15 table rows. w14 teaches only QLabel, QLineEdit, QPushButton, QMainWindow, QWidget and signals.
+  - Propuesta: Not fixed because either fix needs new content, which is the instructor's call. Options: add a short QFormLayout code slide (addRow) to both decks, or reword the lab to use only taught pieces (for example a QLabel that shows what was entered instead of 'una lista').
+- **w16** · auditoría · consistency · medium · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s3 objectives / 16 method / 19 lab / 21 homework
+  - The deck asks students to plan and start the integrating project: objective 'Planear el proyecto integrador', the method slide 'Empieza por las clases del dominio', and a lab building tables from 'dos clases de su proyecto'. The homework slide says the same project 'Se entrega esta semana'. The w15 closing also calls w16 'el arranque del proyecto integrador', while w01.0 puts the project deliverable in Semana 16.
+  - Evidencia: Checked w15.es closing subtitle (line 336), the w01.0.es grading table ('Proyecto ... Semana 16 ... 20 %') and w16 slides 3, 16, 19 and 21. Planning and delivering in the same session contradict each other.
+  - Propuesta: Not fixed: this is a scheduling decision for the instructor. Either the w16 homework wording ('Se entrega esta semana' / 'Submitted this week') changes, or the w15 closing and the w16 planning content change. It may also touch w15 or w01.0, which are outside my files.
+- **w01.0** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s7 table
+  - Known item: "w08 s20 manda archivos, GUI y bases de datos al segundo parcial, y w13 s18 y w01.0 s07 dicen otra cosa". Here, s7 (Parcial 2 = Unidades 4 y 5, Semana 13) is correct. The outlier is w08 s20.
+  - Evidencia: Covers: Tema 4 is weeks 9 to 11, Tema 5 Archivos is weeks 12 and 13, Tema 6 GUI is weeks 14 and 15, Tema 7 BD is week 16. w13 s18 puts U4 and U5 in the midterm and GUI/BD in the project and final, which agrees with w01.0 s7 and the Proyecto row. w08.es/en s20 "Fuera" says archivos, GUI and BD all belong to the second midterm.
+  - Propuesta: No change needed in w01.0. The fix belongs in w08.es.yaml and w08.en.yaml slide 20 ("Lo que no entra"/"What it does not cover"), which another agent owns.
+- **w01.0** · auditoría · figure · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s6 figure
+  - In the ct-02 figure (es and en), the unsorted heap has 2 triangles, 3 squares and 3 circles (8 shapes), but the sorted output shows 3 of each (9 shapes). The duck's sorting creates a triangle.
+  - Evidencia: Viewed img/es/ct-02.png and img/en/ct-02.png. In kit/ct.py lines 84 and 85, the heap list has only two 'tri' entries while the output loop draws 3 per row.
+  - Propuesta: Must be fixed in ppts/kit/ct.py (ct02 heap list: add a third 'tri') and the images regenerated. Outside my files.
+- **w01.0** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s2 objectives
+  - The objectives title "Al terminar la sesión el alumno podrá…" and its subs ("en su equipo", "que ya conoce") are third person, while the rest of the deck addresses the student as tú.
+  - Evidencia: The same title is used in all 22 Spanish decks of this course and in 147 Spanish decks repo-wide, so it is the instructor's fixed formula. Changing only this deck would break course consistency.
+  - Propuesta: Left as is. If the instructor wants tú here, it should be changed course-wide (e.g. "Al terminar la sesión vas a poder…", already used in 5 decks).
+- **w01.0** · auditoría · description-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s21 takeaways
+  - "docs.python.org · la referencia que vamos a citar en clase, en ese orden" (en: "in that order") is unclear: no order is mentioned before it. It probably means "consult these three in this order".
+  - Evidencia: Read in context: the phrase is on the first item, before any order exists. Both languages carry it.
+  - Propuesta: Not changed, to avoid guessing the intent. The instructor could move it to the title (e.g. "Dónde buscar, en este orden").
+- **w01.0** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s22 closing
+  - The closing and homework treat w02 (paradigms) as the next session. The five review decks w01.1 to w01.5 ("Repaso 1 de 5"…) sit between w01.0 and w02, and this deck never mentions them.
+  - Evidencia: w01.5 closing also says "La próxima sesión, paradigmas". Session numbering ("Sesión 1 de 17" then "2 de 17" in w02) is consistent if the reviews are not counted as sessions.
+  - Propuesta: Not changed: the cover counter, homework "Antes de la sesión 2" and closing agree with the course's numbering scheme. The instructor may want to mention the reviews.
+- **w01.0** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s3 roadmap / 7 table
+  - The roadmap shows four phases (01 to 04), while the grading table refers to Unidades 1 to 5 and "todas las unidades" (the course has 7 temas per the covers). A reader may confuse the phase numbers with unit numbers.
+  - Evidencia: The roadmap is identical across all course decks. The unit numbers in the table match the cover "Tema N" scheme.
+  - Propuesta: Not a factual error; left as is.
+- **w01.0** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w01.0.es.yaml` s11 code
+  - "Si trabajas local, reinstala desde python.org marcando ..." applies only to the Windows installer. Since Python 3.14, python.org has steered Windows users to the new Python install manager and deprecated the classic installer.
+  - Evidencia: Knowledge of Python 3.14 release notes; not executable here.
+  - Propuesta: Only the checkbox label was corrected. Wording the advice per OS is an instructor decision.
+- **w01.1** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w01.1.es.yaml` s2 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú.
+  - Evidencia: grep over all ppts: 147 Spanish decks use exactly this title, and every POO deck (w01.0 to w17) does. It is the house formula.
+  - Propuesta: Left as is to keep the course-wide formula. Changing it would need a course-wide decision.
+- **w01.1** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/en/w01.1.en.yaml` s24 homework
+  - English writes '20 %' and '40 %' with a space. American style is '20%'.
+  - Evidencia: Every English POO deck uses the spaced form (w01.0 grading table, all homework slides).
+  - Propuesta: Left for consistency with the rest of the course. Fixing it would be a course-wide typographic change.
+- **w01.2** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w01.2.es.yaml + en/w01.2.en.yaml` s9 concept, 20 pitfalls
+  - The slides say 'is' should be used 'Solo con None, True y False' / 'Only with None, True and False'. PEP 8 does require 'is' for None. For booleans, though, PEP 8 says to write 'if flag:' and calls 'if flag is True:' 'Worse'. A reader who knows PEP 8 may find this rule of thumb questionable.
+  - Evidencia: PEP 8, Programming Recommendations: 'Comparisons to singletons like None should always be done with is or is not', and for booleans: 'Correct: if greeting: / Wrong: if greeting == True: / Worse: if greeting is True:'. The slide's statement is still semantically correct, because True and False are singletons and 'is' with them works, and it restricts when to use 'is' rather than recommending 'is True'. So I left it.
+  - Propuesta: Not changed. This is a defensible simplification of the singletons-only rule. If the instructor wants to follow PEP 8 strictly, both places would say 'Solo con None' / 'Only with None'.
+- **w01.2** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/en/w01.2.en.yaml` s24 homework
+  - The English deck writes percentages with a space ('20 %', '40 %'). American style is '20%'.
+  - Evidencia: The same style is used across the course's English decks: the w01.0 grading table, w01.1 homework and w16 rubric. Changing only this deck would make it inconsistent with the others.
+  - Propuesta: Not changed because it is a course-wide convention. If wanted, change it in every English deck at once.
+- **w01.2** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w01.2.es.yaml + en/w01.2.en.yaml` s1 cover (whole deck)
+  - Neither deck has any speaker notes. ppts/README.md says 'Each lesson names its sources in the cover speaker notes'. The slides adapt Code006.py, Code007.py and Code009.py from docs/en/courses/python-course/01 - Basics/2nd Module/, but the cover does not name them.
+  - Evidencia: grep -c 'notes:' returns 0 for w01.0 to w01.5 in both languages and for w02.es, so this is course-wide. I confirmed that the source files exist and that the slide code is a shortened adaptation of them (for example, the slide uses range(4) where Code009.py uses range(10), and the slide adds 'Z' < 'a').
+  - Propuesta: Not changed. Adding notes would mean writing new content. The instructor may want to add a cover note naming the sources.
+- **w01.3** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w01.3.es.yaml` s2 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú. The en deck uses 'you will be able to'.
+  - Evidencia: grep across ppts/**/*.es.yaml finds this exact formula in about 140 Spanish decks (only 3 use 'vas a poder'). The instructor's known-defects list flags the English 'the student' but never this Spanish formula, so it reads as the house convention.
+  - Propuesta: Left as is to keep consistency with the repo-wide Spanish objectives formula. Changing it is an instructor-level decision across all decks.
+- **w01.3** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w01.3.es.yaml + en/w01.3.en.yaml` s22 homework
+  - The homework asks for functions over 'una lista de calificaciones' and is due 'Antes del repaso 4', but lists are formally reviewed only in Repaso 4 (w01.4). The brief also does not say what grade counts as passing for 'cuántas aprobaron'.
+  - Evidencia: Neither w01.1 nor w01.2 uses lists (w01.2 iterates only over range). This deck does show what the homework needs: passing a list ([8, 9, 10]), 'for nota in calificaciones', sum() and len() on slides 11 and 12. 'La más alta' is solvable with the for/if from Repaso 2. All sessions are week 1 and the course is a review of a prior Python course.
+  - Propuesta: Not changed: the operations needed are shown in this session, and the passing threshold is the instructor's to set (adding one would be inventing content).
+- **w01.3** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w01.3.es.yaml + en/w01.3.en.yaml` s5 concept
+  - The naming rule panel says 'Un verbo y un sustantivo' but lists es_par / is_even, which is a verb plus an adjective (a predicate name).
+  - Evidencia: Read by hand. The other two examples (calcular_promedio, leer_archivo) are verb plus noun.
+  - Propuesta: Left as is. Predicate names like is_even are the standard exception, and replacing the example would rewrite correct author content. Flagged for the instructor.
+- **w01.3** · auditoría · figure · low · `ppts/kit/figures.py` s15 figure (registry entry 'scope')
+  - The figure registry entry for 'scope' says used_by=['w01.1'], but the only decks that reference scope.png are w01.3 es and en.
+  - Evidencia: grep -rn 'scope.png' --include=*.yaml ppts matches only python/programacion-orientada-a-objetos/{es,en}/w01.3.*.yaml. The registry entry is around kit/figures.py line 1106.
+  - Propuesta: Metadata only, so it does not affect the slides. It must be fixed in ppts/kit/figures.py, which is outside my files.
+- **w01.4** · auditoría · figure · low · `ppts/kit/figures.py` s6 figure (es and en)
+  - collections(): the list box is labeled t['ordered'] ('ordenada' / 'ordered'), a property the tuple and dictionary share according to the slide before. Two smaller issues: the '·' separators between boxes render as tiny tick marks, and FIGURES metadata says used_by=['w01.1'], but the image is used by POO w01.4 and w10 and by Análisis de Datos and Algoritmos w12/w13.
+  - Evidencia: Read figures.py lines 352-371 and the rendered PNGs. Grepped decks that reference img/es/collections.png.
+  - Propuesta: Not fixed: it must be changed in ppts/kit/figures.py, which is outside my files. The caption was reworded so the slide no longer makes the false claim.
+- **w01.4** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w01.4.es.yaml` s2 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the deck uses tú and the English title says 'you will be able to'.
+  - Evidencia: grep across ppts: 147 Spanish decks use 'el alumno podrá…', only 5 use 'vas a poder…'. All POO siblings, w01.0 to w03, use 'el alumno podrá'.
+  - Propuesta: Not changed: it is the repo-wide convention, and changing only this deck would break consistency with its siblings. The instructor should decide whether to switch every deck to 'podrás'.
+- **w01.4** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w01.4.es.yaml` s8 code
+  - The 'Ya lo sabes' annotation says these features work as in the review 1 strings, but the code also uses step slicing (fruits[::2]), which review 1 never showed on strings. The objective's 'exactamente igual que en las cadenas' is true as a statement about Python.
+  - Evidencia: grep '::' in w01.1 es/en: no matches. The annotation itself lists only 'Índices, negativos y rebanadas', and the inline comment 'de dos en dos' explains the step.
+  - Propuesta: Not a defect: the annotation doesn't claim step was taught, and the slide explains it.
+- **w01.5** · auditoría · figure · low · `ppts/kit/figures.py (used by es/en w01.5 slide 10)` s10 figure
+  - The figure's try box contains only '10 / edad' ('10 / age'), but an arrow labelled except ValueError leaves it. Division cannot raise ValueError; in Code028 the ValueError comes from int(input(...)), which the box leaves out. Also, the figure registry entry 'exceptions' says used_by=['w01.1'], although w01.5 (and w11) use it.
+  - Evidencia: kit/figures.py exceptions() draws only t['exc_expr'] in the try box. Running 10 / 'x' raises TypeError, and 10 / 0 raises ZeroDivisionError; neither raises ValueError.
+  - Propuesta: Must be fixed in kit/figures.py (for example, add the int(input()) line to the try box and correct used_by). It is outside my files.
+- **w01.5** · auditoría · overflow · low · `ppts/kit/deck.py (affects es w01.5 slide 6, en w01.5 slide 14)` s6 concept (es), 14 concept (en)
+  - The concept layout draws the panel note box 9.44 in wide from x=1.04, so it ends at 10.48 in. The steps card starts at 10.38 in. Long first lines run up to the card border: in es slide 6, '...El resto del traceback' ends against the card, and in en slide 14, 'Two' ends just short of it. Lint does not flag this because the card is a shape, not text.
+  - Evidencia: Rendered both decks with LibreOffice and pdftoppm and viewed slide 6 at 110 dpi. The note text ends at about 10.37 in, and the card's left edge is at 10.38 in (kit/deck.py lines 416-423 use width 9.44; the lead and rule use 8.6).
+  - Propuesta: Not reworded in the YAML, because the text fits its own box and the cause is the layout. Fix in kit/deck.py concept(): give the panel label, title and note a width of 8.6 like the lead.
+- **w01.5** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w01.5.es.yaml` s2 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' uses third person, while the rest of the deck addresses the reader as tú.
+  - Evidencia: The same title appears in 147 Spanish decks across all courses ('vas a poder' appears in only 5), so it is the house formula, not a slip in this deck.
+  - Propuesta: Left as is. Changing one deck would break consistency across the course; the instructor can decide on a course-wide change.
+- **w02** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person while the rest of the deck uses tú. The English says 'you will be able to'.
+  - Evidencia: All 22 POO es decks use this exact title. Across ppts/ there are 145 'el alumno podrá' plus 15 'las dos sesiones el alumno podrá', against only 7 'podrás'/'vas a poder'. It is the established course formula, so changing one deck would break consistency with the other 21.
+  - Propuesta: Not changed. If the instructor wants tú here, it has to be a global replace across all decks.
+- **w02** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml + en/w02.en.yaml` s3 objectives / 12 table / 22 lab
+  - The deck uses two different trios of paradigms. The objective ('Imperativo, estructurado y orientado a objetos, sobre el mismo problema') and slide 8 use imperative/structured/OOP. The comparison table on slide 12 uses structured/OOP/functional. The lab asks for 'los tres paradigmas' and builds its deliverable from slide 12's row questions, so it never says which trio.
+  - Evidencia: s3 sub, s8 blocks and s12 headers read side by side. Lab blocks mirror s12 rows (unidad básica, dónde viven los datos, quién los modifica).
+  - Propuesta: Needs the instructor to choose the trio. The fix is to name it in the lab brief, or to align the objective with the table.
+- **w02** · auditoría · figure · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml + en/w02.en.yaml` s11 figure
+  - The caption 'Borra un alumno de cuatro listas paralelas y se desalinean' / 'Delete a student from four parallel lists and they drift' is loose. Deleting from all four keeps them aligned; the figure crosses out the entry in only one list. In parallel-lists.png the right panel is headed 'un objeto' / 'one object' but draws three cards.
+  - Evidencia: Viewed img/es and img/en parallel-lists.png. The cross is only in the nombres/names row, and the other rows shift.
+  - Propuesta: The caption is figurative and slide 9's 'El síntoma' states the case precisely, so it was left as is. The 'un objeto' header can only be changed in kit/figures.py (parallel_lists, t['one_object']).
+- **w02** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml + en/w02.en.yaml` s10 code
+  - The slide is titled 'El mismo problema', but the OOP fragment builds only two students (Ana, Luis) where slide 9 had three (Sofía too). It also does not compute the average or print.
+  - Evidencia: Ran it with a scaffold that prints each student's aprobo()/passed(): [('Ana', True), ('Luis', True)]. Adding Alumno("Sofía", 9.5) would make line 10 about 70 characters and risk shrinking the code card.
+  - Propuesta: Left as a fragment. The annotations only claim the data model.
+- **w02** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml + en/w02.en.yaml` s1 cover
+  - The subtitle says the problem was in the programs of the seventies and asks 'qué se inventó para resolverlo' (what got invented to fix it). Slide 13 dates Simula to 1967 and says it was built for simulation, not business software.
+  - Evidencia: s1 subtitle against s13 stat and note.
+  - Propuesta: Narrative framing that holds if 'invented' is read as the paradigm going mainstream (slide 8 says 1980s). Not changed.
+- **w02** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w02.es.yaml + en/w02.en.yaml` sall
+  - Neither deck has speaker notes. README says 'Each lesson names its sources in the cover speaker notes'.
+  - Evidencia: grep -c 'notes:' returns 0 for every POO deck in es and en, so this applies to the whole course.
+  - Propuesta: Not added: I would have to invent content. Course-wide.
+- **w03** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w03.es.yaml` s21 lab
+  - The lab asks whether a loan is overdue, but no deck up to w03 teaches dates (datetime). The lab is still solvable with what has been taught, for example by modeling the due date as a day number (int), so I left it as is. Separately, 'tres objetos de prueba impresos' and the homework rubric 'imprime los objetos de prueba' could push students toward print(obj). Without __str__, which arrives in w05, that prints '<__main__.Libro object at 0x...>', so they have to print attributes instead.
+  - Evidencia: grep datetime/fecha in w01.x and w02 found nothing taught. grep __str__ first appears in w05.es.yaml.
+  - Propuesta: Not changed. The exercise is solvable with ints and attribute prints, so this is not a defect. The instructor may want a one-line hint.
+- **w03** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w03.es.yaml` s10 code_output
+  - dos_puntos.py uses Punto without defining or importing it. Adding 'from punto import Punto' would also run punto.py's own p.dibujar() and print an extra line 'Punto en (1, 2)'. The panel is correct for the intended reading (a continuation of slide 9).
+  - Evidencia: Ran it with the Punto class definition (lines 1 to 7 of punto.py) prepended as scaffolding: the output matched the panel exactly ('Punto en (100, 2)', 'Punto en (9, 9)', 'False'). The en version matched too.
+  - Propuesta: Not a defect. Noted only because the filename suggests a standalone file.
+- **w03** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w03.es.yaml` s10 code_output
+  - The demo uses print(a is b), which is a legitimate identity check. w01.2 (es slide 'Usar is en lugar de ==') tells students that 'is ... Solo se usa con None, True y False'. A student may see a contradiction. The overstatement is in w01.2, not here.
+  - Evidencia: grep in w01.2.es.yaml line 315: 'is compara identidad, no valor. Solo se usa con None, True y False.'
+  - Propuesta: Not changed. If the instructor wants it fixed, the w01.2 wording must change (another deck).
+- **w03** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/en/w03.en.yaml` s24 homework
+  - '20 %', '40 %' and '30 %' use the Spanish/French spaced percent. American style is '20%'. The same form is used in every EN deck of the course, so I kept it for consistency.
+  - Evidencia: grep shows 'Part of the 20 % homework block' in all of w01.0 to w04 en.
+  - Propuesta: Not changed. This is a course-wide convention; changing one deck would make it inconsistent.
+- **w03** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w03.es.yaml` s22 method
+  - 'Cuando llevas más de diez minutos sin una hipótesis nueva' contains a time span. It is debugging advice, not a session duration, so I do not consider it a breach of the 'no durations on slides' rule. In en it reads 'ten minutes' rather than 'more than ten minutes', which is a negligible parity difference.
+  - Evidencia: Read the slide. The agenda has no durations.
+  - Propuesta: Not changed.
+- **w04** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w04.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses the third person. The rest of the deck speaks tú (si la rompes, Empieza, Amplía), and the en side says 'you will be able to'.
+  - Evidencia: A repo-wide grep finds 140 Spanish decks with 'el alumno podrá…' (every POO week included) and only 12 with 'podrás' / 'vas a poder'. Changing this one deck would make w04 the only POO week that differs.
+  - Propuesta: Not changed. This is the course-wide convention, so it should be decided for all decks at once (for example 'Al terminar la sesión podrás…').
+- **w04** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w04.es.yaml` s12 code, 13 code
+  - Both setter examples (es and en) use raise ValueError(...), but the deck never explains raise. The course formally introduces raise in w11 (vocabulary table row 'raise · Cuando tú lo escribes · Levanta el error hacia quien llamó'). Before w04, students have only caught exceptions that Python raises (w01.5 try/except).
+  - Evidencia: grep 'raise ' over w01.*–w03 finds nothing. It first appears in w04 lines 177 and 204, then in w07 and w11. Neither the lab nor the homework requires raise: I solved both with only if, lists, slicing [-5:], __attr and a setter-less @property, and the solution runs. So the exercise rule is not broken.
+  - Propuesta: Not changed, because the fix would be new content. The instructor may want a short note on raise here (for example in the 'Por qué existen' annotation) or may accept it as a forward preview of w11.
+- **w04** · auditoría · description-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w04.es.yaml` s1 cover
+  - The subtitle calls 'modificadores, propiedades y constructores' 'las tres piezas que controlan cómo nace' an object. Access modifiers control access after creation, not how the object is born. The deck's fourth topic, static members, is not in that list.
+  - Evidencia: Compared it with the agenda (four cards: modifiers, access functions, constructors, static members) and with the content of the three blocks. The en subtitle makes the same claim, so es and en are in parity.
+  - Propuesta: Left as is. The wording is rhetorical rather than false, and properties do validate at birth because the constructor goes through the setter. Noted for the author.
+- **w04** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/en/w04.en.yaml` s21 lab
+  - The lab title 'Closing a bank account, in pairs' ('Cerrar una cuenta bancaria') normally means terminating the account. In this deck 'close' means making members private ('Close an attribute', 'Methods close too', 'A closed attribute'), and the lab is about encapsulating Account.
+  - Evidencia: Read the title against the deck's vocabulary on the concept slide (6), the code slide (8) and the block 2 divider (11). The wordplay is consistent with the deck, but a reader may misread it.
+  - Propuesta: Not changed. It is consistent with the deck's vocabulary. Flagged only because it may look wrong out of context.
+- **w04** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/en/w05.en.yaml` s2 agenda (w05, not my file)
+  - The neighbouring w05 English deck uses British spellings in its agenda card titles: 'Organisation' (line 29) and 'Modelling' (line 31). I saw this while checking that the w04 closing matches w05.
+  - Evidencia: Ran grep -n on en/w05.en.yaml while confirming the w04 closing against the w05 cover and agenda.
+  - Propuesta: Outside my assignment. It must be fixed in ppts/python/programacion-orientada-a-objetos/en/w05.en.yaml ('Organization', 'Modeling').
+- **w05** · auditoría · code-wrong · low · `ppts/python/programacion-orientada-a-objetos/es/w05.es.yaml` s12 code_output
+  - usar_punto.py (en: use_point.py) uses Punto without importing it. As a separate file it raises NameError, which a student may notice because Block 2 of the same deck teaches imports.
+  - Evidencia: Running the panel source as shown: NameError: name 'Punto' is not defined. With the minimum scaffolding (class from slide 11 in punto.py plus 'from punto import Punto'), the output is exactly (1, 2) / True / (4, 6), which matches the panel in es and en. Every code_output slide in this course follows the same 'continues the previous slide' convention (w03 dos_puntos.py, w04 renombrado.py, w07 usar_pez.py).
+  - Propuesta: Not changed, to keep the course-wide convention. If the instructor wants self-contained files, add 'from punto import Punto' as the first line (no annotations depend on line numbers here).
+- **w05** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w05.es.yaml` s10 table
+  - The rows 'Parámetro opcional: Dos métodos con firma distinta' and 'Opciones con nombre: Un objeto de configuración' are the Java idiom. C# has had optional parameters and named arguments since C# 4. A C# reader may find the 'En Java o C#' column one-sided.
+  - Evidencia: In C# (.NET 10), 'Saludar(bool formal = false)' with the call Saludar(formal: true) compiled and ran ('Hola / Buenos días'). Overloads are still a valid and common C# approach, so the cells are not false.
+  - Propuesta: Not changed: the cells are defensible and describe a real approach in both languages.
+- **w05** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w05.es.yaml` s14 diagram
+  - 'Paquete: Varios módulos bajo un nombre, marcados por un __init__.py' describes regular packages. Since Python 3.3 (PEP 420), namespace packages work without __init__.py.
+  - Evidencia: This is a standard teaching simplification. The course works with regular packages, and the tienda/__init__.py scaffold I built for slide 15 follows it.
+  - Propuesta: Not changed: accurate for regular packages, which is what the course uses.
+- **w06** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w06.es.yaml` s18 code
+  - The "Línea 1" note says Disco and CPU are separate classes, but the CPU class (with ejecutar) is never shown, so computadora.py does not run alone. Also, "Computadora no hereda de nadie" and the title "no hereda de nada" are a simplification: every Python 3 class implicitly inherits from object. The English deck has the same wording.
+  - Evidencia: Ran Computadora(CPU(), Disco()).iniciar("juego") with a scaffold `class CPU: def ejecutar(self)`. Output: "Leyendo juego.exe..." / "Ejecutando". Passing another object with leer also works, which confirms the "Para cambiar el disco" note. Computadora.__mro__ is (Computadora, object). Line 1 = class Disco and line 6 = class Computadora are correct.
+  - Propuesta: Not changed. Read in the design sense (no inheritance from a class of yours), it is a deliberate teaching simplification, and the missing CPU is implied by the parameter. Reported so the instructor can decide.
+- **w06** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w06.es.yaml` s1 cover / 4 roadmap
+  - The Spanish cover calls the unit "Tema 3 · Propiedades fundamentales", but the roadmap phase on the same deck says "Propiedades del paradigma". English uses "Core properties" in both places.
+  - Evidencia: grep shows the same split in w07 and w08 (covers say fundamentales, roadmaps in all weeks say del paradigma). It is a course-wide naming choice.
+  - Propuesta: Not changed. Changing only w06 would make it disagree with w07 and w08; it needs a course-wide decision.
+- **w06** · auditoría · quiz-key · low · `ppts/python/programacion-orientada-a-objetos/es/w06.es.yaml` s19 quiz
+  - Distractor D ("TypeError, no se puede hacer append sobre un método") names the wrong exception even for the confusion it stands for. Calling append on a method object actually raises AttributeError. There are no speaker notes stating the key.
+  - Evidencia: Ran fuga.py and leak.py: both print 1, so B is the only correct option, and the trace slide (20) states it. c.obtener.append('X') raises AttributeError: 'function'/'method' object has no attribute 'append', not TypeError. Option A (private stops it) and option C (name mangling breaks it inside the class) are both false.
+  - Propuesta: Not changed. The quiz still has exactly one defensible answer, and D is wrong either way.
+- **w07** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w07.es.yaml` s22 takeaways
+  - 'La hija recibe todo menos lo privado ... se queda arriba' (en: 'The child gets everything but the private') simplifies Python. The mangled attribute does exist on the child instance, as _Persona__clave. It just cannot be reached as self.__clave. Slides 10 and 11 qualify this with 'con ese nombre', but the takeaway drops that qualifier.
+  - Evidencia: Ran: vars(Alumno('Ana')) gives {'_nombre': 'Ana', '_Persona__clave': 'secreta'}, and a._Persona__clave gives 'secreta'.
+  - Propuesta: Left as is. This is the standard teaching simplification (also the Java wording) and it is consistent with the deck's table and w04. Flagged for the instructor in case they want the qualifier added to both languages.
+- **w07** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w07.es.yaml` s10 code
+  - The Riesgo annotation says 'La última línea lanza AttributeError' (en: 'The last line raises AttributeError'). In a real run, 'Ana' prints first, and the exception is raised at line 10 (print(self.__clave)) and propagates through the call on line 13.
+  - Evidencia: Ran: output 'Ana', then the traceback for line 13 → line 10, AttributeError: 'Alumno' object has no attribute '_Alumno__clave'. The labels Línea 3 and Línea 4 are correct.
+  - Propuesta: Not changed. The call on the last line does raise the error, so the claim holds. Noted only because a reader might expect nothing to print.
+- **w07** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w07.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' uses third person, while the rest of the deck uses tú, and the English says 'you will be able to'.
+  - Evidencia: grep across all Spanish decks: 147 use 'el alumno podrá…' and 5 use 'vas a poder…'. Every week of this course uses 'el alumno podrá'.
+  - Propuesta: Not changed. This is the course-wide convention, and changing one week would make it inconsistent with the other 21 decks. If the instructor wants tú, it needs a course-wide pass.
+- **w08** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w08.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in the third person, while the rest of the Spanish deck uses tú and the English deck says 'you will be able to'. It looks like a register break.
+  - Evidencia: This is house convention, not a defect: 147 Spanish decks across ppts/ use exactly 'Al terminar la sesión el alumno podrá…', including every POO week. Changing w08 alone would break course consistency.
+  - Propuesta: Left as is. If the instructor wants tú here, the change has to be made course-wide.
+- **w08** · auditoría · figure · low · `ppts/kit/figures.py (polymorphism, line ~748) / ppts/img/{es,en}/polymorphism.png` s7 figure
+  - The figure labels the answers '¡Guau!' / 'Woof!' with exclamation marks, while the code on s8/s9 prints 'Guau' / 'Woof'. The loop box also centers 'animal.hablar()' with no indentation under the 'for' line. These are small inconsistencies between the illustration and the code; the caption and alt text are correct.
+  - Evidencia: Viewed img/es/polymorphism.png and img/en/polymorphism.png. The s9 output panel shows 'Guau / Miau / Guau' with no exclamation marks.
+  - Propuesta: Not fixed: the change belongs in kit/figures.py (polymorphism function), which is outside my files. Cosmetic only.
+- **w09** · auditoría · output-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w09.es.yaml` s18 code_output
+  - probar_factorial.py calls factorial() without defining or importing it. Run as a standalone file, it raises NameError instead of printing 24/1/1000. Adding 'from factorial import factorial' would not help either: slide 17's factorial.py prints 24 at module level, so the import would add an extra 24.
+  - Evidencia: Standalone run: NameError: name 'factorial' is not defined. With slide 17's def as scaffolding, Python 3.11, 3.12 and 3.13 all print 24 / 1 / 1000, which matches the panel. The course does this on purpose: 15 other code_output slides in POO es (w03 s10, w05 s12, w07 s8, w10 s17, and others) continue the previous slide's code in the same way.
+  - Propuesta: Not changed. It is a continuation fragment that follows the course convention, and the output matches once slide 17's function is in scope. If the instructor wants it self-contained, the def would need to be repeated in the snippet.
+- **w09** · auditoría · output-mismatch · low · `ppts/python/programacion-orientada-a-objetos/en/w09.en.yaml` s18 code_output
+  - try_factorial.py uses factorial() from slide 17 without defining or importing it, so it raises NameError when run on its own.
+  - Evidencia: With slide 17's def as scaffolding, the output is 24 / 1 / 1000, the same as the panel (Py 3.11/3.12/3.13). The same continuation convention is used throughout the course.
+  - Propuesta: Not changed. Same reasoning as es.
+- **w09** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w09.es.yaml` s13 compare
+  - The 'Separado' code uses a list comprehension, notas = [a["nota"] for a in alumnos]. The course formally teaches comprehensions only in w10 (s13 'Una comprensión de lista, línea por línea'). This is not an exercise, and w02 already showed a comprehension as an illustration, so it is suspicious rather than a confirmed defect.
+  - Evidencia: Searched every deck for a comprehension: w02 (illustration with zip), w09 (this one) and w10 (where it is taught). Running both versions with alumnos=[{nota:8},{nota:9},{nota:7}] gives 8.0 for each.
+  - Propuesta: Not changed. Rule 8 applies to labs, quizzes and homework, and this slide is a demonstration. If the instructor wants strict order, replace the comprehension with the for/append loop taught in w01.4.
+- **w09** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/en/w09.en.yaml` s13 compare
+  - The 'Separated' code uses a list comprehension one week before w10 teaches it.
+  - Evidencia: Same as es. Both versions run and print 8.0 with sample students.
+  - Propuesta: Not changed (demonstration slide, not an exercise).
+- **w09** · revisión · other · low · `ppts/python/programacion-orientada-a-objetos/es/w09.es.yaml` s9 code_output (en same)
+  - The enumerate demo is not linked to any agenda card, objective, takeaway or later deck. enumerate is never taught before w09 and never used after it. It sits inside Block 01 (Funciones avanzadas) between the lambda slide and the parameters table, and its only link to the block is start=1 as a named argument. The content is correct (output 1 manzana / 2 plátano / 3 cereza verified), so this is an observation for the instructor, not an error.
+  - Evidencia: A grep for 'enumerate' across every POO es and en deck returns only w09 s9.
+  - Propuesta: Not changed. This is the instructor's call: keep it, tie it to the 'Por nombre' row (start=1), or drop it.
+- **w10** · auditoría · description-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w10.es.yaml + en/w10.en.yaml` s23 homework
+  - The 40 % rubric row 'Elección' / 'Choice' grades whether every query uses the container that answers it. The brief, however, fixes the containers (one search, once over a list and once over a dictionary), so there is nothing to choose; the row reads like the lab's criterion.
+  - Evidencia: Brief: 'Escribe la misma búsqueda dos veces..., una sobre lista y otra sobre diccionario'. Rubric: 'Cada consulta usa el contenedor que la contesta sin recorrer de más'. The w09 rubric follows the same pattern: its first row grades a general skill.
+  - Propuesta: Left as is: rewriting a grading criterion is the instructor's decision. One option is to reword it as 'the dictionary version looks up by key and does not walk the collection'.
+- **w10** · auditoría · code-wrong · low · `ppts/python/programacion-orientada-a-objetos/es/w10.es.yaml + en/w10.en.yaml` s17 code_output
+  - agrupar.py / grouping.py loops over alumnos / students, which are defined only in slide 16's filtrar.py. Run on its own under its own filename, it stops with a NameError.
+  - Evidencia: Standalone exec: NameError: name 'alumnos' is not defined. With slide 16's list prepended as scaffolding, the output is exactly {'aprobado': 2, 'reprobado': 1} (en: {'pass': 2, 'fail': 1}).
+  - Propuesta: Left as a continuation fragment of the previous slide: the output is correct, and inlining the 5-line list would crowd the slide. Possible fix: a one-line comment such as '# alumnos viene de filtrar.py'.
+- **w10** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w10.es.yaml + en/w10.en.yaml` s21 lab
+  - The deliverable is a .py that 'carga el padrón en memoria' / 'loads the roll into memory'. If the roll is handed out as a CSV or text file, reading it needs file I/O, which is not taught until session 12.
+  - Evidencia: The w12 cover introduces files and CSV. The w10 block 3 divider says nothing touches the disk this week.
+  - Propuesta: Not changed. The wording is acceptable if the roll is given as a Python literal; the instructor should hand it out that way, or say so in the brief.
+- **w10** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w10.es.yaml` s3 objectives
+  - The Spanish objectives title says 'el alumno podrá…' in the third person, while the English says 'you will be able to'. The rest of the deck addresses the student as tú.
+  - Evidencia: grep shows all 22 Spanish decks of this course use the exact title 'Al terminar la sesión el alumno podrá…', so this is a course-wide convention.
+  - Propuesta: Not changed in one deck alone, since that would break course consistency. If wanted, change it in all es decks at once, for example to 'Al terminar la sesión podrás…'.
+- **w10** · auditoría · figure · low · `ppts/kit/figures.py (collections) / ppts/img/{es,en}/collections.png` s7 figure
+  - The '·' separators drawn between the four boxes come out in the handwriting font as tiny stray tick marks at mid height, which look like specks rather than separators.
+  - Evidencia: Viewed img/es/collections.png and img/en/collections.png. collections() calls p.text(x + bw + gap/2, y0 + 180, '·', 44, MUTED).
+  - Propuesta: Must be fixed in kit/figures.py collections(), for example by drawing a dot or removing the separators, then regenerating img. That file is outside this assignment.
+- **w10** · auditoría · figure · low · `ppts/kit/figures.py (reference_vs_copy) / ppts/img/{es,en}/reference-vs-copy.png` s20 figure
+  - The right panel shows 'copia = numeros.copy()' and then numeros [1, 2, 3] and copia [1, 2, 3, 4]. Right after a copy the two would be equal, so the append(4) that the drawing assumes is missing. The numbers also differ from this deck's quiz ([1, 2, 3, 4] plus append(5)), because the figure was made for w01.4.
+  - Evidencia: Viewed both PNGs. reference_vs_copy() hardcodes '[1, 2, 3]' and '[1, 2, 3, 4]' with no append line.
+  - Propuesta: Can only be fixed in kit/figures.py, for example by adding 'copia.append(4)' under each code header. The caption on slide 20 stays accurate either way.
+- **w11** · auditoría · figure · low · `ppts/kit/figures.py (exceptions, t['exc_expr'])` s7 figure
+  - The try box in the figure shows only `10 / edad` / `10 / age`, yet an arrow runs from it to `except ValueError`. That expression can only raise ZeroDivisionError. In slide 8 the ValueError comes from int(input(...)).
+  - Evidencia: Read the figure and slide 8's source: line 2 is int(input()), which raises ValueError, and line 3 is 10 / edad, which raises ZeroDivisionError.
+  - Propuesta: Fix in kit/figures.py, for example an exc_expr like 'int(...) / 10 / edad', or by showing both lines. Left as is.
+- **w11** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w11.es.yaml + en/w11.en.yaml` s10 code
+  - 'El finally… es donde se cierra lo que se abrió' sits next to code that closes the file in the else, not the finally. If read() raised, close() would be skipped. The Riesgo annotation explains why the close cannot simply move into the finally (NameError), so the slide holds together, but a careful reader may notice the tension.
+  - Evidencia: Ran leer_archivo.py and read_file.py with the file missing ('No existe el archivo' / 'Terminé de intentarlo') and with it present (contents, then the finally message). Ran the risky variant: at module level it raises NameError; inside a function it raises UnboundLocalError, which is a subclass of NameError. So the Riesgo claim holds.
+  - Propuesta: Author's design choice; w12 introduces with. Not changed.
+- **w11** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w11.es.yaml + en/w11.en.yaml` s14 compare (and 10 code)
+  - The compare slide uses pathlib methods (ruta.exists(), ruta.read_text()) on an undefined `ruta`, and slide 10 uses open(). Path and open are first taught in w12; nothing in w01.x to w10 covers them. These are demonstrations, not exercises. The lab's missing-file case relies only on open() and FileNotFoundError, which slide 10 itself shows.
+  - Evidencia: Searched es w01-w10 for open(, Path, pathlib and read_text: no hits. The w12 cover and agenda introduce Path and opening/closing files. Ran both compare snippets with the scaffold ruta = Path(argv[1]): both print 'No existe' when the file is missing and stay silent when it exists.
+  - Propuesta: Forward reference on demonstration slides only; left as is.
+- **w11** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w11.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú. The English deck says 'you'.
+  - Evidencia: Searched the course: all 22 es decks use exactly this title, so it is a course-wide convention, not a w11 slip.
+  - Propuesta: Not changed, to keep the course consistent. It is the instructor's call whether to switch every deck to 'podrás'.
+- **w11** · auditoría · description-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w11.es.yaml + en/w11.en.yaml` s21 lab
+  - The brief says the script reads grades 'desde la consola', but it must also survive 'un archivo que no existe'. This only makes sense if the console input includes a file name. Mildly ambiguous, not wrong.
+  - Evidencia: Read the lab brief. The script and the five test inputs it refers to are not in the repo.
+  - Propuesta: Left as is.
+- **w12** · auditoría · output-mismatch · low · `ppts/python/programacion-orientada-a-objetos/es/w12.es.yaml` s8 code_output
+  - The output panel shows datos\alumnos.csv with a backslash, which is the Windows output. On Linux, macOS or browser Python the first line prints datos/alumnos.csv. The panel does not say it is a Windows run. The English deck is the same (data\students.csv).
+  - Evidencia: On Linux python3 printed datos/alumnos.csv, alumnos.csv, .csv, datos. PureWindowsPath printed exactly the panel: datos\alumnos.csv, alumnos.csv, .csv, datos. The English deck matched the same way.
+  - Propuesta: Not a defect: the output is real for Windows, which the deck assumes elsewhere (newline/Windows notes), and the slide-7 title covers both systems. Optionally the instructor can say it is the Windows run.
+- **w12** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w12.es.yaml` s11 code
+  - 'Sin él Python usa el del sistema' (en: 'Without it Python uses the system default') holds for Python 3.12 to 3.14, which the course requires as a minimum (3.12+). PEP 686 makes UTF-8 the default in Python 3.15, so the claim may be outdated for students on 3.15. Pitfall 04 relies on the same premise.
+  - Evidencia: I could not verify this here: only Python 3.11 is installed and docs.python.org is blocked by the egress proxy. The claim is true for the Windows locale code page on 3.12 to 3.14. The advice to always pass encoding stays valid.
+  - Propuesta: Left unchanged. If 3.15 is allowed, consider 'antes de Python 3.15' / 'before Python 3.15'.
+- **w12** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w12.es.yaml` s18 quiz
+  - The quiz code opens files with open(ruta, "w") and read_text() and never passes an encoding. The lab and homework on the next slides require an encoding on every open.
+  - Evidencia: Ran the quiz code: it prints 'segunda' (en: 'second'), so option B is the only correct one. A matches append mode, C assumes w keeps the old content, and D is the x mode, so each distractor is a real confusion. There are no notes that state the answer. The answer is on trace slide 19.
+  - Propuesta: Not changed. The ASCII content makes the result independent of encoding, and the quiz is about modes. The instructor may add encoding="utf-8" for consistency.
+- **w12** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w12.es.yaml` s3 objectives
+  - The Spanish objectives title uses the third person ('el alumno podrá'), while the English says 'you will be able to'. The rest of the deck uses tú.
+  - Evidencia: grep shows the same title 'Al terminar la sesión el alumno podrá…' in all 22 Spanish decks of the course, so it is a course-wide convention and not specific to w12.
+  - Propuesta: Not changed. Changing it only in w12 would break consistency across the course. The instructor should decide this for every deck at once.
+- **w12** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w12.es.yaml` s1 cover
+  - Neither deck has speaker notes. The README says each lesson names its sources in the cover notes.
+  - Evidencia: grep -c notes: returns 0 for every deck in this course folder, es and en.
+  - Propuesta: Not changed, because writing notes would invent content. This is course-wide.
+- **w13** · auditoría · figure · low · `ppts/kit/figures.py (img/es/seek-tell.png, img/en/seek-tell.png)` s11 figure
+  - Known defect (instructor list): the seek-tell tape strikes out the 7, and in Spanish it reads 'HOLA MUNDO!!'. The fix belongs in kit/figures.py, not in the YAML.
+  - Evidencia: Viewed both PNGs and seek_tell() in kit/figures.py, read-only. The current committed files show no strike-out on the 7, the Spanish tape reads 'HOLA A TODOS', seek(7) lands before cell 7 and the figure shows tell() == 7. The defect appears already resolved in the kit. The alt text ('doce casillas numeradas...') matches the image.
+  - Propuesta: Not editable from my files. The kit side already looks fixed; nothing to change in the YAML.
+- **w13** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w13.es.yaml + en/w13.en.yaml` s18 tiers
+  - Known defect (instructor list): w08 s20 sends files, GUI and databases to the second midterm, while w13 s18 and w01.0 s07 say something else.
+  - Evidencia: w13 s18 (U4 + U5 in; GUI and DB out, assessed in the project and the final) agrees with w01.0 s07, the syllabus table: Parcial 2 = Unidades 4 y 5, Semana 13, 20 %; Proyecto has datos e interfaz; Final covers todas las unidades. The current, unmodified w08 s20 also agrees ('Funciones avanzadas y archivos, del segundo parcial; interfaces gráficas y bases de datos, del proyecto y el final'). w13 s22 (Semana 13, 20 %) agrees too.
+  - Propuesta: No change needed in w13. Its scope matches the syllabus.
+- **w13** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w13.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' uses the third person, while the rest of the deck uses tú and the English side says 'you will be able to'.
+  - Evidencia: This is the house formula across 145 Spanish decks in the repo, every week of this course included. Changing only w13 would break consistency with the rest of the course.
+  - Propuesta: Left as is. If the instructor wants tú here, the change should be made once across all courses.
+- **w13** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w13.es.yaml + en/w13.en.yaml` s19 method
+  - 'Qué practicar: Los laboratorios de las semanas 9, 11 y 12' skips the week-10 lab (collections, which is in U4). No lab covers binary files or seek, both of which slide 18 puts on the exam.
+  - Evidencia: Lab topics: w09 function splitting, w10 container choice, w11 exception hardening, w12 CSV report. Recommending a subset of labs is the author's choice, not a false claim.
+  - Propuesta: Not changed. Flagged for the instructor in case week 10 or a binary/seek drill should be added.
+- **w13** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w13.es.yaml + en/w13.en.yaml` s7 code
+  - The 'Riesgo' annotation says opening a binary in text mode raises UnicodeDecodeError or silently reads garbage. Strictly, open() does not raise; the read does. In the context of the code (open + read) the claim holds.
+  - Evidencia: Reading logo.png in text mode with utf-8 raises UnicodeDecodeError at byte 0x89. With latin-1 it silently returns '\x89PNG\n\x1a\n\x00' (CRLF translated). With cp1252 it fails on byte 0x8d. The binario.py/binary.py output is b'\x89PNG\r\n\x1a\n' and 8, as expected.
+  - Propuesta: Not a defect. Left as is.
+- **w14** · auditoría · code-wrong · low · `ppts/python/programacion-orientada-a-objetos/es/w14.es.yaml` s12 code
+  - controles.py builds widgets with no QApplication, so as a standalone file it aborts. It reads as a fragment, and slide 8 already established that QApplication comes first, so I left it.
+  - Evidencia: Run without an app: 'QWidget: Must construct a QApplication before a QWidget' and Aborted (exit 134). With one added line of scaffolding (QApplication([])) it prints an empty line, matching the 'Riesgo' annotation that text() returns ''.
+  - Propuesta: Not changed. It is a fragment, and fixing it would push the code card past its current size for no teaching gain. The instructor may add the app line if students will run it as-is.
+- **w14** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w14.es.yaml` s7 figure
+  - The caption 'Está dando vueltas, esperando el siguiente evento' (en: 'going around') could suggest a busy loop. Qt's event loop actually blocks in the OS wait while idle, and the figure itself says 'el programa no hace nada, solo espera'. This is defensible as a metaphor, so I left it.
+  - Evidencia: Compared the caption with the text in img/es/event-loop.png and img/en/event-loop.png. Both figures match their alt text.
+  - Propuesta: No change. Flagged for the instructor.
+- **w14** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w14.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person while the deck otherwise uses tú. The English uses 'you'.
+  - Evidencia: Across the repo, 145 es decks use exactly 'Al terminar la sesión el alumno podrá…', including every POO week. Only 7 use podrás or vas a poder.
+  - Propuesta: Not changed. It is the course-wide house formula, and changing one week would make it inconsistent with w01 to w17. If the instructor wants tú here, it needs a course-wide decision.
+- **w15** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w15.es.yaml + en/w15.en.yaml` s14 code
+  - The 'Línea 1' / 'Line 1' annotation says Registro does not import PyQt6. But the card shows Registro and Ventana(QMainWindow) in one file, integrar.py / integrating.py, and that file has to import PyQt6. Slides 12 and 20 tell students to keep the domain class in its own file and grep it for PyQt6 imports. A reader may see a contradiction.
+  - Evidencia: I split the code the way the lab asks: dominio.py with Registro, and ventana.py with Ventana plus both compare-slide slots. The test script imported Registro without loading any PyQt6 module (sys.modules check: False). alta('Al') raised 'Mínimo tres letras' and alta('Ana') stored ['Ana']. The line references 1, 7 and 12 are correct.
+  - Propuesta: Not a factual error, because the class itself references nothing from Qt. It is a display simplification. If the instructor wants it strict, the card's filename or a short caption could say the two classes live in separate files.
+- **w15** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w15.es.yaml + en/w15.en.yaml` s9 code
+  - The title and annotations say the button spans two rows and two columns. That is true of its grid cell. Without setSizePolicy, though, the button keeps its normal height and is centered vertically on the right side. The course source (05 - GUI/9th Module/Code042.py) adds button.setSizePolicy(Expanding, Expanding) for that reason, and the slide drops that line. A student who runs the slide code will not see a tall button.
+  - Evidencia: Offscreen run of rejilla.py inside a QMainWindow at 500x200: label (0,0,1,1) QRect(9,9,159,88), button (0,1,2,2) QRect(174,89,317,22), rowCount 2, columnCount 3.
+  - Propuesta: Left as is because the span claims are correct. The verdict on slide 19 now says 'its cell'. The instructor may mention the size policy aloud.
+- **w15** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w15.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck addresses the reader as tú.
+  - Evidencia: Counted objectives titles across ppts: 142 es decks use 'el alumno podrá…' and only 10 use 'podrás' or 'vas a poder'. It is the course-wide convention, and w14 and w16 use the same title.
+  - Propuesta: Not changed, so the deck stays consistent with the rest of the course. If the instructor wants pure tú, the change belongs in a course-wide pass ('Al terminar la sesión podrás…').
+- **w15** · auditoría · other · low · `ppts/python/programacion-orientada-a-objetos/es/w15.es.yaml + en/w15.en.yaml` s1 cover (whole deck)
+  - Neither deck has any speaker notes. ppts/README.md says each lesson names its sources in the cover speaker notes. Here those sources would be docs/en/courses/python-course/05 - GUI/9th Module/Code041.py to Code044.py.
+  - Evidencia: grep -c 'notes:' returns 0 for w13, w14, w15, w16 and w17 in both languages, so the gap is course-wide.
+  - Propuesta: Not added, because no deck in the course has notes and adding them is new content. Reported for the instructor.
+- **w16** · auditoría · language · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml` s3 objectives
+  - The Spanish objectives title says 'Al terminar la sesión el alumno podrá…' (third person), while the English says 'you will be able to…' and the rest of the Spanish deck addresses the student as tú.
+  - Evidencia: grep shows the same title in all 22 Spanish POO decks, so this is a course-wide convention.
+  - Propuesta: Not fixed, so the course stays consistent. If the instructor wants tú here ('Al terminar la sesión podrás…'), all 22 es decks need the change.
+- **w16** · auditoría · figure · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s7 figure
+  - The db-access figure has its own bottom note, 'el cursor no trae las filas, apunta a ellas y las entrega una por una'. The slide caption right under it says nearly the same thing, so the slide shows the sentence twice.
+  - Evidencia: Rendered s7 to PNG: both lines are visible, one above the other. The note comes from t['db_note'] in kit/figures.py db_access.
+  - Propuesta: Not fixed: the better fix is to drop or change db_note in ppts/kit/figures.py (db_access). Trimming the YAML caption would also work if the instructor prefers.
+- **w16** · auditoría · code-wrong · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s10 code
+  - crear.py only works if the datos/ folder already exists. Run a second time, it fails because CREATE TABLE IF NOT EXISTS makes the script look rerunnable but the INSERT reuses the same id.
+  - Evidencia: In an empty folder: sqlite3.OperationalError: unable to open database file. Second run: sqlite3.IntegrityError: UNIQUE constraint failed: Peliculas.id. w12/w13 use the same Path("datos") convention, which assumes the folder exists.
+  - Propuesta: Not fixed: it is a one-time setup script under the course's existing convention. The instructor may want to mention it in class.
+- **w16** · auditoría · technical-claim · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s8 table
+  - 'Buscar un registro: Contesta sin leer todo' is only true when the search column is indexed, such as the INTEGER PRIMARY KEY. A WHERE titulo = ? search in SQLite with no index still scans the whole table.
+  - Evidencia: This is how SQLite's query planner works. The concept slide's hedge ('el motor decide cómo llegar al dato') softens it.
+  - Propuesta: Left as an introductory simplification. Worth a verbal caveat.
+- **w16** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s16 method / 19 lab
+  - The method slide says persistence comes with 'las mismas clases guardando y recuperando su estado'. The lab says all SQL lives in one data-access class and the domain classes must run without importing sqlite3.
+  - Evidencia: The two can be reconciled: guardar/cargar can live in the data-access class. But a reader may take the method slide to mean the domain classes save themselves.
+  - Propuesta: Not changed. The texts are compatible.
+- **w16** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s21 homework
+  - w01.0 rule 03 says a project that does not run gets at most 30 %. In the w16 rubric, a project that does not run could still earn POO 20 + Buenas prácticas 10 + Reporte 30 = 60 %.
+  - Evidencia: w01.0.es line 179 against the w16 rubric. The 30 % cap equals the report weight, so it reads as an override rule.
+  - Propuesta: Not changed. The instructor may want the rubric to restate the cap.
+- **w16** · auditoría · pedagogy-order · low · `ppts/python/programacion-orientada-a-objetos/es/w16.es.yaml + en/w16.en.yaml` s17 quiz
+  - The quiz is the first slide to use cursor.fetchone() and SELECT COUNT(*). Earlier slides only iterate the cursor (s11) and call fetchall() (s12).
+  - Evidencia: grep across this deck and the earlier decks: no other occurrence of fetchone or COUNT. Both are readable from context, and the options show the (1,) tuple form.
+  - Propuesta: Not changed. Minor, and self-explanatory.
+- **w17** · auditoría · consistency · low · `ppts/python/programacion-orientada-a-objetos/es/w17.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' uses the third person while the rest of the deck addresses the student as tú, and the English says 'you will be able to'.
+  - Evidencia: grep over every es deck in this course: 21 of 22 objectives titles say 'el alumno podrá…' and only one says 'podrás…'. This is the course-wide convention, so changing it only here would make w17 the odd one out.
+  - Propuesta: Not changed. If the instructor wants tú here, it should change course-wide, which is outside this assignment.
+- **w17** · auditoría · quiz-key · low · `ppts/python/programacion-orientada-a-objetos/es/w17.es.yaml` s10 quiz / 11 trace
+  - The quiz checks out: option B (AttributeError) is the only defensible answer, A, C and D are plausible confusions, and slide 11 states the answer. The deck has no speaker notes, so there is no notes key to cross-check. No deck in this course has notes.
+  - Evidencia: I ran repaso.py and review.py: both raise AttributeError: 'Hija'/'Child' object has no attribute 'items'. With super().__init__() added, the output is 0. Hija() takes no arguments, so C (TypeError) is a real distractor and not a second answer. grep -c notes: returns 0 for all 44 YAML files in the course.
+  - Propuesta: No change needed. I did not add notes, because that would be inventing content.
+
+## Unity (AR móvil, Essentials, VR)
+
+86 entradas, de mayor a menor severidad.
+
+- **ar-mobile-w05** · auditoría · code-wrong · high · `ppts/kit/highlight.py (affects ppts/unity/ar-mobile/es/w05.es.yaml and en/w05.en.yaml)` s19 code
+  - The built slide shows `if (rp) rp.renderScale = small ? 0.f : 0.f;` while the YAML has `0.7f : 0.9f`. The kit's highlighter silently drops the digit before an f/F suffix in every C# float literal. Students see code with the wrong values.
+  - Evidencia: python-pptx read of the built es and en .pptx gives runs [' ', '0.', 'f ', ':', ' ', '0.', 'f', ';']. kit.highlight.highlight() on 'float g = 2f;' returns 'float g = f;', on '10.25f' returns '10.f', and on '1.5F' returns '1.F'. Cause: in kit/highlight.py `(?P<num>\b\d+\.?\d*\b)` (line 150 in _TOKEN_RE, used for csharp; the same pattern is at line 142 in _TOKEN_RE_C) backtracks to '0.' because no \b exists between '7' and 'f'. The leftover digit matches no alternative, so finditer skips it. A line-by-line comparison of every code/output line in both decks shows this is the only altered line in this deck.
+  - Propuesta: Not fixable in my YAML without rewriting correct code. Fix in ppts/kit/highlight.py: let the num group take a suffix, e.g. `\b\d+(?:\.\d+)?[fFdDmMuUlL]*\b`, or add a catch-all `(?P<text>.)` alternative so unmatched characters are never dropped. This likely affects every C# deck with float literals (Unity courses).
+- **essentials-w05** · auditoría · code-wrong · high · `ppts/unity/essentials/es/w05.es.yaml + ppts/unity/essentials/en/w05.en.yaml (defect lives in ppts/kit/highlight.py)` s8 code_output
+  - The built slide drops the digits of every C# float literal. The YAML says `float d = 10f;`, `* 0.5f *` and `2f * d`, but the .pptx shows `float d = f;`, `cam.fieldOfView * 0.f * Mathf.Deg2Rad;` and `float h = f * d * Mathf.Tan(half);`. That code does not compile and contradicts the output panel. Cause: in the committed kit/highlight.py, `_TOKEN_RE` has `num = \b\d+\.?\d*\b`, which cannot match a number followed by a letter, and `op = [^\sA-Za-z_0-9]` excludes digits. So `finditer` skips the digits without any warning. Hex `0x1F` and exponent `1e5` literals are hit the same way. This affects every deck with suffixed literals; Unity alone has 28 such lines, e.g. w04 `90f`.
+  - Evidencia: I read the shape text out of the built w05.es.pptx and w05.en.pptx with python-pptx and compared it line by line with the YAML source. Only these 3 lines of slide 8 differ, in both decks. I loaded `git show HEAD:ppts/kit/highlight.py` on its own and called highlight(): 'float d = 10f;' gives 'float d = f;', '0.5f' gives '0.f', '2f' gives 'f', '1e5' gives 'e5', '0x1F' gives 'x1F'. The contact-sheet preview shows the same broken lines.
+  - Propuesta: Not fixed: the defect is in ppts/kit/highlight.py, which I may not edit. Proposed fix: change the num group of _TOKEN_RE (and of the new _TOKEN_RE_C) to `\b0[xX][0-9A-Fa-f]+\b|\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?[fFdDmMuUlL]*\b`, and add a final catch-all `(?P<other>.)` so the tokenizer can never drop a character silently. The YAML code is correct and was left as written. A YAML workaround (`10`, `/ 2`, `2 * d`) would hide a bug that affects many other decks.
+- **ar-mobile-w02** · revisión · technical-claim · medium · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s17 table (rows 1 and 3); also 2 agenda, 3 objectives, 23 takeaways
+  - The deck treats 'flat color' (missing AR Background Renderer Feature) and 'black screen' (camera permission refused) as visually distinct failures. With the XR Origin (Mobile AR) camera's default black clear color, the missing feature also shows a black background behind the cube. Row 3 then sends the most common failure to the permissions fix. The agenda line 'Flat color, magenta and black are three different problems' and the objective 'Tell three broken screens apart' rest on the same distinction.
+  - Evidencia: XROriginCreateUtil.cs in AF 6.0.3 sets backgroundColor = Color.black. The permission-refused visual itself (whether the cube still renders, and the session state) could not be checked without a device.
+  - Propuesta: Not fixed. A correct rewrite needs a decision from the instructor, for example telling them apart by whether tracking works or by setting a non-black clear color in step 05, and needs device behavior I cannot verify. Reported for the instructor.
+- **ar-mobile-w02** · revisión · confirmado
+  - 17 table row 5: 'Content sunk / Objects outside the XR Origin / Reparent under XR Origin'
+  - Evidencia: I could not fully confirm it, and the evidence points to a wrong cause and fix. In core-utils 2.3.0, XROrigin's default CameraYOffset is 1.1176 and is applied whenever the tracking origin mode resolves to Device. The AF 6.0.3 menu-created origin keeps the defaults. Reparenting content under an XR Origin at identity does not move it, so the stated fix cannot cure a height offset. Whether ARCore reports Device mode needs the editor or a device, so I left it for the instructor rather than rewrite unverified.
+- **ar-mobile-w02** · revisión · confirmado
+  - 24 homework: repository with Library ignored, git never taught
+  - Evidencia: w01's homework is a screenshot of installed modules, and no ar-mobile deck teaches git or .gitignore. w03, w04 and w05 also require a repository, so the fix spans other decks or needs a stated prerequisite. This is for the instructor.
+- **essentials-w04** · revisión · confirmado
+  - w03 pitfalls Error 04: GetComponent null said to throw NRE (cross-deck)
+  - Evidencia: Outside my files. In the current working tree, w03.en and w03.es already say MissingComponentException, so the w03 owner appears to have handled it. Its wording ('names the method, not the lookup') belongs to that deck's reviewer.
+- **essentials-w05** · revisión · confirmado
+  - 1. Highlighter drops the digits of C# float literals on slide 8 (10f, 0.5f, 2f)
+  - Evidencia: I reproduced it. The kit/highlight.py in the working tree is unchanged from HEAD, and highlight() still turns 'float d = 10f;' into 'float d = f;', '0.5f' into '0.f', '2f' into 'f', '1e5' into 'e5' and '0x1F' into 'x1F'. I read the rebuilt w05.es.pptx and w05.en.pptx with python-pptx. Only the 3 literal lines of slide 8 differ from the YAML; every other code line on slides 8, 15, 16 and 21 matches. check.sh reports CLEAN even so, because no check catches dropped characters. The fix belongs in ppts/kit/highlight.py: the num group of _TOKEN_RE and _TOKEN_RE_C needs suffix, exponent and hex support, plus a catch-all group. The YAML C# is idiomatic and correct, so I left it alone. Severity stays high: until the kit is fixed, both decks show code that does not compile.
+- **essentials-w05** · revisión · confirmado
+  - 11. Slide 7 Priority cell gives a rule under the 'De fábrica' / 'The default' header
+  - Evidencia: The mismatch is real but minor, and no single default value is verifiable. In the URP scene templates in Unity-Technologies/Graphics 6000.3/staging, Basic.unity has the Main Camera at m_Depth -1 (FOV 60), while Standard.unity has m_Depth 0 (FOV 27). A new Camera component starts at 0. Putting one number in the cell could be wrong for the class scene, and the current cell keeps the useful rule. This needs an instructor decision.
+- **essentials-w05** · revisión · confirmado
+  - 12. 'Behavior and senses' inconsistent across EN decks
+  - Evidencia: It has since been resolved by other agents. All six EN Unity Essentials decks (w01 to w06) now say 'Behavior and senses', and all six ES decks say 'Conducta y sentidos'. Nothing is left to do.
+- **vr-w03** · auditoría · output-mismatch · medium · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s10 code_output
+  - 'Qué imprime el banco al cargar' shows four 'registrado ...' lines on entering Play mode. That only happens if BenchRegistry.OnEnable subscribes before the interactables' OnEnable registers them. XRI gives interactables an earlier execution order (k_Interactables = -98) than a user script (0), and even without that the order would be undefined. A real load could print nothing. The deck itself warns that load order shows up as bugs.
+  - Evidencia: XRI 3.5 docs (Context7): XRInteractionUpdateOrder.k_Interactables = -98 and XRInteractionManager is [DefaultExecutionOrder(-105)]. Unity's own InteractableRegisteredEventArgs sample says that components created before subscribing 'the initial register callback will not be logged'. In my stub run, subscribing after registration printed nothing, and subscribing first printed exactly the slide's four lines (the format string is correct).
+  - Propuesta: Not fixed: I cannot confirm this without running Unity, and the fix changes the code. Options for the instructor: add [DefaultExecutionOrder(-106)] to BenchRegistry, or iterate manager.GetRegisteredInteractables in OnEnable, or relabel the output as what prints when objects are toggled after load.
+- **vr-w05** · auditoría · consistency · medium · `ppts/unity/vr/es/w05.es.yaml + ppts/unity/vr/en/w05.en.yaml` s24 trace
+  - The trace says 'same scene, same task' and gives the device's first-run main thread as 14.2 ms, which goes to 11.8 ms after one change. Elsewhere the deck gives other numbers for the same bench. Slide 15 says the run averaged 8.1 ms with only 4 of 600 frames late. Slide 21 says the change took the main thread from 8.1 to 7.4 ms. Slide 14's worst frame is 21.4, not 14.2. The cover notes say all millisecond figures came from this bench, so a student cannot reconcile them.
+  - Evidencia: Cross-read slides 14, 15, 21 and 24. Within the table, 14.2 minus 13.9 equals 0.3, so the row's own arithmetic is right. No single statistic (average, worst frame, typical frame) makes all four slides agree.
+  - Propuesta: Not changed, because fixing it would mean inventing measurements. The instructor needs to say which statistic the 'Hilo principal' column shows and supply matching bench numbers, or mark the trace as a separate illustrative run.
+- **ar-mobile-w01** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w01.es.yaml + ppts/unity/ar-mobile/en/w01.en.yaml` s17 code
+  - Two annotations simplify, and an expert reader may question them. 'Riesgo' says that reading the descriptor too early gives a null reference 'and a working device looks unsupported'; as written, the code throws a NullReferenceException at line 10 instead of reporting false. 'Cuándo llamarlo' / 'When to call it' says there is nothing to describe 'until the session starts'; in fact the descriptor exists once the manager's OnEnable has run with an active XR loader, before ARSession reaches Ready. I judged both not to be defects: the advice (not from Awake) is correct.
+  - Evidencia: SubsystemLifecycleManager.cs 6.0.3: 'public TSubsystemDescriptor descriptor => subsystem?.subsystemDescriptor;', set by EnsureSubsystemInstanceSet() in OnEnable. Stub run: ReportOnce prints 'h=True v=True' with ARCore's registered flags, and throws NullReferenceException with a null descriptor.
+  - Propuesta: Left as is. The guidance is sound and both annotations fit the available space.
+- **ar-mobile-w01** · auditoría · output-mismatch · low · `ppts/unity/ar-mobile/es/w01.es.yaml + ppts/unity/ar-mobile/en/w01.en.yaml` s18 code_output
+  - Two things a strict reader may notice. (1) The panel contains device header lines ('teléfono con ARCore' / 'phone with ARCore') that the code does not print; output_label 'Dos equipos' / 'Two devices' frames them as labels. (2) If the AR Session component is enabled in the scene, its own Initialize coroutine calls StartSubsystem right after Ready, and ARSession.Update then sets SessionInitializing. Depending on coroutine order, this script can log 'state SessionInitializing' on the ARCore phone. The shown output assumes the documented pattern, with the session disabled until the check finishes.
+  - Evidencia: ARSession.cs 6.0.3: OnEnable starts Initialize(), which calls CheckAvailability and then StartSubsystem; Update sets state to SessionInitializing or SessionTracking while the subsystem is running.
+  - Propuesta: Not changed. The output is correct for the documented setup and the labels are a deck-wide convention. The scene assumption could go in speaker notes if the instructor wants it.
+- **ar-mobile-w02** · auditoría · language · low · `ppts/unity/ar-mobile/es/w02.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: 147 Spanish decks in the repo use this exact title, including unity ar-mobile w01 and w03 to w05. The only 5 that use 'vas a poder' are VBA w13 to w17, which the instructor's known-defects list names as the inconsistent ones.
+  - Propuesta: Not changed. This is the house convention for Spanish objective titles, and changing one week would break consistency with w01 and w03 to w05.
+- **ar-mobile-w02** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s19 pitfalls (Error/Mistake 03)
+  - 'Backend Mono con ARM64 marcado: la compilación falla antes de compilar... a dos renglones uno del otro'. The ARCore plug-in itself does not fail this build. Its IL2CPP+ARM64 validation rule has Error = false (a warning only), and ARCoreBuildProcessor.Check64BitArch only calls Debug.LogWarning under Mono. A failure would have to come from Unity rejecting a Mono build whose only selected architecture is ARM64. The 'two rows apart' layout detail could not be checked.
+  - Evidencia: ARCoreProjectValidationRules.cs and ARCoreBuildProcessor.cs from com.unity.xr.arcore 6.0.3. The docs say 'The Mono backend does not support ARM64'.
+  - Propuesta: Left as is. I cannot run the Unity editor to confirm or refute the build failure, so the instructor should check this with Unity 6.
+- **ar-mobile-w02** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s17 table (row 5)
+  - 'Contenido hundido / Objetos fuera del XR Origin / Cuélgalos del XR Origin'. If the XR Origin sits at identity, reparenting an object under it does not change the object's world position. Whether content 'sinks' depends on the XR Origin's Camera Y Offset in Mobile AR mode, which I could not confirm.
+  - Evidencia: The AR Foundation 6.0.3 managers doc says trackables are children of the XR Origin, but nothing there covers scene content placed outside it. The changelog shows XROrigin applies CameraYOffset in Device mode.
+  - Propuesta: Left as is because I could not verify it. Flagged for the instructor.
+- **ar-mobile-w02** · auditoría · quiz-key · low · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s20 quiz / 21 trace
+  - No slide except the cover has speaker notes, so the quiz has no stated answer key. The answer is only implied by the trace slide that follows (option A, the AR Background Renderer Feature).
+  - Evidencia: Checked by hand: A is the only defensible answer. B (no AR Session) and C (ARCore not installed) contradict 'tracking works'. D (unconverted materials) would cause magenta objects, not a gray background. The trace verdict agrees with A.
+  - Propuesta: No change. Writing notes would mean inventing content; the key is consistent as it stands.
+- **ar-mobile-w02** · auditoría · pedagogy-order · low · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s24 homework
+  - The homework asks students to push the project to a repository with Library ignored. No deck in this five-session course teaches git or .gitignore.
+  - Evidencia: grep for repositorio/git/Library in unity/ar-mobile w01 and w03: only w03 reuses 'repositorio' as a format. It is presumably a course prerequisite.
+  - Propuesta: No change. This is a prerequisite question for the instructor.
+- **ar-mobile-w02** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w02.es.yaml + ppts/unity/ar-mobile/en/w02.en.yaml` s13 steps
+  - 'Cada error trae un botón que escribe el ajuste por ti' / 'Each error carries a button that writes the setting for you'. The ARCore docs say some rules have an Edit button instead of Fix.
+  - Evidencia: In ARCore 6.0.3, all four Android rules define FixIt. Three write the setting; the Gradle rule's FixIt only opens Preferences. In practice the claim holds for the settings this deck covers.
+  - Propuesta: Not changed. It is accurate for the API level, OpenGLES3 and IL2CPP/ARM64 rules the slide refers to.
+- **ar-mobile-w03** · auditoría · language · low · `ppts/unity/ar-mobile/es/w03.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' uses the third person, while the rest of the deck uses tú and the en side says 'you will be able to'.
+  - Evidencia: Grep across ppts/: 147 Spanish decks use exactly this formula, all five weeks of this course included, and only 5 use 'vas a poder…'. Changing one week would break consistency inside the course, so this is the instructor's call.
+  - Propuesta: Not changed. If the instructor wants tú here, it should change course-wide, not in w03 alone.
+- **ar-mobile-w03** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w03.es.yaml` s19 stat and 22 trace (verdict); same in en
+  - 'El rastreador no puede medir tu pantalla. Le cree a la biblioteca' / 'It believes the library'. This is true for ARKit. The course builds to Android/ARCore, and Google's ARCore docs say ARCore estimates the image's physical width itself; a specified width only makes that faster, and the estimate may differ from it. On ARCore the error may therefore shrink over time instead of staying fixed at 2x.
+  - Evidencia: From my knowledge of the ARCore AugmentedImageDatabase.addImage(widthInMeters) documentation. I could not test on a device here.
+  - Propuesta: Not changed: it is a simplification that teaches the right habit (measure the screen). The instructor should confirm on an ARCore phone whether a hedge belongs in the speaker notes.
+- **ar-mobile-w03** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w03.es.yaml` s14 code (same in en)
+  - The Riesgo annotation says 'Con un false la lista conserva lo viejo'. I recall from memory (not checked here) that ARRaycastManager clears the list before filling it, so a no-hit false would leave it empty; only the early return with no subsystem keeps old contents.
+  - Evidencia: The Scripting API contract for hitResults says 'Contents are replaced with the raycast results, if successful', which matches the slide, and the advice 'read only after a true' is correct either way.
+  - Propuesta: Not a defect against the documented contract. Left unchanged.
+- **ar-mobile-w03** · auditoría · pedagogy-order · low · `ppts/unity/ar-mobile/es/w03.es.yaml` s9 code (same in en)
+  - PlaneLog shows only OnEnable/AddListener, while its Riesgo annotation tells you to remove the listener in OnDisable. The code on screen therefore has the bug it warns about.
+  - Evidencia: Compiled it: 0 errors. The only warnings are CS0649 on [SerializeField] fields, which Unity's analyzers suppress. The pattern of showing the risk and naming it in the accent annotation is used across the course.
+  - Propuesta: Intentional teaching pattern. Left unchanged.
+- **ar-mobile-w04** · auditoría · language · low · `ppts/unity/ar-mobile/es/w04.es.yaml` s3 objectives (title)
+  - The ES title 'Al terminar la sesión el alumno podrá…' uses third person, while EN says 'you will be able to' and the rest of the ES deck uses tú.
+  - Evidencia: grep over ppts/: 147 Spanish decks use 'el alumno podrá…', 5 use 'vas a poder…'. All Unity es decks, w01 to w05 included, use 'el alumno podrá'. This is the house-wide convention, so changing one deck would break consistency with its neighbours.
+  - Propuesta: Not changed. If the instructor wants tú here, it should change in every deck at once, not only in w04.
+- **ar-mobile-w04** · auditoría · description-mismatch · low · `ppts/unity/ar-mobile/es/w04.es.yaml, ppts/unity/ar-mobile/en/w04.en.yaml` s26 homework
+  - The brief and title ask for an over-heavy scene for session 5, but the rubric grades only Graph, Seam and Pathway, so the heavy scene itself is ungraded.
+  - Evidencia: Pattern check: in w02 and w03 the rubric grades the repository state from that week, so this follows the same convention. Still, the stated ask has no rubric line.
+  - Propuesta: Left for the instructor. Adding a rubric line or changing the brief would invent content.
+- **ar-mobile-w04** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w04.es.yaml, ppts/unity/ar-mobile/en/w04.en.yaml` s18 table
+  - The 'ARRaycastManager | Type Options | Para que sus métodos sean nodos' rationale is doubtful. In Visual Scripting, member nodes are generated from the types in Node Library assemblies. Type Options mainly controls the types offered in type pickers and variable/port types. The steps on slide 17 (add types after the assembly, then regenerate) do match the manual.
+  - Evidencia: Checked against my knowledge of the VS 1.9 configuration pages and the Bolt/VS codebase. I could not run the Unity Editor to confirm which list makes the Raycast node appear.
+  - Propuesta: Not changed, because the claim cannot be verified here. Worth checking in the Editor.
+- **ar-mobile-w04** · auditoría · technical-claim · low · `ppts/unity/ar-mobile/es/w04.es.yaml, ppts/unity/ar-mobile/en/w04.en.yaml` s15 pitfalls (Error 03), 26 homework
+  - 'sesenta veces por segundo' and 'una escena que ya corre a sesenta' assume 60 fps. On Android, Unity's default targetFrameRate (-1) renders at 30 fps, and ARSession 'Match Frame Rate' follows the ARCore camera, typically 30.
+  - Evidencia: Application.targetFrameRate docs: on mobile the default is typically 30 fps. w05 itself discusses both 30 and 60 fps budgets.
+  - Propuesta: Read as an illustrative figure that matches the w05 60 fps budget slide, so I left it unchanged.
+- **ar-mobile-w05** · auditoría · trace · low · `ppts/unity/ar-mobile/es/w05.es.yaml; ppts/unity/ar-mobile/en/w05.en.yaml` s21 trace
+  - 'Frame mostrado 22 ms, Como 45 fps' is the naive 1000/22. Android enforces vsync, so a steady 22 ms frame on a 60 Hz panel is shown as an uneven mix of 16.7 and 33.3 ms intervals (about 45 average with triple buffering) or a locked 30 with frame pacing. 'Como/About 45' is defensible as an average, so I left it.
+  - Evidencia: 1000/22 = 45.5. The Unity manual says Android/iOS enforce VSync.
+  - Propuesta: Left unchanged. The instructor could add 'en promedio' or mention judder in the notes.
+- **ar-mobile-w05** · auditoría · language · low · `ppts/unity/ar-mobile/es/w05.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú (and EN says 'you will be able to').
+  - Evidencia: The same title appears in all 5 ar-mobile es decks and about 145 es decks repo-wide. It is the house formula, so changing one deck would break course consistency.
+  - Propuesta: Not changed. If the instructor wants tú here, it should change repo-wide (e.g. 'Al terminar la sesión podrás…').
+- **essentials-w01** · auditoría · language · low · `ppts/unity/essentials/es/w01.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person, while the rest of the deck uses tú.
+  - Evidencia: grep across ppts: 140 Spanish decks use exactly this title, including all six es weeks of this course. Only 8 use 'podrás…'. The instructor's known list counts a changed objectives title between weeks as a defect (VBA w13 to w17).
+  - Propuesta: Not changed. Changing only w01 would make it differ from w02 to w06 of the same course. If the instructor wants tú here, it should change course-wide ('Al terminar la sesión podrás…').
+- **essentials-w01** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s10 stat, 24 takeaways
+  - 'Las otras cuatro se reconstruyen a partir de ellas' / 'The other four are rebuilt from them', and the takeaway 'lo demás es un caché'. Only Library is derived from Assets, Packages and ProjectSettings. Logs and Temp are scratch output, and UserSettings is recreated with defaults, so personal layouts are lost.
+  - Evidencia: Unity folder semantics. The practical conclusion (a clone of the three folders opens and runs) is still true.
+  - Propuesta: Left as a deliberate simplification; the instructor can say 'Unity las vuelve a crear' if they want precision.
+- **essentials-w01** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s10 stat (note)
+  - 'una carpeta obj se les une la primera vez que compila un script' / 'an obj folder joins them the first time a script compiles'. As far as I know, Unity compiles through Bee into Library/Bee and Library/ScriptAssemblies. The root obj/ folder comes from the IDE (Visual Studio, VS Code C# Dev Kit, Rider) running MSBuild on the generated .csproj, not from Unity's compile.
+  - Evidencia: Could not run Unity here. Unity's standard .gitignore lists /[Oo]bj/ because of IDE output. In practice it appears when the student opens the script in an IDE, so the observation still holds loosely.
+  - Propuesta: Not changed. Unverifiable without a Unity install; flagged for the instructor.
+- **essentials-w01** · auditoría · output-mismatch · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s20 code_output, 19 code (rootCount annotation)
+  - 'objetos 2' / 'objects 2' and 'A new 3D scene has two, camera and light' depend on which scene the student saves as Bay. The Basic (URP) scene template has a camera and a light (2). The Standard (URP) template adds a Global Volume (3), and the Universal 3D template's SampleScene may include one too.
+  - Evidencia: Compiled the slide's SceneCheck.cs with .NET 10 against minimal UnityEngine stubs: 0 warnings. Run, its output is byte-identical to the panel in both languages, three lines aligned at column 9. Lines 8 to 11 of the code card match the code_output fragment exactly. The real values (version string, scene name, root count) need the Unity runtime.
+  - Propuesta: Code and format verified. The count of 2 cannot be verified here; the instructor should confirm it against the scene the lab produces.
+- **essentials-w01** · auditoría · description-mismatch · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s2 agenda
+  - The four agenda cards cover Blocks 01 and 02. Block 03 (first project, the SceneCheck receipt, quiz and lab) has no card.
+  - Evidencia: Divider at slide 18 and slides 19 to 23. The agenda layout holds four cards, and the cards map to the two pathway areas.
+  - Propuesta: Not changed. The deck frames the script as a receipt that session 4 explains, and adding a card would mean restructuring the agenda.
+- **essentials-w01** · auditoría · pedagogy-order · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s23 lab
+  - The lab asks the student to create a C# script and attach it to the Main Camera. Adding a component is not shown in this deck (components arrive in sessions 2 and 3), although the file path and the code are given on slide 19.
+  - Evidencia: grep over w01: no Add Component or drag-onto-object instruction. The roadmap puts components in sessions 2 and 3, and w04 explains the script.
+  - Propuesta: Not changed. It is a one-step action presumably demonstrated live in Block 03; the instructor could add a speaker note.
+- **essentials-w01** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s23 lab, 8 steps
+  - 'con Windows Build Support marcado' / 'Windows Build Support checked'. On a Windows host, Windows (Mono) build support ships with the editor, and the only optional Windows module is 'Windows Build Support (IL2CPP)', which also needs the C++ toolchain. On macOS the checkbox is 'Windows Build Support (Mono)'.
+  - Evidencia: Unity Hub module list as I know it. Could not run the Hub here.
+  - Propuesta: Not changed. The instructor should confirm which module the lab machines need.
+- **essentials-w01** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s7 steps
+  - The '6000' item is titled 'La línea del año' / 'The year line', which suggests 6000 is a year. Unity calls it the major version (Unity 6 = 6000), which took over the slot of the year-based numbering.
+  - Evidencia: The item desc already says 'Unity 6 numera sus entregas desde 6000, así que una lista de versiones ordena después de 2023', so the slide corrects itself.
+  - Propuesta: Not changed. 'El mayor' / 'The major' would sit alongside 'El menor'; left to the instructor.
+- **essentials-w01** · auditoría · quiz-key · low · `ppts/unity/essentials/es/w01.es.yaml + ppts/unity/essentials/en/w01.en.yaml` s21 quiz
+  - The quiz has no speaker notes explaining the distractors. The answer is given on the following method slide.
+  - Evidencia: Method slide 22: 'La segunda' / 'The second one' matches option B, the only defensible answer. A (Inspector equals saved), C (Library as a store) and D (version control saves edits) are each a plausible misconception that is wrong. Both languages agree.
+  - Propuesta: Key verified; nothing to fix.
+- **essentials-w01** · auditoría · consistency · low · `ppts/unity/essentials/en/w02.en.yaml, ppts/unity/essentials/en/w03.en.yaml (out of scope)` s4 roadmap and others
+  - Other weeks of the same course have the same British spellings I fixed in w01: roadmap 'Behaviour and senses' (w04 to w06 say 'Behavior'), plus 'grey', 'recolour', 'Recolour.cs', 'ticked' and 'unticked' in w02 and w03.
+  - Evidencia: grep over ppts/unity/essentials/en: w02 lines 69, 291, 307, 326 and 329; w03 lines 105, 112, 220, 221, 245, 263 and 361; roadmap title in w02 and w03.
+  - Propuesta: Not my files. These must be fixed in en/w02.en.yaml and en/w03.en.yaml, and the roadmap title in both.
+- **essentials-w02** · auditoría · language · low · `ppts/unity/essentials/es/w02.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú, while en says 'you will be able to'.
+  - Evidencia: This exact title appears in 137 Spanish decks repo-wide (13 use 'podrás'), and in unity w01 and w03. It is a course-wide convention.
+  - Propuesta: Left as is. Changing one deck would break consistency with the course; the instructor should decide repo-wide.
+- **essentials-w02** · auditoría · description-mismatch · low · `ppts/unity/essentials/es/w02.es.yaml, ppts/unity/essentials/en/w02.en.yaml` s1 cover
+  - The subtitle 'Tres números colocan cada objeto...' / 'Three numbers place every object' means the three Transform rows (nine numbers). 'Uno de los tres' refers to scale.
+  - Evidencia: Read against the slide 10 divider ('Tres renglones del Inspector').
+  - Propuesta: Left as is. It reads as an authorial hook, not a factual claim.
+- **essentials-w02** · auditoría · other · low · `ppts/unity/essentials/es/w02.es.yaml, ppts/unity/essentials/en/w02.en.yaml` s8 steps
+  - The ramp (Cube, length 12, at y = 1, tilted 18 degrees) has its low end 1 - 6*sin18 = -0.85 m, about 2.8 m of its length below the floor plane at y = 0. The high end is at 2.85 m.
+  - Evidencia: trs.py geometry check.
+  - Propuesta: Not changed. A ramp that comes up out of the floor is a plausible design choice, and w03 depends on these numbers.
+- **essentials-w02** · auditoría · quiz-key · low · `ppts/unity/essentials/es/w02.es.yaml, ppts/unity/essentials/en/w02.en.yaml` s20 quiz
+  - The quiz has no speaker notes. The answer ('La segunda' / 'The second one') is on the method slide that follows, which is consistent. Option B is the only defensible one. A and D are the sharedMaterial confusion (addressed on slide 21), and C is the save-the-scene confusion.
+  - Evidencia: Every unity essentials deck carries notes only on the cover. es and en options match one for one.
+  - Propuesta: No defect; nothing changed.
+- **essentials-w02** · auditoría · other · low · `/opt/audit-templates/check.sh` sn/a
+  - check.sh resolves relative paths against the repo root. A path given relative to ppts/ falls back to realpath of $1, so the second deck is silently replaced by the first and never checked. My first run printed the es deck twice and reported CLEAN.
+  - Evidencia: Running check.sh with 'unity/essentials/es/... unity/essentials/en/...' printed '### unity/essentials/es/w02.es.yaml' twice. Absolute paths check both.
+  - Propuesta: Outside my files. Other agents should pass absolute or repo-root-relative paths.
+- **essentials-w03** · auditoría · code-wrong · low · `ppts/unity/essentials/es/w03.es.yaml` s12 code_output
+  - steps = (int)(t / Time.fixedDeltaTime) truncates. The panel shows 32 only if Time.time at contact is exactly 32*0.02f. If the time base accumulated in float, t = 0.6399999 and the cast gives 31. Unity keeps time in double internally (fixedTimeAsDouble), so 32 is what Unity should print, but the code is fragile. Math.RoundToInt would be robust.
+  - Evidencia: Compiled the verbatim es and en fragments with a UnityEngine stub (.NET 10, no warnings). Simulated semi-implicit Euler with g=9.81 and dt=0.02: first penetration at step 32 (theory 0.6386 s = 31.93 steps). Time accumulated in double: output 'altura de caída 2.00 m / primer contacto 0.64 s / pasos fijos 32' (en same), which matches the panel. Float accumulation: t=0.6399999, steps=31.
+  - Propuesta: Not changed: the panel matches what Unity's double time base produces. Reported as a robustness caveat.
+- **essentials-w03** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w03.es.yaml` s14 code
+  - The attachedRigidbody annotation says the guard makes the floor be ignored ('así que el piso se ignora'). With the door as a plain static trigger, which the 'En la puerta' annotation says it is, the floor never reaches OnTriggerEnter: the Riesgo annotation on the same slide and the pairing table say so. The claim is true but gives the guard credit for what the engine already does. The same applies to the en deck.
+  - Evidencia: Unity collision action matrix: static collider vs static trigger collider sends no trigger messages. Ran BayDoor (es and en) with stubs: an entry without a Rigidbody is skipped, and entries with a Rigidbody print 'caja 1/2/3 en la puerta' / 'crate 1/2 at the door'.
+  - Propuesta: Left as is: not false, and it acts as a defensive guard that w04 keeps. Flagged for the instructor.
+- **essentials-w03** · auditoría · other · low · `ppts/unity/essentials/es/w03.es.yaml` s22 method
+  - The title 'La segunda, y cuesta unos cuatro segundos' contains a time span, which a reader could take for a breach of the no-durations rule.
+  - Evidencia: It is the time a fix takes (one checkbox), not session timing. The rule targets minutes per activity.
+  - Propuesta: Not a defect; left unchanged.
+- **essentials-w03** · auditoría · language · low · `ppts/unity/essentials/es/w03.es.yaml` s3 objectives
+  - The objectives title uses the third person 'el alumno podrá…' while the rest of the deck uses tú and the en deck says 'you will be able to'.
+  - Evidencia: 131 Spanish decks across ppts/ use 'Al terminar la sesión el alumno podrá…', as do all six Unity Essentials weeks. It is the house formula, not a register slip.
+  - Propuesta: Not changed, to keep it consistent with the course and the house formula.
+- **essentials-w04** · auditoría · trace · low · `ppts/unity/essentials/es/w04.es.yaml` s14 trace (also en 14)
+  - The trace itself is correct. The verdict's 'Quita la revisión de closed y la puerta cuenta hasta diecisiete' is hyperbole: without the check it keeps counting every crate, and the lab drops only four. A reader may ask why seventeen.
+  - Evidencia: Ran BayDoor.cs verbatim with a UnityEngine stub. One floor collider without a Rigidbody is ignored. Crates 1 to 3 print 1/3 closed=False, 2/3 closed=False, 3/3 closed=True, and crate 4 prints nothing with state crates=3 closed=True, which matches all four trace rows and the slide 13 output exactly. With the closed check removed it printed 4/3 … 17/3 closed=True for 17 crates.
+  - Propuesta: Left as the author's rhetorical voice. It is not a factual error about the code.
+- **essentials-w04** · auditoría · output-mismatch · low · `ppts/unity/essentials/es/w04.es.yaml` s9 code_output; 22 code_output (also en)
+  - Both panels are labeled 'Medido', but they show idealized numbers: exactly 60/30 frames in one second and a constant deltaTime. A real Unity run varies by a frame or so. The logging code for Drift is not shown.
+  - Evidencia: Simulated with dt=1/60 and 1/30: naive 2.9999983 / 1.4999996 and scaled 2.9999983 / 2.9999993, which give 3.00 / 1.50 / 3.00 / 3.00 with F2, matching the panel. Mover over 60 frames: 'frames 60', 'z 120.0' (F1), matching. Spinner: 90.00 degrees per second at both rates and 5400 without deltaTime at 60 fps, matching the Risk annotation.
+  - Propuesta: No change. The values equal what the code produces under the stated frame rates.
+- **essentials-w04** · auditoría · quiz-key · low · `ppts/unity/essentials/es/w04.es.yaml` s21 quiz (also en 21)
+  - The quiz has no speaker notes stating the answer or what each distractor represents. The answer is given by the next slide ('Dos metros por cuadro…', which is option B).
+  - Evidencia: Option B (120 m) is the only defensible answer: Translate(0,0,2) per Update at 60 fps reached z = 120 in the harness. A (2 m) ignores per-frame calls, C wrongly ties Translate to a Rigidbody, and D is false because the code compiles without deltaTime (verified). The deck has no notes on any slide except the cover.
+  - Propuesta: Not changed. Adding notes would be inventing content, and the quiz itself is sound.
+- **essentials-w04** · auditoría · language · low · `ppts/unity/essentials/es/w04.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú, while en says 'you will be able to'.
+  - Evidencia: grep across ppts: 147 Spanish decks use exactly 'Al terminar la sesión el alumno podrá…', including all six Unity Essentials weeks, so it is the house formula.
+  - Propuesta: Left as is. Changing one deck would break consistency across all decks. Flagged for the instructor.
+- **essentials-w04** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w04.es.yaml` s12 code (also en 12)
+  - The Risk annotation says 'sólo Reset sobre el componente lo limpia'. Reset is the usual route, but removing and re-adding the component, or for a prefab instance reverting the override, also restores the initializer. 'sólo' slightly overstates it.
+  - Evidencia: Unity serialization semantics (from knowledge). The rest of the annotation is correct: the serialized 3 overrides a changed initializer.
+  - Propuesta: Not changed. A minor overstatement in the author's voice.
+- **essentials-w04** · auditoría · consistency · low · `ppts/unity/essentials/es/w03.es.yaml` sw03 pitfalls Error 04 (also w03.en)
+  - Related claim in another deck: w03 says that using the null returned by a missing GetComponent throws NullReferenceException. In the editor, GetComponent<T>() returns a fake null, and using it throws MissingComponentException ('There is no 'X' attached to the 'Y' game object…'). That is the same editor fake-null mechanism behind the w04 slide 16/19 fix.
+  - Evidencia: Unity editor behavior from knowledge (it is also why GetComponent allocates in the editor when the component is missing). Not executable here.
+  - Propuesta: Outside my assignment. Must be checked and fixed in ppts/unity/essentials/es/w03.es.yaml and en/w03.en.yaml by that deck's owner.
+- **essentials-w04** · revisión · code-wrong · low · `ppts/unity/essentials/es/w04.es.yaml` s12 code (also en 12)
+  - BayDoor.cs is shown as a complete class from `public class BayDoor : MonoBehaviour` to the closing brace, but without `using UnityEngine;`. Slide 7 of the same deck says that without that line none of MonoBehaviour, Time or Debug resolve. If a student copies the slide verbatim into an empty file, they get CS0246.
+  - Evidencia: I compiled the class without the using line against a UnityEngine stub: error CS0246 'The type or namespace name 'MonoBehaviour' could not be found'. With the line, it compiles and reproduces the slide 13 and slide 14 output. On a scratch copy, I added `using UnityEngine;` plus a blank line. kit lint reported 'slide 12 code.source: 15 rows, cap 13.9', and the panel crossed the footer rule. Even without the blank line it would be 14 non-blank rows, over the cap. The code card is already at the 18 pt floor.
+  - Propuesta: Not changed. The using line does not fit unless the example is split or the code is restyled. The impact is small: the lab tells students to extend the BayDoor.cs from session 3, and that file (w03 slide, same filename) already starts with `using UnityEngine;`. If the instructor wants it, the fix is to split the slide or move the using line into the speaker notes.
+- **essentials-w05** · auditoría · description-mismatch · low · `ppts/unity/essentials/es/w05.es.yaml + ppts/unity/essentials/en/w05.en.yaml` s7 table (row Priority)
+  - The third column is headed 'De fábrica' / 'The default', but the Priority row holds a rule ('La mayor dibuja al final' / 'The higher one draws last') rather than a default value.
+  - Evidencia: From memory of Unity scene files: the Main Camera of a new scene has m_Depth -1, which URP shows as Priority, and GameObject > Camera creates a camera with 0. The URP package source is not in UnityCsReference, so I could not confirm the URP template's value here.
+  - Propuesta: Left as is because I could not verify the default. If the instructor confirms it, the cell could read '-1 en la Main Camera' / '-1 on the Main Camera'.
+- **essentials-w05** · auditoría · consistency · low · `ppts/unity/essentials/en/w05.en.yaml (other decks: en/w01, w02, w03, w06)` s4 roadmap
+  - After the American English fix, this deck's phase 3 reads 'Behavior and senses', the same as w04.en (already changed by another agent). en/w01, w02, w03 and w06 still say 'Behaviour and senses', so the course map is inconsistent across sessions until those decks are fixed.
+  - Evidencia: grep 'Behaviour and senses|Behavior and senses' en/*.yaml: w01, w02, w03 and w06 say Behaviour; w04 and w05 say Behavior.
+  - Propuesta: Must be fixed in en/w01, w02, w03 and w06 (not my files).
+- **essentials-w05** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w05.es.yaml + ppts/unity/essentials/en/w05.en.yaml` s23 method (statement)
+  - 'Arreglar el blend es lo que hace que los otros cinco existan' could be read as the other five rows of the slide 13 table, which would include Play On Awake and Loop, and those work without Spatial Blend. Not a defect: the 3D Sound Settings foldout has exactly five fields (Doppler Level, Spread, Volume Rolloff, Min Distance, Max Distance), and Spatial Blend 0 disables all of them.
+  - Evidencia: AudioSourceInspector.Audio3DGUI() at 6000.3.7f1 draws exactly those five controls.
+  - Propuesta: No change; the statement is correct.
+- **essentials-w05** · auditoría · language · low · `ppts/unity/essentials/es/w05.es.yaml` s3 objectives (title)
+  - 'Al terminar la sesión el alumno podrá…' is third person while the rest of the deck uses tú, which could look like a register slip.
+  - Evidencia: The same title appears in 152 Spanish decks across all courses, so it is the house formula, not a slip in this deck.
+  - Propuesta: No change; it is the course-wide convention.
+- **essentials-w06** · auditoría · technical-claim · low · `ppts/unity/essentials/es/w06.es.yaml; ppts/unity/essentials/en/w06.en.yaml` s6 concept
+  - The panel note says a prefab that a script only mentions by name is left out of the build, "and that bug only appears in the build". This is incomplete. Every asset under a Resources folder ships whether or not anything references it, and Resources.Load by name fails in the editor too when the prefab is outside Resources. The bug is build-only only with editor-only loaders such as AssetDatabase or Addressables in editor mode. The es version also omits "and never references".
+  - Evidencia: Unity build inclusion rules: referenced assets, plus Resources and StreamingAssets folders. Not wrong for the beginner case the slide has in mind, so I left it.
+  - Propuesta: Not changed. The author may want to add "salvo en una carpeta Resources" / "unless it sits in a Resources folder" if space allows.
+- **essentials-w06** · auditoría · language · low · `ppts/unity/essentials/es/w06.es.yaml` s3 objectives
+  - The title "Al terminar la sesión el alumno podrá…" is third person, while the rest of the deck uses tú and the English says "you will be able to".
+  - Evidencia: Repo-wide this is the house objectives title: 147 Spanish decks use it, including Unity w01 to w05. The instructor's known-defects list flags VBA w13 to w17 for departing from it.
+  - Propuesta: Left as is because it is the course-wide convention.
+- **vr-w01** · auditoría · description-mismatch · low · `ppts/unity/vr/es/w01.es.yaml, ppts/unity/vr/en/w01.en.yaml` s2 agenda (card 2); 3 objectives (item 2)
+  - 'las tres respuestas que lo quitan / the three answers that remove it' is announced, but no slide lists exactly three. Block 2 has a concept card with four steps and a table of five sources with five answers.
+  - Evidencia: This reading is defensible. The concept slide's steps 2 to 4 (locomotion moves the origin, fixed-step turning, no acceleration) and table rows 1 to 3 (teleport, snap turn, constant speed) are the three answers to the vestibular mismatch. The other two rows (camera in script, UI on face) are separate sources. So I did not treat it as a confirmed defect.
+  - Propuesta: Not changed. If the instructor wants it airtight, drop 'tres/three' from agenda card 2 and objective 2 in both files.
+- **vr-w01** · auditoría · language · low · `ppts/unity/vr/es/w01.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: This is the repo-wide Spanish convention: grep shows 147 es decks with this exact title (w02 to w05 of this course included) and only 5 with 'vas a poder'. Changing only w01 would break consistency within the course.
+  - Propuesta: Left as is because it follows the house convention. Changing it would be a repo-wide decision.
+- **vr-w01** · auditoría · consistency · low · `ppts/unity/vr/es/w01.es.yaml, ppts/unity/vr/en/w01.en.yaml` s19 concept (panel note), with 6 concept and 7 table
+  - The second example note says 'parado/standing at the motor end ... tuve que ponerme de pie / I had to stand up to reach it'. A Mexican reader takes 'parado' as 'de pie', so it reads as standing and then standing up. The deck uses 'parado en' for the virtual location (method slide), so the intended reading (physically seated, virtually at the motor end) holds. Two other inconsistencies about the wrench: slide 6 puts it 40 cm above a seated reach while the fix here lowers the socket only 12 cm, and slide 7 puts it 'tras el hombro / behind the shoulder' while this note says 'arriba de mi hombro / above my shoulder'.
+  - Evidencia: Read slides 6, 7, 16 and 19 side by side in both languages. These may be separate observations, and choosing one number would mean inventing content.
+  - Propuesta: Not changed. The author should decide whether the 12 cm and 40 cm figures describe the same build.
+- **vr-w01** · auditoría · technical-claim · low · `ppts/unity/vr/es/w01.es.yaml, ppts/unity/vr/en/w01.en.yaml` s14 pitfalls (Error 02)
+  - 'los ojos nunca alcanzan a converger en ello / the eyes never get to converge on it' overstates the problem with head-locked UI. Eyes can converge on a head-locked panel at its stereo depth. The established problems are that it can never be looked away from and that a panel placed too close causes vergence-accommodation strain.
+  - Evidencia: Checked against the usual XR comfort guidance (head-locked UI is discouraged; keep UI at a comfortable world-locked distance). This is a design-guideline wording issue, not a factual error that misleads the exercise.
+  - Propuesta: Not changed. A precise rewording would be 'y si queda cerca cansa la vista / and up close it strains the eyes'.
+- **vr-w01** · auditoría · language · low · `ppts/unity/vr/en/w01.en.yaml` s4 roadmap
+  - 'Five sessions beside a six week pathway' is missing the compound-adjective hyphen ('six-week').
+  - Evidencia: The same title appears in the roadmaps of w02 to w05 (5 occurrences repo-wide). Fixing only w01 would make the course roadmaps disagree.
+  - Propuesta: Not changed, to keep the course consistent. To fix, change all five roadmap titles in ppts/unity/vr/en together.
+- **vr-w02** · auditoría · language · low · `ppts/unity/vr/es/w02.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is third person. The rest of the deck uses tú, and the English says 'you will be able to'.
+  - Evidencia: A grep over every Spanish deck finds this exact title in 145 files ('podrás' or 'vas a poder' in only 7), and all five VR weeks use it. It is the house title, so changing only this deck would make it inconsistent with its sibling weeks.
+  - Propuesta: Not changed. If the instructor wants tú here, it should be changed in all Spanish decks at once (for example 'Al terminar la sesión podrás…').
+- **vr-w02** · auditoría · trace · low · `ppts/unity/vr/es/w02.es.yaml, ppts/unity/vr/en/w02.en.yaml` s20 trace
+  - The row 'Sin toolkit → Errores de compilación' / 'No toolkit → Compile errors, no build' only holds if project scripts reference XR Interaction Toolkit types. In this session's lab (a floor plus DeviceReport.cs, which uses only UnityEngine), a missing toolkit would not cause compile errors. The quiz still has exactly one defensible answer (B), because a missing toolkit never produces a flat 2D app.
+  - Evidencia: Traced by hand. DeviceReport.cs compiles against UnityEngine alone (confirmed with the stub build). XR stereo comes from the OpenXR provider, not from XRI.
+  - Propuesta: Left as written because the verdict and the answer key are still correct. The instructor may want a symptom that holds for the lab project.
+- **vr-w02** · auditoría · consistency · low · `ppts/unity/vr/labs/lab01.es.md (outside assigned files)` sn/a (line 64)
+  - The companion lab guide says 'En Play mode vas a leer WindowsEditor, Direct3D11 y True'. A new Unity 6.1+ project reports Direct3D12, which now disagrees with the corrected slide 17. The guide's step 26 already anticipates both 6.0 and 6.1+.
+  - Evidencia: grep -rn Direct3D11 ppts/unity/vr/labs finds line 64 of lab01.es.md.
+  - Propuesta: Not my file. Fix it in ppts/unity/vr/labs/lab01.es.md: Direct3D12 on Unity 6.1+, Direct3D11 on 6.0.
+- **vr-w03** · auditoría · technical-claim · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s14 code_output
+  - The output prints 'HandR' and 'HandL' from a.interactorObject.transform.name. In the XRI Starter Assets rig that slide 21 tells students to import, both hands' interactor GameObjects are named 'Near-Far Interactor'. A student's lab log ('registra qué mano lo tomó') would then print the same name for either hand unless the objects are renamed.
+  - Evidencia: XRI 3.x Starter Assets XR Origin (XR Rig) hierarchy: Left Controller and Right Controller each have a child 'Near-Far Interactor'. IXRInteractor.handedness exists in XRI 3.x and would identify the hand without renaming.
+  - Propuesta: Not fixed: the bench scene may rename its interactors and I cannot verify that. Suggest a note saying the interactors were renamed, or using a.interactorObject.handedness.
+- **vr-w03** · auditoría · pedagogy-order · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s24 lab
+  - The lab starts from 'tu build de la sesión 2' and asks students to make the torque wrench grabbable and anchor at the motor end of the bench. The session 2 lab build is 'una escena vacía... nada más que un piso'. Session 1 used a classroom bench build. The deck never says where students get the bench scene (wrench, motor, bench).
+  - Evidencia: vr/es/w02.es.yaml lab: 'pongan el script de reporte en un objeto vacío... En la escena, nada más que un piso'. vr/es/w01.es.yaml lab: 'Tomen el build del banco en el visor del salón'.
+  - Propuesta: Not fixed: the instructor needs to say whether the bench scene assets are handed out. A one-line mention in the brief or notes would close the gap.
+- **vr-w03** · auditoría · language · low · `ppts/unity/vr/es/w03.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person while the rest of the deck uses tú and the English says 'you will be able to'.
+  - Evidencia: This exact title appears in 142 Spanish decks across the repo, including all VR weeks. Only 10 use 'podrás' or 'vas a poder'.
+  - Propuesta: Not fixed: it is the course-wide formula, and changing one deck would break consistency. It needs a global decision by the instructor.
+- **vr-w03** · auditoría · description-mismatch · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s13 code
+  - The annotation 'Dos usings' sits over a source with three using lines, and the Interactables using is not used by anything in the displayed WrenchLog. It is only needed by the 'grab' field that appears in the quiz version of the file.
+  - Evidencia: The source compiled against stubs with the Interactables using removed and gave no error, so it is unused in this snippet. C# reports this only as hidden diagnostic CS8019, not as a warning.
+  - Propuesta: Not fixed: the label clearly refers to the two Toolkit usings and the code compiles. I'm noting it because a reader may count three.
+- **vr-w03** · auditoría · consistency · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s25 takeaways
+  - The takeaway says Floor asks the runtime and 'Not Specified le pregunta al dispositivo', while slides 18 and 19 say for Not Specified 'decide el runtime' / 'Lo que escoja el runtime'. The contrast suggests these are different things.
+  - Evidencia: The XR Origin docs describe Not Specified as the device's default tracking origin mode, which the OpenXR runtime on the device reports. Both wordings describe the same thing.
+  - Propuesta: Not fixed: there is no factual error. Optionally align the takeaway wording with slides 18 and 19.
+- **vr-w03** · auditoría · consistency · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s1 cover / 2 agenda / 5 divider / 6 diagram
+  - 'The three parts' are named three different ways. The agenda (and objective 1) say origin, manager and interactor. The block 1 divider says origin, reachable objects and something in the middle. The diagram says interactor, manager and interactable. The cover says 'Tres componentes' while slide 8 is titled 'Cinco componentes'.
+  - Evidencia: Read side by side. Each statement is defensible on its own (the origin carries the interactors).
+  - Propuesta: Not fixed: this is the author's framing rather than a factual error. The instructor may want one triple used throughout.
+- **vr-w03** · auditoría · quiz-key · low · `ppts/unity/vr/es/w03.es.yaml + ppts/unity/vr/en/w03.en.yaml` s22 quiz
+  - The quiz has no speaker notes naming the answer or the confusion behind each distractor. The answer is given by the next slide ('Respuesta' trace), which supports option B (three lines). Distractors A (dedupe), C (auto-removal on disable) and D (error on duplicate add) are each a real misconception about UnityEvent.
+  - Evidencia: Simulation: 3 lines after load enable plus two disable/enable cycles. UnityEvent.AddListener does not dedupe and does not throw, and disabling a GameObject does not remove runtime listeners.
+  - Propuesta: No change needed to the key. Notes could be added by the instructor; I did not invent them.
+- **vr-w04** · auditoría · quiz-key · low · `ppts/unity/vr/es/w04.es.yaml, ppts/unity/vr/en/w04.en.yaml` s19 quiz / 20 trace
+  - The quiz has no speaker notes stating the answer. The following 'Respuesta' / 'Answer' trace slide implies B. Option B ('los eventos... los listeners del inspector se callan' / 'every inspector listener goes silent'), Error 01 and takeaway 2 all say every listener stops. Strictly, only the select-entered events (selectEntered, firstSelectEntered) stop. Hover and selectExited listeners still fire.
+  - Evidencia: Compiled the quiz source with dotnet build -warnaserror: 0 warnings, 0 errors, so C is a valid distractor. Run: Latched=True, isSelected=True (state is kept in OnSelectEntering, so D is wrong), selectEntered listener ran=False, so B is correct and A is wrong. Exactly one defensible answer. Course pattern (w03) also puts the answer on a trace slide with no notes.
+  - Propuesta: Not changed: the key is unambiguous and the overstatement reads correctly in the context of the overridden OnSelectEntered. Narrow it to 'el evento de selección' if the instructor wants strict wording.
+- **vr-w04** · auditoría · trace · low · `ppts/unity/vr/es/w04.es.yaml, ppts/unity/vr/en/w04.en.yaml` s12 trace
+  - Row 4 (Reposición / Panel reset) changes the Motor column from 'detenido/stopped' to 'en reposo/idle'. ClearFromPanel only sets Latched=false and never touches the motor, so a reader may think the reset changes motor state.
+  - Evidencia: Harness run of the verbatim slide 11 class: rows match the slide for Latched and events. After ClearFromPanel the MotorDrive stub is still 'stopped'. 'Idle' is defensible as 'stopped and no longer held by the stop'.
+  - Propuesta: Left as is: an interpretive label, not a contradiction of the code. Rows 1-3 and the events column match the execution.
+- **vr-w04** · auditoría · technical-claim · low · `ppts/unity/vr/es/w04.es.yaml, ppts/unity/vr/en/w04.en.yaml` s11 code
+  - 'La guarda' says a second press on a latched stop 'no hace nada' / 'does nothing'. Because base.OnSelectEntered runs before the guard, the second press still raises selectEntered (sound, highlight). The slide 12 trace correctly shows 'enter, exit' for it. The annotation means the latch logic does nothing.
+  - Evidencia: Harness trace row 'Poke it again': events=[select enter, select exit], Latched stays True, motor.Stop not called again.
+  - Propuesta: Left as is: in context it describes the guarded branch, and the trace on the next slide shows the events.
+- **vr-w04** · auditoría · parity · low · `ppts/unity/vr/es/w04.es.yaml, ppts/unity/vr/en/w04.en.yaml` s11 code, 16 code
+  - The English annotations carry small extra clauses the Spanish lacks: 'and nothing should be stopped twice', 'a walk and a decision', and 'or a string built per frame becomes a collection pause'. No fact, number or code behavior differs.
+  - Evidencia: Side-by-side read of the annotation texts. Slide count (24/24) and layout order are identical.
+  - Propuesta: Not changed: trims in the Spanish, no factual divergence.
+- **vr-w04** · auditoría · output-mismatch · low · `ppts/unity/vr/es/w04.es.yaml, ppts/unity/vr/en/w04.en.yaml` s9 code_output
+  - The separator lines '-- con la llamada a base --' / '-- sin ella --' are not printed by the code. They mark two runs in one panel and use a double hyphen.
+  - Evidencia: Preflight accepts them (check.sh CLEAN), and they are console separators, not a prose dash. The real output of each run matches the panel lines between separators after the order fix.
+  - Propuesta: Left as an editorial device. Flagged only so the instructor can confirm it is acceptable under the no-double-hyphen rule.
+- **vr-w05** · auditoría · output-mismatch · low · `ppts/unity/vr/es/w05.es.yaml + ppts/unity/vr/en/w05.en.yaml` s12 code_output
+  - The panel shows adb forward printing '34999' and says adb reverse prints nothing. In adb, forward and reverse send their reply through the same path (handle_forward_request returns the resolved TCP port). Either both print the port or neither does, depending on the adb version. The adb man page documents printing only for tcp:0.
+  - Evidencia: No adb binary or headset is available here, and android.googlesource.com is blocked. This is based on reading the adb source from memory plus the man page found through search.
+  - Propuesta: Not changed. The instructor should run both commands once on the classroom PC and copy what they actually print.
+- **vr-w05** · auditoría · language · low · `ppts/unity/vr/es/w05.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is in the third person, while the items use tú ('tu propio build') and the English says 'you will be able to'. This mixes registers on one slide.
+  - Evidencia: grep across ppts: 'Al terminar la sesión el alumno podrá…' appears in 133 Spanish decks, including unity vr w01 to w04, and 'podrás' appears in 17. The instructor's known list flags only the English 'the student'.
+  - Propuesta: Not changed, because it is the template phrase used across the whole course. Changing one deck alone would break consistency. Needs an instructor decision for all decks (suggested wording: 'Al terminar la sesión podrás…').
+- **vr-w05** · auditoría · technical-claim · low · `ppts/unity/vr/es/w05.es.yaml + ppts/unity/vr/en/w05.en.yaml` s11 steps
+  - Stop 03 makes 'adb forward' a required step. The Unity manual says Build And Run creates the adb tunnel automatically, and the manual forward is needed only to profile another app or after restarting the adb server. Running it again is harmless.
+  - Evidencia: Unity manual 'Collecting performance data on an Android device', found through web search: 'The Editor automatically creates an adb tunnel when you select Build & Run'. Both commands on slide 12 (forward tcp:34999 localabstract:Unity-<bundle id> and reverse tcp:34998 tcp:34999) match the manual.
+  - Propuesta: Not changed, because the step is redundant rather than wrong. The instructor may want to say 'si Build And Run no lo hizo ya'.
+- **vr-w05** · auditoría · quiz-key · low · `ppts/unity/vr/es/w05.es.yaml + ppts/unity/vr/en/w05.en.yaml` s23 quiz
+  - The quiz has no speaker notes stating the answer. Option B is the only defensible one: A (thinks the build is broken), C (trusts the Editor's CPU number) and D (4.1 < 13.9 ms) are clear confusions. The answer is given on the next 'Respuesta' trace slide.
+  - Evidencia: The quizzes in unity vr w01 to w04 also have no notes and are answered by the next trace slide, so this follows the course convention.
+  - Propuesta: No change needed. The key is B in both languages.
+- **vr-w05** · auditoría · language · low · `ppts/unity/vr/en/w05.en.yaml` s4 roadmap
+  - 'Five sessions beside a six week pathway' is missing the compound-adjective hyphen ('six-week').
+  - Evidencia: The same title appears in the en roadmaps of w01 to w04.
+  - Propuesta: Not changed, to keep it identical to the other four weeks' roadmaps, which I may not edit. If wanted, fix all five decks together.
+
+## VBA · Análisis y Procesamiento de la Información (TIA503)
+
+82 entradas, de mayor a menor severidad.
+
+- **w02** · auditoría · figure · medium · `ppts/img/en/macro-dialog.png` s9 figure (es and en)
+  - The screenshot shows the Macro dialog with an empty list. It should show the procedure from the editor capture (FormatHeader) so the slide shows something being run. Only a new capture can fix this, and it lives outside my files.
+  - Evidencia: I viewed the image directly: the list is empty and the Run, Step Into and Edit buttons are greyed out.
+  - Propuesta: Not fixed: it must be recaptured in ppts/img/en/macro-dialog.png, using the workbook from vbe-editor.png with FormatHeader in Module1. The captions are written so they stay true once the new capture is in.
+- **w05** · auditoría · consistency · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/soluciones.es.md` sn/a (outside assigned files)
+  - Supporting documents now disagree with the corrected slides. soluciones.es.md line 655 and solutions.en.md line 665 say `If respuesta = "Sí"` 'nunca entra al If, la macro no marca error'. A Long compared with that string gives error 13. Line 591 / 601 still say 'La lámina de la semana 5 dice False y error 13', which is no longer true. HANDOFF.md line 306 records the UK-region '$5' result with no region caveat.
+  - Evidencia: Same VB.NET proxy and MS-VBAL coercion rule as the slide 8 and slide 11 findings.
+  - Propuesta: Not edited because these files are outside my assignment. The owner of soluciones.es.md, solutions.en.md and HANDOFF.md should update them.
+- **w07** · auditoría · technical-claim · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s13 pitfalls
+  - Error 02 ('Apagar la pantalla y no encenderla: la hoja se queda congelada…') may overstate the problem. Excel is widely reported to set Application.ScreenUpdating back to True when VBA execution ends, the way it does for DisplayAlerts. Calculation is the setting that really persists, which is what s12, the quiz and takeaway 2 correctly say.
+  - Evidencia: Microsoft Learn for ScreenUpdating says only 'remember to set it back to True', and I cannot run Excel here to test the behavior. The claim is not contradicted inside the deck.
+  - Propuesta: Not changed. The instructor should verify this in Excel 365. If ScreenUpdating does reset, reword Error 02 (for example, to a frozen screen while the macro is paused in break mode).
+- **w10** · revisión · confirmado
+  - 11 code / 21 homework: UDF TasaMensual/MonthlyRate vs the w04 defined name (kept)
+  - Evidencia: In w04, TasaMensual appears only in an example formula in a compare card, and Names.Add never creates it. The repo workbook uses the name MonthlyInterestRate. A collision is possible only if a student created that name, and Excel's behavior cannot be checked here. Too speculative to justify renaming code on three slides in each deck.
+- **w11** · auditoría · pedagogy-order · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w11.es.yaml and en/w11.en.yaml` s21 lab
+  - The lab's workbook event must 'send the user to the input sheet with the cell already selected'. That needs Worksheets("X").Activate or .Select, and no slide in w01-w11 shows a sheet referenced by name. Separately, the homework's BeforeSave needs the signature (ByVal SaveAsUI As Boolean, Cancel As Boolean), which the deck never shows. Objective 1 promises 'la firma exacta que Excel espera', but only the two sheet-event signatures appear.
+  - Evidencia: grep for Worksheets/Sheets/Activate/Goto over es w01-w10: no hits. The deck has no Workbook_Open or Workbook_BeforeSave code slide. The solution for 11.3 uses ThisWorkbook.Worksheets("Nomina").Activate.
+  - Propuesta: Not fixed: closing the gap needs new content, either a code slide with Workbook_Open (Activate plus Range.Select) and the BeforeSave signature, or a mention of the code window's two drop-down lists that write the stub. That is the instructor's call, not a one-word edit.
+- **w11** · auditoría · consistency · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/soluciones.es.md, solutions.en.md, es/w05.es.yaml, en/w05.en.yaml` soutside files (related to w11 s12)
+  - The w11 week 11 grading note in the solutions still describes the old slide (it says the slide lists $5, 5% and 2026-01-01 as False). It also gives 0.15 for 5% where 0.05 is correct, and calls the date cell numeric (46023), but VBA hands a date cell to IsNumeric as a Date, which returns False. Separately, w05 (table 'Qué acepta IsNumeric' and pitfall 04) states that IsNumeric of $5 is False. That was measured on UK regional settings and is True on a Mexico-region machine.
+  - Evidencia: soluciones.es.md week 11, 'Nota de calificación' paragraph. HANDOFF.md notes the probes ran on UK regional settings. The Microsoft VBA reference says IsNumeric returns False for a date expression, and LibreOffice Basic agrees.
+  - Propuesta: Outside my files: update the note in soluciones.es.md and solutions.en.md week 11, and add the region caveat to the w05 $5 rows.
+- **w11** · revisión · confirmado
+  - 14. Known defect: English cover kicker and Code
+  - Evidencia: w11 en already has the right English form ('School of Business · 2026', 'TIA503 · Business'). The defect was in en w01-w10. Other agents have since aligned those decks (the working tree diff for w07-w09 shows the change), and grep finds no en deck that still says Empresariales. No change needed in w11.
+- **w11** · revisión · confirmado
+  - 17. Solutions week 11 grading note is stale, and w05 states IsNumeric of $5 is False
+  - Evidencia: The w05 part of this finding is wrong as of now. es/w05 s? table 'Qué acepta IsNumeric' already lists $5 as True, and pitfall 04 gives the region caveat (True in Mexico, False in the UK); en/w05 has the same. Only the 'Nota de calificación' in soluciones.es.md and solutions.en.md week 11 is stale. It still says the slide lists $5, 5% and 2026-01-01 as False, gives 0.15 for 5% where 0.05 is correct, and calls the date cell numeric. The 'Error que más se ve' paragraph of 11.1 also says the slide measures a string, which the slide no longer does. Must be fixed in those two solution files.
+- **w15** · auditoría · technical-claim · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w17.es.yaml` sw17 error table (line 153, es and en)
+  - Outside my files: the w17 table of errors lists 438 'Object doesn't support…' as the error for 'Pedirle a WorksheetFunction algo de VBA' / 'Asking WorksheetFunction for a VBA function'. That case is a compile error ('Method or data member not found', 461), not runtime 438. It repeats the claim I corrected in w15 s7.
+  - Evidencia: es/w17.es.yaml:153 and en/w17.en.yaml:153. The reasoning is the same as for w15 s7.
+  - Propuesta: Not my file. It must be fixed in w17.es.yaml / w17.en.yaml, for example by replacing the trigger with a late-bound case such as Application.Foo, or by moving that row to a compile-error note.
+- **w16** · auditoría · technical-claim · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w16.es.yaml` s24 lab (with 18 code)
+  - Possible problem, not verified. Slide 18's Workbook_Open protects every worksheet with UserInterfaceOnly. The lab then asks that adding rows and rerunning puts them in the summary. Excel is widely reported not to extend UserInterfaceOnly to PivotTable creation or refresh, nor to growing a ListObject, on a protected sheet. If so, the lab criterion fails with 1004 unless the Resumen and Datos sheets are excluded or unprotected around the refresh. The English deck has the same text.
+  - Evidencia: This could not be run: there is no Excel here, and LibreOffice does not enforce sheet protection against macros (my LO run wrote A1 even without UserInterfaceOnly). The Microsoft Learn Worksheet.Protect page does not list these exceptions. The claim rests on recurring reports from practitioners. It needs a 5-minute test in Excel 365 before class. A fix would go in the lab constraint text of both decks.
+  - Propuesta: Not changed: unverified, and a fix would mean writing new lab content. Flagged for the instructor.
+- **w17** · auditoría · technical-claim · medium · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w17.es.yaml` s18 pitfalls
+  - Error 04, 'Entregar sin correrlo una última vez: Un libro que no abre tiene techo de 30 %', appears in a list about losing points on the exam (Error 01 talks about 'los del examen'). The 30 % cap only exists in the project rubric (syllabus, w01, w16). The syllabus exam rules say nothing about it. This is a grading policy, so I did not change it: the instructor must confirm whether the cap also applies to the final exam or reword the item. The English deck (slide 18, 'capped at 30 %') has the same text.
+  - Evidencia: Syllabus Project rubric: 'If the workbook does not run, its maximum grade is 30 %'. Syllabus Exams section: no cap. w01.es concept 'Proyecto integrador' and w16.es steps 'Si no corre, el techo es 30 %' both belong to the project.
+  - Propuesta: Not changed because it is a policy decision. Instructor to confirm, in both es and en.
+- **w01** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w01.es.yaml` s3 objectives
+  - The objectives title 'Al terminar la sesión el alumno podrá…' is in third person, while the rest of the deck addresses the student as tú. This could look like a register break.
+  - Evidencia: This title is the course convention for w01 to w12 and appears in 147 Spanish decks repo-wide; only 5 decks (vba w13 to w17) use 'vas a poder', and the instructor's list flags those five as the deviation.
+  - Propuesta: Left as is to stay consistent with the course and repo convention. If the instructor prefers tú here, it has to change in every deck at once.
+- **w01** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w01.es.yaml` s3 objectives, 8 diagram, 25 homework
+  - The objective promises the cycle 'del primer clic al botón que lo repite', and the homework rubric asks that the macro 'Corre desde el cuadro de macros'. But w01 never shows how to run a recorded macro: the only mention is in the Developer-tab figure caption ('Macros abren ... la lista'). The Alt+F8 dialog is first shown in w02, and assigning a macro to a sheet button is never taught in the course.
+  - Evidencia: Grepped all TIA503 decks for Assign Macro, Alt+F8 and Form Control: only w02 slide 'La lista que Excel muestra con Alt + F8'.
+  - Propuesta: Not fixed because it needs new content. I removed the reference to an untaught button from pitfall 04. Suggest one line in w01's setup steps or lab: 'Alt + F8, eliges la macro y Ejecutar'.
+- **w01** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w01.es.yaml` s6 stat
+  - The note says that next month the 600 cells 'hay que rehacerlas con otro monto y otra tasa' (have to be rebuilt with another amount and rate). In the module 00 workbook they are formulas that recalculate from Initial_Loan_Value and the rate; only the payment cell, set by Goal Seek, needs redoing.
+  - Evidencia: openpyxl on amortization_table.xlsx, sheet Example, B10:DQ14: 120 columns × 5 rows = 600, which confirms the figure. B11 =Initial_Loan_Value, B12 =B11*Interest_Rate__Monthly, B14 =B11+B12-B13.
+  - Propuesta: Left as is: it reads as rhetoric about building the table by hand, and the 600 count itself is correct (the same applies to en).
+- **w01** · auditoría · figure · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w01.en.yaml` s17 figure
+  - The caption says 'Description is the only place the recorder will not write for you'. In the dialog, Shortcut key also starts blank, so read literally the claim is loose.
+  - Evidencia: Screenshot img/en/record-macro-dialog.png: Macro name is prefilled 'Macro1', Store macro in is 'This Workbook', and Shortcut key and Description are empty. The name-'cannot start with a digit' and 'no spaces' rules match Microsoft's naming rules.
+  - Propuesta: Left as is: it is defensible as 'the one header comment the recorder cannot compose itself'. The es translation keeps parity.
+- **w02** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w02.es.yaml` s3 objectives
+  - The objectives title "Al terminar la sesión el alumno podrá…" is in the third person, while the rest of the deck uses tú. The English deck says "you will be able to".
+  - Evidencia: Across the repository, 147 decks use "Al terminar la sesión el alumno podrá…". The instructor's list counts the w13 to w17 title ("vas a poder…") as the exception, so the third-person title is the house convention for Spanish.
+  - Propuesta: Left as is because it follows the repository-wide Spanish convention. Changing it here alone would make w02 the odd one out among w01 to w12.
+- **w02** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w02.es.yaml` s18 table
+  - "Las cinco teclas de esta sesión" lists Alt + F11, F5, F8, Ctrl + G and Ctrl + Break. The deck also mentions F4 (slide 7) and Alt + F8 (slide 9).
+  - Evidencia: I read slides 7, 9 and 18.
+  - Propuesta: Not changed. The table plausibly means the five keys for running and stepping. Noted because a careful reader could object.
+- **w02** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w02.es.yaml` s5 divider
+  - "Excel y el editor son dos programas que comparten un libro": the VBE runs inside Excel's process, not as a separate program.
+  - Evidencia: Standard references describe the VBE as "a separate application that works seamlessly with Excel" (Walkenbach), so this is an accepted teaching simplification.
+  - Propuesta: Not changed. I judged it an acceptable simplification and noted it only because it can look wrong to an expert reader.
+- **w02** · auditoría · code-wrong · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w02.es.yaml` s12 code, 13 code_output, 19 trace, 21 quiz
+  - I checked all the code examples and found no defect. MessageAndSubs matches docs/en/courses/vba-course/01 - Basic Concepts/BasicConcepts.bas, and the MsgBox output panel matches the box's text. The trace matches the F8 semantics: the highlight shows the next statement, the comment and blank lines in w01's HideColumn are skipped, and the column is hidden after press 3 and visible again after press 4. The quiz has exactly one correct answer, A (two presses leave the Range("A1") line highlighted and A1 still empty). The distractors stand for the three-press state, "highlight equals executed", and "F8 runs two lines at a time". The Riesgo annotation is correct: module 04 declares Sub DefineNameCells twice, at lines 1 and 25, which VBA rejects as "Ambiguous name detected".
+  - Evidencia: All four snippets compiled under LibreOffice 24.2 Basic with Option VBASupport 1 (the Noop probe returned "compiled"). They could not be executed because Calc is not installed. I traced F8 by hand against w01's source lines 225 to 233 and ran grep -n "Sub " on DefineNameCells.bas, which shows lines 1 and 25. None of the annotations use "Línea N" / "Line N" references.
+  - Propuesta: No change needed.
+- **w03** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w03.es.yaml + en/w03.en.yaml` s3 objectives / 22 homework
+  - The objective 'Leer y escribir celdas desde VBA' and the homework both involve reading a cell into a variable (x = Range("B1").Value). No slide in w01 to w03 shows the read direction; every code example only writes to cells.
+  - Evidencia: A grep of w01 to w05 for '= Range(' or a read of .Value finds the first read in w05 (txtMonto.Value). w03 slides 10, 12, 13, 16 and 18 only assign to cells.
+  - Propuesta: Not fixed because it needs new content (for example one more line in the Range annotation on slide 16, or a short read example). The instructor should decide whether to add it.
+- **w03** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w03.es.yaml` s10 code_output
+  - The Spanish deck shows the English error text "Run-time error '6': Overflow". A Spanish Excel shows 'Desbordamiento'.
+  - Evidencia: The course HANDOFF.md records this as deliberate ('The Spanish decks show the English string'). The output itself is correct: assigning Rows.Count (1,048,576) to an Integer raises error 6. LibreOffice run: '6 Overflow.'
+  - Propuesta: Not a defect; it is a documented instructor decision.
+- **w03** · auditoría · quiz-key · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w03.es.yaml + en/w03.en.yaml` s19 quiz
+  - Option B (2, banker's rounding) is the only defensible answer, and the distractors match plausible confusions (school rounding, a cell that takes decimals, an expected error). There are no speaker notes stating the key, and pitfalls slide 14 (Error 03) gives the exact answer five slides earlier.
+  - Evidencia: Microsoft CInt/CLng: a fraction of exactly .5 rounds to even, so 2.5 becomes 2. HANDOFF Excel table: n = 2.5 gives 2. LibreOffice gives 3 (a dialect difference, not a slide error).
+  - Propuesta: Speaker notes were stripped course-wide on the instructor's instruction, so none were added. The repeated answer reads as a recall check, so it was left.
+- **w03** · auditoría · other · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w03.es.yaml + en/w03.en.yaml` s12 code
+  - 'Const pi As Double = 3.14159' sits inside Sub Prestamo / Loan, a constant unrelated to a loan, which a reader may find odd.
+  - Evidencia: Taken verbatim from docs/en/courses/vba-course/01 - Basic Concepts/BasicConcepts.bas (Sub Constants). Valid VBA; it ran in LibreOffice and wrote 3.14159.
+  - Propuesta: Not a defect; left as the author's source example.
+- **w04** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s22 homework
+  - The homework asks for 'el pago aproximado' (the monthly loan payment). No slide in weeks 1 to 4 gives the payment formula, M*i/(1-(1+i)^-n), and the module 00 workbook has the payment hard-coded (B5 = 7780.737861676426). Business students may know it from finance, but the deck never shows it.
+  - Evidencia: grep of w01 to w04 (es/en) and the module 00 workbook: no payment formula. The payment is only found later, with Goal Seek in w07.
+  - Propuesta: Not fixed, to avoid inventing content. Suggest the instructor add the annuity formula to the brief or point to a source.
+- **w04** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s17 table
+  - Two rows query Range("DatosCliente") / Range("ClientData") ($A$1:$B$5, 10 cells) under the title 'Lo que devuelve un nombre ya creado', but no slide creates that name. The source module DefineNameCells.bas creates it as DataRange. Its range also covers B1 and B2, which are already MontoPrestamo and TasaAnual.
+  - Evidencia: Slide 16 creates only MontoPrestamo and TasaAnual. The source .bas has Names.Add Name:="DataRange", RefersTo:="=Sheet1!$A$1:$B$5". The values themselves are right: 2 x 5 = 10 cells.
+  - Propuesta: Not fixed: the values are correct, and adding a creation line or dropping the rows would add or remove content. Suggest a Names.Add line for DatosCliente on slide 16, or a caption.
+- **w04** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s8 code
+  - The precedence ladder in the code comment (1. () 2. ^ 3. * / 4. \ 5. Mod 6. + -) leaves out unary negation, the level that drives slide 10's -3^2. Microsoft's order is ^, negation, * /, \, Mod, + -.
+  - Evidencia: Reading the ladder's '-' as level 6 still predicts VBA's -9, so the slide gives no wrong answer. Annotations 11/16 match the run (LO Basic: 11 and 16).
+  - Propuesta: Not fixed: the comment is incomplete, not wrong. Adding the negation level is optional.
+- **w04** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w04.es.yaml` s3 objectives
+  - The Spanish objectives title is in third person ('el alumno podrá…'), while the rest of the deck and the English ('you will be able to') address the student as tú/you.
+  - Evidencia: Every es deck from w01 to w12 uses this exact title. known.txt flags w13 to w17 as the decks that changed it ('vas a poder'), so this is the course convention.
+  - Propuesta: Left as is to match w01-w12. The instructor should pick one title course-wide.
+- **w04** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w04.es.yaml + en/w04.en.yaml` s10 table
+  - The title 'Tres expresiones que dan distinto' sits over a four-row table. This looks like the w02 'Tres palabras' defect, but the fourth row is labelled as the control ('64 y 64, aquí sí coinciden'), so the count of three differing expressions is exact.
+  - Evidencia: LibreOffice Calc: =-3^2 9, ="5"+"3" 8, =MOD(-5,3) 1, =2^3^2 64. VBA side: -9, '53', -2, 64 (see unverifiable for -3^2).
+  - Propuesta: Not a defect. Left unchanged.
+- **w05** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w05.es.yaml` s3 objectives
+  - The title 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú. It is the course-wide wording for w01 to w13; w14 to w17 say 'vas a poder…', and the known list treats those later decks as the divergent ones.
+  - Evidencia: grep shows the same title in es/w01 to w13 and 'vas a poder…' in w14 to w17. Changing only w05 would split the course further.
+  - Propuesta: Left as is. The instructor needs to decide one wording for all es decks.
+- **w05** · auditoría · other · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w05.es.yaml` s6, 7, 9, 14 to 16, 18 to 20, 22
+  - Checked and correct, recorded so a later reviewer can skip them. Constants 0, 1, 4, 16, 32, 48 and 64; vbYes 6 and vbNo 7; vbYesNo+vbQuestion 36; A2:H341 is 340 rows; vbNewLine is CR+LF. The quiz has exactly one defensible answer, B (error 13); A tests short-circuit confusion, C tests Val-style confusion, D tests loop confusion. 'Más de dos datos' and 'proyecto de la semana 16 pide uno' are backed by the syllabus project topics ('User forms (1.6)'). Session 5 de 17 and the roadmap 'now' on phase 01 (weeks 1 to 5) match the w04 and w06 roadmaps. The closing matches the w06 topic.
+  - Evidencia: Harness printed every constant and the quiz behavior ('abc' raises InvalidCast; '5' writes A1=5). Compared with the syllabus-tia503.xlsx rows for weeks 5 and 16 and the w04/w06 roadmaps. es and en both have 22 slides with the same layouts in the same order.
+  - Propuesta: No change needed.
+- **w06** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w06.es.yaml` s8 method (also en)
+  - 'Qué se gana ... y dejas de depender de qué hoja estaba activa' (en: 'you no longer depend on which sheet was active'). For the unqualified Range code shown in this deck (slides 7 and 12), the code still acts on ActiveSheet. The gain holds only when the recorded Sheets("X").Select is merged into a qualified reference, which follows from the slide's own 'Cómo se quita' rule.
+  - Evidencia: In LibreOffice VBA mode, Range("C2:C13").NumberFormat in a standard module acted on whichever sheet was active, as in Excel.
+  - Propuesta: Left as is. The claim is true of the general rule the slide states (Sheets(...).Select joined to the next line gives a sheet-qualified reference). Flagged because a reader may test it against slide 7's unqualified code.
+- **w06** · auditoría · quiz-key · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w06.es.yaml` s18 quiz (also en)
+  - Neither deck has speaker notes (no deck in this VBA course has any), so no stated answer or distractor rationale exists to check. The quiz itself is sound: B ('Solo de C2 a C13, y no marca ningún error') is the only defensible option. A, C and D match the confusions their wording implies (Selection adjusts, size mismatch error, slower).
+  - Evidencia: Ran the quiz Sub verbatim in LibreOffice VBA mode on 40 data rows: C2 and C13 got $#,##0.00, C14 and C41 stayed General, no error.
+  - Propuesta: Nothing to fix in the options. Notes stating the answer would have to be written by the instructor (I did not invent notes).
+- **w06** · auditoría · output-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w06.es.yaml` s13 code_output (also en)
+  - The output panel shows datos.Address, but the two-line fragment prints nothing. The panel label 'Rango que arma' / 'Range it builds' makes that explicit, and the values are right.
+  - Evidencia: Ran the fragment with a Debug-style log of datos.Address: 12 rows gave $A$2:$C$13 and 40 rows gave $A$2:$C$41, both matching the panel.
+  - Propuesta: Not a defect; noted only because a reader might expect console output.
+- **w07** · auditoría · code-wrong · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s8 stat, 9 code_output, 10 table
+  - I checked every number on these slides against a rebuild of the module 00 model (500,000 at 12% effective annual, 120 periods, monthly rate (1+a)^(1/12)-1, balance_t = balance + balance*r - payment). All of them match. No defect.
+  - Evidencia: Python /tmp/claude-0/audit/scratch/vba1-w07/amort.py: monthly rate 0.009488792934583046; closing balance at payment 1,000 = 1,330,994.06; Goal Seek (secant) payment 6,997.358693387519 -> 6,997.36; total 839,683.04; interest 339,683.04 = 67.9% (68%); 60-period payment 10,967.85. The secant float residue was -2.17E-10, the same order as the slide's -5.56E-10. The exact Excel value cannot be reproduced here.
+  - Propuesta: No change needed
+- **w07** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s8 stat
+  - The stat eyebrow calls it 'El préstamo del módulo 00' at 12% a year. The amortization_table.xlsx in docs/.../00 - Record Macro - Amortization Table actually holds 15% (Example!B2 = 0.15, payment 7,780.74). The 12% figure comes from the course storyline (w04's DefinirNombres writes 0.12, and HANDOFF.md records a rebuilt 12% model), so the deck is internally consistent, but a student who opens the repo file will see other numbers.
+  - Evidencia: openpyxl on amortization_table.xlsx: B1=500000, B2=0.15, B5=7780.737861676426. w03 also uses tasaAnual = 0.15; w04 and w10 use 0.12.
+  - Propuesta: Not changed: this is an instructor choice between the workbook and the deck storyline. The other option is to drop 'del módulo 00' from the eyebrow or to update the workbook.
+- **w07** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s10 table
+  - The title is 'Por qué el saldo final no queda en cero exacto', but row 4 ('Pago con 60 periodos, 10,967.85, El mismo modelo, la mitad del plazo') has nothing to do with why the balance is not zero.
+  - Evidencia: Rows 1 to 3 (MaxChange, MaxIterations, residue) explain the title and row 4 does not. The 10,967.85 figure itself is correct (Python rebuild).
+  - Propuesta: Not changed: fixing it means either deleting a verified fact or retitling the slide, and that is the author's call.
+- **w07** · auditoría · code-wrong · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s16 code
+  - SubFunctions calls SetupFieldsInWorksheet, which writes the header 'Amortization Table Parameters' to A1, and then does Range("A1").Value = resultado, overwriting that header with 8. The code runs and no slide claims anything about A1, but the example clobbers its own setup. w10 shows the same master with MsgBox instead.
+  - Evidencia: SubsFunctions.bas line 64 sets Range("A1").Value = "Amortization Table Parameters". The slide's line 7 writes the result to A1.
+  - Propuesta: Not changed (no false claim). Optional: write to another cell or use MsgBox as in w10 and the source.
+- **w07** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s7 code
+  - The title 'Toda la búsqueda de objetivo, en un renglón' sits over code where the GoalSeek statement spans three physical lines joined with ' _'. It is still one logical statement (the source .bas has it on one line), and line continuation was taught in w04 and w05, so I judged it not a defect.
+  - Evidencia: es/w04.es.yaml:224 and w05.es.yaml:85 use ' _'. Joining it into a single physical line would make the card text too long.
+  - Propuesta: No change
+- **w07** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s2 agenda, 12 code
+  - The agenda card and the s12 title promise switching settings back on 'pase lo que pase' / 'whatever happens', but the code has no error handler, so it cannot guarantee that. The deck admits this in its Riesgo annotation, and On Error cleanup only arrives in w16. This reads as a stated rule rather than a false claim.
+  - Evidencia: s12 source has no On Error. w16.es brief mentions 'un manejador de errores en el procedimiento principal'.
+  - Propuesta: No change: the slide states the rule and flags the risk.
+- **w07** · auditoría · quiz-key · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w07.es.yaml; ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w07.en.yaml` s17 quiz
+  - The quiz has exactly one defensible answer: B, Excel stays on manual. A (auto-reset) is the plausible ScreenUpdating/DisplayAlerts confusion, and C and D are clearly wrong. There are no notes to check the key against, because by the instructor's decision the TIA503 decks carry no speaker notes (HANDOFF.md).
+  - Evidencia: Application.Calculation is an application-level setting that persists after an aborted macro, and xlCalculationManual = -4135. The 'renglón de en medio' of the 5-line snippet is line 3, Call ProcesarTodo.
+  - Propuesta: No change
+- **w08** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/soluciones.es.md + solutions.en.md (outside assignment)` sn/a (exercise 08.1 solution, supports w08 slides 13/20)
+  - The solution says none of `= 0`, `= ""`, `> 0` can tell an empty amount from a zero amount and that IsEmpty (week 9) is required. In fact `Range(...).Value = ""` is True for an empty cell and False for a cell holding 0, because VBA compares as strings ('0' vs '') when one operand is a String. The w08 slides themselves only claim that the zero test fails, which is correct.
+  - Evidencia: Executed in LibreOffice Basic (VBASupport): empty A1 = "" -> True; A2 holding 0 = "" -> False; empty A1 = 0 -> True. This matches Microsoft's comparison rule: one String and a non-Null Variant gives a string comparison.
+  - Propuesta: Not my files. Fix in soluciones.es.md line 1073 and solutions.en.md line 1089: `= ""` does separate empty from zero, while IsEmpty is the clearer tool that arrives in week 9.
+- **w08** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w08.es.yaml + en/w08.en.yaml` s10 table
+  - In the truth table under headers [Combinación, And, Or], the 'Not True' / 'Not False' rows put Not's result in the And column and explanatory prose in the Or column. That can be read as 'Not True And ... = False'.
+  - Evidencia: All values were executed and are correct: And/Or for TT, TF, FT, FF, and Not True = False, Not False = True. The rendered slide shows prose under the 'OR' header.
+  - Propuesta: Left as is because the values are correct and a fix would mean restructuring a correct slide. It is flagged for the instructor.
+- **w08** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w08.es.yaml` s3 objectives
+  - 'Al terminar la sesión el alumno podrá…' is third person in a deck that otherwise uses tú.
+  - Evidencia: It is the VBA course-wide convention: all 17 es decks in HEAD use it, and the instructor's earlier fix normalized w13 to w17 back to this exact title. English uses 'you will be able to'.
+  - Propuesta: Kept to match the course convention. Changing it belongs to a course-wide decision.
+- **w08** · auditoría · other · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w08.es.yaml + en/w08.en.yaml` s7 code
+  - The filename 'ComparissonOperators.bas' looks like a misspelling of 'Comparison'.
+  - Evidencia: It is the real file name in the repository: docs/en/courses/vba-course/05 - Comparisson Operators/ComparissonOperators.bas. The slide code is Part 1 of that module, adapted, and runs to 'True'.
+  - Propuesta: Not a defect. The slide names the actual source file.
+- **w08** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w08.es.yaml + en/w08.en.yaml` s19 lab / 21 homework
+  - The lab test ('Si lo clasifica como cero, ya sabes qué falta') and the homework criterion 'Vacíos' ask students to tell an empty cell from zero, while IsEmpty arrives in week 9.
+  - Evidencia: This is reachable with week 8 material: testing `= ""` before the numeric tiers works (verified: empty gives True, 0 gives False). The deck only claims that the zero test fails.
+  - Propuesta: Not a defect. It is listed because the solutions file wrongly says IsEmpty is required.
+- **w08** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w08.en.yaml` s15 table, 21 homework
+  - '20 %' with a space reads as non-American typography.
+  - Evidencia: Repo-wide English convention: 582 occurrences of 'N %' with a space in en decks, against 36 without.
+  - Propuesta: Kept to match the repository convention.
+- **w09** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w09.es.yaml + en/w09.en.yaml` s7 table
+  - The title "Todas las formas de repetir que trae VBA" lists Do While and Do Until but not the post-test forms Do ... Loop While and Do ... Loop Until, or a bare Do ... Loop with Exit Do.
+  - Evidencia: VBA language reference for the Do...Loop statement. This is defensible if the post-test forms count as variants of Do While and Do Until, so I left it.
+  - Propuesta: Not changed: the claim is arguable rather than wrong. The instructor may want to add "(y sus variantes Loop While/Until)".
+- **w09** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w09.es.yaml + en/w09.en.yaml` s3 objectives / 12 stat
+  - Objective 5, "Elegir entre celda por celda y arreglo", is backed only by the stat slide (0.02 s vs 0.91 s). No slide shows how to write a range from an array, so students can choose but not yet implement.
+  - Evidencia: Read all 21 slides. Arrays appear only in the stat text, pitfall 04 and takeaway 3. The lab and homework do not need arrays, so this does not break the week rule.
+  - Propuesta: Not changed. 'Elegir' (choose) is defensible as written. Flagged for the instructor.
+- **w09** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w09.es.yaml` s3 objectives
+  - The Spanish objectives title "Al terminar la sesión el alumno podrá…" is third person, while the English says "you will be able to".
+  - Evidencia: All 17 Spanish decks of this course use exactly this title (grep), so it is a course-wide convention, not a w09 defect. Changing only w09 would create an inconsistency.
+  - Propuesta: Not changed. If the instructor wants tú, it has to change in all 17 Spanish decks together (for example "Al terminar la sesión podrás…").
+- **w09** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w09.es.yaml + en/w09.en.yaml` s18 lab
+  - The lab title says "Mil filas" / "A thousand rows", but the brief asks for a base of "al menos doscientas filas" / "at least two hundred rows".
+  - Evidencia: Read slide 18. The title echoes agenda card 4 and works as a slogan, not a contradiction.
+  - Propuesta: Not changed; reads as rhetorical. Flagged in case the instructor wants the numbers to match.
+- **w10** · auditoría · output-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s12 code_output
+  - This panel shows TasaMensual(0.12) as '9.48879293458305E-03', while slide 16 now shows the same value in a cell as 0.009488793. The difference is intended: MsgBox uses VBA's string conversion and the cell uses Excel's General format. The MsgBox form could not be confirmed by running it.
+  - Evidencia: In LibreOffice Basic (Option VBASupport 1), Summation(5,3) gives 8, the unassigned As Double function gives 0, and TasaMensual(0.12) gives 0.00948879293458305. LibreOffice formats the number in fixed notation. Real VBA's VarBstrFromR8 switches to E notation when fixed form needs more than 15 significant places (as with 1/30 = 3.33333333333333E-02), so the author's 'Verificado' value is consistent. Kept as is.
+  - Propuesta: No change. The value matches to 15 significant digits, and the E-notation form is the expected VBA MsgBox form.
+- **w10** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s12 code_output
+  - MsgBox SinAsignar(7) / NeverAssigned(7) calls a function that no slide defines. The shown '0' holds only if it is declared with a numeric return type. Declared without As, it returns Empty and the MsgBox comes up blank.
+  - Evidencia: In LibreOffice Basic (VBA mode), an unassigned 'Function f(n As Double) As Double' returns 0, while an unassigned Variant version gives IsEmpty=True and CStr gives ''. The slide 11 Riesgo annotation implies the function. Adding its definition would mean adding code to a full slide.
+  - Propuesta: Not changed, to avoid inventing code. If wanted, the instructor can say in class that SinAsignar is declared As Double like the others.
+- **w10** · auditoría · quiz-key · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s18 quiz
+  - The quiz has no speaker notes, so no answer key is stated. The code was run: x ends at 14, so option B is the only correct one. A is the ByVal confusion, C confuses 'returns nothing' with 'changes nothing', and D wrongly says a Sub cannot take parameters.
+  - Evidencia: Ran Duplicar/Probar (and Twice/Test) in LibreOffice Basic with Option VBASupport 1: x = 14. All 34 decks of this course have zero 'notes:' entries, so an answer note would break the course convention.
+  - Propuesta: No change: there is exactly one defensible answer (B), and no notes exist in this course to correct.
+- **w10** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s11 code / 21 homework
+  - Possible name clash. w04 (es and en) uses TasaMensual / MonthlyRate as the defined name of the monthly-rate cell in the amortization workbook ('=MontoPrestamo*TasaMensual'). This deck names the UDF TasaMensual / MonthlyRate, and the homework asks students to add that Function to the same amortization workbook. A workbook defined name and a UDF with the same name can collide in =TasaMensual(A1).
+  - Evidencia: grep across the course: es/w04 line 268 '=MontoPrestamo*TasaMensual' and en/w04 line 268 '=LoanAmount*MonthlyRate'. Excel's resolution of that clash could not be executed here.
+  - Propuesta: Not changed: a rename would touch code on four slides and the fix depends on Excel behavior I could not verify. The instructor could rename the UDF (for example TasaMensualDe) or warn students in the homework.
+- **w10** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s14 table
+  - The row label 'n As Long, sin declarar' can be read as 'n is undeclared'. What it means is that neither ByRef nor ByVal is written; the en deck says 'unmarked'. The meaning comes clear from the 'Conclusión' row.
+  - Evidencia: Read the slide. The values 50 / 5 / 50 were confirmed by running PorRef / PorVal / SinMarca with n = 5 in LibreOffice Basic (VBA mode).
+  - Propuesta: No change: the values are right and the wording is the author's. 'sin marcar' would match the English if the instructor prefers.
+- **w10** · revisión · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w10.es.yaml` s11 code / 12 code_output
+  - The code card filename is SubsFunctions.bas (MonthlyRate in the en deck), but the repository's docs/en/courses/vba-course/09 - Subs and Functions/SubsFunctions.bas has no TasaMensual/MonthlyRate function, and its Summation takes (number1, number2), not (n1, n2). A student who opens the repo file will not find the code shown. The repo does the monthly-rate calculation as a cell formula in ReadInputParameters. Both decks are affected.
+  - Evidencia: grep of procedure declarations in both module 09 .bas files: SubFunctions, SetupFieldsInWorksheet, ReadInputParameters, ReadInputParametersValidation, Summation(number1, number2), AmortizationTable. No monthly-rate Function exists. The repo uses Range("MonthlyInterestRate").Formula = "=((1+AnnualInterestRate)^(1/12))-1", the same math as the slide.
+  - Propuesta: Not changed. The slide can be read as the module the student extends, and w07 already uses the same (n1, n2) simplification. If the instructor wants an exact match, either rename the tab to Modulo1.bas / Module1.bas or add the function to the repository file.
+- **w11** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w11.en.yaml` s1 cover
+  - Known defect: the English covers of w11-w17 say 'School of Business · 2026' and 'TIA503 · Business', while w01-w10 en say 'Facultad de Empresariales · 2026' and 'TIA503 · Empresariales'. w11 already follows the repository-wide English convention: every engineering English deck says 'School of Engineering · 2026'.
+  - Evidencia: grep of kickers: 110 en decks 'School of Engineering', 28 'School of Business', 27 'Facultad de Empresariales'. Spanish w11 ('Facultad de Empresariales', 'Sesión 11 de 17') matches es w01-w12.
+  - Propuesta: w11 left as is. The fix belongs in en w01.en.yaml to w10.en.yaml: kicker 'School of Business · 2026' and Code 'TIA503 · Business'. The instructor should confirm which form wins.
+- **w11** · auditoría · overflow · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w11.es.yaml and en/w11.en.yaml` s7 table
+  - In the 3.1 in first column, 'Worksheet_SelectionChange' and 'Workbook_BeforeSave' are wider than the box. The kit sizes those rows for two lines, so PowerPoint will break the identifiers mid-word. The PIL preview draws them running into the second column. Lint reports nothing.
+  - Evidencia: pptx geometry: name box 3.10 in wide at 22.5 pt Arial bold, row height 1.18 in (two lines) against 0.78 in for the short names. kit.deck.wrap_lines documents the mid-word break.
+  - Propuesta: Not fixable in YAML without renaming the events. It needs a wider first table column in kit/deck.py, or the instructor reordering the columns.
+- **w11** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w11.es.yaml and en/w11.en.yaml` s10 diagram
+  - The title says 'Tres lugares' / 'Three places' but the diagram draws two blocks. The third place, the ordinary module, is covered in the note directly below.
+  - Evidencia: Rendered preview: two blocks plus a note about the ordinary module, which matches the three places w02 introduced.
+  - Propuesta: Judged not a defect, because the note shows the third place. Left unchanged.
+- **w11** · revisión · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w11.es.yaml and en/w11.en.yaml` s23 homework
+  - The homework slide uses different conventions from w01-w10 of the same course. The en eyebrow is 'Homework' where w01-w10 say 'Assignment'. Due says 'Before session 12' / 'Antes de la sesión 12' where w08-w10 say 'Before week N' / 'Antes de la semana N'. Both forms are correct and both are common across the repository, so this is a course-wide style choice, not an error.
+  - Evidencia: grep of homework blocks in en/es w08-w13: w08-w10 use 'Assignment' and 'Before week N', w11-w13 use 'Homework' and 'Before session N'. Repository-wide: 102 'Homework' against 26 'Assignment', and 82 'Before week N' against 50 'Before session N'.
+  - Propuesta: Left as is: there is no wrong form, and aligning only w11 would split the w11-w17 batch. If the instructor wants one form, apply it across w01-w17 of TIA503 in both languages.
+- **w12** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w12.es.yaml` s10, 15, 17 (Debug.Print)
+  - Debug.Print appears for the first time in the course in w12: zero occurrences in w01 to w11, es and en. The quiz (s17) and the homework ('demuestre, imprimiendo') depend on it, but no slide says what it does. w02 only taught the Immediate window as a place to ask what something is worth.
+  - Evidencia: grep -c 'Debug.Print' es/w01..w11 gives 0 in every file. w12 has 5, and ejercicios.es.md first uses it in week 12. The only bridge is the s10 output label 'Ventana Inmediato'.
+  - Propuesta: Not changed. The decks carry no speaker notes on the instructor's instruction (HANDOFF.md), and code_output has no annotation slot, so the fix would mean new slide text or a sentence in an earlier week. Left for the instructor to decide. The same applies to en/w12.en.yaml.
+- **w12** · auditoría · output-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w12.es.yaml` s10 code_output
+  - Debug.Print of a positive number puts a space before it for the sign, so the real Immediate window shows ' 180000' and ' 0'. The panel shows '180000' and '0'.
+  - Evidencia: In VBA, Print of numbers reserves a leading space for the sign; the emulation gives ' 180000 ' / ' 0 '. The whole course drops that space: w10 shows '8', w13 shows '4 4'.
+  - Propuesta: Not changed. Adding the space only here would break the course-wide display convention, and the values are right. Reported so the instructor knows the panels drop the sign space. The same applies to en.
+- **w12** · auditoría · code-wrong · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w12.es.yaml` s15 code_output
+  - The fragment uses a and b without Dim. Since w03 the course requires Option Explicit, which would reject it with 'Variable no definida'. Slides 10, 13 and the quiz (s17) do declare their variables.
+  - Evidencia: Read against w03, whose lab says to put Option Explicit at the top of the module. Without Option Explicit, a and b are Variants and the output is the same (the emulation matches). Later decks (w14 and others) also show undeclared variables in fragments.
+  - Propuesta: Not changed. This is a fragment, and a declaration is minimum scaffolding under the course's fragment convention. Adding a line would also shrink the code card. The same applies to en.
+- **w12** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w12.es.yaml` s13 code_output, 8 diagram
+  - The Spanish deck names the Spanish VBE UI on s8 ('Insertar · Módulo de clase', 'Clase1') but shows the English run-time message on s13 ('Object variable or With block variable not set'). In Spanish Excel the message is 'Variable de objeto o bloque With no establecida'.
+  - Evidencia: This is a course-wide convention: es/w03 shows 'Run-time error 6: Overflow', es/w14 shows the same error 91 text, and es/w15 shows 'Object doesn't support this property or method'. w14 links back to this slide ('El mismo error 91 de la semana 12').
+  - Propuesta: Not changed. Changing it only in w12 would break the match with w14. If the instructor wants Spanish messages, the change belongs in all the Spanish VBA decks.
+- **w12** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w12.en.yaml` s1 cover
+  - The instructor's list says the English covers of w01 to w10 read 'Facultad de Empresariales · 2026' and those of w11 to w17 read 'School of Business'. In w12, en reads 'School of Business · 2026' / 'TIA503 · Business' and es reads 'Facultad de Empresariales · 2026', the syllabus name.
+  - Evidencia: Other agents have already moved en w01, w02 and w10 to 'School of Business'; en w03 to w09 still read 'Facultad'. In Spanish, w01 to w12 read 'Facultad'. The session counter (12 de 17 / 12 of 17) and the roadmap (phase 03 'Semanas 8–12' = now) agree with w11 and w13.
+  - Propuesta: No change needed in w12: both covers already match the direction being applied. The fix for the remaining decks belongs in en w03 to w09 and in es w13 to w17 (kicker, objectives title and roadmap wording).
+- **w13** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w13.en.yaml` s1 cover
+  - Known defect (English covers): w01 to w10 say 'Facultad de Empresariales · 2026' and w11 to w17 say 'School of Business · 2026'. This deck says 'School of Business', which is the correct English form.
+  - Evidencia: Repo-wide, English decks use 'School of Engineering' (110 times) for 'Facultad de Ingeniería', so 'School of Business' is the house translation.
+  - Propuesta: No change in w13.en. The fix belongs in en/w01 to en/w10, which should become 'School of Business · 2026'.
+- **w13** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w13.es.yaml` s26 takeaways, 28 closing, 12 quiz, 20 pitfalls
+  - More cross-week drift in the same w13 to w17 Spanish block, not named in the instructor list. The takeaways title says 'Tres ideas para llevarte' (w01 to w12: 'llevarse'). The closing label says 'Chat' (w01 to w12: 'Mensajería'). The quiz and pitfalls eyebrows say 'Pregunta rápida' and 'Diagnóstico' from w11 on (w01 to w10: 'Verificación rápida' and 'Bloque 0N · Errores comunes'), in both languages.
+  - Evidencia: Scripted comparison of the recurring slide titles over es/w01 to es/w17 and en/w01 to en/w17 in this folder.
+  - Propuesta: Not changed. Fixing only w13 would move the break between w13 and w14 instead of removing it. It should be decided for w13 to w17 (and w11 to w12 for the eyebrows) together.
+- **w13** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w13.es.yaml` s9 code / 16 code
+  - Possible confusion for a reader: the cleaning and sorting macros hard-code A2:A200 and A1:C200. Meanwhile the lab ('El rango se calcula, no se escribe') and the midterm method slide ('que use un rango variable en vez de una dirección fija') require a calculated range. The For Each annotation 'sin que te importe cuántas filas trae' is true of For Each but not of a fixed 199-row range.
+  - Evidencia: w09 uses the same framing ('Sin contador... Si el rango cambia, el ciclo se ajusta solo') and teaches End(xlUp). The slides are demos of Trim and Sort, not of range calculation. The same applies to the en deck.
+  - Propuesta: Left as is: the code is correct as a demo and changing it would rewrite correct slides. The instructor may want a computed range here.
+- **w13** · auditoría · description-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w13.es.yaml` s17 code_output
+  - The title 'Sin declarar el encabezado, el encabezado se ordena' sits over code that explicitly passes Header:=xlNo, which a reader may find contradictory.
+  - Evidencia: Range.Sort's Header defaults to xlNo, so omitting Header and writing xlNo behave the same. Pitfall 02 frames it as 'Olvidar Header:=xlYes'. LibreOffice VBA run: 'Nombre' sorts to the bottom after Ana, Beto, Carla, Dario, matching the panel. Same in the en deck.
+  - Propuesta: Not a defect; no change.
+- **w14** · auditoría · technical-claim · low · `both` s19 code_output
+  - I could not verify this slide. It says a table created from the header-only range A1:B1 has ListRows.Count = 0 and DataBodyRange Is Nothing, so Debug.Print ...DataBodyRange.Rows.Count raises error 91. If Excel instead gives a new header-only table one real blank data row, the slide would print 1 and the error would not occur.
+  - Evidencia: There is no Excel here and HANDOFF.md has no measurement for w14. The forum material I could reach says an empty table (header row plus the visible empty row) has DataBodyRange = Nothing. That fits the slide but does not settle a freshly created table. Within the slide, the output is consistent: a Nothing DataBodyRange followed by .Rows gives error 91, 'Object variable or With block variable not set'.
+  - Propuesta: Left as is. Someone should check it in Excel by hand.
+- **w14** · auditoría · pedagogy-order · low · `both` s25 lab
+  - The lab asks students to turn their database into a table and then write subtotals on a separate sheet. Range.Subtotal does not work on a ListObject, so the data has to go out as a plain range first, and no deck from w01 to w14 shows Range.Copy. Students can get there with xlFilterCopy (slide 11) or a recorded macro, but nothing on the slides warns them that Subtotal fails on a table.
+  - Evidencia: A grep for '.Copy', 'PasteSpecial' and 'Sheets.Add' in es/w01-w13 found nothing. Excel greys out Subtotal for a table, and VBA's Range.Subtotal fails on one.
+  - Propuesta: Not changed, because a fix means new content (a warning line or a step). The instructor should decide.
+- **w14** · auditoría · language · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w14.en.yaml` s7, 13 code_output
+  - The English department name 'Buying' (for Compras) reads as British retail usage; American English would usually say 'Purchasing'.
+  - Evidencia: Swapping it would not change any result: P still sorts before S, so the label would be 'Purchasing Total' with =SUBTOTAL(9,B2:B3). My Python model confirms the current 'Buying Total' / =SUBTOTAL(9,B2:B3) output.
+  - Propuesta: Left as is: it is correct and consistent, and renaming it would touch three slides.
+- **w14** · auditoría · other · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w14.es.yaml` s13, 19 code_output
+  - The Spanish deck shows English Excel strings ('Compras Total', 'Error 91 Object variable or With block variable not set'). A Spanish Excel would show 'Total Compras' and 'Variable de objeto o bloque With no establecido'.
+  - Evidencia: HANDOFF.md, 'Error text follows the Office UI language': the Spanish decks deliberately show the English strings that the repository and the reference use.
+  - Propuesta: Not a defect. This is a documented course convention.
+- **w15** · auditoría · output-mismatch · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w15.es.yaml` s13 code_output
+  - The source shows only SumIfs(..., "Ventas"), but the panel also lists SumIfs "Nada" = 0 and CountIf "Ventas" = 2, calls the slide does not show.
+  - Evidencia: The values are correct (400, 0, 2, recomputed in Python). The course's 'Medido' panels routinely list labeled measurements of variants not written out in the source (for example w14.es s7 shows four sums for one AutoFilter line), so I treated this as the course convention and left it.
+  - Propuesta: Left as is (house convention for labeled measurements). If the instructor wants strict equality, add the two calls to the source.
+- **w15** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w15.es.yaml` s16 concept
+  - 'Es lo que la grabadora lleva escribiéndote desde la semana 6' / 'since week 6'. No earlier deck in the course shows recorder output containing FormulaR1C1. The recorded macros shown in w01 and w06 only hide columns and set NumberFormat.
+  - Evidencia: Grepped es w01 to w14 for FormulaR1C1 and RC[: no hits. The claim is still plausible, because the recorder writes ActiveCell.FormulaR1C1 whenever a formula is typed while recording, and students recorded macros in w01 (amortization) and w06 and w07.
+  - Propuesta: Not changed. This is a pedagogical claim about students' own recordings, so it cannot be refuted from the decks.
+- **w15** · auditoría · other · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w15.es.yaml` sall
+  - Neither deck has speaker notes, so there is no quiz answer in the notes to cross-check. The answer to the slide 22 quiz (option A: Error 1004, 36 rows written) is given by the slide 23 trace, and it is the only defensible option. Distractor B is Application.VLookup's behavior, C a SumIfs-style zero, D an empty cell.
+  - Evidencia: grep -c notes: gives 0 for every deck in the course, so this is the course convention.
+  - Propuesta: No change. Writing notes would mean inventing content.
+- **w16** · auditoría · pedagogy-order · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w16.es.yaml` s24 lab
+  - The lab requires a table as the pivot source, but slide 6 builds the cache from CurrentRegion and no slide shows PivotCaches.Create with a table (SourceData:="Ventas2026" or tbl.Range). The English deck has the same gap.
+  - Evidencia: w14 taught ListObjects and table names (tbl.Name = "Ventas2026"), and w15 taught 'Apunta SetSourceData a la tabla', so students can infer the step. The lab does not use anything outside weeks 1 to 16.
+  - Propuesta: Not changed: the step can be inferred from w14 and w15. Adding a slide would be new content.
+- **w16** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w16.es.yaml` s26 homework
+  - The deck says 'Entrega: Antes de la sesión 17' and 'prepárate para presentarlo', and session 17 is the final exam. The syllabus says the project is handed in and presented in week 16 (two meetings per week). The deck never says when the presentation happens. The English deck has the same wording.
+  - Evidencia: Syllabus xlsx: 'One delivery only: the finished project, handed in and presented in week 16', and week 16 lists 'Progress presentations and peer review'. Read with the decks' one-session-per-week numbering, the two do not contradict each other. The weights all match the syllabus: project 20 %; rubric 30/20/20/15/10/5 adds up to the 70/25/5 split; '30 % ceiling if it does not run'; graded individually.
+  - Propuesta: Not changed. The wording is consistent with the syllabus if the presentation is week 16's second meeting.
+- **w17** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w17.es.yaml` s12 concept
+  - The title 'El 91 salió dos veces por dos razones distintas' (en: 'Error 91 turned up twice') names weeks 12 and 14. w06 also brought up error 91, for a third reason (assigning a Range without Set), in an annotation and a pitfall. It is defensible if 'salió' means measured output, since only w12 and w14 show 91 in a measured panel, but a student who remembers w06 may read it as wrong.
+  - Evidencia: w06.es: annotation 'Set: … Sin Set, error 91' and pitfall 'Olvidar Set en un objeto … error 91'. w12 and w14 have code_output panels with Error 91.
+  - Propuesta: Left as is because it is defensible under 'Repaso de lo medido'. The instructor may want to mention the w06 Set case.
+- **w17** · auditoría · technical-claim · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w17.es.yaml` s15 trace
+  - The verdict says that with a table as source 'las dos crecen solas y no hay que acordarse de nada' (en: 'nothing to remember'). With a table source the chart updates by itself, but the pivot still only shows new rows after RefreshTable. In the quiz scenario the refresh is already done, and w16 frames it the same way ('El origen se vuelve tabla y ya crece solo'), so this reads as an overstatement rather than an error.
+  - Evidencia: Hand check against Excel PivotCache semantics, plus a LibreOffice analog: a DataPilot over a fixed A1:B100 range does not pick up rows 101 to 120 after refresh.
+  - Propuesta: Not changed. It is consistent with w16 and the scenario includes the refresh.
+- **w17** · auditoría · consistency · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/en/w17.en.yaml` s1 cover
+  - Known defect context: the English covers mix 'Facultad de Empresariales' and 'School of Business'. en/w17 already says 'School of Business · 2026' and 'TIA503 · Business'. That matches en/w01, w02 and w10 to w16, and the w03 to w05 en agents are converging on it, so I made no change. Note that the English syllabus keeps the Spanish name 'Facultad de Empresariales'. If the instructor prefers that, every English cover needs to change together.
+  - Evidencia: git show HEAD for the en kickers, compared with the current working-tree kickers of en/w01 to w17.
+  - Propuesta: No change needed in w17.en. It is consistent with the English convention being applied.
+- **w17** · auditoría · quiz-key · low · `ppts/vba/analisis-y-procesamiento-de-la-informacion/es/w17.es.yaml` s14 quiz / 15 trace
+  - I verified the quiz (chart and pivot over A1:B100, 20 rows arrive, pt.RefreshTable). It has exactly one defensible answer, A ('Ninguna de las dos incluye las filas nuevas'), and the trace slide confirms it step by step. B (refresh means new data), C (refresh fetches new rows) and D (the chart grows by itself) are real confusions. es and en have the same options in the same order. Neither deck has speaker notes (they were removed course-wide in commit 6818abb 'strip speaker notes'), so there is no notes answer to compare against.
+  - Evidencia: LibreOffice Calc analog through UNO: built a DataPilot and a chart over A1:B100, wrote 20 rows in A101:B120 and called refresh(). The pivot total stayed at 99 (only the old rows) and the chart range stayed at rows 0 to 99. Excel semantics checked by reading: the series is fixed at $A$2:$B$100 and PivotCache.SourceData is a fixed address.
+  - Propuesta: No change needed.

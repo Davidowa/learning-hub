@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Universidad Panamericana · 2026
+      kicker: Facultad de Ingeniería · 2026
       unit: Semana 16 · Bloque E · Concurrencia y bloqueos · Proyecto
       title: Introducción a las Bases de Datos
       subtitle: >-
@@ -18,7 +18,7 @@ slides:
         mil pesos.
       meta:
         - [Profesor, David Escobar-Castillejos]
-        - [Clave, COM112 · Semestre 1]
+        - [Motor, MySQL 9.7.2]
         - [Sesión, 16 de 17]
 
   - agenda:
@@ -182,7 +182,7 @@ slides:
           WHERE alumno_id = 1 FOR SHARE;
 
         SELECT ... FOR UPDATE NOWAIT;
-        SELECT ... FOR UPDATE SKIP LOCKED;
+        SELECT * FROM alumno FOR UPDATE SKIP LOCKED;
       output: |
         ERROR 1205 (HY000): Lock wait
         timeout exceeded; try
@@ -303,7 +303,7 @@ slides:
         UPDATE alumno SET ...      UPDATE alumno SET ...
           WHERE alumno_id = 1;       WHERE alumno_id = 2;
 
-        -- y ahora, a la vez     -- y ahora, a la vez
+        -- y ahora, a la vez       -- y ahora, a la vez
 
         UPDATE alumno SET ...      UPDATE alumno SET ...
           WHERE alumno_id = 2;       WHERE alumno_id = 1;
@@ -326,12 +326,14 @@ slides:
       output_label: Salida
       source: |
         -- caso 1, el interbloqueo
+        START TRANSACTION;
         UPDATE alumno SET credito_maximo = credito_maximo + 500
           WHERE alumno_id = 3;
         -- y luego choca de frente:  ERROR 1213
         COMMIT;
 
         -- caso 2, la espera que expira
+        START TRANSACTION;
         UPDATE alumno SET credito_maximo = 7777
           WHERE alumno_id = 3;
         -- y luego espera y expira:  ERROR 1205
@@ -390,7 +392,7 @@ slides:
         SELECT ID, COMMAND, TIME, STATE, LEFT(INFO,34)
         FROM information_schema.PROCESSLIST;
 
-        KILL 1131;
+        KILL 1123;
       output: |
         waiting_pid    1124
         blocking_pid   1123
@@ -410,18 +412,18 @@ slides:
       output_label: Salida
       source: |
         DECLARE v_intentos INT DEFAULT 0;
+        DECLARE v_falla INT DEFAULT 0;
         DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
-        BEGIN
-          ROLLBACK;
-          SET v_intentos = v_intentos + 1;
-        END;
+          BEGIN ROLLBACK; SET v_falla = 1; END;
 
         reintenta: LOOP
+          SET v_falla = 0, v_intentos = v_intentos + 1;
           START TRANSACTION;
           UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = 1;
-          COMMIT;
-          LEAVE reintenta;
+            WHERE alumno_id = p_primera;
+          UPDATE alumno SET credito_maximo = credito_maximo + 100
+            WHERE alumno_id = p_segunda;
+          IF v_falla = 0 THEN COMMIT; LEAVE reintenta; END IF;
         END LOOP;
       output: |
         sesion A
@@ -454,7 +456,7 @@ slides:
           title: Creer que la transacción sigue abierta
           desc: >-
             El DDL confirma por su cuenta, LOCK TABLES también, y en MyISAM el ROLLBACK no
-            deshace nada. Tres maneras de perder el «todas o ninguna» sin un solo aviso.
+            deshace nada. Tres maneras de perder el «todas o ninguna» sin un solo error.
         - label: Error 04
           title: Subir el aislamiento para no pensar
           desc: >-
@@ -492,8 +494,8 @@ slides:
             Ahí cabe la otra sesión, y no hay error ni advertencia que lo diga
         - title: El candado se pide, no se hereda
           desc: >-
-            Una lectura simple nunca espera. FOR UPDATE y FOR SHARE sí, y hasta dónde
-            llegan lo decide el índice que hay detrás del WHERE
+            En el nivel de fábrica, una lectura simple nunca espera. FOR UPDATE y FOR SHARE
+            sí, y hasta dónde llegan lo decide el índice que hay detrás del WHERE
         - title: 1205 y 1213 no son el mismo error
           desc: >-
             El 1213 deshace la transacción completa y el 1205 solo la sentencia. Reintentar

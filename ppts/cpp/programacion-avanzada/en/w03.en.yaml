@@ -117,12 +117,12 @@ slides:
         label: Where to look it up
         title: The limits header says so
         note: >-
-          std::numeric_limits<int>::max() returns 2147483647 and min() returns
-          -2147483648. Useful for checking a range instead of assuming one.
+          std::numeric_limits<int>::min() returns -2147483648 and max() returns
+          2147483647. Useful for checking a range instead of assuming one.
       steps:
         - text: Every type has a fixed range
         - text: Going past it raises nothing
-        - text: The value wraps and carries on
+        - text: The program carries on with a wrong value
           loop: ↺ choosing the type is choosing where that edge sits
 
   - code_output:
@@ -171,6 +171,7 @@ slides:
         file: short.cpp
         lang: cpp
         code: |
+          #include <iostream>
           #include <string>
           using namespace std;
 
@@ -181,6 +182,7 @@ slides:
         file: explicit.cpp
         lang: cpp
         code: |
+          #include <iostream>
           #include <string>
 
           std::string course = "Programming";
@@ -277,11 +279,11 @@ slides:
 
   - table:
       eyebrow: Operations
-      title: 'Seven operations on a = "Programacion"'
+      title: 'Seven operations on a = "Programming"'
       headers: ["Operation", "What it does", "Gives"]
       rows:
         - ["a + b", "Joins the two", "A new string"]
-        - ["a.length()", "Counts the characters", "12"]
+        - ["a.length()", "Counts the characters", "11"]
         - ["a.at(0)", "The character at that position", "P"]
         - ["a.substr(0, 7)", "A piece from a position", "Program"]
         - ["a.find(\"gram\")", "Where the searched text starts", "3"]
@@ -294,24 +296,24 @@ slides:
       filename: piece.cpp
       lang: cpp
       source: |
-        std::string s = "Programacion";
+        std::string s = "Programming";
 
         std::cout << s.substr(0, 7) << s.length() << "\n";
       options:
-        - 'Program12, because substr does not modify the original'
+        - 'Program11, because substr does not modify the original'
         - 'Program7, because substr leaves the string seven characters long'
-        - 'Programacion12, because substr copies the whole string'
-        - 'Programa12, because the numbers are the start and the end'
+        - 'Programming11, because substr copies the whole string'
+        - 'Programm11, because the numbers are the start and the end'
 
   - trace:
       eyebrow: Answer
       title: substr hands back a copy and leaves the original alone
       headers: ["Step", "Expression", "Gives", "s is still"]
       rows:
-        - ["1", "s starts as Programacion", "–", "Programacion"]
-        - ["2", "s.substr(0, 7)", "Program", "Programacion"]
-        - ["3", "s.length()", "12", "Programacion"]
-        - ["4", "Printed together", "Program12", "Programacion"]
+        - ["1", "s starts as Programming", "–", "Programming"]
+        - ["2", "s.substr(0, 7)", "Program", "Programming"]
+        - ["3", "s.length()", "11", "Programming"]
+        - ["4", "Printed together", "Program11", "Programming"]
       verdict: The two arguments of substr are the starting position and how many characters to take, not the start and the end. And neither operation changes the string it was applied to.
 
   - method:
@@ -345,7 +347,7 @@ slides:
         - title: The size depends on the platform
           desc: long is 4 bytes on Windows and 8 on Linux, from the same code under the same standard
         - title: Going out of range raises nothing
-          desc: Unsigned wraps silently and signed is undefined, so the type is chosen by the range you actually need
+          desc: Unsigned wraps silently and signed overflow is undefined, so the type is chosen by the range you actually need
         - title: std is a namespace
           desc: The prefix says which library each name came from, and in a header it is never left out
 

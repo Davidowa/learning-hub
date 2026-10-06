@@ -55,7 +55,7 @@ slides:
         - head: Construir una tabla de dos variables
           sub: "Celda de entrada (fila) y Celda de entrada (columna), y cuál de los dos ejes es cuál"
         - head: Guardar y comparar escenarios con nombre
-          sub: "[Add], Valores de escenario, Resumen, y por qué tres copias de una hoja no son escenarios"
+          sub: "Agregar, Valores de escenario, Resumen, y por qué tres copias de una hoja no son escenarios"
         - head: Calcular un pago y un plazo
           sub: PAGO y NPER sobre el mismo modelo de crédito, con la tasa y los periodos de acuerdo
 
@@ -245,9 +245,9 @@ slides:
       filename: Churrumpin.xlsx
       lang: excel
       source: |
-        Una variable, las entradas por A10:A20
-        B9   =B14
-        B10  {=TABLE(,B2)}
+        Una variable, las entradas por D10:D20
+        E9   =B14
+        E10  {=TABLE(,B2)}
 
         Dos variables, por H10:H20 y por I9:M9
         H9   =B14
@@ -309,14 +309,14 @@ slides:
           title: Ábrelo vacío
           desc: Datos, Análisis de hipótesis, Administrador de escenarios. Se lee "No Scenarios defined".
         - label: '02'
-          title: "[Add], y ponle nombre"
+          title: "Agregar, y ponle nombre"
           desc: Los nombres salen en el informe de resumen, así que usa palabras que un lector entienda.
         - label: '03'
           title: "Celdas cambiantes"
-          desc: Ctrl+clic para las celdas que no están juntas. El tope práctico son 32 de ellas.
+          desc: Ctrl+clic para las celdas que no están juntas. El tope son 32 de ellas.
         - label: '04'
-          title: Valores, y otra vez [Add]
-          desc: Una casilla por celda que cambia. [Add] entra al siguiente escenario sin salir del cuadro.
+          title: Valores, y otra vez Agregar
+          desc: Una casilla por celda que cambia. Agregar entra al siguiente escenario sin salir del cuadro.
         - label: '05'
           title: "Resumen"
           desc: "Resumen de escenario o Informe de tabla dinámica de escenario, más las Celdas de resultado a comparar"
@@ -331,7 +331,7 @@ slides:
         primer escenario.
       alt: >-
         El cuadro de diálogo Administrador de escenarios de Excel en una hoja sin
-        escenarios, con [Add] disponible y los demás botones en gris.
+        escenarios, con Agregar, Combinar y Cerrar disponibles y los demás botones en gris.
       side:
         label: Qué pide Resumen
         text: >-
@@ -347,7 +347,7 @@ slides:
       source: |
         B5   =PAGO(B2/12,B3*12,B4)
 
-        B6   =NPER(B2/12,-B5,B4)
+        B6   =NPER(B2/12,B5,B4)
 
         B7   =SI(Y(B6<=36,-B5<=5000),"Aprobar","Rechazar")
       annotations:
@@ -365,8 +365,8 @@ slides:
             gana los segundos.
         - label: Riesgo
           text: >-
-            Que NPER dé negativo o #¡NUM! quiere decir que Pago y Va traen el mismo
-            signo.
+            Si NPER da negativo, Pago y Va traen el mismo signo. Si da #¡NUM!, el pago
+            no cubre ni el interés.
           accent: true
 
   - pitfalls:
@@ -393,7 +393,7 @@ slides:
           title: La tasa anual sin dividir
           desc: >-
             PAGO devuelve un pago que se ve plausible y es demasiado grande. Revisa que el
-            pago por el plazo pase del monto prestado.
+            pago por el plazo pase del monto prestado por poco, no por mucho.
 
   - table:
       eyebrow: Bloque 03 · El proyecto final
@@ -423,7 +423,7 @@ slides:
         mil unidades, el volumen de equilibrio con Buscar objetivo, y la utilidad barrida de
         treinta a setenta mil en pasos de cinco mil. El crédito automotriz: PAGO con
         validación de datos en la tasa y el plazo, y luego el mismo pago sobre una columna
-        de tasas y un renglón de precios. El caso de divisas: una tabla de dos variables
+        de tasas y un renglón de plazos. El caso de divisas: una tabla de dos variables
         sobre el tipo de compra y el de venta. Agreguen lo que el ejercicio deja fuera, tres
         escenarios con nombre y un informe de resumen.
       blocks:

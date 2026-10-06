@@ -82,7 +82,9 @@ slides:
         lang: excel
         code: |
           =C2/B2
-          # and you drag it down to row 500
+          =C3/B3
+          …
+          =C500/B500
       after:
         label: In Python
         file: cpc.py
@@ -181,7 +183,7 @@ slides:
         - label: The counter
           text: day starts at zero and climbs by one per pass. That is how you count how many times something repeated.
         - label: Risk
-          text: Remove the subtraction and the program never ends. Control C stops it, and it is worth seeing once.
+          text: Remove the subtraction and the program never ends. Control C stops it in a terminal, or the stop button in Colab.
           accent: true
 
   - trace:
@@ -206,11 +208,11 @@ slides:
           title: Off by one
           desc: range(4) gives four passes, from 0 to 3. The 4 never shows up, and that is correct.
         - label: Error 03
-          title: Declaring the accumulator inside
-          desc: If total = 0 sits inside the loop, it resets every pass and at the end it holds only the last one.
+          title: Declaring the counter inside
+          desc: If day = 0 sits inside the loop, it resets every pass and at the end it holds 1, not 8.
         - label: Error 04
           title: Walking lists of different lengths
-          desc: Three columns with different row counts break the pairing. They raise IndexError, or drop rows without warning.
+          desc: Three columns with different row counts break the pairing. The loop raises IndexError, or skips rows without warning.
 
   - table:
       eyebrow: First midterm

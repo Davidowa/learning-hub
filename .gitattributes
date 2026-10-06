@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# The PDF scripts at the root: cmd.exe misreads a .bat with bare LF endings, and a
+# .command with CR in it fails on macOS with "bad interpreter".
+*.bat     text eol=crlf
+*.ps1     text eol=crlf
+*.command text eol=lf

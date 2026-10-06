@@ -13,8 +13,8 @@ slides:
       unit: Semana 09 · Bloque C · El SELECT de una tabla
       title: Introducción a las Bases de Datos
       subtitle: >-
-        Esta es la sentencia que van a escribir más veces que todas las demás juntas, y
-        casi todo lo que le sale mal, le sale mal en silencio.
+        Esta es la sentencia que vas a escribir más veces que todas las demás juntas, y
+        casi todo lo que le sale mal le sale mal en silencio.
       meta:
         - [Profesor, David Escobar-Castillejos]
         - [Motor, MySQL 9.7.2]
@@ -44,7 +44,7 @@ slides:
         - head: Leer el orden lógico de las cláusulas
           sub: De ahí sale sola la regla de dónde vive un alias y dónde todavía no existe
         - head: Ordenar y paginar un resultado
-          sub: Con los NULL donde usted quiera y no donde MySQL los pone por omisión
+          sub: Con los NULL donde tú quieras y no donde MySQL los pone por omisión
         - head: Reconocer los tres errores callados de la semana
           sub: El conteo que no cierra, el orden alfabético de una columna numérica y la coma que falta
 
@@ -93,8 +93,8 @@ slides:
         label: La regla operativa
         title: NULL no se compara, se pregunta
         note: >-
-          Para preguntar por la ausencia de dato existen IS NULL e IS NOT NULL, y son los
-          únicos operadores que contestan verdadero o falso sobre un NULL. El signo de
+          Para preguntar por la ausencia de dato existen IS NULL e IS NOT NULL, y
+          contestan verdadero o falso sobre un NULL. El signo de
           igual nunca lo hace, ni siquiera contra otro NULL.
       steps:
         - text: El WHERE evalúa la condición fila por fila
@@ -164,7 +164,7 @@ slides:
       title: La caja de búsqueda
       lede: >-
         Nombre parcial, matrícula parcial, un porcentaje que es dato y no comodín, y una
-        colación que ya resolvió los acentos antes de que usted llegara.
+        colación que ya resolvió los acentos antes de que tú llegaras.
       block: 2
 
   - code_output:
@@ -403,7 +403,7 @@ slides:
         Bruno Ramírez Sosa
         Carla Méndez Ruiz
         Diego Ortiz Luna
-        EXPLAIN, segundo renglon:
+        EXPLAIN, segundo renglón:
         -> Covering index scan on
            alumno using ix_grupo
         -> Table scan on alumno
@@ -430,18 +430,18 @@ slides:
 
   - pitfalls:
       eyebrow: Errores comunes
-      title: Cuatro maneras de perder filas sin enterarse
+      title: Cuatro maneras de consultar mal
       items:
         - label: Error 01
           title: Filtrar con igual contra NULL
           desc: >-
             WHERE carrera = NULL devuelve cero filas y no devuelve error. La pregunta por
-            la ausencia se escribe IS NULL, y es la única forma que contesta.
+            la ausencia se escribe IS NULL, y esa sí contesta.
         - label: Error 02
           title: Confiar en NOT IN sobre datos con NULL
           desc: >-
             NOT IN pierde la fila nula igual que el distinto. Aquí son tres carreras de
-            once alumnos con carrera, y el doceavo no aparece en ninguna de las dos listas.
+            once alumnos con carrera, y el duodécimo no aparece en ninguna de las dos listas.
         - label: Error 03
           title: Escribir OFFSET sin LIMIT
           desc: >-
@@ -457,7 +457,7 @@ slides:
       eyebrow: Laboratorio
       title: La pantalla de búsqueda de control escolar, en tres pasadas
       brief: >-
-        Sobre la tabla alumno, y sin un solo JOIN, arme la consulta que alimenta la
+        Sobre la tabla alumno, y sin un solo JOIN, arma la consulta que alimenta la
         pantalla de búsqueda de la oficina. Primero el filtro exacto por carrera, después
         la caja de texto con nombre y matrícula parciales, y al final la rejilla de
         resultados ordenada y paginada de cinco en cinco.
@@ -466,11 +466,11 @@ slides:
           text: Un archivo .sql con las tres consultas y la salida que devolvió el servidor
         - label: Restricción
           text: >-
-            Ninguna consulta puede perder al alumno con carrera nula. Si lo pierde, escriba
-            en un comentario por qué lo perdió.
+            Ninguna consulta puede perder al alumno con carrera nula. Si lo pierdes, escribe
+            en un comentario por qué lo perdiste.
         - label: La prueba
           text: >-
-            Cuente las filas del filtro y de su contrario. Si no suman doce, ya encontró el
+            Cuenta las filas del filtro y de su contrario. Si no suman doce, ya encontraste el
             NULL de la tabla.
 
   - takeaways:
@@ -479,12 +479,12 @@ slides:
       items:
         - title: Una condición contesta tres cosas
           desc: >-
-            Verdadero, falso y desconocido. El WHERE se queda con el primero, y por eso la
-            condición y su contraria nunca suman el total de la tabla
+            Verdadero, falso y desconocido. El WHERE se queda con el primero, y por eso, si la
+            columna trae un NULL, la condición y su contraria no suman el total de la tabla
         - title: El orden lógico explica los alias
           desc: >-
             WHERE corre antes que SELECT, así que el alias todavía no existe y sale 1054.
-            ORDER BY corre después y sí lo acepta. La semana 10 agrega HAVING al mismo dibujo
+            ORDER BY corre después y sí lo acepta. La semana 10 enciende HAVING en el mismo dibujo
         - title: Ordenar es parte de la respuesta
           desc: >-
             Un LIMIT sin ORDER BY devuelve lo primero que el optimizador tocó, y el mismo

@@ -61,10 +61,10 @@ slides:
         - head: Predict whether two objects will collide
           sub: From which of them carries a Rigidbody and which collider is a trigger
         - head: Use the fixed timestep in an argument
-          sub: Fifty physics steps a second, and a fall of two metres inside thirty-two of them
+          sub: Fifty physics steps a second, and a fall of two meters inside thirty-two of them
         - head: Make a prefab and edit it in Prefab Mode
           sub: So one change reaches every crate in the scene at once
-        - head: Recognise an override before it confuses you
+        - head: Recognize an override before it confuses you
           sub: The value in bold, the blue bar in the margin, and what Revert does to it
 
   - roadmap:
@@ -80,7 +80,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: now
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: todo
         - label: 04 · Session 6
@@ -102,14 +102,14 @@ slides:
       lead: >-
         A GameObject holds a name, a Transform and a list of components. Nothing else. Making
         the crate bounce means adding a component, not writing a subclass of Crate, and that
-        is why two objects with nothing in common can share exactly one behaviour. It also
+        is why two objects with nothing in common can share exactly one behavior. It also
         means the Inspector is the truth about what an object does.
       panel:
         label: The one part that cannot be removed
         title: Every GameObject has a Transform
         note: >-
           Even an empty used only as a folder in the Hierarchy. The Remove Component entry is
-          greyed out on it, because a thing in a scene has to be somewhere.
+          grayed out on it, because a thing in a scene has to be somewhere.
       steps:
         - text: The GameObject is a container with a name
         - text: Each component adds one capability
@@ -146,7 +146,7 @@ slides:
         - ["Mesh Filter", "Which mesh gets drawn", "Yes"]
         - ["Mesh Renderer", "Draws it, holds materials", "Yes"]
         - ["Box Collider", "A shape physics can touch", "Yes"]
-        - ["Rigidbody", "Mass, drag, gravity", "Yes"]
+        - ["Rigidbody", "Mass, damping, gravity", "Yes"]
 
   - divider:
       eyebrow: Block 02
@@ -171,7 +171,7 @@ slides:
           Halving it doubles the physics work per second. It is a knob for a simulation that
           jitters, not a knob for a scene that runs slowly.
       steps:
-        - text: Gravity is -9.81 on Y, in metres per second squared
+        - text: Gravity is -9.81 on Y, in meters per second squared
         - text: The engine integrates once every 0.02 seconds
         - text: A frame may cover zero steps or three
           loop: ↺ and Time.deltaTime is the frame, Time.fixedDeltaTime is the step
@@ -179,7 +179,7 @@ slides:
   - stat:
       eyebrow: Measured on the class ramp
       value: 32 steps
-      text: What a two metre drop costs the physics engine, before anything is drawn
+      text: What a two meter drop costs the physics engine, before anything is drawn
       note: >-
         The theory says the square root of 2h over g, which is 0.639 seconds. At 0.02 seconds
         a step that is 31.9 steps, and the first contact is reported on step 32. The frame
@@ -217,8 +217,8 @@ slides:
         - ["Rigidbody", "Plain collider", "Collision, messages fire"]
         - ["Rigidbody", "Rigidbody", "Collision, both are pushed"]
         - ["Plain collider", "Plain collider", "Nothing at all"]
-        - ["Rigidbody", "Is Trigger ticked", "Trigger messages, no push"]
-        - ["Kinematic body", "Is Trigger ticked", "Trigger messages, no push"]
+        - ["Rigidbody", "Is Trigger checked", "Trigger messages, no push"]
+        - ["Kinematic body", "Is Trigger checked", "Trigger messages, no push"]
 
   - code:
       eyebrow: Block 02 · The bay door
@@ -242,7 +242,7 @@ slides:
       annotations:
         - label: On the door
           text: >-
-            A Box Collider with Is Trigger ticked, sitting across the bottom of the ramp.
+            A Box Collider with Is Trigger checked, sitting across the bottom of the ramp.
         - label: attachedRigidbody
           text: >-
             The body the collider belongs to. Null for scenery, so the floor is ignored.
@@ -257,10 +257,10 @@ slides:
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four physics failures with no error message
+      title: Four physics failures that do not warn you in time
       items:
         - label: Error 01
-          title: Is Trigger left ticked
+          title: Is Trigger left checked
           desc: >-
             The crate falls straight through the ramp. The collider is still there, it just
             reports contact instead of resisting it, and the scene looks broken rather than wrong.
@@ -273,13 +273,13 @@ slides:
           title: Moving a body by its Transform
           desc: >-
             Writing transform.position on a Rigidbody teleports it past thin colliders and
-            fights the solver. Use MovePosition, or a force, or make it kinematic.
+            fights the solver. Use a force, or make it kinematic and move it with MovePosition.
         - label: Error 04
           title: The component that is not there
           desc: >-
             GetComponent returns null when the component is not there, and the console stays
-            quiet until the first line that uses that null. That line throws a
-            NullReferenceException, and it names the method, not the lookup.
+            quiet until the first line that uses that null. In the editor that line throws a
+            MissingComponentException, and it names the method, not the lookup.
 
   - divider:
       eyebrow: Block 03
@@ -321,7 +321,7 @@ slides:
           desc: Into Assets/Prefabs. The Hierarchy entry turns blue, which means it is linked
         - label: '03'
           title: Delete the rest
-          desc: The other two crates go, and three fresh instances come from the asset
+          desc: The other two crates go, and two fresh instances come from the asset
         - label: '04'
           title: Edit in Prefab Mode
           desc: Double click the asset. The header bar tells you that you left the scene
@@ -334,14 +334,14 @@ slides:
       title: Four ways to change a prefab, and who hears about it
       headers: [What you do, Where it lands, Other instances]
       rows:
-        - ["Edit in Prefab Mode", "In the asset", "All of them follow"]
+        - ["Edit in Prefab Mode", "In the asset", "Follow, unless overridden"]
         - ["Edit one instance", "An override on that one", "Unaffected"]
         - ["Overrides · Apply All", "Pushed into the asset", "Follow, unless overridden"]
-        - ["Overrides · Revert All", "Dropped", "The instance matches again"]
+        - ["Overrides · Revert All", "Dropped", "Unaffected, and this one matches again"]
 
   - trace:
       eyebrow: Block 03 · Measured trace
-      title: One asset edit, three crates, three different endings
+      title: One asset edit, three crates, three endings
       headers: [Crate, Mass before, What was done, Mass after]
       rows:
         - ["Crate A", "8", "Nothing", "12"]
@@ -358,7 +358,7 @@ slides:
       question: A crate falls through the ramp instead of sliding down it. What is the first thing to check?
       options:
         - That the crate's mass is high enough to register
-        - That Is Trigger is unticked on the ramp's collider
+        - That Is Trigger is unchecked on the ramp's collider
         - That the ramp has a Rigidbody as well
         - That the fixed timestep is small enough for the speed
 
@@ -367,7 +367,7 @@ slides:
       title: The second one, and it costs about four seconds
       statement: >-
         A trigger collider reports contact and resists nothing. The crate passes through as if
-        the ramp were painted on, which reads as a broken engine and is a single tick box.
+        the ramp were painted on, which reads as a broken engine and is a single checkbox.
       points:
         - label: Why not mass
           text: >-
@@ -405,13 +405,13 @@ slides:
       eyebrow: Summary
       title: Three ideas to take away
       items:
-        - title: Behaviour arrives as components
+        - title: Behavior arrives as components
           desc: >-
             The object is an empty container with a Transform. What it does is the list
             underneath, which is why the Inspector tells you more than any class diagram
         - title: Physics has its own clock
           desc: >-
-            Fifty steps a second, gravity at -9.81, and a two metre drop lands on step 32
+            Fifty steps a second, gravity at -9.81, and a two meter drop lands on step 32
             whatever the frame rate does around it
         - title: The override is the trap
           desc: >-
@@ -433,7 +433,7 @@ slides:
         - ["Prefab", "Required", "One asset, three linked instances in the scene"]
         - ["Physics", "Required", "The crates land on the ramp and reach the door"]
         - ["Reading", "Required", "One line explaining the instance that did not follow"]
-        - ["Pathway", "Required", "Both areas of this session marked done on Unity Learn"]
+        - ["Pathway", "Required", "The session's three parts marked done on Unity Learn"]
 
   - closing:
       title: Questions

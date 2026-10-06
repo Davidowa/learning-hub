@@ -45,7 +45,7 @@ slides:
           sub: The rule for where an alias exists and where it does not yet falls straight out of it
         - head: Sort and paginate a result
           sub: With the NULLs where you want them, not where MySQL puts them by default
-        - head: Recognise the week's three silent failures
+        - head: Recognize the week's three silent failures
           sub: The count that does not close, a numeric column sorted as text, and the missing comma
 
   - roadmap:
@@ -93,8 +93,8 @@ slides:
         label: The working rule
         title: NULL is not compared, it is asked about
         note: >-
-          To ask about a missing value there are IS NULL and IS NOT NULL, and they are the
-          only operators that answer true or false over a NULL. The equals sign never
+          To ask about a missing value there are IS NULL and IS NOT NULL, and they
+          answer true or false over a NULL. The equals sign never
           does, not even against another NULL.
       steps:
         - text: WHERE evaluates the condition one row at a time
@@ -135,7 +135,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · precedence
-      title: AND resolves before OR, and the brackets cost two students
+      title: AND resolves before OR, and the parentheses cost two students
       filename: precedence.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -430,17 +430,17 @@ slides:
 
   - pitfalls:
       eyebrow: Common errors
-      title: Four ways to lose rows without noticing
+      title: Four ways to query badly
       items:
         - label: Error 01
           title: Filtering with equals against NULL
           desc: >-
             WHERE carrera = NULL returns zero rows and raises nothing. The question about
-            a missing value is written IS NULL, and it is the only form that answers.
+            a missing value is written IS NULL, and that form does answer.
         - label: Error 02
           title: Trusting NOT IN over data with NULLs
           desc: >-
-            NOT IN loses the null row exactly as not equals did. Here it is three careers
+            NOT IN loses the null row exactly as not equals did. Here it is three majors
             out of eleven students with one, and the twelfth is on neither list.
         - label: Error 03
           title: Writing OFFSET without LIMIT
@@ -458,7 +458,7 @@ slides:
       title: The registrar's search screen, in three passes
       brief: >-
         Over the alumno table, and without a single JOIN, build the query behind the
-        office search screen. First the exact filter by career, then the text box with
+        office search screen. First the exact filter by major, then the text box with
         partial name and partial student number, and finally the results grid, sorted and
         paginated five at a time.
       blocks:
@@ -466,7 +466,7 @@ slides:
           text: One .sql file with the three queries and the output the server returned
         - label: Constraint
           text: >-
-            No query may lose the student whose career is null. If yours loses them, write
+            No query may lose the student whose major is null. If yours loses them, write
             a comment saying why it did.
         - label: The test
           text: >-
@@ -479,16 +479,16 @@ slides:
       items:
         - title: A condition answers three things
           desc: >-
-            True, false and unknown. WHERE keeps the first one, and that is why a condition
-            and its opposite never add up to the whole table
+            True, false and unknown. WHERE keeps the first one, and that is why, once the
+            column holds a NULL, a condition and its opposite do not add up to the whole table
         - title: The logical order explains the aliases
           desc: >-
             WHERE runs before SELECT, so the alias does not exist yet and out comes 1054.
-            ORDER BY runs after and takes it. Week 10 adds HAVING to the same drawing
+            ORDER BY runs after and takes it. Week 10 lights up HAVING in the same drawing
         - title: Sorting is part of the answer
           desc: >-
-            A LIMIT with no ORDER BY returns whatever the optimiser touched first, and the
-            same LIMIT 4 over two different columns brings back two different students
+            A LIMIT with no ORDER BY returns whatever the optimizer touched first, and the
+            same LIMIT 4 over two different columns brings back two different sets of students
 
   - homework:
       eyebrow: Homework

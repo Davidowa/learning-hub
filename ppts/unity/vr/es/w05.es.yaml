@@ -123,7 +123,7 @@ slides:
       steps:
         - text: El CPU prepara el cuadro
         - text: El GPU lo dibuja, en paralelo
-        - text: Los dos terminan dentro del presupuesto
+        - text: Los dos tienen que terminar dentro del presupuesto
         - text: Se mide el más lento
           loop: ↺ y el arreglo de uno no le hace nada al otro
 
@@ -177,16 +177,17 @@ slides:
       eyebrow: Bloque 02 · El cable
       title: Los dos comandos que ponen a hablar al Editor y al build
       filename: adb.txt
-      lang: csharp
+      lang: bash
       output_label: Terminal
       source: |
-        // del Editor al Android player
+        # del Editor al Android player
         adb forward tcp:34999 localabstract:Unity-<bundle id>
 
-        // del Android player de regreso al Editor
+        # del Android player de regreso al Editor
         adb reverse tcp:34998 tcp:34999
       output: |
         > adb devices
+        List of devices attached
         <serial>      device
         > adb forward tcp:34999 ...
         34999
@@ -277,13 +278,14 @@ slides:
         - label: Error 02
           title: Leer el promedio
           desc: >-
-            Una media de 8 ms esconde cuatro cuadros en 21. El usuario siente los cuatro, y
+            Una media de 8 ms esconde cuatro cuadros tarde, uno de ellos en 21. El usuario siente los cuatro, y
             la media es justo el número que no los va a mencionar.
         - label: Error 03
           title: Frame timing apagado en release
           desc: >-
             Los tiempos están siempre encendidos en un development build y apagados por
-            omisión en uno de release, así que el mismo código no reporta nada y parece roto.
+            omisión en uno de release. Sin Frame Timing Stats, FrameTimingManager no reporta
+            nada; un ProfilerRecorder lo enciende solo.
         - label: Error 04
           title: Un profiler que reporta tarde
           desc: >-
@@ -309,7 +311,7 @@ slides:
         - label: El mismo tipo de build
           text: Development build las dos veces. Comparar uno contra un release no prueba nada.
         - label: Escríbelo
-          text: Antes, después y qué cambió. Tres números por renglón, y el registro dura más que el semestre.
+          text: Antes, después y qué cambió. Tres datos por renglón, y el registro dura más que el semestre.
 
   - tiers:
       eyebrow: Bloque 03 · Cuando el CPU se pasa
@@ -378,7 +380,7 @@ slides:
 
   - trace:
       eyebrow: Respuesta
-      title: La misma escena, la misma tarea, tres mediciones
+      title: La misma escena, la misma tarea, cuatro mediciones
       headers: [Dónde se midió, Hilo principal, Veredicto]
       rows:
         - ["Editor, Play mode", "4.1 ms", "No dice nada"]
@@ -415,7 +417,7 @@ slides:
         - title: Solo cuenta el número del visor
           desc: El Editor mide una máquina con ventilador, GPU de escritorio y sin límite térmico.
         - title: El promedio es el número malo
-          desc: Cuatro cuadros de 21 ms son lo que el usuario sintió, y una media de 8 nunca los menciona.
+          desc: Cuatro cuadros tarde, uno de 21 ms, son lo que el usuario sintió, y una media de 8 nunca los menciona.
 
   - homework:
       eyebrow: Para el cierre del curso

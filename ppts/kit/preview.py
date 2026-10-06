@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pptx import Presentation
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 
+from . import fonts
 from .deck import _FONT_FILES
 
 DPI = 100
@@ -23,7 +24,7 @@ INSET = 0.0278
 
 def _font(name, bold, size_pt, px_per_in):
     fname = _FONT_FILES.get((name, bold), 'arial.ttf')
-    path = os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts', fname)
+    path = fonts.find(fname)
     px = max(6, int(round(size_pt / 72.0 * px_per_in)))
     try:
         return ImageFont.truetype(path, px)

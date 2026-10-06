@@ -58,7 +58,7 @@ slides:
         - head: Add an object and know what came with it
           sub: A cube arrives with a Mesh Filter, a Mesh Renderer and a Box Collider
         - head: Read the Transform as three separate things
-          sub: Position in metres, rotation in degrees, scale as a multiplier
+          sub: Position in meters, rotation in degrees, scale as a multiplier
         - head: Tell local space from world space
           sub: And predict the world position of a child under a rotated parent
         - head: Build a Hierarchy somebody else can read
@@ -66,7 +66,7 @@ slides:
         - head: Make and apply a material
           sub: And say why editing it changes every object that shares it
         - head: Diagnose an object that looks wrong
-          sub: Magenta, flat grey, black or invisible, each with a different cause
+          sub: Magenta, flat gray, black or invisible, each with a different cause
 
   - roadmap:
       eyebrow: Course map
@@ -81,7 +81,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: now
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: todo
         - label: 04 · Session 6
@@ -119,29 +119,29 @@ slides:
 
   - table:
       eyebrow: Block 01 · The GameObject menu
-      title: What each primitive arrives with, before you touch it
+      title: What each menu item arrives with, before you touch it
       headers: [Menu item, Components, Collider]
       rows:
         - ["Create Empty", "Transform, and nothing else", "None"]
         - ["3D Object · Cube", "Mesh Filter, Mesh Renderer", "Box Collider"]
         - ["3D Object · Sphere", "Mesh Filter, Mesh Renderer", "Sphere Collider"]
         - ["3D Object · Plane", "Mesh Filter, Mesh Renderer", "Mesh Collider"]
-        - ["Light · Directional", "Light", "None"]
-        - ["Audio · Source", "Audio Source", "None"]
+        - ["Directional Light", "Light", "None"]
+        - ["Audio Source", "Audio Source", "None"]
 
   - steps:
       eyebrow: Block 01 · The class scene
-      title: The store room, built in five objects
+      title: The store room, built in five steps
       items:
         - label: '01'
           title: Floor
-          desc: A Plane at the origin, scaled 2 on X and Z, which makes it 20 by 20 metres
+          desc: A Plane at the origin, scaled 2 on X and Z, which makes it 20 by 20 meters
         - label: '02'
           title: Ramp
           desc: A Cube scaled 4 by 0.2 by 12, rotated -18 on X, sitting at y equals 1
         - label: '03'
           title: Crates
-          desc: Three Cubes scaled 0.6, spaced 1 metre apart along the top of the ramp
+          desc: Three Cubes scaled 0.6, spaced 1 meter apart along the top of the ramp
         - label: '04'
           title: Light
           desc: The Directional Light the Universal 3D template gave you, rotated 50 on X
@@ -154,7 +154,7 @@ slides:
       value: 1 unit = 1 m
       text: Nothing enforces it, and every default in the engine is tuned for it
       note: >-
-        Gravity is -9.81 on Y, and that number is metres per second squared. Model a crate
+        Gravity is -9.81 on Y, and that number is meters per second squared. Model a crate
         ten times too big and it still falls at -9.81, so it drifts down like a balloon and
         the physics looks wrong without a single wrong value in the Inspector.
 
@@ -162,7 +162,7 @@ slides:
       eyebrow: Block 02
       title: Position, rotation, scale
       lede: >-
-        Three rows in the Inspector, and the second one is measured against the parent rather
+        Three rows in the Inspector, and all three are measured against the parent rather
         than against the world.
       block: 2
 
@@ -172,8 +172,8 @@ slides:
       lead: >-
         The Transform in the Inspector is always relative to the parent. With no parent, the
         parent is the world and the two agree, which is why the difference stays invisible
-        for the first hour. Parent a crate to the ramp and the Inspector keeps reading the
-        old numbers while the crate is somewhere else entirely.
+        for the first hour. Parent a crate to an empty, rotate the empty, and the Inspector
+        keeps reading the old numbers while the crate is somewhere else entirely.
       panel:
         label: The order the engine applies them
         title: Scale, then rotate, then translate
@@ -188,7 +188,7 @@ slides:
 
   - code:
       eyebrow: Block 02 · Reading the numbers
-      title: The two properties the Inspector hides
+      title: Two positions, and the one the Inspector hides
       filename: WhereAmI.cs
       lang: csharp
       source: |
@@ -216,7 +216,7 @@ slides:
         - label: Risk
           text: >-
             With no parent, transform.parent is null and the third line throws a
-            NullReferenceException before the other two are read.
+            NullReferenceException after the other two print.
           accent: true
 
   - code_output:
@@ -232,7 +232,7 @@ slides:
       output: |
         local (0.00, 0.50, 0.00)
         world (0.00, 1.48, -0.15)
-        parent Ramp
+        parent Pivot
 
   - trace:
       eyebrow: Block 02 · Measured trace
@@ -244,7 +244,7 @@ slides:
         - ["Parent turned -18", "0, 0.5, 0", "1.48", "-0.15"]
       verdict: >-
         The local numbers never change. In the third row the parent is rotated -18 degrees on
-        X, so the crate's half metre of height becomes 0.5 times the cosine of 18, which is
+        X, so the crate's half meter of height becomes 0.5 times the cosine of 18, which is
         0.4755, and it picks up 0.5 times the sine of -18, which is -0.1545, on Z. The crate
         moved because its parent turned, and the Inspector had no way of saying so.
 
@@ -260,7 +260,7 @@ slides:
         - label: Error 02
           title: Reset on a child
           desc: >-
-            Transform · Reset sets the local values to zero, so the child jumps to the
+            Transform · Reset zeroes the local position, so the child jumps to the
             parent's origin rather than to the world origin you had in mind.
         - label: Error 03
           title: Rotation that reads 359.99
@@ -268,9 +268,9 @@ slides:
             The Inspector shows Euler angles, the engine stores a quaternion. Values drift
             by a hundredth of a degree, which is cosmetic until you compare two of them.
         - label: Error 04
-          title: Scaling instead of moving
+          title: Moving instead of scaling
           desc: >-
-            A Plane is 10 by 10 metres at scale 1, so a 20 metre floor is scale 2, not
+            A Plane is 10 by 10 meters at scale 1, so a 20 meter floor is scale 2, not
             position 20. Typing the size into the wrong row is the most common first error.
 
   - divider:
@@ -288,7 +288,7 @@ slides:
         The shader is the program that decides how a surface answers light. The material is
         a set of values for one shader, saved as an asset. The texture is one of those
         values, an image plugged into a slot. A renderer points at a material, so ten crates
-        pointing at the same material are ten crates you can recolour at once, or by accident.
+        pointing at the same material are ten crates you can recolor at once, or by accident.
       panel:
         label: What the pipeline decides
         title: A URP project needs URP materials
@@ -304,7 +304,7 @@ slides:
   - code_output:
       eyebrow: Block 03 · Measured
       title: Touching .material makes a copy behind you
-      filename: Recolour.cs
+      filename: Recolor.cs
       lang: csharp
       output_label: Console, in play mode
       source: |
@@ -323,10 +323,10 @@ slides:
       headers: [On screen, Cause, Fix]
       rows:
         - ["Bright magenta", "Shader missing in this pipeline", "Use a URP material"]
-        - ["Flat grey", "No light reaching it", "Add a Directional Light"]
+        - ["Flat gray", "No light reaching it", "Add a Directional Light"]
         - ["Almost black", "The light points elsewhere", "Rotate the light on X"]
         - ["Mirror shiny", "Smoothness near 1", "Bring it down to about 0.2"]
-        - ["Nothing at all", "Mesh Renderer unticked", "Tick it in the Inspector"]
+        - ["Nothing at all", "Mesh Renderer unchecked", "Check its box in the Inspector"]
 
   - quiz:
       eyebrow: Quick check
@@ -342,7 +342,7 @@ slides:
       title: The second one, and the copy has a cost
       statement: >-
         Reading .material clones the material for that renderer and hands you the clone. Only
-        that crate changes, and the clone lives until the object is destroyed.
+        that crate changes, and the clone outlives the object: destroying it is your job.
       points:
         - label: Use sharedMaterial
           text: >-
@@ -354,14 +354,14 @@ slides:
             renderer that asks for it.
         - label: The tell
           text: >-
-            The name gains the word Instance in brackets. If you see that in the Inspector
+            The name gains the word Instance in parentheses. If you see that in the Inspector
             during play mode, something in your code touched .material.
 
   - lab:
       eyebrow: Lab
       title: Build the store room, in pairs
       brief: >-
-        Build the five objects of the class scene with the numbers from block 1, parent the
+        Build the five parts of the class scene with the numbers from block 1, parent the
         three crates under an empty called Crates, and give them a material you made yourself.
         Then rotate that parent 30 degrees on Y and note where each crate ends up.
       blocks:
@@ -369,8 +369,8 @@ slides:
           text: The saved scene, plus the three world positions before and after the rotation
         - label: Constraint
           text: >-
-            Empty parents stay at position zero with no rotation and scale 1, so the numbers
-            underneath them stay readable.
+            Apart from that rotation, empty parents stay at position zero with no rotation and
+            scale 1, so the numbers underneath them stay readable.
         - label: The test
           text: >-
             Select a crate and press F. If the view frames something far from where you
@@ -386,12 +386,12 @@ slides:
             which is exactly why the difference bites the first time you parent something
         - title: Scale multiplies everything
           desc: >-
-            The mesh, the collider and the children. A non-uniform scale on a rotated parent
-            skews all three, and nothing in the interface complains
+            The mesh, the collider and the children. A non-uniform scale on a parent skews
+            every rotated child, and nothing in the interface complains
         - title: A material is a shared asset
           desc: >-
             Ten renderers can point at one material. Editing it changes ten objects, and
-            touching .material in code silently makes an eleventh
+            touching .material in code silently makes a second one
 
   - homework:
       eyebrow: Homework

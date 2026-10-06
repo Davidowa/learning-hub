@@ -38,7 +38,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Nombrar los cuatro tiempos de un ciclo
-          sub: Y señalar con el dedo la línea que eventualmente vuelve falsa la condición
+          sub: Y señalar con el dedo la línea que tarde o temprano vuelve falsa la condición
         - head: Elegir entre while y do-while
           sub: Según si el cuerpo puede correr cero veces o tiene que correr al menos una
         - head: Leer una muestra sin tirar el programa
@@ -87,8 +87,8 @@ slides:
         label: La pregunta que hay que contestar antes de correr
         title: ¿Qué línea vuelve falsa la condición?
         note: >-
-          Si nadie en el salón puede señalarla, el programa no se ejecuta. No es un consejo
-          de estilo. Es la diferencia entre una corrida y una terminal secuestrada.
+          Si nadie en el salón puede señalarla, no se corre. No es un consejo de estilo.
+          Es la diferencia entre una corrida y una terminal secuestrada.
       steps:
         - text: Antes del lazo, la variable de control nace con un valor
         - text: En el encabezado, la condición se juzga entera
@@ -118,7 +118,7 @@ slides:
         - label: La corrida rpm
           text: Siete lecturas del tacómetro del banco de bandas. Las mismas vuelven en la semana 9 y en la 14.
         - label: El acumulador
-          text: suma vive fuera del lazo. Adentro se reiniciaría cada pasada y el total sería la última lectura.
+          text: suma vive fuera del lazo. Adentro se reiniciaría cada pasada y guardaría una sola lectura.
         - label: rpm.Length
           text: El arreglo sabe cuántos elementos tiene, así que el lazo no depende de un 7 escrito a mano.
         - label: Riesgo
@@ -157,7 +157,7 @@ slides:
         - ["while", "Juzga antes de la primera pasada, así que puede no correr nunca", "0"]
         - ["do-while", "Corre el cuerpo y después juzga lo que quedó", "1"]
         - ["break", "Termina el lazo justo donde está parado", "no aplica"]
-        - ["continue", "Abandona la pasada y salta al tiempo de cambio", "no aplica"]
+        - ["continue", "Abandona el resto de la pasada y empieza la siguiente", "no aplica"]
 
   - divider:
       eyebrow: Bloque 02
@@ -212,8 +212,8 @@ slides:
           text: Hay que pedir la muestra antes de juzgarla, así que el cuerpo corre al menos una vez.
         - label: Dos guardias
           text: Primero que la cadena sea un entero, después que caiga en la banda del banco. En ese orden.
-        - label: El corto circuito
-          text: El segundo && no llega a evaluarse si TryParse falló. Es la semana 7 haciendo trabajo real aquí.
+        - label: El cortocircuito
+          text: El rango no llega a evaluarse si TryParse falló. Es la semana 7 haciendo trabajo real aquí.
         - label: Riesgo
           text: Si el while no depende de ok, el lazo pide muestras para siempre aunque la primera sirva.
           accent: true
@@ -238,7 +238,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 02 · Medido
-      title: El mismo menú con Convert, y la primera tecla lo mata
+      title: La misma lectura con Convert, y la primera tecla la mata
       filename: Program.cs
       lang: csharp
       output_label: abc
@@ -276,8 +276,8 @@ slides:
       annotations:
         - label: Tres razones físicas
           text: Puerta cerrada, paro de emergencia liberado y el eje bajo 50 rpm. Ninguna es una contraseña.
-        - label: El primer break del curso
-          text: Termina el do-while en cuanto las tres condiciones se cumplen, sin gastar el tercer intento.
+        - label: El primer break de un ciclo
+          text: Termina el do-while en cuanto las tres condiciones se cumplen, sin gastar los intentos que queden.
         - label: El enclavamiento
           text: Tres intentos fallidos y queda enclavada. Reponerla exige ir al tablero, no teclear otra vez.
         - label: Riesgo
@@ -465,7 +465,7 @@ slides:
         - ["Peso", "20 % de la calificación final"]
         - ["Formato", "Se resuelve en la computadora del salón y se sube comprimido a Blackboard"]
         - ["Puedes llevar", "Tus apuntes, tus tareas, los libros y lo que hayas generado con IA antes del examen"]
-        - ["No puedes", "Teléfono, audífonos, lentes con IA ni ningún medio de mensajería"]
+        - ["No puedes", "Celular, audífonos, lentes con IA ni ningún medio de mensajería"]
 
   - concept:
       eyebrow: Alcance del examen
@@ -479,8 +479,8 @@ slides:
         label: Lo que la semana 9 agrega y no se pregunta hoy
         title: for, anidamiento y el costo contado
         note: >-
-          Esas tres cosas se evalúan hasta el examen final. Si un reactivo del parcial te
-          pide un for, contéstalo con el while equivalente y estarás dentro del alcance.
+          Esas tres se evalúan hasta el examen final. Si un reactivo del parcial te pide
+          un for, contéstalo con el while equivalente y estarás dentro.
       steps:
         - text: Nombra la línea que vuelve falsa la condición
         - text: Di si el cuerpo puede correr cero veces
@@ -507,7 +507,7 @@ slides:
   - closing:
       title: Preguntas
       subtitle: >-
-        La siguiente sesión, los mismos tres tiempos escritos en un renglón, el ciclo que
+        La siguiente sesión, tres de los cuatro tiempos escritos en un renglón, el ciclo que
         recorre sin contador, y lo que cuesta meter un ciclo dentro de otro.
       meta:
         - [Correo, descobarc@up.edu.mx]

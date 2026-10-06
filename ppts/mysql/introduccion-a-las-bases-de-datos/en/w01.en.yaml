@@ -114,11 +114,11 @@ slides:
 
         -- the same information, declared
         CREATE TABLE inscripcion (
-          inscripcion_id INT PRIMARY KEY,
-          alumno_id      INT NOT NULL,
-          materia_id     INT NOT NULL,
-          periodo        CHAR(5) NOT NULL,
-          calificacion   DECIMAL(4,2) NULL
+          matricula    CHAR(8)      NOT NULL,
+          clave        CHAR(6)      NOT NULL,
+          periodo      CHAR(5)      NOT NULL,
+          calificacion DECIMAL(4,2) NULL,
+          PRIMARY KEY (matricula, clave, periodo)
         );
       annotations:
         - label: Above
@@ -127,7 +127,7 @@ slides:
             the file takes it.
         - label: Below
           text: >-
-            Every column carries a name, a type and a size, and four of them refuse to be
+            Every column carries a name, a type and a size, and three of them refuse to be
             left empty. The declaration is what decides.
         - label: The empty cell
           text: >-
@@ -170,10 +170,10 @@ slides:
         - label: Before
           text: >-
             The program that wrote the file was the only one that knew what each column meant.
-            Change the program and you changed the file.
+            If the program changed, the file changed too.
         - label: After
           text: >-
-            The structure lives on the server and every program asks it. Changing client no
+            The structure lives on the server and every program asks it. Switching clients no
             longer changes the database, and week 2 shows that on screen.
         - label: The price
           text: >-
@@ -198,7 +198,7 @@ slides:
           desc: Sequential access. It is read in the order it was written, with no jumps.
         - label: '1960'
           title: Disk
-          desc: Random access. The datum is asked for by address and the arm goes straight to it.
+          desc: Random access. Data is requested by address and the arm goes straight to it.
         - label: Today
           title: A 16 KB page
           desc: InnoDB does not read loose bytes. It asks for whole pages, and by number.
@@ -291,7 +291,8 @@ slides:
       source: |
         START TRANSACTION;
         INSERT INTO materia VALUES ('FI1010','Fisica I');
-        INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI');
+        INSERT INTO inscripcion (matricula, clave, periodo)
+          VALUES ('A0000002','FI1010','26PRI');
         SELECT COUNT(*) AS materias_dentro_de_la_transaccion
           FROM materia;
         ROLLBACK;

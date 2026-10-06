@@ -149,7 +149,7 @@ slides:
       title: What happens when it gets used
       filename: Module1
       lang: vba
-      output_label: Immediate window
+      output_label: Debug.Print prints to Immediate
       source: |
         Dim e As Employee
         Set e = New Employee
@@ -159,9 +159,9 @@ slides:
 
         e.Salary = -500
         Debug.Print e.Salary
-      output: |
-        180000
-        0
+      output: |2
+         180000
+         0
 
   - concept:
       eyebrow: The one that runs itself
@@ -218,6 +218,8 @@ slides:
       lang: vba
       output_label: Output of both tests
       source: |
+        Dim a As Employee, b As Employee
+
         Set a = New Employee
         Set b = New Employee
         a.Name = "Ana"
@@ -297,7 +299,7 @@ slides:
           desc: You end up with two names for one object, and writing through one shows in the other
         - label: Error 04
           title: The property instead of the field
-          desc: Salary = value inside Let calls itself, recurses, and the program runs out of stack
+          desc: Writing Salary = value inside Let makes the property call itself until the stack runs out
 
   - lab:
       eyebrow: Lab

@@ -119,7 +119,7 @@ slides:
       title: The parts of a path, already separated
       filename: paths.py
       lang: python
-      output_label: Output
+      output_label: Output on Windows
       source: |
         print(path)
         print(path.name)
@@ -162,7 +162,7 @@ slides:
         - label: Line 5
           text: The with closes the file on the way out of the block, even if something raises inside
         - label: The encoding
-          text: Without it Python uses the system default, and accents break on the next machine over
+          text: Without it, Python 3.14 and earlier fall back on the system default, and accents break on the next machine over
         - label: Risk
           text: read() pulls the whole file into memory, and with a large file that does not fit
           accent: true
@@ -274,13 +274,13 @@ slides:
       source: |
         path = Path("grades.txt")
 
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write("first")
 
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write("second")
 
-        print(path.read_text())
+        print(path.read_text(encoding="utf-8"))
       options:
         - 'firstsecond'
         - 'second, because w empties the file on opening'

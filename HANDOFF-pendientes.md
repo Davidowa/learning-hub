@@ -1,5 +1,11 @@
 # Lo que queda, y el estado en que lo dejo
 
+> **Actualización, 6 de octubre de 2026.** Una auditoría con agentes corrió sobre los 334 decks después
+> de este documento. Los 28 avisos de lint, las figuras de POO y C++ y la diferencia de diapositivas de
+> VBA w01 y w02 ya se corrigieron, y la lista de errores de contenido de abajo se atendió semana por
+> semana; lo que quedó abierto está en `ppts/audit/prioritarios.md`. El estado actual
+> y lo que sigue están en [`HANDOFF-auditoria-y-cursos-nuevos.md`](HANDOFF-auditoria-y-cursos-nuevos.md).
+
 Estado al cerrar (29 de septiembre de 2026): rama `main`, local y remoto en el mismo commit.
 Ocho cursos, 334 decks, 765 ejercicios, 47 capturas de Excel y 91 figuras colocadas en los
 ejercicios. Con el kit nuevo, preflight, avisos del build y sizes están en cero sobre todo el

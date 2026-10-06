@@ -50,18 +50,18 @@ slides:
       phases:
         - label: 01 · Weeks 1–5
           title: Programming in VBA
-          desc: Editor, types, variables, operations and input forms
+          desc: Editor, data types, variables, operations and data-entry forms
           state: done
         - label: 02 · Weeks 6–7
           title: Editing recorded macros
-          desc: Variable ranges, goal seek and bounded automation
+          desc: Variable ranges, Goal Seek and bounded automation
           state: done
         - label: 03 · Weeks 8–12
           title: Decisions, loops and events
           desc: If, For, For Each, procedures, functions and custom classes
           state: now
         - label: 04 · Weeks 13–17
-          title: Excel from macros
+          title: Excel through macros
           desc: Cleaning, filters, PivotTables, the R1C1 formula and security
           state: todo
 
@@ -93,12 +93,12 @@ slides:
   - table:
       eyebrow: The four on the syllabus
       title: What triggers each one, and where it lives
-      headers: ["Event", "Fires when", "Lives in"]
+      headers: ["Lives in", "Event", "Fires when"]
       rows:
-        - ["Worksheet_Change", "A cell value changes", "The sheet"]
-        - ["Worksheet_SelectionChange", "Another cell is selected", "The sheet"]
-        - ["Workbook_Open", "The file is opened", "ThisWorkbook"]
-        - ["Workbook_BeforeSave", "Just before saving", "ThisWorkbook"]
+        - ["The sheet", "Worksheet_Change", "A cell value changes"]
+        - ["The sheet", "Worksheet_SelectionChange", "Another cell is selected"]
+        - ["ThisWorkbook", "Workbook_Open", "The file is opened"]
+        - ["ThisWorkbook", "Workbook_BeforeSave", "Just before saving"]
 
   - code:
       eyebrow: The simplest one
@@ -113,7 +113,7 @@ slides:
         - label: Private Sub
           text: Private because nobody outside the sheet calls it. Excel calls it.
         - label: The name
-          text: You do not choose it. Worksheet_SelectionChange is the name Excel looks for.
+          text: You do not make it up. Pick Worksheet and the event in the two lists above the code, and the editor writes it with its signature.
         - label: Target
           text: The range just selected. Address gives it back in A1 notation.
         - label: Risk
@@ -196,7 +196,7 @@ slides:
       title: The same code, without the guard
       filename: Sheet1
       lang: vba
-      output_label: What happens on writing in A1
+      output_label: What happens when you write in A1
       source: |
         Private Sub Worksheet_Change(ByVal Target As Range)
             Target.Offset(0, 1).Value = "echo"
@@ -254,7 +254,7 @@ slides:
 
   - quiz:
       eyebrow: Quick question
-      question: The handler sits in an ordinary module, not the sheet. What happens on writing in A1?
+      question: The handler sits in an ordinary module, not the sheet. What happens when you write in A1?
       filename: Module1
       lang: vba
       source: |
@@ -298,7 +298,7 @@ slides:
   - lab:
       eyebrow: Lab
       title: Your workbook, automated with two events
-      brief: Take your project workbook and add two events. A sheet one that validates an input cell and writes the verdict beside it. A workbook one that on opening sends the user to the input sheet with the cell already selected.
+      brief: Take your project workbook and add two events. A sheet one that validates an input cell and writes the verdict beside it. A workbook one that on opening sends the user to the input sheet with Activate and leaves the cell already selected.
       blocks:
         - label: Constraint
           text: The sheet one has to carry a guard or EnableEvents. Without that it is not accepted.

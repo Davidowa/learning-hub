@@ -28,7 +28,7 @@ slides:
         - title: INSERT
           desc: One row, many rows, and rows that come out of another query
         - title: UPDATE and DELETE
-          desc: The WHERE between a correction and a disaster, and the one that also divides by zero
+          desc: The WHERE between a correction and a disaster, and the division by zero
         - title: The transaction
           desc: START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, and the three times they undo nothing
         - title: First midterm
@@ -45,8 +45,8 @@ slides:
         - head: Open and close a transaction
           sub: START TRANSACTION, then COMMIT or ROLLBACK, which are two endings and not one button
         - head: Name the three conditions under which ROLLBACK undoes nothing
-          sub: Autocommit on, a DDL statement in the way, or a table that is not InnoDB
-        - head: Recognise that a statement is atomic without anyone asking
+          sub: No open transaction, a DDL statement in the way, or a table that is not InnoDB
+        - head: Recognize that a statement is atomic without anyone asking
           sub: Of two rows in one INSERT, a single bad one keeps both of them out
 
   - roadmap:
@@ -59,7 +59,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, and the model turned into tables and keys
+          desc: Entity-relationship, normalization, and the model turned into tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -105,16 +105,16 @@ slides:
             table and a future ALTER breaks it.
         - label: Several rows
           text: >-
-            One trip to the server for three students. Also one fate if something goes
-            wrong, two slides from here.
+            One trip to the server for two students. Also one fate if something goes
+            wrong, three slides from here.
         - label: INSERT from SELECT
           text: >-
-            The rows come out of a query. This is how a whole term's enrolments get loaded
-            without typing one.
+            The rows come out of a query. This is how a whole term's enrollments get
+            loaded without typing one.
         - label: Risk
           text: >-
-            The SELECT in the third form decides how many rows go in. Run it on its own
-            first, and count the result.
+            The SELECT in the third form decides how many rows go in. Run it alone first
+            and count the result.
           accent: true
 
   - code_output:
@@ -134,7 +134,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · MySQL 9.7.2
-      title: An enrolment for a student who does not exist
+      title: An enrollment for a student who does not exist
       filename: child_no_parent.sql
       lang: sql
       output_label: Output
@@ -159,7 +159,7 @@ slides:
       lang: sql
       output_label: Output
       source: |
-        -- 6 enrolments before we start
+        -- 6 enrollments before we start
         INSERT INTO inscripciones
           (matricula, clave_materia, periodo, calificacion)
         VALUES ('100003', 'MAT201', '2026-2', 7.0),
@@ -167,10 +167,12 @@ slides:
 
         SELECT COUNT(*) FROM inscripciones;
       output: |
-        ERROR 1644 (45000)
+        ERROR 3819 (HY000): Check
+        constraint 'inscripciones_chk_1'
+        is violated.
 
-        conteo = 6
-        la primera fila tampoco quedo
+        COUNT(*)
+        6
 
   - divider:
       eyebrow: Block 02
@@ -203,8 +205,8 @@ slides:
             nothing to copy across.
         - label: The UPDATE's WHERE
           text: >-
-            Two conditions because the row is identified by two columns. One alone would
-            have graded the entire group.
+            Two conditions because the row is identified by two columns. Without the
+            student number it would have graded the entire group.
         - label: DELETE FROM
           text: >-
             It takes no column list. The whole row goes or none of it does; there is no
@@ -217,7 +219,7 @@ slides:
 
   - code_output:
       eyebrow: Measured · MySQL 9.7.2
-      title: Deleting a student who has enrolments
+      title: Deleting a student who has enrollments
       filename: parent_with_children.sql
       lang: sql
       output_label: Output
@@ -243,7 +245,7 @@ slides:
 
         -- The same division inside an INSERT
 
-        -- The repair, which is collected in week 10
+        -- The repair
         --   / NULLIF(costo_interno, 0)
       output: |
         margen
@@ -280,7 +282,8 @@ slides:
         SELECT COUNT(*) AS materias_despues_del_rollback
           FROM materia;
       output: |
-        @@autocommit -> 1
+        @@autocommit
+        1
 
         materias_dentro_de_la_transaccion
         3
@@ -323,7 +326,8 @@ slides:
         ROLLBACK;
         SELECT clave FROM materias WHERE clave = 'HIS100';
       output: |
-        HIS100 sigue ahi
+        clave
+        HIS100
 
   - code_output:
       eyebrow: Measured · MySQL 9.7.2
@@ -342,21 +346,26 @@ slides:
         ROLLBACK;
         SELECT * FROM t_myisam;
       output: |
-        la fila sigue ahi
-        el ROLLBACK no hizo nada
+        Warning 1196 'Some non-
+        transactional changed tables
+        couldn't be rolled back'
+
+        id  nombre
+        1   uno
 
   - method:
       eyebrow: The inherited sentence, completed
       title: ROLLBACK returns the database to its previous state
       statement: >-
-        The source slide says that and stops there. On this server the sentence is true
-        three times out of four, and the three conditions it is missing are exactly the
-        three you have just watched run.
+        The source slide says that and stops there. On this server the sentence only
+        holds under three conditions it never mentions, and they are exactly the three
+        you have just watched run.
       points:
         - label: Condition 1
           text: >-
             There has to be an open transaction. With autocommit at 1 every statement has
-            already committed itself and ROLLBACK reports that it changed nothing.
+            already committed itself and ROLLBACK answers Query OK without undoing
+            anything.
         - label: Condition 2
           text: >-
             No DDL in the way. The CREATE you slipped between the INSERT and the ROLLBACK
@@ -364,7 +373,7 @@ slides:
         - label: Condition 3
           text: >-
             The table has to be transactional. On MyISAM the ROLLBACK does nothing and
-            says nothing either, which is the worse half of the two.
+            only admits it in warning 1196, which nobody reads.
 
   - pitfalls:
       eyebrow: Common mistakes
@@ -378,8 +387,8 @@ slides:
         - label: Error 02
           title: Treating ROLLBACK as an undo button
           desc: >-
-            With no open transaction it answers Query OK and changes nothing. The student
-            concludes it worked, and it worked as well as doing nothing does.
+            With no open transaction it answers Query OK and changes nothing. You conclude
+            it worked, and it worked as well as doing nothing does.
         - label: Error 03
           title: Using REPLACE INTO as if it updated
           desc: >-
@@ -393,11 +402,11 @@ slides:
 
   - lab:
       eyebrow: Lab
-      title: Enrolment day at the records office
+      title: Enrollment day at the records office
       brief: >-
-        Load fifty enrolments in a single multi-row INSERT, with one of them pointing at a
-        student who dropped out. Then fix the load, wrap it in a transaction and verify
-        with a SELECT before you commit.
+        Load fifty enrollments in a single multi-row INSERT, with one of them pointing at a
+        student number that does not exist. Then fix the load, wrap it in a transaction
+        and verify with a SELECT before you commit.
       blocks:
         - label: Deliverable
           text: The script and both runs, the one that bounced and the one that stayed
@@ -421,7 +430,7 @@ slides:
         - title: ROLLBACK has three conditions
           desc: >-
             An open transaction, no DDL in the way, and an InnoDB table. Miss any of the
-            three and the undo does not happen, and the server does not complain
+            three and the undo does not happen, and the server raises no error
         - title: All of this assumed you were alone
           desc: >-
             Every run today had the server to itself. What happens when two people write
@@ -437,7 +446,7 @@ slides:
       meta:
         - [When, Week 08]
         - [Format, Written · SQL by hand and reading errors]
-        - [Weight, 20 % of the final mark]
+        - [Weight, 20 % of the final grade]
       rubric:
         - [Model and keys, 30 %, Weeks 4 to 6 · which constraint raises which error]
         - [Types and DDL, 30 %, Week 7 · choosing the type and defending it]

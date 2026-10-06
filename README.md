@@ -35,6 +35,20 @@ learning-hub/
 └── .github/workflows/docs.yml  # auto-deploy to GitHub Pages
 ```
 
+## Generar los PDFs de las presentaciones
+
+Los `.pptx` y los PDFs no viven en el repositorio: se generan en tu computadora desde los `.yaml`.
+
+- **Windows:** doble clic en `generar-pdfs.bat` (o en PowerShell: `.\generar-pdfs.ps1`).
+  Usa PowerPoint si está instalado; si no, LibreOffice.
+- **macOS:** doble clic en `generar-pdfs.command` (o en la terminal: `./generar-pdfs.command`).
+  Usa LibreOffice (`brew install --cask libreoffice`, o el instalador de libreoffice.org).
+
+Necesitas Python 3.10 o más nuevo. La primera vez el script crea `.venv/` e instala lo que el kit
+necesita. Para un solo curso, pasa su carpeta relativa a `ppts/`: `generar-pdfs.bat python` o
+`./generar-pdfs.command cpp/programacion-avanzada`. Los PDFs quedan en `pdf/`: uno por
+presentación en `pdf/decks/` y uno por curso e idioma, con un marcador por sesión.
+
 ## Build docs locally
 
 ```bash

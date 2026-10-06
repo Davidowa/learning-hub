@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 08 · Unit 3 · Decisions and the first midterm
       title: Information Analysis and Processing
       subtitle: Compare, combine, decide. And the four comparisons that answer the opposite of what they look like.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 8 of 17]
 
   - agenda:
@@ -27,7 +27,7 @@ slides:
         - title: Combining and deciding
           desc: And, Or and Not, and the two ways to write the decision they feed
         - title: The first midterm
-          desc: What it covers, how it is sat, and what you may bring with you
+          desc: What it covers, how it is taken, and what you may bring with you
         - title: Your turn
           desc: A customer classification written both ways
 
@@ -43,7 +43,7 @@ slides:
           sub: And know both sides always evaluate, whatever the first one answered
         - head: Write a decision two ways
           sub: If with a chain of ElseIf, and Select Case when one variable is being tested
-        - head: Sit the first midterm
+        - head: Take the first midterm
           sub: What it covers, what you may consult, and how the answer is uploaded
 
   - roadmap:
@@ -75,7 +75,7 @@ slides:
 
   - table:
       eyebrow: Block 01 · All six
-      title: Every comparison operator VBA has
+      title: The six operators that compare two values
       headers: [Operator, What it asks, Example, Result]
       rows:
         - ["=", "Are they equal?", "5 = 5", "True"]
@@ -184,6 +184,8 @@ slides:
               level = "A"
           ElseIf grade >= 8 Then
               level = "B"
+          ElseIf grade >= 7 Then
+              level = "C"
           End If
       after:
         label: With Select Case
@@ -191,8 +193,9 @@ slides:
         lang: vba
         code: |
           Select Case grade
-              Case Is >= 9:   level = "A"
-              Case 8 To 8.99: level = "B"
+              Case Is >= 9: level = "A"
+              Case Is >= 8: level = "B"
+              Case Is >= 7: level = "C"
           End Select
       note: >-
         Both give C for 7.5, verified. Select Case wins when every condition asks about
@@ -208,7 +211,7 @@ slides:
           desc: "CInt(True) is -1. That is why (5 > 1) * 3 gives -3, and adding two true conditions gives -2."
         - label: Error 02
           title: Norte does not equal norte
-          desc: VBA compares text case-sensitively. A database with mixed capture never adds up when grouped.
+          desc: VBA compares text case-sensitively. A database with mixed-case entries never adds up when grouped.
         - label: Error 03
           title: An empty cell equals zero
           desc: It also equals an empty string, both true. Asking whether it is zero does not find the missing value.
@@ -219,7 +222,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: The first midterm
-      lede: It covers units 1, 2 and 3. That is everything we have done, and it is sat at the machine with your notes beside you.
+      lede: It covers units 1, 2 and 3. That is everything we have done, and it is taken at the machine with your notes beside you.
       block: 3
 
   - table:
@@ -255,11 +258,11 @@ slides:
   - method:
       eyebrow: Block 03 · What is actually asked
       title: You may consult everything, and you still have to know
-      statement: The exam does not measure what you memorised. It measures whether you can read a requirement, write the macro and defend it.
+      statement: The exam does not measure what you memorized. It measures whether you can read a requirement, write the macro and defend it.
       points:
         - label: What is assessed
           text: That the code runs, that it does what the brief asks, and that it uses a variable range instead of a fixed address
-        - label: The defence
+        - label: The defense
           text: I may ask you to talk through one of your own procedures out loud. Reading it is not explaining it.
         - label: How to prepare
           text: By redoing the assignments without looking at your solution. Consulting is fast once you know what to look for.
@@ -284,7 +287,7 @@ slides:
   - lab:
       eyebrow: Lab
       title: Classify a customer portfolio
-      brief: Take a customer database from your own area and write a macro that sorts every row into three tiers by balance. Write it twice, once with a chain of ElseIf and once with Select Case, and decide which one reads better for this case.
+      brief: Take a customer database from your own area and write a macro that sorts the selected row into three tiers by balance. Write it twice, once with a chain of ElseIf and once with Select Case, and decide which one reads better for this case.
       blocks:
         - label: Submission
           text: The module with both procedures and a note on which you chose, on Blackboard
@@ -308,16 +311,16 @@ slides:
       eyebrow: Assignment
       title: Submission and grading criteria
       brief: >-
-        On the amortization table, write a macro that walks every period and marks the
-        ones that have already paid off more than half the principal. Use the variable
-        range from week 6 and sort them into three tiers.
+        On the amortization table, write a macro that checks the selected period and
+        marks it if it has already paid off more than half the principal. Locate it
+        with Cells, as in week 6, and sort it into three tiers.
       meta:
         - [Due, Before week 9]
         - [Format, Blackboard · .bas and .xlsm]
         - [Weight, Part of the 20 % for assignments]
       rubric:
-        - ["Conditions", "40 %", "All three branches exist and no row goes unclassified"]
-        - ["Variable range", "30 %", "It walks whatever is there, not a hand-typed address"]
+        - ["Conditions", "40 %", "All three branches exist and no period goes unclassified"]
+        - ["No fixed address", "30 %", "It locates the period with Cells, not a hand-typed address"]
         - ["Empties", "30 %", "A period with no value is not counted as zero"]
 
   - closing:

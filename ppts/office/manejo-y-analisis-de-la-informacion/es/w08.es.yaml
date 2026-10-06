@@ -88,7 +88,7 @@ slides:
       eyebrow: Bloque 01
       title: Un criterio, una respuesta
       lede: >-
-        Todo lo anterior escribía un resultado por renglón. Estas funciones leen todos los
+        Cada condición anterior escribía un resultado por renglón. Estas funciones leen todos los
         renglones y escriben un solo número, que es de lo que está hecho un reporte.
       block: 1
 
@@ -128,7 +128,7 @@ slides:
       items:
         - label: '01'
           title: Selecciona la celda de la respuesta
-          desc: Una celda para toda la columna. Es la primera fórmula del curso que no se arrastra junto a sus datos.
+          desc: Una celda para toda la columna. Es la primera condición del curso que no se arrastra junto a sus datos.
         - label: '02'
           title: Fórmulas, Más funciones
           desc: Las seis que empiezan con CONTAR, PROMEDIO, MAX y MIN están en Estadísticas
@@ -160,7 +160,7 @@ slides:
         - label: Línea 4
           text: Un operador se une a una celda con ampersand antes de que la función lo llegue a ver.
         - label: Línea 6
-          text: Distinto de nada. Así se evita que los renglones vacíos jalen el promedio hacia abajo.
+          text: "Distinto de nada. Da igual que PROMEDIO: las celdas vacías nunca cuentan como cero."
         - label: Si falla
           text: >-
             PROMEDIO.SI sin un solo renglón que coincida contesta #¡DIV/0!, así que el reporte
@@ -192,7 +192,7 @@ slides:
 
   - pitfalls:
       eyebrow: Bloque 01 · Errores comunes
-      title: Cuatro respuestas malas que no marcan error
+      title: Cuatro errores, y tres de ellos no marcan nada
       items:
         - label: Error 01
           title: "Rango y Rango_suma volteados"
@@ -202,13 +202,13 @@ slides:
         - label: Error 02
           title: Una comparación sin comillas
           desc: >-
-            Mayor que quinientos es un criterio, no un valor, así que viaja como texto
-            entre comillas. Solo un número suelto o una referencia sola funcionan solos.
+            Mayor que quinientos es un criterio, no un valor, y viaja entre comillas.
+            Tecleada sin ellas, Excel rechaza la fórmula; solo un número o una referencia van solos.
         - label: Error 03
           title: Rangos de distinta altura
           desc: >-
-            Renglones 2 a 521 probados contra renglones 2 a 500 sumados. Excel los alinea
-            desde arriba y responde sobre los renglones equivocados sin decir nada.
+            Renglones 2 a 500 probados contra renglones 2 a 521 sumados. Excel los alinea
+            desde arriba y deja fuera los últimos 21 renglones sin decir nada.
         - label: Error 04
           title: Leer un resultado vacío como cero
           desc: >-
@@ -236,7 +236,7 @@ slides:
 
   - compare:
       eyebrow: Bloque 02 · La trampa que pone la familia
-      title: El mismo total, en orden contrario
+      title: Los mismos rangos, en orden contrario
       before:
         label: SUMAR.SI, el rango que se suma va al final
         file: pedidos.xlsx
@@ -266,17 +266,17 @@ slides:
       points:
         - label: La ruta que califica
           text: >-
-            Fórmulas, Más funciones, y luego la función por su nombre. Cada casilla trae
+            Fórmulas, Más funciones o [Math & Trig], y luego la función por su nombre. Cada casilla trae
             su nombre, su descripción abajo y su valor a la derecha conforme la llenas, así
             que el cambio se ve antes de confirmar nada.
         - label: La ruta rápida
           text: >-
-            Tecléala y lee el Info. en pantalla amarillo debajo de la celda. Te dice en qué
+            Tecléala y lee la información en pantalla amarilla debajo de la celda. Te dice en qué
             argumento vas y nunca qué debe ir ahí, que es justo el dato que esta familia
             está evaluando.
         - label: Lo que cuesta el error
           text: >-
-            Un par volteado regresa cero, no un error. Un cero en una columna de totales
+            Un rango volteado regresa cero, no un error. Un cero en una columna de totales
             se lee como respuesta real, y se va a copiar a un reporte antes de que alguien
             se dé cuenta.
 
@@ -292,7 +292,7 @@ slides:
           desc: "Rango_criterios1 y Criterios1, luego rango 2 y criterio 2, y el cuadro crece conforme lo llenas"
         - label: '03'
           title: Todos los rangos a la misma altura
-          desc: Los rangos de criterios y el rango que se suma tienen que cubrir los mismos renglones, o la respuesta sale mal en silencio
+          desc: "Los rangos de criterios y el que se suma cubren los mismos renglones. Otra altura da #¡VALOR!; un rango corrido falla en silencio"
         - label: '04'
           title: Los operadores viajan como texto
           desc: Mayor que, menor que y distinto de van entre comillas, unidos a una celda con ampersand
@@ -320,8 +320,8 @@ slides:
           text: Un solo par es válido, y más seguro. Agregar una segunda condición después no cambia nada más.
         - label: Si falla
           text: >-
-            Un cero donde debería ir un total casi siempre quiere decir que un rango
-            empieza en el renglón de los encabezados.
+            Un rango que empieza en el renglón de los encabezados da #¡VALOR! si queda
+            más alto que los otros, y si mide lo mismo, un total con un renglón de desfase.
 
   - code_output:
       eyebrow: Medido · seis renglones, en la diapositiva
@@ -347,7 +347,7 @@ slides:
 
   - trace:
       eyebrow: Bloque 02 · Cómo recorre los renglones CONTAR.SI.CONJUNTO
-      title: Dos de tres no es coincidencia
+      title: Uno de dos no es coincidencia
       headers: ["Renglón", "Región", "Mes", "Norte y marzo"]
       rows:
         - ["2", "Norte", "marzo", "cuenta"]
@@ -356,7 +356,7 @@ slides:
         - ["5", "Norte", "marzo", "cuenta"]
         - ["6", "Este", "marzo", "no, región"]
         - ["7", "Sur", "abril", "ninguna"]
-      verdict: Cada criterio se cumple en el mismo renglón. Dos de tres cuenta como ninguno.
+      verdict: Todos los criterios, en el mismo renglón. Uno de dos cuenta como ninguno.
 
   - divider:
       eyebrow: Bloque 03
@@ -414,11 +414,11 @@ slides:
         - label: Nada nuevo que aprender
           text: "Rango_máximo primero, luego los pares, igual que SUMAR.SI.CONJUNTO."
         - label: Línea 4
-          text: La semana 4 pedía el máximo de una columna entera. Este bloque le hace la misma pregunta a un pedazo de ella.
+          text: La semana 4 pedía el máximo de una columna entera. Aquí es el de un pedazo de ella.
         - label: Línea 5
-          text: Sin renglones que coincidan regresa cero, no un error, que es lo contrario de lo que hace PROMEDIO.SI.CONJUNTO.
+          text: "Sin coincidencias regresa cero, no un error: lo contrario de PROMEDIO.SI.CONJUNTO."
         - label: Un hueco del paquete
-          text: El ejercicio 11 solo practica las tres primeras plurales, por eso el laboratorio agrega estas dos.
+          text: El ejercicio 11 solo practica las otras tres; el laboratorio agrega estas dos.
       notes: >-
         Saber la forma plural es saberse estas dos.
 
@@ -434,6 +434,11 @@ slides:
         - "Cero, porque ningún monto es igual a Norte"
         - "Un error de nombre, porque los rangos están al revés"
         - "Cuántos renglones tienen la región Norte"
+      notes: >-
+        Respuesta: B. SUMAR.SI prueba el primer rango, E, contra Norte; ningún monto es
+        igual a Norte, así que no suma nada y regresa cero sin marcar error. A da por
+        buenos los rangos volteados, C supone que Excel avisa del orden, cuando el error
+        de nombre solo sale con una función mal escrita, y D la confunde con CONTAR.SI.
 
   - lab:
       eyebrow: Laboratorio
@@ -453,8 +458,8 @@ slides:
             reporte, no a un texto tecleado dentro de la fórmula
         - label: La comprobación
           text: >-
-            Agreguen un registro al final de los datos, dentro de los rangos, y cada celda
-            del resumen se tiene que mover sola. La que no se mueva está apuntando corto.
+            Agreguen un registro al final de los datos, dentro de los rangos, y el total
+            de su sucursal y su mes se tiene que mover solo. Si no se mueve, está apuntando corto.
 
   - takeaways:
       eyebrow: Resumen
@@ -462,7 +467,7 @@ slides:
       items:
         - title: Esta semana cambió la forma
           desc: >-
-            Ahora una fórmula lee una columna entera y responde una vez, y por eso las
+            Ahora una condición lee una columna entera y responde una vez, y por eso las
             referencias se fijan antes de arrastrar nada a ningún lado
         - title: El CONJUNTO mueve el primer argumento
           desc: >-

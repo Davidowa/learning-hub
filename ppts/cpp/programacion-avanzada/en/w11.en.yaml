@@ -42,7 +42,7 @@ slides:
         - head: Combine record and array
           sub: To represent a table of rows whose columns have different types
         - head: Choose between struct and class
-          sub: By what the convention communicates, since the language barely separates them
+          sub: By what the convention communicates, since the language barely tells them apart
 
   - roadmap:
       eyebrow: Course map
@@ -104,6 +104,7 @@ slides:
       source: |
         Point q;
         q.x = 3.0;
+        q.y = 4.0;
 
         Point r = q;
         r.x = 99.0;
@@ -170,7 +171,7 @@ slides:
       title: The one difference is what is assumed when you say nothing
       lead: >-
         In a struct, anything without a label is public. In a class, it is private. That is
-        everything the language separates. A struct can have constructors, member functions,
+        all the language distinguishes. A struct can have constructors, member functions,
         inheritance and access levels, exactly the same.
       panel:
         label: What it does communicate
@@ -210,6 +211,7 @@ slides:
 
         Point q;
         q.x = 3.0;
+        q.y = 4.0;
         Point r = q;
         r.x = 99.0;
 
@@ -225,7 +227,7 @@ slides:
       title: Two separate records from the assignment line onward
       headers: ["Step", "What happens", "q.x", "r.x"]
       rows:
-        - ["1", "q.x = 3.0", "3", "does not exist"]
+        - ["1", "q.x = 3.0 and q.y = 4.0", "3", "does not exist"]
         - ["2", "Point r = q, copies field by field", "3", "3"]
         - ["3", "r.x = 99.0", "3", "99"]
         - ["4", "Both are printed", "3", "99"]

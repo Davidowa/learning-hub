@@ -22,18 +22,18 @@ slides:
       eyebrow: Agenda
       title: Cuatro momentos de la sesión
       cards:
-        - title: Elegir
-          desc: Columnas por nombre, renglones por condición
-        - title: Filtrar
+        - title: Elegir y filtrar
           desc: El autofiltro, escrito. Y las dos reglas que evitan el error confuso
         - title: Limpiar
           desc: Duplicados, texto inconsistente, números que eran texto y huecos
+        - title: La trampa
+          desc: La asignación que no escribe nada, y cómo se escribe con loc
         - title: Tu turno
           desc: Tu archivo, limpio, con cada decisión anotada
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión podrás…
+      title: Al terminar la sesión el alumno podrá…
       items:
         - head: Elegir columnas y renglones
           sub: Columnas por nombre con corchetes, renglones por condición
@@ -98,7 +98,7 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · La máscara
-      title: Una condición devuelve una columna de verdad o falso
+      title: Una condición devuelve una columna de verdadero o falso
       filename: mascara.py
       source: |
         mascara = ventas["units"] > 20
@@ -210,6 +210,7 @@ slides:
       title: Tres respuestas honestas, y aquí quitamos el renglón
       filename: limpiar.py
       source: |
+        ventas = ventas.drop_duplicates()
         print(ventas["units"].isna().sum())
 
         ventas = ventas.dropna(subset=["units"])
@@ -270,7 +271,7 @@ slides:
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
-      title: Cuatro errores al limpiar
+      title: Cuatro errores al filtrar y limpiar
       items:
         - label: Error 01
           title: Calcular antes de limpiar
@@ -320,7 +321,7 @@ slides:
         - title: Limpiar antes de calcular
           desc: La suma sobre datos sucios devuelve un número, y un número equivocado nunca se anuncia solo
         - title: Escribe con loc, en un paso
-          desc: La asignación encadenada no hace nada y solo deja una advertencia, que es la peor combinación posible
+          desc: La asignación encadenada no hace nada y solo deja una advertencia, fácil de pasar por alto
 
   - homework:
       eyebrow: Tarea

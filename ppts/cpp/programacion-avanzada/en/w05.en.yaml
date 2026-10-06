@@ -106,7 +106,7 @@ slides:
 
   - code_output:
       eyebrow: Demonstration
-      title: Two calls that look the same, two different results
+      title: Two nearly identical calls, two different results
       filename: twice.cpp
       lang: cpp
       output_label: Output
@@ -199,23 +199,6 @@ slides:
         2 1
         3 1
 
-  - pitfalls:
-      eyebrow: Diagnosis
-      title: Four stumbles from this unit
-      items:
-        - label: Error 01
-          title: Forgetting the ampersand
-          desc: The function compiles, runs, modifies nothing, and the mistake only shows in the final answer
-        - label: Error 02
-          title: Reusing a global's name
-          desc: The local covers it with no warning, and the program does something other than what it reads
-        - label: Error 03
-          title: Returning a reference to a local
-          desc: The variable dies when the function ends, leaving a reference to memory that is no longer its own
-        - label: Error 04
-          title: Default value on both sides
-          desc: It goes in the prototype if there is one, never in both, or the compiler rejects it
-
   - divider:
       eyebrow: Block 03
       title: One name, several functions
@@ -256,7 +239,7 @@ slides:
         - ["What type they are", "print(int) vs print(double)", "Yes"]
         - ["Only the parameter name", "f(int a) vs f(int b)", "No"]
         - ["Only the return", "int f(int) vs double f(int)", "No"]
-        - ["Value or reference", "f(int) vs f(int&)", "Yes, but f(x) is C2668"]
+        - ["Value or reference", "f(int) vs f(int&)", "Yes, but f(x) gives C2668"]
 
   - code:
       eyebrow: Default values
@@ -284,6 +267,23 @@ slides:
         - label: Risk
           text: The default value is written once, in the prototype if there is one. Repeating it in the definition does not compile.
           accent: true
+
+  - pitfalls:
+      eyebrow: Diagnosis
+      title: Four stumbles from this unit
+      items:
+        - label: Error 01
+          title: Forgetting the ampersand
+          desc: The function compiles, runs, modifies nothing, and the mistake only shows in the final answer
+        - label: Error 02
+          title: Reusing a global's name
+          desc: The local covers it with no warning, and the program does something other than what it reads
+        - label: Error 03
+          title: Returning a reference to a local
+          desc: The variable dies when the function ends, leaving a reference to memory that is no longer its own
+        - label: Error 04
+          title: Default value on both sides
+          desc: It goes in the prototype if there is one, never in both, or the compiler rejects it
 
   - quiz:
       eyebrow: Quick question
@@ -339,7 +339,7 @@ slides:
   - homework:
       eyebrow: For the next session
       title: The report card with references and one overload
-      brief: Take last week's modular report card and change the average function so it hands back, by reference, both the average and the number of subjects counted. Add an overload that accepts a fourth exam.
+      brief: Take last week's modular report card and change the average function so it hands back, by reference, both the average and the number of subjects counted. Add an overload that accepts a fourth grade.
       meta:
         - [Due, Before session 6]
         - [Format, Blackboard · .zip without the x64 folder]

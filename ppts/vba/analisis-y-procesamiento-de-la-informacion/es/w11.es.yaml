@@ -93,12 +93,12 @@ slides:
   - table:
       eyebrow: Los cuatro del temario
       title: Qué dispara cada uno, y dónde vive
-      headers: ["Evento", "Se dispara cuando", "Vive en"]
+      headers: ["Vive en", "Evento", "Se dispara cuando"]
       rows:
-        - ["Worksheet_Change", "Cambia el valor de una celda", "La hoja"]
-        - ["Worksheet_SelectionChange", "Se selecciona otra celda", "La hoja"]
-        - ["Workbook_Open", "Se abre el archivo", "ThisWorkbook"]
-        - ["Workbook_BeforeSave", "Justo antes de guardar", "ThisWorkbook"]
+        - ["La hoja", "Worksheet_Change", "Cambia el valor de una celda"]
+        - ["La hoja", "Worksheet_SelectionChange", "Se selecciona otra celda"]
+        - ["ThisWorkbook", "Workbook_Open", "Se abre el archivo"]
+        - ["ThisWorkbook", "Workbook_BeforeSave", "Justo antes de guardar"]
 
   - code:
       eyebrow: El más simple
@@ -113,7 +113,7 @@ slides:
         - label: Private Sub
           text: Va privado porque nadie fuera de la hoja lo llama. Lo llama Excel.
         - label: El nombre
-          text: No lo eliges tú. Worksheet_SelectionChange es el nombre que Excel busca.
+          text: No lo inventas tú. Si eliges Worksheet y el evento en las dos listas de arriba del código, el editor lo escribe con su firma.
         - label: Target
           text: El rango que se acaba de seleccionar. Address lo devuelve en notación A1.
         - label: Riesgo
@@ -298,7 +298,7 @@ slides:
   - lab:
       eyebrow: Laboratorio
       title: Tu libro, automatizado con dos eventos
-      brief: Toma el libro de tu proyecto y agrégale dos eventos. Uno de hoja, que valide una celda de captura y escriba el resultado al lado. Uno de libro, que al abrir mande al usuario a la hoja de captura con la celda ya seleccionada.
+      brief: Toma el libro de tu proyecto y agrégale dos eventos. Uno de hoja, que valide una celda de captura y escriba el resultado al lado. Uno de libro, que al abrir mande al usuario a la hoja de captura con Activate y deje la celda ya seleccionada.
       blocks:
         - label: Restricción
           text: El de hoja tiene que llevar guarda o EnableEvents. Sin eso no se recibe.

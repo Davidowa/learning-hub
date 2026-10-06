@@ -13,8 +13,8 @@ slides:
       unit: Session 01 · AR design · Use cases and platform limits
       title: Mobile AR Development
       subtitle: >-
-        Before any code, two questions. What can the phone actually track, and does the idea
-        need a camera at all.
+        Before any code, two questions. What the phone can actually track, and whether the
+        idea needs a camera at all.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, UNITY · Foundational]
@@ -95,7 +95,7 @@ slides:
         The camera hands the tracking system a stream of images. The system picks out points
         that look the same from one frame to the next, watches how they move, and folds in
         the accelerometer and gyroscope. Out of that comes one answer per frame, where the
-        device is and which way it points. Surfaces come afterwards, and they are inferred
+        device is and which way it points. Surfaces come afterward, and they are inferred
         from those points rather than measured.
       panel:
         label: What this buys, and what it costs
@@ -211,7 +211,7 @@ slides:
           title: Content that could have been a photo
           desc: >-
             If the object never touches the room, the room was never needed. Ship the photo,
-            and spend the term on something that requires a camera.
+            and spend the semester on something that requires a camera.
 
   - divider:
       eyebrow: Block 03
@@ -284,11 +284,12 @@ slides:
             classification.
         - label: When to call it
           text: >-
-            Not from Awake. There is nothing to describe until the session starts.
+            Not from Awake. The manager gets its subsystem in OnEnable, which can run
+            after your Awake.
         - label: Risk
           text: >-
-            Read it too early and you get a null reference, so a working device looks
-            unsupported.
+            Read it too early and descriptor is still null, so line 10 throws even on a
+            device that works.
           accent: true
 
   - code_output:
@@ -316,6 +317,14 @@ slides:
 
         tablet without ARCore support
         state Unsupported
+      notes: |
+        The lines "phone with ARCore" and "tablet without ARCore support" label each device.
+        The code only prints the "state" lines.
+
+        The output assumes the pattern in the AR Foundation manual, with the AR Session
+        component disabled until the check finishes. If the session is already enabled in the
+        scene, it starts as soon as the state reaches Ready, and the phone can print
+        SessionInitializing instead of Ready.
 
   - quiz:
       eyebrow: Quick check
@@ -344,7 +353,7 @@ slides:
       eyebrow: Lab
       title: One page for one idea, in pairs
       brief: >-
-        Pick a use case from your own department. A lab bench, a workshop machine, a campus
+        Pick a use case from your own major. A lab bench, a workshop machine, a campus
         sign. Write one page naming the trackable it depends on, the device it will run on,
         and what the user sees at the moment tracking is lost.
       blocks:

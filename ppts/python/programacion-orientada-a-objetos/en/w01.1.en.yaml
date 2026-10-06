@@ -177,7 +177,7 @@ slides:
       headers: ["Method", "What it does", "Example", "Result"]
       rows:
         - ["upper()", "All to capitals", "'python'.upper()", "'PYTHON'"]
-        - ["lower()", "All to lower case", "'PYTHON'.lower()", "'python'"]
+        - ["lower()", "All to lowercase", "'PYTHON'.lower()", "'python'"]
         - ["title()", "Capitalizes each word", "'python 3'.title()", "'Python 3'"]
         - ["strip()", "Trims the edges", "'  py  '.strip()", "'py'"]
         - ["find(x)", "Position, -1 if absent", "'python'.find('th')", "2"]
@@ -303,7 +303,7 @@ slides:
       items:
         - label: Error 01
           title: Doing arithmetic on what input returned
-          desc: 'TypeError. input returns str, so convert with int() or float() first.'
+          desc: 'A TypeError or a nonsense result. input returns str, so convert with int() or float() first.'
         - label: Error 02
           title: Assuming bool("0") is False
           desc: Any non-empty string is truthy, including "0" and a single space
@@ -334,11 +334,11 @@ slides:
   - trace:
       eyebrow: Answer
       title: It prints 6, because price was never a number
-      headers: ["Step", "Statement", "price", "total", "Type of total", "Output"]
+      headers: ["Step", "Statement", "total", "Type of total", "Output"]
       rows:
-        - ["1", "price = '100'", "'100'", "–", "–", "–"]
-        - ["2", "total = price * 2", "'100'", "'100100'", "str", "–"]
-        - ["3", "len(total)", "'100'", "'100100'", "str", "6"]
+        - ["1", "price = '100'", "–", "–", "–"]
+        - ["2", "total = price * 2", "'100100'", "str", "–"]
+        - ["3", "print(len(total))", "'100100'", "str", "6"]
       verdict: Multiplying a string by an integer repeats it. To do arithmetic you need int(price) first.
 
   - takeaways:

@@ -1,0 +1,377 @@
+diff --git a/ppts/office/manejo-y-analisis-de-la-informacion/en/w09.en.yaml b/ppts/office/manejo-y-analisis-de-la-informacion/en/w09.en.yaml
+index 869e2c2..40db8e7 100644
+--- a/ppts/office/manejo-y-analisis-de-la-informacion/en/w09.en.yaml
++++ b/ppts/office/manejo-y-analisis-de-la-informacion/en/w09.en.yaml
+@@ -26,7 +26,7 @@ slides:
+         3.3.1, 3.3.2 and the Document Inspector half of 1.5.4, plus Expert 2.2.5.
+         COBERTURA.md adds Associate 1.1.1, Expert 2.2.2, Expert 2.1.1 and Expert 1.1.4.
+         The 365 only objective MO-210 1.1.2, importing from online sources, depends on
+-        the lab build and is named on the compare slide rather than taught.
++        the lab build and is named out loud at the compare slide rather than taught.
+         Every route on these slides comes from procedures.en.md. Exercises 14 and 15.
+ 
+   - agenda:
+@@ -38,7 +38,7 @@ slides:
+         - title: Proving it is clean
+           desc: Remove Duplicates, sorting on levels, and the rule that stops the wrong value being typed at all
+         - title: Finding the rows
+-          desc: AutoFilter by value, by criteria, by colour and by icon, and the three ways to clear it
++          desc: AutoFilter by value, by criteria, by color and by icon, and the three ways to clear it
+         - title: Handing it over
+           desc: File, Info. Workbook properties, the Document Inspector and the versions Excel kept without asking
+ 
+@@ -78,7 +78,7 @@ slides:
+           desc: Import, filters, tables, charts and the lookup functions
+           state: now
+         - label: E · Weeks 14–17
+-          title: Summarising and delivery
++          title: Summarizing and delivery
+           desc: PivotTables, advanced filters, what-if and printing
+           state: todo
+ 
+@@ -123,7 +123,7 @@ slides:
+           Select Students_data.csv, Import
+           File Origin:  Windows (ANSI)
+           Delimiter:    Comma
+-          Data Type Detection: Do not detect
++          Data Type Detection: Based on entire dataset
+           Load arrow > Load To...
+           Import Data > Existing worksheet: =$A$1
+       after:
+@@ -144,7 +144,7 @@ slides:
+ 
+   - table:
+       eyebrow: Block 01 · The preview window
+-      title: Three lists, and what each one decides
++      title: Three lists and two buttons, and what each one decides
+       headers: [List, What you are choosing, When it bites]
+       rows:
+         - ["File Origin", "The byte table the file was written with", "Accented text"]
+@@ -173,8 +173,8 @@ slides:
+         Iñaki    España    Bilbao
+         Björn    Suecia    Västerås
+         File Origin: 65001 UTF-8
+-        I?aki    Espa?a    Bilbao
+-        Bj?rn    Suecia    V?ster?s
++        I�aki    Espa�a    Bilbao
++        Bj�rn    Suecia    V�ster�s
+ 
+   - steps:
+       eyebrow: Block 01 · A .txt is a different route
+@@ -218,18 +218,18 @@ slides:
+         - label: Error 04
+           title: Pasting from Notepad
+           desc: >-
+-            It reaches the same wizard through the wrong door. The task is written about
++            Paste, then Text to Columns, reaches the same wizard through the wrong door. The task is written about
+             the import, and a paste leaves no query and no record of the choices.
+ 
+   - method:
+       eyebrow: Block 01 · Two fills, two objectives
+       title: AutoFill continues, Flash Fill deduces
+-      statement: Flash Fill reads the column beside it, works out the pattern from what you typed, and writes constants. Not one formula appears anywhere.
++      statement: Flash Fill reads the columns beside it, works out the pattern from what you typed, and writes constants. Not one formula appears anywhere.
+       points:
+         - label: The key
+           text: Ctrl+E fills the column by pattern from wherever the cursor sits. That single key is the whole objective.
+         - label: The condition
+-          text: The new column has to be immediately beside the source column, and the data needs a header row. Flash Fill does not look further away.
++          text: The new column has to be immediately beside the source data, and the data needs a header row. Flash Fill does not look further away.
+         - label: The tell
+           text: Click a filled cell. The formula bar shows a constant. A LEFT and FIND chain would show a formula, and it answers a different objective.
+ 
+@@ -331,7 +331,7 @@ slides:
+       image: img/en/data-validation-dialog.png
+       caption: >-
+         Opened on an unvalidated cell, so Allow reads Any value and everything under it is
+-        greyed out. Change Allow and the Data list wakes up, the boxes it needs appear, and
++        grayed out. Change Allow and the Data list wakes up, the boxes it needs appear, and
+         the other two tabs are one click away. Clear All is how a rule is removed, and
+         Apply these changes pushes an edit onto every cell already sharing the rule.
+       alt: The Excel Data Validation dialog on its Settings tab, with the Input Message and Error Alert tabs beside it.
+@@ -343,22 +343,22 @@ slides:
+       lang: excel
+       source: |
+         Allow:   Custom
+-        Formula: =B2<=A2*0.1
++        Formula: =D2<=C2*0.1
+ 
+-        A2 is the salary, B2 is the bonus.
++        C2 is the salary, D2 is the bonus.
+         Write the formula for the top left cell
+         of the selection. Excel shifts it across
+         the rest exactly as a copied formula shifts,
+-        so B3 gets =B3<=A3*0.1 without you typing it.
++        so D3 gets =D3<=C3*0.1 without you typing it.
+       annotations:
+         - label: Why Custom
+-          text: Allow has seven other entries. Only this one can compare against another cell.
++          text: Allow has seven other entries. Only this one takes a formula that returns TRUE or FALSE.
+         - label: How it spreads
+           text: Write it for the top left cell of the selection. Excel shifts it across the rest.
+         - label: The other four
+           text: Text length 5, salary 6,000 to 20,000, date equal to today, department from a list.
+         - label: If it fails
+-          text: A reference aimed at the wrong row caps every bonus against one salary.
++          text: A fixed reference, $C$2, caps every bonus against one salary.
+           accent: true
+ 
+   - divider:
+@@ -371,7 +371,7 @@ slides:
+ 
+   - tiers:
+       eyebrow: Block 03 · AutoFilter
+-      title: Four ways to cut the same list down
++      title: Three ways to cut the list down, and how to clear it
+       items:
+         - key: By value
+           title: The check box list
+@@ -380,8 +380,8 @@ slides:
+           title: Text, Number and Date Filters
+           desc: Excel offers the family that matches the column type. Greater Than, Between, Top 10, Begins With, Contains.
+         - key: By format
+-          title: Colour and icon
+-          desc: Filter by Color reads the fill, the font colour or the icon. It only exists when the column carries one.
++          title: Color and icon
++          desc: Filter by Color reads the fill, the font color or the icon. It only exists when the column carries one.
+         - key: Clearing
+           title: Three different commands
+           desc: Clear Filter From one column, Clear on the Data tab for all of them, Filter again to remove the arrows.
+@@ -399,7 +399,7 @@ slides:
+ 
+   - steps:
+       eyebrow: Block 03 · File, Info
+-      title: Three things the backstage pane knows
++      title: Three things the backstage pane knows, in five steps
+       items:
+         - label: '01'
+           title: Properties
+@@ -412,7 +412,7 @@ slides:
+           desc: Named that on the professor's build, Version History on some others. Every autosaved version with its time stamp, and Restore.
+         - label: '04'
+           title: Recover Unsaved Workbooks
+-          desc: At the bottom of File, Open, Recent, and also under Manage Workbook. It opens the Unsaved Files folder holding the .xlsb drafts.
++          desc: At the bottom of File, Open, Recent, and also under Manage Workbook. It opens the UnsavedFiles folder holding the .xlsb drafts.
+         - label: '05'
+           title: Set the interval
+           desc: File, Options, Save. Save AutoRecover information every N minutes, and keep the last version when closing without saving.
+@@ -440,7 +440,7 @@ slides:
+           title: Filtering and then reading the total
+           desc: >-
+             A plain SUM under a filtered list still adds the hidden rows. The status bar
+-            count at the bottom left is the number that respects the filter.
++            Sum at the bottom right is the number that respects the filter.
+ 
+   - quiz:
+       eyebrow: Quick check
+@@ -456,7 +456,8 @@ slides:
+       title: Students_data.csv, from the file to the answer
+       brief: >-
+         Import the file through Data, From Text/CSV with the encoding, the delimiter and the
+-        detection set by hand. Convert the result to a range, remove the duplicate students,
++        detection set by hand. Convert the result to a range with Table Design, Convert to
++        Range, remove the duplicate students,
+         sort on three levels, and put a validation rule on the sheet the exercise names.
+       blocks:
+         - label: Deliverable
+@@ -477,7 +478,7 @@ slides:
+         - title: The ticked columns are the question
+           desc: >-
+             Remove Duplicates deletes what you defined as a duplicate. On the same 26 rows,
+-            all seven columns leave 24 students and one column leaves 19
++            all seven columns leave 24 students and Country of origin alone leaves 19
+         - title: A filter hides, it does not delete
+           desc: >-
+             The row numbers turn blue and skip. The status bar counts what survived, and
+@@ -487,8 +488,8 @@ slides:
+       eyebrow: Assignment
+       title: Exercise 14, submission and grading
+       brief: >-
+-        The three sheets of Excel 14. Duplicates on the Name column, then on the whole row,
+-        then on names and car models together. The import and the two sorts. The five
++        The three sheets of Excel 14. Duplicates on the Name column, then whole rows where
++        the name repeats, then on names and car models together. The import and the two sorts. The five
+         validation rules, including the bonus capped at a tenth of the salary.
+       meta:
+         - [Due, Before week 10]
+diff --git a/ppts/office/manejo-y-analisis-de-la-informacion/es/w09.es.yaml b/ppts/office/manejo-y-analisis-de-la-informacion/es/w09.es.yaml
+index c7d2246..f95bc8c 100644
+--- a/ppts/office/manejo-y-analisis-de-la-informacion/es/w09.es.yaml
++++ b/ppts/office/manejo-y-analisis-de-la-informacion/es/w09.es.yaml
+@@ -26,8 +26,8 @@ slides:
+         3.3.1, 3.3.2 y la mitad del Inspector de documento de 1.5.4, más Expert 2.2.5.
+         COBERTURA.md agrega Associate 1.1.1, Expert 2.2.2, Expert 2.1.1 y Expert 1.1.4.
+         El objetivo MO-210 1.1.2, que solo existe en 365 e importa desde orígenes en
+-        línea, depende de cómo esté armado el laboratorio y se nombra en la diapositiva
+-        de comparación en lugar de enseñarse.
++        línea, depende de cómo esté armado el laboratorio y se nombra en voz alta en la
++        diapositiva de comparación en lugar de enseñarse.
+         Todas las rutas de estas diapositivas salen de procedures.en.md. Ejercicios 14 y 15.
+ 
+   - agenda:
+@@ -35,7 +35,7 @@ slides:
+       title: Cuatro momentos de la sesión
+       cards:
+         - title: Cómo entran
+-          desc: Desde Desde el texto/CSV, el asistente heredado para un .txt y Relleno rápido para la columna que llegó pegada
++          desc: Desde el texto/CSV, el asistente heredado para un .txt y Relleno rápido para la columna que llegó pegada
+         - title: Comprobar que están limpios
+           desc: Quitar duplicados, ordenar por niveles y la regla que impide que se escriba el valor equivocado
+         - title: Encontrar las filas
+@@ -45,7 +45,7 @@ slides:
+ 
+   - objectives:
+       eyebrow: Objetivos de la sesión
+-      title: Al terminar las dos sesiones el alumno podrá…
++      title: Al terminar las dos sesiones podrás…
+       items:
+         - head: Importar un .csv con Obtener y transformar
+           sub: Fijando la codificación, el delimitador y la detección de tipos antes de que aterrice una sola fila
+@@ -125,7 +125,7 @@ slides:
+           Elige Students_data.csv, Importar
+           Origen del archivo:  Windows (ANSI)
+           Delimitador:    Coma
+-          [Data Type Detection]: [Do not detect]
++          [Data Type Detection]: [Based on entire dataset]
+           Flecha de Cargar > Cargar en...
+           Importar datos > Hoja de cálculo existente: =$A$1
+       after:
+@@ -147,7 +147,7 @@ slides:
+ 
+   - table:
+       eyebrow: Bloque 01 · La ventana de vista previa
+-      title: Tres listas, y qué decide cada una
++      title: Tres listas y dos botones, y qué decide cada uno
+       headers: ["Lista", "Qué estás eligiendo", "Cuándo duele"]
+       rows:
+         - ["Origen del archivo", "La tabla de bytes del archivo", "Texto con acentos"]
+@@ -177,8 +177,8 @@ slides:
+         Iñaki    España    Bilbao
+         Björn    Suecia    Västerås
+         Origen del archivo: 65001 UTF-8
+-        I?aki    Espa?a    Bilbao
+-        Bj?rn    Suecia    V?ster?s
++        I�aki    Espa�a    Bilbao
++        Bj�rn    Suecia    V�ster�s
+ 
+   - steps:
+       eyebrow: Bloque 01 · Un .txt lleva otra ruta
+@@ -237,18 +237,19 @@ slides:
+         - label: Error 04
+           title: Pegar desde el Bloc de notas
+           desc: >-
+-            Llega al mismo asistente por la puerta equivocada. La tarea está escrita sobre
++            Pegar y luego Texto en columnas llega al mismo asistente por la puerta
++            equivocada. La tarea está escrita sobre
+             la importación, y un pegado no deja consulta ni registro de las decisiones.
+ 
+   - method:
+       eyebrow: Bloque 01 · Dos rellenos, dos objetivos
+       title: Autorrellenar continúa, Relleno rápido deduce
+-      statement: Relleno rápido lee la columna de al lado, saca el patrón de lo que escribiste y escribe constantes. No aparece ni una fórmula en ningún lado.
++      statement: Relleno rápido lee las columnas de al lado, saca el patrón de lo que escribiste y escribe constantes. No aparece ni una fórmula en ningún lado.
+       points:
+         - label: La tecla
+           text: Ctrl+E rellena la columna por patrón desde donde esté el cursor. Esa sola tecla es todo el objetivo.
+         - label: La condición
+-          text: La columna nueva tiene que estar pegada a la columna de origen, y los datos necesitan fila de encabezados. Relleno rápido no busca más lejos.
++          text: La columna nueva tiene que estar pegada a los datos de origen, y los datos necesitan fila de encabezados. Relleno rápido no busca más lejos.
+         - label: La señal
+           text: Haz clic en una celda rellenada. La barra de fórmulas muestra una constante. Una cadena de IZQUIERDA y ENCONTRAR mostraría una fórmula, y responde a otro objetivo.
+ 
+@@ -397,23 +398,23 @@ slides:
+       lang: excel
+       source: |
+         Permitir:  Personalizada
+-        Fórmula:   =B2<=A2*0.1
++        Fórmula:   =D2<=C2*0.1
+ 
+-        A2 es el sueldo, B2 es el bono.
++        C2 es el sueldo, D2 es el bono.
+         Escribe la fórmula para la celda superior
+         izquierda de la selección. Excel la recorre
+         por el resto igual que se recorre una fórmula
+-        copiada, así que B3 recibe =B3<=A3*0.1 sin
++        copiada, así que D3 recibe =D3<=C3*0.1 sin
+         que tú lo escribas.
+       annotations:
+         - label: Por qué Personalizada
+-          text: Permitir tiene otras siete entradas. Solo esta puede comparar contra otra celda.
++          text: Permitir tiene otras siete entradas. Solo esta recibe una fórmula que devuelve VERDADERO o FALSO.
+         - label: Cómo se extiende
+-          text: Escríbela para la celda superior izquierda de la selección. Excel la recorre por el resto.
++          text: Escríbela para la celda superior izquierda. Excel la recorre por el resto.
+         - label: Las otras cuatro
+           text: Longitud del texto 5, sueldo de 6,000 a 20,000, fecha igual a hoy, departamento desde una lista.
+         - label: Si falla
+-          text: Una referencia apuntada a la fila equivocada topa cada bono contra un solo sueldo.
++          text: Una referencia fija, $C$2, topa cada bono contra un solo sueldo.
+           accent: true
+ 
+   - divider:
+@@ -426,7 +427,7 @@ slides:
+ 
+   - tiers:
+       eyebrow: Bloque 03 · Filtro automático
+-      title: Cuatro formas de recortar la misma lista
++      title: Tres formas de recortar la lista, y cómo se quita
+       items:
+         - key: Por valor
+           title: La lista de casillas
+@@ -454,7 +455,7 @@ slides:
+ 
+   - steps:
+       eyebrow: Bloque 03 · Archivo, Información
+-      title: Tres cosas que sabe el panel de backstage
++      title: Tres cosas que sabe el panel de backstage, en cinco pasos
+       items:
+         - label: '01'
+           title: "Propiedades"
+@@ -477,7 +478,7 @@ slides:
+           title: "Recuperar libros no guardados"
+           desc: >-
+             Hasta abajo de Archivo, Abrir, Recientes, y también dentro de
+-            Administrar libro. Abre la carpeta [Unsaved Files] con los borradores .xlsb.
++            Administrar libro. Abre la carpeta [UnsavedFiles] con los borradores .xlsb.
+         - label: '05'
+           title: Fija el intervalo
+           desc: >-
+@@ -509,7 +510,7 @@ slides:
+           title: Filtrar y luego leer el total
+           desc: >-
+             Una SUMA simple debajo de una lista filtrada sigue sumando las filas
+-            escondidas. La cuenta de la barra de estado, abajo a la izquierda, es el
++            escondidas. La Suma de la barra de estado, abajo a la derecha, es el
+             número que respeta el filtro.
+ 
+   - quiz:
+@@ -526,7 +527,8 @@ slides:
+       title: Students_data.csv, del archivo a la respuesta
+       brief: >-
+         Importen el archivo con Datos, Desde el texto/CSV, con la codificación, el delimitador
+-        y la detección puestos a mano. Conviertan el resultado en rango, quiten los alumnos
++        y la detección puestos a mano. Conviertan el resultado en rango con Diseño de tabla,
++        Convertir en rango, quiten los alumnos
+         duplicados, ordenen por tres niveles y pongan una regla de validación en la hoja
+         que nombra el ejercicio.
+       blocks:
+@@ -549,7 +551,7 @@ slides:
+         - title: Las columnas marcadas son la pregunta
+           desc: >-
+             Quitar duplicados borra lo que tú definiste como duplicado. Sobre las mismas
+-            26 filas, las siete columnas dejan 24 alumnos y una sola columna deja 19
++            26 filas, las siete columnas dejan 24 alumnos y Country of origin sola deja 19
+         - title: Un filtro esconde, no borra
+           desc: >-
+             Los números de fila se ponen azules y se saltan. La barra de estado cuenta lo
+@@ -559,8 +561,8 @@ slides:
+       eyebrow: Tarea
+       title: Ejercicio 14, entrega y calificación
+       brief: >-
+-        Las tres hojas del Excel 14. Duplicados sobre la columna Name, luego sobre la fila
+-        completa, luego sobre nombres y modelos de auto juntos. La importación y los dos
++        Las tres hojas del Excel 14. Duplicados sobre la columna Name, luego la fila completa
++        donde se repite el nombre, luego sobre nombres y modelos de auto juntos. La importación y los dos
+         ordenamientos. Las cinco reglas de validación, incluida la del bono topado a la
+         décima parte del sueldo.
+       meta:

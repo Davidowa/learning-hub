@@ -22,12 +22,12 @@ slides:
       eyebrow: Agenda
       title: Four moments in the session
       cards:
-        - title: Choosing
-          desc: Columns by name, rows by condition
-        - title: Filtering
+        - title: Choosing and filtering
           desc: The AutoFilter, written. And the two rules that avoid the confusing error
         - title: Cleaning
           desc: Duplicates, inconsistent text, numbers that were text, and holes
+        - title: The trap
+          desc: The assignment that writes nothing, and how to write with loc
         - title: Your turn
           desc: Your file, cleaned, with every decision written down
 
@@ -210,6 +210,7 @@ slides:
       title: Three honest answers, and here we drop the row
       filename: clean.py
       source: |
+        sales = sales.drop_duplicates()
         print(sales["units"].isna().sum())
 
         sales = sales.dropna(subset=["units"])
@@ -270,7 +271,7 @@ slides:
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
-      title: Four cleaning errors
+      title: Four filtering and cleaning errors
       items:
         - label: Error 01
           title: Calculating before cleaning
@@ -320,7 +321,7 @@ slides:
         - title: Clean before you calculate
           desc: A sum over dirty data returns a number, and a wrong number never announces itself
         - title: Write with loc, in one step
-          desc: Chained assignment does nothing and only leaves a warning, which is the worst possible combination
+          desc: Chained assignment does nothing and only leaves a warning, which is easy to miss
 
   - homework:
       eyebrow: Homework

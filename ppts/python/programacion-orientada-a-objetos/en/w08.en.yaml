@@ -26,7 +26,7 @@ slides:
           desc: One message, one different answer from each class
         - title: Overriding
           desc: Replacing the parent's method, or extending it with super
-        - title: Abstract and interfaces
+        - title: Abstract classes and interfaces
           desc: Declaring the contract before writing any of the body
         - title: First midterm
           desc: What is covered, how it is submitted and how it is graded
@@ -75,7 +75,7 @@ slides:
       eyebrow: Key concept
       title: What polymorphism is
       lead: >-
-        Objects of different classes answering the same message, each in their own way, with
+        Objects of different classes answering the same message, each in its own way, with
         the caller never having to know which one it got. That is what lets you add a new
         class without touching a single line of the code that already worked.
       panel:
@@ -122,7 +122,7 @@ slides:
         - label: Line 12
           text: Cat does the same with a different body, and neither knows the other exists
         - label: Mind the words
-          text: Overriding replaces the body in the child. Overloading would mean two signatures, and Python has none.
+          text: Overriding replaces the body in the child. Overloading would mean two signatures, and Python does not do that.
 
   - code_output:
       eyebrow: Demonstration
@@ -195,7 +195,7 @@ slides:
                 print("Reading from memory")
       annotations:
         - label: Line 4
-          text: Inheriting from ABC marks the class abstract, but it only stops being buildable once it has an abstract method
+          text: Inheriting from ABC makes Python refuse to instantiate the class while it still has an abstract method
         - label: Line 8
           text: The decorator forces every child to write read. Leave it out and the error fires on construction.
         - label: Risk
@@ -218,6 +218,7 @@ slides:
         Reading from memory
         Traceback (most recent call last):
           File "try_stream.py", line 5
+            other = Stream()
         TypeError: Can't instantiate
         abstract class Stream without an
         implementation for abstract
@@ -306,7 +307,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: First midterm
-      lede: It closes units 1, 2 and 3. Everything on it has already been practiced in a lab.
+      lede: It closes units 1, 2 and 3. Everything on it was practiced in class, with code that actually runs.
       block: 3
 
   - tiers:

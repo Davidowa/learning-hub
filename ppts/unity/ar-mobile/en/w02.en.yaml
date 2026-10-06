@@ -176,8 +176,8 @@ slides:
         - ["Minimum API Level", "Android 7.0, API level 24", "Player > Other Settings"]
         - ["Scripting Backend", "IL2CPP", "Player > Other Settings"]
         - ["Target Architectures", "ARM64", "Player > Other Settings"]
-        - ["Auto Graphics API", "Off", "Other Settings > Rendering"]
-        - ["Graphics APIs", "OpenGLES3, no Vulkan", "Other Settings > Rendering"]
+        - ["Auto Graphics API", "Off", "Player > Other Settings > Rendering"]
+        - ["Graphics APIs", "OpenGLES3, no Vulkan", "Player > Other Settings > Rendering"]
         - ["ARCore Requirement", "Required or Optional", "XR Plug-in Management"]
 
   - concept:
@@ -301,8 +301,8 @@ slides:
         label: The one that converts materials
         title: Window, Rendering, Render Pipeline Converter
         note: >-
-          Set the source to Built-in and the target to Universal, choose the material
-          upgrade, initialize the converter and then convert the assets.
+          Pick Built-in to URP from the dropdown, choose the material upgrade,
+          initialize the converter and then convert the assets.
       steps:
         - text: Flat color means no passthrough
         - text: Magenta means an unconverted shader
@@ -327,8 +327,8 @@ slides:
         - label: Mistake 03
           title: Mono backend with ARM64 checked
           desc: >-
-            The build fails before it compiles. ARM64 needs IL2CPP, and the two settings sit
-            two rows apart in the same Configuration panel.
+            The build fails before it compiles. ARM64 needs IL2CPP, and both settings sit
+            in the same Configuration section.
         - label: Mistake 04
           title: Built without switching platform
           desc: >-
@@ -337,7 +337,7 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: The build runs, tracking works, the cube renders, and the rest of the screen is one gray. What is missing?
+      question: The build runs, tracking works, the cube renders, and the rest of the screen is one flat color. What is missing?
       options:
         - The AR Background Renderer Feature on the Mobile_Renderer
         - The AR Session, so tracking never started in the first place

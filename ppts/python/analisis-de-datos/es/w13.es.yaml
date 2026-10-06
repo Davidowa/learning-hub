@@ -81,7 +81,7 @@ slides:
         file: tasas.xlsx
         lang: excel
         code: |
-          =BUSCARV(B2; Catalogo; 2; FALSO)
+          =BUSCARV(B2, Catalogo, 2, FALSO)
       after:
         label: En Python
         file: tasas.py
@@ -188,12 +188,12 @@ slides:
       title: Regiones de este año contra las del anterior
       filename: comparar.py
       source: |
-        este = {"Norte", "Centro", "Sur"}
+        actual = {"Norte", "Centro", "Sur"}
         pasado = {"Centro", "Sur", "Este"}
 
-        print(sorted(este & pasado))
-        print(sorted(este - pasado))
-        print(sorted(este ^ pasado))
+        print(sorted(actual & pasado))
+        print(sorted(actual - pasado))
+        print(sorted(actual ^ pasado))
       output: |
         ['Centro', 'Sur']
         ['Norte']
@@ -266,7 +266,7 @@ slides:
       title: Tres ideas para llevarse
       items:
         - title: Un diccionario es un BUSCARV
-          desc: La llave, el valor, y ninguna columna número tres. En la semana 15 esto es lo que hace groupby
+          desc: La llave, el valor, y ninguna columna número tres. En la semana 15 esto es lo que hace groupby por dentro
         - title: get no revienta
           desc: Los corchetes lanzan KeyError con una llave que falta, y get devuelve lo que tú decidas
         - title: Un conjunto quita duplicados solo
@@ -275,7 +275,7 @@ slides:
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
-      brief: Con las listas de campañas del curso, arma un diccionario de canal a inversión, calcula el total con values, e imprime cuáles canales aparecen este año y no el pasado usando conjuntos.
+      brief: Con las listas de campañas de la semana 8, arma un diccionario de canal a inversión y calcula el total con values. Luego escribe la lista de canales del año pasado e imprime, usando conjuntos, cuáles aparecen este año y no el pasado.
       meta:
         - [Entrega, Antes de la semana 14]
         - [Formato, Blackboard · .py]

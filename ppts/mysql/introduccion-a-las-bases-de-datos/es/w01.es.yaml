@@ -114,11 +114,11 @@ slides:
 
         -- la misma informacion, declarada
         CREATE TABLE inscripcion (
-          inscripcion_id INT PRIMARY KEY,
-          alumno_id      INT NOT NULL,
-          materia_id     INT NOT NULL,
-          periodo        CHAR(5) NOT NULL,
-          calificacion   DECIMAL(4,2) NULL
+          matricula    CHAR(8)      NOT NULL,
+          clave        CHAR(6)      NOT NULL,
+          periodo      CHAR(5)      NOT NULL,
+          calificacion DECIMAL(4,2) NULL,
+          PRIMARY KEY (matricula, clave, periodo)
         );
       annotations:
         - label: Arriba
@@ -127,7 +127,7 @@ slides:
             mal escrito y se acepta.
         - label: Abajo
           text: >-
-            Cada columna trae nombre, tipo y tamaño, y cuatro de ellas se niegan a quedarse
+            Cada columna trae nombre, tipo y tamaño, y tres de ellas se niegan a quedarse
             vacías. La declaración es la que decide.
         - label: La celda vacía
           text: >-
@@ -135,7 +135,7 @@ slides:
             se llama NULL y tiene reglas propias.
         - label: Riesgo
           text: >-
-            Para el archivo nada de lo de arriba está mal, y ese es el problema: no puede
+            Para el archivo, nada de lo de arriba está mal, y ese es el problema: no puede
             decirlo.
           accent: true
 
@@ -291,7 +291,8 @@ slides:
       source: |
         START TRANSACTION;
         INSERT INTO materia VALUES ('FI1010','Fisica I');
-        INSERT INTO inscripcion VALUES ('A0000002','FI1010','26PRI');
+        INSERT INTO inscripcion (matricula, clave, periodo)
+          VALUES ('A0000002','FI1010','26PRI');
         SELECT COUNT(*) AS materias_dentro_de_la_transaccion
           FROM materia;
         ROLLBACK;
