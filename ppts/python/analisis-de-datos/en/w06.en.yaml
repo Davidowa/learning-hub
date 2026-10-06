@@ -43,7 +43,7 @@ slides:
           sub: if on its own, and if with else, and what changes between them
         - head: Chain several cases with elif
           sub: And explain why only the first branch that holds gets executed
-        - head: Recognise the boundary error
+        - head: Recognize the boundary error
           sub: The difference between greater than and greater or equal, in a real case
 
   - roadmap:
@@ -64,7 +64,7 @@ slides:
           state: todo
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: todo
 
   - divider:
@@ -91,8 +91,8 @@ slides:
       eyebrow: Key concept
       title: A boolean expression has only two answers
       lead: >-
-        Whatever you compare, the result is True or False. There is no «almost» and no
-        «it depends». That is the entire raw material of a decision, and it is why a
+        Whatever you compare, the result is True or False. There is no “almost” and no
+        “it depends”. That is the entire raw material of a decision, and it is why a
         condition that looks complicated can nearly always be split into two simple
         comparisons and put back together.
       panel:
@@ -124,7 +124,7 @@ slides:
   - divider:
       eyebrow: Block 02
       title: Deciding
-      lede: The same structure you already use in a spreadsheet, written across two lines instead of inside one long formula.
+      lede: The same structure you already use in a spreadsheet, written across several lines instead of inside one long formula.
       block: 2
 
   - compare:
@@ -183,8 +183,12 @@ slides:
       source: |
         if conversion >= 0.03:
             status = "Acceptable"
+            print("The campaign stays live.")
         else:
             status = "Review"
+            print("The targeting needs a look.")
+
+        print(f"{conversion:.2%} · {status}")
       output: |
         The campaign stays live.
         3.42% · Acceptable
@@ -255,7 +259,7 @@ slides:
           desc: Greater than excludes whoever landed exactly on target. Greater or equal includes them. Decide which you meant.
         - label: Error 04
           title: Writing the conditions backwards
-          desc: Most demanding to least. Reversed, the first branch swallows every case there is.
+          desc: Most demanding to least. Reversed, the first branch swallows the cases meant for the ones below.
 
   - quiz:
       eyebrow: Quick check
@@ -282,7 +286,7 @@ slides:
       brief: Write a program that classifies something from your discipline into at least three bands, such as a customer by tenure, a supplier by compliance, or an expense by amount. Have it read the value from the keyboard.
       blocks:
         - label: Deliverable
-          text: The .py file and the three runs that land in each band
+          text: The .py file and one run that lands in each band
         - label: Constraint
           text: The bands have to be exclusive. No case may land in two of them.
         - label: The test
@@ -293,11 +297,11 @@ slides:
       title: Three ideas to take away
       items:
         - title: A comparison returns True or False
-          desc: Never «almost» and never «it depends». That is the whole raw material a decision is built from
+          desc: Never “almost” and never “it depends”. That is the whole raw material a decision is built from
         - title: The indentation is the structure
           desc: Those four spaces are the only thing saying which lines belong to which branch of the if
         - title: The order of the elif decides
-          desc: Most demanding to least. Reversing it lets the first branch swallow every case
+          desc: Most demanding to least. Reversing it lets the first branch swallow the cases meant for the ones below
 
   - homework:
       eyebrow: Homework

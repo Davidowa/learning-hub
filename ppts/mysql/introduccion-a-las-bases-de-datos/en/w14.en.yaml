@@ -27,7 +27,7 @@ slides:
         - title: OLD and NEW
           desc: The six moments, the validation that handles NULL, and the CHECK that sometimes wins
         - title: Auditing, and the hole
-          desc: The audit log that works and the three ways it ends up seeing nothing at all
+          desc: The audit log that works and the two ways it ends up seeing nothing at all
         - title: Events
           desc: The switch, the timestamp that already passed, and the failure nobody reports
         - title: Your turn
@@ -41,7 +41,7 @@ slides:
           sub: With the trg_table_timing_event_purpose convention, which reads on its own in a SHOW TRIGGERS
         - head: Say what is in OLD and what is in NEW
           sub: It depends on the timing and the event, and asking for the one that is missing is error 1363
-        - head: Validate without letting NULL through
+        - head: Validate without NULL slipping through by accident
           sub: A comparison against NULL is not false, it is unknown, and the IF simply does not run
         - head: Choose between the trigger and the CHECK
           sub: 1644 with a message of your own against a declarative 3819, and neither one always wins
@@ -58,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -78,11 +78,11 @@ slides:
       title: OLD, NEW and the six moments
       lede: >-
         A trigger is a block of code the server runs for every row that changes. The only
-        thing to memorise is which row it can see, and that comes down to two words.
+        thing to memorize is which row it can see, and that comes down to two words.
       block: 1
 
   - table:
-      eyebrow: Block 01 · The one thing to memorise
+      eyebrow: Block 01 · The one thing to memorize
       title: What exists in OLD and what exists in NEW, moment by moment
       headers: [Moment, OLD, NEW]
       rows:
@@ -122,8 +122,8 @@ slides:
             move house.
         - label: The guard
           text: >-
-            Without IS NOT NULL, an empty grade leaves the comparison unknown and the row
-            lands in silence.
+            With or without it, the empty grade gets in. The guard only writes down that
+            it is on purpose.
         - label: Risk
           text: >-
             A trigger watches the statements somebody writes. What disappears by another
@@ -147,7 +147,7 @@ slides:
 
   - compare:
       eyebrow: Block 01 · The same rule, twice
-      title: A validation that does not handle NULL is a validation that does not validate
+      title: NULL gets through both, and only one of them says so
       before:
         label: No guard
         file: sin_guarda.sql
@@ -172,17 +172,17 @@ slides:
       note: >-
         With the grade at NULL the comparison on the left does not answer false. It
         answers unknown, and unknown is not true, so the IF never runs and the row goes
-        through. It is week 9's three-valued logic landing in the one place where it
-        switches off a rule somebody wrote on purpose.
+        through. It is week 9's three-valued logic. The guard on the right does not change
+        the result: it turns it into a written decision instead of an accident.
 
   - code_output:
       eyebrow: Measured · when the trigger is too much
-      title: The same rule, without one line of procedural code
+      title: A range rule, without one line of procedural code
       filename: chk_creditos.sql
       lang: sql
       output_label: On execution
       source: |
-        -- the other way of saying the same thing,
+        -- the other way of writing a range rule,
         -- declarative and with no body to maintain
         ALTER TABLE materias
           ADD CONSTRAINT chk_creditos
@@ -247,7 +247,7 @@ slides:
         TRUNCATE TABLE inscripciones;
         SELECT COUNT(*) FROM inscripciones_audit;
       output: |
-        the child enrolment is gone:
+        the child enrollment is gone:
         count 1 -> 0
         the audit log:
         0 rows
@@ -264,8 +264,10 @@ slides:
       source: |
         START TRANSACTION;
           INSERT INTO inscripciones
+            (matricula, clave_materia, periodo, calificacion)
           VALUES (100002, 'MAT201', '2026-2', 8.0);
           INSERT INTO inscripciones
+            (matricula, clave_materia, periodo, calificacion)
           VALUES (100002, 'PRG101', '2026-2', 11.0);
         ROLLBACK;
       output: |
@@ -323,7 +325,7 @@ slides:
         - label: Error 04
           title: Forgetting that sql_mode is frozen
           desc: >-
-            SHOW TRIGGERS keeps the Definer and the sql_mode of each trigger. The one you
+            SHOW TRIGGERS shows the Definer and the sql_mode of each trigger. The one you
             created today keeps today's, whatever the server changes to later.
 
   - divider:
@@ -331,7 +333,7 @@ slides:
       title: Events, and what neither of the two can see
       lede: >-
         A trigger waits for somebody to write a statement. An event waits for nobody: it
-        waits for the clock. And when it breaks, the catalogue goes on reporting that it
+        waits for the clock. And when it breaks, the catalog goes on reporting that it
         is perfectly fine.
       block: 3
 
@@ -464,12 +466,12 @@ slides:
         - title: You already know how to raise the error
           desc: >-
             SIGNAL, MESSAGE_TEXT and the handlers are week 13's and here they only move
-            house. A trigger can even call the procedure you wrote back then, and that is
-            verified
+            house. A trigger can even call a procedure, as long as that procedure returns no
+            rows and runs no ROLLBACK
         - title: ENABLED does not mean healthy
           desc: >-
             An event that breaks every night keeps its status and its LAST_EXECUTED, the
-            catalogue cannot tell a live one from a dead one, and the error goes to a file
+            catalog cannot tell a live one from a dead one, and the error goes to a file
             nobody opens
 
   - homework:
@@ -477,8 +479,8 @@ slides:
       title: Submission and grading criteria
       brief: >-
         Write the validation trigger and the audit trigger on inscripciones, plus an event
-        that closes the enrolment period. Hand in the run where the bad INSERT is refused,
-        the good UPDATE leaves its row in the log, and the event shows up in the catalogue.
+        that closes the term. Hand in the run where the bad INSERT is refused,
+        the good UPDATE leaves its row in the log, and the event shows up in the catalog.
       meta:
         - [Due, Before week 15]
         - [Format, Blackboard · .sql script and pasted output]
@@ -486,7 +488,7 @@ slides:
       rubric:
         - ["Validation", "40 %", "The trigger refuses and handles the NULL case"]
         - ["Auditing", "40 %", "OLD and NEW end up in the same row"]
-        - ["The event", "20 %", "Created with a future timestamp and still in the catalogue"]
+        - ["The event", "20 %", "Created with a future timestamp and still in the catalog"]
 
   - closing:
       title: Questions

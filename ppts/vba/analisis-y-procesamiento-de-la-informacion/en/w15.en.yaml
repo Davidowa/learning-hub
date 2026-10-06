@@ -75,7 +75,7 @@ slides:
       eyebrow: Key concept
       title: Some functions only live on one side
       lead: >-
-        Left, Mid and Replace are VBA's and do not appear under WorksheetFunction. VLookup,
+        Left, Mid and Len are VBA's and do not appear under WorksheetFunction. VLookup,
         SumIfs and CountIf are the sheet's and do not exist loose in VBA. And a few, like
         Trim, sit on both sides doing different things, which was week 13.
       panel:
@@ -88,11 +88,11 @@ slides:
         - text: Write the name with no prefix
         - text: If the editor does not know it, add WorksheetFunction
         - text: If it is not there either, it does not exist by that name
-          loop: ↺ and that is the whole rule, no lists to memorise
+          loop: ↺ and that is the whole rule, no lists to memorize
 
   - code_output:
       eyebrow: Measured
-      title: The same function asked for three ways
+      title: Three calls and what each one gives back
       filename: Module1
       lang: vba
       output_label: Output
@@ -103,22 +103,22 @@ slides:
 
         WorksheetFunction.Trim("a    b")
       output: |
-        Error 438
-        Object doesn't support this
-        property or method
+        Compile error:
+        Method or data member
+        not found
 
         Hello
 
-        [a b]
+        a b
 
   - code_output:
       eyebrow: Measured
-      title: VLookup when the value is not in the catalogue
+      title: VLookup when the value is not in the catalog
       filename: Module1
       lang: vba
       output_label: Looking up "Zoe"
       source: |
-        ' catalogue: Ana 100, Beto 200, Carla 300
+        ' catalog: Ana 100, Beto 200, Carla 300
 
         WorksheetFunction.VLookup("Zoe", cat, 2, False)
 
@@ -144,10 +144,10 @@ slides:
 
             For i = 2 To 500
                 v = Application.VLookup(Cells(i, 1).Value, _
-                        Range("Catalogue"), 2, False)
+                        Range("Catalog"), 2, False)
 
                 If IsError(v) Then
-                    Cells(i, 2).Value = "not in catalogue"
+                    Cells(i, 2).Value = "not in catalog"
                 Else
                     Cells(i, 2).Value = v
                 End If
@@ -289,7 +289,7 @@ slides:
         - ["RC[-1]", "One column to the left", "Relative, like B6"]
         - ["R[-1]C", "One row up", "Relative, like C5"]
         - ["R1C1", "Row 1, column 1", "Absolute, $A$1"]
-        - ["RC", "The cell itself", "Rarely used at all"]
+        - ["RC", "The cell itself", "C6: a circular reference"]
 
   - code:
       eyebrow: The chart
@@ -331,9 +331,9 @@ slides:
       output: |
         charts = 1      series = 1
 
-        =SERIES(Sheet1!$B$1,
-          Sheet1!$A$2:$A$3,
-          Sheet1!$B$2:$B$3, 1)
+        =SERIES(Data!$B$1,
+          Data!$A$2:$A$3,
+          Data!$B$2:$B$3,1)
 
   - concept:
       eyebrow: What that formula gives away
@@ -356,7 +356,7 @@ slides:
 
   - quiz:
       eyebrow: Quick question
-      question: The catalogue is missing the code on row 38. What is left in the report?
+      question: The catalog is missing the code on row 38. What is left in the report?
       filename: Module1
       lang: vba
       source: |
@@ -382,8 +382,8 @@ slides:
         - ["4", "What is written stays written", "36 of 499, unannounced"]
       verdict: >-
         WorksheetFunction raises the error; Application returns #N/A as a value. With
-        Application and an IsError, row 38 is flagged as not in the catalogue and the other
-        462 still get written.
+        Application and an IsError, row 38 is flagged as not in the catalog and the 462 rows
+        after it still get written.
 
   - pitfalls:
       eyebrow: Diagnosis

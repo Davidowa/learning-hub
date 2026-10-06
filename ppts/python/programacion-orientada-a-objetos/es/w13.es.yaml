@@ -85,7 +85,7 @@ slides:
           Una imagen, un zip o un ejecutable no tienen letras adentro. Traducirlos a texto los
           rompe, y con suerte lanza UnicodeDecodeError antes de alcanzar a romper algo.
       steps:
-        - text: Texto para lo que se lee
+        - text: Texto para lo que lee una persona
         - text: Binario para todo lo demás
         - text: Nunca los mezcles en un archivo
           loop: ↺ el modo se elige por el contenido, no por la extensión
@@ -160,7 +160,7 @@ slides:
       eyebrow: Diagnóstico
       title: El cursor, la lectura y el salto
       image: img/es/seek-tell.png
-      caption: Leer avanza el cursor una posición a la vez. seek lo pone donde le digas, sin leer nada en el camino.
+      caption: Cada read(1) avanza el cursor una posición. seek lo pone donde le digas, sin leer nada en el camino.
       alt: Un archivo dibujado como doce casillas numeradas, con una flecha de salto arriba y flechas de avance abajo
 
   - code:
@@ -180,7 +180,7 @@ slides:
             primero = f.read(TAM)
       annotations:
         - label: Línea 4
-          text: Si todos los registros miden lo mismo, el registro n empieza en n por el tamaño
+          text: Si todos los registros miden lo mismo, el registro n, contado desde cero, empieza en n por el tamaño
         - label: Línea 6
           text: tell devuelve la posición actual del cursor, contada en bytes desde el principio
         - label: Por qué importa
@@ -236,7 +236,7 @@ slides:
       options:
         - "b'DE', porque el cursor queda antes de la cuarta letra"
         - "b'CD', porque seek empieza a contar en uno"
-        - "b'ABCDEFGH', porque seek no afecta lo que lee read"
+        - "b'AB', porque seek no afecta lo que lee read"
         - 'Un error, seek no funciona en modo binario'
 
   - trace:
@@ -247,13 +247,13 @@ slides:
         - ["1", 'open("datos.bin", "rb")', "0", "–"]
         - ["2", "f.seek(3)", "3", "3"]
         - ["3", "f.read(2)", "5", "b'DE'"]
-        - ["4", "print(...)", "5", "b'DE'"]
+        - ["4", "print(...)", "5", "imprime b'DE'"]
       verdict: Las posiciones se cuentan desde cero, igual que los índices de una lista. La posición 3 queda justo antes de la cuarta letra, y read(2) toma esa y la siguiente.
 
   - divider:
       eyebrow: Bloque 03
       title: Segundo parcial
-      lede: Cierra las unidades 4 y 5. Todo lo que entra se practicó en un laboratorio, con el archivo escribiéndose en disco.
+      lede: Cierra las unidades 4 y 5. Todo lo que entra se practicó en clase, con el archivo escribiéndose en disco.
       block: 3
 
   - tiers:
@@ -318,7 +318,7 @@ slides:
         - [Peso, 20 % de la calificación final]
       rubric:
         - ["Funciones", "25 %", "Cada función hace una sola cosa y revisa lo que recibe de fuera"]
-        - ["Archivos", "35 %", "Todo acceso usa with, Path y un encoding explícito"]
+        - ["Archivos", "35 %", "Todo acceso usa with y Path, y en modo texto un encoding explícito"]
         - ["Robustez", "25 %", "Los errores previsibles se atrapan por tipo y con un mensaje que sirve"]
         - ["Ejecución", "15 %", "Cada archivo corre y produce la salida que pide el enunciado"]
 

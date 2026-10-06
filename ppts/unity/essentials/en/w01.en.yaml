@@ -82,7 +82,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: todo
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: todo
         - label: 04 · Session 6
@@ -96,7 +96,7 @@ slides:
       lead: >-
         The skills, and the order they arrive in, come from the Unity Learn pathway Unity
         Essentials. You are enrolled in it and you are expected to work through it on your
-        own account. What happens in this room is the other half, the part a video cannot
+        own. What happens in this room is the other half, the part a video cannot
         do, which is watching something break in front of you and being told why.
       panel:
         label: What this course adds
@@ -144,12 +144,12 @@ slides:
           desc: The Hub is not the editor. It is the launcher that installs and keeps versions
         - label: '02'
           title: Sign in
-          desc: A Unity account and a personal licence. Without one the editor opens and stops
+          desc: A Unity account and a personal license. Without one the editor opens and stops
         - label: '03'
           title: Add the version
           desc: Installs, then Install Editor. The group installs 6000.3.7f1 and nothing else
         - label: '04'
-          title: Tick the modules
+          title: Check the modules
           desc: Build support is chosen here. Adding it later means the installer runs again
         - label: '05'
           title: New project
@@ -157,7 +157,7 @@ slides:
 
   - table:
       eyebrow: Block 01 · On disk
-      title: What a new project has, and what belongs in version control
+      title: What a new project has, and what is committed
       headers: [Folder, What it holds, In the repository]
       rows:
         - ["Assets", "What you make or import, with .meta", "Yes"]
@@ -166,6 +166,7 @@ slides:
         - ["Library", "Imported assets, rebuilt", "No"]
         - ["Logs", "Editor and build logs", "No"]
         - ["Temp", "Only while the editor is open", "No"]
+        - ["UserSettings", "Each user's editor settings", "No"]
 
   - stat:
       eyebrow: Measured on a fresh project
@@ -235,19 +236,20 @@ slides:
       title: Play mode is a sandbox, and the editor throws it away
       lead: >-
         Pressing Play does not run the scene file. The editor loads the scene into memory,
-        runs it there, and on Stop reloads the file from disk. Every value you nudged while
+        runs it there, and on Stop puts it back the way it was before Play. Every value you
+        nudged while
         the play button was down goes with it. This is a feature, since it lets you break
         things safely, and it is the first hour a student loses in the course.
       panel:
         label: Make it visible before it costs you
         title: Preferences · Colors · Playmode tint
         note: >-
-          Set a tint you cannot miss. The editor changes colour during play mode, so you
+          Set a tint you cannot miss. The editor changes color during play mode, so you
           answer the question by looking, not remembering.
       steps:
         - text: Play loads the scene into memory
         - text: You edit the copy, not the file
-        - text: Stop reloads the file from disk
+        - text: Stop restores the scene from before Play
           loop: ↺ and the copy, with your two hours of tuning, is gone
 
   - steps:
@@ -265,7 +267,7 @@ slides:
           desc: Moves the scene camera along its own forward axis, not a lens change
         - label: Frame
           title: Press F
-          desc: Fits the selected object in the view. The one shortcut worth learning today
+          desc: Fits the selected object in the view. The shortcut most worth learning today
         - label: Fly
           title: Right button and WASD
           desc: First person movement, Q and E for down and up, Shift to go faster
@@ -284,7 +286,7 @@ slides:
 
   - table:
       eyebrow: Block 02 · The 2D button
-      title: What changes when the 2D button goes down
+      title: What changes when you work in 2D
       headers: [Aspect, In 3D, In 2D]
       rows:
         - ["Scene camera", "Perspective, shrinks with distance", "Orthographic, flat"]
@@ -331,8 +333,8 @@ slides:
             Objects at the top of the Hierarchy. A new 3D scene has two, camera and light.
         - label: Risk
           text: >-
-            Rename the file and the console reads The associated script cannot be loaded,
-            with an empty slot in the Inspector.
+            Rename the file and the component in the Inspector reads The associated script
+            can not be loaded.
           accent: true
 
   - code_output:
@@ -356,7 +358,7 @@ slides:
       question: You moved a crate while the play button was down, then pressed Stop. Where is the move?
       options:
         - In the scene file, because the Inspector showed the new position
-        - Gone, because Stop reloads the scene from disk
+        - Gone, because Stop restores the scene from before Play
         - In the Library folder, and it comes back on the next play
         - Saved only if the project was in version control
 
@@ -365,26 +367,27 @@ slides:
       title: The second one, and the loss is silent
       statement: >-
         Nothing warns you. The Inspector showed the new position because the object in memory
-        really had it, and on Stop the editor reloaded the file that never heard about it.
+        really had it, and on Stop the editor restored the scene from before Play, which never
+        heard about it.
       points:
         - label: Why it happens
           text: >-
-            Play mode edits a copy of the scene. The file on disk is the original, and it is
-            what comes back the moment the play button lets go.
+            Play mode edits a copy of the scene. The scene from before Play is the original,
+            and it is what comes back the moment the play button lets go.
         - label: What to do instead
           text: >-
             Tune during play, write the numbers down, stop, and type them in again. Copy
             Component and Paste Component Values also survive the stop.
         - label: The tell
           text: >-
-            The playmode tint. If the editor is a different colour, everything you type is
+            The playmode tint. If the editor is a different color, everything you type is
             temporary, and that is worth checking before a long tuning session.
 
   - lab:
       eyebrow: Lab
       title: Install, create and prove it
       brief: >-
-        Install 6000.3.7f1 from the Hub with Windows Build Support ticked, create a Universal
+        Install 6000.3.7f1 from the Hub with Windows Build Support checked, create a Universal
         3D project called StoreRoom with no spaces in the path, save the empty scene as Bay.unity under
         Assets/Scenes and attach SceneCheck.cs to the Main Camera.
       blocks:
@@ -413,8 +416,8 @@ slides:
             which is why a clone of those three opens and runs
         - title: Play mode is a copy
           desc: >-
-            The editor runs the scene from memory and reloads the file on Stop, so tuning
-            done during play is tuning thrown away
+            The editor runs the scene from memory and restores the pre-Play scene on Stop,
+            so tuning done during play is tuning thrown away
 
   - homework:
       eyebrow: Homework

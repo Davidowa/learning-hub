@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión el alumno podrá…
+      title: Al terminar la sesión podrás…
       items:
         - head: Agrupar y resumir en una línea
           sub: groupby seguido de la columna y de la función de resumen
@@ -113,6 +113,7 @@ slides:
         Centre    3919.0
         West      3030.0
         South     1553.0
+        Name: amount, dtype: float64
 
   - code:
       eyebrow: Bloque 01 · Varios resúmenes
@@ -174,6 +175,7 @@ slides:
         print((rejilla / 1000).round(0))
       output: |
         channel  Online  Retail  Wholesale
+        region
         Centre   1292.0   490.0     2137.0
         North     978.0  1331.0     2042.0
         South     420.0   271.0      862.0
@@ -193,9 +195,9 @@ slides:
         file: ventas.xlsx
         lang: excel
         code: |
-          =BUSCARV(B2; Regiones; 2; FALSO)
-          =BUSCARV(B2; Regiones; 3; FALSO)
-          =BUSCARV(B2; Regiones; 4; FALSO)
+          =BUSCARV(B2, Regiones, 2, FALSO)
+          =BUSCARV(B2, Regiones, 3, FALSO)
+          =BUSCARV(B2, Regiones, 4, FALSO)
       after:
         label: En pandas
         file: unir.py
@@ -204,12 +206,12 @@ slides:
                                on="region",
                                how="left")
       note: >-
-        Tres fórmulas por cada columna que quieras traer, o una sola instrucción que las
+        Una fórmula por cada columna que quieras traer, o una sola instrucción que las
         trae todas. Y sin escribir el número de columna, que es donde BUSCARV se rompe.
 
   - table:
       eyebrow: Bloque 03 · Modos
-      title: Los cuatro modos de unión
+      title: Cuatro modos de unión
       headers: [Modo, Qué conserva, Cuándo]
       rows:
         - ["left", "Todos los renglones de la izquierda", "El seguro, y el que imita a BUSCARV"]
@@ -231,6 +233,7 @@ slides:
         both          306
         right_only      1
         left_only       0
+        Name: count, dtype: int64
 
   - concept:
       eyebrow: Concepto clave
@@ -242,7 +245,7 @@ slides:
         región que el catálogo no conoce es un problema de datos que hay que reportar.
       panel:
         label: La diferencia con BUSCARV
-        title: N/A esparcido en la hoja no se cuenta solo
+        title: "#N/A esparcido en la hoja no se cuenta solo"
         note: >-
           Con una fórmula tendrías que contar los errores a mano y en una sola dirección.
           Aquí el conteo viene incluido y cubre las dos.
@@ -258,7 +261,7 @@ slides:
       items:
         - label: Error 01
           title: Agrupar sin haber limpiado
-          desc: Ocho regiones donde hay cuatro. Los totales se parten y cada mitad se ve perfectamente razonable.
+          desc: Ocho regiones donde hay cuatro. Los totales se parten y cada pedazo se ve perfectamente razonable.
         - label: Error 02
           title: Suponer que pivot_table suma
           desc: Por omisión promedia. Si esperabas totales y no dijiste aggfunc, el número está mal.

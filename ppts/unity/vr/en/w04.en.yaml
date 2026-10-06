@@ -36,7 +36,7 @@ slides:
       title: Three working blocks
       cards:
         - title: Two doors into the toolkit
-          desc: A method the inspector calls, or a component that inherits the behaviour
+          desc: A method the inspector calls, or a component that inherits the behavior
         - title: A stop that latches
           desc: State that survives the release, and a reset that is not the button
         - title: Work that happens every frame
@@ -47,7 +47,7 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Choose between an event and an override
-          sub: One is wiring for a single object, the other is behaviour every copy inherits
+          sub: One is wiring for a single object, the other is behavior every copy inherits
         - head: Write an interactable of your own
           sub: Inheriting from XRBaseInteractable, with the base call that keeps the events alive
         - head: Hold state across an interaction
@@ -99,13 +99,13 @@ slides:
         label: The question that decides it
         title: Would you have to repeat this on the next copy?
         note: >-
-          If yes, it is behaviour and it belongs in a class. If it is one sound on one
+          If yes, it is behavior and it belongs in a class. If it is one sound on one
           object in one scene, the inspector is faster and honest about it.
       steps:
         - text: Wiring lives in the scene file
-        - text: Behaviour lives in the class
+        - text: Behavior lives in the class
         - text: Wiring is per object, always
-        - text: Behaviour arrives with the prefab
+        - text: Behavior arrives with the prefab
           loop: ↺ and the scene file is the hardest place to review a rule
 
   - table:
@@ -121,7 +121,7 @@ slides:
 
   - code:
       eyebrow: Block 01 · The smallest one that runs
-      title: An interactable of your own, in ten lines
+      title: An interactable of your own, in thirteen lines
       filename: EmergencyStop.cs
       lang: csharp
       source: |
@@ -170,8 +170,8 @@ slides:
         Debug.Log($"latched {Latched}");
       output: |
         -- with the base call --
-        latched True
         panel sound played
+        latched True
         -- without it --
         latched True
 
@@ -239,13 +239,13 @@ slides:
       title: The same four steps, logged on the device
       filename: EmergencyStop.cs
       lang: csharp
-      output_label: adb logcat, four events
+      output_label: adb logcat, five events
       source: |
         Debug.Log($"enter latched={Latched}");
         Debug.Log($"exit  latched={Latched}");
         Debug.Log($"panel latched={Latched}");
       output: |
-        enter latched=True
+        enter latched=False
         exit  latched=True
         enter latched=True
         exit  latched=True
@@ -269,7 +269,7 @@ slides:
         title: The method is called more than once per frame
         note: >-
           Test the phase and return early on the ones you do not want, or the dial turns
-          twice as fast as the number you typed.
+          several times as fast as the number you typed.
       steps:
         - text: The manager runs its phases in order
         - text: Your override is called in each one
@@ -313,7 +313,7 @@ slides:
           accent: true
 
   - compare:
-      eyebrow: Block 03 · The same behaviour, two costs
+      eyebrow: Block 03 · The same behavior, two costs
       title: Polling for a press against being told about it
       before:
         label: Polled in Update
@@ -358,8 +358,8 @@ slides:
         - label: Error 03
           title: Per-frame work in Update
           desc: >-
-            It runs outside the interaction phases, so the dial reads the selection state
-            of the previous frame and the movement lags the hand by exactly one.
+            It runs outside the interaction phases. If it executes before the manager, the
+            dial reads the previous frame's selection and the movement lags the hand by one.
         - label: Error 04
           title: Assuming there is one hand
           desc: >-
@@ -435,7 +435,7 @@ slides:
         - [Format, Blackboard · scripts and PDF]
         - [Weight, Part of the assignment average]
       rubric:
-        - ["The interlock", "40 %", "Three conditions, checked in one place, readable in the class"]
+        - ["The interlock", "40 %", "Two conditions, checked in one place, readable in the class"]
         - ["The custom interactable", "40 %", "Inherits, calls its base, holds its own state"]
         - ["The broken run", "20 %", "Both logs, and one sentence on what the silence meant"]
 

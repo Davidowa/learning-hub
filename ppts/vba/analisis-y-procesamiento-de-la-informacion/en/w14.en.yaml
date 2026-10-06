@@ -36,7 +36,7 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Filter from a macro
-          sub: With AutoFilter and with an advanced filter, and know when each one suits
+          sub: With AutoFilter and with an advanced filter, and know when to use each one
         - head: Work only with what is visible
           sub: With SpecialCells and with SUBTOTAL, the two ways of respecting the filter
         - head: Insert subtotals by group
@@ -87,7 +87,7 @@ slides:
       steps:
         - text: You filter and two rows are left in view
         - text: The loop walks all four anyway
-        - text: The total comes out double what you expected
+        - text: The total comes out higher than you expected
           loop: ↺ and the number looks reasonable, which is the worst part
 
   - code_output:
@@ -123,6 +123,7 @@ slides:
                     .SpecialCells(xlCellTypeVisible)
                 total = total + c.Value
             Next c
+            MsgBox total
         End Sub
       annotations:
         - label: SpecialCells
@@ -243,7 +244,7 @@ slides:
         End Sub
       annotations:
         - label: RemoveSubtotal
-          text: Clear the previous breaks first, or the second run breaks over the breaks.
+          text: Clear the previous breaks first, or the Sort shuffles the old total rows into the data.
         - label: CurrentRegion
           text: The block of cells around A1, so the range is not typed by hand
         - label: TotalList
@@ -279,7 +280,7 @@ slides:
         - label: The name
           text: It is what you will call it by from formulas, so give it one that means something
         - label: Risk
-          text: Run the macro twice on the same sheet and the second one fails, because the name already exists.
+          text: Run the macro twice on the same sheet and the second one fails, because that range is already a table.
           accent: true
 
   - code_output:
@@ -348,24 +349,24 @@ slides:
         Sub AddColumnToTable()
             Dim found As Boolean
             ' ...
-            Dim found As Boolean
-
             MsgBox "Table '" & tableNameToFind & "' not found."
+            ' ...
+            Dim found As Boolean
         End Sub
       annotations:
         - label: The repeated Dim
           text: Declared twice in the same procedure. That is a compile error.
         - label: What you see
-          text: The debugger opens and marks the repeated line. Not one instruction runs.
+          text: The editor opens and marks the repeated line. Not one instruction runs.
         - label: The other one
           text: tableNameToFind is declared nowhere, and it turns up four times in the file.
         - label: Risk
-          text: That second one does not fail. Without Option Explicit, VBA invents it empty and the message comes out gapped.
+          text: That second one does not fail. Without Option Explicit, VBA invents it empty and the message comes out with a gap.
           accent: true
 
   - quiz:
       eyebrow: Quick question
-      question: The module has no Option Explicit. What does the message show?
+      question: No Option Explicit, and the repeated Dim is gone. What does the message show?
       filename: Tables.bas
       lang: vba
       source: |

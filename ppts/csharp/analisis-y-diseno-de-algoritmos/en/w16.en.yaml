@@ -13,7 +13,7 @@ slides:
       unit: Week 16 · Unit 7 · Integration and final project
       title: Analysis and Design of Algorithms
       subtitle: >-
-        A free topic, a fixed checklist, a report that carries a third of the grade, and a
+        A free topic, a fixed checklist, a report that carries 30 % of the project, and a
         program that has to run in front of the room.
       meta:
         - [Instructor, David Escobar-Castillejos]
@@ -102,8 +102,8 @@ slides:
             That check runs on the reference skeleton and it passes.
         - label: The policy half
           text: >-
-            «If the project does not run, its maximum grade is 30 %». It is a clause of
-            the syllabus, not a measurement, and it is not negotiable.
+            «If the project does not run, its maximum grade is 30 %». It is a quotation,
+            not a measurement, and it appears word for word in the syllabus.
         - label: Why they stay apart
           text: >-
             A program can print its menu and still exit −532462766, and another can exit 0
@@ -148,7 +148,6 @@ slides:
           desc: >-
             At least one solution you considered and rejected, with the reason you rejected
             it. Without this the report is incomplete.
-          accent: true
         - key: "03"
           title: The evidence
           desc: >-
@@ -196,7 +195,6 @@ slides:
           text: Anything that is not 0, 1, 2 or 3 lands here and the menu stays alive.
         - label: The proven exit
           text: running changes only in the case 0 arm, and that is why the loop ends.
-          accent: true
 
   - code_output:
       eyebrow: Block 02 · Measured
@@ -209,7 +207,8 @@ slides:
         {
             string? line = Console.ReadLine();
             if (line == null) return 0;
-            return int.TryParse(line, out int v) ? v : -1;
+            if (int.TryParse(line, out int v)) return v;
+            return -1;
         }
       output: |
         Build succeeded.
@@ -246,7 +245,7 @@ slides:
         - label: b[count]
           text: The array element is the struct, so writing one of its fields writes into the bank.
         - label: Risk
-          text: Without this if, the fourth sample writes past the array in front of the room.
+          text: Without this if, the fourth sample throws IndexOutOfRangeException in front of the room.
           accent: true
 
   - code_output:
@@ -332,7 +331,7 @@ slides:
 
   - trace:
       eyebrow: Answer
-      title: One bad reading, three different behaviours
+      title: One bad reading, three different behaviors
       headers: [Input, Convert.ToInt32, int.TryParse]
       rows:
         - ["abc", "FormatException", "False, v=0"]
@@ -368,10 +367,10 @@ slides:
       eyebrow: Block 03 · RAA08
       title: The design review, in pairs and in writing
       statement: >-
-        Each of you presents your problem and the alternative you rejected. Your pair hands
-        back two things in writing, and neither of them is a grade.
+        Each of you presents your problem and the alternative you rejected. Your partner
+        hands back two things in writing, and neither of them is a grade.
       points:
-        - label: What the pair returns
+        - label: What your partner returns
           text: >-
             One risk the author had not named, and one checklist line the design does not
             yet satisfy. Nothing more, and both of them written down.
@@ -418,8 +417,8 @@ slides:
           desc: The reference skeleton runs with zero warnings and not one feature inside it
         - title: A guard beats an apology
           desc: One if ahead of the write is the gap between a message and an exception in public
-        - title: The report carries a third
-          desc: The problem identified and the alternative rejected are half of what is graded there
+        - title: The report carries 30 %
+          desc: The problem identified and the alternative rejected are the direct measure of ABET SO 1
 
   - homework:
       eyebrow: Homework

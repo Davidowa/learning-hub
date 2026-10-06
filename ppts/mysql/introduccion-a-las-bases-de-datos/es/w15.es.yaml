@@ -9,16 +9,15 @@ meta:
 
 slides:
   - cover:
-      kicker: Universidad Panamericana · 2026
+      kicker: Facultad de Ingeniería · 2026
       unit: Semana 15 · Bloque E · Índices y desempeño
       title: Introducción a las Bases de Datos
       subtitle: >-
-        Hace cuatro semanas un JOIN tardaba a la vista. Hoy se sabe por qué, cuánto cuesta
-        repararlo en cada escritura, y por qué la búsqueda de la pantalla siguiente es
-        otro problema que el índice no toca.
+        Hace cuatro semanas un JOIN tardaba a la vista. Hoy sabrás por qué, cuánto cuesta
+        repararlo en cada escritura y por qué el buscador de texto es otro problema.
       meta:
         - [Profesor, David Escobar-Castillejos]
-        - [Clave, COM112 · Semestre 1]
+        - [Motor, MySQL 9.7.2]
         - [Sesión, 15 de 17]
 
   - agenda:
@@ -32,7 +31,7 @@ slides:
         - title: Lo que cuesta
           desc: El precio en cada escritura y el consejo heredado del LIKE, resuelto
         - title: Tu turno
-          desc: Medir, indexar y volver a medir sobre las tablas grandes del laboratorio
+          desc: Medir la consulta más lenta de tu esquema, indexar y volver a medir
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
@@ -146,7 +145,7 @@ slides:
           correo    VARCHAR(120),
           INDEX idx_apellido (apellido)
         );
-
+        -- o, con la tabla creada sin ese INDEX:
         CREATE INDEX idx_apellido ON alumnos (apellido);
         CREATE UNIQUE INDEX idx_correo ON alumnos (correo);
 
@@ -155,20 +154,19 @@ slides:
       annotations:
         - label: La misma cosa
           text: >-
-            Declararlo dentro del CREATE TABLE y declararlo después con CREATE INDEX
-            producen exactamente el mismo objeto.
+            Dentro del CREATE TABLE o después con CREATE INDEX, el objeto es el mismo.
         - label: El que no escribiste
           text: >-
-            SHOW INDEX FROM inscripciones devuelve tres índices donde solo se declararon
-            la llave primaria y dos foráneas. El nombre viene de la restricción.
+            SHOW INDEX FROM inscripciones devuelve tres, y solo declaraste la llave
+            primaria y dos foráneas.
         - label: Y se borran
           text: >-
             DROP INDEX no aparece en ninguna fuente del curso y es la mitad que falta de
-            cualquier prueba de desempeño.
+            toda prueba.
         - label: Riesgo
           text: >-
-            Cada índice se paga en cada INSERT y en cada UPDATE de la columna. Crear ocho
-            por si acaso es una decisión, no una precaución.
+            Cada índice se paga en cada escritura. Ocho por si acaso es una decisión, no
+            una precaución.
           accent: true
 
   - code_output:
@@ -253,7 +251,7 @@ slides:
       output_label: Salida
       source: |
         -- 60 000 mensajes del tablon de asesorias
-        SELECT id FROM mensajes
+        SELECT mensaje_id FROM mensajes
         WHERE MATCH(cuerpo) AGAINST ('normalizacion');
 
         ALTER TABLE mensajes ADD FULLTEXT (matricula);
@@ -481,7 +479,7 @@ slides:
         - title: El plan contesta la pregunta
           desc: >-
             «Tarda mucho» no es un diagnóstico. type, key y rows sí lo son, y en 9.7.2 se
-            piden con EXPLAIN antes y después de cada cambio
+            piden con EXPLAIN FORMAT=TRADITIONAL antes y después de cada cambio
         - title: El índice se paga escribiendo
           desc: >-
             Ocho índices de más son 4.6 veces la carga y 3.71 veces el tamaño de los datos.

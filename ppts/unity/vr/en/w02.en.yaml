@@ -42,7 +42,7 @@ slides:
         - title: Build and run
           desc: Onto the headset, then reading back what the device actually got
         - title: When it fails
-          desc: Four failures with the exact text they put on your screen
+          desc: Four failures and what they put on your screen
 
   - objectives:
       eyebrow: Learning objectives
@@ -102,7 +102,7 @@ slides:
         title: Tethered buys watts, standalone buys the room
         note: >-
           A cable removes the power limit and adds a tripping hazard, a host machine per
-          student and a two metre radius.
+          student and a two meter radius.
       steps:
         - text: Standalone runs an Android build
         - text: Tethered runs a desktop build
@@ -152,13 +152,13 @@ slides:
           desc: The cheapest hardware that still meets the constraint
           dark: true
       note: >-
-        Run it the other way round and the project inherits every limit of the headset that
-        happened to be in the cupboard, with no record of which limits mattered.
+        Run it the other way around and the project inherits every limit of the headset that
+        happened to be in the closet, with no record of which limits mattered.
 
   - divider:
       eyebrow: Block 02
       title: What makes a build an XR build
-      lede: An Android build and an Android XR build differ by one tick box and a plug-in. Miss it and the app still installs.
+      lede: An Android build and an Android XR build differ by one checkbox and a plug-in. Miss it and the app still installs.
       block: 2
 
   - steps:
@@ -170,16 +170,16 @@ slides:
           desc: Add the XR Interaction Toolkit and the OpenXR plug-in.
         - label: '02'
           title: XR Plug-in Management
-          desc: Project Settings. Tick OpenXR on the Android tab.
+          desc: Project Settings. Check OpenXR on the Android tab.
         - label: '03'
           title: The Meta feature
           desc: Enable the Meta Quest feature group under OpenXR.
         - label: '04'
           title: Build profile
-          desc: Meta Quest in Build Profiles, which exists from Unity 6.1 on.
+          desc: Meta Quest in Build Profiles. That profile exists from Unity 6.1 on.
         - label: '05'
           title: Build And Run
-          desc: With the headset plugged in, awake and authorised.
+          desc: With the headset plugged in, awake and authorized.
 
   - table:
       eyebrow: Block 02 · From the profile, or by hand
@@ -225,7 +225,7 @@ slides:
       title: Meta Quest Link is convenience, not a requirement
       lead: >-
         Build And Run installs over the cable, and for that the headset only needs developer
-        mode and to have authorised your computer. Link is a different thing: it lets you hit
+        mode and to have authorized your computer. Link is a different thing: it lets you hit
         Play in the Editor and see the scene in the headset without building. It saves
         minutes, it is Windows only, and nothing in this course depends on it.
       panel:
@@ -267,7 +267,7 @@ slides:
         - label: Application.platform
           text: >-
             Returns Android on the headset and WindowsEditor in play mode. Two different
-            values from one build.
+            values from one script.
         - label: graphicsDeviceType
           text: >-
             The API that was actually created, not the one at the top of the list in Player
@@ -280,7 +280,7 @@ slides:
 
   - code_output:
       eyebrow: Block 03 · Measured
-      title: The same build, read in two places
+      title: The same script, read in two places
       filename: DeviceReport.cs
       lang: csharp
       output_label: Play mode, then adb logcat
@@ -291,12 +291,15 @@ slides:
       output: |
         -- play mode --
         os    WindowsEditor
-        gfx   Direct3D11
+        gfx   Direct3D12
         edit  True
         -- on the headset --
         os    Android
         gfx   Vulkan
         edit  False
+      notes: |
+        In Unity 6.0, or in a project created before 6.1, play mode reports Direct3D11:
+        from 6.1 on, new projects use DirectX 12 on Windows.
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
@@ -305,13 +308,13 @@ slides:
         - label: Error 01
           title: The app opens as a flat panel
           desc: >-
-            OpenXR is ticked on the desktop tab and not on the Android one, so the build
+            OpenXR is checked on the desktop tab and not on the Android one, so the build
             shipped without an XR provider. Android then runs it as an ordinary 2D app.
         - label: Error 02
           title: adb devices says unauthorized
           desc: >-
             The Allow USB debugging prompt is waiting inside the headset. Put it on, answer
-            it, tick the always allow box, then list the devices again.
+            it, check the always allow box, then list the devices again.
         - label: Error 03
           title: INSTALL_FAILED_UPDATE_INCOMPATIBLE
           desc: >-
@@ -328,7 +331,7 @@ slides:
       question: The build installs and opens as a flat window in the headset. Where do you look first?
       options:
         - Player Settings, because the target architecture is wrong
-        - XR Plug-in Management, Android tab, where OpenXR is unticked
+        - XR Plug-in Management, Android tab, where OpenXR is unchecked
         - The scene, because the XR Origin is missing from it
         - The Package Manager, because the toolkit is not installed
 

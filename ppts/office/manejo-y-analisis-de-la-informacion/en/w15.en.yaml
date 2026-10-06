@@ -78,7 +78,7 @@ slides:
           desc: Import, filters, tables, charts and the lookup functions
           state: done
         - label: E · Weeks 14–17
-          title: Summarising and delivery
+          title: Summarizing and delivery
           desc: PivotTables, advanced filters, what-if and printing
           state: now
 
@@ -130,19 +130,19 @@ slides:
         E*
         ?E*
         *A*
-        *8
+        ="=*8"
 
         >6000
         <>Azcapotzalco
-        >=1991
+        >=1/1/1991
       annotations:
         - label: The two wildcards
           text: >-
             An asterisk stands for any run of characters, a question mark for exactly one.
         - label: Reading them
           text: >-
-            E* begins with E, ?E* has E as its second character, *A* contains an A, *8
-            ends in 8.
+            E* begins with E, ?E* has E as its second character, *A* contains an A,
+            ="=*8" ends in 8. Without the equals, *8 takes an 8 anywhere.
         - label: Comparisons
           text: >-
             Typed straight under the field header. No equals sign, no quotes, no formula.
@@ -151,6 +151,15 @@ slides:
             A blank row inside the criteria range is a condition that matches everything,
             so the filter returns the whole list and looks broken the other way round.
           accent: true
+      notes: |
+        Text in a criterion is read as "begins with". That is why a bare *8 returns seven
+        codes with an 8 anywhere, and ="=*8" returns the four that end in 8.
+        The date goes in whole: >=1991 under DOB compares against serial number 1991 and
+        lets all 27 through.
+        The workbook spells it Azcapozalco, without the t. Against that data
+        <>Azcapotzalco excludes nobody, and filter 6 lets the five from that branch
+        through. Fix the data or type the criterion as the workbook spells it before
+        filters 3 and 6.
 
   - code:
       eyebrow: Block 01 · The criterion that is a formula
@@ -158,11 +167,11 @@ slides:
       filename: Excel24_instructions(Advanced Filters).xlsx
       lang: excel
       source: |
-        =$J4>AVERAGE($J$4:$J$29)
+        =$J3>AVERAGE($J$3:$J$29)
 
-        =AND(YEAR($F4)>=1991,YEAR($F4)<=1994)
+        =AND(YEAR($F3)>=1991,YEAR($F3)<=1994)
 
-        =LEFT($B4,1)="E"
+        =LEFT($B3,1)="E"
       annotations:
         - label: The header is the trap
           text: >-
@@ -170,14 +179,14 @@ slides:
             blank or write f(x).
         - label: Relative on purpose
           text: >-
-            $J4 points at the first data row and stays relative down, so Excel walks the
+            $J3 points at the first data row and stays relative down, so Excel walks the
             list. What it is compared against is locked.
         - label: What it must return
           text: >-
             TRUE or FALSE. Anything else is read as text and matches nothing at all.
         - label: Risk
           text: >-
-            The cell shows TRUE or FALSE for row 4 only, and looks wrong. It is not: the
+            The cell shows TRUE or FALSE for row 3 only, and looks wrong. It is not: the
             filter re-evaluates it once per record.
           accent: true
 
@@ -193,13 +202,13 @@ slides:
         - label: Error 02
           title: Headers retyped by hand
           desc: >-
-            A trailing space or a different spelling and the field is not recognised. Copy
+            A trailing space or a different spelling and the field is not recognized. Copy
             the header cells from the list; never type them again.
         - label: Error 03
           title: A field name over a formula
           desc: >-
-            Excel compares the text of the formula against the column instead of running
-            it. Nothing matches, nothing is highlighted, and no error appears.
+            Excel compares the result of the formula against the column instead of using
+            it as a test. Nothing matches, nothing is highlighted, and no error appears.
         - label: Error 04
           title: Treating the extract as live
           desc: >-
@@ -239,7 +248,7 @@ slides:
       title: Three boxes and two option buttons
       image: img/en/advanced-filter.png
       caption: >-
-        Copy to stays greyed until Copy to another location is selected, which is the
+        Copy to stays grayed until Copy to another location is selected, which is the
         dialog saying the two decisions are really one decision.
       alt: >-
         The Excel Advanced Filter dialog, with Filter the list, in-place selected and the
@@ -301,8 +310,8 @@ slides:
           desc: One slicer, several reports, if they share a cache. Office 2019 calls it PivotTable Connections.
 
   - table:
-      eyebrow: Block 03 · Three ways to filter the same report
-      title: Only one of them leaves an object
+      eyebrow: Block 03 · Four ways to filter the same report
+      title: Only two of them leave an object
       headers: [Route, What lands on the sheet, What a grader finds]
       rows:
         - ["Filter arrow", "Nothing at all", "No object, no marks"]
@@ -333,13 +342,13 @@ slides:
   - method:
       eyebrow: Block 03 · Objective 4.3.3
       title: Styling one is three separate marks
-      statement: Chart Design, Chart Styles, the More arrow for the full gallery. Then Change Colors beside it, then Quick Layout in the group to its left. Three buttons, three graded actions.
+      statement: Chart Design, Chart Styles, the More arrow for the full gallery. Change Colors sits beside it, and Quick Layout in the group to its left. Three buttons, three graded actions.
       points:
         - label: Style
           text: >-
             The gallery boxes whatever is applied, so reopening it is the check. It is the
             same gallery an ordinary chart uses, on the same contextual tab.
-        - label: Colour
+        - label: Color
           text: >-
             Change Colors is its own button, with Colorful and Monochromatic palettes. The
             caption is verified on a plain chart and still to confirm on a PivotChart.
@@ -356,8 +365,8 @@ slides:
         - ["Switch Row/Column", "Swaps the report too", "Swaps the picture only"]
         - ["Scatter or Bubble", "Refused outright", "Available"]
         - ["Field buttons", "Sit on the chart", "Do not exist"]
-        - ["Double-click a value", "Writes a detail sheet", "Nothing happens"]
-        - ["Contextual tab", "PivotChart Analyze", "Chart Design only"]
+        - ["Double-click its value cell", "Writes a detail sheet", "Just edits the cell"]
+        - ["Contextual tab", "PivotChart Analyze", "Chart Design and Format only"]
 
   - concept:
       eyebrow: Block 03 · Drilling down
@@ -369,7 +378,7 @@ slides:
         only route that leaves written evidence.
       panel:
         label: How to check it
-        title: Count the new sheet against the number you clicked
+        title: Check the new sheet against the number you clicked
         note: >-
           Sum the amount column of the drill-through sheet. It has to equal the cell that
           produced it. The setting that allows or forbids it sits on the Data tab of
@@ -377,7 +386,7 @@ slides:
       steps:
         - text: Put a second field under the first in Axis (Categories)
         - text: Collapse Field and Expand Field walk the levels
-        - text: Double-click the value for the rows themselves
+        - text: Double-click the value cell for the rows themselves
           loop: ↺ and the sheet stays in the workbook until you delete it
 
   - quiz:
@@ -388,6 +397,12 @@ slides:
         - "The slicer was inserted from the Insert tab instead"
         - "Report Connections works on tables, not on PivotTables"
         - "Multi Select was left switched off in the slicer header"
+      notes: >-
+        Answer: A. Report Connections only offers the PivotTables that share the slicer's
+        cache, so a report built on its own cache cannot be connected. B is not a cause:
+        inserted from the Insert tab, the slicer is still connected to the active report.
+        C has it backwards, since the button exists precisely for PivotTables. D confuses
+        picking several buttons with connecting several reports.
 
   - lab:
       eyebrow: Lab

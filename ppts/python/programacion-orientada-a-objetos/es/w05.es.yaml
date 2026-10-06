@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión el alumno podrá…
+      title: Al terminar la sesión podrás…
       items:
         - head: Explicar por qué el segundo def gana
           sub: El nombre de un método es una entrada de diccionario, y una entrada solo guarda un valor
@@ -43,6 +43,8 @@ slides:
           sub: __str__, __eq__ y __add__ hacen que print, == y + funcionen sobre tus objetos
         - head: Repartir las clases en archivos
           sub: Qué justifica un módulo nuevo, qué justifica un paquete y qué corre al importar
+        - head: Pasar de un enunciado a un modelo
+          sub: Sustantivos a clases, verbos a métodos, y la caja UML antes del código
 
   - roadmap:
       eyebrow: Mapa del curso
@@ -109,7 +111,7 @@ slides:
       options:
         - '3, porque Python elige el método de dos parámetros'
         - 'TypeError, falta un argumento posicional'
-        - '6, porque c vale cero cuando no se pasa'
+        - '3, porque c vale cero cuando no se pasa'
         - 'SyntaxError, sumar está definido dos veces'
 
   - compare:
@@ -169,10 +171,10 @@ slides:
       headers: ["Necesidad", "En Java o C#", "En Python"]
       rows:
         - ["Parámetro opcional", "Dos métodos con firma distinta", "def saludar(self, formal=False)"]
-        - ["Cantidad variable", "Un método por cantidad", "def agregar(self, *skus)"]
+        - ["Cantidad variable", "params (C#) o varargs (Java)", "def agregar(self, *skus)"]
         - ["Opciones con nombre", "Un objeto de configuración", "def crear(self, **opciones)"]
-        - ["Tipos distintos", "Una firma por tipo", "isinstance o functools.singledispatch"]
-        - ["Operadores propios", "operator overloading", "__add__ · __eq__ · __str__"]
+        - ["Tipos distintos", "Una firma por tipo", "isinstance o functools.singledispatchmethod"]
+        - ["Operadores propios", "operator+ en C# (Java no tiene)", "__add__ · __eq__ · __str__"]
 
   - code:
       eyebrow: Sobrecarga de operadores
@@ -300,7 +302,7 @@ slides:
           desc: Diez archivos de quince líneas son diez archivos que abrir para entender una sola idea
         - label: Error 03
           title: Importaciones circulares
-          desc: Si carrito importa cliente y cliente importa carrito, Python falla a media carga con ImportError
+          desc: Si carrito importa cliente y cliente importa carrito, Python puede fallar a media carga con ImportError
         - label: Error 04
           title: Código suelto en el módulo
           desc: Todo lo que esté fuera de una función o una clase corre en el momento de importar, siempre

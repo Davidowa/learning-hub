@@ -60,7 +60,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, keys
+          desc: Entity-relationship, normalization, keys
           state: now
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -116,11 +116,11 @@ slides:
       annotations:
         - label: The 1:N rule
           text: >-
-            A lecturer belongs to one department. The foreign key lives on the many side,
+            A professor belongs to one department. The foreign key lives on the many side,
             which is where the diagram draws the crow's foot.
         - label: NOT NULL
           text: >-
-            Mandatory participation. A lecturer with no department does not go in. Make it
+            Mandatory participation. A professor with no department does not go in. Make it
             optional and the column accepts NULL.
         - label: UNIQUE on nombre
           text: >-
@@ -184,7 +184,7 @@ slides:
         - ["How many", "One per table", "Several per table"]
         - ["Nulls", "Never, automatically", "Accepted if you allow it"]
         - ["Uniqueness", "Mandatory", "No, except in the 1:1"]
-        - ["Points at", "Nothing, it identifies", "Another table's key"]
+        - ["Points at", "Nothing, it identifies", "The parent table's key"]
         - ["Its index", "The server creates it", "Also, and unrequested"]
 
   - divider:
@@ -377,33 +377,33 @@ slides:
           title: Thinking the CHECK covers NULL
           desc: >-
             The unknown walks straight through the range. If the domain does not admit
-            «I do not know», that gets written NOT NULL, and written separately.
+            “I do not know”, that gets written NOT NULL, and written separately.
         - label: Error 03
           title: Promising minimum cardinality
           desc: >-
-            «Every subject with at least one student» has no construct in MySQL. The
-            subject with zero enrolments sits there and nobody objects.
+            “Every subject with at least one student” has no construct in MySQL. The
+            subject with zero enrollments sits there and nobody objects.
         - label: Error 04
           title: Indexing the foreign key by hand
           desc: >-
             The server wrote that index when the key was declared. The inherited
-            best-practice rule was the programmer's job in 2010, not today.
+            best-practice rule comes from engines that do not create it for you.
 
   - lab:
       eyebrow: Lab
       title: The records script, running from empty
       brief: >-
-        Write your week 4 diagram as a script that creates all five tables from an empty
+        Write your week 4 diagram as a script that creates all of its tables from an empty
         database, keys and constraints included. Then attack it four times: a grade of 11,
-        an enrolment for a student who does not exist, a second head for the same
+        an enrollment for a student who does not exist, a second head for the same
         department, and a repeated student number.
       blocks:
         - label: Deliverable
           text: The script and the four refusals with their error numbers, pasted as they came
         - label: Constraint
           text: >-
-            The script runs twice in a row without editing. The creation order is part of
-            what you hand in.
+            The script runs start to finish on an empty database, without editing. The
+            creation order is part of what you hand in.
         - label: The test
           text: >-
             If an attack goes through, a constraint is missing. Write it into the script,
@@ -416,11 +416,12 @@ slides:
         - title: Every line has one physical form
           desc: >-
             1:N is a foreign key, 1:1 is a foreign key plus UNIQUE, N:M is a table keyed on
-            the pair. No source in this course says it, and now it is written down
+            the pair. No source in this course says it, and today it runs
         - title: A constraint is the business rule
           desc: >-
             Written into the server it survives a change of language, of application and of
-            programmer. It is also the only integrity this course has that holds for two
+            programmer. It is also the only integrity this course has that holds up with
+            two people working
         - title: The diagram promises too much
           desc: >-
             Minimum cardinality has no statement, and the domain argument only has teeth in
@@ -438,7 +439,7 @@ slides:
         - [Format, Blackboard · .sql script and a PDF of outputs]
         - [Weight, Part of the 20 % for assignments]
       rubric:
-        - ["The script", "40 %", "Runs from empty, twice in a row"]
+        - ["The script", "40 %", "Runs from empty, complete and unedited"]
         - ["The constraints", "40 %", "Each one answers a rule on the diagram"]
         - ["The refusals", "20 %", "Four errors, with number and SQLSTATE"]
 

@@ -10,10 +10,10 @@ meta:
 slides:
   - cover:
       kicker: School of Engineering · 2026
-      unit: Week 05 · Block B · Normalisation
+      unit: Week 05 · Block B · Normalization
       title: Introduction to Databases
       subtitle: >-
-        Normalising is repairing a model. The server will let you break every rule without
+        Normalizing is repairing a model. The server will let you break every rule without
         saying a word, so today's lesson is not the rule. It is what the rule costs.
       meta:
         - [Instructor, David Escobar-Castillejos]
@@ -29,7 +29,7 @@ slides:
         - title: The three forms
           desc: First, second and third, each with the damage that gives it away
         - title: The bill
-          desc: Three attacks on the wide table and three repairs on screen
+          desc: Three attacks on the wide table and the price of repairing it
         - title: Your turn
           desc: The week 4 model, broken on purpose and repaired by hand
 
@@ -38,16 +38,16 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Write a functional dependency
-          sub: A → B reads «A determines B», and it decides which table every column lives in
+          sub: A → B reads “A determines B,” and it decides which table every column lives in
         - head: Tell 1NF apart from the primary key
           sub: Uniqueness is not part of the first normal form, and the server proves it
         - head: Measure the cost of a list inside one cell
           sub: The value goes in, the row reads fine, and the WHERE that looks for it says zero
-        - head: Recognise a transitive dependency
+        - head: Recognize a transitive dependency
           sub: A column that depends on another one that is not the key splits your UPDATE in two
         - head: Repair the wide table on screen
           sub: Three tables where there was one, and the same three attacks running again
-        - head: Name the price of normalising
+        - head: Name the price of normalizing
           sub: More tables means more joins, and the bill arrives in full in week 11
 
   - roadmap:
@@ -60,7 +60,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, keys
+          desc: Entity-relationship, normalization, keys
           state: now
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -85,7 +85,7 @@ slides:
 
   - concept:
       eyebrow: Key concept
-      title: Normalising is not splitting tables
+      title: Normalizing is not splitting tables
       lead: >-
         Splitting a table in two is the consequence. The rule is a question asked column
         by column: what does this value depend on? If it depends on something that is not
@@ -93,7 +93,7 @@ slides:
         complaint as many times as you ask.
       panel:
         label: The notation
-        title: A → B reads «A determines B»
+        title: A → B reads “A determines B”
         note: >-
           Give me alumno_id and the student's name is already determined. Give me
           materia_id and the subject's name and credits are determined. The grade needs
@@ -106,7 +106,7 @@ slides:
 
   - code:
       eyebrow: Block 01 · The week 4 model, flattened
-      title: One wide table for every enrolment
+      title: One wide table for every enrollment
       filename: insc_desnorm.sql
       lang: sql
       source: |
@@ -121,7 +121,7 @@ slides:
       annotations:
         - label: The key is the pair
           text: >-
-            The pair identifies the row. Nobody enrols twice in the same subject, and that
+            The pair identifies the row. Nobody enrolls twice in the same subject, and that
             part is solved correctly.
         - label: alumno_nombre
           text: >-
@@ -130,7 +130,7 @@ slides:
         - label: materia_nombre
           text: >-
             Same story on the other side. The subject's name is written out again on every
-            enrolment row.
+            enrollment row.
         - label: Risk
           text: >-
             The table is comfortable to read and there is no query anywhere that repairs
@@ -171,7 +171,7 @@ slides:
 
   - steps:
       eyebrow: Block 02 · The ladder
-      title: Five normal forms, and where almost everyone gets off
+      title: Six normal forms, and where almost everyone gets off
       items:
         - label: '1NF'
           title: Atomic values
@@ -228,12 +228,12 @@ slides:
         WHERE with equals missed
 
         No function wrapped around a
-        column can lean on an index,
+        column can lean on its index,
         so the whole table gets read
 
   - code_output:
       eyebrow: Measured · the source's own fix
-      title: The «How to do it right» table in the inherited deck cannot be built
+      title: The “How to do it right” table in the inherited deck cannot be loaded
       filename: pedido_1fn.sql
       lang: sql
       output_label: MySQL 9.7.2
@@ -292,7 +292,7 @@ slides:
       output_label: MySQL 9.7.2
       source: |
         -- empleado_id -> departamento_nombre
-        --             -> departamento_ubicacion
+        -- departamento_nombre -> departamento_ubicacion
         UPDATE empleado_desnorm
            SET departamento_ubicacion = 'Edificio C'
          WHERE empleado_id = 1;
@@ -325,10 +325,10 @@ slides:
       output_label: MySQL 9.7.2
       source: |
         INSERT INTO insc_desnorm
-        VALUES (1, 10, 'Ana Lopez', 'Bases de Datos');
+        VALUES (1, 10, 'Ana Lopez', 'Bases de Datos', NULL);
 
         INSERT INTO insc_desnorm
-        VALUES (1, 11, 'Ana Lpez', 'Calculo');
+        VALUES (1, 11, 'Ana Lpez', 'Calculo', NULL);
       output: |
         Both rows go in
 
@@ -364,7 +364,7 @@ slides:
 
   - method:
       eyebrow: Block 03 · The other side of the trade
-      title: Normalising costs something, and the source never says so
+      title: Normalizing costs something, and the source never says so
       statement: >-
         Every table you split off today is a join somebody writes later. That is not an
         argument for keeping the wide table. It is the price, and it gets paid with your
@@ -377,11 +377,11 @@ slides:
         - label: What you pay
           text: >-
             More tables means more joins. The bill arrives in full in week 11, the week
-            this course writes more queries than any other.
+            this course learns JOIN.
         - label: The rule you take away
           text: >-
-            A function wrapped around a column cannot use an index. It comes back in week
-            9 sorting a group and in week 15 searching with a leading wildcard.
+            A function wrapped around a column cannot use that column's index. It comes
+            back in week 15, with the functional index and the leading wildcard.
 
   - pitfalls:
       eyebrow: Common errors
@@ -396,7 +396,7 @@ slides:
           title: Storing a list in one cell
           desc: >-
             The value goes in and the WHERE with equals answers zero. The FIND_IN_SET
-            patch works and leaves the table without an index forever.
+            patch works and leaves that search without an index forever.
         - label: Error 03
           title: Storing a derived value by hand
           desc: >-
@@ -440,7 +440,7 @@ slides:
           desc: >-
             It accepts the list in the cell, accepts both spellings of the same name and
             accepts the department in two buildings. No error, no warning
-        - title: Normalising is paid for in joins
+        - title: Normalizing is paid for in joins
           desc: >-
             More tables is less redundancy and more work at query time. Better to know the
             price today than to discover it in week 11
@@ -452,6 +452,7 @@ slides:
         Reproduce today's three anomalies on a database of your own: the COUNT that
         returns zero, the two spellings of the same name and the department in two
         buildings. Each one with its statement and the server's output underneath.
+        Write the dependencies as A → B first, and close with the repaired model.
       meta:
         - [Due, Before week 6]
         - [Format, Blackboard · one .sql script and a PDF]

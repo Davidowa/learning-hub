@@ -12,7 +12,7 @@ slides:
       kicker: School of Engineering · 2026
       unit: Week 06 · Topic 3 · Core properties
       title: Object-Oriented Programming
-      subtitle: Keeping data beside whatever looks after it, deciding what shows from outside, and reusing code without inheriting.
+      subtitle: Keeping data with whatever looks after it, deciding what shows from outside, and reusing without inheriting. The topic's first three pillars.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM102 · Term 2]
@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: Encapsulation
-          desc: The data and the behaviour that looks after it, in the same class
+          desc: The data and the behavior that looks after it, in the same class
         - title: Information hiding
           desc: What is part of the contract and what is a detail free to change
         - title: The public interface
@@ -36,7 +36,7 @@ slides:
       title: By the end of this session you will be able to…
       items:
         - head: Tell encapsulating from hiding
-          sub: The first puts data and behaviour together; the second decides what leans outwards
+          sub: The first puts data and behavior together; the second decides what leans outward
         - head: Design a public interface
           sub: Choose which methods are the contract and leave the rest as a replaceable detail
         - head: Spot a leak
@@ -75,7 +75,7 @@ slides:
       eyebrow: Key concept
       title: Encapsulating is not the same as hiding
       lead: >-
-        Encapsulating is putting a value and the behaviour that looks after it in the same
+        Encapsulating is putting a value and the behavior that looks after it in the same
         class. Hiding is the later, separate decision not to let that value be seen from
         outside. You can encapsulate without hiding anything, and that is where trouble starts.
       panel:
@@ -137,7 +137,9 @@ slides:
       output: |
         2
         Traceback (most recent call last):
-          File "open_cloud.py", line 2
+          File "open_cloud.py", line 15
+            print(cloud.tags["c++"])
+                  ~~~~~~~~~~^^^^^^^
         KeyError: 'c++'
 
   - compare:
@@ -157,7 +159,7 @@ slides:
           cloud["c++"]
 
           cloud["Python"] = 99
-      note: The second goes through __getitem__ and __setitem__, so it returns zero instead of blowing up and normalises the key. The rule ends up in exactly one place.
+      note: The second goes through __getitem__ and __setitem__, so it returns zero instead of blowing up and normalizes the key. The rule ends up in exactly one place.
 
   - divider:
       eyebrow: Block 02
@@ -191,7 +193,7 @@ slides:
         - label: Line 10
           text: __getitem__ makes cloud["python"] work, and returns zero instead of raising KeyError
         - label: Two more to go
-          text: __len__ and __iter__ are added the same way, and with them len(cloud) and for start working
+          text: __len__ and __iter__ are added the same way, and with them len(cloud) and for loops start working
 
   - table:
       eyebrow: Interface design
@@ -240,14 +242,14 @@ slides:
       blocks:
         - label: The simplest
           title: Function
-          desc: The behaviour depends on no state at all, so it does not need a class
+          desc: The behavior depends on no state at all, so it does not need a class
         - label: The most flexible
           title: Composition
           desc: The class takes instances of others and delegates the work that is not its own
           dark: true
         - label: The most rigid
           title: Inheritance
-          desc: The class takes the parent's behaviour and is tied to every change the parent makes
+          desc: The class takes the parent's behavior and is tied to every change the parent makes
       note: >-
         Composition is preferred because one part can change without touching the others.
         Inheritance earns its place when there really is an "is a" and not just a "uses a".
@@ -342,7 +344,7 @@ slides:
       title: Three things to take away
       items:
         - title: Encapsulating groups, hiding decides
-          desc: The first puts data and behaviour in the same class; the second chooses what leans out
+          desc: The first puts data and behavior in the same class; the second chooses what leans out
         - title: A getter can undo the encapsulation
           desc: Return the internal structure and anyone can modify it without touching a single rule of yours
         - title: Composition reuses better than inheritance
@@ -351,15 +353,15 @@ slides:
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
-      brief: Take the lab inventory and swap the internal dictionary for a list of tuples, without touching the test file. Explain in one paragraph what you had to change.
+      brief: Take the lab inventory and swap the internal dictionary for a list of tuples, without touching the test file. Explain in one paragraph what you had to change and what would have happened with a public dictionary.
       meta:
         - [Due, Before session 7]
         - [Format, Blackboard · .py + PDF]
-        - [Weight, Part of the 20 % homework block]
+        - [Weight, Part of the 20% homework block]
       rubric:
-        - ["Encapsulation", "40 %", "The test file runs without a single modification"]
-        - ["Interface", "30 %", "The class exposes add, brackets and len, and nothing else"]
-        - ["Reflection", "30 %", "The paragraph explains what would have happened with a public dictionary"]
+        - ["Encapsulation", "40%", "The test file runs without a single modification"]
+        - ["Interface", "30%", "The class exposes add, brackets and len, and nothing else"]
+        - ["Reflection", "30%", "The paragraph explains what would have happened with a public dictionary"]
 
   - closing:
       title: Questions

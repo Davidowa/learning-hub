@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Escuela de Empresariales · 2026
+      kicker: Facultad de Empresariales · 2026
       unit: Semana 16 · Unidades 4 y 6 · Dinámicas, errores y protección
       title: Análisis y Procesamiento de la Información
       subtitle: >-
@@ -35,7 +35,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de la sesión
-      title: Al terminar la sesión vas a poder…
+      title: Al terminar la sesión el alumno podrá…
       items:
         - head: Crear una tabla dinámica desde macro
           sub: Con PivotCaches, los campos de fila y los de dato, y refrescarla cuando toca
@@ -48,15 +48,15 @@ slides:
 
   - roadmap:
       eyebrow: Mapa del curso
-      title: Dónde vamos en el semestre
+      title: Dónde estamos en el semestre
       phases:
         - label: 01 · Semanas 1–5
-          title: Programar en VBA
+          title: Programación en VBA
           desc: Editor, tipos, variables, operaciones y formularios de captura
           state: done
         - label: 02 · Semanas 6–7
-          title: Editar macros grabadas
-          desc: Rangos variables, buscar objetivo y automatización acotada
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
           state: done
         - label: 03 · Semanas 8–12
           title: Decisiones, ciclos y eventos
@@ -112,17 +112,17 @@ slides:
       source: |
         ' Ventas 100, Compras 200,
         ' Ventas 300, Compras 400
-        ' el cache se creo sobre A1:B5
+        ' el caché se creó sobre A1:B5
 
-        ' 1. recien creada
+        ' 1. recién creada
         ' 2. cambio B2 de 100 a 999
         ' 3. pt.RefreshTable
-        ' 4. agrego A6 con 1000, y refresco
+        ' 4. agrego la fila 6 con 1000, y refresco
       output: |
-        recien creada ...... 1000
-        cambie B2 a 999 .... 1000
+        recién creada ...... 1000
+        cambié B2 a 999 .... 1000
         tras RefreshTable .. 1899
-        fila nueva en A6 ... 1899
+        fila 6 nueva ....... 1899
 
   - concept:
       eyebrow: Lo que revelan esos cuatro números
@@ -159,7 +159,7 @@ slides:
         On Error Resume Next
 
         x = 1 / 0
-        v = CDbl("no soy numero")
+        v = CDbl("no soy número")
 
         Err.Clear
       output: |
@@ -222,8 +222,8 @@ slides:
             Exit Sub
 
         Falla:
-            MsgBox "Se detuvo en " & Err.Source & _
-                   ": " & Err.Number & " " & Err.Description
+            MsgBox "Se detuvo con el error " & Err.Number & _
+                   ": " & Err.Description
             Application.EnableEvents = True
         End Sub
       annotations:
@@ -261,7 +261,7 @@ slides:
       source: |
         ws.Protect Password:="abc"
 
-        ws.Range("A1").Value = "la macro escribio"
+        ws.Range("A1").Value = "la macro escribió"
       output: |
         Err 1004
         The cell or chart you're
@@ -278,10 +278,10 @@ slides:
         ws.Protect Password:="abc", _
                    UserInterfaceOnly:=True
 
-        ws.Range("A1").Value = "la macro escribio"
+        ws.Range("A1").Value = "la macro escribió"
       output: |
-        recien puesto
-          la macro escribio
+        recién puesto
+          la macro escribió
           ProtectContents = True
 
         tras guardar y reabrir
@@ -326,17 +326,17 @@ slides:
         total = 2 + 2
 
         If Err.Number <> 0 Then
-            MsgBox "Fallo la suma"
+            MsgBox "Falló la suma"
         End If
       options:
-        - 'Sale "Fallo la suma", aunque la suma salió perfecta.'
+        - 'Sale "Falló la suma", aunque la suma salió perfecta.'
         - 'No sale nada, porque la suma no falló.'
         - 'Sale un error sin manejar y la macro se detiene.'
         - 'Sale el mensaje y además se detiene la macro.'
 
   - trace:
       eyebrow: Respuesta
-      title: Err se quedó puesto y la suma pagó el plato
+      title: Err se quedó puesto y la suma pagó el pato
       headers: ["Paso", "Qué pasa", "Err.Number"]
       rows:
         - ["1", "On Error Resume Next", "0"]

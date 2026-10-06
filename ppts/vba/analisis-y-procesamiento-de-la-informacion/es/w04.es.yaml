@@ -23,7 +23,7 @@ slides:
       title: Cuatro momentos de la sesión
       cards:
         - title: Los siete operadores
-          desc: Los cuatro de siempre y los tres que la hoja no tiene escritos así
+          desc: Los cuatro de siempre, más la división entera, el residuo y la potencia
         - title: La celda contra VBA
           desc: Tres expresiones que dan distinto según dónde las escribas
         - title: Nombres de rango
@@ -70,7 +70,7 @@ slides:
   - divider:
       eyebrow: Bloque 01
       title: Los siete operadores
-      lede: Cuatro los usas desde la primaria. Los otros tres existen en la hoja con otro nombre, y en VBA tienen símbolo propio.
+      lede: Cuatro los usas desde la primaria. De los otros tres, dos son funciones en la hoja y en VBA tienen operador propio.
       block: 1
 
   - table:
@@ -85,7 +85,7 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · Aritméticos · 2 de 2
-      title: Y los tres que la hoja no escribe así
+      title: Y los otros tres
       headers: [Operador, Qué hace, Ejemplo, Resultado]
       rows:
         - ["\\", "División entera", "5 \\ 3", "1"]
@@ -133,7 +133,7 @@ slides:
       rows:
         - ["=-3^2", "-3 ^ 2", "9 contra -9"]
         - ["=\"5\"+\"3\"", "\"5\" + \"3\"", "8 contra 53"]
-        - ["=RESIDUO(-5;3)", "-5 Mod 3", "1 contra -2"]
+        - ["=RESIDUO(-5,3)", "-5 Mod 3", "1 contra -2"]
         - ["=2^3^2", "2 ^ 3 ^ 2", "64 y 64, aquí sí coinciden"]
 
   - method:
@@ -160,6 +160,7 @@ slides:
 
         tasaAnual = 0.12
         tasaMensual = ((1 + tasaAnual) ^ (1 / 12)) - 1
+        MsgBox tasaMensual
       output: |
         9.48879293458305E-03
 
@@ -181,22 +182,22 @@ slides:
         End Sub
       annotations:
         - label: NumberFormat
-          text: Deja el número completo en la celda y solo cambia cómo se ve. B1 muestra 0.95 %.
+          text: Deja el número completo en la celda y solo cambia cómo se ve. B1 muestra 0.95%.
         - label: Format
           text: Devuelve texto ya formateado. Sirve para un mensaje, no para seguir calculando.
         - label: Round
           text: Recorta el número de verdad. Round(tasa, 6) deja 0.009489 y ya perdiste lo demás.
         - label: Riesgo
-          text: Format convierte a texto. Si después sumas eso, VBA lo pega en vez de sumarlo.
+          text: Format convierte a texto. Si después sumas dos de esos, VBA los pega en vez de sumarlos.
           accent: true
 
   - pitfalls:
       eyebrow: Bloque 02 · Errores comunes
-      title: Cuatro cuentas que dan un número equivocado
+      title: Cuatro cuentas que no dan lo que esperas
       items:
         - label: Error 01
           title: Sumar dos textos con más
-          desc: "\"5\" + \"3\" da 53, no 8. Con un número de cada lado sí suma, y esa inconsistencia es la trampa."
+          desc: "\"5\" + \"3\" da 53, no 8. Con un número en uno de los lados sí suma, y esa inconsistencia es la trampa."
         - label: Error 02
           title: Elevar un negativo
           desc: En VBA -3 ^ 2 es -9 porque el signo se aplica al final. Escribe (-3) ^ 2 si querías 9.
@@ -204,13 +205,13 @@ slides:
           title: Dividir entre cero
           desc: La celda muestra un error y sigue. VBA se detiene con error 11 y la macro no termina.
         - label: Error 04
-          title: Dividir enteros con la diagonal
+          title: División entera con la diagonal invertida
           desc: "7.5 \\ 2 no da 3.75 ni 3. Redondea los dos lados primero, así que da 4."
 
   - divider:
       eyebrow: Bloque 03
       title: Nombres de rango
-      lede: Una fórmula con B3 hay que ir a verificarla. Una con Tasa_Mensual se revisa sin moverse de donde está.
+      lede: Una fórmula con B3 hay que ir a verificarla. Una con TasaMensual se revisa sin moverse de donde está.
       block: 3
 
   - code:
@@ -221,9 +222,9 @@ slides:
       source: |
         Sub DefinirNombres()
             ThisWorkbook.Names.Add _
-                Name:="MontoPrestamo", RefersTo:="=Sheet1!$B$1"
+                Name:="MontoPrestamo", RefersTo:="=Hoja1!$B$1"
             ThisWorkbook.Names.Add _
-                Name:="TasaAnual", RefersTo:="=Sheet1!$B$2"
+                Name:="TasaAnual", RefersTo:="=Hoja1!$B$2"
 
             Range("MontoPrestamo").Value = 500000
             Range("TasaAnual").Value = 0.12
@@ -248,7 +249,7 @@ slides:
         - ["500000", "Range(\"MontoPrestamo\").Value"]
         - ["$A$1:$B$5", "Range(\"DatosCliente\").Address"]
         - ["10", "Range(\"DatosCliente\").Cells.Count"]
-        - ["=Sheet1!$B$1", "Names(\"MontoPrestamo\").RefersTo"]
+        - ["=Hoja1!$B$1", "Names(\"MontoPrestamo\").RefersTo"]
 
   - compare:
       eyebrow: Bloque 03 · Por qué vale la pena
@@ -259,14 +260,14 @@ slides:
         lang: excel
         code: |
           =B1*B3
-          =B1+B12-B13
+          =B11+B12-B13
       after:
         label: Con nombres
         file: hoja.xlsx
         lang: excel
         code: |
           =MontoPrestamo*TasaMensual
-          =SaldoInicial+Interes-Capital
+          =SaldoInicial+Interes-Pago
       note: >-
         La primera hay que ir a verificarla celda por celda. La segunda se lee de corrido
         y el error salta solo. Es la misma cuenta, y en la revisión del proyecto una se
@@ -284,7 +285,7 @@ slides:
         End Sub
       options:
         - "9 y 3.75, como en la hoja"
-        - "-9 y 4, porque el signo va al final y la diagonal redondea"
+        - "-9 y 4, porque el signo va al final y la diagonal invertida redondea"
         - "9 y 3, porque la división entera trunca"
         - "Error, porque no se puede elevar un negativo"
 
@@ -296,7 +297,7 @@ slides:
         - label: Entrega
           text: El .xlsm con los nombres creados y el módulo exportado, en Blackboard
         - label: Restricción
-          text: Ninguna fórmula de la hoja puede quedar con coordenadas. Todas con nombres.
+          text: Ninguna fórmula puede tomar un parámetro por su coordenada. Todas por su nombre.
         - label: La prueba
           text: Inserta un renglón arriba de la tabla. Si algo se rompe, el nombre no estaba bien puesto.
 
@@ -324,7 +325,7 @@ slides:
         - [Peso, Parte del 20 % de tareas]
       rubric:
         - ["Operadores", "30 %", "La fórmula usa la precedencia correcta y lleva paréntesis donde hacen falta"]
-        - ["Nombres", "40 %", "Los cuatro parámetros tienen nombre y las fórmulas los usan"]
+        - ["Nombres", "40 %", "Los tres datos y los dos resultados tienen nombre, y las fórmulas los usan"]
         - ["Formato", "30 %", "La tasa se ve como porcentaje y el importe como moneda"]
 
   - closing:

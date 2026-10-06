@@ -25,9 +25,9 @@ slides:
         - title: Bases de datos
           desc: Qué resuelve una tabla que un archivo de texto no
         - title: Acceso
-          desc: Conexión, cursor, commit, y el cierre que no se puede olvidar
+          desc: Conexión, cursor, commit y el cierre que no se puede olvidar
         - title: Consultas
-          desc: SELECT, parámetros, y por qué nunca se pegan cadenas
+          desc: SELECT, parámetros y por qué nunca se pegan cadenas
         - title: Proyecto integrador
           desc: Alcance, entrega y cómo se reparte la calificación
 
@@ -123,20 +123,20 @@ slides:
         import sqlite3
         from pathlib import Path
 
-        ruta = Path("datos") / "peliculas.db"
+        ruta = Path("datos") / "pixar.db"
 
         with sqlite3.connect(ruta) as conexion:
             conexion.execute(
                 "CREATE TABLE IF NOT EXISTS Peliculas ("
                 "id INTEGER PRIMARY KEY, titulo TEXT NOT NULL)")
             conexion.execute(
-                "INSERT INTO Peliculas VALUES (?, ?)", (1, "Coco"))
+                "INSERT INTO Peliculas VALUES (?, ?)", (3, "Coco"))
             conexion.commit()
       annotations:
         - label: Línea 6
           text: >-
             Administra la transacción, no la conexión: al salir sin excepción confirma, y
-            si la hubo revierte. El commit de la línea 13 sobra, y se escribe igual para
+            si la hubo revierte. El commit de la línea 12 sobra, y se escribe igual para
             dejar la intención en el código.
         - label: Línea 11
           text: Los signos de interrogación son marcadores. Los valores viajan aparte, en una tupla.
@@ -159,9 +159,9 @@ slides:
             for fila in cursor:
                 print(fila)
       output: |
-        (19, 'Coco')
-        (15, 'Inside Out')
-        (10, 'Up')
+        (3, 'Coco')
+        (1, 'Toy Story')
+        (2, 'Up')
 
   - code:
       eyebrow: Parámetros
@@ -241,12 +241,12 @@ slides:
 
   - quiz:
       eyebrow: Pregunta rápida
-      question: ¿Qué queda guardado en la base al terminar?
+      question: Si la tabla empieza vacía, ¿qué queda guardado en la base al terminar?
       filename: commit.py
       lang: python
       source: |
         with sqlite3.connect(ruta) as c:
-            c.execute("INSERT INTO Peliculas VALUES (1, 'Up')")
+            c.execute("INSERT INTO Peliculas VALUES (2, 'Up')")
 
         with sqlite3.connect(ruta) as c:
             cursor = c.execute("SELECT COUNT(*) FROM Peliculas")
@@ -262,7 +262,7 @@ slides:
       title: Imprime (1,), y la razón sorprende a medio salón
       headers: ["Paso", "Instrucción", "En memoria", "En disco"]
       rows:
-        - ["1", "connect(ruta)", "transacción abierta", "vacío"]
+        - ["1", "connect(ruta)", "nada pendiente", "vacío"]
         - ["2", "execute(INSERT)", "1 fila pendiente", "vacío"]
         - ["3", "sale del with", "confirma", "1 fila"]
         - ["4", "SELECT COUNT(*)", "1", "1 fila"]

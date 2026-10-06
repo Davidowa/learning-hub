@@ -47,7 +47,7 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Build a scene that reaches
-          sub: An XR Interaction Manager, an XR Origin and one interactor per hand, and no more
+          sub: An XR Interaction Manager, an XR Origin, one interactor per hand and an Input Action Manager
         - head: Explain how registration works
           sub: Components find their manager in OnEnable, which is why load order shows up as bugs
         - head: Bind a method to a select event
@@ -103,14 +103,14 @@ slides:
           title: The wrench
           desc: A collider, a component, and a list of methods to call
       note: >-
-        The arrows go both ways through the middle. That indirection is what lets you swap
+        Messages go both ways, always through the middle. That indirection is what lets you swap
         a ray for a poke without editing a single object on the bench.
 
   - concept:
       eyebrow: Key concept
       title: Registration happens in OnEnable, not in the inspector
       lead: >-
-        An interactor and an interactable never hold a reference to each other. Each registers
+        An interactor and an interactable never look each other up. Each registers
         with the manager when it is enabled and unregisters when it is disabled. After that the
         manager does the matching.
       panel:
@@ -231,8 +231,8 @@ slides:
       annotations:
         - label: public, one argument
           text: >-
-            The inspector only lists methods that are public and take one argument of the
-            event's own type.
+            To pass the event data along, the inspector needs a public method with one
+            argument of the event's own type.
         - label: The argument
           text: >-
             It carries which hand did it. Read what you need inside the call and do not
@@ -270,7 +270,7 @@ slides:
       headers: [Question, Wired in the inspector, Wired in code]
       rows:
         - ["Who can see it", "Anyone opening the scene", "Only a reader"]
-        - ["Search for callers", "Not in a text search", "Findable by name"]
+        - ["Search for callers", "Not in a code search", "Findable by name"]
         - ["Survives a rename", "The binding breaks", "Compiler catches it"]
         - ["Set up per object", "Drag it once", "Needs a reference"]
         - ["Good for", "Sound, effects, one-offs", "Rules and state"]
@@ -298,7 +298,7 @@ slides:
           title: Subscribed twice, never removed
           desc: >-
             The object was disabled and enabled again. The listener list grew and the sound
-            now plays three times on one grab.
+            now plays twice on one grab.
 
   - divider:
       eyebrow: Block 03
@@ -388,6 +388,7 @@ slides:
         - ["Enable, first time", "1", "1"]
         - ["Disable", "1, still attached", "0, object is off"]
         - ["Enable, second time", "2", "2"]
+        - ["Disable again", "2, still attached", "0, object is off"]
         - ["Enable, third time", "3", "3"]
       verdict: >-
         AddListener appends, it does not check. The disable never removed anything because
@@ -425,7 +426,7 @@ slides:
       title: The stop button, wired without a line of code
       brief: >-
         Add a poke interactor to one hand and make the emergency stop respond to it using
-        inspector wiring alone: a sound and a colour change. Write half a page on what that
+        inspector wiring alone: a sound and a color change. Write half a page on what that
         arrangement cannot do, because session 4 is about exactly that gap.
       meta:
         - [Due, Before session 4]

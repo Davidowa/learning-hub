@@ -115,7 +115,7 @@ slides:
         - label: Line 9
           text: The parentheses declare the inheritance. Fish already has name and eat for free.
         - label: Line 11
-          text: super().__init__ runs the parent constructor. Without that line, name never exists.
+          text: super().__init__ runs the parent constructor. Without that call, name never exists.
         - label: Line 13
           text: swim lives only in Fish. The parent does not know it, and pushing it up would be a mistake.
 
@@ -301,7 +301,7 @@ slides:
       rows:
         - ["1", "Dog('Bobby', 'collie')", "–", "–"]
         - ["2", "Dog.__init__ runs", "collie", "does not exist"]
-        - ["3", "Animal.__init__ never runs", "collie", "does not exist"]
+        - ["3", "Animal.__init__ skipped", "collie", "does not exist"]
         - ["4", "print(d.name)", "collie", "AttributeError"]
       verdict: Defining __init__ in the subclass replaces the parent's. Unless you call it with super().__init__(name), the parent constructor never runs at all.
 

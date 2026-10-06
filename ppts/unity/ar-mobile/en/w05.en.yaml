@@ -151,8 +151,8 @@ slides:
       annotations:
         - label: vSyncCount first
           text: >-
-            With vertical sync on, the target is ignored. Turn it off before setting the
-            rate.
+            Off the phone, with vertical sync on, the target is ignored. Android ignores
+            vSyncCount and honors the target.
         - label: Asked, not promised
           text: >-
             It is a ceiling, not a guarantee. The platform can cap it lower and often does.
@@ -162,7 +162,8 @@ slides:
             minutes of heat.
         - label: Risk
           text: >-
-            Set it once in Start. Setting it every frame is a cost you added to fix a cost.
+            With Match Frame Rate checked, AR Session overwrites this value with the camera's
+            rate.
           accent: true
 
   - diagram:
@@ -222,24 +223,24 @@ slides:
 
   - table:
       eyebrow: Block 02 · The rest
-      title: Four more asset costs worth an afternoon
+      title: Six more asset costs worth an afternoon
       headers: [Asset, What to check, Why it matters]
       rows:
         - ["Mesh detail", "Vertex count per object", "Every vertex is transformed"]
-        - ["Mesh import", "Read Write Enabled off", "On keeps a second CPU copy"]
+        - ["Mesh import", "Read/Write off", "On keeps a second CPU copy"]
         - ["Materials", "One shader across many", "It is what lets batching work"]
-        - ["Materials", "GPU Instancing ticked", "For one mesh drawn many times"]
+        - ["Materials", "GPU Instancing checked", "For one mesh drawn many times"]
         - ["Lighting", "Baked, not real time", "A real time shadow costs a pass"]
         - ["Audio", "Compressed in memory", "Uncompressed clips are large"]
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four asset habits that cost the whole budget
+      title: Four habits that cost the whole budget
       items:
         - label: Mistake 01
           title: A 4096 texture on a small object
           desc: >-
-            Sixty four megabytes of memory for something two centimetres across on screen.
+            Sixty four megabytes uncompressed for something two centimeters across on screen.
             Max Size on the importer is the fix, and it takes ten seconds.
         - label: Mistake 02
           title: Real time shadows from every light
@@ -247,7 +248,7 @@ slides:
             Each shadow casting light adds a rendering pass over the scene. Bake what does
             not move, which on a phone is nearly everything.
         - label: Mistake 03
-          title: Read Write Enabled left on
+          title: Read/Write left on
           desc: >-
             The mesh is kept twice, once for the GPU and once for the CPU. It is on by
             accident far more often than it is on for a reason.
@@ -269,7 +270,7 @@ slides:
       headers: [Method, What it needs, What it saves]
       rows:
         - ["SRP Batcher", "One shader variant", "The setup between draws"]
-        - ["GPU Instancing", "Same mesh and material", "One call for many copies"]
+        - ["GPU Instancing", "Same mesh and material, no SRP Batcher", "One call for many copies"]
         - ["Static Batching", "Objects marked Static", "Draw calls, for memory"]
         - ["Fewer objects", "Meshes merged by hand", "All three at once, for free"]
 
@@ -279,7 +280,7 @@ slides:
       items:
         - label: '01'
           title: Development Build
-          desc: In Build Profiles, tick it and tick Autoconnect Profiler beneath it
+          desc: In Build Profiles, check it and check Autoconnect Profiler beneath it
         - label: '02'
           title: Build and Run
           desc: Over the cable, so the connection is not fighting the campus network
@@ -316,8 +317,8 @@ slides:
       annotations:
         - label: renderScale
           text: >-
-            The scene is rendered at a fraction of the screen and scaled up. The passthrough
-            is not affected.
+            The whole camera renders at a fraction of the screen and is scaled up,
+            passthrough included.
         - label: Cheap and effective
           text: >-
             Dropping to 0.7 renders about half the pixels, which is the largest single saving
@@ -333,7 +334,7 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: The Profiler reports 22 ms of GPU time and 9 ms of CPU time. What do you cut first?
+      question: Aiming for 60 fps, the Profiler reports 22 ms of GPU and 9 ms of CPU. What do you cut first?
       options:
         - Resolution, overdraw and shadows, because the GPU is the side over budget
         - Script calls in Update, because nine milliseconds is already too much
@@ -352,7 +353,7 @@ slides:
       verdict: >-
         The frame takes as long as the slower of the two, not as long as both. Twenty two
         milliseconds on the GPU is what the user feels, and its fixes are resolution,
-        overdraw and shadows. Nine milliseconds of script time is not this week's problem.
+        overdraw and shadows. Nine milliseconds of CPU time is not this week's problem.
 
   - lab:
       eyebrow: Lab

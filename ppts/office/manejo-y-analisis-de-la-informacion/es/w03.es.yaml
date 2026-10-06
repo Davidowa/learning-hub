@@ -47,7 +47,7 @@ slides:
           sub: Agregar, renombrar, copiar, ocultar y agrupar las etiquetas para que una edición caiga en todas
         - head: Insertar filas sin romper una fórmula
           sub: "Y leer el #¡REF! que aparece cuando la fórmula apuntaba a lo que borraste"
-        - head: Llenar una serie que el controlador de relleno no produce
+        - head: Llenar una serie que un arrastre simple no produce
           sub: Multiplicar en vez de sumar, días hábiles, un valor de paro, una tendencia y tu propia lista
         - head: Definir un nombre con su ámbito
           sub: Con una referencia absoluta, y navegar hasta él, que es otro objetivo aparte
@@ -114,7 +114,7 @@ slides:
       title: Una edición, todas las hojas seleccionadas
       lead: >-
         Haz clic en la primera etiqueta y luego Ctrl+clic o Shift+clic en las demás. La
-        barra de título agrega la palabra Agrupar. De ahí en adelante todo lo que escribas,
+        barra de título agrega la palabra [Group]. De ahí en adelante todo lo que escribas,
         formatees o borres cae en todas las hojas del grupo a la vez. Clic derecho y
         Desagrupar hojas para salir.
       panel:
@@ -163,14 +163,14 @@ slides:
 
   - steps:
       eyebrow: Bloque 01 · Objetivo Expert 2.1.2
-      title: Dentro del cuadro que el controlador no abre
+      title: Dentro del cuadro que un arrastre simple no abre
       items:
         - label: '01'
           title: "Lineal o [Growth]"
           desc: "Lineal suma el incremento y [Growth] multiplica por él. Comprobado en la máquina del profesor, desde 2 con incremento 3 la serie va 2, 6, 18, 54."
         - label: '02'
           title: "[Date unit]"
-          desc: "[Day], [Weekday], [Month] o [Year]. [Weekday] se salta sábado y domingo, cosa que ningún arrastre hace por ti."
+          desc: "[Day], [Weekday], [Month] o [Year]. [Weekday] se salta sábado y domingo, cosa que un arrastre simple no hace por ti."
         - label: '03'
           title: "[Stop value]"
           desc: Con uno puesto, selecciona una sola celda y deja que Excel decida hasta dónde tiene que llegar la serie.
@@ -253,7 +253,7 @@ slides:
           title: Un nombre que se lee como dirección
           desc: >-
             A1, R1C1 y las letras sueltas C y R quedan rechazadas, porque Excel ya
-            interpreta las cuatro como referencias a una celda.
+            interpreta las cuatro como referencias.
         - label: Error 03
           title: Un ámbito que nadie pensó
           desc: >-
@@ -264,7 +264,7 @@ slides:
           title: "Un nombre que apunta a #¡REF!"
           desc: >-
             El Administrador de nombres lo enseña sin más. El libro del Ejercicio 18 trae
-            seis de ellos, sobras de un ejercicio viejo, y te los vas a topar en la
+            cinco de ellos, sobras de un ejercicio viejo, y te los vas a topar en la
             semana 11.
 
   - divider:
@@ -295,7 +295,7 @@ slides:
         =CONTAR(A1:A3)
         =VERDADERO+VERDADERO
       output: |
-        ESNUMERO(A1)       VERDADERO
+        ESNUMERO(A1)         VERDADERO
         [ISTEXT](A2)         VERDADERO
         A2+1                 143
         SUMA(A2:A3)          142
@@ -360,7 +360,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 03 · Medido en la máquina del lab
-      title: Los siete valores de error, hechos a propósito
+      title: Siete valores de error, hechos a propósito
       filename: errors.xlsx
       lang: excel
       output_label: Excel 16.0
@@ -420,8 +420,8 @@ slides:
           text: Haz clic en J5 y lee la barra de fórmulas. Los dos signos tienen que seguir ahí.
         - label: Si falla
           text: >-
-            Escrita =$F$2*$G$1, las dieciséis celdas devuelven 2 y nada te avisa. Escrita
-            =F2*G1, solo la primera queda bien.
+            Escrita =$F$2*$G$1, las dieciséis celdas devuelven el mismo número y nada te avisa.
+            Escrita =F2*G1, solo la primera lee las celdas correctas.
           accent: true
 
   - table:
@@ -463,6 +463,10 @@ slides:
         - "=$F$2*$G$1, porque nada de lo que trae se puede mover"
         - "=$F2*G$1, un signo en la columna y otro en la fila"
         - "=F$2*$G1, que fija las dos partes que deben moverse"
+      notes: >-
+        Respuesta: C, =$F2*G$1. La A es la fórmula toda relativa: solo la primera celda
+        lee las celdas correctas. La B es la toda absoluta: dieciséis copias del mismo
+        número. La D pone los signos al revés y fija justo lo que tiene que moverse.
 
   - lab:
       eyebrow: Laboratorio
@@ -492,7 +496,7 @@ slides:
         - title: Las mixtas llenan en dos sentidos
           desc: >-
             Un signo en la columna y otro en la fila es lo que deja a una sola fórmula
-            cubrir una cuadrícula. Dos signos dan dieciséis copias del mismo número
+            cubrir una cuadrícula. Cuatro signos dan dieciséis copias del mismo número
         - title: SUMA se salta lo que el más convierte
           desc: >-
             El texto que parece número responde 143 a A2+1 y no aporta nada a SUMA. Revisa

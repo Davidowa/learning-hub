@@ -9,16 +9,15 @@ meta:
 
 slides:
   - cover:
-      kicker: Universidad Panamericana · 2026
+      kicker: School of Engineering · 2026
       unit: Week 15 · Block E · Indexes and performance
       title: Introduction to Databases
       subtitle: >-
         Four weeks ago a JOIN was visibly slow. Today you find out why, what the repair
-        costs on every write, and why the search box on the next screen is a different
-        problem that the same index does not touch.
+        costs on every write, and why the text search box is a different problem.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, COM112 · Term 1]
+        - [Engine, MySQL 9.7.2]
         - [Session, 15 of 17]
 
   - agenda:
@@ -32,7 +31,7 @@ slides:
         - title: What it costs
           desc: The price on every write, and the inherited advice about LIKE, settled
         - title: Your turn
-          desc: Measure, index and measure again on the large tables in the lab
+          desc: Measure the slowest query in your schema, index it and measure again
 
   - objectives:
       eyebrow: Learning objectives
@@ -41,7 +40,7 @@ slides:
         - head: Read the plan of a query
           sub: In 9.7.2 the default EXPLAIN answers a tree, and the classic grid has to be asked for by name
         - head: Apply the leftmost prefix rule
-          sub: And recognise its exception, the skip scan, which the source written for 5.7 does not know
+          sub: And recognize its exception, the skip scan, which the source written for 5.7 does not know
         - head: Choose the index the question needs
           sub: A B-tree for an anchored pattern, FULLTEXT for words inside a long text
         - head: Put a price on every index
@@ -59,7 +58,7 @@ slides:
           state: done
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation, tables and keys
+          desc: Entity-relationship, normalization, tables and keys
           state: done
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -89,7 +88,7 @@ slides:
       lang: sql
       output_label: Output
       source: |
-        -- 100 000 enrolments against 50 000 students
+        -- 100 000 enrollments against 50 000 students
         EXPLAIN SELECT i.id, a.apellido
         FROM inscripciones_big i
         JOIN alumnos_big a ON a.matricula = i.matricula
@@ -146,7 +145,7 @@ slides:
           correo    VARCHAR(120),
           INDEX idx_apellido (apellido)
         );
-
+        -- or, on a table created without that INDEX:
         CREATE INDEX idx_apellido ON alumnos (apellido);
         CREATE UNIQUE INDEX idx_correo ON alumnos (correo);
 
@@ -160,15 +159,15 @@ slides:
         - label: The one you did not write
           text: >-
             SHOW INDEX FROM inscripciones returns three indexes where only the primary key
-            and two foreign keys were declared. The name is the constraint's.
+            and two foreign keys were declared.
         - label: And they get dropped
           text: >-
             DROP INDEX appears in no source in this course, the missing half of any
             performance test.
         - label: Risk
           text: >-
-            Every index is paid for on every INSERT and on every UPDATE of the column.
-            Eight just in case is a decision, not a precaution.
+            Every index is paid for on every write. Eight just in case is a decision, not
+            a precaution.
           accent: true
 
   - code_output:
@@ -253,7 +252,7 @@ slides:
       output_label: Output
       source: |
         -- 60 000 posts on the tutoring board
-        SELECT id FROM mensajes
+        SELECT mensaje_id FROM mensajes
         WHERE MATCH(cuerpo) AGAINST ('normalizacion');
 
         ALTER TABLE mensajes ADD FULLTEXT (matricula);
@@ -421,7 +420,7 @@ slides:
         - label: Branch 03
           title: Inner substring
           desc: >-
-            Neither one helps. «desnormalizacion» is a modelling problem, not an
+            Neither one helps. «desnormalizacion» is a modeling problem, not an
             index problem.
       note: >-
         And REGEXP falls outside all three. It never uses the index, anchor or not, so the
@@ -448,7 +447,7 @@ slides:
             A LIMIT with no ORDER BY is not a sample, and OFFSET does not skip rows, it
             counts them. At OFFSET 90000 the plan examines 90010.
         - label: Advice 04
-          title: «Index the columns you join on»
+          title: «Use indexes on the keys»
           desc: >-
             The foreign key already created its own. What does need checking is the types.
             Comparing a text column against a number leaves 49985 rows examined.
@@ -481,7 +480,7 @@ slides:
         - title: The plan answers the question
           desc: >-
             «It is slow» is not a diagnosis. type, key and rows are, and in 9.7.2 you ask
-            for them with EXPLAIN before and after every change
+            for them with EXPLAIN FORMAT=TRADITIONAL before and after every change
         - title: An index is paid for in writes
           desc: >-
             Eight extra indexes are 4.6 times the load and 3.71 times the size of the data.

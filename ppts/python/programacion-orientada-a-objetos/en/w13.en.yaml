@@ -41,8 +41,8 @@ slides:
           sub: With the rb and wb modes, knowing read counts bytes rather than characters
         - head: Jump to a position
           sub: Work out where record n starts when every record is the same size
-        - head: Sit the second midterm
-          sub: With units 4 and 5 practised by writing files, not by reading notes
+        - head: Take the second midterm
+          sub: With units 4 and 5 practiced by writing files, not by reading notes
 
   - roadmap:
       eyebrow: Course map
@@ -111,7 +111,7 @@ slides:
         - label: Line 6
           text: read(8) asks for eight bytes, not eight characters. In binary there are no characters.
         - label: Risk
-          text: Opening a binary in text mode raises UnicodeDecodeError, or worse, reads rubbish quietly
+          text: Opening a binary in text mode raises UnicodeDecodeError, or worse, reads garbage quietly
           accent: true
 
   - table:
@@ -160,7 +160,7 @@ slides:
       eyebrow: Diagnosis
       title: The cursor, the read and the jump
       image: img/en/seek-tell.png
-      caption: Reading moves the cursor one position at a time. seek puts it where you say, reading nothing on the way.
+      caption: Each read(1) moves the cursor one position. seek puts it where you say, reading nothing on the way.
       alt: A file drawn as twelve numbered cells, with a jump arrow above and step arrows below
 
   - code:
@@ -180,7 +180,7 @@ slides:
             first = f.read(SIZE)
       annotations:
         - label: Line 4
-          text: If every record is the same size, record n starts at n times the size. That is the whole sum.
+          text: If every record is the same size, record n, counted from zero, starts at n times the size. That is the whole sum.
         - label: Line 6
           text: tell returns the current position of the cursor, counted in bytes from the start
         - label: Why it matters
@@ -236,7 +236,7 @@ slides:
       options:
         - "b'DE', because the cursor lands before the fourth letter"
         - "b'CD', because seek starts counting at one"
-        - "b'ABCDEFGH', because seek does not affect read"
+        - "b'AB', because seek does not affect read"
         - 'An error, seek does not work in binary mode'
 
   - trace:
@@ -247,13 +247,13 @@ slides:
         - ["1", 'open("data.bin", "rb")', "0", "–"]
         - ["2", "f.seek(3)", "3", "3"]
         - ["3", "f.read(2)", "5", "b'DE'"]
-        - ["4", "print(...)", "5", "b'DE'"]
+        - ["4", "print(...)", "5", "prints b'DE'"]
       verdict: Positions count from zero, exactly like list indexes. Position 3 sits just before the fourth letter, and read(2) takes that one and the next.
 
   - divider:
       eyebrow: Block 03
       title: Second midterm
-      lede: It closes units 4 and 5. Everything on it was practised in a lab, with a file actually landing on disk.
+      lede: It closes units 4 and 5. Everything on it was practiced in class, with a file actually landing on disk.
       block: 3
 
   - tiers:
@@ -268,7 +268,7 @@ slides:
           desc: Paths, open modes, text, CSV, binaries, and sequential and random access
         - key: Base
           title: What carries over
-          desc: The modelling from units 1 to 3, since the exam asks for classes that read and write files
+          desc: The modeling from units 1 to 3, since the exam asks for classes that read and write files
         - key: Out
           title: What it does not cover
           desc: Graphical interfaces and databases, which are assessed in the project and the final exam
@@ -276,14 +276,14 @@ slides:
   - method:
       eyebrow: How to prepare
       title: This one is studied with the disk plugged in
-      statement: Every unit 5 question is answered by writing a file and reading it back. If you did not practise it by running the code, you did not practise it.
+      statement: Every unit 5 question is answered by writing a file and reading it back. If you did not practice it by running the code, you did not practice it.
       points:
-        - label: What to practise
+        - label: What to practice
           text: The labs from weeks 9, 11 and 12, solved again and from scratch
         - label: What to review
           text: The open modes, and what each one does when the file was already there
         - label: What not to do
-          text: Memorising the methods on Path. They are one tab keypress away inside the editor.
+          text: Memorizing the methods on Path. They are one tab keypress away inside the editor.
 
   - lab:
       eyebrow: Lab
@@ -311,14 +311,14 @@ slides:
   - homework:
       eyebrow: Second midterm
       title: Submission and grading criteria
-      brief: The exam covers units 4 and 5, and is sat during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
+      brief: The exam covers units 4 and 5, and is taken during this same week. It is written at the keyboard, with the course repository open and no help from anyone else.
       meta:
         - [When, Week 13]
         - [Format, Blackboard · one .py per question]
         - [Weight, 20 % of the final grade]
       rubric:
         - ["Functions", "25 %", "Every function does one thing and checks what it takes from outside"]
-        - ["Files", "35 %", "Every access uses with, Path and an explicit encoding"]
+        - ["Files", "35 %", "Every access uses with and Path, and in text mode an explicit encoding"]
         - ["Robustness", "25 %", "Foreseeable errors are caught by type and with a message that helps"]
         - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]
 

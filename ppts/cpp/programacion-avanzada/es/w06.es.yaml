@@ -129,12 +129,12 @@ slides:
       annotations:
         - label: Línea 3
           text: El constructor se llama igual que la clase y no declara tipo de retorno
-        - label: Línea 4
+        - label: Líneas 4 y 5
           text: Un accesor devuelve y no modifica. Un mutador modifica y no devuelve.
         - label: Línea 7
           text: Todo lo que va después de private solo lo pueden tocar las funciones de la clase
         - label: Riesgo
-          text: El punto y coma después de la llave final es obligatorio. Sin él, el error sale en la línea siguiente y no dice por qué.
+          text: El punto y coma después de la llave final es obligatorio. Sin él, el error sale en la línea siguiente, no en la llave.
           accent: true
 
   - code_output:
@@ -228,11 +228,11 @@ slides:
           desc: Un constructor que olvida uno deja basura adentro, igual que una variable suelta
         - label: Error 04
           title: Un accesor que devuelve todo
-          desc: Si entrega el dato interno tal cual, quien lo reciba puede modificarlo sin pasar por la clase
+          desc: Si devuelve una referencia al dato interno, quien la reciba puede modificarlo sin pasar por la clase
 
   - quiz:
       eyebrow: Pregunta rápida
-      question: ¿Cuál de las cuatro líneas no compila?
+      question: ¿Cuál de estas líneas no compila?
       filename: acceso.cpp
       lang: cpp
       source: |
@@ -245,8 +245,8 @@ slides:
       options:
         - 'La última, porque largo es privado'
         - 'La primera, porque falta el operador new'
-        - 'La tercera, porque getAncho no modifica nada'
-        - 'Ninguna, las cuatro son válidas desde fuera'
+        - 'La de getAncho, porque no modifica nada'
+        - 'Ninguna, todas son válidas desde fuera'
 
   - trace:
       eyebrow: Respuesta
@@ -262,10 +262,10 @@ slides:
   - lab:
       eyebrow: Laboratorio
       title: Una clase Alumno, en parejas
-      brief: Escriban una clase Alumno con nombre y tres calificaciones como miembros privados, un constructor que las reciba, accesores para el nombre y el promedio, y una función miembro que devuelva la calificación más el redondeo.
+      brief: Escriban una clase Alumno con nombre y tres calificaciones como miembros privados, un constructor que las reciba, accesores para el nombre y el promedio, y una función miembro que devuelva el promedio redondeado.
       blocks:
         - label: Restricción
-          text: Sin if y sin ciclos, que llegan la próxima semana. Constructores que asignan y accesores que devuelven.
+          text: Sin if y sin ciclos, que llegan en las semanas 7 y 8. Constructores que asignan y accesores que devuelven.
         - label: Entregable
           text: Un .cpp con la clase, y un main que cree dos objetos distintos y pida el promedio de cada uno
         - label: Criterio
@@ -278,7 +278,7 @@ slides:
         - title: Una clase es un tipo tuyo
           desc: Con las mismas reglas que int, solo que el comportamiento lo escribes tú
         - title: El constructor corre solo
-          desc: Se ejecuta al declarar el objeto, y por eso nunca hay un objeto a medio armar
+          desc: Se ejecuta al declarar el objeto, así que ningún objeto existe sin pasar por él
         - title: Privado lo cobra el compilador
           desc: No es un acuerdo entre programadores, es un error C2248 antes de que el programa corra
 

@@ -42,7 +42,7 @@ slides:
         - head: Explain why one equals is not two
           sub: In C# the first one does not even compile, except in the case that opens the valve
         - head: Store a comparison in a bool
-          sub: A condition is a value with a name, not something that only lives inside the brackets
+          sub: A condition is a value with a name, not something that only lives inside the parentheses
         - head: Choose between greater than and greater or equal
           sub: The first bench sample reads 1480, exactly the lower limit of the band
         - head: Order a ladder of else if
@@ -81,8 +81,8 @@ slides:
       eyebrow: Key concept
       title: The braces are the diamond's YES arrow
       lead: >-
-        On the flowchart the diamond had one exit across the top and another down the
-        side. In C# the top one is the braces that follow the if, and the other one is
+        On the flowchart the diamond had one exit at the top and another at the
+        bottom. In C# the top one is the braces that follow the if, and the bottom one is
         everything after the closing brace. The compiler does not read your indentation to
         work that out. It reads the braces, and only the braces.
       panel:
@@ -116,7 +116,7 @@ slides:
       annotations:
         - label: The condition
           text: >-
-            In the brackets goes something only true or false. Here, the thermocouple
+            In the parentheses goes something only true or false. Here, the thermocouple
             against 28 degrees.
         - label: The braces
           text: >-
@@ -165,6 +165,7 @@ slides:
             Console.WriteLine("never gets here");
         }
       output: |
+        Program.cs(1,5): warning CS0219
         Program.cs(3,5): error CS0029
         Cannot implicitly convert
         type 'int' to 'bool'
@@ -384,8 +385,8 @@ slides:
         - label: Error 01
           title: One equals instead of two
           desc: >-
-            On an int it is CS0029 and it never builds. On a bool it is warning CS0665, it
-            builds, and it leaves the valve open.
+            On an int it is CS0029 and it never builds. On a bool it builds, with warning
+            CS0665 at most, and it leaves the valve open.
         - label: Error 02
           title: Writing the block without braces
           desc: >-
@@ -428,7 +429,7 @@ slides:
       brief: >-
         Write the ladder that sorts the gearbox temperature into four bands and also
         decides whether the bypass opens. Read the value from the keyboard and test all
-        three bands plus the exact value of every boundary.
+        four bands plus the exact value of every boundary.
       blocks:
         - label: Deliverable
           text: The Program.cs and one run per band, each with its output pasted in
@@ -455,14 +456,14 @@ slides:
             is why the rule is written out on every slide where the count appears
         - title: The ladder runs narrow to wide
           desc: >-
-            The first rung that holds wins, and ordering it the other way round compiles
+            The first rung that holds wins, and ordering it the other way around compiles
             without a single warning
 
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
       brief: >-
-        Draw the flowchart for the interlock ladder, mark on it where the 1480 sample
+        Draw the flowchart for the interlock ladder, mark on it where a 28.0 reading
         lands, and write out by hand the branch you predict for five readings. Then run
         the program and compare line by line.
       meta:
@@ -472,7 +473,7 @@ slides:
       rubric:
         - ["Flowchart", "40 %", "Every diamond and both of its exits are complete and in order"]
         - ["Prediction", "40 %", "The five predicted branches match the run"]
-        - ["The limit", "20 %", "The 1480 sample is marked and the choice justified"]
+        - ["The limit", "20 %", "The 28.0 reading is marked and the choice justified"]
 
   - closing:
       title: Questions

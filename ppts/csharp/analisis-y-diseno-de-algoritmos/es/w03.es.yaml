@@ -100,7 +100,7 @@ slides:
 
   - concept:
       eyebrow: Bloque 01 · Tema 2.3
-      title: C# no es compilado ni interpretado, es las dos cosas
+      title: C# no es compilado ni interpretado, es ambos
       lead: >-
         El compilador lee el archivo entero antes de que corra una sola línea, pero no
         produce instrucciones del procesador. Produce un formato intermedio que el motor
@@ -359,7 +359,7 @@ slides:
         - label: /* un /* anidado */ */
           title: Comentarios de bloque, que no se anidan
           desc: >-
-            Program.cs(1,36): error CS1003: Syntax error, ',' expected. El primer cierre
+            Program.cs(1,22): error CS1525: Invalid expression term '/'. El primer cierre
             cierra, y lo que sigue vuelve a ser código.
 
   - table:
@@ -370,8 +370,8 @@ slides:
         - ["Variable local", "camelCase", "rpm, sumaMuestras, limiteC"]
         - ["Constante", "PascalCase", "Nominal, Setpoint"]
         - ["Método", "PascalCase, y un verbo", "LeerMuestra, MediaDeBanda"]
-        - ["Tipo", "PascalCase", "Corrida, Muestra, Estado"]
-        - ["Valor de enumeración", "PascalCase", "Ok, Alerta, Falla"]
+        - ["Tipo", "PascalCase", "Corrida, Sample, Status"]
+        - ["Valor de enumeración", "PascalCase", "Ok, Warning, Fault"]
 
   - quiz:
       eyebrow: Verificación rápida
@@ -431,7 +431,7 @@ slides:
         - title: El compilador lee todo antes de correr
           desc: Por eso un error de tipo aparece antes de que el motor gire, y no a media corrida
         - title: Un error es una compuerta, no un aviso
-          desc: Después de Build FAILED la carpeta de salida tiene cero archivos y no hay nada que ejecutar
+          desc: Después de Build FAILED no sale ningún .dll nuevo y dotnet run se niega a ejecutar
         - title: Se lee el primer mensaje, no el último
           desc: Un descuido puede dar siete errores, y los otros seis se van al arreglar el primero
 
@@ -439,7 +439,7 @@ slides:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
       brief: >-
-        Reproduce en tu máquina los cinco errores de sintaxis de la sesión y entrega una
+        Reproduce en tu máquina los cinco errores de compilación de la sesión y entrega una
         tabla con el primer mensaje de cada uno, copiado sin editar, más una línea que
         diga qué fue lo que el compilador leyó mal.
       meta:

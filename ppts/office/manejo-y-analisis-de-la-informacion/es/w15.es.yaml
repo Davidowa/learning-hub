@@ -35,7 +35,7 @@ slides:
         - title: El rango de criterios
           desc: Misma fila es Y, una fila nueva es O, y el encabezado hay que copiarlo
         - title: Correr el filtro
-          desc: Oculto en su lugar o extraído aparte, y la casilla solo registros únicos
+          desc: Oculto en su lugar o extraído aparte, y la casilla Solo registros únicos
         - title: Botones en vez de listas
           desc: Segmentaciones, escalas de tiempo y gráficos dinámicos sobre 26,608 tickets
         - title: Tu turno
@@ -50,7 +50,7 @@ slides:
         - head: Combinar Y con O sin tocar un menú
           sub: A lo ancho para las dos, hacia abajo para cualquiera, y los pares que las mezclan
         - head: Extraer el resultado en vez de ocultar filas
-          sub: Copiar a otra ubicación, y la fila de encabezados que decide qué campos salen
+          sub: Copiar a otro lugar, y la fila de encabezados que decide qué campos salen
         - head: Escribir un criterio que es una fórmula
           sub: Devuelve VERDADERO o FALSO, apunta a la primera fila de datos y nunca lleva nombre de campo
         - head: Filtrar un reporte con una segmentación de datos
@@ -132,20 +132,20 @@ slides:
         E*
         ?E*
         *A*
-        *8
+        ="=*8"
 
         >6000
         <>Azcapotzalco
-        >=1991
+        >=1/1/1991
       annotations:
         - label: Los dos comodines
           text: >-
-            El asterisco vale por cualquier cadena de caracteres y el signo de
-            interrogación por uno solo.
+            El asterisco vale por cualquier cadena y el signo de interrogación por un
+            carácter.
         - label: Cómo se leen
           text: >-
             E* empieza con E, ?E* tiene la E como segundo carácter, *A* contiene una A y
-            *8 termina en 8.
+            ="=*8" termina en 8. Sin el igual, *8 acepta cualquier 8.
         - label: Comparaciones
           text: >-
             Van directo debajo del encabezado del campo. Sin signo de igual, sin
@@ -155,6 +155,14 @@ slides:
             Una fila en blanco en el rango de criterios le atina a todo, así que el
             filtro devuelve la lista entera y parece roto al revés.
           accent: true
+      notes: |
+        Un texto en el criterio se lee como «empieza con». Por eso *8 a secas da siete
+        códigos con un 8 en cualquier lugar, y ="=*8" da los cuatro que terminan en 8.
+        La fecha va completa: >=1991 bajo DOB compara contra el número de serie 1991 y
+        deja pasar a los 27.
+        El libro escribe Azcapozalco, sin la t. Contra esos datos <>Azcapotzalco no
+        excluye a nadie y el filtro 6 deja pasar a los cinco de esa sucursal. Corrige los
+        datos o escribe el criterio igual que el libro antes de los filtros 3 y 6.
 
   - code:
       eyebrow: Bloque 01 · El criterio que es una fórmula
@@ -162,11 +170,11 @@ slides:
       filename: Excel24_instructions(Advanced Filters).xlsx
       lang: excel
       source: |
-        =$J4>PROMEDIO($J$4:$J$29)
+        =$J3>PROMEDIO($J$3:$J$29)
 
-        =Y(AÑO($F4)>=1991,AÑO($F4)<=1994)
+        =Y(AÑO($F3)>=1991,AÑO($F3)<=1994)
 
-        =IZQUIERDA($B4,1)="E"
+        =IZQUIERDA($B3,1)="E"
       annotations:
         - label: El encabezado es la trampa
           text: >-
@@ -174,7 +182,7 @@ slides:
             vacío o escribe f(x).
         - label: Relativa a propósito
           text: >-
-            $J4 apunta a la primera fila de datos y se queda relativa hacia abajo, así
+            $J3 apunta a la primera fila de datos y se queda relativa hacia abajo, así
             Excel recorre la lista. Contra lo que se compara queda fijo.
         - label: Qué debe devolver
           text: >-
@@ -182,7 +190,7 @@ slides:
             nada.
         - label: Riesgo
           text: >-
-            La celda muestra VERDADERO o FALSO solo para la fila 4 y parece un error. No
+            La celda muestra VERDADERO o FALSO solo para la fila 3 y parece un error. No
             lo es: el filtro la vuelve a evaluar una vez por registro.
           accent: true
 
@@ -203,12 +211,12 @@ slides:
         - label: Error 03
           title: Nombre de campo sobre una fórmula
           desc: >-
-            Excel compara el texto de la fórmula contra la columna en vez de ejecutarla.
-            Nada coincide, nada se marca y no aparece ningún error.
+            Excel compara el resultado de la fórmula contra la columna en vez de usarlo
+            como prueba. Nada coincide, nada se marca y no aparece ningún error.
         - label: Error 04
           title: Creer que el extracto es vivo
           desc: >-
-            Copiar a otra ubicación escribe valores, una sola vez. Cambia la lista después
+            Copiar a otro lugar escribe valores, una sola vez. Cambia la lista después
             y el bloque extraído no se mueve con ella.
 
   - divider:
@@ -228,7 +236,7 @@ slides:
           desc: Pestaña Datos, grupo Ordenar y filtrar, Avanzadas. Rango de la lista llega lleno.
         - label: '02'
           title: Elige la acción
-          desc: Filtrar la lista, de forma local, o Copiar a otra ubicación. Esto decide todo lo demás.
+          desc: Filtrar la lista sin moverla a otro lugar, o Copiar a otro lugar. Esto decide todo lo demás.
         - label: '03'
           title: Rango de criterios
           desc: Selecciona los encabezados copiados y todas las filas de criterios de abajo, nada más.
@@ -236,7 +244,7 @@ slides:
           title: Copiar a
           desc: Una celda de destino para todos los campos, o una fila de encabezados copiados para escoger cuáles.
         - label: '05'
-          title: La casilla solo registros únicos
+          title: La casilla Solo registros únicos
           desc: Marcada con el rango de criterios vacío, es la manera no destructiva de listar únicos.
 
   - figure:
@@ -245,17 +253,17 @@ slides:
       image: img/en/advanced-filter.png
       caption: >-
         La captura es de la interfaz en inglés. Copiar a se queda en gris hasta que eliges
-        Copiar a otra ubicación, que es la forma en que el cuadro dice que las dos
+        Copiar a otro lugar, que es la forma en que el cuadro dice que las dos
         decisiones son una sola.
       alt: >-
-        El cuadro de diálogo Filtro avanzado de Excel, con Filtrar la lista, de forma
-        local seleccionado y los cuadros Rango de la lista, Rango de criterios y Copiar a
-        vacíos.
+        El cuadro de diálogo Filtro avanzado de Excel, con Filtrar la lista sin moverla a
+        otro lugar seleccionado y los cuadros Rango de la lista, Rango de criterios y
+        Copiar a vacíos.
       side:
         label: Lee los letreros
         text: >-
-          Filtrar la lista, de forma local y Copiar a otra ubicación son los nombres
-          exactos de los dos botones. La casilla solo registros únicos va debajo de los
+          Filtrar la lista sin moverla a otro lugar y Copiar a otro lugar son los nombres
+          exactos de los dos botones. La casilla Solo registros únicos va debajo de los
           tres cuadros y funciona con el rango de criterios vacío.
 
   - table:
@@ -265,7 +273,7 @@ slides:
       rows:
         - ["En su lugar", "Filas ocultas, lista intacta", "Un resultado a la vez"]
         - ["Copiar a", "Un bloque de valores fijo", "Ya nunca se actualiza"]
-        - ["solo registros únicos", "Se van los duplicados", "Nada, la lista no se toca"]
+        - ["Solo registros únicos", "Se van los duplicados", "Nada, la lista no se toca"]
 
   - method:
       eyebrow: Bloque 02 · Dos límites que conviene decir en voz alta
@@ -309,8 +317,8 @@ slides:
           desc: Una segmentación, varios reportes, si comparten caché. Office 2019 le llama Conexiones de tabla dinámica.
 
   - table:
-      eyebrow: Bloque 03 · Tres maneras de filtrar el mismo reporte
-      title: Solo una de ellas deja un objeto
+      eyebrow: Bloque 03 · Cuatro maneras de filtrar el mismo reporte
+      title: Solo dos de ellas dejan un objeto
       headers: [Ruta, Qué queda en la hoja, Qué encuentra quien califica]
       rows:
         - ["Flecha de filtro", "Nada de nada", "Ningún objeto, cero puntos"]
@@ -341,7 +349,7 @@ slides:
   - method:
       eyebrow: Bloque 03 · Objetivo 4.3.3
       title: Darle estilo son tres calificaciones aparte
-      statement: Diseño de gráfico, Estilos de gráfico, la flecha Más para la galería completa. Luego Cambiar colores al lado, y luego Diseño rápido en el grupo de la izquierda. Tres botones, tres acciones calificadas.
+      statement: Diseño de gráfico, Estilos de gráfico, la flecha Más para la galería completa. Cambiar colores va al lado, y Diseño rápido en el grupo de la izquierda. Tres botones, tres acciones calificadas.
       points:
         - label: Estilo
           text: >-
@@ -367,8 +375,8 @@ slides:
         - ["Cambiar fila o columna", "Intercambia también el reporte", "Solo intercambia el dibujo"]
         - ["Dispersión o burbujas", "Lo rechaza de entrada", "Disponible"]
         - ["[Field Buttons]", "Van sobre el gráfico", "No existen"]
-        - ["Doble clic en un valor", "Escribe una hoja de detalle", "No pasa nada"]
-        - ["Pestaña contextual", "Análisis de gráfico dinámico", "Solo Diseño de gráfico"]
+        - ["Doble clic en su celda de valor", "Escribe una hoja de detalle", "Solo edita la celda"]
+        - ["Pestaña contextual", "Análisis de gráfico dinámico", "Solo Diseño de gráfico y Formato"]
 
   - concept:
       eyebrow: Bloque 03 · Bajar al detalle
@@ -389,7 +397,7 @@ slides:
       steps:
         - text: Pon un segundo campo debajo del primero en [Axis (Categories)]
         - text: Con Contraer campo y Expandir campo recorres los niveles
-        - text: Doble clic en el valor para ver los renglones mismos
+        - text: Doble clic en la celda de valor para ver los renglones mismos
           loop: ↺ y la hoja se queda en el libro hasta que la borres
 
   - quiz:
@@ -400,6 +408,13 @@ slides:
         - "La segmentación se insertó desde la pestaña Insertar"
         - "Conexiones de informe sirve para tablas, no para tablas dinámicas"
         - "[Multi Select] quedó apagado en el encabezado de la segmentación"
+      notes: >-
+        Respuesta: A. Conexiones de informe solo ofrece las tablas dinámicas que comparten
+        la caché de la segmentación, así que un reporte armado con su propia caché no se
+        puede conectar. B no es causa: desde la pestaña Insertar la segmentación también
+        queda conectada al reporte activo. C está al revés, porque el botón existe justo
+        para tablas dinámicas. D confunde elegir varios botones con conectar varios
+        reportes.
 
   - lab:
       eyebrow: Laboratorio

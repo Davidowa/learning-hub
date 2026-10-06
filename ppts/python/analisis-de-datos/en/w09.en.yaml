@@ -38,7 +38,7 @@ slides:
         - head: Write an accumulator
           sub: A variable outside the loop that adds up what happens inside it
         - head: Write a counter
-          sub: How many cases satisfy something, which is not how much they add to
+          sub: How many cases satisfy something, which is not how much they add up to
         - head: Use a flag
           sub: To answer whether at least one exists, without walking any further
         - head: Interrupt or skip a pass
@@ -64,13 +64,13 @@ slides:
           state: todo
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: todo
 
   - divider:
       eyebrow: Block 01
       title: The three patterns
-      lede: Accumulate, count and flag. Recognising which one the wording asks for is half of solving it.
+      lede: Accumulate, count and flag. Recognizing which one the wording asks for is half of solving it.
       block: 1
 
   - table:
@@ -78,7 +78,7 @@ slides:
       title: All three, and the question each answers
       headers: [Pattern, The question, Starting value, Inside the loop]
       rows:
-        - ["Accumulator", "How much do they add to?", "0", "total += value"]
+        - ["Accumulator", "How much do they add up to?", "0", "total += value"]
         - ["Counter", "How many satisfy it?", "0", "if condition: n += 1"]
         - ["Flag", "Does at least one exist?", "False", "if condition: found = True"]
 
@@ -87,7 +87,7 @@ slides:
       title: The variable lives outside, the work happens inside
       lead: >-
         All three patterns share the same shape. A variable is declared before the loop,
-        with a starting value that stands for «nothing yet». Inside the loop it is updated
+        with a starting value that stands for “nothing yet”. Inside the loop it is updated
         on every pass. When the loop ends, that variable holds the answer. Putting it
         inside the loop resets it every pass, and that is the classic error.
       panel:
@@ -155,7 +155,7 @@ slides:
       rows:
         - ["break", "Leaves the loop immediately", "You found what you were after and going on is waste"]
         - ["continue", "Jumps to the next pass", "This record does not apply and you would rather not nest a huge if"]
-        - ["for-else", "Runs only if the loop finished without a break", "To say «I walked all of it and found nothing»"]
+        - ["for-else", "Runs only if the loop finished without a break", "To say “I walked all of it and found nothing”"]
 
   - code:
       eyebrow: Block 02 · In context
@@ -204,7 +204,7 @@ slides:
       title: Every region against every channel
       filename: crosstab.py
       source: |
-        regions = ["North", "Centre"]
+        regions = ["North", "Center"]
         channels = ["Retail", "Online"]
 
         for region in regions:
@@ -231,8 +231,8 @@ slides:
       output: |
         North · Retail
         North · Online
-        Centre · Retail
-        Centre · Online
+        Center · Retail
+        Center · Online
 
   - pitfalls:
       eyebrow: Block 03 · Common errors
@@ -243,17 +243,17 @@ slides:
           desc: total = 0 inside the loop wipes it every pass. At the end it holds the last record and nobody warns you.
         - label: Error 02
           title: Confusing counting with adding
-          desc: How many campaigns beat the target is a counter. How much those campaigns add to is an accumulator.
+          desc: How many campaigns beat the target is a counter. How much those campaigns add up to is an accumulator.
         - label: Error 03
           title: Reusing the inner loop variable
-          desc: If both fors use i, the inner one overwrites the outer and the walk falls apart.
+          desc: If both fors use i, the inner one overwrites the outer, and whatever uses i after it reads the wrong row.
         - label: Error 04
           title: Nesting when a filter was enough
           desc: Before putting a loop inside a loop, ask whether a continue in the first one solved the same thing.
 
   - quiz:
       eyebrow: Quick check
-      question: What is total worth when this finishes?
+      question: What does total hold when this finishes?
       filename: accumulator.py
       source: |
         sales = [100, 200, 300]
@@ -288,7 +288,7 @@ slides:
         - title: The variable lives outside the loop
           desc: Declaring it inside resets it every pass, and the wrong result looks perfectly normal
         - title: Counting and adding are different
-          desc: How many satisfy it is a counter, how much they add to is an accumulator, and the wording usually says
+          desc: How many satisfy it is a counter, how much they add up to is an accumulator, and the wording usually says
         - title: The passes multiply
           desc: Two by two is four, and a hundred by a hundred is ten thousand. That is where nesting stops being free
 

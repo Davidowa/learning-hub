@@ -133,7 +133,7 @@ slides:
         title: const ampersand reads without copying
         note: >-
           Taking a std::string by value copies the whole string on every call. Taking it as
-          const std::string& copies nothing and the compiler stops you modifying it.
+          const std::string& copies nothing and the compiler stops you from modifying it.
       steps:
         - text: int by value, it is cheap
         - text: int& when it must be modified
@@ -214,7 +214,7 @@ slides:
           desc: The variable dies when the function ends, leaving a reference to memory that is no longer its own
         - label: Error 04
           title: Default value on both sides
-          desc: It goes in the prototype or in the definition, never in both, or the compiler rejects it
+          desc: It goes in the prototype if there is one, never in both, or the compiler rejects it
 
   - divider:
       eyebrow: Block 03
@@ -244,6 +244,8 @@ slides:
           text: Runs the first and gives 9, measured. One argument, one side.
         - label: area(3.0, 4.0)
           text: Runs the second and gives 12. The compiler makes that choice, not the program.
+        - label: When to use it
+          text: Only when both do conceptually the same thing. Otherwise they are two different names.
 
   - table:
       eyebrow: The rule
@@ -252,9 +254,9 @@ slides:
       rows:
         - ["How many parameters", "area(double) vs area(double, double)", "Yes"]
         - ["What type they are", "print(int) vs print(double)", "Yes"]
-        - ["Only the name", "f(int a) vs f(int b)", "No"]
+        - ["Only the parameter name", "f(int a) vs f(int b)", "No"]
         - ["Only the return", "int f(int) vs double f(int)", "No"]
-        - ["Value or reference", "f(int) vs f(int&)", "No, C2668"]
+        - ["Value or reference", "f(int) vs f(int&)", "Yes, but f(x) is C2668"]
 
   - code:
       eyebrow: Default values
@@ -314,10 +316,10 @@ slides:
   - lab:
       eyebrow: Lab
       title: A function that reports two things, in pairs
-      brief: Write a void function that takes three marks and hands back, by reference, both the average and the total in two separate parameters. Add a second overloaded version that takes four marks.
+      brief: Write a void function that takes three grades and hands back, by reference, both the average and the total in two separate parameters. Add a second overloaded version that takes four grades.
       blocks:
         - label: Constraint
-          text: No if and no loops, which arrive in week 7. One route through each function.
+          text: No if and no loops, which arrive in weeks 7 and 8. One route through each function.
         - label: Deliverable
           text: A .cpp with both overloaded versions and a main that calls each of them
         - label: Criterion
@@ -332,7 +334,7 @@ slides:
         - title: The local covers the global
           desc: It compiles with no warning and makes the program read differently from how it runs
         - title: static outlives the call
-          desc: It is initialised once and keeps its value, while still being local
+          desc: It is initialized once and keeps its value, while still being local
 
   - homework:
       eyebrow: For the next session

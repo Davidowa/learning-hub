@@ -33,14 +33,14 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión el alumno podrá…
+      title: Al terminar la sesión podrás…
       items:
         - head: Graficar desde un DataFrame
           sub: Pasando nombres de columna, sin preparar los datos antes
         - head: Elegir el estimador correcto
           sub: Porque seaborn promedia por omisión y casi siempre quieres el total
-        - head: Meter una tercera variable
-          sub: Con hue, que separa por color y arma la leyenda solo
+        - head: Sombrear una tabla dinámica
+          sub: Con heatmap, que recibe la rejilla de pivot_table tal cual
         - head: Leer una caja y bigotes
           sub: Mediana, mitad central, rango y los valores atípicos
         - head: Presentar un hallazgo
@@ -127,24 +127,25 @@ slides:
       source: |
         print((ventas.groupby("region")["amount"]
                .agg(["sum", "mean"]) / 1000).round(0))
-      output: |
-        region     sum    mean
-        Centre  3919.0    56.0
-        North   4352.0    47.0
-        South   1553.0    23.0
-        West    3030.0    40.0
+      output: |2
+                   sum  mean
+        region
+        Centre  3919.0  56.0
+        North   4352.0  47.0
+        South   1553.0  23.0
+        West    3030.0  40.0
 
   - concept:
       eyebrow: Concepto clave
       title: Total y promedio contestan preguntas distintas
       lead: >-
-        Norte vende más que Centro en el año. Centro vende más grande en cada operación.
+        Norte vende más que Centro en el año. Centro vende más grande por operación, en promedio.
         Las dos afirmaciones son ciertas y salen de la misma tabla, y la gráfica que
         escojas decide cuál de las dos ve tu lector. Elegir sin darte cuenta es cómo un
         reporte honesto termina diciendo algo que no querías decir.
       panel:
         label: La consecuencia práctica
-        title: Norte vende seguido, Centro vende caro
+        title: Norte vende seguido, Centro vende en grande
         note: >-
           Esa frase es el hallazgo, y no se ve en ninguna de las dos gráficas por separado.
           Sale de poner las dos juntas.
@@ -165,12 +166,12 @@ slides:
       title: La forma completa, no solo el centro
       filename: caja.py
       source: |
-        orden = (empleados.groupby("area")["sueldo_mensual"]
+        orden = (empleados.groupby("area")["monthly_salary"]
                  .median()
                  .sort_values(ascending=False).index)
 
         sns.boxplot(data=empleados, x="area",
-                    y="sueldo_mensual", order=orden,
+                    y="monthly_salary", order=orden,
                     hue="area", legend=False, ax=ax)
       annotations:
         - label: La caja
@@ -206,7 +207,7 @@ slides:
                     cmap="Blues", ax=ax)
       annotations:
         - label: La entrada
-          text: Recibe la rejilla que produjo pivot_table en la sesión anterior. Ninguna preparación extra.
+          text: Recibe la rejilla que produjo pivot_table en la semana 15. Ninguna preparación extra.
         - label: annot
           text: Escribe el valor dentro de cada celda. Sin él, el color obliga a estimar contra la barra lateral.
         - label: El color
@@ -307,7 +308,7 @@ slides:
       rubric:
         - ["Código y análisis", "70 %", "Corre de cero, la limpieza es correcta y las gráficas son honestas"]
         - ["Reporte", "30 %", "Narrativa clara, decisiones justificadas y evidencia integrada"]
-        - ["Dudas", "Requisito", "Las tres preguntas llegan por escrito antes de la semana 17"]
+        - ["Dudas", "Requisito", "Las tres preguntas llegan por escrito a la sesión de repaso"]
 
   - closing:
       title: Preguntas

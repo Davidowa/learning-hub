@@ -43,7 +43,7 @@ slides:
           sub: And why a class in its place does not, with the measurement beside it
         - head: Fill and walk an array of structures
           sub: With for when you have to write and foreach when you only read
-        - head: Recognise the default value that lies
+        - head: Recognize the default value that lies
           sub: The first name in the enumeration is 0, and 0 is what an unfilled field holds
         - head: Compile with not one warning
           sub: The three CS0649 in the course's own example, and the line that takes them to zero
@@ -77,7 +77,7 @@ slides:
 
   - code:
       eyebrow: Block 01 · The type
-      title: The sensor bank, declared and filled
+      title: One bank sample, declared and filled
       filename: Sample.cs
       lang: csharp
       source: |
@@ -99,12 +99,12 @@ slides:
       annotations:
         - label: The fields
           text: A name, a type and a justification per line. Choosing these three fields is the design work of the week.
-        - label: The initialiser
+        - label: The initializer
           text: With braces after new, the fields are assigned by name inside the same expression.
         - label: Where types go
           text: In a file with top-level statements, enum and struct are declared at the very end.
         - label: Risk
-          text: Without that initialiser the program compiles with three CS0649 warnings, one per field.
+          text: Without that initializer the program compiles with three CS0649 warnings, one per field.
           accent: true
 
   - code_output:
@@ -215,11 +215,11 @@ slides:
         - ["(Status)7", "7"]
         - ["Enum.IsDefined((Status)7)", "False"]
         - ['Enum.TryParse("Warning")', "True, hands back Warning"]
-        - ['Enum.TryParse("warning")', "False, leaves Ok"]
+        - ['Enum.TryParse("warning")', "False, hands back Ok"]
       verdict: >-
         The cast is not checked. (Status)7 hands back a 7 with no name and only
         Enum.IsDefined gives it away. TryParse is case sensitive and on failure it
-        leaves the Ok you already had.
+        writes Ok, the default value.
 
   - code_output:
       eyebrow: Block 02 · Measured
@@ -263,6 +263,7 @@ slides:
         Sample[] bank = new Sample[3];
         bank[0] = new Sample { SensorId = 1, Celsius = 20.0 };
         bank[1] = new Sample { SensorId = 2, Celsius = 99.9 };
+        bank[1].State = Status.Fault;
 
         Console.WriteLine(bank[2].SensorId);
         Console.WriteLine(bank[2].Celsius);
@@ -460,12 +461,12 @@ slides:
   - lab:
       eyebrow: Lab
       title: The bill of materials for the assembly
-      brief: Declare a record with a name, a mass in kilograms, a count and a material, fill an array of three parts, print the aligned table with the format widths from week 13, add up the total assembly mass, and flag every part with a count of zero as a kitting gap.
+      brief: Declare a record with a name, a mass in kilograms, a count and a material, fill an array of three parts, print the aligned table with the format widths from week 5, add up the total assembly mass, and flag every part with a count of zero as a kitting gap.
       blocks:
         - label: Deliverable
           text: The .cs and the output, with the aligned table and the total mass to three decimals
         - label: Constraint
-          text: No money column. Mass, count, material and tolerance class
+          text: No money column. Name, mass, count and material
         - label: The test
           text: With flange 1.250 kg times 4, bushing 0.080 kg times 0 and cover 2.400 kg times 1, the total mass is 7.400 kg and there is one gap
 
@@ -480,7 +481,7 @@ slides:
       rubric:
         - ["The table", "40 %", "Every field with a name, a type and a justification on one line"]
         - ["Zero warnings", "40 %", "The declared record compiles without a single CS0649"]
-        - ["The state", "20 %", "The enumeration does not leave the fault value living at zero"]
+        - ["The state", "20 %", "The enumeration reserves zero for the value nobody assigned"]
 
   - closing:
       title: Questions

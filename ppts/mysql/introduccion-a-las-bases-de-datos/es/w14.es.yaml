@@ -27,7 +27,7 @@ slides:
         - title: OLD y NEW
           desc: Los seis momentos, la validación que sí maneja el NULL, y el CHECK que a veces gana
         - title: Auditar, y el agujero
-          desc: La bitácora que funciona y las tres maneras de que no vea absolutamente nada
+          desc: La bitácora que funciona y las dos maneras de que no vea absolutamente nada
         - title: Eventos
           desc: El interruptor, la fecha que ya pasó, y el fallo que nadie te reporta
         - title: Tu turno
@@ -41,7 +41,7 @@ slides:
           sub: Con la convención trg_tabla_momento_evento_proposito, que se lee sola en un SHOW TRIGGERS
         - head: Decir qué hay en OLD y qué hay en NEW
           sub: Depende del momento y del evento, y pedir el que no existe es el error 1363
-        - head: Validar sin dejar pasar el NULL
+        - head: Validar sin que el NULL pase por accidente
           sub: Una comparación contra NULL no da falso, da desconocido, y el IF simplemente no entra
         - head: Elegir entre el trigger y el CHECK
           sub: 1644 con mensaje propio contra 3819 declarativo, y ninguno de los dos es la respuesta siempre
@@ -122,8 +122,8 @@ slides:
             SIGNAL y MESSAGE_TEXT son de la semana pasada; aquí solo cambian de casa.
         - label: La guarda
           text: >-
-            Sin IS NOT NULL, una calificación vacía deja la comparación en desconocido y
-            entra en silencio.
+            Con o sin ella, la calificación vacía entra; la guarda solo deja escrito
+            que es a propósito.
         - label: Riesgo
           text: >-
             El trigger vigila las sentencias que alguien escribe. Lo que desaparece por
@@ -147,7 +147,7 @@ slides:
 
   - compare:
       eyebrow: Bloque 01 · La misma regla, dos veces
-      title: La validación que no maneja el NULL es una validación que no valida
+      title: El NULL pasa por las dos, y solo una lo dice
       before:
         label: Sin guarda
         file: sin_guarda.sql
@@ -172,17 +172,17 @@ slides:
       note: >-
         Con la calificación en NULL, la comparación de la izquierda no contesta falso.
         Contesta desconocido, y desconocido no es verdadero, así que el IF no entra y la
-        fila pasa. Es la misma lógica de tres valores de la semana 9, aterrizando en el
-        único lugar donde apaga una regla que alguien escribió a propósito.
+        fila pasa. Es la lógica de tres valores de la semana 9. La guarda de la derecha no
+        cambia el resultado: lo vuelve una decisión escrita en lugar de un accidente.
 
   - code_output:
       eyebrow: Medido · cuándo el trigger es demasiado
-      title: La misma regla, sin una sola línea de código procedural
+      title: Una regla de rango, sin una sola línea de código procedural
       filename: chk_creditos.sql
       lang: sql
       output_label: Al ejecutar
       source: |
-        -- la otra manera de decir lo mismo,
+        -- la otra manera de escribir un rango,
         -- declarativa y sin cuerpo que mantener
         ALTER TABLE materias
           ADD CONSTRAINT chk_creditos
@@ -263,8 +263,10 @@ slides:
       source: |
         START TRANSACTION;
           INSERT INTO inscripciones
+            (matricula, clave_materia, periodo, calificacion)
           VALUES (100002, 'MAT201', '2026-2', 8.0);
           INSERT INTO inscripciones
+            (matricula, clave_materia, periodo, calificacion)
           VALUES (100002, 'PRG101', '2026-2', 11.0);
         ROLLBACK;
       output: |
@@ -322,7 +324,7 @@ slides:
         - label: Error 04
           title: Olvidar que el sql_mode se congela
           desc: >-
-            SHOW TRIGGERS guarda el Definer y el sql_mode de cada trigger. El que creaste
+            SHOW TRIGGERS muestra el Definer y el sql_mode de cada trigger. El que creaste
             hoy conserva el de hoy, cambie el servidor lo que cambie.
 
   - divider:
@@ -464,8 +466,8 @@ slides:
         - title: El error ya lo sabes levantar
           desc: >-
             SIGNAL, MESSAGE_TEXT y los handlers son los de la semana 13 y aquí solo cambian
-            de casa. El trigger incluso puede llamar al procedimiento que escribiste
-            entonces, y está verificado
+            de casa. El trigger incluso puede llamar a un procedimiento, siempre que ese
+            no devuelva filas ni haga ROLLBACK
         - title: ENABLED no quiere decir sano
           desc: >-
             Un evento que se rompe cada noche conserva su estado y su LAST_EXECUTED, el

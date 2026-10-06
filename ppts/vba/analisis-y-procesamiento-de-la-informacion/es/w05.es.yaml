@@ -36,7 +36,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Mostrar un mensaje con botones e icono
-          sub: MsgBox con sus tres argumentos, y qué constante elegir para cada caso
+          sub: MsgBox con sus tres primeros argumentos, y qué constante elegir para cada caso
         - head: Leer la respuesta del usuario
           sub: MsgBox devuelve un número, y ese número decide qué hace la macro
         - head: Capturar un dato con InputBox
@@ -74,7 +74,7 @@ slides:
       block: 1
 
   - code:
-      eyebrow: Bloque 01 · Los tres argumentos
+      eyebrow: Bloque 01 · Los tres primeros argumentos
       title: MsgBox completo, no solo el texto
       filename: Mensajes.bas
       lang: vba
@@ -135,7 +135,7 @@ slides:
         - label: La suma
           text: vbYesNo más vbQuestion es 4 más 32. Se suman porque cada uno ocupa bits distintos.
         - label: Riesgo
-          text: Si comparas con el texto del botón en vez de la constante, nunca entra al If y el borrado no ocurre.
+          text: Si comparas con el texto del botón en vez de la constante, se detiene con error 13 y el borrado no ocurre.
           accent: true
 
   - divider:
@@ -164,7 +164,7 @@ slides:
         - label: Los dos argumentos
           text: El texto de la pregunta y el título de la ventana. El título es opcional y siempre vale ponerlo.
         - label: CDbl
-          text: Convierte el texto a decimal. Sin él estarías guardando la cadena, no el número.
+          text: Convierte el texto a decimal. Sin él, VBA convierte igual al guardarlo en el Double, pero sin que se vea en el código.
         - label: Cuando cancelan
           text: InputBox devuelve una cadena vacía, y CDbl de una cadena vacía se detiene con error 13.
         - label: Riesgo
@@ -179,7 +179,7 @@ slides:
         - ["5.5", "True", "5.5"]
         - ["1,000", "True", "1000"]
         - ["1e3", "True", "1000"]
-        - ["$5", "False", "error 13"]
+        - ["$5", "True", "5"]
         - ["5a", "False", "error 13"]
         - ["nada, cancelaron", "False", "error 13"]
 
@@ -211,25 +211,25 @@ slides:
         - label: Lo que sobra
           text: El módulo original agrega And texto <> "". Verificado que sobra, IsNumeric de vacío ya da False.
         - label: Riesgo
-          text: Si el usuario cancela, el ciclo vuelve a preguntar para siempre. En la semana 8 le ponemos salida.
+          text: Si el usuario cancela, el ciclo vuelve a preguntar para siempre. Darle salida pide un If más.
           accent: true
 
   - pitfalls:
       eyebrow: Bloque 02 · Errores comunes
-      title: Cuatro formas de que la captura truene
+      title: Cuatro formas de que la captura falle
       items:
         - label: Error 01
           title: And no es de cortocircuito
           desc: "En VBA los dos lados se evalúan siempre. IsNumeric(t) And CDbl(t) > 0 truena con texto, aunque el primero ya dijo False."
         - label: Error 02
           title: Convertir antes de revisar
-          desc: CDbl de lo que sea que hayan tecleado se detiene con error 13. Revisa con IsNumeric primero.
+          desc: CDbl de lo que sea que hayan tecleado puede detenerse con error 13. Revisa con IsNumeric primero.
         - label: Error 03
           title: Olvidar el botón Cancelar
           desc: Cancelar devuelve cadena vacía, igual que aceptar sin escribir nada. Los dos casos hay que atenderlos.
         - label: Error 04
           title: Aceptar el signo de pesos
-          desc: "IsNumeric de $5 da False, pero de 1,000 da True. La coma pasa y el símbolo de moneda no."
+          desc: "IsNumeric de $5 da True con la región de México y False con la del Reino Unido. Prueba la macro en la computadora donde va a correr."
 
   - divider:
       eyebrow: Bloque 03
@@ -289,6 +289,7 @@ slides:
                 txtMonto.SetFocus
                 Exit Sub
             End If
+            ' Aquí va el mismo If para txtTasa
 
             Range("MontoPrestamo").Value = CDbl(txtMonto.Value)
             Range("TasaAnual").Value = CDbl(txtTasa.Value)
@@ -357,7 +358,7 @@ slides:
         - [Formato, Blackboard · .xlsm y .frm]
         - [Peso, Parte del 20 % de tareas]
       rubric:
-        - ["Formulario", "30 %", "Cuatro campos con nombre propio y un botón que se llama como lo que hace"]
+        - ["Formulario", "30 %", "Cada campo con nombre propio y un botón que se llama como lo que hace"]
         - ["Validación", "50 %", "Ningún dato mal escrito llega a la hoja, y el aviso dice cuál falló"]
         - ["Escritura", "20 %", "Los valores llegan a celdas con nombre y con el formato correcto"]
 

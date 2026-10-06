@@ -157,7 +157,7 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · En disco
-      title: Qué trae un proyecto nuevo y qué va al control de versiones
+      title: Qué trae un proyecto nuevo y qué se sube
       headers: [Carpeta, Qué guarda, En el repositorio]
       rows:
         - ["Assets", "Lo que haces o importas, con .meta", "Sí"]
@@ -166,6 +166,7 @@ slides:
         - ["Library", "Assets importados, se reconstruye", "No"]
         - ["Logs", "Bitácoras del editor y del build", "No"]
         - ["Temp", "Existe sólo con el editor abierto", "No"]
+        - ["UserSettings", "Ajustes del editor de cada usuario", "No"]
 
   - stat:
       eyebrow: Medido en un proyecto nuevo
@@ -237,7 +238,7 @@ slides:
       title: Play mode es un cajón de arena, y el editor lo tira
       lead: >-
         Presionar Play no ejecuta el archivo de la escena. El editor carga la escena en
-        memoria, la corre ahí y al Stop vuelve a leer el archivo del disco. Cada valor que
+        memoria, la corre ahí y al Stop la regresa a como estaba antes del Play. Cada valor que
         moviste con el botón de Play encendido se va con ella. Es una ventaja, porque deja
         romper cosas sin consecuencias, y es la primera hora que un alumno pierde en el curso.
       panel:
@@ -249,7 +250,7 @@ slides:
       steps:
         - text: Play carga la escena en memoria
         - text: Editas la copia, no el archivo
-        - text: Stop vuelve a leer el archivo del disco
+        - text: Stop regresa la escena de antes del Play
           loop: ↺ y la copia, con tus dos horas de ajuste, ya no está
 
   - steps:
@@ -267,7 +268,7 @@ slides:
           desc: Mueve la cámara de escena sobre su propio eje frontal, no cambia el lente
         - label: Encuadrar
           title: Tecla F
-          desc: Ajusta el objeto seleccionado a la vista. El único atajo que vale la pena hoy
+          desc: Ajusta el objeto seleccionado a la vista. El atajo que más vale la pena hoy
         - label: Volar
           title: Botón derecho y WASD
           desc: Movimiento en primera persona, Q y E para bajar y subir, Shift para ir más rápido
@@ -286,7 +287,7 @@ slides:
 
   - table:
       eyebrow: Bloque 02 · El botón 2D
-      title: Qué cambia cuando se activa el botón 2D
+      title: Qué cambia cuando trabajas en 2D
       headers: [Aspecto, En 3D, En 2D]
       rows:
         - ["Cámara de escena", "Perspectiva, encoge con distancia", "Ortográfica, plana"]
@@ -334,8 +335,8 @@ slides:
             Objetos en la raíz del Hierarchy. Una escena 3D nueva trae dos, cámara y luz.
         - label: Riesgo
           text: >-
-            Cambia el nombre del archivo y la consola dice The associated script cannot be
-            loaded, con una ranura vacía en el Inspector.
+            Cambia el nombre del archivo y el componente, en el Inspector, dice The
+            associated script can not be loaded.
           accent: true
 
   - code_output:
@@ -359,7 +360,7 @@ slides:
       question: Moviste una caja con el botón de Play encendido y luego presionaste Stop. ¿Dónde quedó el movimiento?
       options:
         - En el archivo de la escena, porque el Inspector mostró la posición nueva
-        - En ningún lado, porque Stop vuelve a leer la escena del disco
+        - En ningún lado, porque Stop regresa la escena de antes del Play
         - En la carpeta Library, y regresa en el siguiente Play
         - Guardado, pero sólo si el proyecto estaba en control de versiones
 
@@ -368,12 +369,13 @@ slides:
       title: La segunda, y la pérdida es silenciosa
       statement: >-
         Nada te avisa. El Inspector mostraba la posición nueva porque el objeto en memoria de
-        verdad la tenía, y al Stop el editor volvió a leer el archivo que nunca se enteró.
+        verdad la tenía, y al Stop el editor regresó a la escena de antes del Play, que nunca
+        se enteró.
       points:
         - label: Por qué pasa
           text: >-
-            Play mode edita una copia de la escena. El archivo en disco es el original, y es
-            lo que regresa en cuanto sueltas el botón de Play.
+            Play mode edita una copia de la escena. La escena de antes del Play es el
+            original, y es lo que regresa en cuanto sueltas el botón de Play.
         - label: Qué hacer en su lugar
           text: >-
             Ajusta durante el Play, anota los números, detén y vuelve a escribirlos. Copy
@@ -416,8 +418,8 @@ slides:
             que es por lo que un clon de esas tres abre y corre
         - title: Play mode es una copia
           desc: >-
-            El editor corre la escena desde memoria y vuelve a leer el archivo al Stop, así
-            que el ajuste hecho durante Play es ajuste tirado
+            El editor corre la escena desde memoria y al Stop regresa la de antes del Play,
+            así que el ajuste hecho durante Play es ajuste tirado
 
   - homework:
       eyebrow: Tarea

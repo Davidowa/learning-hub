@@ -14,7 +14,7 @@ slides:
       title: Unity Essentials
       subtitle: >-
         A project that only runs on your machine with the editor open is not finished. Today
-        it becomes a folder somebody else can double click.
+        it becomes a folder somebody else can double-click.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, UNITY · Foundational]
@@ -34,8 +34,8 @@ slides:
       cards:
         - title: What a build is
           desc: >-
-            Pathway area · Publishing. The player, your data, the scene list, and the four
-            settings that decide what ends up inside the folder.
+            Pathway area · Publishing. The player, your data, the scene list, and the other
+            four settings that decide what ends up inside the folder.
         - title: Reading the output
           desc: >-
             Pathway area · Publishing. What Unity wrote next to the executable, and where a
@@ -44,7 +44,7 @@ slides:
           desc: >-
             All ten pathway areas against the six sessions, so you can see which part of the
             pathway each session was standing next to.
-        - title: The hand in
+        - title: The hand-in
           desc: >-
             One build of the store room that runs on a machine with no Unity installed, plus
             the pathway finished in your own Unity Learn account.
@@ -79,7 +79,7 @@ slides:
           desc: Objects, transforms, materials, physics, components and prefabs
           state: done
         - label: 03 · Sessions 4 and 5
-          title: Behaviour and senses
+          title: Behavior and senses
           desc: Reading and writing scripts, cameras, audio and sprites
           state: done
         - label: 04 · Session 6
@@ -154,11 +154,15 @@ slides:
       lang: csharp
       output_label: Player.log
       source: |
+        using UnityEngine;
         using UnityEngine.SceneManagement;
 
-        void Restart()
+        public class LevelLoader : MonoBehaviour
         {
-            SceneManager.LoadScene("Bay");
+            void Restart()
+            {
+                SceneManager.LoadScene("Bay");
+            }
         }
       output: |
         Scene 'Bay' couldn't be loaded
@@ -180,17 +184,17 @@ slides:
           title: The module that was never installed
           desc: >-
             The platform is listed and the Build button is not there. Fixing it means the Hub,
-            a download and a wait, which is why session 1 ticked the box.
+            a download and a wait, which is why session 1 checked the box.
         - label: Error 03
           title: Editor code in a runtime script
           desc: >-
             Anything from UnityEditor compiles in the editor and stops the build. Either the
-            call goes behind an if UNITY_EDITOR block or the script moves to an Editor folder.
+            call goes behind an #if UNITY_EDITOR block or the script moves to an Editor folder.
         - label: Error 04
           title: Building into the Assets folder
           desc: >-
-            The importer then tries to import your own build, the project grows every time,
-            and the next build includes the previous one. Build outside the project.
+            Unity refuses it with an Invalid build path dialog, because Assets is one of its
+            internal work folders. The project root is refused too. Use Builds/Windows.
 
   - divider:
       eyebrow: Block 02
@@ -224,7 +228,7 @@ slides:
         title: AppData · LocalLow · Company · Product
         note: >-
           The file is Player.log, and the previous run is kept beside it. Naming your company
-          field properly in session 1 is what makes this folder findable in session 6.
+          field properly in Player Settings is what makes this folder findable.
       steps:
         - text: Debug.Log still runs in a build
         - text: It writes to Player.log, not to a window
@@ -258,7 +262,7 @@ slides:
             The Version field in Player Settings. It is a string you set, not a build counter.
         - label: isDebugBuild
           text: >-
-            True when Development Build was ticked. Useful for turning cheats off in a release.
+            True when Development Build was checked. Useful for turning cheats off in a release.
         - label: Risk
           text: >-
             Handing in a development build. The watermark sits on the screen and the
@@ -268,9 +272,9 @@ slides:
   - code_output:
       eyebrow: Block 02 · Measured
       title: The same four lines, read out of the log file
-      filename: Player.log
+      filename: BuildStamp.cs
       lang: csharp
-      output_label: Player.log, first run
+      output_label: Player.log, excerpt
       source: |
         Debug.Log($"product {Application.productName}");
         Debug.Log($"version {Application.version}");
@@ -281,6 +285,10 @@ slides:
         version 0.1.0
         platform WindowsPlayer
         dev False
+      notes: |
+        The panel is an excerpt. In the real file every Debug.Log is followed by its stack
+        trace, because Stack Trace, under Player Settings · Other Settings, leaves Log on
+        ScriptOnly by default. The four stamp lines have to be picked out from among them.
 
   - stat:
       eyebrow: The console a built game has
@@ -307,7 +315,7 @@ slides:
         - ["Session 1", "Creating and Managing Unity Projects · Unity Editor Essentials"]
         - ["Session 2", "Scene Building Essentials, creation, transformation, appearance"]
         - ["Session 3", "Scene Building physics · GameObjects, components and prefabs"]
-        - ["Session 4", "Level 1 Code Comprehension · Level 1 Application Scripting"]
+        - ["Session 4", "Level 1 Code Comprehension · Level 1 Application Scripting · GameObjects, scripting"]
         - ["Session 5", "Beginner Unity Cameras · Audio Essentials · 2D Art"]
         - ["Session 6", "Publishing, and the ten areas seen as one map"]
 
@@ -339,7 +347,7 @@ slides:
           title: The list is right
           desc: Bay.unity is in the list and sits at index zero, so the player opens on it
         - key: Build
-          title: Development is unticked
+          title: Development is unchecked
           desc: No watermark on the screen, no profiler waiting for a connection on the port
         - key: Folder
           title: The whole folder travels
@@ -350,7 +358,7 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: Your build opens on an empty grey screen and the log names no error. What is the first suspect?
+      question: Your build opens on an empty gray screen and the log names no error. What is the first suspect?
       options:
         - The graphics card on the other machine is too old for the player
         - The scene list, because entry zero is not the scene you meant
@@ -382,8 +390,8 @@ slides:
       title: Ship the store room, in pairs
       brief: >-
         Build the StoreRoom project for Windows into Builds/Windows, with Bay.unity at index
-        zero, Development Build unticked and BuildStamp.cs in the scene. Run it on a machine
-        with no Unity installed and bring back the first four lines of its Player.log.
+        zero, Development Build unchecked and BuildStamp.cs in the scene. Run it on a machine
+        with no Unity installed and bring back the four stamp lines from its Player.log.
       blocks:
         - label: Deliverable
           text: The zipped build folder, plus the four stamp lines copied out of Player.log
@@ -394,7 +402,7 @@ slides:
         - label: The test
           text: >-
             Rename the data folder and run it again. Read what happens, then put the name
-            back. That failure is what a half uploaded zip looks like to your reader.
+            back. That failure is what a half-uploaded zip looks like to your reader.
 
   - takeaways:
       eyebrow: Summary
@@ -426,7 +434,7 @@ slides:
         - [Weight, Part of the practical component]
       rubric:
         - ["Build", "Required", "Runs on a machine with no Unity installed"]
-        - ["Scene list", "Required", "Bay.unity at index zero, no watermark on screen"]
+        - ["Settings", "Required", "Bay.unity at index zero, no watermark on screen"]
         - ["Log", "Required", "The four stamp lines, copied from Player.log"]
         - ["Pathway", "Required", "All ten areas of the pathway marked done"]
 

@@ -68,14 +68,14 @@ slides:
   - divider:
       eyebrow: Block 01
       title: Comparing and combining
-      lede: A condition is an expression worth true or false. In C++ that means it is worth 1 or 0, and it can be stored.
+      lede: A condition is an expression that evaluates to true or false. In C++ it is a bool, prints as 1 or 0, and can be stored.
       block: 1
 
   - figure:
       eyebrow: Notation
       title: The four shapes of a flow chart
       image: img/en/ct-05.png
-      caption: The diamond is what arrives this week. Everything in the course so far fitted inside the other three.
+      caption: The diamond is what arrives this week. Everything in the course so far fit inside the other three.
       alt: The four shapes of a flow chart, with the decision diamond among them
 
   - table:
@@ -93,11 +93,11 @@ slides:
   - table:
       eyebrow: Logical
       title: All three, and when they stop early
-      headers: ["Operator", "Reads as", "True when"]
+      headers: ["Operator", "Reads as", "True when", "Stops early if"]
       rows:
-        - ["&&", "And", "Both conditions are true"]
-        - ["||", "Or", "At least one is true"]
-        - ["!", "Not", "The condition is false"]
+        - ["&&", "And", "Both conditions are true", "The first is false"]
+        - ["||", "Or", "At least one is true", "The first is true"]
+        - ["!", "Not", "The condition is false", "Does not apply, there is only one"]
 
   - code_output:
       eyebrow: The classic mistake
@@ -162,7 +162,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Many cases at once
-      lede: Once the same variable is compared against five values, the if-else chain stops reading.
+      lede: Once the same variable is compared against five values, the if-else chain stops being readable.
       block: 3
 
   - code_output:
@@ -194,29 +194,29 @@ slides:
 
   - quiz:
       eyebrow: Quick question
-      question: What does the program print, with mark set to 5?
-      filename: mark.cpp
+      question: What does the program print, with grade set to 5?
+      filename: grade.cpp
       lang: cpp
       source: |
-        int mark = 5;
+        int grade = 5;
 
-        if (mark = 6)
+        if (grade = 6)
             std::cout << "passed\n";
         else
             std::cout << "failed\n";
       options:
-        - 'passed, and mark is now holding 6'
+        - 'passed, and grade is now holding 6'
         - 'failed, because 5 does not reach 6'
         - 'It does not compile, an equals sign is missing'
-        - 'passed, but mark still holds 5'
+        - 'passed, but grade still holds 5'
 
   - trace:
       eyebrow: Answer
       title: The condition compared nothing, it assigned
-      headers: ["Step", "What happens", "mark", "The condition is"]
+      headers: ["Step", "What happens", "grade", "The condition is"]
       rows:
-        - ["1", "int mark = 5", "5", "nothing yet"]
-        - ["2", "mark = 6 assigns", "6", "6"]
+        - ["1", "int grade = 5", "5", "nothing yet"]
+        - ["2", "grade = 6 assigns", "6", "6"]
         - ["3", "6 is not zero", "6", "true"]
         - ["4", "It takes the first path", "6", "true"]
       verdict: The condition would be true for any value other than zero, so the else is never reached. And along the way the program modified the variable it thought it was reading.
@@ -227,7 +227,7 @@ slides:
       items:
         - label: Error 01
           title: One equals instead of two
-          desc: It assigns rather than compares, the condition always fires, and no warning appears
+          desc: It assigns rather than compares, fires on any nonzero value, and compiles with no warning
         - label: Error 02
           title: A semicolon after the if
           desc: The body becomes the empty statement and the block below runs every time
@@ -241,7 +241,7 @@ slides:
   - lab:
       eyebrow: Lab
       title: A class that defends itself, in pairs
-      brief: Take last week's Student class and add validation to the mutators. A mark outside the range of zero to ten must be rejected, and the average should return its letter grade through a chained if-else.
+      brief: Take last week's Student class and add validation to the mutators. A grade outside the range of zero to ten must be rejected, and the average should return its letter grade through a chained if-else.
       blocks:
         - label: Constraint
           text: No loops, which arrive next week. Selection only.
@@ -255,7 +255,7 @@ slides:
       title: Three ideas to take away
       items:
         - title: One equals assigns, two compare
-          desc: The single one compiles inside an if, always fires, and modifies the variable
+          desc: The single one compiles inside an if, fires on any nonzero value, and modifies the variable
         - title: A switch falls through without break
           desc: It picks where to enter, not which case to run, and carries on to the first break
         - title: Reals are not compared with equality

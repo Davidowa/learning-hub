@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: Why a class
-          desc: What problem is solved by keeping data next to its behaviour
+          desc: What problem is solved by keeping data next to its behavior
         - title: Anatomy
           desc: Data members, member functions and the constructor
         - title: What shows
@@ -76,7 +76,7 @@ slides:
       title: The cutter and what comes out of it
       image: img/en/class-object-cpp.png
       caption: The class is written once. Objects are made as many times as needed, each with its own state.
-      alt: A cookie cutter and the cookies it produces, with the class and its objects labelled
+      alt: A cookie cutter and the cookies it produces, with the class and its objects labeled
 
   - concept:
       eyebrow: Key concept
@@ -92,7 +92,7 @@ slides:
           If the area is computed inside the class, there is no way for a distant file to
           compute it differently. It stops being a convention and becomes code.
       steps:
-        - text: Data and behaviour together
+        - text: Data and behavior together
         - text: One place to fix it
         - text: Whoever uses it sees no detail
           loop: ↺ which is why the detail can change without warning
@@ -129,12 +129,12 @@ slides:
       annotations:
         - label: Line 3
           text: The constructor shares the class name and declares no return type
-        - label: Line 4
+        - label: Lines 4 and 5
           text: An accessor returns and does not modify. A mutator modifies and does not return.
         - label: Line 7
           text: Everything after private can only be touched by the functions of the class
         - label: Risk
-          text: The semicolon after the closing brace is required. Without it the error lands on the next line and does not say why.
+          text: The semicolon after the closing brace is required. Without it the error lands on the next line, not on the brace.
           accent: true
 
   - code_output:
@@ -158,8 +158,8 @@ slides:
       title: Six pieces, and what each one does
       headers: ["Piece", "What it is", "In the example"]
       rows:
-        - ["Class", "The mould, written once", "Rectangle"]
-        - ["Object", "Each copy, with its own state", "r"]
+        - ["Class", "The mold, written once", "Rectangle"]
+        - ["Object", "Each instance, with its own state", "r"]
         - ["Data member", "What the object remembers", "width, length"]
         - ["Member function", "What the object can do", "area()"]
         - ["Constructor", "Runs when the object is made", "Rectangle(3.0, 4.0)"]
@@ -224,15 +224,15 @@ slides:
           title: Leaving the data public
           desc: It compiles, it works, and it turns every member into a promise that cannot be withdrawn
         - label: Error 03
-          title: Uninitialised members
+          title: Uninitialized members
           desc: A constructor that misses one leaves garbage inside, exactly like a loose variable
         - label: Error 04
           title: An accessor that hands it all over
-          desc: If it returns the internal data as it is, whoever receives it can modify it without going through the class
+          desc: If it returns a reference to the internal data, whoever receives it can modify it without going through the class
 
   - quiz:
       eyebrow: Quick question
-      question: Which of the four lines does not compile?
+      question: Which of these lines does not compile?
       filename: access.cpp
       lang: cpp
       source: |
@@ -245,12 +245,12 @@ slides:
       options:
         - 'The last one, because length is private'
         - 'The first one, because new is missing'
-        - 'The third one, because getWidth modifies nothing'
-        - 'None of them, all four are valid from outside'
+        - 'The getWidth one, because it modifies nothing'
+        - 'None of them, all are valid from outside'
 
   - trace:
       eyebrow: Answer
-      title: Three go through the interface and one goes round it
+      title: Three go through the interface and one goes around it
       headers: ["Line", "What it touches", "Level", "Compiles"]
       rows:
         - ["r.area()", "Member function", "public", "Yes"]
@@ -262,10 +262,10 @@ slides:
   - lab:
       eyebrow: Lab
       title: A Student class, in pairs
-      brief: Write a Student class with a name and three marks as private members, a constructor that takes them, accessors for the name and the average, and a member function that returns the average plus its rounding.
+      brief: Write a Student class with a name and three grades as private members, a constructor that takes them, accessors for the name and the average, and a member function that returns the rounded average.
       blocks:
         - label: Constraint
-          text: No if and no loops, which arrive next week. Constructors that assign and accessors that return.
+          text: No if and no loops, which arrive in weeks 7 and 8. Constructors that assign and accessors that return.
         - label: Deliverable
           text: A .cpp with the class, and a main that makes two different objects and asks each for its average
         - label: Criterion
@@ -276,9 +276,9 @@ slides:
       title: Three ideas to take away
       items:
         - title: A class is a type of your own
-          desc: Under the same rules as int, except that you write the behaviour yourself
+          desc: Under the same rules as int, except that you write the behavior yourself
         - title: The constructor runs on its own
-          desc: It executes when the object is declared, which is why there is never a half-built object
+          desc: It executes when the object is declared, so no object exists without going through it
         - title: The compiler enforces private
           desc: It is not an agreement between programmers, it is error C2248 before the program runs
 
@@ -292,7 +292,7 @@ slides:
         - [Weight, Exercises are averaged into one point of the term grade]
       rubric:
         - ["Encapsulation", "Required", "No data member is public"]
-        - ["Constructor", "Required", "It leaves the object complete, with no uninitialised members"]
+        - ["Constructor", "Required", "It leaves the object complete, with no uninitialized members"]
         - ["Interface", "Required", "main computes nothing, it only asks"]
 
   - closing:

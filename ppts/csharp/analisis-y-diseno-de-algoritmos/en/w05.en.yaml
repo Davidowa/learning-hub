@@ -38,7 +38,7 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Classify the kinds of statement
-          sub: Declaration, assignment, input and output, selection, repetition and jump
+          sub: Declaration, assignment, input and output, selection, repetition, invocation and jump
         - head: Write output somebody can read
           sub: With a label, a unit and a fixed number of decimals, not bare figures
         - head: Read a value from the keyboard
@@ -46,7 +46,7 @@ slides:
         - head: Choose a converter on purpose
           sub: Convert.ToInt32, int.Parse and int.TryParse do not fail the same way
         - head: Check a reading before using it
-          sub: The bool first, the value second, and never the other way round
+          sub: The bool first, the value second, and never the other way around
 
   - roadmap:
       eyebrow: Course map
@@ -100,7 +100,7 @@ slides:
 
   - code_output:
       eyebrow: Block 01 · Measured
-      title: The compiler enumerates the legal statements itself
+      title: The compiler itself enumerates which expressions count as a statement
       filename: Program.cs
       lang: csharp
       output_label: On build
@@ -122,7 +122,7 @@ slides:
       title: The seven kinds of statement in this course
       headers: [Kind, Example, Where you meet it]
       rows:
-        - ["declaration", "int rpm;", "Today, in this block"]
+        - ["declaration", "int rpm;", "Week 4"]
         - ["assignment", "rpm = 1502;   rpm += 33;", "Week 4"]
         - ["input and output", "ReadLine   WriteLine", "Today, blocks 02 and 03"]
         - ["selection", "if   else if   switch", "Weeks 6 and 7"]
@@ -226,8 +226,8 @@ slides:
       rows:
         - ["{3.14159:F2}", "Two fixed decimals", "3.14", "3,14"]
         - ["{3.14159,10:F3}", "Ten columns, right aligned", "[     3.142]", "[     3,142]"]
-        - ["{148230:N0}", "Cycles to first inspection", "148,230", "148.230"]
-        - ["{0.0342:P1}", "The out-of-band fraction", "3.4%", "3,4 %"]
+        - ["{148230:N0}", "Thousands separator, no decimals", "148,230", "148.230"]
+        - ["{0.0342:P1}", "Percent with one decimal", "3.4%", "3,4 %"]
 
   - trace:
       eyebrow: Block 02 · Trace
@@ -237,7 +237,7 @@ slides:
         - ['"5" + 3', 'It glues the 3 to the text', "53"]
         - ['3 + "5"', 'It glues the text to the 3', "35"]
         - ['"5" + 1 + 2', 'It glues the 1, then the 2', "512"]
-        - ['"5" + (1 + 2)', 'The bracket adds first', "53"]
+        - ['"5" + (1 + 2)', 'The parentheses add first', "53"]
         - ['1 + 2 + "5" + 1 + 2', 'Add, glue, glue, glue', "3512"]
       verdict: >-
         It reads left to right. Up to the first piece of text it adds, and from there on
@@ -272,8 +272,9 @@ slides:
       note: >-
         Interpolation does not abolish the trap, it makes the boundary visible. The
         second line on the right glues the two numbers again, and now you can see why.
-        The same run gives two more facts, concatenating a null yields the empty string
-        instead of blowing up, and a doubled brace is how a literal brace is written.
+        There are two more facts the slide does not show, concatenating a null yields
+        the empty string instead of blowing up, and a doubled brace is how a literal
+        brace is written.
 
   - code_output:
       eyebrow: Block 02 · Measured
@@ -364,7 +365,7 @@ slides:
 
   - table:
       eyebrow: Block 03 · Measured
-      title: One bad reading, three different behaviours
+      title: One bad reading, three different behaviors
       headers: [Input, Convert.ToInt32, int.Parse, int.TryParse]
       rows:
         - ['"abc"', "FormatException", "FormatException", "False and 0"]
@@ -451,13 +452,13 @@ slides:
       brief: >-
         Write out by hand the pseudocode for the front end that reads the station tag,
         the channel, the sample count and one raw reading, then prints the header with a
-        unit and fixed decimals. Before running anything, write into esperado.txt the
+        unit and fixed decimals. Before running anything, write into expected.txt the
         output you predict for two inputs, one valid and one not.
       blocks:
         - label: Deliverable
-          text: The pseudocode on paper, plus esperado.txt and real.txt
+          text: The pseudocode on paper, plus expected.txt and real.txt
         - label: The test
-          text: diff --strip-trailing-cr esperado.txt real.txt has to return 0
+          text: diff --strip-trailing-cr expected.txt real.txt has to return 0
         - label: Constraint
           text: No conversion without first checking the bool it returns
 
@@ -476,8 +477,8 @@ slides:
       eyebrow: Homework
       title: Submission and grading criteria
       brief: >-
-        Submit the data-entry front end with its three prompts, its three checked
-        conversions and the formatted header, together with esperado.txt, real.txt and
+        Submit the data-entry front end with its four prompts, its three checked
+        conversions and the formatted header, together with expected.txt, real.txt and
         the output of the diff pasted exactly as it came out.
       meta:
         - [Due, Before week 6]
@@ -486,7 +487,7 @@ slides:
       rubric:
         - ["Reading", "40 %", "Every conversion checks the bool before using the value"]
         - ["Output", "40 %", "Label, unit and fixed decimals on every line"]
-        - ["Prediction", "20 %", "esperado.txt written before running, and the diff pasted"]
+        - ["Prediction", "20 %", "expected.txt written before running, and the diff pasted"]
 
   - closing:
       title: Questions

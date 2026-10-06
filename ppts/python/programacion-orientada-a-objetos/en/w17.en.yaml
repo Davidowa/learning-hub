@@ -12,7 +12,7 @@ slides:
       kicker: School of Engineering · 2026
       unit: Week 17 · Final assessment
       title: Object-Oriented Programming
-      subtitle: The closing session. What the final exam covers, where each topic was practised, and the four costliest mistakes so far.
+      subtitle: The closing session. What the final exam covers, where each topic was practiced, and the four costliest mistakes so far.
       meta:
         - [Instructor, David Escobar-Castillejos]
         - [Code, COM102 · Term 2]
@@ -25,7 +25,7 @@ slides:
         - title: Scope
           desc: The seven units and what gets asked about each
         - title: Review
-          desc: The mistakes that cost the most marks, with their fixes
+          desc: The mistakes that cost the most points, with their fixes
         - title: Rules
           desc: Format, permitted materials and how it is submitted
         - title: Closing
@@ -36,12 +36,12 @@ slides:
       title: By the end of this session you will be able to…
       items:
         - head: Locate every exam topic
-          sub: Knowing which session covered it and which lab practised it
-        - head: Recognise the frequent mistakes
+          sub: Knowing which session covered it and which lab practiced it
+        - head: Recognize the frequent mistakes
           sub: The four that turned up in most submissions across both midterms
         - head: Prepare with a method
-          sub: Practising at the keyboard rather than rereading slides
-        - head: Sit the exam with no format doubts
+          sub: Practicing at the keyboard rather than rereading slides
+        - head: Take the exam with no format doubts
           sub: With the submission rules and permitted materials already settled
 
   - roadmap:
@@ -73,7 +73,7 @@ slides:
 
   - tiers:
       eyebrow: Syllabus
-      title: The four halves of the course, in order
+      title: The four parts of the course, in order
       items:
         - key: T1
           title: Paradigm and building blocks
@@ -90,7 +90,7 @@ slides:
 
   - table:
       eyebrow: Where to review
-      title: Every topic, with the session and the lab that practised it
+      title: The key topics, with the session and the lab that practiced them
       headers: ["Topic", "Sessions", "Reference lab"]
       rows:
         - ["Classes and access", "3 and 4", "The bank account from session 4"]
@@ -107,17 +107,17 @@ slides:
 
   - pitfalls:
       eyebrow: Diagnosis
-      title: The four that cost the most marks
+      title: The four that cost the most points
       items:
         - label: First midterm
           title: Child constructor without super
           desc: The object is born without the parent's attributes and breaks on the first line using one
         - label: First midterm
           title: Attribute declared outside __init__
-          desc: It sticks to the class and every object shares the same list or the same counter
+          desc: It sticks to the class and every object shares the same list or the same dictionary
         - label: Second midterm
           title: A file opened without with
-          desc: The writes never reach disk when something fails between the open and the close
+          desc: The writes may never reach disk if something fails between the open and the close
         - label: Second midterm
           title: An except with no type
           desc: It catches the unexpected, hides the real error, and leaves the submission undebuggable
@@ -146,12 +146,12 @@ slides:
 
   - trace:
       eyebrow: Answer
-      title: AttributeError, and it is the error of the semester
+      title: AttributeError, and it is the number one error of the semester
       headers: ["Step", "Statement", "c.name", "c.items"]
       rows:
         - ["1", "Child()", "–", "–"]
         - ["2", "Child.__init__ runs", "x", "does not exist"]
-        - ["3", "Base.__init__", "never called", "does not exist"]
+        - ["3", "Base.__init__ never called", "x", "does not exist"]
         - ["4", "len(c.items)", "x", "AttributeError"]
       verdict: Defining __init__ in the child replaces the parent's. The missing line is super().__init__(), and without it the Base constructor never runs at all.
 
@@ -160,7 +160,7 @@ slides:
       title: This exam is studied by typing
       statement: No question asks for a definition. Every one asks for code that runs, so the only preparation that helps is solving the labs again without looking at the solution.
       points:
-        - label: What to practise
+        - label: What to practice
           text: One lab per unit, solved from scratch and without opening the solution file
         - label: What to review
           text: The diagnosis slides. The four errors on each one are the errors on the exam.
@@ -179,7 +179,7 @@ slides:
           desc: The course repository and the official Python documentation, open
         - key: '03'
           title: No outside help
-          desc: No people and no assistants. The University Honour Code applies.
+          desc: No people and no assistants. The University Honor Code applies.
         - key: '04'
           title: Submission
           desc: Through Blackboard, within the exam window. Email submissions are not accepted.
@@ -197,14 +197,14 @@ slides:
 
   - homework:
       eyebrow: Final exam
-      title: Sitting and grading criteria
-      brief: Final integrating exam across all seven units of the course. One question can touch modelling, files and persistence at the same time.
+      title: Taking the exam and grading criteria
+      brief: Final integrating exam across all seven units of the course. One question can touch modeling, files and persistence at the same time.
       meta:
         - [When, Week 17]
         - [Format, Blackboard · one .py per question]
         - [Weight, 20 % of the final grade]
       rubric:
-        - ["Modelling", "30 %", "The classes match the brief and respect the access levels"]
+        - ["Modeling", "30 %", "The classes match the brief and respect the access levels"]
         - ["Application", "35 %", "Collections, files and errors used where the brief asks for them"]
         - ["Robustness", "20 %", "Foreseeable errors are caught by type and with a message that helps"]
         - ["Execution", "15 %", "Every file runs and produces the output the brief asks for"]

@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Escuela de Empresariales · 2026
+      kicker: Facultad de Empresariales · 2026
       unit: Semana 15 · Unidades 4 y 5 · Reportes y R1C1
       title: Análisis y Procesamiento de la Información
       subtitle: Las funciones de la hoja se pueden llamar desde una macro. Pero no todas, y no todas se portan igual.
@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de la sesión
-      title: Al terminar la sesión vas a poder…
+      title: Al terminar la sesión el alumno podrá…
       items:
         - head: Llamar funciones de la hoja
           sub: Con WorksheetFunction, y saber cuáles no están ahí porque ya son de VBA
@@ -46,15 +46,15 @@ slides:
 
   - roadmap:
       eyebrow: Mapa del curso
-      title: Dónde vamos en el semestre
+      title: Dónde estamos en el semestre
       phases:
         - label: 01 · Semanas 1–5
-          title: Programar en VBA
+          title: Programación en VBA
           desc: Editor, tipos, variables, operaciones y formularios de captura
           state: done
         - label: 02 · Semanas 6–7
-          title: Editar macros grabadas
-          desc: Rangos variables, buscar objetivo y automatización acotada
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
           state: done
         - label: 03 · Semanas 8–12
           title: Decisiones, ciclos y eventos
@@ -75,7 +75,7 @@ slides:
       eyebrow: Concepto clave
       title: Hay funciones que solo viven de un lado
       lead: >-
-        Left, Mid y Replace son de VBA y no aparecen en WorksheetFunction. BuscarV, SumarSi
+        Left, Mid y Len son de VBA y no aparecen en WorksheetFunction. BuscarV, Sumar.Si.Conjunto
         y Contar.Si son de la hoja y no existen sueltas en VBA. Y unas cuantas, como Trim,
         están de los dos lados haciendo cosas distintas, que fue lo de la semana 13.
       panel:
@@ -92,7 +92,7 @@ slides:
 
   - code_output:
       eyebrow: Medido
-      title: Las tres formas de pedir la misma función
+      title: Tres llamadas y lo que contesta cada una
       filename: Modulo1
       lang: vba
       output_label: Salida
@@ -103,13 +103,13 @@ slides:
 
         WorksheetFunction.Trim("a    b")
       output: |
-        Error 438
-        Object doesn't support this
-        property or method
+        Compile error:
+        Method or data member
+        not found
 
         Hola
 
-        [a b]
+        a b
 
   - code_output:
       eyebrow: Medido
@@ -118,7 +118,7 @@ slides:
       lang: vba
       output_label: Buscando "Zoe"
       source: |
-        ' catalogo: Ana 100, Beto 200, Carla 300
+        ' catálogo: Ana 100, Beto 200, Carla 300
 
         WorksheetFunction.VLookup("Zoe", cat, 2, False)
 
@@ -147,7 +147,7 @@ slides:
                         Range("Catalogo"), 2, False)
 
                 If IsError(v) Then
-                    Cells(i, 2).Value = "sin catalogo"
+                    Cells(i, 2).Value = "sin catálogo"
                 Else
                     Cells(i, 2).Value = v
                 End If
@@ -187,7 +187,7 @@ slides:
         al escribirlas
           C1 = 30      D1 = 30
 
-        despues de A1 = 100
+        después de A1 = 100
           C1 = 120     D1 = 30
 
   - concept:
@@ -289,7 +289,7 @@ slides:
         - ["RC[-1]", "Una columna a la izquierda", "Relativa, como B6"]
         - ["R[-1]C", "Un renglón arriba", "Relativa, como C5"]
         - ["R1C1", "Renglón 1, columna 1", "Absoluta, $A$1"]
-        - ["RC", "La celda misma", "Se usa poco, casi nunca"]
+        - ["RC", "La celda misma", "C6: referencia circular"]
 
   - code:
       eyebrow: La gráfica
@@ -329,11 +329,11 @@ slides:
         Debug.Print ch.Chart.SeriesCollection.Count
         Debug.Print ch.Chart.SeriesCollection(1).Formula
       output: |
-        graficas = 1    series = 1
+        gráficas = 1    series = 1
 
-        =SERIES(Sheet1!$B$1,
-          Sheet1!$A$2:$A$3,
-          Sheet1!$B$2:$B$3, 1)
+        =SERIES(Datos!$B$1,
+          Datos!$A$2:$A$3,
+          Datos!$B$2:$B$3,1)
 
   - concept:
       eyebrow: Lo que revela esa fórmula
@@ -382,8 +382,8 @@ slides:
         - ["4", "Lo escrito se queda escrito", "36 de 499, sin aviso"]
       verdict: >-
         WorksheetFunction lanza el error; Application devuelve #N/A como valor. Con
-        Application y un IsError, la fila 38 se marca como sin catálogo y las otras 462 se
-        escriben igual.
+        Application y un IsError, la fila 38 se marca como sin catálogo y las 462 que siguen
+        se escriben igual.
 
   - pitfalls:
       eyebrow: Diagnóstico

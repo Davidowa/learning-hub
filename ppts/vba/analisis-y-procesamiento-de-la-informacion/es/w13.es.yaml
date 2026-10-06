@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Escuela de Empresariales · 2026
+      kicker: Facultad de Empresariales · 2026
       unit: Semana 13 · Unidad 4 · Limpiar y ordenar
       title: Análisis y Procesamiento de la Información
       subtitle: Los datos llegan sucios. Limpiarlos a mano no escala, y ordenarlos mal despareja las filas sin que nada te avise.
@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de la sesión
-      title: Al terminar la sesión vas a poder…
+      title: Al terminar la sesión el alumno podrá…
       items:
         - head: Limpiar texto desde una macro
           sub: Espacios de sobra, espacios duros y mayúsculas, recorriendo el rango completo
@@ -46,15 +46,15 @@ slides:
 
   - roadmap:
       eyebrow: Mapa del curso
-      title: Dónde vamos en el semestre
+      title: Dónde estamos en el semestre
       phases:
         - label: 01 · Semanas 1–5
-          title: Programar en VBA
+          title: Programación en VBA
           desc: Editor, tipos, variables, operaciones y formularios de captura
           state: done
         - label: 02 · Semanas 6–7
-          title: Editar macros grabadas
-          desc: Rangos variables, buscar objetivo y automatización acotada
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
           state: done
         - label: 03 · Semanas 8–12
           title: Decisiones, ciclos y eventos
@@ -101,9 +101,9 @@ slides:
         Debug.Print Trim("Ana    Lopez")
         Debug.Print WorksheetFunction.Trim("Ana    Lopez")
       output: |
-        [Ana Lopez]
-        [Ana    Lopez]
-        [Ana Lopez]
+        Ana Lopez
+        Ana    Lopez
+        Ana Lopez
 
   - code_output:
       eyebrow: Medido
@@ -119,10 +119,9 @@ slides:
 
         s = Replace(s, Chr(160), " ")
         Debug.Print Trim(s) = "Ana"
-      output: |
-        4    4
+      output: |2
+         4             4
         False
-
         True
 
   - code:
@@ -168,7 +167,7 @@ slides:
       title: Al quitar duplicados, gana la primera
       filename: Modulo1
       lang: vba
-      output_label: Antes y después
+      output_label: Filas 2 a 4 después
       source: |
         ' A: Depto     B: Nombre
         ' Ventas       primero
@@ -180,7 +179,7 @@ slides:
       output: |
         Ventas    primero
         Compras   segundo
-        (fila vacia)
+        (fila vacía)
 
   - quiz:
       eyebrow: Pregunta rápida
@@ -220,15 +219,17 @@ slides:
       output_label: Con vacías en 2 y 3
       source: |
         For i = 1 To 4
-            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+            If WorksheetFunction.CountA(Rows(i)) = 0 Then _
+                Rows(i).Delete
         Next i
 
         For i = 4 To 1 Step -1
-            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+            If WorksheetFunction.CountA(Rows(i)) = 0 Then _
+                Rows(i).Delete
         Next i
       output: |
         hacia adelante:  a  .  d
-        hacia atras:     a  d
+        hacia atrás:     a  d
 
   - divider:
       eyebrow: Bloque 02
@@ -304,7 +305,7 @@ slides:
       eyebrow: El más caro de la sesión
       title: Los sueldos se ordenaron y los nombres se quedaron quietos
       lead: >-
-        Ana ganaba 15000 y ahora aparece con 12000, que era el de Darío. Ninguna celda está
+        Ana ganaba 15000 y ahora aparece con 12000, que era el de Dario. Ninguna celda está
         vacía, ningún dato se perdió y no salió ningún error. Simplemente todos los
         renglones dicen algo falso, y el archivo se ve perfectamente normal.
       panel:
@@ -331,7 +332,7 @@ slides:
           desc: El encabezado se ordena con los datos y termina en medio de la base
         - label: Error 03
           title: Columns de RemoveDuplicates
-          desc: Cuenta dentro del rango, no en la hoja. Si te equivocas, no quita nada y no avisa.
+          desc: Cuenta dentro del rango, no en la hoja. Si te equivocas, compara otra columna y no avisa.
         - label: Error 04
           title: Borrar filas de arriba hacia abajo
           desc: Al borrar una, la de abajo sube y el ciclo ya pasó de largo por ese renglón
@@ -347,9 +348,9 @@ slides:
       title: De la semana 8 para acá
       headers: [Semanas, Tema, Qué se evalúa]
       rows:
-        - ["8", "Decisiones", "If y operadores de comparación"]
+        - ["8", "Decisiones", "If, comparación y lógicos"]
         - ["9", "Ciclos", "For, For Each y recorrido de rangos"]
-        - ["10", "Modularidad", "Procedimientos y funciones"]
+        - ["10", "Modularidad", "Procedimientos, funciones y parámetros"]
         - ["11 y 12", "Eventos y clases", "Change, Open, BeforeSave y clases"]
         - ["13", "Unidad 4", "Limpieza y ordenación desde macros"]
         - ["Peso", "Semana 13", "20 % de la calificación final"]

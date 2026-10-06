@@ -76,8 +76,8 @@ slides:
       title: Qué es una clase
       lead: >-
         Una plantilla que describe qué recuerda un objeto y qué sabe hacer. La clase se
-        escribe una sola vez y no ocupa memoria por sí misma. Cada objeto que sale de ella
-        sí la ocupa, con su propia copia de los datos.
+        escribe una sola vez y existe una sola vez en memoria. Cada objeto que sale de ella
+        ocupa la suya, con su propia copia de los datos.
       panel:
         label: Tres piezas obligatorias
         title: Un nombre, sus atributos y sus métodos
@@ -96,7 +96,7 @@ slides:
       blocks:
         - label: Plano
           title: Clase
-          desc: Define los atributos y los métodos. No guarda valores.
+          desc: Define los atributos y los métodos. No guarda los datos de cada objeto.
         - label: Fábrica
           title: __init__
           desc: Recibe lo indispensable y deja el objeto listo para usarse
@@ -136,7 +136,7 @@ slides:
         - label: Línea 2
           text: El constructor corre solo, en el momento en que escribes Punto(1, 2)
         - label: Línea 6
-          text: self es el objeto sobre el que se llamó el método, no un parámetro que tú pases
+          text: self es el objeto sobre el que se llamó el método, no un argumento que tú pases
         - label: Riesgo
           text: Si olvidas self en la definición, Python reclama un argumento de más al llamar
           accent: true
@@ -187,7 +187,7 @@ slides:
       annotations:
         - label: Línea 3
           text: Los dos guiones bajos le dicen a Python que renombre el atributo por dentro
-        - label: Línea 10
+        - label: Línea 11
           text: La edad cambia con los años, así que se deja pública a propósito
         - label: Si intentas p.__nombre
           text: AttributeError. El atributo existe, pero con otro nombre fuera de la clase
@@ -218,7 +218,6 @@ slides:
           text: El área nunca queda desincronizada, porque se calcula en el momento de leerla
         - label: Cuándo no usarla
           text: Si el cálculo es caro, escóndelo detrás de un método normal para que se note
-          accent: true
 
   - table:
       eyebrow: Vocabulario
@@ -240,10 +239,10 @@ slides:
           desc: 'TypeError, takes 0 positional arguments but 1 was given. El objeto se pasa solo.'
         - label: Error 02
           title: Declarar el atributo fuera de __init__
-          desc: Queda pegado a la clase y todos los objetos comparten la misma lista o el mismo contador
+          desc: Queda pegado a la clase y todos los objetos comparten la misma lista
         - label: Error 03
           title: Llamar al método sin paréntesis
-          desc: 'p.dibujar imprime la referencia al método. p.dibujar() lo ejecuta.'
+          desc: 'p.dibujar es solo la referencia al método. p.dibujar() lo ejecuta.'
         - label: Error 04
           title: Constructor que hace demasiado
           desc: Si __init__ abre archivos o consulta la red, el objeto falla antes de existir
@@ -272,7 +271,7 @@ slides:
         - '0, porque b nunca agregó nada'
         - '1, porque la lista vive en la clase'
         - 'Error, productos no está definido en __init__'
-        - '2, porque cada carrito duplica la lista'
+        - '2, porque se crearon dos carritos'
 
   - trace:
       eyebrow: Respuesta
@@ -338,7 +337,7 @@ slides:
       statement: Explica tu código en voz alta, línea por línea, a alguien que no puede ayudarte.
       points:
         - label: Por qué funciona
-          text: Verbalizar obliga a revisar las suposiciones que al leer se saltan sin darte cuenta
+          text: Verbalizar obliga a revisar las suposiciones que al leer te saltas sin darte cuenta
         - label: Cuándo usarlo
           text: Cuando llevas más de diez minutos sin una hipótesis nueva sobre el error
         - label: Con qué

@@ -44,8 +44,8 @@ slides:
         - head: Protect a value with const
           sub: A setpoint that must not move is guarded by the compiler, not by a comment
         - head: Apply precedence and associativity
-          sub: And put the bracket in before the machine answers a different question
-        - head: Recognise where arithmetic lies
+          sub: And put the parentheses in before the machine answers a different question
+        - head: Recognize where arithmetic lies
           sub: Integer division, floating point, overflow and rounding
 
   - roadmap:
@@ -111,7 +111,7 @@ slides:
         - label: Quotes
           text: Single quotes for one character, double quotes for text. They are not interchangeable.
         - label: Risk
-          text: Writing 1496 with no decimal point makes it an int, and every division after that truncates without a word.
+          text: Writing 1496 with no decimal point gives an int, and 1496 / 7 truncates to 213 without a word.
           accent: true
 
   - code_output:
@@ -253,7 +253,7 @@ slides:
           // Cannot implicitly convert
           // type 'int' to 'char'
       after:
-        label: The two that do
+        label: The one that does, and the cast
         file: Program.cs
         lang: csharp
         code: |
@@ -272,7 +272,7 @@ slides:
       eyebrow: Block 03
       title: Precedence, shortcuts and where arithmetic lies
       lede: >-
-        Every line in this block compiles with zero warnings. That is exactly the
+        Almost every line in this block compiles with zero warnings. That is exactly the
         problem.
       block: 3
 
@@ -282,7 +282,7 @@ slides:
       headers: [Expression, What wins, Result]
       rows:
         - ["2 + 3 * 4", "The product before the sum", "14"]
-        - ["(2 + 3) * 4", "The bracket goes first", "20"]
+        - ["(2 + 3) * 4", "The parentheses go first", "20"]
         - ["10 + 7 % 3", "Remainder binds like the product", "11"]
         - ["true || false && false", "&& binds tighter than ||", "True"]
         - ["100 - 20 - 5", "Grouped from left to right", "75"]
@@ -290,7 +290,7 @@ slides:
 
   - code_output:
       eyebrow: Block 03 · Measured
-      title: The midpoint of the band, with and without brackets
+      title: The midpoint of the band, with and without parentheses
       filename: Program.cs
       lang: csharp
       output_label: On running
@@ -310,7 +310,7 @@ slides:
   - trace:
       eyebrow: Block 03 · Trace
       title: The suffix answers with the old value
-      headers: [With i at 5, What it prints, Where i ends]
+      headers: [With i and j at 5, What it prints, Where it ends up]
       rows:
         - ["Console.WriteLine(i++)", "5", "i is now 6"]
         - ["Console.WriteLine(++i)", "7", "i is now 7"]
@@ -395,7 +395,7 @@ slides:
       note: >-
         What decides it is whether the compiler could see the value. Real code keeps the
         count in a variable, which is exactly the case the compiler cannot protect, and
-        week 9 cashes this slide with an endurance-rig counter.
+        week 9 cashes in on it with an endurance-rig counter.
 
   - table:
       eyebrow: Block 03 · Measured
@@ -409,7 +409,7 @@ slides:
 
   - code_output:
       eyebrow: Block 03 · Measured
-      title: Every midpoint goes to the even neighbour
+      title: Every midpoint goes to the even neighbor
       filename: Program.cs
       lang: csharp
       output_label: On running
@@ -450,17 +450,17 @@ slides:
       items:
         - title: The type is settled once
           desc: Reassigning changes the value and never the type, and const blocks even the change of value
-        - title: A bracket costs nothing
+        - title: Parentheses cost nothing
           desc: a + b / 2 over the 1480–1520 band prints 2240, a number no tachometer will ever read
         - title: Rounding is a decision
-          desc: A hundred readings landing on an exact half total 5000 half-to-even and 5050 half-away-from-zero
+          desc: The hundred exact halves from 0.5 to 99.5 total 5000 half-to-even and 5050 half-away-from-zero
 
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria
       brief: >-
         Write the identity card for one sensor on the bench using all five types and one
-        constant, and add the precedence trap written twice, with brackets and without,
+        constant, and add the precedence trap written twice, with parentheses and without,
         quoting both outputs exactly as they came out.
       meta:
         - [Due, Before week 5]

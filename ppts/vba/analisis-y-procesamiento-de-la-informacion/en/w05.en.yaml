@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 05 · Unit 1 · Data entry and messages
       title: Information Analysis and Processing
       subtitle: How you ask the user for a value, how you answer back, and why everything they type has to be checked.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 5 of 17]
 
   - agenda:
@@ -36,7 +36,7 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Show a message with buttons and an icon
-          sub: MsgBox with all three arguments, and which constant fits each case
+          sub: MsgBox with its first three arguments, and which constant fits each case
         - head: Read the user's answer
           sub: MsgBox returns a number, and that number decides what the macro does
         - head: Capture a value with InputBox
@@ -74,7 +74,7 @@ slides:
       block: 1
 
   - code:
-      eyebrow: Block 01 · All three arguments
+      eyebrow: Block 01 · The first three arguments
       title: The whole MsgBox, not just the text
       filename: Messages.bas
       lang: vba
@@ -135,7 +135,7 @@ slides:
         - label: The sum
           text: vbYesNo plus vbQuestion is 4 plus 32. They add because each one occupies different bits.
         - label: Risk
-          text: Compare against the button text instead of the constant and the If never fires, so nothing gets cleared.
+          text: Compare against the button text instead of the constant and it stops with error 13, so nothing gets cleared.
           accent: true
 
   - divider:
@@ -164,7 +164,7 @@ slides:
         - label: The two arguments
           text: The prompt and the window title. The title is optional and always worth adding.
         - label: CDbl
-          text: Converts the text to a decimal. Without it you would be storing the string, not the number.
+          text: Converts the text to a decimal. Without it, VBA still converts when storing into the Double, but nothing in the code shows it.
         - label: When they cancel
           text: InputBox returns an empty string, and CDbl of an empty string stops with error 13.
         - label: Risk
@@ -179,9 +179,9 @@ slides:
         - ["5.5", "True", "5.5"]
         - ["1,000", "True", "1000"]
         - ["1e3", "True", "1000"]
-        - ["$5", "False", "error 13"]
+        - ["$5", "True", "5"]
         - ["5a", "False", "error 13"]
-        - ["nothing, cancelled", "False", "error 13"]
+        - ["nothing, canceled", "False", "error 13"]
 
   - code:
       eyebrow: Block 02 · Validate before converting
@@ -207,29 +207,29 @@ slides:
         - label: The flag
           text: valid starts False and only turns True once the value has passed the check.
         - label: The order
-          text: Check first, convert second. Never the other way round, because converting is what breaks.
+          text: Check first, convert second. Never the other way around, because converting is what breaks.
         - label: What is redundant
           text: The original module adds And text <> "". Verified redundant, IsNumeric of empty already gives False.
         - label: Risk
-          text: If the user cancels, the loop asks again forever. Week 8 gives it a way out.
+          text: If the user cancels, the loop asks again forever. A way out takes one more If.
           accent: true
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four ways for data entry to break
+      title: Four ways for data entry to go wrong
       items:
         - label: Error 01
           title: And does not short-circuit
           desc: "In VBA both sides always evaluate. IsNumeric(t) And CDbl(t) > 0 breaks on text, even though the first half already said False."
         - label: Error 02
           title: Converting before checking
-          desc: CDbl of whatever they typed stops with error 13. Check with IsNumeric first.
+          desc: CDbl of whatever they typed can stop with error 13. Check with IsNumeric first.
         - label: Error 03
           title: Forgetting the Cancel button
           desc: Cancel returns an empty string, exactly like clicking OK on an empty box. Both cases need handling.
         - label: Error 04
           title: Accepting the currency symbol
-          desc: "IsNumeric of $5 is False, but of 1,000 it is True. The comma gets through and the symbol does not."
+          desc: "IsNumeric of $5 is True with US regional settings and False with UK ones. Test the macro on the computer it will run on."
 
   - divider:
       eyebrow: Block 03
@@ -244,7 +244,7 @@ slides:
         With one value, InputBox is more than enough. With six, the user answers blind,
         cannot go back and fix the second one while sitting on the fifth, and loses
         everything typed so far if they cancel one. A form puts all six fields together,
-        lets any of them be corrected before accepting, and validates the lot at once.
+        lets any of them be corrected before accepting, and validates them all at once.
       panel:
         label: The rule of thumb
         title: More than two values in a row asks for a form
@@ -289,6 +289,7 @@ slides:
                 txtAmount.SetFocus
                 Exit Sub
             End If
+            ' The same If for txtRate goes here
 
             Range("LoanAmount").Value = CDbl(txtAmount.Value)
             Range("AnnualRate").Value = CDbl(txtRate.Value)
@@ -324,8 +325,8 @@ slides:
 
   - lab:
       eyebrow: Lab
-      title: A payroll screen that refuses rubbish
-      brief: Build a form with four fields from a payroll slip in your own area, for instance the employee number, days worked, daily wage and bonus percentage. On accept, validate all four and write them into named cells.
+      title: A payroll screen that refuses garbage
+      brief: Build a form with four fields from a pay stub in your own area, for instance the employee number, days worked, daily wage and bonus percentage. On accept, validate all four and write them into named cells.
       blocks:
         - label: Submission
           text: The .xlsm with the form and the module exported, on Blackboard
@@ -357,7 +358,7 @@ slides:
         - [Format, Blackboard · .xlsm and .frm]
         - [Weight, Part of the 20 % for assignments]
       rubric:
-        - ["Form", "30 %", "Four fields with names of their own and a button named after what it does"]
+        - ["Form", "30 %", "Every field with a name of its own and a button named after what it does"]
         - ["Validation", "50 %", "No badly typed value reaches the sheet, and the message says which one failed"]
         - ["Writing", "20 %", "The values land in named cells with the right format"]
 

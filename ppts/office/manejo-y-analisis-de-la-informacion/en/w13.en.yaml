@@ -33,13 +33,13 @@ slides:
       title: Four moments in the session
       cards:
         - title: VLOOKUP in depth
-          desc: The dialog, its four arguments, and the two that cost marks
+          desc: The dialog, its four arguments, and the two that cost points
         - title: When VLOOKUP cannot
           desc: HLOOKUP across the top row, INDEX and MATCH when the key sits on the right
         - title: Bringing it together
           desc: Consolidate by label, and a formula that reaches into another file
         - title: Your turn
-          desc: 288 students with fees to fill in, then 2,585 hardware items
+          desc: 288 students with fees to fill in, then 2,583 hardware items
 
   - objectives:
       eyebrow: Session objectives
@@ -50,11 +50,11 @@ slides:
         - head: Choose between FALSE and TRUE
           sub: And say out loud what an empty Range_lookup does, because it is not FALSE
         - head: "Read #N/A instead of hiding it"
-          sub: The four things that produce it, and the one moment IFERROR is allowed to cover it
+          sub: What it is warning you about, and the one moment IFERROR is allowed to cover it
         - head: Reach a column VLOOKUP cannot
           sub: INDEX with MATCH nested in Row_num, in one pass through one dialog
-        - head: Summarise several ranges by label
-          sub: Data, Consolidate, with Top row and Left column ticked so it adds by name
+        - head: Summarize several ranges by label
+          sub: Data, Consolidate, with Top row and Left column checked so it adds by name
         - head: Link a formula to another file
           sub: The bracket notation, and what Edit Links can and cannot put back
 
@@ -79,7 +79,7 @@ slides:
           desc: Import, filters, tables, charts and the lookup functions
           state: now
         - label: E · Weeks 14–17
-          title: Summarising and delivery
+          title: Summarizing and delivery
           desc: PivotTables, advanced filters, what-if and printing
           state: todo
 
@@ -87,7 +87,7 @@ slides:
       eyebrow: Block 01
       title: VLOOKUP, argument by argument
       lede: >-
-        The function is four boxes. Two of them are where the marks are, and neither of
+        The function is four boxes. Two of them are where the points are, and neither of
         the two is the one everybody worries about.
       block: 1
 
@@ -108,7 +108,7 @@ slides:
       steps:
         - text: Excel reads down column one of the block
         - text: It stops on the row where the key matches
-        - text: It walks right by Col_index_num columns
+        - text: It walks right to column Col_index_num, the key column being 1
           loop: ↺ and returns whatever is sitting there, right or wrong
 
   - steps:
@@ -161,7 +161,7 @@ slides:
 
         =VLOOKUP(B2,Fees!$A$2:$B$24,2)
 
-        =VLOOKUP(B2,$F$3:$G$7,2,TRUE)
+        =VLOOKUP(E2,$F$3:$G$7,2,TRUE)
 
         =IFERROR(VLOOKUP(B2,Fees!$A$2:$B$24,2,FALSE),"Check")
       annotations:
@@ -171,8 +171,8 @@ slides:
             at #N/A.
         - label: The missing argument
           text: >-
-            Range_lookup left empty. Empty means TRUE, so an unsorted table returns a
-            neighbour's fee, silently.
+            Range_lookup left empty. Empty means TRUE, so a program that is missing
+            returns a neighbor's fee, silently.
         - label: Banded on purpose
           text: >-
             The score table holds the lower edge of each grade, so TRUE is right and the
@@ -184,8 +184,8 @@ slides:
 
   - table:
       eyebrow: Block 01 · The four boxes
-      title: What each argument is counted from
-      headers: [Argument, What you put in it, Where it is counted from]
+      title: What goes in each argument, and its rule
+      headers: [Argument, What you put in it, The rule]
       rows:
         - ["Lookup_value", "The cell holding the key", "Relative, so it fills down"]
         - ["Table_array", "Key column and all to its right", "Locked with F4"]
@@ -210,7 +210,7 @@ slides:
         - label: Error 03
           title: Range_lookup left empty
           desc: >-
-            Empty means TRUE, and TRUE over an unsorted table returns the row above the key.
+            Empty means TRUE, and TRUE over an unsorted table can return another key's row.
             The number looks plausible and nothing on screen is red.
         - label: Error 04
           title: IFERROR applied too early
@@ -236,16 +236,16 @@ slides:
         - ["Inventory 3", "Item codes run across row 3", "HLOOKUP"]
 
   - code:
-      eyebrow: Block 02 · The same cost, fetched three ways
+      eyebrow: Block 02 · One inventory, three layouts
       title: Down, across, and from the wrong side
       filename: Excer 21 (HLookup).xlsx
       lang: excel
       source: |
-        =VLOOKUP($C4,$B$4:$E$2588,4,FALSE)
+        =VLOOKUP($G5,$B$4:$E$2586,4,FALSE)
 
-        =HLOOKUP($C4,$W$3:$AJ$6,4,FALSE)
+        =HLOOKUP($X11,$W$3:$AJ$6,4,FALSE)
 
-        =INDEX($O$4:$O$2588,MATCH($C4,$M$4:$M$2588,0))
+        =INDEX($L$4:$L$2586,MATCH($Q5,$M$4:$M$2586,0))
       annotations:
         - label: Down the first column
           text: >-
@@ -258,7 +258,7 @@ slides:
         - label: The key on the right
           text: >-
             Inventory 2 puts Description first. MATCH finds the position of the code in M,
-            INDEX reads O at that position.
+            INDEX reads L, to its left, at that position.
         - label: Risk
           text: >-
             MATCH takes one row or one column. Hand it a rectangle and it answers #N/A.
@@ -290,8 +290,8 @@ slides:
       headers: [Match_type, What it finds, What the array needs]
       rows:
         - ["0", "An exact match", "Any order at all"]
-        - ["1 or empty", "Largest value under the key", "Sorted ascending"]
-        - ["-1", "Smallest value over the key", "Sorted descending"]
+        - ["1 or empty", "Largest value at or under the key", "Sorted ascending"]
+        - ["-1", "Smallest value at or over the key", "Sorted descending"]
 
   - quiz:
       eyebrow: Quick check
@@ -305,6 +305,12 @@ slides:
         - "The fee of whichever program sorts just before it"
         - "0, because Range_lookup was left empty"
         - "#REF!, because the block holds only two columns"
+      notes: >-
+        Answer: B. With no Range_lookup, VLOOKUP runs the banded match, and since Fees is in
+        alphabetical order it returns the fee of the program that sorts just before. A is
+        what FALSE would give; #N/A only appears when the program sorts before the first one
+        in the list. C mistakes the empty argument for a zero, and D miscounts: 2 sits inside
+        a two-column block.
 
   - divider:
       eyebrow: Block 03
@@ -326,7 +332,7 @@ slides:
         label: The whole point
         title: Top row and Left column make it add by name
         note: >-
-          With both ticked, Consolidate matches the labels instead of the cell positions,
+          With both checked, Consolidate matches the labels instead of the cell positions,
           so three sheets in three different orders still land in the right rows. Say this
           out loud in class; it is the feature, not a detail of it.
       steps:
@@ -350,7 +356,7 @@ slides:
           desc: Drag a source range, click Add, repeat. A wrong one comes out with Delete.
         - label: '04'
           title: Use labels in
-          desc: Tick Top row and Left column when the sheets carry headers in different orders
+          desc: Check Top row and Left column when the sheets carry headers in different orders
         - label: '05'
           title: OK, not Close
           desc: This dialog has OK and Close rather than OK and Cancel. Close leaves without consolidating.
@@ -404,7 +410,7 @@ slides:
         then the grade column from the score band table, which is the one place TRUE is the
         right answer. Then exercise 21, where inventory 2 puts Description before Item and
         inventory 3 lays the codes across row 3. Choose the function each table forces, and
-        write one line saying why the other two cannot do it.
+        write one line saying why VLOOKUP cannot handle the other two.
       blocks:
         - label: Deliverable
           text: One workbook carrying both exercises, uploaded to Blackboard
@@ -424,7 +430,7 @@ slides:
         - title: Empty is not FALSE
           desc: >-
             A missing Range_lookup means TRUE, which is a banded match over a table nobody
-            sorted. It answers with a neighbour's value and calls it a result
+            sorted. It answers with another row's value and calls it a result
         - title: VLOOKUP is one shape of the problem
           desc: >-
             INDEX with MATCH reaches a column to the left, HLOOKUP reads across a row, and
@@ -435,12 +441,12 @@ slides:
       title: Submission and grading criteria
       brief: >-
         Finish both lookup exercises and add one sheet of your own that consolidates three
-        small ranges by label, with Top row and Left column ticked, plus one formula that
+        small ranges by label, with Top row and Left column checked, plus one formula that
         links to a second workbook you also hand in.
       meta:
         - [Due, Before week 14]
         - [Format, Blackboard · two .xlsx files]
-        - [Weight, Part of the mark for assignments]
+        - [Weight, Part of the assignments grade]
       rubric:
         - ["Exercise 20", "30 %", "Fees and grades filled, F4 and FALSE visible in the bar"]
         - ["Exercise 21", "30 %", "The right function per table, with the reason written down"]

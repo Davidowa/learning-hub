@@ -42,7 +42,7 @@ slides:
         - title: Build And Run
           desc: Hasta el visor, y después leer qué recibió el dispositivo
         - title: Cuando falla
-          desc: Cuatro fallas con el texto exacto que ponen en tu pantalla
+          desc: Cuatro fallas y lo que ponen en tu pantalla
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
@@ -176,7 +176,7 @@ slides:
           desc: Habilita el grupo de features de Meta Quest bajo OpenXR.
         - label: '04'
           title: Build profile
-          desc: Meta Quest en Build Profiles, que existe de Unity 6.1 en adelante.
+          desc: Meta Quest en Build Profiles. Ese profile existe de Unity 6.1 en adelante.
         - label: '05'
           title: Build And Run
           desc: Con el visor conectado, despierto y autorizado.
@@ -267,7 +267,7 @@ slides:
         - label: Application.platform
           text: >-
             Devuelve Android en el visor y WindowsEditor en Play mode. Dos valores distintos
-            del mismo build.
+            del mismo script.
         - label: graphicsDeviceType
           text: >-
             La API que de verdad se creó, no la que está hasta arriba de la lista en Player
@@ -280,7 +280,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 03 · Medido
-      title: El mismo build, leído en dos lugares
+      title: El mismo script, leído en dos lugares
       filename: DeviceReport.cs
       lang: csharp
       output_label: Play mode, y después adb logcat
@@ -291,12 +291,15 @@ slides:
       output: |
         -- play mode --
         os    WindowsEditor
-        gfx   Direct3D11
+        gfx   Direct3D12
         edit  True
         -- en el visor --
         os    Android
         gfx   Vulkan
         edit  False
+      notes: |
+        En Unity 6.0, o en un proyecto creado antes de 6.1, Play mode reporta Direct3D11:
+        desde 6.1 los proyectos nuevos usan DirectX 12 en Windows.
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes

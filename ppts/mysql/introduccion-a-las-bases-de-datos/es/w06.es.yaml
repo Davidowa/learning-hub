@@ -96,7 +96,7 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · El script
-      title: El diagrama de la semana 4, ejecutado línea por línea
+      title: El diagrama de la semana 4, ejecutado
       filename: control_escolar.sql
       lang: sql
       source: |
@@ -125,7 +125,7 @@ slides:
         - label: UNIQUE sobre nombre
           text: >-
             La llave para unir es entera. El nombre es la llave natural y se protege
-            aparte, con su propio índice único.
+            con su propio índice único.
         - label: Riesgo
           text: >-
             El orden importa. La tabla padre se crea primero, o la llave foránea no tiene
@@ -184,7 +184,7 @@ slides:
         - ["Cuántas", "Una por tabla", "Varias por tabla"]
         - ["Nulos", "Nunca, es automático", "Los acepta si la dejas"]
         - ["Unicidad", "Obligatoria", "No, salvo en el 1:1"]
-        - ["Apunta a", "Nada, se identifica sola", "A la llave de otra tabla"]
+        - ["Apunta a", "Nada, se identifica sola", "A la llave de la tabla padre"]
         - ["Su índice", "Lo crea el servidor", "También, y sin pedirlo"]
 
   - divider:
@@ -387,13 +387,13 @@ slides:
           title: Indexar la foránea a mano
           desc: >-
             El servidor ya escribió ese índice al declarar la llave. La regla heredada de
-            buenas prácticas era tarea del programador en 2010, no hoy.
+            buenas prácticas viene de motores que no lo crean solos.
 
   - lab:
       eyebrow: Laboratorio
       title: El script del control escolar, corriendo desde vacío
       brief: >-
-        Escribe tu diagrama de la semana 4 como un script que crea las cinco tablas desde
+        Escribe tu diagrama de la semana 4 como un script que crea todas sus tablas desde
         una base vacía, con sus llaves y sus restricciones. Después atácalo cuatro veces:
         una calificación de 11, una inscripción de un alumno que no existe, una segunda
         jefatura del mismo departamento y una matrícula repetida.
@@ -402,8 +402,8 @@ slides:
           text: El script y los cuatro rechazos con su número de error, pegados tal cual
         - label: Restricción
           text: >-
-            El script corre dos veces seguidas sin editarlo. El orden de creación es parte
-            de la entrega.
+            El script corre completo sobre una base vacía, sin editarlo. El orden de
+            creación es parte de la entrega.
         - label: La prueba
           text: >-
             Si un ataque pasa, falta una restricción. Escríbela en el script, no en la
@@ -416,11 +416,12 @@ slides:
         - title: Cada línea tiene una forma física
           desc: >-
             1:N es una llave foránea, 1:1 es llave foránea más UNIQUE y N:M es una tabla
-            cuya llave es el par. Ninguna fuente del curso lo dice, y hoy quedó escrito
+            cuya llave es el par. Ninguna fuente del curso lo dice, y hoy quedó ejecutado
         - title: La restricción es la regla de negocio
           desc: >-
             Escrita en el servidor sobrevive al cambio de lenguaje, de aplicación y de
-            programador. Y es lo único del curso que aguanta a dos personas trabajando
+            programador. Y es la única integridad del curso que aguanta a dos personas
+            trabajando
         - title: El diagrama promete de más
           desc: >-
             La cardinalidad mínima no tiene sentencia, y el argumento del dominio solo
@@ -438,7 +439,7 @@ slides:
         - [Formato, Blackboard · script .sql y PDF de salidas]
         - [Peso, Parte del 20 % de tareas]
       rubric:
-        - ["El script", "40 %", "Corre desde vacío, dos veces seguidas"]
+        - ["El script", "40 %", "Corre desde vacío, completo y sin editarlo"]
         - ["Las restricciones", "40 %", "Cada una responde a una regla del diagrama"]
         - ["Los rechazos", "20 %", "Cuatro errores, con número y SQLSTATE"]
 

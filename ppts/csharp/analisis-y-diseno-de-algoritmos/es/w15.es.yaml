@@ -77,7 +77,7 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · El tipo
-      title: El banco de muestras, declarado y llenado
+      title: Una muestra del banco, declarada y llenada
       filename: Muestra.cs
       lang: csharp
       source: |
@@ -215,10 +215,10 @@ slides:
         - ["(Status)7", "7"]
         - ["Enum.IsDefined((Status)7)", "False"]
         - ['Enum.TryParse("Warning")', "True, entrega Warning"]
-        - ['Enum.TryParse("warning")', "False, deja Ok"]
+        - ['Enum.TryParse("warning")', "False, entrega Ok"]
       verdict: >-
         El cast no se revisa. (Status)7 entrega un 7 sin nombre y solo Enum.IsDefined lo
-        delata. TryParse distingue mayúsculas y al fallar deja el Ok que ya traías.
+        delata. TryParse distingue mayúsculas y al fallar escribe Ok, el valor por omisión.
 
   - code_output:
       eyebrow: Bloque 02 · Medido
@@ -262,6 +262,7 @@ slides:
         Sample[] bank = new Sample[3];
         bank[0] = new Sample { SensorId = 1, Celsius = 20.0 };
         bank[1] = new Sample { SensorId = 2, Celsius = 99.9 };
+        bank[1].State = Status.Fault;
 
         Console.WriteLine(bank[2].SensorId);
         Console.WriteLine(bank[2].Celsius);
@@ -460,12 +461,12 @@ slides:
   - lab:
       eyebrow: Laboratorio
       title: La lista de materiales del ensamble
-      brief: Declara un registro con nombre, masa en kilogramos, cantidad y material, llena un arreglo de tres piezas, imprime la tabla alineada con los anchos de formato de la semana 13, suma la masa total del ensamble y marca como hueco de kit toda pieza con cantidad cero.
+      brief: Declara un registro con nombre, masa en kilogramos, cantidad y material, llena un arreglo de tres piezas, imprime la tabla alineada con los anchos de formato de la semana 5, suma la masa total del ensamble y marca como hueco de kit toda pieza con cantidad cero.
       blocks:
         - label: Entrega
           text: El .cs y la salida, con la tabla alineada y la masa total en tres decimales
         - label: Restricción
-          text: Ninguna columna de dinero. Masa, cantidad, material y clase de tolerancia
+          text: Ninguna columna de dinero. Nombre, masa, cantidad y material
         - label: La prueba
           text: Con brida 1.250 kg por 4, buje 0.080 kg por 0 y cubierta 2.400 kg por 1, la masa total es 7.400 kg y hay un hueco
 
@@ -480,7 +481,7 @@ slides:
       rubric:
         - ["La tabla", "40 %", "Cada campo con nombre, tipo y justificación en un solo renglón"]
         - ["Cero advertencias", "40 %", "El registro declarado compila sin una sola CS0649"]
-        - ["El estado", "20 %", "La enumeración no deja el valor de falla viviendo en el número cero"]
+        - ["El estado", "20 %", "La enumeración reserva el cero para el valor que nadie asignó"]
 
   - closing:
       title: Preguntas

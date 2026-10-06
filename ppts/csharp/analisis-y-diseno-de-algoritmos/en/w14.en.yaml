@@ -31,7 +31,7 @@ slides:
         - title: Two searches
           desc: What each one costs, and what happens when the array grows
         - title: Your turn
-          desc: Instrument two algorithms and report whatever counts come out
+          desc: The fixture deviation map, with loop bounds taken from GetLength
 
   - objectives:
       eyebrow: Learning objectives
@@ -161,21 +161,22 @@ slides:
       source: |
         int[,] grid = new int[3, 4];
 
-        Array.Sort(grid);
-        Array.BinarySearch(grid, 0);
-      output: |
-        RankException: Only single
-        dimension arrays are
-        supported here.
+        try { Array.Sort(grid); }
+        catch (RankException e) { Console.WriteLine(e.Message); }
 
-        RankException: Only single
-        dimension arrays are
-        supported here.
+        try { Array.BinarySearch(grid, 0); }
+        catch (RankException e) { Console.WriteLine(e.Message); }
+      output: |
+        Only single dimension
+        arrays are supported here.
+
+        Only single dimension
+        arrays are supported here.
 
   - divider:
       eyebrow: Block 02
       title: Four ways to sort the same seven numbers
-      lede: The syllabus names four algorithms. Today all four run on the same logged run, each one carrying its counter.
+      lede: The syllabus names four algorithms. Today all four run on the seven rpm readings from week 13, each one carrying its counter.
       block: 2
 
   - compare:
@@ -265,7 +266,7 @@ slides:
         - ["Shell", "gaps 3, 1", "12", "4"]
         - ["Shell", "gaps 4, 1", "17", "10"]
       verdict: >-
-        Shell nearly doubles its comparison count on the choice of gap sequence alone.
+        Shell more than doubles its movements on the choice of gap sequence alone.
         Comparing alternatives has to include the alternatives that live inside one
         algorithm.
 
@@ -318,9 +319,9 @@ slides:
             if (a[mid] < k) lo = mid+1; else hi = mid-1;
           }
       note: >-
-        Both bodies live inside the same signature, static int Find(int[] a, int k), and both
-        return how many comparisons it took to reach the key. A comparison here is one
-        a[i] == k test in the sequential one and one visit to a[mid] in the binary one.
+        Both bodies, plus a final return -1, live inside static int Seq(int[] a, int k) and
+        Bin, and both return how many comparisons it took to reach the key. A comparison here
+        is one a[i] == k test in the sequential one and one visit to a[mid] in the binary one.
 
   - code_output:
       eyebrow: Block 03 · Measured
@@ -350,7 +351,7 @@ slides:
         - ["8000", "8000", "13"]
       verdict: >-
         Every doubling doubles the sequential cost and adds one comparison to the binary.
-        Read the columns downwards. One gains a digit, the other a unit.
+        Read the columns downward. One adds 7500 comparisons, the other 4.
 
   - quiz:
       eyebrow: Quick check

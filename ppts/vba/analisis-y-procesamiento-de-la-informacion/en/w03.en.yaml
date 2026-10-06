@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 03 · Unit 1 · Types, variables and cells
       title: Information Analysis and Processing
       subtitle: Which type each piece of data gets, why Long and not Integer, and the three ways to reach a cell.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 3 of 17]
 
   - agenda:
@@ -23,13 +23,13 @@ slides:
       title: Four moments in the session
       cards:
         - title: The data types
-          desc: The ten that exist, what each one is for, and which one falls short
+          desc: The ten most common ones, what each one is for, and which one falls short
         - title: Declaring properly
           desc: Dim, As, Const and the line that turns a silent error into a visible one
         - title: Reaching a cell
           desc: Range, Offset and ActiveCell, and what each one leaves in the sheet
         - title: Your turn
-          desc: A customer database walked with variables instead of by hand
+          desc: A customer database with one variable and one type per field
 
   - objectives:
       eyebrow: Session objectives
@@ -97,14 +97,14 @@ slides:
 
   - table:
       eyebrow: Block 01 · Types · 1 of 2
-      title: The numeric ones, complete and in order
+      title: The common numeric ones, in order
       headers: [Type, Range, When you use it]
       rows:
         - ["Integer", "-32,768 to 32,767", "Almost never. Too small."]
-        - ["Long", "±2,147,483,647", "The default for counting"]
+        - ["Long", "-2,147,483,648 to 2,147,483,647", "The default for counting"]
         - ["Single", "7 significant digits", "Rarely. Double gives more."]
         - ["Double", "15 significant digits", "Rates, amounts, decimals"]
-        - ["Currency", "4 exact decimals", "Money, no rounding"]
+        - ["Currency", "4 exact decimals", "Exact money totals"]
 
   - table:
       eyebrow: Block 01 · Types · 2 of 2
@@ -171,7 +171,7 @@ slides:
         - label: Dim and As
           text: Dim opens the declaration, As fixes the type. With no As, the variable ends up a Variant.
         - label: Const
-          text: Declared and given its value on the same line, and it cannot be changed afterwards.
+          text: Declared and given its value on the same line, and it cannot be changed afterward.
         - label: The names
           text: Each one says what it holds. VBA ignores case, so the editor rewrites your capitals as you type.
         - label: Risk
@@ -194,7 +194,7 @@ slides:
         End Sub
       annotations:
         - label: The typo
-          text: unts does not exist. It is units missing two letters, and it reads identical at speed.
+          text: unts does not exist. It is units missing the i, and it reads identical at speed.
         - label: Without the first line
           text: VBA invents unts on the spot, sets it to 300, and the message shows 250. Verified in Excel.
         - label: With the first line
@@ -251,7 +251,7 @@ slides:
         - label: Why it matters
           text: Offset is what works when the starting point moves from month to month. A fixed Range does not.
         - label: Risk
-          text: Offset(1, 0) goes down one row, not across to column B. The first number is rows.
+          text: Offset(1, 0) goes down one row, not across to column C. The first number is rows.
           accent: true
 
   - table:
@@ -259,21 +259,21 @@ slides:
       title: What the full macro leaves in the sheet
       headers: [Column, How it was written, What ended up there]
       rows:
-        - ["A1:A5", "Range directly, one by one", "1, 2, 3, 4, 5"]
-        - ["B1:B5", "Range(\"B1\") plus Offset", "2, 4, 6, 8, 10"]
+        - ["A1:A3", "Range directly, one by one", "1, 2, 3"]
+        - ["B1:B3", "Range(\"B1\") plus Offset", "2, 4, 6"]
         - ["C1:C3", "Select and ActiveCell", "3, 6, 9"]
         - ["ActiveCell", "Where it ended up", "$C$3"]
 
   - trace:
       eyebrow: Block 03 · Trace
       title: After Range("C1").Select, line by line
-      headers: [Line, ActiveCell afterwards, Cell written]
+      headers: [Line, ActiveCell afterward, Cell written]
       rows:
         - ["ActiveCell.Value = 3", "$C$1", "C1 = 3"]
         - ["ActiveCell.Offset(1, 0).Value = 6", "$C$1", "C2 = 6"]
         - ["ActiveCell.Offset(2, 0).Select", "$C$3", "none"]
         - ["ActiveCell.Value = 9", "$C$3", "C3 = 9"]
-      verdict: Without Select, Offset writes into the neighbour and the selection does not move.
+      verdict: Without Select, Offset writes into the neighbor and the selection does not move.
 
   - quiz:
       eyebrow: Quick check
@@ -302,7 +302,7 @@ slides:
         - label: Constraint
           text: No Variants and no single-letter names. Tax IDs and postal codes go in as String.
         - label: The test
-          text: Change one value for one that does not match its type. If nothing breaks, the type was wrong.
+          text: Put text into a numeric or date field. If nothing breaks, the type was wrong.
 
   - takeaways:
       eyebrow: Summary
@@ -320,8 +320,9 @@ slides:
       title: Submission and grading criteria
       brief: >-
         Write a procedure that reads a loan amount and its annual rate from the sheet,
-        computes the monthly rate and writes it back. Declare every variable with its
-        type, and use a constant for the twelve months.
+        stores them in variables and writes them back one column to the right, with
+        Offset. Declare every variable with its type, and use a constant for the
+        twelve-month term, which goes into the sheet too.
       meta:
         - [Due, Before week 4]
         - [Format, Blackboard · .bas and .xlsm]

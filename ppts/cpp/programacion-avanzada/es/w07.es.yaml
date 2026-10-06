@@ -68,7 +68,7 @@ slides:
   - divider:
       eyebrow: Bloque 01
       title: Comparar y combinar
-      lede: Una condición es una expresión que vale verdadero o falso. En C++ eso significa que vale 1 o 0, y se puede guardar.
+      lede: Una condición es una expresión que vale verdadero o falso. En C++ es un bool, se imprime como 1 o 0 y se puede guardar.
       block: 1
 
   - figure:
@@ -93,15 +93,15 @@ slides:
   - table:
       eyebrow: Lógicos
       title: Los tres, y cuándo se detienen
-      headers: ["Operador", "Se lee", "Es cierto cuando"]
+      headers: ["Operador", "Se lee", "Es cierto cuando", "Se detiene si"]
       rows:
-        - ["&&", "Y", "Las dos condiciones son ciertas"]
-        - ["||", "O", "Al menos una es cierta"]
-        - ["!", "No", "La condición es falsa"]
+        - ["&&", "Y", "Las dos condiciones son ciertas", "La primera es falsa"]
+        - ["||", "O", "Al menos una es cierta", "La primera es cierta"]
+        - ["!", "No", "La condición es falsa", "No aplica, solo hay una"]
 
   - code_output:
       eyebrow: El error clásico
-      title: Un signo de más y la condición deja de comparar
+      title: Un signo de menos y la condición deja de comparar
       filename: igual.cpp
       lang: cpp
       output_label: Salida
@@ -227,7 +227,7 @@ slides:
       items:
         - label: Error 01
           title: Un igual en vez de dos
-          desc: Asigna en lugar de comparar, la condición se cumple siempre y no hay advertencia
+          desc: Asigna en lugar de comparar, se cumple con cualquier valor distinto de cero y compila sin advertencia
         - label: Error 02
           title: Punto y coma después del if
           desc: El cuerpo se vuelve la instrucción vacía y el bloque de abajo corre siempre
@@ -255,7 +255,7 @@ slides:
       title: Tres ideas para llevarse
       items:
         - title: Un igual asigna, dos comparan
-          desc: El de uno compila dentro de un if, se cumple siempre y modifica la variable
+          desc: El de uno compila dentro de un if, se cumple con cualquier valor distinto de cero y modifica la variable
         - title: El switch cae sin break
           desc: Elige por dónde entrar, no qué caso ejecutar, y sigue hasta el primer break
         - title: Los reales no se comparan con igualdad

@@ -40,7 +40,7 @@ slides:
         - head: Escribir una ventana como clase
           sub: Heredando de QMainWindow y encadenando el constructor con super
         - head: Colocar controles
-          sub: QLabel, QLineEdit y QPushButton, guardados sobre self para que sobrevivan
+          sub: QLabel, QLineEdit y QPushButton, guardados sobre self para que el slot los alcance
         - head: Conectar una señal a un slot
           sub: Pasando la función sin paréntesis, y leyendo los controles dentro del slot
 
@@ -124,7 +124,7 @@ slides:
 
   - code:
       eyebrow: La ventana como clase
-      title: Donde empieza a servir todo lo del tema 2
+      title: Donde empieza a servir todo lo de los temas 2 y 3
       filename: principal.py
       lang: python
       source: |
@@ -180,7 +180,7 @@ slides:
         print(caja.text())
       annotations:
         - label: La etiqueta
-          text: QLabel solo muestra texto. No recibe nada de quien está usando el programa.
+          text: QLabel solo muestra texto, y setText lo cambia. No recibe nada de quien usa el programa.
         - label: La caja
           text: QLineEdit es un renglón editable, y text() devuelve lo que haya escrito en ese instante
         - label: Riesgo
@@ -196,18 +196,21 @@ slides:
         class VentanaPrincipal(QMainWindow):
             def __init__(self) -> None:
                 super().__init__()
-                self.caja = QLineEdit()
-                self.boton = QPushButton("Entrar")
+                self.caja = QLineEdit(self)
+                self.boton = QPushButton("Entrar", self)
+                self.boton.move(0, 40)
                 self.boton.clicked.connect(self.al_entrar)
 
             def al_entrar(self) -> None:
                 print("Hola,", self.caja.text())
       annotations:
-        - label: Línea 6
+        - label: Líneas 4 a 6
+          text: Con self como padre, el control queda dentro de la ventana. move lo baja 40 píxeles.
+        - label: Línea 7
           text: clicked es la señal y al_entrar es el slot. connect los une y ahí termina tu trabajo.
         - label: Sin paréntesis
           text: Se conecta self.al_entrar, no self.al_entrar(). Con paréntesis se llama en ese instante.
-        - label: Línea 9
+        - label: Línea 10
           text: El slot lee la caja cuando ocurre el clic, que es el único momento en que hay algo escrito
 
   - code_output:
@@ -233,13 +236,13 @@ slides:
       items:
         - label: Error 01
           title: Conectar con paréntesis
-          desc: connect(self.al_entrar()) llama a la función al construir y le conecta el resultado
+          desc: connect(self.al_entrar()) llama a la función al construir e intenta conectar su resultado
         - label: Error 02
           title: Un ciclo largo dentro del slot
           desc: La ventana se congela, porque el ciclo de eventos está esperando a que tu función termine
         - label: Error 03
           title: No guardar el control sobre self
-          desc: Si el widget es una variable local del constructor, Python lo recolecta y desaparece
+          desc: Si el widget es una variable local del constructor, el slot no lo encuentra en self y el programa revienta
         - label: Error 04
           title: Leer los campos al construir
           desc: En ese momento están vacíos. Se leen dentro del slot, cuando ya hay algo escrito.
@@ -247,7 +250,7 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: Práctica y cierre
-      lede: Una ventana que hace algo con lo que le escriben, y el error de sintaxis que se lleva media clase.
+      lede: Una ventana que hace algo con lo que le escriben, y el par de paréntesis que se lleva media clase.
       block: 3
 
   - quiz:

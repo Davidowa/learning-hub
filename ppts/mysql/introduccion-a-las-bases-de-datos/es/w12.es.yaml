@@ -79,7 +79,7 @@ slides:
       title: Qué guarda una vista y qué no
       lede: >-
         La fuente de la semana 2 la llamó «Vista (RO)» y la semana 3 la puso en el nivel externo. Una
-        de las dos cosas está mal, y hoy se corrige con el servidor en pantalla.
+        de las dos cosas está mal, y hoy se termina de corregir con el servidor en pantalla.
       block: 1
 
   - concept:
@@ -220,10 +220,10 @@ slides:
 
         ERROR 1393 (HY000): Can not
         modify more than one base
-        table through a join view
+        table through a join view ...
 
         ERROR 1395 (HY000): Can not
-        delete from join view
+        delete from join view ...
 
   - code_output:
       eyebrow: Medido · dónde sí cae la frontera
@@ -286,7 +286,7 @@ slides:
         - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
         - ["Agregación", "no", "ERROR 1288 (HY000)"]
         - ["DISTINCT o UNION", "no", "IS_UPDATABLE = NO, error 1288"]
-        - ["Subconsulta", "no, si es correlacionada", "dice YES y falla con el 1288"]
+        - ["Subconsulta", "no, si es escalar y correlacionada", "dice YES y falla con el 1288"]
 
   - code_output:
       eyebrow: Medido · cerrar la vista
@@ -404,7 +404,7 @@ slides:
         - label: Error 04
           title: Confiar en IS_UPDATABLE
           desc: >-
-            Con una subconsulta correlacionada el catálogo dice YES y el UPDATE falla con 1288.
+            Con una subconsulta escalar correlacionada el catálogo dice YES y el UPDATE falla con 1288.
             Se prueba el UPDATE, no se le cree a la columna.
 
   - lab:

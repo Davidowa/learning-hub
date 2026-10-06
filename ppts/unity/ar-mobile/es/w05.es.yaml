@@ -151,8 +151,8 @@ slides:
       annotations:
         - label: Primero vSyncCount
           text: >-
-            Con sincronía vertical prendida el objetivo se ignora. Apágala antes de fijar la
-            tasa.
+            Fuera del teléfono, con sincronía vertical prendida el objetivo se ignora. Android
+            ignora vSyncCount y respeta el objetivo.
         - label: Pedido, no prometido
           text: >-
             Es un techo, no una garantía. La plataforma puede bajarlo, y seguido lo hace.
@@ -161,7 +161,8 @@ slides:
             Un treinta parejo se lee mejor que un sesenta que cae a cuarenta con el calor.
         - label: Riesgo
           text: >-
-            Fíjalo una vez en Start. Fijarlo cada frame es un costo que agregaste.
+            Con Match Frame Rate marcado, AR Session reescribe este valor con la tasa de la
+            cámara.
           accent: true
 
   - diagram:
@@ -179,9 +180,9 @@ slides:
           desc: Passthrough, overdraw, sombras y post procesado, a la resolución de pantalla.
           dark: true
       note: >-
-        El primer bloque explica por qué una escena de AR que corre a sesenta en escritorio no
-        llega a treinta en un teléfono con el mismo contenido. Presupuesta contra el tercero,
-        porque en teléfono es el que se agota primero.
+        El primer bloque explica por qué una escena de AR que corre a sesenta en escritorio puede
+        no llegar a treinta en un teléfono con el mismo contenido. Presupuesta contra el tercero,
+        porque en teléfono suele ser el que se agota primero.
 
   - divider:
       eyebrow: Bloque 02
@@ -221,11 +222,11 @@ slides:
 
   - table:
       eyebrow: Bloque 02 · Lo demás
-      title: Cuatro costos de assets que valen una tarde
+      title: Seis costos de assets que valen una tarde
       headers: [Asset, Qué revisar, Por qué importa]
       rows:
         - ["Detalle de malla", "Vértices por objeto", "Cada vértice se transforma"]
-        - ["Importación", "Read Write Enabled apagado", "Prendido deja otra copia"]
+        - ["Importación", "Read/Write apagado", "Prendido deja otra copia"]
         - ["Materiales", "Un shader para muchos", "Es lo que permite el batching"]
         - ["Materiales", "GPU Instancing marcado", "Para una malla dibujada mucho"]
         - ["Iluminación", "Horneada, no en tiempo real", "Una sombra viva cuesta un pase"]
@@ -238,7 +239,7 @@ slides:
         - label: Error 01
           title: Una textura 4096 en algo chico
           desc: >-
-            Sesenta y cuatro megabytes de memoria para algo de dos centímetros en pantalla.
+            Sesenta y cuatro megabytes sin comprimir para algo de dos centímetros en pantalla.
             El arreglo es Max Size en el importador, y toma diez segundos.
         - label: Error 02
           title: Sombras en tiempo real de cada luz
@@ -246,7 +247,7 @@ slides:
             Cada luz que tira sombra agrega un pase de render sobre la escena. Hornea lo que
             no se mueve, que en un teléfono es casi todo.
         - label: Error 03
-          title: Read Write Enabled prendido
+          title: Read/Write prendido
           desc: >-
             La malla se guarda dos veces, una para la GPU y otra para la CPU. Está prendido
             por accidente mucho más seguido que a propósito.
@@ -268,7 +269,7 @@ slides:
       headers: [Método, Qué pide, Qué ahorra]
       rows:
         - ["SRP Batcher", "Una variante de shader", "El armado entre dibujos"]
-        - ["GPU Instancing", "Misma malla y material", "Una llamada para muchas copias"]
+        - ["GPU Instancing", "Misma malla y material, sin SRP Batcher", "Una llamada para muchas copias"]
         - ["Static Batching", "Objetos marcados Static", "Draw calls, a cambio de memoria"]
         - ["Menos objetos", "Mallas unidas a mano", "Las tres cosas juntas, y gratis"]
 
@@ -315,12 +316,12 @@ slides:
       annotations:
         - label: renderScale
           text: >-
-            La escena se dibuja a una fracción de la pantalla y se escala. El passthrough no
-            se toca.
+            Toda la cámara se dibuja a una fracción de la pantalla y se escala, passthrough
+            incluido.
         - label: Barato y eficaz
           text: >-
             Bajar a 0.7 dibuja como la mitad de los píxeles, el mayor ahorro en un frame
-            de GPU.
+            limitado por GPU.
         - label: También en el asset
           text: >-
             shadowDistance está junto, y recortarla es el segundo ahorro más grande.
@@ -331,7 +332,7 @@ slides:
 
   - quiz:
       eyebrow: Verificación rápida
-      question: El Profiler reporta 22 ms de tiempo de GPU y 9 ms de CPU. ¿Qué recortas primero?
+      question: Con objetivo de 60 fps, el Profiler marca 22 ms de GPU y 9 ms de CPU. ¿Qué recortas primero?
       options:
         - Resolución, overdraw y sombras, porque la GPU es el lado excedido
         - Las llamadas en Update, porque nueve milisegundos ya son demasiado
@@ -350,7 +351,7 @@ slides:
       verdict: >-
         El frame tarda lo que tarda el más lento de los dos, no lo que tardan los dos juntos.
         Los veintidós milisegundos de GPU son lo que el usuario siente, y se arreglan con
-        resolución, overdraw y sombras. Los nueve de script no son el problema de esta semana.
+        resolución, overdraw y sombras. Los nueve de CPU no son el problema de esta semana.
 
   - lab:
       eyebrow: Laboratorio

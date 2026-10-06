@@ -43,10 +43,10 @@ slides:
           sub: And why C# does both, with the files it leaves behind measured
         - head: Read the structure of a program
           sub: One line, one csproj, and a class the compiler wrote for you
-        - head: Recognise a compile error
+        - head: Recognize a compile error
           sub: File, line, column and code, read in that order
         - head: Apply the rules of syntax
-          sub: Comments, identifiers, reserved words and capitalisation
+          sub: Comments, identifiers, reserved words and capitalization
         - head: Separate convention from rule
           sub: camelCase and PascalCase are an agreement, not something the compiler checks
 
@@ -359,7 +359,7 @@ slides:
         - label: /* a /* nested */ */
           title: Block comments, which do not nest
           desc: >-
-            Program.cs(1,36): error CS1003: Syntax error, ',' expected. The first closer
+            Program.cs(1,20): error CS1525: Invalid expression term '/'. The first closer
             closes, and whatever follows becomes code again.
 
   - table:
@@ -390,7 +390,7 @@ slides:
         - 'Yes, both say that the name does not exist'
         - 'No, A returns CS0117 and B returns CS0103'
         - 'Yes, both are CS1001 on the identifier'
-        - 'Neither fails, C# ignores capitalisation'
+        - 'Neither fails, C# ignores capitalization'
 
   - trace:
       eyebrow: Answer
@@ -431,7 +431,7 @@ slides:
         - title: The compiler reads it all before running
           desc: That is why a type error shows up before the motor turns, not halfway through the run
         - title: An error is a gate, not a warning
-          desc: After Build FAILED the output folder holds zero files and there is nothing to execute
+          desc: After Build FAILED no new .dll comes out and dotnet run refuses to execute
         - title: You read the first message, not the last
           desc: One slip can give seven errors, and the other six leave when you fix the first
 
@@ -439,7 +439,7 @@ slides:
       eyebrow: Homework
       title: Submission and grading criteria
       brief: >-
-        Reproduce the five syntax errors of this session on your own machine and hand in a
+        Reproduce the five compile errors of this session on your own machine and hand in a
         table with the first message of each, copied unedited, plus one line saying what
         the compiler read wrong.
       meta:

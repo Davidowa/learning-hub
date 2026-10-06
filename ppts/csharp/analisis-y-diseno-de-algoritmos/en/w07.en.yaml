@@ -210,7 +210,7 @@ slides:
               said = "under limit";
       note: >-
         The indentation on the left promises that the else belongs to the outer if. It
-        does not. The else always binds to the nearest if that has not got one yet, and
+        does not. The else always binds to the nearest if that does not have one yet, and
         both versions compile with zero warnings.
 
   - trace:
@@ -360,6 +360,7 @@ slides:
         example, the pattern '3000'
         is not covered.
 
+        idle
         Unmatched value was 4000.
 
   - code_output:
@@ -427,11 +428,11 @@ slides:
       points:
         - label: Inside a switch
           text: >-
-            It closes the case and jumps to the brace that closes the switch. Without it a
-            case with statements inside does not even compile.
+            It closes the case and jumps to the brace that closes the switch. Without it, or
+            a return or goto case, a case with statements inside does not even compile.
         - label: Inside a loop
           text: >-
-            From week 9 on it ends the whole loop. It is a different statement with the
+            From week 8 on it ends the whole loop. It is a different statement with the
             same name, not the same one with another effect.
         - label: When they cross
           text: >-
@@ -458,10 +459,10 @@ slides:
             0.1 + 0.2 is not 0.3 and never will be. On a measurement you compare the
             absolute difference against a margin you wrote down.
         - label: Error 04
-          title: Leaving the switch expression without a discard
+          title: Leaving out the discard arm
           desc: >-
-            It builds with a warning that names the exact value that will bring it down,
-            and it falls the first time that value arrives from the sensor.
+            It builds with a warning that names one value that will bring it down, and it
+            falls the first time such a value arrives from the sensor.
 
   - quiz:
       eyebrow: Quick check
@@ -516,7 +517,7 @@ slides:
         - title: The switch expression can be checked
           desc: >-
             An impossible order is a build error and an uncovered case is a warning that
-            names the very value it is going to choke on
+            names a value it is going to choke on
 
   - homework:
       eyebrow: Homework

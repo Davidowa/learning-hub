@@ -29,7 +29,7 @@ slides:
         - title: Properties
           desc: Computed values that read like plain attributes
         - title: Lab
-          desc: Modelling a library, in pairs
+          desc: Modeling a library, in pairs
 
   - objectives:
       eyebrow: Learning objectives
@@ -76,14 +76,14 @@ slides:
       title: What a class is
       lead: >-
         A template describing what an object remembers and what it can do. You write the
-        class once and it costs no memory by itself. Every object made from it does cost
-        memory, and carries its own copy of the data.
+        class once and it exists once in memory. Every object made from it takes up its
+        own memory, and carries its own copy of the data.
       panel:
         label: Three mandatory pieces
         title: A name, its attributes, its methods
         note: >-
           If you cannot name the class with a concrete noun from the problem, you do not yet
-          know what you are modelling. "Manager" and "handler" are almost never that noun.
+          know what you are modeling. "Manager" and "handler" are almost never that noun.
       steps:
         - text: Name the thing in the world
         - text: List what it has to remember
@@ -96,7 +96,7 @@ slides:
       blocks:
         - label: Blueprint
           title: Class
-          desc: Declares the attributes and methods. Stores no values of its own.
+          desc: Declares the attributes and methods. Holds none of each object's data.
         - label: Factory
           title: __init__
           desc: Takes what is essential and leaves the object ready to use
@@ -113,7 +113,7 @@ slides:
       title: One cutter, many cookies
       image: img/en/class-object.png
       caption: The class is written once. Every object comes out with its own state.
-      alt: A cookie cutter, an oven labelled init, and three different cookies
+      alt: A cookie cutter, an oven labeled init, and three different cookies
 
   - code:
       eyebrow: Python
@@ -187,7 +187,7 @@ slides:
       annotations:
         - label: Line 3
           text: The two leading underscores tell Python to rename the attribute internally
-        - label: Line 10
+        - label: Line 11
           text: Age changes over the years, so it is left public on purpose
         - label: If you try p.__name
           text: AttributeError. The attribute exists, under a different name outside the class
@@ -218,7 +218,6 @@ slides:
           text: The area can never go stale, because it is computed at the moment you read it
         - label: When to skip it
           text: If the computation is expensive, keep it behind a normal method so callers notice
-          accent: true
 
   - table:
       eyebrow: Vocabulary
@@ -240,10 +239,10 @@ slides:
           desc: 'TypeError, takes 0 positional arguments but 1 was given. The object passes itself.'
         - label: Error 02
           title: Declaring the attribute outside __init__
-          desc: It sticks to the class, so every object shares the same list or the same counter
+          desc: It sticks to the class, so every object shares the same list
         - label: Error 03
           title: Calling a method without parentheses
-          desc: 'p.draw prints the method reference. p.draw() runs it.'
+          desc: 'p.draw is only the method reference. p.draw() runs it.'
         - label: Error 04
           title: A constructor that does too much
           desc: If __init__ opens files or hits the network, the object fails before it exists
@@ -272,7 +271,7 @@ slides:
         - '0, because b never added anything'
         - '1, because the list lives on the class'
         - 'An error, items is not defined in __init__'
-        - '2, because each cart copies the list'
+        - '2, because two carts were created'
 
   - trace:
       eyebrow: Answer
@@ -322,7 +321,7 @@ slides:
 
   - lab:
       eyebrow: Lab
-      title: Modelling a library, in pairs
+      title: Modeling a library, in pairs
       brief: Write the classes Book and Loan so that the system can say whether a loan is overdue.
       blocks:
         - label: Constraints
@@ -364,7 +363,7 @@ slides:
         - [Format, Blackboard · .py + PDF]
         - [Weight, Part of the 20 % homework block]
       rubric:
-        - ["Modelling", "40 %", "The attributes match the domain of an actual library"]
+        - ["Modeling", "40 %", "The attributes match the domain of an actual library"]
         - ["Execution", "30 %", "The file runs without errors and prints the test objects"]
         - ["Justification", "30 %", "The paragraph argues decisions instead of narrating the code"]
 

@@ -39,7 +39,7 @@ slides:
         - title: Juntar las piezas
           desc: Consolidar por rótulo, y una fórmula que llega hasta otro archivo
         - title: Tu turno
-          desc: 288 alumnos con cuotas por llenar, y luego 2,585 artículos de inventario
+          desc: 288 alumnos con cuotas por llenar, y luego 2,583 artículos de inventario
 
   - objectives:
       eyebrow: Objetivos de la sesión
@@ -50,7 +50,7 @@ slides:
         - head: Elegir entre FALSO y VERDADERO
           sub: Y decir en voz alta qué hace un Ordenado vacío, porque no es FALSO
         - head: "Leer #N/D en lugar de taparlo"
-          sub: Las cuatro cosas que lo producen, y el único momento en que SI.ERROR puede cubrirlo
+          sub: Qué te está avisando, y el único momento en que SI.ERROR puede cubrirlo
         - head: Llegar a una columna que BUSCARV no alcanza
           sub: ÍNDICE con COINCIDIR anidada en Núm_fila, en una sola pasada por un diálogo
         - head: Resumir varios rangos por rótulo
@@ -109,7 +109,7 @@ slides:
       steps:
         - text: Excel lee hacia abajo la columna uno del bloque
         - text: Se detiene en la fila donde coincide la clave
-        - text: Camina a la derecha tantas columnas como diga Indicador_columnas
+        - text: Camina a la derecha hasta la columna Indicador_columnas, con la clave como 1
           loop: ↺ y devuelve lo que esté ahí, correcto o no
 
   - steps:
@@ -163,7 +163,7 @@ slides:
 
         =BUSCARV(B2,Fees!$A$2:$B$24,2)
 
-        =BUSCARV(B2,$F$3:$G$7,2,VERDADERO)
+        =BUSCARV(E2,$F$3:$G$7,2,VERDADERO)
 
         =SI.ERROR(BUSCARV(B2,Fees!$A$2:$B$24,2,FALSO),"Revisar")
       annotations:
@@ -173,7 +173,7 @@ slides:
             se detiene en #N/D.
         - label: El argumento que falta
           text: >-
-            Ordenado vacío. Vacío es VERDADERO, y una tabla sin ordenar devuelve
+            Ordenado vacío. Vacío es VERDADERO, y un programa que no está trae
             la cuota del vecino, en silencio.
         - label: Por rangos, a propósito
           text: >-
@@ -186,8 +186,8 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · Las cuatro casillas
-      title: Desde dónde se cuenta cada argumento
-      headers: [Argumento, Qué se pone dentro, Desde dónde se cuenta]
+      title: Qué va en cada argumento, y su regla
+      headers: [Argumento, Qué se pone dentro, La regla]
       rows:
         - ["Valor_buscado", "La celda que tiene la clave", "Relativa, para rellenar abajo"]
         - ["Matriz_buscar_en", "La clave y todo lo de su derecha", "Fijado con F4"]
@@ -214,8 +214,8 @@ slides:
         - label: Error 03
           title: "Ordenado vacío"
           desc: >-
-            Vacío significa VERDADERO, y VERDADERO sobre una tabla sin ordenar devuelve
-            la fila de arriba de la clave. El número se ve creíble y nada en la pantalla
+            Vacío significa VERDADERO, y VERDADERO sobre una tabla sin ordenar puede
+            devolver la fila de otra clave. El número se ve creíble y nada en la pantalla
             se pone rojo.
         - label: Error 04
           title: SI.ERROR aplicado muy pronto
@@ -241,16 +241,16 @@ slides:
         - ["Inventario 3", "Los códigos corren por la fila 3", "BUSCARH"]
 
   - code:
-      eyebrow: Bloque 02 · El mismo costo, traído de tres maneras
+      eyebrow: Bloque 02 · Un inventario, tres acomodos
       title: Abajo, a lo ancho y desde el lado equivocado
       filename: Excer 21 (HLookup).xlsx
       lang: excel
       source: |
-        =BUSCARV($C4,$B$4:$E$2588,4,FALSO)
+        =BUSCARV($G5,$B$4:$E$2586,4,FALSO)
 
-        =BUSCARH($C4,$W$3:$AJ$6,4,FALSO)
+        =BUSCARH($X11,$W$3:$AJ$6,4,FALSO)
 
-        =INDICE($O$4:$O$2588,COINCIDIR($C4,$M$4:$M$2588,0))
+        =INDICE($L$4:$L$2586,COINCIDIR($Q5,$M$4:$M$2586,0))
       annotations:
         - label: Por la primera columna
           text: >-
@@ -263,7 +263,7 @@ slides:
         - label: La clave del lado derecho
           text: >-
             El inventario 2 pone Descripción primero. COINCIDIR encuentra la posición
-            del código en M, ÍNDICE lee O en esa posición.
+            del código en M, ÍNDICE lee L, a su izquierda, en esa posición.
         - label: Riesgo
           text: >-
             COINCIDIR toma una fila o una columna. Dale un rectángulo y contesta #N/D.
@@ -275,10 +275,10 @@ slides:
       items:
         - label: '01'
           title: ÍNDICE desde la biblioteca
-          desc: Pestaña Fórmulas, grupo Biblioteca de funciones, Búsqueda y referencia, luego ÍNDICE
+          desc: Pestaña Fórmulas, grupo Biblioteca de funciones, Búsqueda y referencia, luego INDICE
         - label: '02'
           title: "[Select Arguments]"
-          desc: Elige array,row_num,column_num. La otra entrada es para referencias de varias áreas.
+          desc: Elige matriz,núm_fila,núm_columna. La otra entrada es para referencias de varias áreas.
         - label: '03'
           title: "Matriz"
           desc: La columna de valores por devolver. No la tabla completa, y sin fila de encabezado.
@@ -295,8 +295,8 @@ slides:
       headers: ["Valor", Qué encuentra, Qué necesita el rango]
       rows:
         - ["0", "Una coincidencia exacta", "Cualquier orden"]
-        - ["1 o vacío", "El mayor valor bajo la clave", "Ordenado de menor a mayor"]
-        - ["-1", "El menor valor sobre la clave", "Ordenado de mayor a menor"]
+        - ["1 o vacío", "El mayor valor igual o menor que la clave", "Ordenado de menor a mayor"]
+        - ["-1", "El menor valor igual o mayor que la clave", "Ordenado de mayor a menor"]
 
   - quiz:
       eyebrow: Comprobación rápida
@@ -310,6 +310,12 @@ slides:
         - "La cuota del programa que queda justo antes en el orden"
         - "0, porque Ordenado se dejó vacío"
         - "#¡REF!, porque el bloque solo tiene dos columnas"
+      notes: >-
+        Respuesta: B. Sin Ordenado, BUSCARV hace la búsqueda por rangos, y como Fees va en
+        orden alfabético devuelve la cuota del programa que queda justo antes. A es lo que
+        daría con FALSO; solo sale #N/D si el programa queda antes del primero de la lista.
+        C confunde el argumento vacío con un cero, y D cuenta mal: el 2 cae dentro de un
+        bloque de dos columnas.
 
   - divider:
       eyebrow: Bloque 03
@@ -411,7 +417,7 @@ slides:
         puntaje, que es el único lugar donde VERDADERO es la respuesta correcta. Después
         el ejercicio 21, donde el inventario 2 pone Descripción antes que Artículo y el
         inventario 3 acomoda los códigos a lo ancho de la fila 3. Elijan la función que
-        obliga cada tabla, y escriban un renglón que diga por qué las otras dos no pueden.
+        obliga cada tabla, y escriban un renglón que diga por qué BUSCARV no puede con las otras dos.
       blocks:
         - label: Entregable
           text: Un solo libro con los dos ejercicios, subido a Blackboard
@@ -431,7 +437,7 @@ slides:
         - title: Vacío no es FALSO
           desc: >-
             Un Ordenado que falta significa VERDADERO, que es una búsqueda por
-            rangos sobre una tabla que nadie ordenó. Contesta con el valor del vecino y
+            rangos sobre una tabla que nadie ordenó. Contesta con el valor de otra fila y
             lo llama resultado
         - title: BUSCARV es una forma del problema
           desc: >-

@@ -26,9 +26,9 @@ slides:
           desc: What other languages solve with signatures and Python solves with arguments
         - title: Your own operators
           desc: The magic methods that give your class syntax everyone already knows
-        - title: Organisation
+        - title: Organization
           desc: Modules, packages and the one file that actually runs
-        - title: Modelling
+        - title: Modeling
           desc: From the brief to the boxes, and from the boxes to the code
 
   - objectives:
@@ -43,6 +43,8 @@ slides:
           sub: __str__, __eq__ and __add__ make print, == and + work on your own objects
         - head: Spread classes across files
           sub: What justifies a new module, what justifies a package, and what runs on import
+        - head: Turn a brief into a model
+          sub: Nouns into classes, verbs into methods, and the UML box before the code
 
   - roadmap:
       eyebrow: Course map
@@ -109,7 +111,7 @@ slides:
       options:
         - '3, because Python picks the two-parameter method'
         - 'TypeError, one positional argument is missing'
-        - '6, because c is zero when it is not passed'
+        - '3, because c is zero when it is not passed'
         - 'SyntaxError, add is defined twice'
 
   - compare:
@@ -169,10 +171,10 @@ slides:
       headers: ["The need", "In Java or C#", "In Python"]
       rows:
         - ["An optional parameter", "Two methods with different signatures", "def greet(self, formal=False)"]
-        - ["However many values", "One method per count", "def add(self, *skus)"]
+        - ["However many values", "params (C#) or varargs (Java)", "def add(self, *skus)"]
         - ["Named options", "A configuration object", "def create(self, **options)"]
-        - ["Different types", "One signature per type", "isinstance or functools.singledispatch"]
-        - ["Your own operators", "operator overloading", "__add__ · __eq__ · __str__"]
+        - ["Different types", "One signature per type", "isinstance or functools.singledispatchmethod"]
+        - ["Your own operators", "operator+ in C# (Java has none)", "__add__ · __eq__ · __str__"]
 
   - code:
       eyebrow: Operator overloading
@@ -221,7 +223,7 @@ slides:
 
   - divider:
       eyebrow: Block 02
-      title: Organising classes
+      title: Organizing classes
       lede: A thousand-line file runs exactly as well as ten hundred-line ones. The difference shows up when you have to find something.
       block: 2
 
@@ -290,7 +292,7 @@ slides:
 
   - pitfalls:
       eyebrow: Diagnosis
-      title: Four ways to organise a project badly
+      title: Four ways to organize a project badly
       items:
         - label: Error 01
           title: One file holding everything
@@ -300,14 +302,14 @@ slides:
           desc: Ten files of fifteen lines are ten files to open before one idea makes sense
         - label: Error 03
           title: Circular imports
-          desc: If cart imports customer and customer imports cart, Python fails mid-load with ImportError
+          desc: If cart imports customer and customer imports cart, Python can fail mid-load with ImportError
         - label: Error 04
           title: Loose code in a module
-          desc: Anything outside a function or a class runs at import time, every single time
+          desc: Anything outside a function or a class always runs at import time
 
   - divider:
       eyebrow: Block 03
-      title: Basic object-oriented modelling
+      title: Basic object-oriented modeling
       lede: 'The step almost nobody takes, and the one that decides half the result: draw before you type.'
       block: 3
 
@@ -319,7 +321,7 @@ slides:
       alt: A three-compartment UML class box with arrows to the matching lines of Python
 
   - steps:
-      eyebrow: Modelling method
+      eyebrow: Modeling method
       title: From the brief to the boxes, in five steps
       items:
         - label: Step 01
@@ -368,11 +370,11 @@ slides:
       meta:
         - [Due, Before session 6]
         - [Format, Blackboard · .py + PDF]
-        - [Weight, Part of the 20 % homework block]
+        - [Weight, Part of the 20% homework block]
       rubric:
-        - ["Modelling", "40 %", "The classes come from nouns in the brief and none of them does everything"]
-        - ["Operators", "30 %", "__str__ prints something readable and __eq__ compares the data, not identity"]
-        - ["Justification", "30 %", "The paragraph defends the decisions and names one alternative you dropped"]
+        - ["Modeling", "40%", "The classes come from nouns in the brief and none of them does everything"]
+        - ["Operators", "30%", "__str__ prints something readable and __eq__ compares the data, not identity"]
+        - ["Justification", "30%", "The paragraph defends the decisions and names one alternative you dropped"]
 
   - closing:
       title: Questions

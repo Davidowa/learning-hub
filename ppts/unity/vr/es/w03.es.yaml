@@ -48,7 +48,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Armar una escena que alcanza
-          sub: Un XR Interaction Manager, un XR Origin y un interactor por mano, y nada más
+          sub: Un XR Interaction Manager, un XR Origin, un interactor por mano y el Input Action Manager
         - head: Explicar cómo funciona el registro
           sub: Los componentes buscan a su manager en OnEnable, y por eso el orden de carga aparece como bugs
         - head: Ligar un método a un evento de selección
@@ -104,14 +104,14 @@ slides:
           title: El torquímetro
           desc: Un collider, un componente y una lista de métodos por llamar
       note: >-
-        Las flechas van en los dos sentidos y pasan por el medio. Esa indirección es lo que
+        Los mensajes van en los dos sentidos y siempre pasan por el medio. Esa indirección es lo que
         te deja cambiar un rayo por un poke sin editar un solo objeto del banco.
 
   - concept:
       eyebrow: Concepto clave
       title: El registro ocurre en OnEnable, no en el inspector
       lead: >-
-        Un interactor y un interactable nunca guardan una referencia el uno del otro. Cada
+        Un interactor y un interactable nunca se buscan el uno al otro. Cada
         quien se registra con el manager cuando se habilita y se da de baja cuando se
         deshabilita. De ahí en adelante el manager hace el emparejamiento.
       panel:
@@ -232,8 +232,8 @@ slides:
       annotations:
         - label: public, un argumento
           text: >-
-            El inspector solo lista métodos públicos que reciben un argumento del tipo del
-            propio evento.
+            Para recibir los datos del evento, el inspector pide un método público con un
+            argumento de ese tipo.
         - label: El argumento
           text: >-
             Trae qué mano lo hizo. Lee lo que necesites dentro de la llamada y no te quedes
@@ -271,7 +271,7 @@ slides:
       headers: [Pregunta, Cableado en el inspector, Cableado en código]
       rows:
         - ["Quién lo ve", "Quien abra la escena", "Solo quien lea el código"]
-        - ["Buscar quién llama", "No sale en una búsqueda", "Se encuentra por nombre"]
+        - ["Buscar quién llama", "No sale al buscar en el código", "Se encuentra por nombre"]
         - ["Ante un rename", "La liga se rompe", "El compilador lo atrapa"]
         - ["Configuración", "Se arrastra una vez", "Necesita una referencia"]
         - ["Bueno para", "Sonido, efectos, casos únicos", "Reglas y estado"]
@@ -299,7 +299,7 @@ slides:
           title: Suscrito dos veces, nunca quitado
           desc: >-
             El objeto se deshabilitó y se volvió a habilitar. La lista de listeners creció y
-            el sonido ahora suena tres veces en un solo agarre.
+            el sonido ahora suena dos veces en un solo agarre.
 
   - divider:
       eyebrow: Bloque 03
@@ -389,6 +389,7 @@ slides:
         - ["Habilita, primera vez", "1", "1"]
         - ["Deshabilita", "1, sigue puesto", "0, el objeto está apagado"]
         - ["Habilita, segunda vez", "2", "2"]
+        - ["Deshabilita otra vez", "2, sigue puesto", "0, el objeto está apagado"]
         - ["Habilita, tercera vez", "3", "3"]
       verdict: >-
         AddListener agrega, no revisa. El deshabilitar nunca quitó nada porque nadie se lo

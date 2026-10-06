@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 04 · Unit 1 · Operations and range names
       title: Information Analysis and Processing
-      subtitle: The seven operators, the order VBA resolves them in, and why the same sum comes out differently in a cell.
+      subtitle: The seven operators, the order VBA resolves them in, and why the same calculation comes out differently in a cell.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 4 of 17]
 
   - agenda:
@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: The seven operators
-          desc: The four everybody knows and the three the sheet does not spell this way
+          desc: The four everybody knows, plus integer division, remainder and power
         - title: The cell against VBA
           desc: Three expressions that answer differently depending on where you type them
         - title: Range names
@@ -70,7 +70,7 @@ slides:
   - divider:
       eyebrow: Block 01
       title: The seven operators
-      lede: You have used four of them since primary school. The other three exist in the sheet under another name, and in VBA they have symbols of their own.
+      lede: You have used four of them since elementary school. Of the other three, two are functions in the sheet and have an operator of their own in VBA.
       block: 1
 
   - table:
@@ -85,7 +85,7 @@ slides:
 
   - table:
       eyebrow: Block 01 · Arithmetic · 2 of 2
-      title: And the three the sheet does not spell this way
+      title: And the other three
       headers: [Operator, What it does, Example, Result]
       rows:
         - ["\\", "Integer division", "5 \\ 3", "1"]
@@ -160,6 +160,7 @@ slides:
 
         annualRate = 0.12
         monthlyRate = ((1 + annualRate) ^ (1 / 12)) - 1
+        MsgBox monthlyRate
       output: |
         9.48879293458305E-03
 
@@ -181,18 +182,18 @@ slides:
         End Sub
       annotations:
         - label: NumberFormat
-          text: Leaves the whole number in the cell and only changes how it looks. B1 shows 0.95 %.
+          text: Leaves the whole number in the cell and only changes how it looks. B1 shows 0.95%.
         - label: Format
           text: Returns text, already formatted. Good for a message, not for carrying on calculating.
         - label: Round
           text: Cuts the number for real. Round(rate, 6) leaves 0.009489 and the rest is gone.
         - label: Risk
-          text: Format returns text. Add that to something later and VBA glues it instead of adding.
+          text: Format returns text. Add two of those later and VBA glues them instead of adding.
           accent: true
 
   - pitfalls:
       eyebrow: Block 02 · Common errors
-      title: Four sums that return the wrong number
+      title: Four calculations that do not give what you expect
       items:
         - label: Error 01
           title: Adding two strings with plus
@@ -210,7 +211,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Range names
-      lede: A formula with B3 has to be gone and checked. One with Monthly_Rate is reviewed without leaving where you are.
+      lede: A formula with B3 sends you off to check B3. One with MonthlyRate is reviewed without leaving where you are.
       block: 3
 
   - code:
@@ -259,17 +260,17 @@ slides:
         lang: excel
         code: |
           =B1*B3
-          =B1+B12-B13
+          =B11+B12-B13
       after:
         label: With names
         file: sheet.xlsx
         lang: excel
         code: |
           =LoanAmount*MonthlyRate
-          =OpeningBalance+Interest-Principal
+          =OpeningBalance+Interest-Payment
       note: >-
         The first one has to be checked cell by cell. The second reads straight through
-        and the error jumps out on its own. Same sum, and in the project review one is
+        and the error jumps out on its own. Same calculation, and in the project review one is
         defended in ten seconds and the other is not.
 
   - quiz:
@@ -296,7 +297,7 @@ slides:
         - label: Submission
           text: The .xlsm with the names created and the module exported, on Blackboard
         - label: Constraint
-          text: No sheet formula may be left holding coordinates. All of them use names.
+          text: No formula may reach a parameter by its coordinates. Always by its name.
         - label: The test
           text: Insert a row above the table. If something breaks, the name was not set up properly.
 
@@ -324,7 +325,7 @@ slides:
         - [Weight, Part of the 20 % for assignments]
       rubric:
         - ["Operators", "30 %", "The formula uses the right precedence and carries parentheses where needed"]
-        - ["Names", "40 %", "All four parameters are named and the formulas use them"]
+        - ["Names", "40 %", "The three inputs and the two results are named, and the formulas use them"]
         - ["Formatting", "30 %", "The rate shows as a percentage and the amount as currency"]
 
   - closing:

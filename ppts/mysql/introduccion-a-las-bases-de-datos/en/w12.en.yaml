@@ -78,7 +78,7 @@ slides:
       title: What a view stores and what it does not
       lede: >-
         Week 2's source called it “Vista (RO)” and week 3 placed it at the external level. One of
-        those two is wrong, and today it gets corrected with the server on screen.
+        those two is wrong, and today the correction is finished with the server on screen.
       block: 1
 
   - concept:
@@ -213,15 +213,15 @@ slides:
         DELETE FROM v_insc_join WHERE inscripcion_id = 3;
       output: |
         IS_UPDATABLE = YES
-        the UPDATE moved the row in
+        the UPDATE changed the row in
         the base table
 
         ERROR 1393 (HY000): Can not
         modify more than one base
-        table through a join view
+        table through a join view ...
 
         ERROR 1395 (HY000): Can not
-        delete from join view
+        delete from join view ...
 
   - code_output:
       eyebrow: Measured · where the boundary really falls
@@ -284,7 +284,7 @@ slides:
         - ["LEFT JOIN", "no", "IS_UPDATABLE = NO, error 1288"]
         - ["Aggregation", "no", "ERROR 1288 (HY000)"]
         - ["DISTINCT, UNION", "no", "IS_UPDATABLE = NO, error 1288"]
-        - ["A subquery", "no, if correlated", "says YES and fails with 1288"]
+        - ["A subquery", "no, if scalar and correlated", "says YES and fails with 1288"]
 
   - code_output:
       eyebrow: Measured · closing the view
@@ -402,7 +402,7 @@ slides:
         - label: Error 04
           title: Trusting IS_UPDATABLE
           desc: >-
-            With a correlated subquery the catalog says YES and the UPDATE fails with 1288.
+            With a correlated scalar subquery the catalog says YES and the UPDATE fails with 1288.
             You try the UPDATE; you do not take the column's word for it.
 
   - lab:

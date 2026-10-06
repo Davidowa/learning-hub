@@ -13,7 +13,7 @@ slides:
       unit: Semana 04 · Sesiones 7 y 8 · Estadística, texto y fecha
       title: Manejo y Análisis de la Información
       subtitle: >-
-        Dieciséis funciones en dos sesiones, y un cuadro de diálogo por el que pasan todas.
+        Veinticuatro funciones en dos sesiones, y un cuadro de diálogo por el que pasan todas.
         La semana en la que una fórmula empieza a decir lo que significa.
       meta:
         - [Profesor, David Escobar-Castillejos]
@@ -78,7 +78,7 @@ slides:
           state: todo
         - label: E · Semanas 14–17
           title: Resumen y entrega
-          desc: Tablas dinámicas, filtro avanzado, análisis de hipótesis e impresión
+          desc: Tablas dinámicas, filtros avanzados, análisis de hipótesis e impresión
           state: todo
 
   - divider:
@@ -234,13 +234,13 @@ slides:
         EXTRAE(A2,5,3)       luz
         LARGO(A2)            14
         LARGO("Ana Luz ")    8
-        LARGO(ESPACIOS(...))   7
+        LARGO(ESPACIOS(...)) 7
 
   - concept:
       eyebrow: Bloque 02 · Cómo leer las dos últimas líneas
       title: LARGO encuentra el espacio que nadie ve
       lead: >-
-        Ana Luz tiene siete caracteres y LARGO respondió ocho, porque la celda trae un
+        Ana Luz tiene siete caracteres y LARGO respondió ocho, porque la cadena trae un
         espacio al final. En pantalla las dos se ven idénticas. En las búsquedas de la semana
         13 una coincide y la otra devuelve #N/D, y esa es la semana en la que aprendes a
         apuntar LARGO a una columna que crees limpia.
@@ -255,7 +255,7 @@ slides:
         - text: Apunta LARGO a una celda que creas limpia
         - text: Compárala con los caracteres que puedes ver
         - text: Uno de más quiere decir un espacio al final
-          loop: ↺ ESPACIOS lo quita, y la semana 9 tiene una sesión entera de limpieza
+          loop: ↺ ESPACIOS lo quita, y la semana 9 vuelve a la limpieza
 
   - code_output:
       eyebrow: Bloque 02 · Objetivo 4.3.2 y sesión 8
@@ -405,7 +405,7 @@ slides:
           =B1+B2
       output: |
         TEXTO(C2,"0.00")     142.00
-        ESNUMERO de eso    FALSO
+        ESNUMERO de eso      FALSO
         TEXTO(D2,"dddd")     martes
         TEXTO(D2,"mmmm")     marzo
 
@@ -439,7 +439,7 @@ slides:
       headers: [Código, En qué convierte 1234.5, Para qué sirve]
       rows:
         - ['#,##0.00 "kg"', "1,234.50 kg", "Una unidad, y sigue siendo número"]
-        - ['[Red](#,##0.00)', "(1,234.50) en rojo", "Negativos que se leen negativos"]
+        - ['#,##0.00;[Red](#,##0.00)', "(1,234.50) en rojo desde -1234.5", "Negativos que se leen negativos"]
         - ['0.0,,"M"', "12.3M desde 12345678", "Millones, sin dividir"]
         - ['000-00-0000', "000-00-0042 desde 42", "Ceros a la izquierda que aguantan"]
         - ['# ??/??', "1/2 desde 0.5", "Fracciones con barras alineadas"]
@@ -483,7 +483,7 @@ slides:
           desc: El cuadro que está arriba de la lista Tipo muestra la celda seleccionada antes de que aceptes nada.
         - label: '05'
           title: Borra solo los tuyos
-          desc: Vuelve a abrir Ctrl+1, Personalizada, selecciona el código en la lista y haz clic en Eliminar. Los códigos integrados no traen ese botón.
+          desc: Vuelve a abrir Ctrl+1, Personalizada, selecciona el código en la lista y haz clic en Eliminar. Con los integrados, ese botón queda desactivado.
 
   - pitfalls:
       eyebrow: Bloque 03 · Errores comunes
@@ -519,12 +519,18 @@ slides:
         - "Las dos cuentan la celda con una fórmula que no devuelve nada"
         - "CONTAR.BLANCO contó la celda que tiene el número 5"
         - "Los rangos se seleccionaron mal y vieron celdas distintas"
+      notes: >-
+        Respuesta: B. La celda con ="" no está vacía para CONTARA y sí lo está para
+        CONTAR.BLANCO, así que entra en los dos conteos y 3 + 2 da cinco sobre cuatro
+        celdas. A y D culpan a la selección, que es la misma, y C confunde un número con
+        una celda vacía.
 
   - lab:
       eyebrow: Laboratorio
       title: Ejercicios 6 y 13
       brief: >-
-        El ejercicio 6 es el trabajo estadístico sobre la lista de pedidos. El ejercicio 13
+        El ejercicio 6 es el trabajo estadístico sobre la lista de pedidos, sin los
+        CONTAR.SI, que llegan en la semana 8. El ejercicio 13
         son sesenta alumnos con fecha de nacimiento, donde las funciones de texto, las de
         fecha y los formatos de número personalizados caen en un solo archivo. Agreguen lo
         que ninguno de los dos pide, un top tres armado con K.ESIMO.MAYOR y un fondo tres

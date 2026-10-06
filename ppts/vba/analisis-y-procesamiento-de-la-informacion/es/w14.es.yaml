@@ -9,7 +9,7 @@ meta:
 
 slides:
   - cover:
-      kicker: Escuela de Empresariales · 2026
+      kicker: Facultad de Empresariales · 2026
       unit: Semana 14 · Unidad 4 · Filtros, subtotales y tablas
       title: Análisis y Procesamiento de la Información
       subtitle: Filtrar esconde filas, no las quita. Y tu macro no se entera, porque el ciclo las sigue viendo todas.
@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de la sesión
-      title: Al terminar la sesión vas a poder…
+      title: Al terminar la sesión el alumno podrá…
       items:
         - head: Filtrar desde una macro
           sub: Con AutoFilter y con filtro avanzado, y saber cuándo sirve cada uno
@@ -46,15 +46,15 @@ slides:
 
   - roadmap:
       eyebrow: Mapa del curso
-      title: Dónde vamos en el semestre
+      title: Dónde estamos en el semestre
       phases:
         - label: 01 · Semanas 1–5
-          title: Programar en VBA
+          title: Programación en VBA
           desc: Editor, tipos, variables, operaciones y formularios de captura
           state: done
         - label: 02 · Semanas 6–7
-          title: Editar macros grabadas
-          desc: Rangos variables, buscar objetivo y automatización acotada
+          title: Edición de macros grabadas
+          desc: Rangos variables, búsqueda de objetivo y automatización acotada
           state: done
         - label: 03 · Semanas 8–12
           title: Decisiones, ciclos y eventos
@@ -87,7 +87,7 @@ slides:
       steps:
         - text: Filtras y quedan dos renglones a la vista
         - text: El ciclo recorre los cuatro de todas formas
-        - text: El total sale del doble de lo que esperabas
+        - text: El total sale más alto de lo que esperabas
           loop: ↺ y el número se ve razonable, que es lo peor
 
   - code_output:
@@ -123,6 +123,7 @@ slides:
                     .SpecialCells(xlCellTypeVisible)
                 total = total + c.Value
             Next c
+            MsgBox total
         End Sub
       annotations:
         - label: SpecialCells
@@ -203,7 +204,7 @@ slides:
         ordenado .......   8 filas
 
         etiqueta: Compras Total
-        formula:  =SUBTOTAL(9,B2:B3)
+        fórmula:  =SUBTOTAL(9,B2:B3)
 
   - concept:
       eyebrow: Por qué pasa
@@ -243,7 +244,7 @@ slides:
         End Sub
       annotations:
         - label: RemoveSubtotal
-          text: Primero limpia los cortes anteriores. Si no, la segunda corrida corta sobre los cortes.
+          text: Primero limpia los cortes anteriores. Si no, el Sort revuelve las filas de total con los datos.
         - label: CurrentRegion
           text: El bloque de celdas alrededor de A1, así el rango no se escribe a mano
         - label: TotalList
@@ -279,7 +280,7 @@ slides:
         - label: El nombre
           text: Es con el que la vas a llamar desde las fórmulas, así que ponle uno que signifique algo
         - label: Riesgo
-          text: Si corres la macro dos veces sobre la misma hoja, la segunda truena porque el nombre ya existe.
+          text: Si corres la macro dos veces sobre la misma hoja, la segunda truena porque ese rango ya es una tabla.
           accent: true
 
   - code_output:
@@ -299,7 +300,7 @@ slides:
         =SUM(...[Monto])  ->  300
 
         agrego una fila de 300
-        la misma formula  ->  600
+        la misma fórmula  ->  600
 
   - code_output:
       eyebrow: Medido
@@ -348,15 +349,15 @@ slides:
         Sub AddColumnToTable()
             Dim found As Boolean
             ' ...
-            Dim found As Boolean
-
             MsgBox "Table '" & tableNameToFind & "' not found."
+            ' ...
+            Dim found As Boolean
         End Sub
       annotations:
         - label: El Dim repetido
           text: Está declarada dos veces en el mismo procedimiento. Eso es error de compilación.
         - label: Qué se ve
-          text: El depurador abre y te marca la línea repetida. No corre ni la primera instrucción.
+          text: El editor se abre y te marca la línea repetida. No corre ni la primera instrucción.
         - label: La otra
           text: tableNameToFind no está declarada en ningún lado, y aparece cuatro veces en el archivo.
         - label: Riesgo
@@ -365,7 +366,7 @@ slides:
 
   - quiz:
       eyebrow: Pregunta rápida
-      question: El módulo no trae Option Explicit. ¿Qué muestra el mensaje?
+      question: Sin Option Explicit y ya sin el Dim repetido, ¿qué muestra el mensaje?
       filename: Tables.bas
       lang: vba
       source: |
@@ -404,7 +405,7 @@ slides:
           desc: Mete un corte cada vez que el valor cambia, no uno por grupo
         - label: Error 03
           title: Encabezado del criterio mal escrito
-          desc: El filtro avanzado esconde las filas todas y no da ningún error
+          desc: El filtro avanzado esconde todas las filas y no da ningún error
         - label: Error 04
           title: Recorrer una tabla vacía
           desc: DataBodyRange devuelve Nothing y sale el error 91 de la semana 12

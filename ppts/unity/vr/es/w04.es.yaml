@@ -121,7 +121,7 @@ slides:
 
   - code:
       eyebrow: Bloque 01 · El más chico que corre
-      title: Un interactable propio, en diez líneas
+      title: Un interactable propio, en trece líneas
       filename: EmergencyStop.cs
       lang: csharp
       source: |
@@ -170,8 +170,8 @@ slides:
         Debug.Log($"trabado {Latched}");
       output: |
         -- con la llamada a base --
-        trabado True
         sonido del panel
+        trabado True
         -- sin ella --
         trabado True
 
@@ -239,13 +239,13 @@ slides:
       title: Los mismos cuatro pasos, en el dispositivo
       filename: EmergencyStop.cs
       lang: csharp
-      output_label: adb logcat, cuatro eventos
+      output_label: adb logcat, cinco eventos
       source: |
         Debug.Log($"enter trabado={Latched}");
         Debug.Log($"exit  trabado={Latched}");
         Debug.Log($"panel trabado={Latched}");
       output: |
-        enter trabado=True
+        enter trabado=False
         exit  trabado=True
         enter trabado=True
         exit  trabado=True
@@ -268,8 +268,8 @@ slides:
         label: Para qué sirve revisar la fase
         title: El método se llama más de una vez por cuadro
         note: >-
-          Revisa la fase y sal temprano de las que no quieres, o la carátula gira al doble de
-          la velocidad que tecleaste.
+          Revisa la fase y sal temprano de las que no quieres, o la carátula gira varias veces
+          más rápido de lo que tecleaste.
       steps:
         - text: El manager corre sus fases en orden
         - text: Tu override se llama en cada una
@@ -359,8 +359,8 @@ slides:
         - label: Error 03
           title: Trabajo por cuadro en Update
           desc: >-
-            Corre fuera de las fases de interacción, así que la carátula lee el estado de
-            selección del cuadro anterior y el movimiento llega tarde por exactamente uno.
+            Corre fuera de las fases de interacción. Si se ejecuta antes que el manager, la
+            carátula lee la selección del cuadro anterior y el movimiento llega tarde por uno.
         - label: Error 04
           title: Suponer que hay una sola mano
           desc: >-
@@ -403,8 +403,8 @@ slides:
       title: La puerta de guarda, en parejas
       brief: >-
         Escriban un interactable GuardDoor que gire sobre su bisagra mientras se sostiene y
-        reporte si está cerrada, y después hagan que el motor se niegue a arrancar mientras la
-        puerta no esté cerrada y el paro no esté liberado. Dos componentes, un enclavamiento,
+        reporte si está cerrada, y después hagan que el motor se niegue a arrancar a menos que
+        la puerta esté cerrada y el paro liberado. Dos componentes, un enclavamiento,
         nada de lógica en el inspector.
       blocks:
         - label: Restricción
@@ -437,7 +437,7 @@ slides:
         - [Formato, Blackboard · scripts y PDF]
         - [Peso, Parte del promedio de tareas]
       rubric:
-        - ["El enclavamiento", "40 %", "Tres condiciones, revisadas en un solo lugar y legibles en la clase"]
+        - ["El enclavamiento", "40 %", "Dos condiciones, revisadas en un solo lugar y legibles en la clase"]
         - ["El interactable propio", "40 %", "Hereda, llama a su base y sostiene su propio estado"]
         - ["La corrida rota", "20 %", "Los dos logs, y una frase sobre qué significó el silencio"]
 

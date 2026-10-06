@@ -33,7 +33,7 @@ slides:
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
-      title: Al terminar la sesión el alumno podrá…
+      title: Al terminar la sesión podrás…
       items:
         - head: Usar los seis operadores de comparación
           sub: Igual, distinto, mayor, menor, y los dos que incluyen el límite
@@ -124,7 +124,7 @@ slides:
   - divider:
       eyebrow: Bloque 02
       title: Decidir
-      lede: La misma estructura que ya usas en una hoja de cálculo, escrita en dos renglones en lugar de en una fórmula larga.
+      lede: La misma estructura que ya usas en una hoja de cálculo, escrita en varios renglones en lugar de en una fórmula larga.
       block: 2
 
   - compare:
@@ -135,7 +135,7 @@ slides:
         file: campanas.xlsx
         lang: excel
         code: |
-          =SI(D2>=0.03; "Aceptable"; "Revisar")
+          =SI(D2>=0.03, "Aceptable", "Revisar")
       after:
         label: En Python
         file: clasificar.py
@@ -183,8 +183,12 @@ slides:
       source: |
         if conversion >= 0.03:
             estado = "Aceptable"
+            print("La campaña se queda al aire.")
         else:
             estado = "Revisar"
+            print("Hay que revisar la segmentación.")
+
+        print(f"{conversion:.2%} · {estado}")
       output: |
         La campaña se queda al aire.
         3.42% · Aceptable
@@ -255,7 +259,7 @@ slides:
           desc: Mayor que deja fuera al que está justo en la meta. Mayor o igual lo incluye. Decide cuál quieres.
         - label: Error 04
           title: Escribir las condiciones al revés
-          desc: De lo más exigente a lo menos. Al revés, la primera rama se traga todos los casos.
+          desc: De lo más exigente a lo menos. Al revés, la primera rama se traga los casos de las que siguen.
 
   - quiz:
       eyebrow: Verificación rápida
@@ -282,7 +286,7 @@ slides:
       brief: Escribe un programa que clasifique algo de tu carrera en al menos tres categorías, como un cliente por su antigüedad, un proveedor por su cumplimiento o un gasto por su monto. Que pida el dato por teclado.
       blocks:
         - label: Entrega
-          text: El archivo .py y las tres corridas que caen en cada categoría
+          text: El archivo .py y una corrida que caiga en cada categoría
         - label: Restricción
           text: Las categorías tienen que ser excluyentes. Ningún caso puede caer en dos.
         - label: La prueba
@@ -297,7 +301,7 @@ slides:
         - title: La sangría es la estructura
           desc: Los cuatro espacios son lo único que dice qué líneas pertenecen a cada rama del if
         - title: El orden del elif decide
-          desc: De lo más exigente a lo menos. Invertirlo hace que la primera rama se trague todos los casos
+          desc: De lo más exigente a lo menos. Invertirlo hace que la primera rama se trague los casos de las que siguen
 
   - homework:
       eyebrow: Tarea

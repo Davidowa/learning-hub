@@ -9,13 +9,13 @@ meta:
 
 slides:
   - cover:
-      kicker: Facultad de Empresariales · 2026
+      kicker: School of Business · 2026
       unit: Week 06 · Unit 2 · Editing what you recorded
       title: Information Analysis and Processing
       subtitle: Cutting what the recorder added and adding what it left out, so the macro still works next month.
       meta:
         - [Instructor, David Escobar-Castillejos]
-        - [Code, TIA503 · Empresariales]
+        - [Code, TIA503 · Business]
         - [Session, 6 of 17]
 
   - agenda:
@@ -35,16 +35,16 @@ slides:
       eyebrow: Session objectives
       title: By the end of the session you will be able to…
       items:
-        - head: Recognise the recorder's fingerprints
-          sub: Select, Selection, ActiveCell and hard-typed addresses
+        - head: Recognize the recorder's fingerprints
+          sub: Select, Selection and hard-typed addresses
         - head: Remove Select without changing the result
-          sub: And explain why the macro also runs faster afterwards
+          sub: And explain why the macro also runs faster afterward
         - head: Build a range from variables
           sub: Cells(row, column), and the range that runs corner to corner
         - head: Find where the data ends
           sub: End(xlUp), CurrentRegion and UsedRange, and where each one fails
         - head: Tell hiding from deleting
-          sub: One is undone, the other shifts the columns and takes the data with it
+          sub: One can be undone, the other shifts the columns and takes the data with it
 
   - roadmap:
       eyebrow: Course map
@@ -117,7 +117,7 @@ slides:
           Range("C2:C13").NumberFormat = "$#,##0.00"
       note: >-
         Three lines become one, and the line now says what it works on without reading
-        upwards. The macro also stops moving the screen while it runs, which is where the
+        upward. The macro also stops moving the screen while it runs, which is where the
         feeling that it was slow came from.
 
   - method:
@@ -140,7 +140,7 @@ slides:
 
   - concept:
       eyebrow: Key concept
-      title: Cells takes variables, Range does not
+      title: Cells takes numbers, Range takes text
       lead: >-
         Range wants a written address in quotes, and that makes it useless the moment the
         last row moves. Cells wants two numbers, the row and the column, and a number can
@@ -163,7 +163,7 @@ slides:
       title: Three ways to find where the data ends
       headers: [Way, What it returns, Where it fails]
       rows:
-        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "If column 1 has gaps"]
+        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "If column 1 ends before the others"]
         - ["Range(\"A1\").CurrentRegion", "$A$1:$C$13", "If there is an empty row in the middle"]
         - ["UsedRange", "$A$1:$C$13", "If formatting was left in empty cells"]
 
@@ -190,7 +190,7 @@ slides:
         - label: Set
           text: A range is an object, and objects are assigned with Set. Without it, error 91.
         - label: Risk
-          text: If column 1 has gaps, End(xlUp) stops at the first one from the bottom and the range comes out short.
+          text: If column 1 ends before column 3, End(xlUp) stops at its last value and the range comes out short.
           accent: true
 
   - code_output:
@@ -212,7 +212,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Hiding, showing and deleting
-      lede: On screen the first two look alike and so does the third. In the data, one is reversible and the other is not.
+      lede: On screen, hiding and deleting look the same. In the data, one is reversible and the other is not.
       block: 3
 
   - table:
@@ -223,7 +223,7 @@ slides:
         - ["Before running anything", "Visible, says Region", "Region"]
         - ["EntireColumn.Hidden = True", "Hidden, still there", "Region"]
         - ["EntireColumn.Hidden = False", "Visible again", "Region"]
-        - ["EntireColumn.Delete", "Gone, and C shifts across", "Venta"]
+        - ["EntireColumn.Delete", "Gone, and C shifts across", "Sales"]
 
   - code:
       eyebrow: Block 03 · The week 1 macro, fixed
@@ -267,7 +267,7 @@ slides:
           desc: Cells(1, 1).End(xlDown) stops at the first gap. Coming up from the bottom with xlUp does not.
         - label: Error 04
           title: Deleting when you meant hiding
-          desc: Delete shifts the columns from the right across and takes the data. Hidden touches nothing and undoes.
+          desc: Delete shifts the columns from the right across and takes the data. Hidden touches nothing and can be undone.
 
   - quiz:
       eyebrow: Quick check
@@ -303,9 +303,9 @@ slides:
       items:
         - title: The recorder writes today's range
           desc: And next month it runs with no error at all over the wrong part, which is the most expensive failure there is
-        - title: Cells takes variables, Range does not
+        - title: Cells takes numbers, Range takes text
           desc: Range wants an address in quotes, Cells wants two numbers, and a number can be worked out
-        - title: Hiding undoes, deleting does not
+        - title: Hiding can be undone, deleting cannot
           desc: Delete shifts the columns across and takes the data. On screen they look alike, in the data they are nothing alike
 
   - homework:

@@ -36,7 +36,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Reconocer las marcas de la grabadora
-          sub: Select, Selection, ActiveCell y las direcciones fijas
+          sub: Select, Selection y las direcciones fijas
         - head: Quitar Select sin cambiar el resultado
           sub: Y explicar por qué la macro además corre más rápido
         - head: Armar un rango con variables
@@ -123,7 +123,7 @@ slides:
   - method:
       eyebrow: Bloque 01 · La regla
       title: Si lo puedes nombrar, no lo selecciones
-      statement: Seleccionar es lo que hace una persona con el ratón. Un programa nombra la celda y le habla directo.
+      statement: Seleccionar es lo que hace una persona con el mouse. Un programa nombra la celda y le habla directo.
       points:
         - label: Qué se gana
           text: El renglón se entiende solo, la macro no parpadea, y dejas de depender de qué hoja estaba activa
@@ -140,7 +140,7 @@ slides:
 
   - concept:
       eyebrow: Concepto clave
-      title: Cells acepta variables, Range no
+      title: Cells pide números, Range pide texto
       lead: >-
         Range pide una dirección escrita, entre comillas, y eso la vuelve inservible
         cuando la última fila cambia. Cells pide dos números, la fila y la columna, y un
@@ -163,7 +163,7 @@ slides:
       title: Tres formas de encontrar dónde acaban los datos
       headers: [Forma, Qué devuelve, Cuándo falla]
       rows:
-        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "Si la columna 1 tiene huecos"]
+        - ["Cells(Rows.Count, 1).End(xlUp).Row", "13", "Si la columna 1 acaba antes que las otras"]
         - ["Range(\"A1\").CurrentRegion", "$A$1:$C$13", "Si hay una fila vacía en medio"]
         - ["UsedRange", "$A$1:$C$13", "Si quedó formato en celdas vacías"]
 
@@ -190,7 +190,7 @@ slides:
         - label: Set
           text: Un rango es un objeto, y los objetos se asignan con Set. Sin Set, error 91.
         - label: Riesgo
-          text: Si la columna 1 trae huecos, End(xlUp) se detiene en el primero desde abajo y el rango sale corto.
+          text: Si la columna 1 acaba antes que la 3, End(xlUp) se detiene en su último dato y el rango sale corto.
           accent: true
 
   - code_output:
@@ -212,7 +212,7 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: Ocultar, mostrar y eliminar
-      lede: En pantalla las dos primeras se parecen y la tercera también. En los datos, una es reversible y la otra no.
+      lede: En pantalla, ocultar y eliminar se ven igual. En los datos, una es reversible y la otra no.
       block: 3
 
   - table:
@@ -220,9 +220,9 @@ slides:
       title: Qué le pasa a la hoja con cada una
       headers: [Instrucción, Qué le pasa a B, Qué queda en B1]
       rows:
-        - ["Antes de correr nada", "Se ve, dice Region", "Region"]
-        - ["EntireColumn.Hidden = True", "Se esconde, sigue ahí", "Region"]
-        - ["EntireColumn.Hidden = False", "Vuelve a verse", "Region"]
+        - ["Antes de correr nada", "Se ve, dice Región", "Región"]
+        - ["EntireColumn.Hidden = True", "Se esconde, sigue ahí", "Región"]
+        - ["EntireColumn.Hidden = False", "Vuelve a verse", "Región"]
         - ["EntireColumn.Delete", "Desaparece y C se recorre", "Venta"]
 
   - code:
@@ -231,7 +231,7 @@ slides:
       filename: Modulo2.bas
       lang: vba
       source: |
-        Sub OcultarColumnaAuxiliar()
+        Sub AlternarColumnaAuxiliar()
             Dim col As Range
             Set col = Columns("D:D")
 
@@ -247,7 +247,7 @@ slides:
         - label: Hidden se lee
           text: No solo se asigna. Preguntar por él es lo que permite que el mismo botón oculte y muestre.
         - label: El nombre
-          text: OcultarColumnaAuxiliar dice qué columna y para qué. HideColumn no decía ninguna de las dos.
+          text: AlternarColumnaAuxiliar dice qué columna y para qué. HideColumn no decía ninguna de las dos.
         - label: Riesgo
           text: Delete en vez de Hidden se ve igual en la demostración y borra el dato para siempre.
           accent: true
@@ -303,7 +303,7 @@ slides:
       items:
         - title: La grabadora escribe el rango de hoy
           desc: Y el mes que entra corre sin marcar error sobre la parte equivocada, que es la falla más cara de todas
-        - title: Cells acepta variables, Range no
+        - title: Cells pide números, Range pide texto
           desc: Range pide una dirección entre comillas, Cells pide dos números, y un número puede calcularse
         - title: Ocultar se deshace, eliminar no
           desc: Delete recorre las columnas y se lleva el dato. En pantalla se parecen y en los datos no se parecen en nada

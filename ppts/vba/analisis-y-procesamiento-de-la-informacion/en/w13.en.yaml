@@ -27,7 +27,7 @@ slides:
         - title: Sorting
           desc: By several criteria, and the mistake that corrupts the data with no warning
         - title: The second midterm
-          desc: What it covers, how it is sat, and what you may bring with you
+          desc: What it covers, how it is taken, and what you may bring with you
         - title: Your turn
           desc: Your project database, cleaned and sorted from a macro
 
@@ -41,7 +41,7 @@ slides:
           sub: And know which of the repeated rows is the one that survives
         - head: Sort by several criteria
           sub: With Sort, its keys and the header declared, which is not optional
-        - head: Sit the second midterm
+        - head: Take the second midterm
           sub: What it covers, what you may consult, and how the answer is uploaded
 
   - roadmap:
@@ -68,7 +68,7 @@ slides:
   - divider:
       eyebrow: Block 01
       title: Cleaning
-      lede: The database they send you is not clean. And the worse part is that it looks clean.
+      lede: The database they send you is not clean. And the worst part is that it looks clean.
       block: 1
 
   - concept:
@@ -101,9 +101,9 @@ slides:
         Debug.Print Trim("Ana    Lopez")
         Debug.Print WorksheetFunction.Trim("Ana    Lopez")
       output: |
-        [Ana Lopez]
-        [Ana    Lopez]
-        [Ana Lopez]
+        Ana Lopez
+        Ana    Lopez
+        Ana Lopez
 
   - code_output:
       eyebrow: Measured
@@ -119,10 +119,9 @@ slides:
 
         s = Replace(s, Chr(160), " ")
         Debug.Print Trim(s) = "Ana"
-      output: |
-        4    4
+      output: |2
+         4             4
         False
-
         True
 
   - code:
@@ -168,7 +167,7 @@ slides:
       title: When duplicates go, the first one stays
       filename: Module1
       lang: vba
-      output_label: Before and after
+      output_label: Rows 2 to 4 after
       source: |
         ' A: Dept      B: Name
         ' Sales        first
@@ -220,11 +219,13 @@ slides:
       output_label: With 2 and 3 empty
       source: |
         For i = 1 To 4
-            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+            If WorksheetFunction.CountA(Rows(i)) = 0 Then _
+                Rows(i).Delete
         Next i
 
         For i = 4 To 1 Step -1
-            If CountA(Rows(i)) = 0 Then Rows(i).Delete
+            If WorksheetFunction.CountA(Rows(i)) = 0 Then _
+                Rows(i).Delete
         Next i
       output: |
         downwards:  a  .  d
@@ -331,7 +332,7 @@ slides:
           desc: The header is sorted with the data and ends up in the middle of it
         - label: Error 03
           title: RemoveDuplicates Columns
-          desc: It counts inside the range, not on the sheet. Get it wrong and it removes nothing, silently.
+          desc: It counts inside the range, not on the sheet. Get it wrong and it compares another column, silently.
         - label: Error 04
           title: Deleting rows top to bottom
           desc: Delete one and the next moves up into a position the loop has already passed
@@ -339,12 +340,12 @@ slides:
   - divider:
       eyebrow: Block 03
       title: The second midterm
-      lede: It covers unit 3 in full and the start of unit 4. It is sat at the machine, with your notes beside you.
+      lede: It covers unit 3 in full and the start of unit 4. It is taken at the machine, with your notes beside you.
       block: 3
 
   - table:
       eyebrow: Block 03 · What it covers
-      title: From week 8 onwards
+      title: From week 8 onward
       headers: [Weeks, Topic, What is assessed]
       rows:
         - ["8", "Decisions", "If, comparison and logical operators"]
@@ -381,7 +382,7 @@ slides:
       points:
         - label: What is assessed
           text: That the macro runs on data you had not seen and that it uses a variable range instead of a fixed address
-        - label: The defence
+        - label: The defense
           text: I may ask you to talk through one of your own procedures out loud. Reading it is not explaining it.
         - label: How to prepare
           text: By redoing the weeks 9 to 12 assignments without looking at your solution. Consulting is fast once you know what to look for.

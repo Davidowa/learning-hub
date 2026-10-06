@@ -23,7 +23,7 @@ slides:
       title: Four moments in the session
       cards:
         - title: Calling itself
-          desc: The base case and the case that moves towards it
+          desc: The base case and the case that moves toward it
         - title: The stack
           desc: What happens in memory while the recursion goes down and comes back
         - title: Two at once
@@ -36,10 +36,10 @@ slides:
       title: By the end of the session you will be able to…
       items:
         - head: Write a recursive function
-          sub: With a base case that stops it and a case that moves towards it on every call
+          sub: With a base case that stops it and a case that moves toward it on every call
         - head: Follow the call stack
           sub: And explain why the result is assembled on the way back rather than on the way down
-        - head: Recognise a stack overflow
+        - head: Recognize a stack overflow
           sub: And say what a recursion that never ends is missing
         - head: Explain what a mutex protects
           sub: Over a resource two threads touch at the same time
@@ -93,12 +93,12 @@ slides:
       eyebrow: Diagnosis
       title: What a recursion looks like while it runs
       image: img/en/recursion.png
-      caption: The frames go down to the base case and the result is assembled coming back up, multiplying on the way.
-      alt: Four stack frames for factorial of 4, going down to the base case and returning upwards
+      caption: Shown here with factorial(4). The frames go down to the base case and the result is assembled coming back up, multiplying on the way.
+      alt: Four stack frames for factorial of 4, going down to the base case and returning upward
 
   - trace:
       eyebrow: Step by step
-      title: Five calls waiting and one that answers
+      title: Four calls waiting and one that answers
       headers: ["Call", "What it returns", "Waits for", "Final value"]
       rows:
         - ["factorial(5)", "5 times the one below", "factorial(4)", "120"]
@@ -123,7 +123,7 @@ slides:
           desc: The stack runs out and the program dies with no useful message, it does not hang like a loop
         - label: Error 02
           title: An unreachable base case
-          desc: It exists, but the argument never moves towards it, and the effect is exactly the same
+          desc: It exists, but the argument never moves toward it, and the effect is exactly the same
         - label: Error 03
           title: Recomputing the same thing
           desc: Naive recursive Fibonacci repeats the same calls and takes forever for large n
@@ -158,7 +158,7 @@ slides:
         - ["2", "4", "count(3)", "No"]
         - ["...", "falling with no limit", "the next one", "No"]
         - ["thousands", "negative", "the next one", "The stack runs out"]
-      verdict: It compiles without a single warning, because syntactically nothing is wrong. And it does not hang. The stack has a fixed size and the program dies the moment it is exceeded.
+      verdict: It compiles, because syntactically nothing is wrong; Visual Studio only warns (C4717) that it calls itself on every path. And it does not hang. The stack has a fixed size and the program dies the moment it is exceeded.
 
   - divider:
       eyebrow: Block 03
@@ -182,9 +182,9 @@ slides:
         std::jthread a(noise, "AAAA");
         std::jthread b(noise, "BBBB");
       output: |
-        AAAA 149
-        BBBBAAAA 0
-        AAAA 150 0
+        AAAA 198
+        AAAABBBB  150
+        199
 
   - concept:
       eyebrow: The fix
@@ -213,36 +213,36 @@ slides:
           desc: Unit 1 through unit 14. The first and second partials come back in full.
         - key: '02'
           title: It weighs the same as the other two
-          desc: All three are averaged and that average is 80 per cent of the grade
+          desc: All three are averaged and that average is 80 percent of the grade
         - key: '03'
           title: Recursion is on it, threads barely
           desc: Concurrency is asked about as a concept, not as code you have to write
         - key: '04'
           title: The project is separate
-          desc: It is handed in on the final exam date and carries the remaining 20 per cent
+          desc: It is handed in on the final exam date and carries the remaining 20 percent
 
   - lab:
       eyebrow: Lab
       title: Hanoi and one lock, in pairs
-      brief: Write the recursive solution to the towers of Hanoi for five discs, printing every move. Then launch two threads printing in parallel and fix the interleaved output with a mutex.
+      brief: Write the recursive solution to the towers of Hanoi for five disks, printing every move. Then launch two threads printing in parallel and fix the interleaved output with a mutex.
       blocks:
         - label: Constraint
           text: The Hanoi part has to be recursive, no loops. The thread part uses jthread.
         - label: Deliverable
           text: A .cpp with both parts and a screenshot of the output before and after the lock
         - label: Criterion
-          text: That you can say how many moves Hanoi makes with five discs and why
+          text: That you can say how many moves Hanoi makes with five disks and why
 
   - takeaways:
       eyebrow: Summary
       title: Three ideas to take away
       items:
         - title: No base case, no recursion
-          desc: What you get is a program that runs out of stack and dies, and it compiles with no warning
+          desc: What you get is a program that runs out of stack and dies, and it compiles with just a warning
         - title: The calls stack up and wait
           desc: The result is assembled coming back, and every pending call holds memory at once
         - title: Shared things need a lock
-          desc: Two threads on one resource tread on each other, twice in every four hundred lines
+          desc: Two threads on one resource tread on each other, and it shows in some runs and not in others
 
   - homework:
       eyebrow: For the next session
@@ -253,13 +253,13 @@ slides:
         - [Format, Blackboard · .zip without the x64 folder]
         - [Weight, Exercises are averaged into one point of the term grade]
       rubric:
-        - ["Recursion", "Required", "Hanoi solves five discs with the right number of moves"]
+        - ["Recursion", "Required", "Hanoi solves five disks with the right number of moves"]
         - ["Concurrency", "Required", "The mutex removes the interleaved output"]
         - ["Project", "Required", "It builds and the document has been started"]
 
   - closing:
       title: Questions
-      subtitle: Next session, the integrating project. How it is handed in, how it is marked, and what the presentation should look like.
+      subtitle: Next session, the integrating project. How it is handed in, how it is graded, and what the presentation should look like.
       meta:
         - [Email, descobarc@up.edu.mx]
         - [Chat, Institutional Google Chat]

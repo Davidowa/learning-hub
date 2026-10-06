@@ -214,7 +214,7 @@ slides:
           desc: La variable muere al terminar la función y queda una referencia a memoria que ya no es suya
         - label: Error 04
           title: Valor por omisión en los dos lados
-          desc: Va en el prototipo o en la definición, nunca en ambos, o el compilador lo rechaza
+          desc: Va en el prototipo si existe, nunca en ambos, o el compilador lo rechaza
 
   - divider:
       eyebrow: Bloque 03
@@ -254,9 +254,9 @@ slides:
       rows:
         - ["Cuántos parámetros", "area(double) y area(double, double)", "Sí"]
         - ["De qué tipo son", "imprimir(int) e imprimir(double)", "Sí"]
-        - ["Solo el nombre", "f(int a) y f(int b)", "No"]
+        - ["Solo el nombre del parámetro", "f(int a) y f(int b)", "No"]
         - ["Solo el retorno", "int f(int) y double f(int)", "No"]
-        - ["Valor o referencia", "f(int) y f(int&)", "No, da C2668"]
+        - ["Valor o referencia", "f(int) y f(int&)", "Sí, pero f(x) da C2668"]
 
   - code:
       eyebrow: Valores por omisión
@@ -319,7 +319,7 @@ slides:
       brief: Escriban una función void que reciba tres calificaciones y devuelva, por referencia, el promedio y la suma en dos parámetros distintos. Agreguen una segunda versión sobrecargada que reciba cuatro calificaciones.
       blocks:
         - label: Restricción
-          text: Sin if y sin ciclos, que llegan en la semana 7. Una sola ruta por función.
+          text: Sin if y sin ciclos, que llegan en las semanas 7 y 8. Una sola ruta por función.
         - label: Entregable
           text: Un .cpp con las dos versiones sobrecargadas y un main que llame a las dos
         - label: Criterio

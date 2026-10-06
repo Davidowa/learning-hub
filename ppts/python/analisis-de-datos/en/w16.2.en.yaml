@@ -39,8 +39,8 @@ slides:
           sub: By passing column names, with no data preparation first
         - head: Choose the right estimator
           sub: Because seaborn averages by default and you nearly always want the total
-        - head: Bring in a third variable
-          sub: With hue, which splits by colour and builds the legend itself
+        - head: Shade a PivotTable
+          sub: With heatmap, which takes the pivot_table grid as it is
         - head: Read a box plot
           sub: Median, middle half, range and the outliers
         - head: Present a finding
@@ -64,7 +64,7 @@ slides:
           state: done
         - label: 04 · Weeks 14–17
           title: Real data
-          desc: Files, pandas and visualisation
+          desc: Files, pandas and visualization
           state: now
 
   - divider:
@@ -127,18 +127,19 @@ slides:
       source: |
         print((sales.groupby("region")["amount"]
                .agg(["sum", "mean"]) / 1000).round(0))
-      output: |
-        region     sum    mean
-        Centre  3919.0    56.0
-        North   4352.0    47.0
-        South   1553.0    23.0
-        West    3030.0    40.0
+      output: |2
+                   sum  mean
+        region
+        Centre  3919.0  56.0
+        North   4352.0  47.0
+        South   1553.0  23.0
+        West    3030.0  40.0
 
   - concept:
       eyebrow: Key concept
       title: Total and average answer different questions
       lead: >-
-        North sells more than Centre over the year. Centre sells bigger on every deal. Both
+        North sells more than Centre over the year. Centre sells bigger per deal, on average. Both
         statements are true and both come from the same table, and the chart you pick
         decides which one your reader sees. Picking without noticing is how an honest
         report ends up saying something you did not mean.
@@ -162,7 +163,7 @@ slides:
 
   - code:
       eyebrow: Block 02 · Box plots
-      title: The whole shape, not just the centre
+      title: The whole shape, not just the center
       filename: box.py
       source: |
         order = (employees.groupby("area")["monthly_salary"]
@@ -190,7 +191,7 @@ slides:
         - ["barplot", "Comparing categories", "Averages unless you say estimator"]
         - ["lineplot", "Change over time", "hue splits several series"]
         - ["boxplot", "The whole spread", "Shows what the average hides"]
-        - ["heatmap", "A grid, shaded", "It is the PivotTable in colour"]
+        - ["heatmap", "A grid, shaded", "It is the PivotTable in color"]
         - ["pairplot", "Everything against everything", "For exploring, not for the report"]
 
   - code:
@@ -206,10 +207,10 @@ slides:
                     cmap="Blues", ax=ax)
       annotations:
         - label: The input
-          text: It takes the grid pivot_table produced last session. No extra preparation at all.
+          text: It takes the grid pivot_table produced in week 15. No extra preparation at all.
         - label: annot
-          text: It writes the value inside each cell. Without it the colour forces an estimate off the side bar.
-        - label: The colour
+          text: It writes the value inside each cell. Without it the color forces an estimate off the side bar.
+        - label: The color
           text: It does the ranking for you. You see where the high values are without comparing figures one by one.
         - label: fmt
           text: It controls how the written value is rounded. In thousands with no decimals it fits comfortably.
@@ -217,7 +218,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: The integrative project
-      lede: It is handed in and presented today. It is worth twenty per cent, and grading is individual.
+      lede: It is handed in and presented today. It is worth twenty percent, and grading is individual.
       block: 3
 
   - table:
@@ -307,7 +308,7 @@ slides:
       rubric:
         - ["Code and analysis", "70 %", "It runs from scratch, the cleaning is right and the charts are honest"]
         - ["Report", "30 %", "Clear narrative, justified decisions and integrated evidence"]
-        - ["Questions", "Required", "The three questions arrive in writing before week 17"]
+        - ["Questions", "Required", "The three questions arrive in writing at the review session"]
 
   - closing:
       title: Questions

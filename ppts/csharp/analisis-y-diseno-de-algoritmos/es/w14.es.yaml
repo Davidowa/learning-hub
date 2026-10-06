@@ -31,7 +31,7 @@ slides:
         - title: Dos búsquedas
           desc: Lo que cuesta cada una, y lo que pasa cuando el arreglo crece
         - title: Tu turno
-          desc: Instrumentar dos algoritmos y reportar los conteos que salgan
+          desc: El mapa de desviaciones del dispositivo, con límites que salen de GetLength
 
   - objectives:
       eyebrow: Objetivos de aprendizaje
@@ -161,21 +161,22 @@ slides:
       source: |
         int[,] rejilla = new int[3, 4];
 
-        Array.Sort(rejilla);
-        Array.BinarySearch(rejilla, 0);
-      output: |
-        RankException: Only single
-        dimension arrays are
-        supported here.
+        try { Array.Sort(rejilla); }
+        catch (RankException e) { Console.WriteLine(e.Message); }
 
-        RankException: Only single
-        dimension arrays are
-        supported here.
+        try { Array.BinarySearch(rejilla, 0); }
+        catch (RankException e) { Console.WriteLine(e.Message); }
+      output: |
+        Only single dimension
+        arrays are supported here.
+
+        Only single dimension
+        arrays are supported here.
 
   - divider:
       eyebrow: Bloque 02
       title: Cuatro maneras de ordenar los mismos siete números
-      lede: El temario nombra cuatro algoritmos. Hoy corren los cuatro sobre la misma corrida y cada uno lleva su contador.
+      lede: El temario nombra cuatro algoritmos. Hoy corren los cuatro sobre las siete lecturas de rpm de la semana 13 y cada uno lleva su contador.
       block: 2
 
   - compare:
@@ -265,7 +266,7 @@ slides:
         - ["Shell", "saltos 3, 1", "12", "4"]
         - ["Shell", "saltos 4, 1", "17", "10"]
       verdict: >-
-        Shell casi duplica su número de comparaciones nada más por la secuencia de saltos.
+        Shell más que duplica sus movimientos nada más por la secuencia de saltos.
         Comparar alternativas incluye las alternativas que viven dentro de un mismo
         algoritmo.
 
@@ -318,8 +319,8 @@ slides:
             if (a[mid] < k) lo = mid+1; else hi = mid-1;
           }
       note: >-
-        Los dos cuerpos viven dentro de la misma firma, static int Buscar(int[] a, int k), y
-        los dos devuelven cuántas comparaciones costó llegar a la clave. Una comparación es
+        Los dos cuerpos, más un return -1 final, viven en static int Seq(int[] a, int k) y Bin,
+        y los dos devuelven cuántas comparaciones costó llegar a la clave. Una comparación es
         una prueba a[i] == k en la secuencial y una visita a a[mid] en la binaria.
 
   - code_output:
@@ -350,7 +351,7 @@ slides:
         - ["8000", "8000", "13"]
       verdict: >-
         Cada duplicación duplica el costo de la secuencial y le añade una comparación a la
-        binaria. Lean las columnas hacia abajo. Una gana un dígito, la otra una unidad.
+        binaria. Lee las columnas hacia abajo. Una suma 7500 comparaciones y la otra 4.
 
   - quiz:
       eyebrow: Pregunta rápida

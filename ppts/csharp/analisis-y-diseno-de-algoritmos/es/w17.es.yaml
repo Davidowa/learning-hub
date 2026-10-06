@@ -34,7 +34,7 @@ slides:
           desc: La segunda mitad de la sesión, con lo que trajiste por escrito
 
   - objectives:
-      eyebrow: Objetivos de la sesión
+      eyebrow: Objetivos de aprendizaje
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Ubicar cada tema en el mapa
@@ -124,7 +124,8 @@ slides:
       filename: Repaso.cs
       lang: csharp
       source: |
-        // struct Sample { int Channel; int Rpm; Status State; }
+        // struct Sample { public int Channel, Rpm;
+        //                 public Status State; }
         Sample[] banco = new Sample[n];
         int suma = 0, fuera = 0;
         for (int i = 0; i < n; i++)
@@ -224,7 +225,7 @@ slides:
       steps:
         - text: Un tipo decide qué cabe
         - text: Una condición decide por dónde
-        - text: Un ciclo repite hasta que se cumple
+        - text: Un ciclo repite mientras se cumple
           loop: ↺ y la función le pone nombre
 
   - table:
@@ -316,7 +317,7 @@ slides:
       source: |
         Sample s1 = new Sample
         {
-            SensorId = 1, Celsius = 20.0, Estado = Status.Ok
+            SensorId = 1, Celsius = 20.0, State = Status.Ok
         };
         Sample s2 = s1;
         s2.Celsius = 99.9;
@@ -428,7 +429,7 @@ slides:
       rows:
         - ["int.MaxValue + 1", "error CS0220", "al compilar"]
         - ["ciclos++", "-2147483648", "al correr"]
-        - ["en long", "2147483650", "al correr"]
+        - ["en long", "2147483648", "al correr"]
         - ["checked { }", "OverflowException", "al correr"]
       verdict: >-
         A 25 ciclos por segundo, ese tope llega a los 994.2 días de corrida continua. Es un
@@ -441,7 +442,7 @@ slides:
       rows:
         - ["Contenido", "Todas las unidades del curso"]
         - ["Peso", "20 % de la calificación final"]
-        - ["Nuevo", "El for, el anidamiento y break o continue entran por primera vez"]
+        - ["Nuevo", "El for, el anidamiento y su costo contado entran por primera vez"]
         - ["Nuevo", "Los arreglos de dos índices, la ordenación y la búsqueda también"]
         - ["Formato", "En la computadora del salón, y se sube a Blackboard"]
         - ["Puedes llevar", "Apuntes, tareas, libros y tu propio código del semestre"]
@@ -456,8 +457,8 @@ slides:
       points:
         - label: Del primer parcial
           text: >-
-            El parcial 1 examinó la repetición al nivel de la semana 8, con while, do-while
-            y una salida probada. El for, el anidamiento y break o continue entran aquí.
+            El parcial 1 examinó la repetición al nivel de la semana 8: while, do-while, una
+            salida probada, break y continue. El for, el anidamiento y su costo entran aquí.
         - label: Del segundo parcial
           text: >-
             El parcial 2 cubrió la unidad 5 completa y la 6 hasta 6.1.3. Los arreglos de dos
@@ -473,16 +474,16 @@ slides:
       items:
         - label: No vimos 01
           title: Clases propias con comportamiento
-          desc: Las clases aparecieron dos veces y solo como contraste medido. Escribir una es el curso que sigue.
+          desc: Las clases aparecieron en las semanas 2, 11 y 15, solo como contraste medido. Escribir una es el curso que sigue.
         - label: No vimos 02
           title: try / catch como herramienta de diseño
           desc: Aquí las excepciones fueron fallas que se previenen. La regla fue guardar la entrada, no atrapar el choque.
         - label: No vimos 03
           title: Colecciones más allá del arreglo
-          desc: List de T apareció una vez y fallando, con CS1612. Archivos y bases de datos tampoco entraron.
+          desc: List de T apareció dos veces y las dos fallando, en las semanas 9 y 15. Archivos y bases de datos tampoco entraron.
         - label: No vimos 04
           title: Genéricos, LINQ y programación asíncrona
-          desc: Un solo rpm.Sum() en la lámina de paradigmas de la semana 2, y nada más. No es una disculpa, es el mapa.
+          desc: Sum() en las semanas 2 y 3, y Distinct().Count() en la 12, nada más. No es una disculpa, es el mapa.
 
   - takeaways:
       eyebrow: Resumen

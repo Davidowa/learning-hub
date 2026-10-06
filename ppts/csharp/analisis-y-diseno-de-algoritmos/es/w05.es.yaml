@@ -38,7 +38,7 @@ slides:
       title: Al terminar la sesión el alumno podrá…
       items:
         - head: Clasificar los tipos de instrucción
-          sub: Declaración, asignación, entrada y salida, selección, repetición y salto
+          sub: Declaración, asignación, entrada y salida, selección, repetición, invocación y salto
         - head: Escribir una salida legible
           sub: Con etiqueta, unidad y un número fijo de decimales, no cifras desnudas
         - head: Leer un valor desde el teclado
@@ -100,7 +100,7 @@ slides:
 
   - code_output:
       eyebrow: Bloque 01 · Medido
-      title: El compilador enumera él mismo las instrucciones legales
+      title: El compilador enumera él mismo qué expresiones valen como instrucción
       filename: Program.cs
       lang: csharp
       output_label: Al compilar
@@ -122,7 +122,7 @@ slides:
       title: Los siete tipos de instrucción del curso
       headers: [Tipo, Ejemplo, Dónde se ve]
       rows:
-        - ["declaración", "int rpm;", "Hoy, en este bloque"]
+        - ["declaración", "int rpm;", "Semana 4"]
         - ["asignación", "rpm = 1502;   rpm += 33;", "Semana 4"]
         - ["entrada y salida", "ReadLine   WriteLine", "Hoy, bloques 02 y 03"]
         - ["selección", "if   else if   switch", "Semanas 6 y 7"]
@@ -193,11 +193,11 @@ slides:
         - label: Write
           text: Escribe y se queda en el mismo renglón. Es lo que se usa para un aviso que espera respuesta al lado.
         - label: WriteLine
-          text: Escribe y baja. Cada llamada empieza un renglón nuevo, y una llamada vacía deja una línea en blanco.
+          text: Escribe y baja. Cada llamada empieza un renglón nuevo, y una vacía deja una línea en blanco.
         - label: La interpolación
           text: El signo de pesos antes de la comilla y el valor entre llaves. Adentro cabe una expresión completa.
         - label: Riesgo
-          text: Lo que va después de los dos puntos elige la forma, no el valor. La variable sigue guardando lo mismo.
+          text: Lo que va tras los dos puntos elige la forma, no el valor. La variable sigue guardando lo mismo.
           accent: true
 
   - code_output:
@@ -226,8 +226,8 @@ slides:
       rows:
         - ["{3.14159:F2}", "Dos decimales fijos", "3.14", "3,14"]
         - ["{3.14159,10:F3}", "Diez columnas, a la derecha", "[     3.142]", "[     3,142]"]
-        - ["{148230:N0}", "Ciclos hasta la inspección", "148,230", "148.230"]
-        - ["{0.0342:P1}", "Fracción fuera de banda", "3.4%", "3,4 %"]
+        - ["{148230:N0}", "Separador de miles, sin decimales", "148,230", "148.230"]
+        - ["{0.0342:P1}", "Porcentaje con un decimal", "3.4%", "3,4 %"]
 
   - trace:
       eyebrow: Bloque 02 · Traza
@@ -271,8 +271,8 @@ slides:
           // rpm 14801520
       note: >-
         La interpolación no abole la trampa, hace visible el límite. La segunda línea de
-        la derecha vuelve a pegar los dos números, y ahora se ve por qué. De la misma
-        corrida salen dos hechos más, concatenar un null da la cadena vacía en vez de
+        la derecha vuelve a pegar los dos números, y ahora se ve por qué. Hay dos hechos
+        más que la lámina no muestra, concatenar un null da la cadena vacía en vez de
         reventar, y una llave doble es como se escribe una llave literal.
 
   - code_output:
@@ -333,9 +333,9 @@ slides:
         - label: La variable intermedia
           text: Guardar la línea antes de convertirla parte el renglón en dos y deja ver qué se está convirtiendo.
         - label: El bool
-          text: TryParse devuelve si pudo. Ese valor es el que se revisa, y a partir de la semana 6 será una condición.
+          text: TryParse devuelve si pudo. Ese valor es el que se revisa, y desde la semana 6 será una condición.
         - label: Riesgo
-          text: Tal como está, esta versión compila con dos advertencias CS8600. La siguiente lámina explica por qué.
+          text: Tal como está, compila con dos advertencias CS8600. La siguiente lámina explica por qué.
           accent: true
 
   - code_output:
@@ -384,8 +384,8 @@ slides:
         - ['"2147483648"', "int.TryParse", "False y 0"]
       verdict: >-
         Los espacios de los extremos los recortan los tres. Un espacio en medio no, y
-        una lectura más grande que int.MaxValue es un tercer modo de falla. No escriban
-        código que recorta antes de convertir, escriban código que revisa después.
+        una lectura más grande que int.MaxValue es un tercer modo de falla. No escribas
+        código que recorta antes de convertir, escribe código que revisa después.
 
   - code_output:
       eyebrow: Bloque 03 · Medido
@@ -476,7 +476,7 @@ slides:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación
       brief: >-
-        Sube el front end de captura con los tres avisos, las tres conversiones
+        Sube el front end de captura con los cuatro avisos, las tres conversiones
         revisadas y el encabezado formateado, junto con esperado.txt, real.txt y la
         salida del diff pegada tal cual.
       meta:

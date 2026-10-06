@@ -49,7 +49,7 @@ slides:
           sub: >-
             El directorio de datos, la página de 16 KB y el pool de 128 MB, leídos del
             servidor y no de un diagrama
-        - head: Leer un EXPLAIN de MySQL 9
+        - head: Leer un EXPLAIN de MySQL 9.7
           sub: >-
             El formato por omisión es TREE y la rejilla clásica ahora hay que pedirla
         - head: Nombrar componentes que se puedan abrir
@@ -133,11 +133,8 @@ slides:
         SELECT @@innodb_buffer_pool_size AS gestor_de_buffers_bytes,
                @@innodb_page_size        AS tamano_pagina;
       output: |
-        gestor_de_buffers_bytes
-        134217728
-
-        tamano_pagina
-        16384
+        gestor_de_buffers_bytes  134217728
+        tamano_pagina            16384
 
   - code_output:
       eyebrow: Medido
@@ -149,11 +146,8 @@ slides:
         SELECT @@log_bin AS bitacora_binaria_activa,
                @@innodb_flush_log_at_trx_commit AS redo_log_en_commit;
       output: |
-        bitacora_binaria_activa
-        1
-
-        redo_log_en_commit
-        1
+        bitacora_binaria_activa  1
+        redo_log_en_commit       1
 
   - divider:
       eyebrow: Bloque 02
@@ -196,7 +190,8 @@ slides:
       source: |
         SELECT TABLE_NAME, TABLE_TYPE, ENGINE
         FROM information_schema.TABLES
-        WHERE TABLE_SCHEMA = 'agente_intro01';
+        WHERE TABLE_SCHEMA = 'agente_intro01'
+          AND TABLE_NAME IN ('alumno', 'v_alumno_activo');
       output: |
         alumno           BASE TABLE  InnoDB
         v_alumno_activo  VIEW        NULL
@@ -213,7 +208,7 @@ slides:
         SELECT @@innodb_buffer_pool_size;
       output: |
         @@datadir
-        ...\scratchpad\mydb\data\
+        ...\data\
 
         @@innodb_page_size
         16384
@@ -222,7 +217,7 @@ slides:
         134217728
 
   - code_output:
-      eyebrow: Medido · el suelo
+      eyebrow: Medido · los tamaños se vuelven a medir en el aula
       title: Cada tabla es un archivo, y la vista no aparece porque no tiene archivo
       filename: archivos.sql
       lang: sql
@@ -237,7 +232,7 @@ slides:
         419  db_backup/materia      114688
 
   - code_output:
-      eyebrow: Medido · [E] los tamaños se vuelven a medir en el aula
+      eyebrow: Medido · el suelo
       title: Los primeros bytes del archivo son un encabezado de página de InnoDB
       filename: terminal
       lang: sql
@@ -254,8 +249,8 @@ slides:
       eyebrow: Bloque 03
       title: Los componentes que sí puedes señalar
       lede: >-
-        La fuente lista ocho. Cinco se abren en pantalla esta misma sesión, uno no existe
-        con ese nombre en MySQL, y los otros dos tienen semana propia.
+        La fuente lista ocho. Cinco se abren en pantalla esta misma sesión, uno en MySQL
+        lleva ese nombre pero hace otra cosa, y los otros dos tienen semana propia.
       block: 3
 
   - table:
@@ -264,7 +259,7 @@ slides:
       headers: [Componente, Qué hace, Cómo se ve]
       rows:
         - ["Parser", "Lee tu SQL y lo rechaza si no cuadra", "ERROR 1064"]
-        - ["Optimizador", "Elige el plan, no mejora tu SQL", "EXPLAIN"]
+        - ["Optimizador", "Elige el plan, no corrige tu SQL", "EXPLAIN"]
         - ["Ejecutor", "Corre el plan que se eligió", "La salida"]
         - ["Gestor de archivos", "Lee y escribe los .ibd del disco", "@@datadir"]
         - ["Gestor de buffers", "Guarda páginas de 16 KB en memoria", "134217728"]
@@ -310,9 +305,11 @@ slides:
         @@explain_format
         TREE
 
-        id  select_type  table  type
-        possible_keys  key  key_len
-        ref  rows  filtered  Extra
+        id  select_type  table
+        partitions  type  possible_keys
+        key  key_len  ref  rows
+        filtered  Extra
+        …
 
   - pitfalls:
       eyebrow: Errores comunes
@@ -336,8 +333,9 @@ slides:
         - label: Error 04
           title: Memorizar el «planificador»
           desc: >-
-            MySQL no tiene nada con ese nombre. Lo que ordena el trabajo simultáneo es el
-            gestor de bloqueos de InnoDB, y se abre fila por fila en la semana 16.
+            En MySQL el planificador solo dispara eventos (semana 14). Lo que ordena el
+            trabajo simultáneo es el gestor de bloqueos de InnoDB, y se abre fila por fila
+            en la semana 16.
 
   - lab:
       eyebrow: Laboratorio
@@ -355,8 +353,8 @@ slides:
             listado de archivos ya no corresponde al catálogo.
         - label: La prueba
           text: >-
-            Agrega una columna a la tabla y vuelve a correr la primera consulta. Si la
-            vista cambió, no era independencia lógica.
+            Agrega una columna a la tabla con ALTER TABLE … ADD COLUMN y vuelve a correr
+            la primera consulta. Si la vista cambió, no era independencia lógica.
 
   - takeaways:
       eyebrow: Resumen
@@ -372,8 +370,8 @@ slides:
             respuestas distintas, y la de abajo puede cambiar sin tocar la de arriba
         - title: La brecha es el manejador
           desc: >-
-            Los tres archivos ocupan 376 832 bytes en disco para quince renglones que como
-            texto SQL pesan 6 963. Esa diferencia es estructura, no desperdicio
+            Los tres archivos ocupan 376,832 bytes en disco para quince renglones cuyo
+            respaldo en texto SQL pesa 6,963. Esa diferencia es estructura, no desperdicio
 
   - homework:
       eyebrow: Tarea
@@ -395,7 +393,7 @@ slides:
   - closing:
       title: Preguntas
       subtitle: >-
-        La próxima sesión cerramos el bloque A y abrimos el B. Se dibuja el control
+        Hoy se cierra el bloque A y la próxima sesión abre el B. Se dibuja el control
         escolar entero, con atributos, y cada línea del dibujo se convierte en algo que
         el servidor escribe de vuelta.
       meta:

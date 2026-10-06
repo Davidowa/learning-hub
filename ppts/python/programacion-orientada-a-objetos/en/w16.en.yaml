@@ -29,7 +29,7 @@ slides:
         - title: Queries
           desc: SELECT, parameters, and why strings never get glued together
         - title: Integrating project
-          desc: Scope, submission and how the marks are split
+          desc: Scope, submission and how the grade is split
 
   - objectives:
       eyebrow: Learning objectives
@@ -88,7 +88,7 @@ slides:
         - text: One table per noun
         - text: One column per attribute
         - text: One key that identifies
-          loop: ↺ it is week 5 modelling again, in a different syntax
+          loop: ↺ it is week 5 modeling again, in a different syntax
 
   - figure:
       eyebrow: Diagnosis
@@ -123,20 +123,20 @@ slides:
         import sqlite3
         from pathlib import Path
 
-        path = Path("data") / "movies.db"
+        path = Path("data") / "pixar.db"
 
         with sqlite3.connect(path) as connection:
             connection.execute(
                 "CREATE TABLE IF NOT EXISTS Movies ("
                 "id INTEGER PRIMARY KEY, title TEXT NOT NULL)")
             connection.execute(
-                "INSERT INTO Movies VALUES (?, ?)", (1, "Coco"))
+                "INSERT INTO Movies VALUES (?, ?)", (3, "Coco"))
             connection.commit()
       annotations:
         - label: Line 6
           text: >-
             It manages the transaction, not the connection: leaving without an exception
-            commits, leaving through one rolls back. The commit on line 13 is redundant,
+            commits, leaving through one rolls back. The commit on line 12 is redundant,
             and is written anyway to keep the intent in the code.
         - label: Line 11
           text: The question marks are placeholders. The values travel separately, in a tuple.
@@ -159,9 +159,9 @@ slides:
             for row in cursor:
                 print(row)
       output: |
-        (19, 'Coco')
-        (15, 'Inside Out')
-        (10, 'Up')
+        (3, 'Coco')
+        (1, 'Toy Story')
+        (2, 'Up')
 
   - code:
       eyebrow: Parameters
@@ -185,7 +185,7 @@ slides:
         - label: Line 9
           text: With the placeholder the value is never read as SQL. It is data and it stays data.
         - label: The comma
-          text: '(wanted,) with a comma is a one-item tuple. Without the comma it is just brackets.'
+          text: '(wanted,) with a comma is a one-item tuple. Without the comma it is just parentheses.'
 
   - pitfalls:
       eyebrow: Diagnosis
@@ -207,7 +207,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: The integrating project
-      lede: The submission that pulls the seven units together. Code and report are both marked, and the code carries more than twice the weight.
+      lede: The submission that pulls the seven units together. Code and report are both graded, and the code carries more than twice the weight.
       block: 3
 
   - tiers:
@@ -215,7 +215,7 @@ slides:
       title: The four pieces the project has to contain
       items:
         - key: '01'
-          title: Object-oriented modelling
+          title: Object-oriented modeling
           desc: Classes with their own state, encapsulation, and at least one justified inheritance
         - key: '02'
           title: Persistence
@@ -241,12 +241,12 @@ slides:
 
   - quiz:
       eyebrow: Quick question
-      question: What ends up stored in the database?
+      question: Starting from an empty table, what ends up stored in the database?
       filename: commit.py
       lang: python
       source: |
         with sqlite3.connect(path) as c:
-            c.execute("INSERT INTO Movies VALUES (1, 'Up')")
+            c.execute("INSERT INTO Movies VALUES (2, 'Up')")
 
         with sqlite3.connect(path) as c:
             cursor = c.execute("SELECT COUNT(*) FROM Movies")
@@ -262,13 +262,13 @@ slides:
       title: It prints (1,), and the reason surprises half the room
       headers: ["Step", "Statement", "In memory", "On disk"]
       rows:
-        - ["1", "connect(path)", "transaction open", "empty"]
+        - ["1", "connect(path)", "nothing pending", "empty"]
         - ["2", "execute(INSERT)", "1 row pending", "empty"]
         - ["3", "leaving the with", "commits", "1 row"]
         - ["4", "SELECT COUNT(*)", "1", "1 row"]
       verdict: >-
         The sqlite3 with manages the transaction: it commits when the block ends without
-        an exception and rolls back when it does not. What it never does is close the
+        an exception and rolls back when there is one. What it never does is close the
         connection, which is what most people assume because with a file it does.
 
   - lab:
@@ -304,8 +304,8 @@ slides:
         - [Weight, 20 % of the final grade]
       rubric:
         - ["Execution", "40 %", "The application runs and does what the report says it does"]
-        - ["OOP and structure", "20 %", "The modelling holds and the interface carries no business rules"]
-        - ["Good practice", "10 %", "Organisation, naming and handling of foreseeable errors"]
+        - ["OOP and structure", "20 %", "The modeling holds and the interface carries no business rules"]
+        - ["Good practice", "10 %", "Organization, naming and handling of foreseeable errors"]
         - ["Written report", "30 %", "Narrative, design decisions and evidence woven into the text"]
 
   - closing:

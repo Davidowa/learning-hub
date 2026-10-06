@@ -40,7 +40,7 @@ slides:
         - head: Write a window as a class
           sub: Inheriting from QMainWindow and chaining the constructor with super
         - head: Place controls
-          sub: QLabel, QLineEdit and QPushButton, stored on self so they survive
+          sub: QLabel, QLineEdit and QPushButton, stored on self so the slot can reach them
         - head: Connect a signal to a slot
           sub: Passing the function without parentheses, and reading controls inside the slot
 
@@ -94,7 +94,7 @@ slides:
       eyebrow: Diagnosis
       title: What exec() does while nothing is happening
       image: img/en/event-loop.png
-      caption: The loop does not stop even when the window looks still. It is going round, waiting for the next event.
+      caption: The loop does not stop even when the window looks still. It is going around, waiting for the next event.
       alt: A click entering an event queue, being dispatched to a function, and going back to waiting
 
   - code:
@@ -124,7 +124,7 @@ slides:
 
   - code:
       eyebrow: The window as a class
-      title: Where everything from topic 2 starts paying off
+      title: Where everything from topics 2 and 3 starts paying off
       filename: main_window.py
       lang: python
       source: |
@@ -143,7 +143,7 @@ slides:
         - label: Line 4
           text: Inheriting from QMainWindow brings a menu bar, a status bar and a central area for free
         - label: Line 6
-          text: super().__init__() is compulsory. Without it Qt never initialises the window and it dies.
+          text: super().__init__() is compulsory. Without it Qt never initializes the window and it dies.
         - label: Line 11
           text: The central widget fills the main area, and there can only be one. Layouts grow out of that.
 
@@ -180,7 +180,7 @@ slides:
         print(box.text())
       annotations:
         - label: The label
-          text: QLabel only displays text. It takes nothing from whoever is using the program.
+          text: QLabel only displays text, and setText changes it. It takes nothing from whoever uses the program.
         - label: The box
           text: QLineEdit is an editable line, and text() returns whatever is in it at that moment
         - label: Risk
@@ -196,18 +196,21 @@ slides:
         class MainWindow(QMainWindow):
             def __init__(self) -> None:
                 super().__init__()
-                self.box = QLineEdit()
-                self.button = QPushButton("Sign in")
+                self.box = QLineEdit(self)
+                self.button = QPushButton("Sign in", self)
+                self.button.move(0, 40)
                 self.button.clicked.connect(self.on_sign_in)
 
             def on_sign_in(self) -> None:
                 print("Hi,", self.box.text())
       annotations:
-        - label: Line 6
+        - label: Lines 4 to 6
+          text: With self as the parent, the control sits inside the window. move drops it 40 pixels.
+        - label: Line 7
           text: clicked is the signal and on_sign_in is the slot. connect joins them and your job ends.
         - label: No parentheses
           text: You connect self.on_sign_in, not self.on_sign_in(). With parentheses it runs right there.
-        - label: Line 9
+        - label: Line 10
           text: The slot reads the box when the click happens, the one moment when something is typed in it
 
   - code_output:
@@ -233,13 +236,13 @@ slides:
       items:
         - label: Error 01
           title: Connecting with parentheses
-          desc: connect(self.on_sign_in()) calls the function while building and connects its result
+          desc: connect(self.on_sign_in()) calls the function while building and tries to connect its result
         - label: Error 02
           title: A long loop inside the slot
           desc: The window freezes, because the event loop is waiting for your function to finish
         - label: Error 03
           title: Not storing the control on self
-          desc: If the widget is a local variable in the constructor, Python collects it and it vanishes
+          desc: If the widget is a local variable in the constructor, the slot cannot find it on self and the program crashes
         - label: Error 04
           title: Reading the fields while building
           desc: At that point they are empty. They get read inside the slot, once something is typed.
@@ -247,7 +250,7 @@ slides:
   - divider:
       eyebrow: Block 03
       title: Practice and wrap-up
-      lede: A window that does something with what it is given, and the syntax slip that takes out half the class.
+      lede: A window that does something with what it is given, and the pair of parentheses that takes out half the class.
       block: 3
 
   - quiz:

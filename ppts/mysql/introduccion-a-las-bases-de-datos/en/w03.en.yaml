@@ -14,7 +14,7 @@ slides:
       title: Introduction to Databases
       subtitle: >-
         «Logical and physical independence» stops being a phrase the day you watch it in
-        three queries. Then we go down to the disc, to the files last week's definition
+        three queries. Then we go down to the disk, to the files last week's definition
         promised and nobody had shown.
       meta:
         - [Instructor, David Escobar-Castillejos]
@@ -30,7 +30,7 @@ slides:
         - title: The three levels
           desc: External, conceptual and internal, one query per level
         - title: The floor
-          desc: The files on disc, and why they are not written for you
+          desc: The files on disk, and why they are not written for you
         - title: The components
           desc: The five you can point at on a screen in this very session
 
@@ -49,7 +49,7 @@ slides:
           sub: >-
             The data directory, the 16 KB page and the 128 MB pool, read off the server
             rather than off a diagram
-        - head: Read an EXPLAIN on MySQL 9
+        - head: Read an EXPLAIN on MySQL 9.7
           sub: >-
             The default format is TREE and the classic grid now has to be asked for
         - head: Name components you can actually open
@@ -66,7 +66,7 @@ slides:
           state: now
         - label: B · Weeks 4–6
           title: Model before you write
-          desc: Entity-relationship, normalisation and keys
+          desc: Entity-relationship, normalization and keys
           state: todo
         - label: C · Weeks 7–11
           title: SQL that queries
@@ -118,7 +118,7 @@ slides:
       rows:
         - ["Files", "16 KB pages in its own pool", "Today · H-03-4"]
         - ["Integrity", "INSERT, UPDATE and DELETE watched", "6 and 14"]
-        - ["Security", "Authorises accounts, not people", "17"]
+        - ["Security", "Authorizes accounts, not people", "17"]
         - ["Backup", "Two logs, and the copy aside", "17"]
         - ["Concurrency", "Coordinates simultaneous sessions", "16"]
         - ["Transactions", "Every operation or none of them", "8 and 16"]
@@ -133,11 +133,8 @@ slides:
         SELECT @@innodb_buffer_pool_size AS gestor_de_buffers_bytes,
                @@innodb_page_size        AS tamano_pagina;
       output: |
-        gestor_de_buffers_bytes
-        134217728
-
-        tamano_pagina
-        16384
+        gestor_de_buffers_bytes  134217728
+        tamano_pagina            16384
 
   - code_output:
       eyebrow: Measured
@@ -149,11 +146,8 @@ slides:
         SELECT @@log_bin AS bitacora_binaria_activa,
                @@innodb_flush_log_at_trx_commit AS redo_log_en_commit;
       output: |
-        bitacora_binaria_activa
-        1
-
-        redo_log_en_commit
-        1
+        bitacora_binaria_activa  1
+        redo_log_en_commit       1
 
   - divider:
       eyebrow: Block 02
@@ -176,27 +170,28 @@ slides:
         - label: Level 02
           title: Conceptual
           desc: >-
-            What the designer sees. The catalogue names the table, its engine and the
+            What the designer sees. The catalog names the table, its engine and the
             view, one row each.
         - label: Level 03
           title: Internal
           desc: >-
             What the engine sees. 16 KB pages inside a 128 MB pool, and a data directory
-            on disc.
+            on disk.
       note: >-
         Adding a column changes the conceptual level and does not force the view to be
         rewritten. That is logical independence, and week 12 cashes it again.
 
   - code_output:
       eyebrow: Measured · conceptual level
-      title: The catalogue tells table from view, and gives an engine to only one
+      title: The catalog tells table from view, and gives an engine to only one
       filename: niveles.sql
       lang: sql
       output_label: MySQL 9.7.2
       source: |
         SELECT TABLE_NAME, TABLE_TYPE, ENGINE
         FROM information_schema.TABLES
-        WHERE TABLE_SCHEMA = 'agente_intro01';
+        WHERE TABLE_SCHEMA = 'agente_intro01'
+          AND TABLE_NAME IN ('alumno', 'v_alumno_activo');
       output: |
         alumno           BASE TABLE  InnoDB
         v_alumno_activo  VIEW        NULL
@@ -213,7 +208,7 @@ slides:
         SELECT @@innodb_buffer_pool_size;
       output: |
         @@datadir
-        ...\scratchpad\mydb\data\
+        ...\data\
 
         @@innodb_page_size
         16384
@@ -222,7 +217,7 @@ slides:
         134217728
 
   - code_output:
-      eyebrow: Measured · the floor
+      eyebrow: Measured · the sizes get re-measured in the room
       title: Every table is one file, and the view is missing because it has none
       filename: archivos.sql
       lang: sql
@@ -237,13 +232,13 @@ slides:
         419  db_backup/materia      114688
 
   - code_output:
-      eyebrow: Measured · [E] the sizes get re-measured in the room
+      eyebrow: Measured · the floor
       title: The first bytes of the file are an InnoDB page header
       filename: terminal
       lang: sql
       output_label: Outside the client
       source: |
-        -- not SQL any more, this is the disc
+        -- not SQL anymore, this is the disk
         od -A n -t x1 -N 64 alumno.ibd
       output: |
         f8 6f be bf 00 00 00 00
@@ -254,8 +249,8 @@ slides:
       eyebrow: Block 03
       title: The components you can actually point at
       lede: >-
-        The source lists eight. Five of them open on screen in this session, one does not
-        exist under that name in MySQL, and the other two have a week of their own.
+        The source lists eight. Five of them open on screen in this session, one carries
+        that name in MySQL but does another job, and the other two have a week of their own.
       block: 3
 
   - table:
@@ -263,8 +258,8 @@ slides:
       title: Five pieces, and how each one looks from the client
       headers: [Component, What it does, How you see it]
       rows:
-        - ["Parser", "Reads your SQL and rejects it", "ERROR 1064"]
-        - ["Optimizer", "Picks the plan, never edits your SQL", "EXPLAIN"]
+        - ["Parser", "Reads your SQL, rejects bad syntax", "ERROR 1064"]
+        - ["Optimizer", "Picks the plan, never fixes your SQL", "EXPLAIN"]
         - ["Executor", "Runs the plan that was picked", "The output"]
         - ["File manager", "Reads and writes the .ibd files", "@@datadir"]
         - ["Buffer manager", "Holds 16 KB pages in memory", "134217728"]
@@ -310,9 +305,11 @@ slides:
         @@explain_format
         TREE
 
-        id  select_type  table  type
-        possible_keys  key  key_len
-        ref  rows  filtered  Extra
+        id  select_type  table
+        partitions  type  possible_keys
+        key  key_len  ref  rows
+        filtered  Extra
+        …
 
   - pitfalls:
       eyebrow: Common mistakes
@@ -334,17 +331,17 @@ slides:
             Any tutorial you find was written for 8.0 and its first screenshot no longer
             matches your screen. Ask for TRADITIONAL, or read the tree.
         - label: Mistake 04
-          title: Memorising the «scheduler»
+          title: Memorizing the «scheduler»
           desc: >-
-            MySQL has nothing under that name. What orders simultaneous work is the
-            InnoDB lock manager, and week 16 opens its queue row by row.
+            In MySQL the scheduler only fires events (week 14). What orders simultaneous
+            work is the InnoDB lock manager, and week 16 opens its queue row by row.
 
   - lab:
       eyebrow: Lab
       title: The same question from four heights
       brief: >-
         Connect to the server and ask «what is in there» four times, top to bottom. The
-        view first, then the catalogue, then the three internal-level variables, and
+        view first, then the catalog, then the three internal-level variables, and
         finally leave the client and list the files in the data directory.
       blocks:
         - label: Deliverable
@@ -352,11 +349,11 @@ slides:
         - label: Constraint
           text: >-
             One session and one database. Change database halfway through and the file
-            listing no longer matches the catalogue.
+            listing no longer matches the catalog.
         - label: The test
           text: >-
-            Add a column to the table and run the first query again. If the view changed,
-            it was not logical independence.
+            Add a column to the table with ALTER TABLE … ADD COLUMN and run the first
+            query again. If the view changed, it was not logical independence.
 
   - takeaways:
       eyebrow: Summary
@@ -368,16 +365,16 @@ slides:
             versions of the deck, and no later week ever calls on it
         - title: Each level answers something else
           desc: >-
-            The view, the catalogue and the pool answer the same question three different
+            The view, the catalog and the pool answer the same question three different
             ways, and the bottom one can change without touching the top one
         - title: The gap is the manager
           desc: >-
-            The three files take 376,832 bytes on disc to hold fifteen rows that weigh
-            6,963 bytes as SQL text. That difference is structure, not waste
+            The three files take 376,832 bytes on disk to hold fifteen rows whose SQL
+            text dump weighs 6,963 bytes. That difference is structure, not waste
 
   - homework:
       eyebrow: Homework
-      title: Deliverable and marking criteria
+      title: Deliverable and grading criteria
       brief: >-
         The three levels against a database of your own, one query per level, with its
         output pasted. Explain in two lines what part of your database would change if
@@ -385,19 +382,19 @@ slides:
       meta:
         - [Due, Before week 4]
         - [Format, Blackboard · PDF with the three outputs]
-        - [Weight, Part of the 20 % homework]
+        - [Weight, Part of the 20% homework]
       rubric:
-        - ["External level", "30 %", "The query on the view and its literal output"]
-        - ["Conceptual level", "30 %", "The catalogue, with engine and object type"]
-        - ["Internal level", "30 %", "Data directory, page size and pool"]
-        - ["The explanation", "10 %", "Which level absorbs the change, and why"]
+        - ["External level", "30%", "The query on the view and its literal output"]
+        - ["Conceptual level", "30%", "The catalog, with engine and object type"]
+        - ["Internal level", "30%", "Data directory, page size and pool"]
+        - ["The explanation", "10%", "Which level absorbs the change, and why"]
 
   - closing:
       title: Questions
       subtitle: >-
-        Next session closes block A and opens block B. We draw the whole records system,
-        attributes included, and every line of the drawing turns into something the
-        server writes back at us.
+        This session closes block A, and the next one opens block B. We draw the whole
+        records system, attributes included, and every line of the drawing turns into
+        something the server writes back at us.
       meta:
         - [Email, descobarc@up.edu.mx]
         - [Chat, Institutional Google Chat]
