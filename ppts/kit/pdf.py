@@ -74,7 +74,9 @@ def find_soffice() -> str | None:
         hit = shutil.which(name)
         if hit:
             return hit
-    candidates = ['/Applications/LibreOffice.app/Contents/MacOS/soffice']
+    candidates = ['/Applications/LibreOffice.app/Contents/MacOS/soffice',
+                  # macOS, installed without admin rights
+                  os.path.expanduser('~/Applications/LibreOffice.app/Contents/MacOS/soffice')]
     for root in (os.environ.get('ProgramFiles'), os.environ.get('ProgramFiles(x86)'),
                  r'C:\Program Files', r'C:\Program Files (x86)'):
         if root:
@@ -114,6 +116,18 @@ def powerpoint_app():
         return comtypes.client.CreateObject('PowerPoint.Application')
     except Exception:
         return None
+
+
+def powerpoint_installed() -> bool:
+    """Whether PowerPoint is registered for COM, checked without starting it."""
+    if sys.platform != 'win32':
+        return False
+    try:
+        import comtypes
+        comtypes.GUID.from_progid('PowerPoint.Application')
+        return True
+    except Exception:
+        return False
 
 
 def convert_powerpoint(app, pptx: str, outdir: str) -> str:
@@ -158,7 +172,15 @@ def main(argv=None):
                     help='auto: PowerPoint on Windows when installed, LibreOffice otherwise')
     a = ap.parse_args(argv)
 
-    decks = _decks(a.target)
+    # A single lesson: export that deck alone, and leave the course PDF untouched.
+    single = os.path.isfile(a.target)
+    if single:
+        pptx = os.path.splitext(a.target)[0] + '.pptx'
+        if not os.path.exists(pptx):
+            sys.exit(f'{pptx} does not exist; run python -m kit.build {a.target} first')
+        decks = [pptx]
+    else:
+        decks = _decks(a.target)
     if not decks:
         sys.exit(f'no .pptx under {a.target}; run python -m kit.build first')
 
@@ -195,7 +217,13 @@ def main(argv=None):
                 done[d] = convert_powerpoint(app, d, o)
                 print(f'[{n}/{len(jobs)}] {os.path.relpath(done[d])}')
         finally:
-            app.Quit()
+            # PowerPoint runs a single instance: if the user already had it open, COM
+            # handed us theirs, and Quit would close their presentations too.
+            try:
+                if app.Presentations.Count == 0:
+                    app.Quit()
+            except Exception:
+                pass
     else:
         with cf.ThreadPoolExecutor(max_workers=a.jobs) as ex:
             futs = {ex.submit(convert, d, o, soffice): d for d, o in jobs}
@@ -204,6 +232,8 @@ def main(argv=None):
                 done[d] = f.result()
                 print(f'[{n}/{len(jobs)}] {os.path.relpath(done[d])}')
 
+    if single:
+        return
     for (course_dir, lang), items in sorted(groups.items()):
         rel = os.path.relpath(course_dir, here)
         slug = rel.replace(os.sep, '--')
