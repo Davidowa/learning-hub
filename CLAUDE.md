@@ -5,3 +5,7 @@
 - Captions and alt text go through the-writer.
 - Here, 'captura' or 'capturar' without 'de pantalla' means data entry.
 <!-- davidowa-skills:project:end -->
+
+## Python runtime
+
+Use Python 3.14. On Windows, run Python with `py -3.14`. Recreate the project environment with `py -3.14 -m venv .venv` before installing dependencies. Use the committed lock file when a Pipfile is present. Do not select Python 3.13 or 3.15 for this project.

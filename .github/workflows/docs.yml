@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           cache: pip
 
       - name: Cache MkDocs build
@@ -34,7 +34,13 @@ jobs:
           restore-keys: mkdocs-material-${{ hashFiles('requirements.txt') }}-
           path: .cache
 
+      - name: Install Cairo runtime
+        run: sudo apt-get update && sudo apt-get install -y libcairo2
+
       - run: pip install -r requirements.txt
+
+      - name: Verify CairoSVG rendering
+        run: python -c 'import cairosvg; assert cairosvg.svg2png(bytestring=b"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\"/>").startswith(b"\x89PNG")'
 
       - run: mkdocs build --strict
 
