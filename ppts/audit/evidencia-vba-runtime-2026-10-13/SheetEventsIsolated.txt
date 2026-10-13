@@ -1,0 +1,24 @@
+Option Explicit
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    RuntimeEvents.SelectionCount = RuntimeEvents.SelectionCount + 1
+    RuntimeEvents.LastSelection = Target.Address
+End Sub
+Private Sub Worksheet_Change(ByVal Target As Range)
+    RuntimeEvents.EventCount = RuntimeEvents.EventCount + 1
+    If RuntimeEvents.RecursiveProbe Then
+        If RuntimeEvents.EventCount < 5 Then Target.Offset(0, 1).Value = "echo"
+        Exit Sub
+    End If
+    If Target.Address = "$A$1" Then
+        If RuntimeEvents.SafeWriteMode Then Application.EnableEvents = False
+        RevisarSiEsNumero Target
+        If RuntimeEvents.SafeWriteMode Then Application.EnableEvents = True
+    End If
+End Sub
+Sub RevisarSiEsNumero(Target As Range)
+    If IsNumeric(Target.Value) Then
+        Target.Offset(0, 1).Value = "Numero"
+    Else
+        Target.Offset(0, 1).Value = "No es numero"
+    End If
+End Sub

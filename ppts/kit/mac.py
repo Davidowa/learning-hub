@@ -74,6 +74,18 @@ def adapt_text(node):
        'File, Options':'Excel, Preferences','Archivo, Opciones de Excel':'Excel, Preferences',
        'Archivo, Opciones':'Excel, Preferences','File, Info':'File, Properties','Archivo, Información':'File, Properties',
        'Options, then Formulas':'Excel Preferences, Calculation','Read-only set in Windows':'Read-only file permissions','Solo lectura en Windows':'Permisos de solo lectura','Opciones, luego Fórmulas':'Excel Preferences, Calculation'}.items():node=node.replace(a,b)
+    # Chr uses the host character set; Unicode 160 is NBSP on both platforms.
+    node = node.replace('Chr(160)', 'WorksheetFunction.Unichar(160)')
+    if '\n' in node:
+        lines = []
+        for line in node.splitlines():
+            for variable in ('celda', 'cell'):
+                marker = f'Replace({variable}.Value, WorksheetFunction.Unichar(160), " "))'
+                if marker in line:
+                    indent = line[:len(line) - len(line.lstrip())]
+                    line = line.replace(marker, f'Replace({variable}.Value, _\n{indent}WorksheetFunction.Unichar(160), " "))')
+            lines.append(line)
+        node = '\n'.join(lines) + ('\n' if node.endswith('\n') else '')
     return node
 
 
@@ -166,6 +178,10 @@ def generate(out=Path('mac')):
                   for a,b in {'Document Inspector':'workbook properties','Inspector de documento':'propiedades del libro','File, Info':'File, Properties','Archivo, Información':'File, Properties','Trust Center':'Security preferences','Centro de confianza':'Security preferences'}.items(): n=n.replace(a,b)
                 return n
               slide={layout:platform_labels(k)}
+            if vba and p.name.startswith('w13.') and 'WorksheetFunction.Unichar(160)' in str(slide):
+              if layout == 'code_output':
+                k['output_label'] = 'Con un espacio duro' if es else 'With a hard space'
+              k['notes'] = str(k.get('notes', '')) + ('\nEn Excel para Mac 16.112.3, AscW(Chr(160)) dio 8224. Unichar(160) dio 160 y corrigió la limpieza de nombres. Usa Unicode para este espacio duro.' if es else '\nIn Excel for Mac 16.112.3, AscW(Chr(160)) returned 8224. Unichar(160) returned 160 and corrected the name cleaner. Use Unicode for this hard space.')
             current=next(iter(slide.values()));current['notes']=str(current.get('notes',''))+('\nEdición Mac. Interfaz capturada en inglés.' if es else '\nMac edition. Captured interface is English.')
             # Expanded Command labels must still fit the existing table geometry.
             if layout=='table' and not es:

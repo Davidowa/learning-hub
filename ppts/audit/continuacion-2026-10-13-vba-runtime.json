@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-13",
+  "platform": "macOS; native Microsoft Excel 16.112.3",
+  "method": "Native Excel VBA, UI via CUA; saved worksheet assertions read from OOXML without recalculation",
+  "course_assertions": 134,
+  "platform_failures": 1,
+  "harness_failures_excluded_from_course_count": 1,
+  "platform_fix": "Mac derivatives use WorksheetFunction.Unichar(160) for NBSP; native final ES/EN cleaner regression passed",
+  "suites": [
+    {
+      "file": "ppts/audit/evidencia-vba-runtime-2026-10-13/spanish-results.json",
+      "workbook": "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-core-104.xlsm",
+      "counts": {
+        "PASS": 103,
+        "FAIL": 1
+      }
+    },
+    {
+      "file": "ppts/audit/evidencia-vba-runtime-2026-10-13/events-results.json",
+      "workbook": "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-events.xlsm",
+      "counts": {
+        "PASS": 17,
+        "FAIL": 1
+      }
+    },
+    {
+      "file": "ppts/audit/evidencia-vba-runtime-2026-10-13/protection-results.json",
+      "workbook": "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-protection.xlsm",
+      "counts": {
+        "PASS": 5
+      }
+    },
+    {
+      "file": "ppts/audit/evidencia-vba-runtime-2026-10-13/mac-regression-results.json",
+      "workbook": "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-mac-regression.xlsm",
+      "counts": {
+        "PASS": 8
+      }
+    }
+  ],
+  "instrumentation": [
+    "Core procedure names and sheet references isolated; source procedure bodies reused; automatic MsgBox messages captured as strings; accented message literals consistently normalized for import",
+    "Worksheet event counters moved to standard module; recursive probe bounded at five writes; unbounded crash example not executed",
+    "Native InputBox: amount 500000 and rate 0.12; numeric validation rejected abc, accepted 1000; real Hello World MsgBox observed and dismissed",
+    "Class Empleado created natively through Insert Class Module, name set and source pasted, rather than importing Windows .cls headers",
+    "Mac ValidateLoan MsgBox branches captured as strings for four numeric/text cases"
+  ],
+  "scope_limits": [
+    "Core suite uses Spanish lesson code and controlled fixture workbooks; full English corpus not executed separately",
+    "Corrected Mac week 13 ES and EN source procedures both executed; Mac week 5 validation branch executed",
+    "Windows UserForm workflow not tested on Windows; Mac worksheet alternative tested",
+    "Intentional compiler failures and unsafe unbounded recursion not executed",
+    "GoalSeek depends on the supplied amortization fixture; student workbooks and complete final projects not covered"
+  ],
+  "harness_incidents": [
+    "Adding modules/document members after execution produced VBE object-library-invalid errors in scratch projects; isolated fresh projects executed the remaining tests. These errors are recorded as editor/harness incidents, not attributed to the lesson macros",
+    "Initial extension SaveAs failed because its host workbook had not yet been saved; rerun in a saved standalone project passed all five protection assertions"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/chr-function",
+    "https://learn.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.unichar"
+  ],
+  "evidence_hashes": {
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/RuntimeEvents.bas": "53dd4e0cbacfe0e2f70ea9daaa4f5ac044fdd2040ec53b443f1df632ece533ae",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/MacRegression.bas": "70d103bae82b56d01595f6d0c6710c04da10bdf7d5cad822e5e7e45ec1284285",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-core-104.xlsm": "2fe50e2080b6120c5b6958efcc0496ddb81642f1099c6753e4af5532d91cea36",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/RuntimeProtection.bas": "f88dd245483d9eb40db6b1ca3b727df0bc1407034c63d676ab7729f1017a4ff3",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/spanish-results.json": "0713227214c6429d5d2c77f16a4f712f706e3b26b5a8a1b179af8a1451266891",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/mac-regression-results.json": "8b63a5143ea7e14fcef6d079a257e2bb550eea7697d61a9b4f8d471519c7bdb9",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/events-results.json": "f65a8d0f97cbafc3ba752c62e44b8bf6739f37e2f03a05cec36db008364d6e93",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/protection-results.json": "0f08e1355b97c023fe617bca2deafd4c2fcfc930dcacb17af2ee1fc6263ffa23",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/README.md": "870f4208302f24a3ab79f0a77bf7271578aef978a5b823626060d13c91fb2808",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/RuntimeSuiteV2.bas": "792357173417bebb74494e4d2402e8420f9d6bd167ea606b876a54216554693a",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/prose-lint.json": "cd19f89710ed41464b434ed9ea0527a32c1996194461f71a3150c093d4e6e49a",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-mac-regression.xlsm": "c32c393ec1bd28a257a738e3f613fcbb09a8c33de3d37ce88444ea8824205e78",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/SheetEventsIsolated.txt": "c1dd084f19abc67179f1af6bc4930fa095247383bad52298950d6997330dc7c7",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/source-language-parity.json": "ebf0e7eeeb55a790e8996ec4a7e58d346171c1f255abad8244a7cf1911eca6c2",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-events.xlsm": "5bda9f4c2cb2cbc176ab93b0e12124a4eacdc3f5b52e33deb249361824676bc1",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/lesson-sources.json": "e75eb2ddc2b91aad8d4cbd77ffaa8671bce8a42c40c44f84d262eb091c981a5c",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/suite-provenance.json": "4a379526591f7f3e12f33a4c7d1429345859b7f3b9f4a6eb744b23dbd52f59bc",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/RuntimeSmoke.bas": "1cef9e94227c6f4c56aea681a563cab7dd1fc4084e5c0e55ed8e96a93f132bc4",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/vba-protection.xlsm": "d96e3ad7643e7c3ab1c0def2c2a722be0d066d4de7bb0f16bb74532df43a7025",
+    "ppts/audit/evidencia-vba-runtime-2026-10-13/Empleado-source.txt": "819ef9e2be30587075ea633517ca651cbf1fda4f53cfc8fbf048021526fb1768"
+  },
+  "successful_assertions": 133,
+  "original_platform_failure_resolved_by_regression": true
+}
