@@ -221,6 +221,23 @@ slides:
           title: The project is separate
           desc: It is handed in on the final exam date and carries the remaining 20 percent
 
+  - code:
+      eyebrow: Example for the exercise
+      title: The mutex protects one complete line
+      filename: threads.cpp
+      lang: cpp
+      source: |
+        std::mutex gate;
+        void noise(const char* tag)
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                std::lock_guard<std::mutex> lock(gate);
+                std::cout << tag << " " << i << "\n";
+            }
+        }
+      notes: "Include iostream, thread and mutex. Define this function outside main; create the two jthread objects inside main as in the demonstration. lock_guard releases the mutex when the block ends. Thread order remains variable, but each line stays complete."
+
   - lab:
       eyebrow: Lab
       title: Hanoi and one lock, in pairs

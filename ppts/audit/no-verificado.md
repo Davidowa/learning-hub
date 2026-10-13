@@ -1,5 +1,8 @@
 # Lo que no se pudo verificar ejecutando
 
+> Registro histórico de la primera auditoría. El corte del 13 de octubre de 2026 y los informes `continuacion-2026-10-13-*.json` documentan las correcciones, refutaciones y límites posteriores. Este listado conserva la trazabilidad; su conteo no representa automáticamente defectos todavía abiertos.
+
+
 VBA, fórmulas de Excel, C# de Unity y algunos datos externos (precios, versiones, catálogos) no se
 pueden correr en el contenedor donde se hizo la auditoría. Los agentes los revisaron leyendo y
 trazando a mano; aquí quedan, por curso y semana, para que alguien los confirme en la máquina real.

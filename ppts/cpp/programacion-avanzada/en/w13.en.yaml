@@ -95,7 +95,7 @@ slides:
   - figure:
       eyebrow: Access
       title: Reading in order or jumping to a position
-      image: img/en/seek-tell.png
+      image: img/en/seek-tell-cpp.png
       caption: Sequential reading moves one step at a time. seekg moves the cursor in one go and tellg reports where it stopped.
       alt: A cursor over a file drawn as numbered positions, with a sequential read and a jump
 
@@ -248,6 +248,26 @@ slides:
           desc: is_open is the line separating a correct program from one reading nothing
         - title: The read is the condition
           desc: The loop is driven by the result of reading, not by asking about end of file
+
+  - code:
+      eyebrow: Example for the exercise
+      title: One invalid line does not stop reading
+      filename: read-lines.cpp
+      lang: cpp
+      source: |
+        std::ifstream in("grades.txt");
+        std::string line; int number = 1;
+        while (std::getline(in, line))
+        {
+            std::istringstream row(line);
+            std::string name, extra; double grade;
+            if ((row >> name >> grade) && !(row >> extra))
+                std::cout << name << " " << grade << "\n";
+            else
+                std::cerr << "bad line " << number << "\n";
+            number++;
+        }
+      notes: "Include iostream, fstream, sstream and string. This fragment belongs inside main. Each line holds a name without spaces and one numeric grade. getline keeps the line; istringstream parses it without putting the file in a failed state."
 
   - homework:
       eyebrow: For the next session

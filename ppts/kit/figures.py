@@ -30,7 +30,7 @@ T = {  # every label the figures use, so a new language is one dict away
         list_='lista', tuple_='tupla', set_='conjunto', dict_='diccionario',
         ordered='ordenada', immutable='inmutable', unique='sin repetidos', bykey='por llave',
         caught='cada except atrapa su tipo', clean='sin excepción',
-        exc_expr='10 / edad',            # the variable the w01.5 and w11 code divides by
+        exc_expr='edad = int(input())',            # the variable the w01.5 and w11 code divides by
         klass='clase', object_='objeto', objects='objetos',
         blueprint='el molde', instances='cada objeto con su propio estado',
         shared='se comparte', own='propio de cada objeto',
@@ -149,7 +149,7 @@ T = {  # every label the figures use, so a new language is one dict away
         list_='list', tuple_='tuple', set_='set', dict_='dictionary',
         ordered='ordered', immutable='immutable', unique='no duplicates', bykey='by key',
         caught='each except catches its own type', clean='no exception',
-        exc_expr='10 / age',
+        exc_expr='age = int(input())',
         klass='class', object_='object', objects='objects',
         blueprint='the cutter', instances='each object with its own state',
         shared='shared', own='one per object',
@@ -376,7 +376,8 @@ def exceptions(t, lang):
     p = Pen(WS, HS, seed=61)
     p.rect(120, 120, 520, 220, r=22, fill=YELLOW_WASH)
     p.mono(380, 200, 'try:', 40)
-    p.mono(380, 268, t['exc_expr'], 32, MUTED)
+    p.mono(380, 254, t['exc_expr'], 26, MUTED)
+    p.mono(380, 306, '10 / edad' if lang == 'es' else '10 / age', 26, MUTED)
 
     for i, (name, y) in enumerate((('ValueError', 470), ('ZeroDivisionError', 640))):
         p.arrow(660, 250 + i * 40, 830, y - 30, wavy=True)
@@ -607,41 +608,44 @@ def stack_vs_heap(t, lang):
         fill = BLUE_WASH if i == 1 else None
         p.rect(240, y, 360, 80, r=14, fill=fill)
     p.mono(420, 412, '42', 34)
-    p.text(420, 600, t['sh_auto_note'], 26, MUTED)
+    if lang == 'en':
+        p.text(420, 578, 'born and destroyed with the block', 26, MUTED)
+        p.text(420, 620, 'without an explicit delete', 26, MUTED)
+    else:
+        p.text(420, 600, t['sh_auto_note'], 26, MUTED)
 
     p.text(1260, 150, t['sh_heap'], 38, BLUE)
-    p.mono(1260, 208, t['sh_dyn'], 26, MUTED)
-    p.rect(940, 270, 200, 80, r=14, fill=BLUE_WASH)
-    p.mono(1040, 322, 'p', 30)
+    p.mono(1260, 208, 'new int(42)', 26, MUTED)
+    p.mono(420, 322, 'int* p', 30)
     p.rect(1330, 380, 220, 110, r=18, fill=YELLOW_WASH)
     p.mono(1440, 452, '42', 40)
-    p.arrow(1145, 315, 1325, 410)
+    p.arrow(610, 315, 1325, 410)
     p.text(1260, 600, t['sh_dyn_note'], 26, MUTED)
     p.text(W / 2, 680, t['sh_leak'], 26, MUTED)
     return p
 
 
 def vtable(t, lang):
-    # One call site, the table it goes through, and the row the real type picks.
+    # A common implementation: the object selects its class table; area is a slot.
     p = Pen(W, H, seed=157)
-    p.rect(90, 300, 380, 130, r=20, fill=BLUE_WASH)
-    p.mono(280, 378, t['vt_call'], 32)
-
-    p.rect(700, 200, 520, 340, r=22)
-    p.text(960, 262, t['vt_table'], 32, BLUE)
-    p.line(700, 292, 1220, 292, w=2.0, color=MUTED)
-    for i, row in enumerate(t['vt_rows']):
-        y = 316 + i * 74
-        if i == 1:
-            p.rect(720, y, 480, 62, r=14, fill=YELLOW_WASH)
-        p.mono(960, y + 42, row, 28)
-
-    p.arrow(480, 365, 690, 365)
-    # short arrow and a centred label: anchored at the arrow head the text ran
-    # off the right edge of the canvas
-    p.arrow(1230, 421, 1330, 421)
-    p.text(1505, 421, t['vt_real'], 24, MUTED)
-    p.text(W / 2, 660, t['vt_note'], 28, MUTED)
+    square = 'Cuadrado' if lang == 'es' else 'Square'
+    p.rect(80, 210, 460, 110, r=20, fill=BLUE_WASH)
+    p.mono(310, 275, 'f->area()', 32)
+    p.rect(80, 390, 460, 150, r=20, fill=YELLOW_WASH)
+    p.mono(310, 452, square + ' (3)', 28)
+    p.mono(310, 505, 'vptr', 26, BLUE)
+    p.arrow(550, 485, 775, 390)
+    p.text(680, 525, 'clase real' if lang == 'es' else 'real class', 24, MUTED)
+    p.rect(785, 210, 770, 350, r=22)
+    p.text(1170, 270, t['vt_table'] + ': ' + square, 32, BLUE)
+    p.line(785, 305, 1555, 305, w=2.0, color=MUTED)
+    p.rect(805, 340, 730, 75, r=14, fill=YELLOW_WASH)
+    p.mono(1170, 388, 'area -> ' + square + '::area', 28)
+    p.text(1170, 490, 'otras funciones virtuales' if lang == 'es'
+           else 'other virtual functions', 26, MUTED)
+    p.arrow(550, 270, 775, 377)
+    p.text(W / 2, 655, 'Cada clase polimórfica tiene su tabla; area ocupa una ranura.'
+           if lang == 'es' else 'Each polymorphic class has a table; area occupies a slot.', 28, MUTED)
     return p
 
 
@@ -825,7 +829,7 @@ def file_lifecycle(t, lang):
     return p
 
 
-def seek_tell(t, lang):
+def seek_tell(t, lang, cpp=False):
     p = Pen(W, H, seed=157)
     n, cw, x0, y0, ch = 12, 110, 180, 250, 120
     data = t['st_data']
@@ -841,17 +845,19 @@ def seek_tell(t, lang):
     p.line(start, y0 - 62, start, 148, w=2.4)
     p.line(start, 148, target, 148, w=2.4)
     p.arrow(target, 148, target, y0 - 62)
-    p.mono((start + target) / 2, 116, 'f.seek(7)', 32, BLUE)
+    p.mono((start + target) / 2, 116, 'in.seekg(7)' if cpp else 'f.seek(7)', 32, BLUE)
 
     for i in range(7):
         xa = x0 + i * cw + cw / 2
         p.arrow(xa + 16, 442, xa + cw - 16, 442, head=11)
-    p.mono(600, 508, 'f.read(1)', 30, MUTED)
+    p.mono(600, 508, 'in.get()' if cpp else 'f.read(1)', 30, MUTED)
     p.text(600, 566, t['sequential'], 28, MUTED)
 
     p.arrow(target, 476, target, 386)
-    p.mono(target + 60, 490, 'f.tell() == 7', 28, BLUE, anchor='start')
-    p.text(W / 2, 686, t['st_note'], 28, MUTED)
+    p.mono(target + 60, 490, 'in.tellg() == 7' if cpp else 'f.tell() == 7', 28, BLUE, anchor='start')
+    note = ('seekg salta; tellg indica la posición de lectura' if lang == 'es'
+            else 'seekg jumps; tellg reports the input position') if cpp else t['st_note']
+    p.text(W / 2, 686, note, 28, MUTED)
     return p
 
 
@@ -1067,6 +1073,9 @@ def flow_connector(t, lang):
     p.text(lx, 74, t['fc_left'], 28, MUTED)
     p.text(rx, 74, t['fc_right'], 28, MUTED)
 
+    p.rect(65, 123, 170, 74, r=34, fill=YELLOW_WASH)
+    p.text(150, 170, 'INICIO' if lang == 'es' else 'START', 26)
+    p.arrow(237, 160, 275, 160)
     p.rhomboid(lx, 160, 300, 74, fill=BLUE_WASH)
     p.mono(lx, 170, t['fc_read'], 26)
     p.arrow(lx, 200, lx, 246)
@@ -1074,6 +1083,12 @@ def flow_connector(t, lang):
     p.diamond(lx, 310, 170, 62, fill=YELLOW_WASH)
     p.mono(lx, 320, t['fc_valid'], 26)
     p.arrow(lx, 374, lx, 420)
+    p.text(lx + 46, 404, 'Sí' if lang == 'es' else 'Yes', 24, MUTED)
+    # Invalid input returns to READ; both decision exits are labeled.
+    p.line(602, 310, 718, 310)
+    p.text(660, 290, 'No', 24, MUTED)
+    p.line(718, 310, 718, 160)
+    p.arrow(718, 160, 584, 160)
 
     p.rect(lx - 150, 420, 300, 74, r=10, fill=BLUE_WASH)
     p.mono(lx, 466, t['fc_clean'], 26)
@@ -1213,8 +1228,8 @@ FIGURES = {
         used_by=['w12']),
     'vtable': dict(
         fn=vtable, size='21:9',
-        about='One call site, the table the call goes through, and the row the real type '
-              'picks out.',
+        about='A common virtual-dispatch implementation: the object points to its class table, '
+              'and the area slot contains that class override.',
         reuse='Week 12, once virtual is on the board. Pair it with polymorphism: one '
               'drawing is what the caller sees, this one is what actually happens.',
         used_by=['w12']),
@@ -1259,7 +1274,7 @@ FIGURES = {
         used_by=['w05']),
     'hierarchy': dict(
         fn=hierarchy, size='21:9',
-        about='A two-level tree that works beside a four-level chain that produces a '
+        about='A two-level tree that works beside a three-level chain that produces a '
               'chicken which inherits fly().',
         reuse='The argument for keeping inheritance shallow, and it is structural, so it '
               'holds in any language with classes.',
@@ -1292,6 +1307,10 @@ FIGURES = {
         reuse='The difference between sequential and random access, drawn once. Same '
               'drawing works for a text file, a binary file or a database page.',
         used_by=['w13']),
+    'seek-tell-cpp': dict(
+        fn=lambda t, lang: seek_tell(t, lang, cpp=True), size='21:9',
+        about='C++ input cursor: seekg jumps, get reads a character, tellg reports its position.',
+        reuse='Use for C++ input streams; Python retains seek-tell.', used_by=['cpp w13']),
     'event-loop': dict(
         fn=event_loop, size='21:9',
         about='Why a GUI program looks idle: exec() is a loop that waits, dispatches one '

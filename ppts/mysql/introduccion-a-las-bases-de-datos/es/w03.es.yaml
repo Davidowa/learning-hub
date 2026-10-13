@@ -153,14 +153,14 @@ slides:
       eyebrow: Bloque 02
       title: Los tres niveles, y el suelo debajo del tercero
       lede: >-
-        La misma pregunta (¿qué hay ahí?) hecha desde cuatro alturas en una sola sesión.
+        La misma pregunta (¿qué hay ahí?) hecha desde cuatro alturas. Las capturas muestran dos bases independientes.
         La cuarta ya no es SQL. Es un listado de archivos y sesenta y cuatro bytes
         ilegibles a propósito.
       block: 2
 
   - diagram:
       eyebrow: Bloque 02 · Arquitectura
-      title: Tres niveles, tres consultas, una sola sesión
+      title: Tres niveles y sus consultas
       blocks:
         - label: Nivel 01
           title: Externo
@@ -230,6 +230,8 @@ slides:
         417  db_backup/alumno       131072
         418  db_backup/inscripcion  131072
         419  db_backup/materia      114688
+
+      notes: "Esta captura de archivos pertenece a db_backup, mientras que la captura anterior del catálogo pertenece a agente_intro01. Son dos ejemplos independientes. En el laboratorio repite todas las consultas sobre una sola base; no reutilices tamaños ni identificadores de esta captura."
 
   - code_output:
       eyebrow: Medido · el suelo
@@ -324,7 +326,7 @@ slides:
           title: «La bitácora», en singular
           desc: >-
             Son dos. El redo log da durabilidad ante una caída; el binlog da recuperación
-            a un punto en el tiempo y replicación. La semana 17 usa los dos.
+            a un punto en el tiempo y replicación. La semana 17 usa el binlog.
         - label: Error 03
           title: Copiar una captura de EXPLAIN de 8.0
           desc: >-
@@ -336,6 +338,16 @@ slides:
             En MySQL el planificador solo dispara eventos (semana 14). Lo que ordena el
             trabajo simultáneo es el gestor de bloqueos de InnoDB, y se abre fila por fila
             en la semana 16.
+
+  - code:
+      eyebrow: Ejemplo reproducible
+      title: La vista muestra el nivel externo
+      filename: external-level.sql
+      lang: sql
+      source: |
+        SELECT matricula, nombre, correo, creditos
+        FROM v_alumno_activo;
+      notes: "Ejecuta esta consulta en la misma base que el catálogo y las variables del laboratorio. La salida depende de sus filas. La vista enumera columnas; agregar otra a alumno no cambia esta lista."
 
   - lab:
       eyebrow: Laboratorio

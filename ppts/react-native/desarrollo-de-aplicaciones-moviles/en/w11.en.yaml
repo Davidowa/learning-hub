@@ -1,0 +1,239 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 11
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 11 · Sensors and location
+    title: Mobile Application Development
+    subtitle: A sensor is a stream of noisy, timestamped samples
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 11 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: a sensor is a stream of noisy, timestamped samples
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Record samples with units and cancel subscriptions
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Record samples with units and cancel subscriptions.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: now
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: a sensor is a stream of noisy, timestamped samples. You trade sampling rate and accuracy against battery and privacy, filter the noise, and always unsubscribe.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Sensors and location
+    lead: a sensor is a stream of noisy, timestamped samples. You trade sampling rate and accuracy against battery and privacy, filter the noise, and always unsubscribe.
+    panel:
+      label: Application
+      title: Sensors and location
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Sensor families
+    lead: 'Sensor families: motion (accelerometer, gyroscope, magnetometer), environment (barometer, light), position; units and coordinate frames'
+    panel:
+      label: Application
+      title: Sensor families
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Streams
+    lead: 'Streams: subscribe, sampling rate, cleanup, low-pass filtering'
+    panel:
+      label: Application
+      title: Streams
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Location
+    lead: 'Location: accuracy against battery, foreground and background access, approximate and precise permission'
+    panel:
+      label: Application
+      title: Location
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Maps
+    lead: 'Maps: markers, regions, opening the detail from a marker; geocoding as a network call'
+    panel:
+      label: Application
+      title: Maps
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Testing with simulated data
+    lead: 'Testing with simulated data: simulated locations, recorded samples as test fixtures'
+    panel:
+      label: Application
+      title: Testing with simulated data
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1
+    filename: w11-sample-1.tsx
+    lang: tsx
+    source: |
+      useEffect(() => {
+        Accelerometer.setUpdateInterval(100);   // ms
+        const sub = Accelerometer.addListener(({ x, y, z }) => {
+          const rad = Math.atan2(y, Math.hypot(x, z));
+          setTilt(lowPass(rad * 180 / Math.PI));
+        });
+        return () => sub.remove();
+      }, []);
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: A sensor value fluctuates around a reference. What should be checked?
+    options:
+    - Only the dependency popularity
+    - Whether the title is short
+    - Only the color of the number
+    - Units, sampling, noise and comparison with the reference
+    notes: Answer D. a sensor is a stream of noisy, timestamped samples. You trade sampling rate and accuracy against battery and privacy, filter the noise, and always unsubscribe.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.11
+    brief: Record samples with units and cancel subscriptions. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Record samples with units and cancel subscriptions. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: a sensor is a stream of noisy, timestamped samples. You trade sampling rate and accuracy against battery and privacy, filter the noise, and always unsubscribe.
+    - title: Implementation
+      desc: Record samples with units and cancel subscriptions.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: System integration'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

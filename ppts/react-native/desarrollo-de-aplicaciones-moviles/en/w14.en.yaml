@@ -1,0 +1,274 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 14
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: 'Week 14 · Quality: testing, debugging and CI'
+    title: Mobile Application Development
+    subtitle: Tests are executable specifications at different costs
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 14 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: tests are executable specifications at different costs
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Fix a defect and add a regression test. Submit an identifiable commit and evidence of the result.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Fix a defect and add a regression test.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: done
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: now
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: 'tests are executable specifications at different costs: many fast unit tests, fewer component tests, a handful of end-to-end flows, and checks on a real device. CI makes "it works on my machine" irrelevant.'
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: 'Quality: testing, debugging and CI'
+    lead: 'tests are executable specifications at different costs: many fast unit tests, fewer component tests, a handful of end-to-end flows, and checks on a real device. CI makes "it works on my machine" irrelevant.'
+    panel:
+      label: Application
+      title: 'Quality: testing, debugging and CI'
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: The testing pyramid and what each level catches
+    lead: The testing pyramid and what each level catches
+    panel:
+      label: Application
+      title: The testing pyramid and what each level catches
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Test doubles
+    lead: 'Test doubles: a fake repository, a mocked network, deterministic time and IDs'
+    panel:
+      label: Application
+      title: Test doubles
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: UI tests that query by role and label, so accessibility pays off twice
+    lead: UI tests that query by role and label, so accessibility pays off twice
+    panel:
+      label: Application
+      title: UI tests that query by role and label
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Debugging and profiling
+    lead: 'Debugging and profiling: breakpoints, logs, network inspection, render and frame profiling'
+    panel:
+      label: Application
+      title: Debugging and profiling
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Continuous integration
+    lead: 'Continuous integration: type check, lint and tests on every PR, with a protected main branch'
+    panel:
+      label: Application
+      title: Continuous integration
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Production observability
+    lead: 'Production observability: crash reports and logs with consent'
+    panel:
+      label: Application
+      title: Production observability
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1
+    filename: w14-sample-1.tsx
+    lang: tsx
+    source: |
+      test('save is disabled until the title is valid', () => {
+        render(<NewReport onSave={jest.fn()} />);
+        const save = screen.getByRole('button', { name: 'Guardar' });
+        expect(save).toBeDisabled();
+
+        fireEvent.changeText(
+          screen.getByPlaceholderText('¿Qué observaste?'), 'Fuga');
+        expect(save).toBeEnabled();
+      });
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 2
+    filename: w14-sample-2.maestro
+    lang: yaml
+    source: |
+      appId: dev.tunombre.bitacora
+      ---
+      - launchApp
+      - tapOn: "Nuevo reporte"
+      - inputText: "Fuga en laboratorio"
+      - tapOn: "Guardar"
+      - assertVisible: "Fuga en laboratorio"
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: Which test demonstrates that a defect was fixed?
+    options:
+    - One that fails on the defect and passes on the corrected behavior
+    - A screenshot with no acceptance criterion
+    - A count of source files
+    - One that passes before and after without checking the defect
+    notes: 'Answer A. tests are executable specifications at different costs: many fast unit tests, fewer component tests, a handful of end-to-end flows, and checks on a real device. CI makes "it works on my machine" irrelevant.'
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.14
+    brief: Fix a defect and add a regression test. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Fix a defect and add a regression test. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: 'tests are executable specifications at different costs: many fast unit tests, fewer component tests, a handful of end-to-end flows, and checks on a real device. CI makes "it works on my machine" irrelevant.'
+    - title: Implementation
+      desc: Fix a defect and add a regression test.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Security, privacy and release'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

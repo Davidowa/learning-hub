@@ -10,7 +10,7 @@
 # quedan en pdf/ (un PDF por presentación en pdf/decks/, y uno por curso e idioma
 # con un marcador por sesión). pdf/ no se sube al repositorio.
 #
-# Necesita Python 3.10 o más nuevo y LibreOffice. La primera vez crea .venv/ en la
+# Necesita Python 3.14 y LibreOffice. La primera vez crea .venv/ en la
 # raíz del repositorio e instala lo que el kit necesita (ppts/requirements.txt).
 #
 # Si macOS no te deja abrirlo con doble clic ("no se puede abrir", "Apple no pudo
@@ -60,9 +60,9 @@ case "$CARPETA" in /*) DIR="$CARPETA" ;; *) DIR="ppts/$CARPETA" ;; esac
 [ -d "$DIR" ] || falla "No existe la carpeta $DIR." \
   "Pasa una carpeta relativa a ppts/, por ejemplo: python o cpp/programacion-avanzada/es"
 
-# 1. Python 3.10 o más nuevo
+# 1. Python 3.14
 PY=""
-for c in python3.14 python3.13 python3.12 python3.11 python3.10 python3; do
+for c in python3.14; do
   p="$(command -v "$c" 2>/dev/null)" || continue
   # Sin las herramientas de línea de comandos de Xcode, el /usr/bin/python3 de macOS no
   # corre: abre un diálogo para instalarlas (y lo que instala es Python 3.9). Se salta.
@@ -70,13 +70,13 @@ for c in python3.14 python3.13 python3.12 python3.11 python3.10 python3; do
     dev="$(xcode-select -p 2>/dev/null)" || dev=""
     { [ -n "$dev" ] && [ -x "$dev/usr/bin/python3" ]; } || continue
   fi
-  if "$p" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; then
+  if "$p" -c 'import sys; sys.exit(0 if sys.version_info[:2] == (3, 14) else 1)' 2>/dev/null; then
     PY="$p"
     break
   fi
 done
-[ -n "$PY" ] || falla "No encontré Python 3.10 o más nuevo${MAC:+ (el python3 que trae macOS es 3.9)}." \
-  "Instálalo desde https://www.python.org/downloads/ o con Homebrew: brew install python"
+[ -n "$PY" ] || falla "No encontré Python 3.14${MAC:+ (el python3 que trae macOS es 3.9)}." \
+  "Instálalo desde https://www.python.org/downloads/ o con Homebrew: brew install python@3.14"
 echo "Python: $PY ($("$PY" -c 'import platform; print(platform.python_version())'))"
 
 # 2. LibreOffice, que convierte cada .pptx a PDF
@@ -100,8 +100,8 @@ versión para Apple Silicon de https://www.libreoffice.org/download/ (o Rosetta:
 echo "LibreOffice: $SOFFICE"
 
 # 3. Entorno virtual con lo que el kit necesita. Si ya hay una .venv/ cuyo Python no corre
-#    (se desinstaló o lo cambió Homebrew), es anterior a 3.10 o no tiene pip, se rehace.
-if ! .venv/bin/python -c 'import sys, pip; sys.exit(0 if sys.version_info >= (3, 10) else 1)' \
+#    (se desinstaló o lo cambió Homebrew), no usa Python 3.14 o no tiene pip, se rehace.
+if ! .venv/bin/python -c 'import sys, pip; sys.exit(0 if sys.version_info[:2] == (3, 14) else 1)' \
      >/dev/null 2>&1; then
   if [ -e .venv ] || [ -L .venv ]; then
     echo "Rehaciendo .venv/ (la que había no le sirve al kit)..."

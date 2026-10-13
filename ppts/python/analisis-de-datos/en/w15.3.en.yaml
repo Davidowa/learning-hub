@@ -102,6 +102,8 @@ slides:
       title: The four totals, in thousands
       filename: group.py
       source: |
+        sales["amount"] = sales["units"] * sales["unit_price"]
+
         by_region = (sales.groupby("region")["amount"]
                      .sum()
                      .sort_values(ascending=False))

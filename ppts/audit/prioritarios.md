@@ -1,5 +1,8 @@
 # Hallazgos prioritarios
 
+> Registro histórico de la primera auditoría. El corte del 13 de octubre de 2026 y los informes `continuacion-2026-10-13-*.json` documentan las correcciones, refutaciones y límites posteriores. Este listado conserva la trazabilidad; su conteo no representa automáticamente defectos todavía abiertos.
+
+
 Lo que los agentes encontraron y no corrigieron. Un hallazgo queda abierto por una de tres razones:
 la corrección es una decisión del profesor (una política del syllabus, una convención de todo el
 curso), vive fuera del deck (una figura, el syllabus, otro archivo) o exigiría inventar contenido.

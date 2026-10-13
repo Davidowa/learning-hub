@@ -32,6 +32,10 @@ WOOD, WOOD_WASH = '#8A6A00', '#EADCB4'   # the one warm pair, for wood
 
 FONTS = os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts')
 HAND_FILE = fonts.find('Inkfree.ttf')     # Ink Free ships with Windows
+if not os.path.isfile(HAND_FILE):
+    # Office for Mac provides this handwriting face; export outlines so the
+    # receiving machine does not need either font installed.
+    HAND_FILE = fonts.find('Segoe Print Bold.ttf')
 MONO_FILE = fonts.find('consola.ttf')     # Consolas: Windows, or Office for Mac
 
 CURVE_STEPS = 12

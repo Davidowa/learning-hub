@@ -1,5 +1,8 @@
 # Auditoría de los decks y cursos nuevos: dónde quedó y cómo seguir
 
+> La continuación del 13 de octubre de 2026 está documentada en `ENTREGA-2026-10-13.md` y `ppts/audit/estado.md`. Este archivo conserva el relevo anterior.
+
+
 Estado al detener (6 de octubre de 2026): todo en `main`. Los 334 decks construyen sin errores ni
 avisos, y preflight, lint y sizes están en cero en las 22 carpetas de idioma. La sesión se detuvo
 a pedido del profesor con la auditoría casi terminada y los cursos nuevos en borrador.

@@ -1,0 +1,230 @@
+meta:
+  course: Fundamentos del comercio electrónico
+  code: E-commerce
+  lang: es
+  language: commerce
+  week: 13
+  footer: FUNDAMENTOS DEL COMERCIO ELECTRÓNICO · COMERCIO DIGITAL
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Semana 13 · Medición y decisiones
+    title: Fundamentos del comercio electrónico
+    subtitle: 'Medir decisiones, no datos: el árbol de indicadores, los eventos y por qué tres fuentes nunca dan el mismo número.'
+    meta:
+    - - Profesor
+      - David Escobar-Castillejos
+    - - Track
+      - Comercio digital
+    - - Sesión
+      - 13 de 17
+- agenda:
+    eyebrow: Agenda
+    title: Recorrido de la sesión
+    cards:
+    - title: Definición de métricas
+      desc: Declara población, unidad de observación, periodo y denominador
+    - title: Conciliación
+      desc: Compara pedidos, pagos y eventos mediante identificadores estables
+    - title: Atribución y causa
+      desc: La atribución asigna crédito según una regla
+    - title: Aplicación
+      desc: Caso, comprobación y entrega.
+- objectives:
+    eyebrow: Objetivos
+    title: Al terminar la sesión el alumno podrá…
+    items:
+    - head: Explicar definición de métricas
+      sub: Declara población, unidad de observación, periodo y denominador. Sesión, cliente, pedido y artículo son unidades distintas.
+    - head: Explicar conciliación
+      sub: Compara pedidos, pagos y eventos mediante identificadores estables. Investiga faltantes y duplicados antes de decidir.
+    - head: Explicar atribución y causa
+      sub: La atribución asigna crédito según una regla
+    - head: Justificar una decisión con evidencia
+      sub: Aplicar el caso y declarar sus supuestos.
+- roadmap:
+    eyebrow: Mapa del curso
+    title: Ubicación de la sesión
+    phases:
+    - label: 01–04
+      title: Modelo y economía
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 05–08
+      title: Compra y pago
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 09–13
+      title: Operación y medición
+      desc: Concepto, caso y evidencia.
+      state: now
+    - label: 14–17
+      title: Retención y decisión
+      desc: Concepto, caso y evidencia.
+      state: todo
+- divider:
+    eyebrow: Bloque 01
+    title: Modelo de la sesión
+    lede: 'Medir decisiones, no datos: el árbol de indicadores, los eventos y por qué tres fuentes nunca dan el mismo número.'
+    block: 1
+- concept:
+    eyebrow: Concepto
+    title: Definición de métricas
+    lead: Declara población, unidad de observación, periodo y denominador. Sesión, cliente, pedido y artículo son unidades distintas.
+    panel:
+      label: Aplicación
+      title: Definición de métricas
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- concept:
+    eyebrow: Concepto
+    title: Conciliación
+    lead: Compara pedidos, pagos y eventos mediante identificadores estables. Investiga faltantes y duplicados antes de decidir.
+    panel:
+      label: Aplicación
+      title: Conciliación
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- concept:
+    eyebrow: Concepto
+    title: Atribución y causa
+    lead: La atribución asigna crédito según una regla. Un experimento con grupo de control puede estimar impacto incremental. Cada pregunta necesita evidencia distinta.
+    panel:
+      label: Aplicación
+      title: Atribución y causa
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- divider:
+    eyebrow: Bloque 02
+    title: Caso Molienda
+    lede: Datos ficticios para practicar una decisión verificable.
+    block: 2
+- table:
+    eyebrow: Caso ilustrativo
+    title: Datos para tomar una decisión
+    headers:
+    - Registro
+    - ID
+    - Efecto
+    rows:
+    - - Registro de pedido
+      - '1001'
+      - 2,068
+    - - Registro de evento
+      - '1001'
+      - 2,068
+    - - Evento repetido
+      - '1001'
+      - Ignorar duplicado
+    - - Pedidos conciliados
+      - '1'
+      - 2,068
+    notes: 'All numbers are synthetic teaching inputs. No vendor fees or product tax classifications are asserted. '
+- method:
+    eyebrow: Comprobación
+    title: La decisión necesita una base explícita
+    statement: Declara unidad, periodo y supuestos antes de comparar resultados.
+    points:
+    - label: Dato
+      text: Distingue registros de estimaciones.
+    - label: Cálculo
+      text: Conserva denominadores y unidades.
+    - label: Decisión
+      text: Indica qué acción cambia con la evidencia.
+- code:
+    eyebrow: Caso Molienda
+    title: Registro estructurado del caso
+    filename: case-w13.json
+    lang: json
+    source: |
+      {
+        "event": "purchase",
+        "transaction_id": "1001",
+        "value": 2068,
+        "currency": "MXN"
+      }
+    annotations:
+    - label: Identidad
+      text: Conserva identificadores estables.
+    - label: Contrato
+      text: Define campos, unidades y responsable.
+    notes: Synthetic teaching record. This is a generic contract, not a vendor API implementation.
+- quiz:
+    eyebrow: Comprobación
+    question: El evento purchase llega sin transaction_id. ¿Cuál es el riesgo?
+    options:
+    - Ninguno.
+    - Recargar la página de agradecimiento cuenta la compra dos veces e infla los ingresos.
+    - GA4 rechaza todos los eventos.
+    - Al cliente no se le cobra.
+    notes: |-
+      El evento purchase llega sin transaction_id. ¿Cuál es el riesgo? A) Ninguno. B) Recargar la página de agradecimiento cuenta la compra dos veces e infla los ingresos (correcta). C) GA4 rechaza todos los eventos. D) Al cliente no se le cobra.
+      Respuesta: B
+- divider:
+    eyebrow: Bloque 03
+    title: Aplicación y evidencia
+    lede: El caso termina en una decisión que puedes comprobar.
+    block: 3
+- lab:
+    eyebrow: Laboratorio
+    title: 'Molienda · Pedido #1001'
+    brief: Explora la cuenta demo de GA4 (embudo y adquisición de tráfico por UTM). Escribe el plan de medición de Molienda y construye la tabla de conciliación que resuelve el acertijo de w12, incluido un evento de compra duplicado sembrado en los datos. Lab corto por la semana de examen.
+    blocks:
+    - label: Entrega
+      text: Resultado y registro de evidencia.
+    - label: Restricción
+      text: Usa solo conceptos de esta sesión y anteriores.
+    - label: Comprobación
+      text: Otra persona debe poder reproducir el resultado.
+    notes: Explora la cuenta demo de GA4 (embudo y adquisición de tráfico por UTM). Escribe el plan de medición de Molienda y construye la tabla de conciliación que resuelve el acertijo de w12, incluido un evento de compra duplicado sembrado en los datos. Lab corto por la semana de examen.
+- homework:
+    eyebrow: Tarea
+    title: Aplicación al proyecto
+    brief: Set de práctica del Parcial 2 (reactivos mezclados de w09 a w13 más la economía de w03, sin calificación) y el plan de medición y árbol de indicadores del equipo para el Avance 3.
+    meta:
+    - - Entrega
+      - Antes de la siguiente sesión
+    - - Formato
+      - Evidencia y explicación
+    rubric:
+    - - Concepto
+      - 40 %
+      - Uso correcto y supuestos claros
+    - - Evidencia
+      - 40 %
+      - Resultado reproducible
+    - - Decisión
+      - 20 %
+      - Justificación y límite
+    notes: Set de práctica del Parcial 2 (reactivos mezclados de w09 a w13 más la economía de w03, sin calificación) y el plan de medición y árbol de indicadores del equipo para el Avance 3.
+- takeaways:
+    eyebrow: Resumen
+    title: Conceptos que debes conservar
+    items:
+    - title: Definición de métricas
+      desc: Declara población, unidad de observación, periodo y denominador. Sesión, cliente, pedido y artículo son unidades distintas.
+    - title: Conciliación
+      desc: Compara pedidos, pagos y eventos mediante identificadores estables. Investiga faltantes y duplicados antes de decidir.
+    - title: Atribución y causa
+      desc: La atribución asigna crédito según una regla. Un experimento con grupo de control puede estimar impacto incremental. Cada pregunta necesita evidencia distinta.
+- closing:
+    title: Preguntas
+    subtitle: 'Siguiente sesión: Retención y valor del cliente'
+    meta:
+    - - Contacto
+      - descobarc@up.edu.mx
+    - - Curso
+      - learning-hub

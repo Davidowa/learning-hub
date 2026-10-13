@@ -367,16 +367,16 @@ slides:
 
   - quiz:
       eyebrow: Verificación rápida
-      question: El objeto del banco se deshabilita y se habilita dos veces. ¿Qué registra el siguiente agarre?
-      filename: WrenchLog.cs
+      question: El observador se deshabilita y se habilita dos veces. ¿Qué registra el siguiente registro?
+      filename: BenchRegistry.cs
       lang: csharp
       source: |
         void OnEnable()
         {
-            grab.selectEntered.AddListener(Held);
+            manager.interactableRegistered += Added;
         }
       options:
-        - Un renglón, un UnityEvent guarda cada listener una sola vez
+        - Un renglón, += sustituye la suscripción anterior
         - Tres renglones, uno por cada habilitación que no devolvió su listener
         - Nada, porque deshabilitar el objeto soltó el listener
         - Un error, porque el mismo método no se puede agregar dos veces
@@ -384,16 +384,16 @@ slides:
   - trace:
       eyebrow: Respuesta
       title: La lista de listeners, contada en cada paso
-      headers: [Paso, Listeners después, Renglones en un agarre]
+      headers: [Paso, Listeners después, Renglones en un registro]
       rows:
         - ["Habilita, primera vez", "1", "1"]
-        - ["Deshabilita", "1, sigue puesto", "0, el objeto está apagado"]
+        - ["Deshabilita", "1, sigue puesto", "1, sigue suscrito"]
         - ["Habilita, segunda vez", "2", "2"]
-        - ["Deshabilita otra vez", "2, sigue puesto", "0, el objeto está apagado"]
+        - ["Deshabilita otra vez", "2, sigue puesto", "2, sigue suscrito"]
         - ["Habilita, tercera vez", "3", "3"]
       verdict: >-
-        AddListener agrega, no revisa. El deshabilitar nunca quitó nada porque nadie se lo
-        pidió, así que la cuenta solo sube. Un RemoveListener en OnDisable deja esto en un
+        Cada += agrega una suscripción. El deshabilitar nunca quitó nada porque nadie se lo
+        pidió, así que la cuenta solo sube. Un -= en OnDisable deja esto en un
         renglón por el resto de la vida del proyecto.
 
   - lab:

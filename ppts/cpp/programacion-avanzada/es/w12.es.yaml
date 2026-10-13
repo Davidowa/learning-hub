@@ -145,6 +145,27 @@ slides:
       lede: La palabra virtual es lo que convierte una jerarquía de clases en algo que sirve de verdad.
       block: 3
 
+  - code:
+      eyebrow: Ejemplo para el ejercicio
+      title: Las clases de la comparación virtual
+      filename: virtual.cpp
+      lang: cpp
+      source: |
+        class Figura {
+        public:
+            virtual double area() { return -1; }
+            double areaNoVirtual() { return -1; }
+            virtual ~Figura() = default;
+        };
+        class Cuadrado : public Figura {
+            double side;
+        public:
+            Cuadrado(double s) : side(s) {}
+            double area() override { return side * side; }
+            double areaNoVirtual() { return side * side; }
+        };
+      notes: "Estas definiciones pertenecen a virtual.cpp. La clase abstracta posterior es otro ejemplo independiente. La llamada no virtual usa el tipo del puntero; la virtual usa el objeto real."
+
   - code_output:
       eyebrow: La demostración
       title: El mismo puntero, dos llamadas, dos respuestas
@@ -166,7 +187,7 @@ slides:
       title: Por dónde pasa la llamada cuando es virtual
       image: img/es/vtable.png
       caption: El objeto lleva un puntero a una tabla con la dirección de la función que le toca. La llamada consulta la tabla en lugar de decidirlo al compilar.
-      alt: Una llamada que entra a una tabla virtual de tres renglones y sale por el que corresponde al tipo real
+      alt: Un puntero selecciona la tabla de la clase real y consulta la entrada de area
 
   - code:
       eyebrow: Abstractas

@@ -1,0 +1,242 @@
+meta:
+  course: Desarrollo de aplicaciones móviles
+  code: SwiftUI
+  lang: es
+  language: swift
+  week: 6
+  footer: DESARROLLO DE APLICACIONES MÓVILES · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Semana 06 · Listas y navegación
+    title: Desarrollo de aplicaciones móviles
+    subtitle: Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+    meta:
+    - - Profesor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Sesión
+      - 6 de 17
+- agenda:
+    eyebrow: Agenda
+    title: Recorrido de la sesión
+    cards:
+    - title: Modelo
+      desc: Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+    - title: Implementación
+      desc: SwiftUI
+    - title: Comprobación
+      desc: Estados, casos límite y evidencia.
+    - title: Bitácora
+      desc: Navegar entre lista y detalle con identidad estable
+- objectives:
+    eyebrow: Objetivos
+    title: Al terminar la sesión el alumno podrá…
+    items:
+    - head: Explicar el modelo de la sesión con un ejemplo de Bitácora.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Navegar entre lista y detalle con identidad estable.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Comparar la decisión de implementación en Android e iOS.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Entregar evidencia reproducible y explicar el código utilizado.
+      sub: Resultado verificable en el caso Bitácora.
+- roadmap:
+    eyebrow: Mapa del curso
+    title: Ubicación de la sesión
+    phases:
+    - label: 01–03
+      title: Fundamentos
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 04–07
+      title: Interfaz y estado
+      desc: Concepto, caso y evidencia.
+      state: now
+    - label: 08–12
+      title: Datos y dispositivo
+      desc: Concepto, caso y evidencia.
+      state: todo
+    - label: 13–17
+      title: Calidad y entrega
+      desc: Concepto, caso y evidencia.
+      state: todo
+- divider:
+    eyebrow: Bloque 01
+    title: Modelo y contratos
+    lede: Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+    block: 1
+- concept:
+    eyebrow: Concepto
+    title: Listas y navegación
+    lead: Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+    panel:
+      label: Aplicación
+      title: Listas y navegación
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- concept:
+    eyebrow: Concepto
+    title: Asigna una identidad estable a cada registro.
+    lead: Asigna una identidad estable a cada registro.
+    panel:
+      label: Aplicación
+      title: Asigna una identidad estable a cada registro.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Carga listas sin construir todas las filas simultáneamente.
+    lead: Carga listas sin construir todas las filas simultáneamente.
+    panel:
+      label: Aplicación
+      title: Carga listas sin construir todas las filas
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Representa los destinos de navegación y sus argumentos.
+    lead: Representa los destinos de navegación y sus argumentos.
+    panel:
+      label: Aplicación
+      title: Representa los destinos de navegación y sus argumentos.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Confirma una acción destructiva y conserva contexto.
+    lead: Confirma una acción destructiva y conserva contexto.
+    panel:
+      label: Aplicación
+      title: Confirma una acción destructiva y conserva contexto.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Comprueba búsqueda, edición y regreso a la lista.
+    lead: Comprueba búsqueda, edición y regreso a la lista.
+    panel:
+      label: Aplicación
+      title: Comprueba búsqueda, edición y regreso a la lista.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Bloque 02
+    title: Implementación en SwiftUI
+    lede: La API concreta es una instancia del modelo.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Ejemplo 1
+    filename: w06-sample-1.swift
+    lang: swift
+    source: |
+      NavigationStack {
+          List(reports) { report in
+              NavigationLink(value: report) {
+                  ReportRow(report: report)
+              }
+          }
+          .navigationTitle("Reportes")
+          .navigationDestination(for: Report.self) { report in
+              ReportDetail(report: report)
+          }
+      }
+    annotations:
+    - label: Contexto
+      text: Fragmento del archivo de ejemplo. Conserva los tipos e imports de su contexto.
+    - label: Comprobación
+      text: Explica entradas, estado y resultado esperado.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Comprobación
+    question: Se inserta una fila al principio de una lista. ¿Qué clave conserva la identidad del registro?
+    options:
+    - Un identificador único y estable del registro
+    - La posición actual en pantalla
+    - Una clave aleatoria en cada render
+    - El índice de la fila
+    notes: Respuesta A. Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+- divider:
+    eyebrow: Bloque 03
+    title: Aplicación y evidencia
+    lede: El caso termina en una decisión que puedes comprobar.
+    block: 3
+- lab:
+    eyebrow: Laboratorio
+    title: Bitácora · v0.6
+    brief: Navegar entre lista y detalle con identidad estable. Entrega un commit identificable y evidencia del resultado.
+    blocks:
+    - label: Entrega
+      text: Resultado y registro de evidencia.
+    - label: Restricción
+      text: Usa solo conceptos de esta sesión y anteriores.
+    - label: Comprobación
+      text: Otra persona debe poder reproducir el resultado.
+    notes: Navegar entre lista y detalle con identidad estable. Entrega un commit identificable y evidencia del resultado.
+- homework:
+    eyebrow: Tarea
+    title: Aplicación al proyecto
+    brief: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+    meta:
+    - - Entrega
+      - Antes de la siguiente sesión
+    - - Formato
+      - Evidencia y explicación
+    rubric:
+    - - Concepto
+      - 40 %
+      - Uso correcto y supuestos claros
+    - - Evidencia
+      - 40 %
+      - Resultado reproducible
+    - - Decisión
+      - 20 %
+      - Justificación y límite
+    notes: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+- takeaways:
+    eyebrow: Resumen
+    title: Modelo, implementación y evidencia
+    items:
+    - title: Modelo
+      desc: Una fila necesita identidad estable. La navegación guarda destinos y contexto.
+    - title: Implementación
+      desc: Navegar entre lista y detalle con identidad estable.
+    - title: Evidencia
+      desc: El resultado y su comprobación deben poder reproducirse.
+- closing:
+    title: Preguntas
+    subtitle: 'Siguiente sesión: Arquitectura de la app'
+    meta:
+    - - Contacto
+      - descobarc@up.edu.mx
+    - - Curso
+      - learning-hub

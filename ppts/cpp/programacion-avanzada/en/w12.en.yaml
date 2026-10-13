@@ -145,6 +145,27 @@ slides:
       lede: The word virtual is what turns a hierarchy of classes into something genuinely useful.
       block: 3
 
+  - code:
+      eyebrow: Example for the exercise
+      title: The classes used in the virtual comparison
+      filename: virtual.cpp
+      lang: cpp
+      source: |
+        class Shape {
+        public:
+            virtual double area() { return -1; }
+            double areaNonVirtual() { return -1; }
+            virtual ~Shape() = default;
+        };
+        class Square : public Shape {
+            double side;
+        public:
+            Square(double s) : side(s) {}
+            double area() override { return side * side; }
+            double areaNonVirtual() { return side * side; }
+        };
+      notes: "These definitions belong to virtual.cpp. The later abstract class is a separate example. The nonvirtual call uses the pointer type; the virtual call uses the real object."
+
   - code_output:
       eyebrow: The demonstration
       title: One pointer, two calls, two answers
@@ -166,7 +187,7 @@ slides:
       title: Where a virtual call actually goes
       image: img/en/vtable.png
       caption: The object carries a pointer to a table holding the address of the function that belongs to it. The call consults the table instead of being settled at compile time.
-      alt: A call entering a three-row virtual table and leaving through the row matching the real type
+      alt: A pointer selects the real class table and reads its area entry
 
   - code:
       eyebrow: Abstract

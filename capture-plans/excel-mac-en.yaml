@@ -1,0 +1,993 @@
+app: excel
+lang: en
+version: 1
+notes: Verified on Excel for Mac 16.112.3 with the English interface. Dark dialogs
+  were visually inspected. Use --plan for check so dark-appearance guard overrides
+  apply. The Mac set remains separate from Windows.
+defaults:
+  kind: dialog
+  profile: office
+shots:
+- name: advanced-filter
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: &id001
+        - - Region
+          - Rep
+          - Units
+        - - North
+          - Ana
+          - 1240
+        - - South
+          - Beto
+          - 980
+        - - East
+          - Carla
+          - 1510
+    - select: F10
+    open:
+      ribbon:
+      - Data
+      - Advanced...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: F10
+    open:
+      menu:
+      - Data
+      - Advanced Filter...
+    verify: on a Mac
+  expect:
+    title: Advanced Filter
+  alt: The Excel Advanced Filter dialog, with Filter the list, in-place selected and
+    the List range, Criteria range and Copy to boxes empty.
+  caption: Copy to stays greyed until Copy to another location is selected.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: arrange-windows
+  win:
+    open:
+      ribbon:
+      - View
+      - Arrange All
+  mac:
+    open:
+      menu:
+      - Window
+      - Arrange...
+    verify: on a Mac
+  expect:
+    title: Arrange Windows
+  alt: The Arrange Windows dialog with Tiled selected among Tiled, Horizontal, Vertical
+    and Cascade, and the Windows of active workbook check box clear.
+  caption: Arrange All on the View tab opens this dialog; Tiled is the default.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: cf-rules-manager
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      ribbon:
+      - Home
+      - Conditional Formatting
+      - Manage Rules...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      menu:
+      - Format
+      - Conditional Formatting...
+    title: Manage Rules
+    verify: on a Mac; the Mac dialog may carry another title
+  expect:
+    title: Conditional Formatting Rules Manager
+  alt: The Conditional Formatting Rules Manager, with Show formatting rules for set
+    to Current Selection, an empty rule list, and the columns Rule, Format, Applies
+    to and Stop If True.
+  caption: It opens on Current Selection, so a sheet that carries rules can still
+    look empty here.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: consolidate-dialog
+  win:
+    open:
+      ribbon:
+      - Data
+      - Consolidate...
+  mac:
+    open:
+      menu:
+      - Data
+      - Consolidate...
+    verify: on a Mac
+  expect:
+    title: Consolidate
+  alt: The Consolidate dialog with Function set to Sum, an empty Reference box, an
+    empty All references list, and the Top row, Left column and Create links to source
+    data check boxes clear.
+  caption: Each reference is added to All references with Add; Function applies to
+    all of them.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: create-pivottable
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      ribbon:
+      - Insert
+      - PivotTable
+      - From Table/Range
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      menu:
+      - Data
+      - Summarize with PivotTable
+    title: Create PivotTable
+    verify: on a Mac
+  expect:
+    title: PivotTable from table or range
+  alt: The PivotTable from table or range dialog, with Table/Range set to Sheet1!$A$1:$C$4,
+    New Worksheet selected, and Add this data to the Data Model clear.
+  caption: The range comes from the selection; New Worksheet puts the PivotTable on
+    a sheet of its own.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: create-table
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      keys: ^t
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      menu:
+      - Insert
+      - Table
+    verify: on a Mac
+  expect:
+    title: Create Table
+  alt: The Create Table dialog, with the data range $A$1:$C$4 and My table has headers
+    ticked.
+  caption: Ctrl+T opens it on the current region; the check box decides whether row
+    1 holds headers.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: custom-views
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    open:
+      ribbon:
+      - View
+      - Custom Views...
+    notes: the workbook is saved first (Book1.xlsx); Custom Views refuses an unsaved
+      one
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - save_as: xlsx
+    open:
+      menu:
+      - View
+      - Custom Views...
+    verify: on a Mac
+  expect:
+    title: Custom Views
+  alt: The Custom Views dialog with an empty Views list, Show and Delete greyed out,
+    and Close and Add available.
+  caption: The list is empty until Add saves the first view of the sheet.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: data-validation-dialog
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: C2
+    open:
+      ribbon:
+      - Data
+      - Data Validation
+      - Data Validation...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: C2
+    open:
+      menu:
+      - Data
+      - Validation...
+    verify: on a Mac
+  expect:
+    title: Data Validation
+  alt: The Excel Data Validation dialog on its Settings tab, with the Input Message
+    and Error Alert tabs beside it.
+  caption: Opened on a cell without a rule, so Allow reads Any value; Clear All removes
+    a rule.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: define-name
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      ribbon:
+      - Formulas
+      - Define Name...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      menu:
+      - Insert
+      - Name
+      - Define Name
+    verify: on a Mac; the Mac dialog may carry another title
+  expect:
+    title: New Name
+  alt: The New Name dialog, with Name filled in as Region, Scope set to Workbook,
+    an empty Comment box, and Refers to reading =Sheet1!$A$1:$C$4.
+  caption: Excel proposes the top-left label as the name and the selection as the
+    reference.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: error-checking
+  win:
+    setup:
+    - cells:
+        at: A2
+        rows:
+        - - 10
+        - - 0
+    - formula:
+        B2: =A2/A3
+    - select: B2
+    open:
+      ribbon:
+      - Formulas
+      - Error Checking
+      - Error Checking...
+  mac:
+    setup:
+    - cells:
+        at: A2
+        rows:
+        - - 10
+        - - 0
+    - formula:
+        B2: =A2/A3
+    - select: B2
+    open:
+      menu:
+      - Tools
+      - Error Checking...
+    verify: on a Mac
+  expect:
+    title: Error Checking
+  alt: The Error Checking dialog for cell B2 holding =A2/A3, titled Divide by Zero
+    Error, with Help on this Error, Show Calculation Steps, Ignore Error and Edit
+    in Formula Bar.
+  caption: The dialog names the cell, shows its formula, and says why the result is
+    an error.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: excel-developer-tab
+  kind: ribbon
+  win:
+    setup:
+    - developer_tab: true
+    open:
+      ribbon:
+      - Developer
+    crop:
+      rect_pt:
+      - 0
+      - 0
+      - null
+      - 200
+    notes: developer_tab sets Application.ShowDevTools for this shot and puts the
+      previous value back when the shot ends. The crop keeps the title bar, the tabs
+      and the ribbon (300 px at 150 percent).
+  mac:
+    open:
+      ribbon_tab: Developer
+    crop:
+      rect_pt:
+      - 0
+      - 0
+      - null
+      - 160
+    verify: on a Mac; the Developer tab must be ticked once in Excel Settings, Ribbon
+      and Toolbar, and the crop height is a guess
+  expect:
+    title_contains: Book
+  alt: The Developer tab in Excel for Mac.
+  caption: Visual Basic, Macros and Record Macro are available on the Developer tab.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-alignment
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    tab_walk:
+      keys: ^{TAB}
+      from: Font
+      to: Alignment
+      order: &id002
+      - Number
+      - Alignment
+      - Font
+      - Border
+      - Fill
+      - Protection
+      verify: hash-distinct
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    tab: Alignment
+    verify: on a Mac
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog on the Alignment tab, with Horizontal set to General,
+    Vertical set to Bottom, the Wrap text, Shrink to fit and Merge cells boxes clear,
+    and the Orientation dial at 0 degrees.
+  caption: Wrap text and Merge cells live here, under Text control.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-border
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    tab_walk:
+      keys: ^{TAB}
+      from: Font
+      to: Border
+      order: *id002
+      verify: hash-distinct
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    tab: Border
+    verify: on a Mac
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog on the Border tab, with the line Style list and Color
+    on the left, the None, Outline and Inside presets on top, and the border preview
+    with its buttons.
+  caption: Pick a line style first, then a preset or a side of the preview.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-dialog
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    tab_walk:
+      keys: ^{TAB}
+      from: Font
+      to: Number
+      order: *id002
+      verify: hash-distinct
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    verify: on a Mac
+    tab: Number
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog on its Number tab, showing the six tabs across the
+    top, the Category list from General down to Custom, and the Sample box on the
+    right.
+  caption: Special and Custom sit at the bottom of the Category list; neither has
+    a ribbon button.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-fill
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    tab_walk:
+      keys: ^{TAB}
+      from: Font
+      to: Fill
+      order: *id002
+      verify: hash-distinct
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    tab: Fill
+    verify: on a Mac
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog on the Fill tab, with the Background Color palette,
+    the No Color button, Fill Effects, More Colors, and the Pattern Color and Pattern
+    Style lists.
+  caption: No Color removes a fill; the Sample box shows the result before OK.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-font
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    notes: Ctrl+Shift+F opens Format Cells on the Font tab, so no walk is needed
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    tab: Font
+    verify: on a Mac
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog open on the Font tab, showing the six tabs across the
+    top, the Font, Font style and Size lists, Underline, Color, the Effects check
+    boxes and the Preview box.
+  caption: Font style, Size, Underline and Color all change in one trip through this
+    tab.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: format-cells-protection
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      keys: ^+f
+    tab_walk:
+      keys: ^{TAB}
+      from: Font
+      to: Protection
+      order: *id002
+      verify: hash-distinct
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1
+    open:
+      menu:
+      - Format
+      - Cells...
+    tab: Protection
+    verify: on a Mac
+  expect:
+    title: Format Cells
+  alt: The Format Cells dialog on the Protection tab, with Locked ticked, Hidden clear,
+    and the note that both take effect only once the sheet is protected.
+  caption: Every cell starts Locked; the lock does nothing until Protect Sheet is
+    applied.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: goal-seek-dialog
+  win:
+    setup:
+    - select: F16
+    open:
+      ribbon:
+      - Data
+      - What-If Analysis
+      - Goal Seek...
+  mac:
+    setup:
+    - select: F16
+    open:
+      menu:
+      - Tools
+      - Goal Seek...
+    verify: on a Mac
+  expect:
+    title: Goal Seek
+  alt: The Excel Goal Seek dialog, with Set cell reading F16 and the To value and
+    By changing cell boxes empty.
+  caption: Set cell arrives holding the selected cell; By changing cell must hold
+    a value, not a formula.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: macro-dialog
+  win:
+    setup:
+    - developer_tab: true
+    open:
+      ribbon:
+      - Developer
+      - Macros
+  mac:
+    open:
+      menu:
+      - Tools
+      - Macro
+      - Macros...
+    verify: on a Mac
+  expect:
+    title: Macro
+  alt: The Macro dialog listing the macros available to run in the workbook.
+  caption: The same list opens with Alt+F8; a macro missing here is in another workbook
+    or is not a Sub without arguments.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: name-manager
+  win:
+    open:
+      keys: ^{F3}
+  mac:
+    open:
+      menu:
+      - Insert
+      - Name
+      - Name Manager
+    verify: on a Mac; the menu path is a guess
+  expect:
+    title: Name Manager
+  alt: The Name Manager with an empty list under the columns Name, Value, Refers To,
+    Scope and Comment, and the New, Edit, Delete and Filter buttons.
+  caption: Ctrl+F3 opens it; New defines a name without leaving the dialog.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: new-formatting-rule
+  win:
+    setup: &id003
+    - cells:
+        at: A1
+        rows: *id001
+    - select: C2:C4
+    open:
+      ribbon:
+      - Home
+      - Conditional Formatting
+      - New Rule...
+  notes: 'No macOS route yet: Excel for Mac reaches New Formatting Rule from the Manage
+    Rules dialog (Format, Conditional Formatting, then +); write it after a discover
+    dump.'
+  expect:
+    title: New Formatting Rule
+  alt: The New Formatting Rule dialog in Excel for Mac.
+  caption: Style controls which settings appear in the New Formatting Rule dialog.
+  guards:
+    dark_max: 0.99
+    edge: false
+  mac:
+    setup: *id003
+    open:
+      menu:
+      - Format
+      - Conditional Formatting...
+    tab: +
+    title: New Formatting Rule
+- name: page-setup-dialog
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    open:
+      com_dialog: 7
+    notes: xlDialogPageSetup (7) through Application.Dialogs in a Start-Job, which
+      binds to this workbook with BindToMoniker; Dialogs.Show blocks COM until the
+      dialog closes.
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    open:
+      menu:
+      - File
+      - Page Setup...
+    verify: on a Mac
+  expect:
+    title: Page Setup
+  alt: The Excel Page Setup dialog on its Page tab, with Portrait selected, Adjust
+    to 100 percent, the paper size, and the print quality.
+  caption: Orientation, Scaling and Paper size sit on the Page tab; Margins, Header/Footer
+    and Sheet are the other three.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: paste-special
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - copy: A1:C4
+    - select: E1
+    open:
+      keys: ^%v
+    notes: Ctrl+Alt+V; Ctrl+Shift+V pastes at once in current Excel (SCREENSHOTS.md)
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - copy: A1:C4
+    - select: E1
+    open:
+      menu:
+      - Edit
+      - Paste Special...
+    verify: on a Mac
+  expect:
+    title: Paste Special
+  alt: The Paste Special dialog with All selected under Paste and None under Operation,
+    and the Skip blanks and Transpose check boxes clear.
+  caption: Values, Formats and Transpose are the choices the labs use most.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: protect-sheet
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    open:
+      ribbon:
+      - Review
+      - Protect Sheet...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    open:
+      menu:
+      - Tools
+      - Protection
+      - Protect Sheet...
+    verify: on a Mac
+  expect:
+    title: Protect Sheet
+  alt: The Protect Sheet dialog with an empty password box, Protect worksheet and
+    contents of locked cells ticked, and only Select locked cells and Select unlocked
+    cells ticked in the list.
+  caption: Use AutoFilter is clear when the dialog opens; tick it to keep filters
+    usable.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: record-macro-dialog
+  win:
+    setup:
+    - developer_tab: true
+    open:
+      ribbon:
+      - Developer
+      - Record Macro
+  mac:
+    open:
+      menu:
+      - Tools
+      - Macro
+      - Record New Macro...
+    verify: on a Mac
+  expect:
+    title: Record Macro
+  alt: The Record Macro dialog, with Macro name, Shortcut key, Store macro in, and
+    Description.
+  caption: The name takes no spaces; Store macro in decides which workbook keeps the
+    code.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: scenario-manager
+  win:
+    open:
+      ribbon:
+      - Data
+      - What-If Analysis
+      - Scenario Manager...
+  mac:
+    open:
+      menu:
+      - Tools
+      - Scenarios...
+    title: Scenario Manager
+    verify: on a Mac
+  expect:
+    title: Scenario Manager
+  alt: The Excel Scenario Manager dialog on a sheet with no scenarios, with Add available
+    and the other buttons greyed out.
+  caption: Show, Delete, Edit and Summary stay greyed until the first scenario exists.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: sort-dialog
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      ribbon:
+      - Data
+      - Sort...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id001
+    - select: A1:C4
+    open:
+      menu:
+      - Data
+      - Sort...
+    verify: on a Mac
+  expect:
+    title: Sort
+  alt: The Sort dialog with one Sort by level, Sort On set to Cell Values, Order set
+    to A to Z, and My data has headers ticked.
+  caption: Add Level adds a second key; levels sort from the top row down.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: subtotal-dialog
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows: &id004
+        - - Region
+          - Rep
+          - Units
+          - Revenue
+        - - East
+          - Carla
+          - 250
+          - 10000
+        - - East
+          - Dana
+          - 300
+          - 12000
+        - - East
+          - Eli
+          - 210
+          - 8400
+        - - North
+          - Ana
+          - 320
+          - 12800
+        - - North
+          - Bruno
+          - 240
+          - 9600
+        - - South
+          - Beto
+          - 410
+          - 16400
+        - - South
+          - Cira
+          - 220
+          - 8800
+        - - West
+          - Diego
+          - 205
+          - 8200
+    - select: A1:D9
+    open:
+      ribbon:
+      - Data
+      - Subtotal
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows: *id004
+    - select: A1:D9
+    open:
+      menu:
+      - Data
+      - Subtotals...
+    title: Subtotal
+    verify: on a Mac
+  expect:
+    title: Subtotal
+  alt: The Excel Subtotal dialog, with At each change in set to Region, Use function
+    set to Sum, and Revenue ticked in the Add subtotal to list.
+  caption: At each change in decides where a group ends, and Add subtotal to decides
+    which columns get a total.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: text-to-columns
+  win:
+    setup:
+    - cells:
+        at: A1
+        rows:
+        - - Region
+        - - North
+        - - South
+        - - East
+    - select: A1:A4
+    open:
+      ribbon:
+      - Data
+      - Text to Columns...
+  mac:
+    setup:
+    - cells:
+        at: A1
+        rows:
+        - - Region
+        - - North
+        - - South
+        - - East
+    - select: A1:A4
+    open:
+      menu:
+      - Data
+      - Text to Columns...
+    verify: on a Mac
+  expect:
+    title: Convert Text to Columns Wizard - Step 1 of 3
+  alt: Step 1 of 3 of the Convert Text to Columns Wizard, with Delimited selected,
+    Fixed width as the other choice, and a preview of the selected data.
+  caption: Step 1 picks how the fields are separated; steps 2 and 3 set the delimiter
+    and the column formats.
+  guards:
+    dark_max: 0.99
+    edge: false
+- name: vbe-editor
+  kind: vbe
+  win:
+    setup:
+    - vba_module:
+        name: Module1
+        code: ''
+    open:
+      vbe: true
+    paste_code: &id005
+      module: Module1
+      code: 'Sub FormatHeader()
+
+        Range("A1:B1").Select
+
+        Selection.Font.Bold = True
+
+        Selection.Interior.Color = 15773696
+
+        End Sub
+
+        '
+    notes: needs doctor --enable-vbom (the module is added through VBProject); the
+      code goes in through the clipboard, never SendKeys (failure mode 3)
+  mac:
+    open:
+      vbe: true
+    verify: on a Mac; the VBE on a Mac opens separate windows, and this captures the
+      code window
+    setup:
+    - save_as: xlsx
+    paste_code: *id005
+  expect:
+    title_contains: Book1
+  alt: The Visual Basic editor in Excel for Mac, with FormatHeader in a standard module.
+  caption: Project Explorer, Properties and a code window are visible in the Visual
+    Basic editor for Mac.
+  guards:
+    dark_max: 0.99
+    edge: false

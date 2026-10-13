@@ -163,7 +163,7 @@ slides:
   - divider:
       eyebrow: Bloque 03
       title: Dos cosas a la vez
-      lede: Un panorama, no un tratado. Lo suficiente para saber qué existe y por qué es difícil.
+      lede: Una introducción a dos tareas simultáneas. Lo suficiente para saber qué existe y por qué es difícil.
       block: 3
 
   - code_output:
@@ -221,6 +221,23 @@ slides:
         - key: '04'
           title: El proyecto va aparte
           desc: Se entrega en la fecha del examen final y vale el 20 por ciento restante
+
+  - code:
+      eyebrow: Ejemplo para el ejercicio
+      title: El mutex protege una línea completa
+      filename: threads.cpp
+      lang: cpp
+      source: |
+        std::mutex gate;
+        void noise(const char* tag)
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                std::lock_guard<std::mutex> lock(gate);
+                std::cout << tag << " " << i << "\n";
+            }
+        }
+      notes: "Incluye iostream, thread y mutex. La función va fuera de main; dentro de main crea los dos jthread como en la demostración. lock_guard libera el mutex al cerrar el bloque. El orden entre hilos sigue siendo variable, pero cada línea queda completa."
 
   - lab:
       eyebrow: Laboratorio

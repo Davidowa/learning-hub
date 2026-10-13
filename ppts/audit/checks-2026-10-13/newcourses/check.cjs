@@ -1,0 +1,13 @@
+const assert = require('node:assert/strict');
+const {pending, preview, isValidTitle} = require('./compiled/report.js');
+const a = {id:'1',title:'Fuga',category:'facility',status:'pending'};
+const b = {id:'2',title:'Lámpara',category:'facility',status:'synced'};
+assert.deepEqual(pending([a,b]).map(r=>r.id), ['1']);
+assert.deepEqual(pending([]), []);
+assert.equal(isValidTitle('  '), false);
+assert.equal(isValidTitle('ab'), false);
+assert.equal(isValidTitle(' Fuga '), true);
+const assigned = a; assigned.title = 'Bomba';
+assert.equal(a.title, 'Bomba');
+assert.equal(preview(a), '(sin nota)');
+console.log('7 TypeScript domain checks passed');

@@ -1,0 +1,448 @@
+[
+  {
+    "label": "w02 inventory table",
+    "sql": "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_TYPE='BASE TABLE'",
+    "rows": [
+      [
+        4
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 index objects per table",
+    "sql": "SELECT COUNT(DISTINCT TABLE_NAME,INDEX_NAME) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE()",
+    "rows": [
+      [
+        6
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 distinct names merged",
+    "sql": "SELECT COUNT(DISTINCT INDEX_NAME) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE()",
+    "rows": [
+      [
+        3
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 constraints",
+    "sql": "SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE()",
+    "rows": [
+      [
+        8
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 aggregate",
+    "sql": "SELECT COUNT(*),ROUND(AVG(calificacion),2) FROM inscripcion",
+    "rows": [
+      [
+        7,
+        "8.33"
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 UPDATE row trigger",
+    "sql": "UPDATE alumno SET creditos=creditos+5",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w02 three logs",
+    "sql": "SELECT COUNT(*) FROM bitacora_alumno",
+    "rows": [
+      [
+        3
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 aggregate view write",
+    "sql": "UPDATE v_creditos_por_materia SET inscritos=9 WHERE clave=\"BD1001\"",
+    "error": [
+      1288,
+      "The target table v_creditos_por_materia of the UPDATE is not updatable"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 invalid form",
+    "sql": "CREATE FORM f_alta_alumno",
+    "error": [
+      1064,
+      "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FORM f_alta_alumno' at line 1"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 check violation",
+    "sql": "INSERT INTO alumno VALUES('A0000009','Mal Dato','mal@up.edu.mx',900)",
+    "error": [
+      3819,
+      "Check constraint 'ck_alumno_creditos' is violated."
+    ],
+    "ok": true
+  },
+  {
+    "label": "w02 duplicate",
+    "sql": "INSERT INTO alumno VALUES('A0000010','Otro','ana@up.edu.mx',10)",
+    "error": [
+      1062,
+      "Duplicate entry 'ana@up.edu.mx' for key 'alumno.correo'"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w01/w08 explicit columns valid",
+    "sql": "START TRANSACTION",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w01/w08 named columns",
+    "sql": "INSERT INTO inscripcion(matricula,clave,periodo) VALUES('A0000002','FI1010','26VER')",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w01/w08 rollback",
+    "sql": "ROLLBACK",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w03 catalog",
+    "sql": "SELECT TABLE_TYPE,ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='v_alumno_activo'",
+    "rows": [
+      [
+        "VIEW",
+        null
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w04 recursive join",
+    "sql": "SELECT e.nombre,j.nombre FROM empleado e LEFT JOIN empleado j ON e.jefe_id=j.empleado_id",
+    "rows": [
+      [
+        "Directora",
+        null
+      ],
+      [
+        "Coordinador",
+        "Directora"
+      ],
+      [
+        "Analista",
+        "Coordinador"
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w05 equality misses list",
+    "sql": "SELECT COUNT(*) FROM pedido_no1fn WHERE producto='camisa'",
+    "rows": [
+      [
+        0
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w05 find list",
+    "sql": "SELECT COUNT(*) FROM pedido_no1fn WHERE FIND_IN_SET('camisa',REPLACE(producto,', ',','))>0",
+    "rows": [
+      [
+        1
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w05 generated refuses",
+    "sql": "INSERT INTO detalle_pedido VALUES(3,250,1)",
+    "error": [
+      3105,
+      "The value specified for generated column 'total' in table 'detalle_pedido' is not allowed."
+    ],
+    "ok": true
+  },
+  {
+    "label": "w06 NULL passes CHECK",
+    "sql": "INSERT INTO persona VALUES(3,NULL)",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w06 rejected range",
+    "sql": "INSERT INTO persona VALUES(1,200)",
+    "error": [
+      3819,
+      "Check constraint 'persona_chk_1' is violated."
+    ],
+    "ok": true
+  },
+  {
+    "label": "w06 domain syntax",
+    "sql": "CREATE DOMAIN dom_edad AS INT CHECK(VALUE BETWEEN 0 AND 150)",
+    "error": [
+      1064,
+      "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DOMAIN dom_edad AS INT CHECK(VALUE BETWEEN 0 AND 150)' at line 1"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w07 ENUM order",
+    "sql": "SELECT id,estatus+0 FROM t_enum ORDER BY estatus",
+    "rows": [
+      [
+        3,
+        1.0
+      ],
+      [
+        2,
+        2.0
+      ],
+      [
+        1,
+        3.0
+      ],
+      [
+        4,
+        4.0
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w07 DDL implicit commit",
+    "sql": "SELECT COUNT(*) FROM t_prueba",
+    "rows": [
+      [
+        0
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w09 NULL comparison",
+    "sql": "SELECT NULL=NULL, NULL<>1, 1 BETWEEN 2 AND 0",
+    "rows": [
+      [
+        null,
+        null,
+        0
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w09 text numeric order",
+    "sql": "SELECT '10'<'9',10<9",
+    "rows": [
+      [
+        1,
+        0
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w11 where collapses left",
+    "sql": "SELECT COUNT(*) FROM alumnos a LEFT JOIN inscripciones i ON a.alumno_id=i.alumno_id WHERE i.periodo='2026-1'",
+    "rows": [
+      [
+        3
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w11 on preserves left",
+    "sql": "SELECT COUNT(*) FROM alumnos a LEFT JOIN inscripciones i ON a.alumno_id=i.alumno_id AND i.periodo='2026-1'",
+    "rows": [
+      [
+        6
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w12 check option",
+    "sql": "INSERT INTO v_ing VALUES(99,\"Nuevo\",\"Derecho\")",
+    "error": [
+      1369,
+      "CHECK OPTION failed 'learning_review.v_ing'"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w12 star frozen",
+    "sql": "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=\"v_star\"",
+    "rows": [
+      [
+        4
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w12 outer view refuses",
+    "sql": "UPDATE v_insc_left SET calificacion=9.9 WHERE inscripcion_id=3",
+    "error": [
+      1288,
+      "The target table v_insc_left of the UPDATE is not updatable"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w13 parameter shadow rows",
+    "sql": "CALL sp_malo(1)",
+    "rows": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w14 UPDATE audit",
+    "sql": "SELECT COUNT(*) FROM grade_audit",
+    "rows": [
+      [
+        1
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w14 cascade bypasses audit",
+    "sql": "SELECT COUNT(*) FROM grade_audit",
+    "rows": [
+      [
+        1
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w14 truncate bypasses audit",
+    "sql": "SELECT COUNT(*) FROM grade_audit",
+    "rows": [
+      [
+        1
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w15 UNIQUE accepts nulls",
+    "sql": "INSERT INTO ix_test VALUES(1,NULL,NOW()),(2,NULL,NOW())",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w15 functional index",
+    "sql": "CREATE INDEX ix_day ON ix_test((DATE(fecha)))",
+    "rows": [],
+    "ok": true
+  },
+  {
+    "label": "w16 lost update",
+    "sql": "SELECT amount FROM balances WHERE id=1",
+    "rows": [
+      [
+        16000
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w16 atomic repairs",
+    "sql": "SELECT amount FROM balances WHERE id=1",
+    "rows": [
+      [
+        17000
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w16 NOWAIT",
+    "sql": "SELECT * FROM balances WHERE id=1 FOR UPDATE NOWAIT",
+    "error": [
+      3572,
+      "Statement aborted because lock(s) could not be acquired immediately and NOWAIT is set."
+    ],
+    "ok": true
+  },
+  {
+    "label": "w16 SKIP LOCKED",
+    "sql": "SELECT id FROM balances FOR UPDATE SKIP LOCKED",
+    "rows": [
+      [
+        2
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "label": "w17 restricted delete",
+    "sql": "DELETE FROM balances",
+    "error": [
+      1142,
+      "DELETE command denied to user 'review_read'@'localhost' for table 'balances'"
+    ],
+    "ok": true
+  },
+  {
+    "label": "w17 complete dump",
+    "ok": true,
+    "exit": 0,
+    "bytes": 26902
+  },
+  {
+    "label": "w17 restore",
+    "ok": true,
+    "exit": 0
+  },
+  {
+    "label": "w17 restored count",
+    "sql": "SELECT COUNT(*) FROM learning_restored.alumno",
+    "rows": [
+      [
+        3
+      ]
+    ],
+    "ok": true
+  }
+]

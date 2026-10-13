@@ -1,0 +1,259 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 7
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 07 · App architecture
+    title: Mobile Application Development
+    subtitle: Separate what changes for different reasons
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 7 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: separate what changes for different reasons
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Separate the repository and test it with in-memory data
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Separate the repository and test it with in-memory data.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: now
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: separate what changes for different reasons. Views render, a store owns app state, and a repository hides where the data lives. Boundaries make code testable and replaceable.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: App architecture
+    lead: separate what changes for different reasons. Views render, a store owns app state, and a repository hides where the data lives. Boundaries make code testable and replaceable.
+    panel:
+      label: Application
+      title: App architecture
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Layers
+    lead: 'Layers: view, state, domain and data, and the direction of dependencies'
+    panel:
+      label: Application
+      title: Layers
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Shared state across screens without passing props through every level
+    lead: Shared state across screens without passing props through every level
+    panel:
+      label: Application
+      title: Shared state across screens without passing props
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Interfaces or protocols and dependency injection
+    lead: Interfaces or protocols and dependency injection, with in-memory fakes for tests
+    panel:
+      label: Application
+      title: Interfaces or protocols and dependency injection
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Dependencies
+    lead: 'Dependencies: package managers, semantic versioning, lockfiles, and the first formal use of the evaluation rubric'
+    panel:
+      label: Application
+      title: Dependencies
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Code review
+    lead: 'Code review: the PR description, small diffs, a checklist, and reviewing AI-generated code'
+    panel:
+      label: Application
+      title: Code review
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1 · 1/2
+    filename: w07-sample-1.ts
+    lang: ts
+    source: |
+      import { create } from 'zustand';
+
+      type ReportState = {
+        reports: Report[];
+        add: (r: Report) => void;
+        remove: (id: string) => void;
+      };
+
+      export const useReports = create<ReportState>()(set => ({
+        reports: [],
+        add: r => set(s => ({ reports: [...s.reports, r] })),
+        remove: id => set(s => ({
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 1 · 2/2
+    filename: w07-sample-1.ts
+    lang: ts
+    source: |2
+          reports: s.reports.filter(r => r.id !== id) })),
+      }));
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: How can domain logic be tested without network access?
+    options:
+    - Delete all domain checks
+    - Put every rule inside the view
+    - Wait for the production server
+    - Inject an in-memory repository with the same contract
+    notes: Answer D. separate what changes for different reasons. Views render, a store owns app state, and a repository hides where the data lives. Boundaries make code testable and replaceable.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.7
+    brief: Separate the repository and test it with in-memory data. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Separate the repository and test it with in-memory data. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: separate what changes for different reasons. Views render, a store owns app state, and a repository hides where the data lives. Boundaries make code testable and replaceable.
+    - title: Implementation
+      desc: Separate the repository and test it with in-memory data.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Networking and asynchrony'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

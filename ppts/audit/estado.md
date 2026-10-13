@@ -1,5 +1,17 @@
 # Estado de la auditoría, semana por semana
 
+## Continuación del 13 de octubre de 2026
+
+Las 99 semanas que requerían continuación recibieron una revisión independiente: 33 de C++/C#/SQL, 32 de Office/VBA, incluida Office w09, y 34 de Python/Unity. Con las 68 ya revisadas, el registro original tiene **167 pares es/en revisados**. Se corrigieron los defectos confirmados y se conservaron las refutaciones y los límites de ejecución en los informes fechados.
+
+Los informes actuales son `continuacion-2026-10-13-code-db.json`, `continuacion-2026-10-13-office.json` y `continuacion-2026-10-13-python-unity.json`. La segunda revisión de los 54 pares nuevos está en `continuacion-2026-10-13-newcourses-review.json`. Los 34 pares para Mac, 68 presentaciones, se derivan de Office/VBA y tienen una revisión de rutas, figuras y atajos.
+
+La revisión no convierte las mediciones históricas sin datos originales en resultados reproducidos. También conserva las políticas docentes existentes. Office/VBA y Unity tienen límites de ejecución documentados; una revisión estática no equivale a probar todas las macros, escenas o dispositivos.
+
+El manifiesto `continuacion-2026-10-13-entrega.json` registra la comprobación final de fuentes, PowerPoint y PDF. El bloque siguiente conserva el estado anterior para rastrear el relevo; sus conteos pendientes son históricos.
+
+## Registro anterior a esta continuación
+
 Cada semana es el par es/en. La auditoría tiene dos pasadas por semana:
 
 1. **Auditoría**: un agente corre todo el código de las diapositivas (Python, g++, .NET 10,

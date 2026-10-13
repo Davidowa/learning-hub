@@ -236,7 +236,7 @@ slides:
         - label: The argument
           text: >-
             It carries which hand did it. Read what you need inside the call and do not
-            keep the object afterwards.
+            keep the object afterward.
         - label: Two usings
           text: >-
             The event args sit in the Toolkit namespace, the components one level down in
@@ -366,16 +366,16 @@ slides:
 
   - quiz:
       eyebrow: Quick check
-      question: The bench object is disabled and enabled twice. What does the next grab log?
-      filename: WrenchLog.cs
+      question: The observer is disabled and enabled twice. What does the next registration log?
+      filename: BenchRegistry.cs
       lang: csharp
       source: |
         void OnEnable()
         {
-            grab.selectEntered.AddListener(Held);
+            manager.interactableRegistered += Added;
         }
       options:
-        - One line, a UnityEvent keeps each listener only once
+        - One line, += replaces the previous subscription
         - Three lines, one for every enable that never gave its listener back
         - Nothing, because disabling the object dropped the listener
         - An error, because the same method cannot be added twice
@@ -383,7 +383,7 @@ slides:
   - trace:
       eyebrow: Answer
       title: The listener list, counted at every step
-      headers: [Step, Listeners after it, Lines on one grab]
+      headers: [Step, Listeners after it, Lines on a registration]
       rows:
         - ["Enable, first time", "1", "1"]
         - ["Disable", "1, still attached", "0, object is off"]
@@ -391,8 +391,8 @@ slides:
         - ["Disable again", "2, still attached", "0, object is off"]
         - ["Enable, third time", "3", "3"]
       verdict: >-
-        AddListener appends, it does not check. The disable never removed anything because
-        nothing asked it to, so the count only goes up. One RemoveListener in OnDisable
+        Each += adds a subscription. The disable never removed anything because
+        nothing asked it to, so the count only goes up. One -= in OnDisable
         keeps this at one line for the rest of the project's life.
 
   - lab:

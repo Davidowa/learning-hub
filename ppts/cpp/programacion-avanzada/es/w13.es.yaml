@@ -95,7 +95,7 @@ slides:
   - figure:
       eyebrow: Acceso
       title: Leer en orden o saltar a una posición
-      image: img/es/seek-tell.png
+      image: img/es/seek-tell-cpp.png
       caption: La lectura secuencial avanza un paso a la vez. seekg mueve el cursor de golpe y tellg dice dónde quedó.
       alt: Un cursor sobre un archivo dibujado como posiciones numeradas, con una lectura secuencial y un salto
 
@@ -248,6 +248,26 @@ slides:
           desc: is_open es la línea que separa un programa correcto de uno que lee la nada
         - title: La lectura es la condición
           desc: El ciclo se controla con el resultado de leer, no preguntando por el fin de archivo
+
+  - code:
+      eyebrow: Ejemplo para el ejercicio
+      title: Una línea inválida no detiene la lectura
+      filename: read-lines.cpp
+      lang: cpp
+      source: |
+        std::ifstream in("grades.txt");
+        std::string line; int number = 1;
+        while (std::getline(in, line))
+        {
+            std::istringstream row(line);
+            std::string name, extra; double grade;
+            if ((row >> name >> grade) && !(row >> extra))
+                std::cout << name << " " << grade << "\n";
+            else
+                std::cerr << "bad line " << number << "\n";
+            number++;
+        }
+      notes: "Incluye iostream, fstream, sstream y string. El fragmento va dentro de main. Cada línea tiene un nombre sin espacios y una calificación numérica. getline conserva la línea; istringstream la analiza sin dejar el archivo en estado de error."
 
   - homework:
       eyebrow: Para la próxima sesión

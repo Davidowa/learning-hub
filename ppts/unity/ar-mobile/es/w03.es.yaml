@@ -154,11 +154,11 @@ slides:
 
             void OnEnable() =>
                 planes.trackablesChanged.AddListener(OnChanged);
+            void OnDisable() =>
+                planes.trackablesChanged.RemoveListener(OnChanged);
 
-            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
-            {
+            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e) =>
                 Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
-            }
         }
       annotations:
         - label: Un evento
@@ -175,8 +175,8 @@ slides:
             AddListener.
         - label: Riesgo
           text: >-
-            Agrega el listener en OnEnable y quítalo en OnDisable, o al reactivar el
-            componente quedan dos.
+            Sin OnDisable, el manager puede seguir avisando a un componente
+            deshabilitado.
           accent: true
 
   - code_output:
@@ -293,7 +293,7 @@ slides:
             superficie.
         - label: Riesgo
           text: >-
-            Con un false la lista conserva lo viejo, así que léela sólo después de un true.
+            Lee la lista de hits sólo si Raycast devuelve true; false significa que no hubo un resultado válido.
           accent: true
 
   - pitfalls:

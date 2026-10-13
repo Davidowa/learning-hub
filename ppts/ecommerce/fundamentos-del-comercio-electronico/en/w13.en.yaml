@@ -1,0 +1,230 @@
+meta:
+  course: Fundamentals of E-commerce
+  code: E-commerce
+  lang: en
+  language: commerce
+  week: 13
+  footer: FUNDAMENTALS OF E-COMMERCE · DIGITAL COMMERCE
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 13 · Measurement and decisions
+    title: Fundamentals of E-commerce
+    subtitle: 'Measuring decisions, not data: the KPI tree, events and why three sources never report the same number.'
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - Digital commerce
+    - - Session
+      - 13 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Metric definitions
+      desc: State population, unit of observation, period and denominator
+    - title: Reconciliation
+      desc: Compare order records, payment records and behavioral events by stable identifiers
+    - title: Attribution and cause
+      desc: Attribution assigns credit under a rule
+    - title: Application
+      desc: Case, check and submission.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain metric definitions
+      sub: State population, unit of observation, period and denominator. A session, customer, order and item are different units.
+    - head: Explain reconciliation
+      sub: Compare order records, payment records and behavioral events by stable identifiers
+    - head: Explain attribution and cause
+      sub: Attribution assigns credit under a rule
+    - head: Justify a decision with evidence
+      sub: Apply the case and state its assumptions.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–04
+      title: Model and economics
+      desc: Concept, case and evidence.
+      state: done
+    - label: 05–08
+      title: Shopping and payment
+      desc: Concept, case and evidence.
+      state: done
+    - label: 09–13
+      title: Operations and measurement
+      desc: Concept, case and evidence.
+      state: now
+    - label: 14–17
+      title: Retention and decisions
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Session model
+    lede: 'Measuring decisions, not data: the KPI tree, events and why three sources never report the same number.'
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Metric definitions
+    lead: State population, unit of observation, period and denominator. A session, customer, order and item are different units.
+    panel:
+      label: Application
+      title: Metric definitions
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Reconciliation
+    lead: Compare order records, payment records and behavioral events by stable identifiers. Investigate missing and duplicated events before deciding.
+    panel:
+      label: Application
+      title: Reconciliation
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Attribution and cause
+    lead: Attribution assigns credit under a rule. A holdout experiment can estimate incremental impact. Different questions require different evidence.
+    panel:
+      label: Application
+      title: Attribution and cause
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- divider:
+    eyebrow: Block 02
+    title: The Molienda case
+    lede: Fictional data for practicing a verifiable decision.
+    block: 2
+- table:
+    eyebrow: Illustrative case
+    title: Data for a decision
+    headers:
+    - Record
+    - ID
+    - Effect
+    rows:
+    - - Order record
+      - '1001'
+      - 2,068
+    - - Event record
+      - '1001'
+      - 2,068
+    - - Repeated event
+      - '1001'
+      - Ignore duplicate
+    - - Reconciled orders
+      - '1'
+      - 2,068
+    notes: 'All numbers are synthetic teaching inputs. No vendor fees or product tax classifications are asserted. '
+- method:
+    eyebrow: Check
+    title: The decision needs an explicit basis
+    statement: State the unit, period and assumptions before comparing results.
+    points:
+    - label: Data
+      text: Distinguish records from estimates.
+    - label: Calculation
+      text: Keep denominators and units.
+    - label: Decision
+      text: State which action changes with the evidence.
+- code:
+    eyebrow: Molienda case
+    title: Structured case record
+    filename: case-w13.json
+    lang: json
+    source: |
+      {
+        "event": "purchase",
+        "transaction_id": "1001",
+        "value": 2068,
+        "currency": "MXN"
+      }
+    annotations:
+    - label: Identity
+      text: Keep identifiers stable.
+    - label: Contract
+      text: Define fields, units and owner.
+    notes: Synthetic teaching record. This is a generic contract, not a vendor API implementation.
+- quiz:
+    eyebrow: Quick check
+    question: The purchase event arrives without a transaction_id. What is the risk?
+    options:
+    - None.
+    - Reloading the thank-you page counts the purchase twice and inflates revenue.
+    - GA4 rejects every event.
+    - The customer is not charged.
+    notes: |-
+      The purchase event arrives without a transaction_id. What is the risk? A) None. B) Reloading the thank-you page counts the purchase twice and inflates revenue (correct). C) GA4 rejects every event. D) The customer is not charged.
+      Answer: B
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: 'Molienda · Order #1001'
+    brief: Explore the GA4 demo account (funnel and traffic acquisition by UTM). Write Molienda's measurement plan and build the reconciliation table that solves the w12 puzzle, including a duplicate purchase event planted in the data. A short lab because of the exam week.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Explore the GA4 demo account (funnel and traffic acquisition by UTM). Write Molienda's measurement plan and build the reconciliation table that solves the w12 puzzle, including a duplicate purchase event planted in the data. A short lab because of the exam week.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Midterm 2 practice set (mixed items from w09 to w13 plus w03 economics, ungraded) and the team's measurement plan and KPI tree for Checkpoint 3.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Midterm 2 practice set (mixed items from w09 to w13 plus w03 economics, ungraded) and the team's measurement plan and KPI tree for Checkpoint 3.
+- takeaways:
+    eyebrow: Summary
+    title: Concepts to retain
+    items:
+    - title: Metric definitions
+      desc: State population, unit of observation, period and denominator. A session, customer, order and item are different units.
+    - title: Reconciliation
+      desc: Compare order records, payment records and behavioral events by stable identifiers. Investigate missing and duplicated events before deciding.
+    - title: Attribution and cause
+      desc: Attribution assigns credit under a rule. A holdout experiment can estimate incremental impact. Different questions require different evidence.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Retention and customer value'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

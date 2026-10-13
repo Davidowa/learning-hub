@@ -1,0 +1,258 @@
+meta:
+  course: Mobile Application Development
+  code: SwiftUI
+  lang: en
+  language: swift
+  week: 13
+  footer: MOBILE APPLICATION DEVELOPMENT · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 13 · Accessibility, languages and screens
+    title: Mobile Application Development
+    subtitle: The same app must work for every user and every screen
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Session
+      - 13 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: the same app must work for every user and every screen
+    - title: Implementation
+      desc: SwiftUI
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Complete the flow with a screen reader and two languages
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Complete the flow with a screen reader and two languages.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: done
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: now
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: the same app must work for every user and every screen. That takes semantics for assistive technology, text that scales, strings that translate and layouts that adapt.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Accessibility, languages and screens
+    lead: the same app must work for every user and every screen. That takes semantics for assistive technology, text that scales, strings that translate and layouts that adapt.
+    panel:
+      label: Application
+      title: Accessibility, languages and screens
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Semantics
+    lead: 'Semantics: labels, roles or traits, grouping and focus order, tested with TalkBack and VoiceOver'
+    panel:
+      label: Application
+      title: Semantics
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Visual accessibility
+    lead: 'Visual accessibility: text scaling, contrast, touch targets (44 pt on iOS, 48 dp on Android), reduced motion'
+    panel:
+      label: Application
+      title: Visual accessibility
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Localization
+    lead: 'Localization: external strings, plurals, locale formats for dates, numbers and units'
+    panel:
+      label: Application
+      title: Localization
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Adaptive layout
+    lead: 'Adaptive layout: safe areas, orientation, tablets and foldables, iPad windows, dark mode'
+    panel:
+      label: Application
+      title: Adaptive layout
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Auditing
+    lead: 'Auditing: Accessibility Inspector, Android Accessibility Scanner, automated audits in UI tests'
+    panel:
+      label: Application
+      title: Auditing
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in SwiftUI
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Example 1 · 1/2
+    filename: w13-sample-1.swift
+    lang: swift
+    source: |
+      @Environment(\.horizontalSizeClass) private var size
+
+      var body: some View {
+          if size == .regular {
+              NavigationSplitView {
+                  ReportList()
+              } detail: {
+                  ReportDetailPlaceholder()
+              }
+          } else {
+              NavigationStack { ReportList() }
+          }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- code:
+    eyebrow: SwiftUI
+    title: Example 1 · 2/2
+    filename: w13-sample-1.swift
+    lang: swift
+    source: |
+      }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Quick check
+    question: An icon-only delete button has no accessible name. What fixes the missing information?
+    options:
+    - Add a larger shadow
+    - Provide a meaningful accessible name and role
+    - Change the icon color alone
+    - Remove it from the screen-reader flow
+    notes: Answer B. the same app must work for every user and every screen. That takes semantics for assistive technology, text that scales, strings that translate and layouts that adapt.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.13
+    brief: Complete the flow with a screen reader and two languages. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Complete the flow with a screen reader and two languages. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: the same app must work for every user and every screen. That takes semantics for assistive technology, text that scales, strings that translate and layouts that adapt.
+    - title: Implementation
+      desc: Complete the flow with a screen reader and two languages.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Quality: testing, debugging and CI'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

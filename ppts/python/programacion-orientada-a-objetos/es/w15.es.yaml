@@ -158,6 +158,32 @@ slides:
         - ["QGridLayout", "En filas y columnas", "Tableros y calculadoras"]
         - ["QFormLayout", "Etiqueta y campo por renglón", "Formularios de captura"]
 
+  - code:
+      eyebrow: Formulario y lista
+      title: Etiquetar un campo y mostrar registros
+      filename: formulario.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QFormLayout, QListWidget
+
+        central = QWidget(self)
+        formulario = QFormLayout()
+        self.caja = QLineEdit()
+        formulario.addRow("Usuario", self.caja)
+        self.lista = QListWidget()
+        columna = QVBoxLayout(central)
+        columna.addLayout(formulario)
+        columna.addWidget(self.lista)
+        self.lista.addItem("Ana")
+        self.setCentralWidget(central)
+      annotations:
+      - label: addRow
+        text: Une la etiqueta y el campo en un renglón.
+      - label: addItem
+        text: Agrega el texto de un registro a la lista.
+      notes: Este fragmento va dentro de __init__ de la ventana. QWidget, QLineEdit y QVBoxLayout siguen los ejemplos anteriores.
+        Ana es un dato de demostración; en el slot del botón se usa el texto validado de la caja.
+
   - divider:
       eyebrow: Bloque 02
       title: Integración de componentes

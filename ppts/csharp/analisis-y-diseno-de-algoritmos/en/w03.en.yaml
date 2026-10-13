@@ -100,17 +100,16 @@ slides:
 
   - concept:
       eyebrow: Block 01 · Unit 2.3
-      title: C# is neither compiled nor interpreted, it is both
+      title: JIT execution compiles C# in two stages
       lead: >-
-        The compiler reads the whole file before a single line runs, but it does not
-        produce processor instructions. It produces an intermediate format that the .NET
-        engine translates at the last moment. That is why a type error shows up before
+        The compiler checks the file and produces intermediate language. During JIT execution,
+        the .NET runtime compiles that language to processor instructions when needed. That is why a type error shows up before
         anything starts, and why the same compiled file runs on Windows and on macOS.
       panel:
         label: Measured on this machine
         title: dotnet build leaves five files, two of them runnable
         note: >-
-          The bin/Debug/net10.0 folder ends up with bench.dll, bench.exe, bench.pdb,
+          On Windows, bin/Debug/net10.0 contains bench.dll, bench.exe, bench.pdb,
           bench.deps.json and bench.runtimeconfig.json. The .dll carries the program; the
           .exe only knows how to start the engine and hand it over.
       steps:
@@ -172,6 +171,8 @@ slides:
 
         exit code
         0
+
+      notes: "The panel preserves the original Windows measurement. On macOS, SDK 10.0.401 produced one 39-byte line with LF. Other SDKs may add a comment; measure your file and adjust the diagnostic line."
 
   - code:
       eyebrow: Block 02 · Unit 2.2

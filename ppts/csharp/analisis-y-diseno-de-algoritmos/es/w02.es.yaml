@@ -127,9 +127,9 @@ slides:
         lang: text
         code: |
           HOME de ejes X Y Z
-          MIENTRAS cama < 60.0
+          MIENTRAS cama < 60.0 Y vueltas < 5
               cama = cama + 12.0
-              ESCRIBIR cama
+              vueltas = vueltas + 1
           SI cama >= 60.0 ENTONCES
               purgar boquilla
           SI NO
@@ -216,66 +216,85 @@ slides:
       alt: Los cuatro símbolos de un diagrama de flujo, dibujados a mano y etiquetados
 
   - code:
-      eyebrow: Bloque 02 · Pseudocódigo
-      title: La secuencia de arranque, escrita para leerse
-      filename: arranque_impresora.txt
+      eyebrow: Bloque 02
+      title: Calentamiento en la secuencia de arranque
+      filename: printer_startup.txt
       lang: text
       source: |
         INICIO
             cama = 22.0
+            vueltas = 0
             ESCRIBIR "HOME de ejes X Y Z"
-
-            MIENTRAS cama < 60.0
+            MIENTRAS cama < 60.0 Y vueltas < 5
                 cama = cama + 12.0
+                vueltas = vueltas + 1
                 ESCRIBIR "calentando cama", cama
+      annotations:
+        - label: Continuación
+          text: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
+      notes: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
 
+  - code:
+      eyebrow: Bloque 02
+      title: La decisión de arranque
+      filename: printer_startup.txt
+      lang: text
+      source: |
+        Continuación del calentamiento
             SI cama >= 60.0 ENTONCES
                 ESCRIBIR "purgando boquilla"
+                ESCRIBIR "iniciando impresion"
             SI NO
                 ESCRIBIR "ABORTAR"
-
-            ESCRIBIR "iniciando impresion"
         FIN
       annotations:
-        - label: Sin lenguaje
-          text: No es C# ni ningún otro lenguaje. Es el plan, y por eso lo lee quien no programa.
-        - label: La sangría
-          text: Marca qué instrucciones caen dentro del lazo y cuáles dentro de cada rama.
-        - label: Las tres formas
-          text: Secuencia, selección y repetición. No aparece una cuarta en todo el plan.
-        - label: Riesgo
-          text: Si el paso del calentado no mueve la condición, el MIENTRAS no termina nunca.
-          accent: true
+        - label: Continuación
+          text: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
+      notes: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
 
   - code_output:
-      eyebrow: Bloque 02 · Medido
-      title: El mismo plan, ya en C#, con las tres formas
+      eyebrow: Bloque 02
+      title: Calentamiento en C#
       filename: Program.cs
       lang: csharp
-      output_label: Al correr
       source: |
         double cama = 22.0;
-        string aborto = "ABORTAR: la cama no alcanzo el setpoint";
-
+        int vueltas = 0;
         Console.WriteLine("HOME de ejes X Y Z");
-        while (cama < 60.0)
+        while (cama < 60.0 && vueltas < 5)
         {
             cama += 12.0;
+            vueltas++;
             Console.WriteLine($"calentando cama: {cama:F1} C");
         }
-        if (cama >= 60.0)
-            Console.WriteLine("cama en setpoint, purgando boquilla");
-        else
-            Console.WriteLine(aborto);
-        Console.WriteLine("iniciando impresion");
+      output_label: Al correr
       output: |
         HOME de ejes X Y Z
         calentando cama: 34.0 C
         calentando cama: 46.0 C
         calentando cama: 58.0 C
         calentando cama: 70.0 C
+      notes: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
+
+  - code_output:
+      eyebrow: Bloque 02
+      title: Decisión de arranque en C#
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string aborto = "ABORTAR: la cama no alcanzo el setpoint";
+        if (cama >= 60.0)
+        {
+            Console.WriteLine("cama en setpoint, purgando boquilla");
+            Console.WriteLine("iniciando impresion");
+        }
+        else
+            Console.WriteLine(aborto);
+      output_label: Al correr
+      output: |
         cama en setpoint, purgando boquilla
         iniciando impresion
+      notes: Los dos fragmentos forman un solo programa. El segundo continúa después del ciclo, con las mismas variables.
 
   - compare:
       eyebrow: Bloque 02 · Tema 1.3

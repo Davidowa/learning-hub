@@ -1,0 +1,258 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 5
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 05 · State and interaction
+    title: Mobile Application Development
+    subtitle: State has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 5 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: state has exactly one owner
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Validate and save form inputs. Submit an identifiable commit and evidence of the result.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Validate and save form inputs.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: now
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: state has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: State and interaction
+    lead: state has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.
+    panel:
+      label: Application
+      title: State and interaction
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: State and inputs
+    lead: 'State and inputs: what a component owns and what it receives'
+    panel:
+      label: Application
+      title: State and inputs
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Single source of truth and one-way flow
+    lead: 'Single source of truth and one-way flow: lifting state, callbacks and bindings'
+    panel:
+      label: Application
+      title: Single source of truth and one-way flow
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Forms
+    lead: 'Forms: controlled inputs, validation, disabled states, the keyboard'
+    panel:
+      label: Application
+      title: Forms
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Touch
+    lead: 'Touch: gestures, touch target size, pressed states, haptic feedback'
+    panel:
+      label: Application
+      title: Touch
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Re-rendering
+    lead: 'Re-rendering: what triggers an update, and why in-place mutation does not'
+    panel:
+      label: Application
+      title: Re-rendering
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1 · 1/2
+    filename: w05-sample-1.tsx
+    lang: tsx
+    source: |
+      export function NewReport({ onSave }: Props) {
+        const [title, setTitle] = useState('');
+        const valid = isValidTitle(title);
+
+        return (
+          <View style={{ gap: 12 }}>
+            <TextInput value={title} onChangeText={setTitle}
+                       placeholder="¿Qué observaste?" />
+            <Button title="Guardar" disabled={!valid}
+                    onPress={() => onSave(title.trim())} />
+          </View>
+        );
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 1 · 2/2
+    filename: w05-sample-1.tsx
+    lang: tsx
+    source: |
+      }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: Two views show conflicting copies of the same field. What should change?
+    options:
+    - Add another copy
+    - Give the field one owner and pass updates through a contract
+    - Refresh at random
+    - Remove validation
+    notes: Answer B. state has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.5
+    brief: Validate and save form inputs. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Validate and save form inputs. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: state has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.
+    - title: Implementation
+      desc: Validate and save form inputs.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Lists and navigation'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

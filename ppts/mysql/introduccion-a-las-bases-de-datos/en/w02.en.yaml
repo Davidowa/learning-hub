@@ -77,8 +77,8 @@ slides:
       eyebrow: Block 01
       title: Three pieces of software, not one
       lede: >-
-        The source calls the base, the DBMS and the administrator its macro parts. They are not
-        three layers of a drawing. They are three separate things, and today each one shows up
+        The source calls the database, the DBMS and the administrator its macro parts.
+        Each has a separate role: storage, management and connection. Today each appears
         on screen by itself.
       block: 1
 
@@ -238,7 +238,9 @@ slides:
         EVENT                1
         PROCEDURE/FUNCTION   0
         CONSTRAINT           8
-        INDEX                3
+        INDEX                6
+
+      notes: "Identify each index by table and name: COUNT(DISTINCT TABLE_NAME, INDEX_NAME). Counting names alone merges the four PRIMARY indexes and yields 3. labs/w02-taller.sql includes all seven queries and a reproducible practice database."
 
   - code_output:
       eyebrow: Measured · correction
@@ -413,6 +415,18 @@ slides:
         - title: Integrity is the server's job
           desc: >-
             Today's three integrity refusals were raised by the engine with no ORM connected
+
+  - code:
+      eyebrow: Reproducible example
+      title: Create the view counted in the inventory
+      filename: w02-view.sql
+      lang: sql
+      source: |
+        CREATE VIEW v_alumno_activo AS
+        SELECT matricula, nombre, correo, creditos
+        FROM alumno
+        WHERE creditos > 0;
+      notes: "labs/w02-taller.sql creates a practice database from empty and shows all seven inventory queries. Change the database name for your assignment. The data are fictional."
 
   - homework:
       eyebrow: Homework

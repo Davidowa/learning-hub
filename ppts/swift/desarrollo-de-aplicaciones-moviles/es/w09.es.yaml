@@ -1,0 +1,243 @@
+meta:
+  course: Desarrollo de aplicaciones móviles
+  code: SwiftUI
+  lang: es
+  language: swift
+  week: 9
+  footer: DESARROLLO DE APLICACIONES MÓVILES · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Semana 09 · Persistencia local y trabajo sin conexión
+    title: Desarrollo de aplicaciones móviles
+    subtitle: La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.
+    meta:
+    - - Profesor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Sesión
+      - 9 de 17
+- agenda:
+    eyebrow: Agenda
+    title: Recorrido de la sesión
+    cards:
+    - title: Modelo
+      desc: La copia local y el servidor pueden divergir
+    - title: Implementación
+      desc: SwiftUI
+    - title: Comprobación
+      desc: Estados, casos límite y evidencia.
+    - title: Bitácora
+      desc: Conservar datos después de reiniciar y migrar el esquema
+- objectives:
+    eyebrow: Objetivos
+    title: Al terminar la sesión el alumno podrá…
+    items:
+    - head: Explicar el modelo de la sesión con un ejemplo de Bitácora.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Conservar datos después de reiniciar y migrar el esquema.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Comparar la decisión de implementación en Android e iOS.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Entregar evidencia reproducible y explicar el código utilizado.
+      sub: Resultado verificable en el caso Bitácora.
+- roadmap:
+    eyebrow: Mapa del curso
+    title: Ubicación de la sesión
+    phases:
+    - label: 01–03
+      title: Fundamentos
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 04–07
+      title: Interfaz y estado
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 08–12
+      title: Datos y dispositivo
+      desc: Concepto, caso y evidencia.
+      state: now
+    - label: 13–17
+      title: Calidad y entrega
+      desc: Concepto, caso y evidencia.
+      state: todo
+- divider:
+    eyebrow: Bloque 01
+    title: Modelo y contratos
+    lede: La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.
+    block: 1
+- concept:
+    eyebrow: Concepto
+    title: Persistencia local y trabajo sin conexión
+    lead: La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.
+    panel:
+      label: Aplicación
+      title: Persistencia local y trabajo sin conexión
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- concept:
+    eyebrow: Concepto
+    title: Elige almacenamiento según tamaño, estructura y sensibilidad.
+    lead: Elige almacenamiento según tamaño, estructura y sensibilidad.
+    panel:
+      label: Aplicación
+      title: Elige almacenamiento según tamaño
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Una migración debe preservar los registros existentes.
+    lead: Una migración debe preservar los registros existentes.
+    panel:
+      label: Aplicación
+      title: Una migración debe preservar los registros existentes.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Modela altas y cambios pendientes de sincronización.
+    lead: Modela altas y cambios pendientes de sincronización.
+    panel:
+      label: Aplicación
+      title: Modela altas y cambios pendientes de sincronización.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Resuelve conflictos con una política explícita.
+    lead: Resuelve conflictos con una política explícita.
+    panel:
+      label: Aplicación
+      title: Resuelve conflictos con una política explícita.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Guarda credenciales en el almacenamiento seguro de la plataforma.
+    lead: Guarda credenciales en el almacenamiento seguro de la plataforma.
+    panel:
+      label: Aplicación
+      title: Guarda credenciales en el almacenamiento seguro de la
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Bloque 02
+    title: Implementación en SwiftUI
+    lede: La API concreta es una instancia del modelo.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Ejemplo 1
+    filename: w09-sample-1.swift
+    lang: swift
+    source: |
+      @Model
+      final class Report {
+          var title: String
+          var status: String = "pending"
+          var createdAt: Date = Date.now
+          var photoPath: String?
+
+          init(title: String) { self.title = title }
+      }
+
+      @Query(sort: \Report.createdAt, order: .reverse)
+      private var reports: [Report]
+    annotations:
+    - label: Contexto
+      text: Fragmento del archivo de ejemplo. Conserva los tipos e imports de su contexto.
+    - label: Comprobación
+      text: Explica entradas, estado y resultado esperado.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Comprobación
+    question: Una actualización del esquema falla a la mitad. ¿Qué diseño conserva la base anterior?
+    options:
+    - Borrar la base al iniciar
+    - Aplicar cambios de esquema y versión en una transacción
+    - Aumentar la versión antes de cambiar tablas
+    - Ignorar la falla
+    notes: Respuesta B. La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.
+- divider:
+    eyebrow: Bloque 03
+    title: Aplicación y evidencia
+    lede: El caso termina en una decisión que puedes comprobar.
+    block: 3
+- lab:
+    eyebrow: Laboratorio
+    title: Bitácora · v0.9
+    brief: Conservar datos después de reiniciar y migrar el esquema. Entrega un commit identificable y evidencia del resultado.
+    blocks:
+    - label: Entrega
+      text: Resultado y registro de evidencia.
+    - label: Restricción
+      text: Usa solo conceptos de esta sesión y anteriores.
+    - label: Comprobación
+      text: Otra persona debe poder reproducir el resultado.
+    notes: Conservar datos después de reiniciar y migrar el esquema. Entrega un commit identificable y evidencia del resultado.
+- homework:
+    eyebrow: Tarea
+    title: Aplicación al proyecto
+    brief: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+    meta:
+    - - Entrega
+      - Antes de la siguiente sesión
+    - - Formato
+      - Evidencia y explicación
+    rubric:
+    - - Concepto
+      - 40 %
+      - Uso correcto y supuestos claros
+    - - Evidencia
+      - 40 %
+      - Resultado reproducible
+    - - Decisión
+      - 20 %
+      - Justificación y límite
+    notes: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+- takeaways:
+    eyebrow: Resumen
+    title: Modelo, implementación y evidencia
+    items:
+    - title: Modelo
+      desc: La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.
+    - title: Implementación
+      desc: Conservar datos después de reiniciar y migrar el esquema.
+    - title: Evidencia
+      desc: El resultado y su comprobación deben poder reproducirse.
+- closing:
+    title: Preguntas
+    subtitle: 'Siguiente sesión: Cámara, fotos y archivos'
+    meta:
+    - - Contacto
+      - descobarc@up.edu.mx
+    - - Curso
+      - learning-hub

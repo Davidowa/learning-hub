@@ -1,14 +1,7 @@
-# Desarrollo de Aplicaciones Móviles · SwiftUI (iOS)
+# Desarrollo de aplicaciones móviles · SwiftUI
 
-Este curso comparte temario con su gemelo en React Native: mismas sesiones, mismos objetivos y la
-misma evaluación, con una realización distinta en cada sesión (SwiftUI solo para iOS, React Native
-para iOS y Android). El material compartido vive en
-[`../../react-native/desarrollo-de-aplicaciones-moviles/`](../../react-native/desarrollo-de-aplicaciones-moviles/):
-el temario original que entregó el profesor y las propuestas de rediseño.
+El curso comparte las 17 sesiones, los objetivos conceptuales y la evaluación con React Native. SwiftUI construye para iOS. Los conceptos de Android se estudian mediante equivalencias con el sistema de Apple.
 
-Estado: el temario todavía no se sintetiza y no hay decks. Ver
-[`HANDOFF-auditoria-y-cursos-nuevos.md`](../../../HANDOFF-auditoria-y-cursos-nuevos.md).
+Los decks de cada idioma viven en `es/` y `en/`. El encuadre usa `w01.0`; las sesiones usan `w01` a `w17`. El temario y los ejercicios tienen ediciones en ambos idiomas. Las muestras de código completas de cada tarjeta están en `labs/samples/`; son fragmentos didácticos que deben integrarse en el contexto indicado.
 
-Paleta del kit: `language: swift` en el `meta` de cada deck (naranja Swift oscurecido para la
-estructura, azul del sistema de Apple como acento, lienzo carbón cálido), y `lang: swift` en las
-tarjetas de código.
+La síntesis compartida está en `../../react-native/desarrollo-de-aplicaciones-moviles/plan.json`. El anexo fechado de herramientas define requisitos y fuentes que se revisan antes de cada periodo. La paleta del kit usa `language: swift`.

@@ -102,6 +102,8 @@ slides:
       title: Los cuatro totales, en miles
       filename: agrupar.py
       source: |
+        ventas["amount"] = ventas["units"] * ventas["unit_price"]
+
         por_region = (ventas.groupby("region")["amount"]
                       .sum()
                       .sort_values(ascending=False))

@@ -209,11 +209,23 @@ def _coerced(problems, n, layout, node, trail=''):
 
 def check(path: str) -> tuple[list[str], int]:
     problems: list[str] = []
-    for i, raw in enumerate(open(path, encoding='utf-8'), 1):
+    scalar_indent = None
+    with open(path, encoding='utf-8') as source:
+        source_text = source.read()
+    for i, raw in enumerate(source_text.splitlines(keepends=True), 1):
         line = raw.rstrip('\n').rstrip()
         if '—' in line:
             problems.append(f'line {i}: em dash, which the house style bans; use a comma, '
                             f'a colon, parentheses or a word -> {line.strip()[:64]}')
+        indent = len(raw) - len(raw.lstrip(' '))
+        if scalar_indent is not None:
+            if not line.strip() or indent > scalar_indent:
+                continue
+            scalar_indent = None
+        block = re.match(r'^(\s*)(?:- )?[^:]+:\s*[|>][1-9]?[+-]?(?:\s+#.*)?$', line)
+        if block:
+            scalar_indent = len(block.group(1))
+            continue
         q = QUOTED_SCALAR.match(line)
         if q and not line.endswith(q.group(1)):
             problems.append(f'line {i}: opens with {q.group(1)} and does not end with it, '
@@ -234,7 +246,7 @@ def check(path: str) -> tuple[list[str], int]:
                             f'of the value, keeping only -> {kept[:56]}')
 
     try:
-        doc = yaml.safe_load(open(path, encoding='utf-8'))
+        doc = yaml.safe_load(source_text)
     except yaml.YAMLError as exc:
         mark = getattr(exc, 'problem_mark', None)
         where = f' at line {mark.line + 1}, column {mark.column + 1}' if mark else ''

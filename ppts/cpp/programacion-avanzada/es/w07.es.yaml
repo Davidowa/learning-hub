@@ -192,6 +192,26 @@ slides:
         - ["if-else", "Dos caminos excluyentes", "Anidar más de dos niveles"]
         - ["switch", "Una variable, muchos valores", "El break de cada caso"]
 
+  - code_output:
+      eyebrow: Selección · else if
+      title: La primera condición verdadera elige la letra
+      filename: grade.cpp
+      lang: cpp
+      source: |
+        double promedio = 8.5;
+        if (promedio >= 9.0)
+            std::cout << "A\n";
+        else if (promedio >= 8.0)
+            std::cout << "B\n";
+        else if (promedio >= 6.0)
+            std::cout << "C\n";
+        else
+            std::cout << "F\n";
+      output_label: Salida
+      output: |
+        B
+      notes: Comprueba también 9.0, 8.0 y 6.0. Cada límite pertenece a la rama que usa >=. La cadena termina al encontrar la primera condición verdadera.
+
   - quiz:
       eyebrow: Pregunta rápida
       question: ¿Qué imprime el programa, con nota valiendo 5?
@@ -227,7 +247,7 @@ slides:
       items:
         - label: Error 01
           title: Un igual en vez de dos
-          desc: Asigna en lugar de comparar, se cumple con cualquier valor distinto de cero y compila sin advertencia
+          desc: Asigna en lugar de comparar, se cumple con cualquier valor distinto de cero y puede compilar con una advertencia
         - label: Error 02
           title: Punto y coma después del if
           desc: El cuerpo se vuelve la instrucción vacía y el bloque de abajo corre siempre

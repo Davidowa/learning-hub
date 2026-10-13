@@ -227,9 +227,9 @@ slides:
         It returns the row that the
         WHERE with equals missed
 
-        No function wrapped around a
-        column can lean on its index,
-        so the whole table gets read
+        This FIND_IN_SET expression
+        cannot use the ordinary
+        index for a direct lookup
 
   - code_output:
       eyebrow: Measured · the source's own fix
@@ -366,9 +366,9 @@ slides:
       eyebrow: Block 03 · The other side of the trade
       title: Normalizing costs something, and the source never says so
       statement: >-
-        Every table you split off today is a join somebody writes later. That is not an
-        argument for keeping the wide table. It is the price, and it gets paid with your
-        eyes open.
+        Every table split today can require a join in a later query. Normalization reduces
+        duplicated facts while adding work at query time. Evaluate both costs when choosing
+        the design.
       points:
         - label: What you buy
           text: >-

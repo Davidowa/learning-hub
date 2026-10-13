@@ -238,7 +238,9 @@ slides:
         EVENT                1
         PROCEDURE/FUNCTION   0
         CONSTRAINT           8
-        INDEX                3
+        INDEX                6
+
+      notes: "Cada índice se identifica por tabla y nombre: COUNT(DISTINCT TABLE_NAME, INDEX_NAME). Contar solo nombres fusiona los cuatro PRIMARY y da 3. El script labs/w02-taller.sql incluye las siete consultas y una base de práctica reproducible."
 
   - code_output:
       eyebrow: Medido · corrección
@@ -413,6 +415,18 @@ slides:
         - title: La integridad la pone el servidor
           desc: >-
             Los tres rechazos de integridad de hoy los levantó el motor sin un ORM conectado
+
+  - code:
+      eyebrow: Ejemplo reproducible
+      title: Crear la vista que usa el inventario
+      filename: w02-view.sql
+      lang: sql
+      source: |
+        CREATE VIEW v_alumno_activo AS
+        SELECT matricula, nombre, correo, creditos
+        FROM alumno
+        WHERE creditos > 0;
+      notes: "El archivo labs/w02-taller.sql crea una base de práctica desde cero y muestra las siete consultas del inventario. Cambia el nombre de la base para tu tarea. Los datos son ficticios."
 
   - homework:
       eyebrow: Tarea

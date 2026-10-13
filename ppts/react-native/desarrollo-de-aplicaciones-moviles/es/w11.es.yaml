@@ -1,0 +1,239 @@
+meta:
+  course: Desarrollo de aplicaciones móviles
+  code: React Native
+  lang: es
+  language: react-native
+  week: 11
+  footer: DESARROLLO DE APLICACIONES MÓVILES · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Semana 11 · Sensores y ubicación
+    title: Desarrollo de aplicaciones móviles
+    subtitle: Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+    meta:
+    - - Profesor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Sesión
+      - 11 de 17
+- agenda:
+    eyebrow: Agenda
+    title: Recorrido de la sesión
+    cards:
+    - title: Modelo
+      desc: Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+    - title: Implementación
+      desc: React Native
+    - title: Comprobación
+      desc: Estados, casos límite y evidencia.
+    - title: Bitácora
+      desc: Registrar muestras con unidades y cancelar suscripciones
+- objectives:
+    eyebrow: Objetivos
+    title: Al terminar la sesión el alumno podrá…
+    items:
+    - head: Explicar el modelo de la sesión con un ejemplo de Bitácora.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Registrar muestras con unidades y cancelar suscripciones.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Comparar la decisión de implementación en Android e iOS.
+      sub: Resultado verificable en el caso Bitácora.
+    - head: Entregar evidencia reproducible y explicar el código utilizado.
+      sub: Resultado verificable en el caso Bitácora.
+- roadmap:
+    eyebrow: Mapa del curso
+    title: Ubicación de la sesión
+    phases:
+    - label: 01–03
+      title: Fundamentos
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 04–07
+      title: Interfaz y estado
+      desc: Concepto, caso y evidencia.
+      state: done
+    - label: 08–12
+      title: Datos y dispositivo
+      desc: Concepto, caso y evidencia.
+      state: now
+    - label: 13–17
+      title: Calidad y entrega
+      desc: Concepto, caso y evidencia.
+      state: todo
+- divider:
+    eyebrow: Bloque 01
+    title: Modelo y contratos
+    lede: Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+    block: 1
+- concept:
+    eyebrow: Concepto
+    title: Sensores y ubicación
+    lead: Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+    panel:
+      label: Aplicación
+      title: Sensores y ubicación
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: ''
+- concept:
+    eyebrow: Concepto
+    title: Expresa muestras con unidades y marcos de referencia.
+    lead: Expresa muestras con unidades y marcos de referencia.
+    panel:
+      label: Aplicación
+      title: Expresa muestras con unidades y marcos de referencia.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: El intervalo de muestreo afecta ruido y energía.
+    lead: El intervalo de muestreo afecta ruido y energía.
+    panel:
+      label: Aplicación
+      title: El intervalo de muestreo afecta ruido y energía.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Comprueba una lectura contra una referencia conocida.
+    lead: Comprueba una lectura contra una referencia conocida.
+    panel:
+      label: Aplicación
+      title: Comprueba una lectura contra una referencia conocida.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Solicita ubicación con alcance proporcional a la función.
+    lead: Solicita ubicación con alcance proporcional a la función.
+    panel:
+      label: Aplicación
+      title: Solicita ubicación con alcance proporcional a la
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concepto
+    title: Detén la suscripción cuando la pantalla deja de usarla.
+    lead: Detén la suscripción cuando la pantalla deja de usarla.
+    panel:
+      label: Aplicación
+      title: Detén la suscripción cuando la pantalla deja de usarla.
+      note: Identifica qué decisión cambia con este concepto.
+    steps:
+    - text: Define el caso y sus restricciones
+    - text: Comprueba la evidencia disponible
+    - text: Explica la decisión y su límite
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Bloque 02
+    title: Implementación en React Native
+    lede: La API concreta es una instancia del modelo.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Ejemplo 1
+    filename: w11-sample-1.tsx
+    lang: tsx
+    source: |
+      useEffect(() => {
+        Accelerometer.setUpdateInterval(100);   // ms
+        const sub = Accelerometer.addListener(({ x, y, z }) => {
+          const rad = Math.atan2(y, Math.hypot(x, z));
+          setTilt(lowPass(rad * 180 / Math.PI));
+        });
+        return () => sub.remove();
+      }, []);
+    annotations:
+    - label: Contexto
+      text: Fragmento del archivo de ejemplo. Conserva los tipos e imports de su contexto.
+    - label: Comprobación
+      text: Explica entradas, estado y resultado esperado.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Comprobación
+    question: Un sensor fluctúa alrededor de una referencia. ¿Qué debes comprobar?
+    options:
+    - Solo la popularidad de la dependencia
+    - Si el título es corto
+    - Solo el color del número
+    - Unidades, muestreo, ruido y comparación con la referencia
+    notes: Respuesta D. Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+- divider:
+    eyebrow: Bloque 03
+    title: Aplicación y evidencia
+    lede: El caso termina en una decisión que puedes comprobar.
+    block: 3
+- lab:
+    eyebrow: Laboratorio
+    title: Bitácora · v0.11
+    brief: Registrar muestras con unidades y cancelar suscripciones. Entrega un commit identificable y evidencia del resultado.
+    blocks:
+    - label: Entrega
+      text: Resultado y registro de evidencia.
+    - label: Restricción
+      text: Usa solo conceptos de esta sesión y anteriores.
+    - label: Comprobación
+      text: Otra persona debe poder reproducir el resultado.
+    notes: Registrar muestras con unidades y cancelar suscripciones. Entrega un commit identificable y evidencia del resultado.
+- homework:
+    eyebrow: Tarea
+    title: Aplicación al proyecto
+    brief: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+    meta:
+    - - Entrega
+      - Antes de la siguiente sesión
+    - - Formato
+      - Evidencia y explicación
+    rubric:
+    - - Concepto
+      - 40 %
+      - Uso correcto y supuestos claros
+    - - Evidencia
+      - 40 %
+      - Resultado reproducible
+    - - Decisión
+      - 20 %
+      - Justificación y límite
+    notes: Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.
+- takeaways:
+    eyebrow: Resumen
+    title: Modelo, implementación y evidencia
+    items:
+    - title: Modelo
+      desc: Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.
+    - title: Implementación
+      desc: Registrar muestras con unidades y cancelar suscripciones.
+    - title: Evidencia
+      desc: El resultado y su comprobación deben poder reproducirse.
+- closing:
+    title: Preguntas
+    subtitle: 'Siguiente sesión: Integración con el sistema'
+    meta:
+    - - Contacto
+      - descobarc@up.edu.mx
+    - - Curso
+      - learning-hub

@@ -6,7 +6,7 @@ The instructor's copy. It carries the run solution to every exercise, the expect
 
 ## Week 01 · Course framing and the first recorded macro
 
-### 01.1 · Recognise
+### 01.1 · Recognize
 
 **Solution**
 
@@ -131,7 +131,7 @@ Handing in only the edited version. Without the original code there is no way to
 
 ## Week 02 · Unit 1 · The VBA editor
 
-### 02.1 · Recognise
+### 02.1 · Recognize
 
 **Solution**
 
@@ -262,7 +262,7 @@ Tracing as though `Call` were a single step and F8 did not step into the called 
 
 ## Week 03 · Unit 1 · Types, variables and cells
 
-### 03.1 · Recognise
+### 03.1 · Recognize
 
 **Solution**
 
@@ -403,7 +403,7 @@ Writing `Range("E2").Value = Range("C2").Value * Range("D2").Value` and skipping
 
 ## Week 04 · Unit 1 · Operations and range names
 
-### 04.1 · Recognise
+### 04.1 · Recognize
 
 **Solution**
 
@@ -493,7 +493,7 @@ Range("B2").Value = Range("B3").Value  ->  False
 
 | Criterion | Points |
 |---|---|
-| The two names created with `Names.Add` and used afterwards | 3 |
+| The two names created with `Names.Add` and used afterward | 3 |
 | The power formula with the right parentheses | 3 |
 | B2 with `NumberFormat`, B3 with `Format` and B4 with `Round` | 3 |
 | The comment separates what B2 keeps from what B3 lost | 1 |
@@ -563,7 +563,7 @@ Dividing the variance by the actual instead of by the budget. It gives 2.02 %, w
 
 ## Week 05 · Unit 1 · Data entry and messages
 
-### 05.1 · Recognise
+### 05.1 · Recognize
 
 **Solution**
 
@@ -598,7 +598,7 @@ Type mismatch
 
 Marking `False` for `1,000`. The thousands comma does get through `IsNumeric` and `CDbl` turns it into 1000, and the student who rejects it is usually validating more than the problem asked for.
 
-Grading note: the currency symbol row depends on the machine's regional setting, so its point is awarded for either answer as long as the student says which region they tested on. `IsNumeric` accepts the currency symbol of the active region and rejects any other. The week 5 slide says `False` and error 13 because it was measured on an Excel set to the United Kingdom, where the symbol is the pound and the dollar sign does not count as currency. Measured on the classroom machine, region United States: `IsNumeric("$780.50")` returns `True` and `CDbl("$780.50")` returns 780.5, while the same string with a pound sign returns `False`. What is not accepted is claiming that no currency symbol ever gets through.
+Grading note: the currency symbol row depends on the machine's regional setting, so its point is awarded for either answer as long as the student says which region they tested on. `IsNumeric` accepts the currency symbol of the active region and rejects any other. The earlier measurement returned `False` and error 13 because it was taken on an Excel set to the United Kingdom, where the symbol is the pound and the dollar sign does not count as currency. Measured on the classroom machine, region United States: `IsNumeric("$780.50")` returns `True` and `CDbl("$780.50")` returns 780.5, while the same string with a pound sign returns `False`. What is not accepted is claiming that no currency symbol ever gets through.
 
 ### 05.2 · Apply
 
@@ -662,7 +662,7 @@ Types "15"       ->  box: Save 15 days for Ana Robles?
 
 **Most common mistake**
 
-Comparing the answer against the button text, something like `If answer = "Yes"`. It never enters the `If`, the macro raises no error and C2 is left empty.
+Comparing the answer against the button text, something like `If answer = "Yes"`. The comparison raises error 13 because the numeric result cannot be compared with that nonnumeric string. Compare against `vbYes`.
 
 ### 05.3 · Integrate
 
@@ -772,7 +772,7 @@ Grading note: `"$#,##0.00"` leaves the dollar sign unquoted, so Excel treats it 
 
 ## Week 06 · Unit 2 · Editing what you recorded
 
-### 06.1 · Recognise
+### 06.1 · Recognize
 
 **Solution**
 
@@ -903,7 +903,7 @@ Using `Delete` instead of `Hidden` for the helper column. In the demonstration i
 
 ## Week 07 · Unit 2 · Goal Seek and chaining
 
-### 07.1 · Recognise
+### 07.1 · Recognize
 
 **Solution**
 
@@ -935,7 +935,7 @@ MaxIterations  100
 | Points at `UnitPrice` and explains why it cannot hold a formula | 3 |
 | Arrives at 136.50 | 3 |
 | Says whether a residue is left and names `MaxChange` and `MaxIterations` | 2 |
-| Recognises the 1004 of the last case | 2 |
+| Recognizes the 1004 of the last case | 2 |
 
 **Most common mistake**
 
@@ -1070,7 +1070,7 @@ Writing the function without ever assigning its own name. It raises no error, re
 
 ## Week 08 · Unit 3 · Decisions and the first midterm
 
-### 08.1 · Recognise
+### 08.1 · Recognize
 
 **Solution**
 
@@ -1299,7 +1299,7 @@ Writing `Range("G3").Value = tier` inside `ClassifyAmount` instead of using the 
 
 ## Week 09 · Unit 3 · Repetition
 
-### 09.1 · Recognise
+### 09.1 · Recognize
 
 **Solution**
 
@@ -1476,7 +1476,7 @@ Asking `If Cells(r, 3).Value = 0` instead of `IsEmpty`. The two campaigns with n
 
 ## Week 10 · Units 1 and 3 · Procedures and functions
 
-### 10.1 · Recognise
+### 10.1 · Recognize
 
 **Solution**
 
@@ -1656,7 +1656,7 @@ Putting the bonus calculation inside `ComputePay` and leaving the function unuse
 
 ## Week 11 · Units 2 and 3 · Events
 
-### 11.1 · Recognise
+### 11.1 · Recognize
 
 **Solution**
 
@@ -1704,7 +1704,7 @@ measured, what the cell holds after each entry:
 
 Answering `Not a number` for `15%`, copying the week 11 slide table without noticing that there `IsNumeric` is measured over a string and here over `Target.Value`. It gives itself away when the student hands in the text column filled in twice.
 
-Grading note: the week 11 slide lists `$5`, `5%` and `2026-01-01` as `False`, and that is true of `IsNumeric` applied to those strings, not of the cell once it has been entered. Measured on Excel 16.0 in the United States region, typing those three values into a cell leaves `Target.Value` at 5, 0.15 and 46023, all three numeric. The `$780.50` row also depends on the region in the text column: `IsNumeric` accepts the currency symbol of the active region, so it returns `True` here and `False` on a machine set to the United Kingdom, where the symbol is the pound. The slide answer is accepted if the student explains which of the two questions they are answering.
+Grading note: distinguish the typed string from `Target.Value`. A percentage cell containing 5% returns the number 0.05. A date-formatted cell can return a Date value, for which `IsNumeric` returns False. Currency strings depend on regional settings. Grade the stated input type and region rather than an assumed universal result.
 
 ### 11.2 · Apply
 
@@ -1828,7 +1828,7 @@ Switching events off and never switching them back on because the procedure exit
 
 ## Week 12 · Unit 3 · Custom classes
 
-### 12.1 · Recognise
+### 12.1 · Recognize
 
 **Solution**
 
@@ -2034,13 +2034,13 @@ Putting `Set item = New Supplier` before the loop. It runs and gives the right t
 
 ## Week 13 · Unit 4 · Cleaning and sorting
 
-### 13.1 · Recognise
+### 13.1 · Recognize
 
 **Solution**
 
 In (a) the VBA `Trim` strips the spaces at the edges and leaves the ones in the middle alone. The sheet one, called through `WorksheetFunction`, also collapses the middle ones to a single space.
 
-In (b), `Len(s)` and `Len(Trim(s))` are both 5, and the comparison returns `False`. `Chr(160)` is a hard space and `Trim` does not recognise it as a space, so it survives and makes two cells that look identical compare as different.
+In (b), `Len(s)` and `Len(Trim(s))` are both 5, and the comparison returns `False`. `Chr(160)` is a hard space and `Trim` does not recognize it as a space, so it survives and makes two cells that look identical compare as different.
 
 In (c), the one that is not what the user wanted is `Aceros Del Bajío`: `Proper` capitalises every word, articles and prepositions included.
 
@@ -2109,7 +2109,7 @@ A4 = Papelera Central
 A5 = Comercial Sáenz
 ```
 
-`Proper` leaves `Del` capitalised. That is the correct result of the function and not the one the business wants: if the catalogue requires it in lower case, it has to be fixed afterwards with `Replace`.
+`Proper` leaves `Del` capitalised. That is the correct result of the function and not the one the business wants: if the catalog requires it in lower case, it has to be fixed afterward with `Replace`.
 
 **Rubric** (totals 10)
 
@@ -2239,7 +2239,7 @@ Sorting with only the amount column passed as the range. The amounts come out or
 
 ## Week 14 · Unit 4 · Filters, subtotals and tables
 
-### 14.1 · Recognise
+### 14.1 · Recognize
 
 **Solution**
 
@@ -2455,7 +2455,7 @@ Checking the empty table with `If tbl.DataBodyRange.Rows.Count = 0`. The check i
 
 ## Week 15 · Units 4 and 5 · Reports and R1C1
 
-### 15.1 · Recognise
+### 15.1 · Recognize
 
 **Solution**
 
@@ -2513,7 +2513,7 @@ Sub CompleteMovements()
                                 Range("Catalogue"), 2, False)
 
         If IsError(v) Then
-            ws.Cells(r, 3).Value = "not in catalogue"
+            ws.Cells(r, 3).Value = "not in catalog"
             ws.Range(ws.Cells(r, 1), ws.Cells(r, 3)) _
                 .Interior.Color = RGB(255, 235, 156)
         Else
@@ -2540,7 +2540,7 @@ C2 = Aceros del Bajío
 C3 = Empaques Lira
 C4 = Aceros del Bajío
 C5 = Papelera Central
-C6 = not in catalogue      row 6 in yellow
+C6 = not in catalog      row 6 in yellow
 C7 = Empaques Lira
 C8 = Aceros del Bajío
 C9 = Papelera Central
@@ -2643,7 +2643,7 @@ Sub SummariseBySupplier()
         v = Application.VLookup(wr.Cells(r, 1).Value, _
                                 Range("Catalogue"), 2, False)
         If IsError(v) Then
-            wr.Cells(r, 3).Value = "not in catalogue"
+            wr.Cells(r, 3).Value = "not in catalog"
         Else
             wr.Cells(r, 3).Value = v
         End If
@@ -2681,7 +2681,7 @@ Column E of Suppliers, written with a single statement:
 Summary sheet:
   Aceros Del Bajío    $95,700.00    Metals
   Empaques Lira       $33,540.00    Packaging
-  Papelera Central    $16,000.00    not in catalogue
+  Papelera Central    $16,000.00    not in catalog
 
   Grand total        $145,240.00
   One column chart on the sheet, title Value by supplier
@@ -2709,7 +2709,7 @@ Grading note: if the student leaves calculation on manual for the whole procedur
 
 ## Week 16 · Units 4 and 6 · Pivots, errors and protection
 
-### 16.1 · Recognise
+### 16.1 · Recognize
 
 **Solution**
 
@@ -2939,7 +2939,7 @@ Protecting without `UserInterfaceOnly` and unprotecting at the start of every ma
 
 ## Week 17 · Closing · Final exam
 
-### 17.1 · Recognise
+### 17.1 · Recognize
 
 **Solution**
 
@@ -3016,7 +3016,7 @@ Sub FixedReport()
     For r = 2 To lastRow
         v = Application.VLookup(Cells(r, 1).Value, Range("Catalogue"), 2, False)
         If IsError(v) Then
-            Cells(r, 5).Value = "not in catalogue"
+            Cells(r, 5).Value = "not in catalog"
         Else
             Cells(r, 5).Value = v
         End If
@@ -3041,10 +3041,10 @@ Run over the eight-row sales database, where every amount is above 50,000 so not
 ```text
 8 rows of data left, sorted ascending by amount, each row with its own salesperson
 
-  V-1007   Norte    Carla Méndez     54,120.00   not in catalogue
-  V-1006   Centro   Beto Lira        65,900.00   not in catalogue
-  V-1004   Centro   Darío Sáenz      87,300.00   not in catalogue
-  V-1002   Sur      Beto Lira        96,750.00   not in catalogue
+  V-1007   Norte    Carla Méndez     54,120.00   not in catalog
+  V-1006   Centro   Beto Lira        65,900.00   not in catalog
+  V-1004   Centro   Darío Sáenz      87,300.00   not in catalog
+  V-1002   Sur      Beto Lira        96,750.00   not in catalog
   V-1001   Norte    Ana Robles      128,400.00   North quarterly
   V-1003   Norte    Carla Méndez    143,200.00   North annual
   V-1008   Bajío    Darío Sáenz     181,045.00   Bajío annual
@@ -3052,7 +3052,7 @@ Run over the eight-row sales database, where every amount is above 50,000 so not
 
 Before: the macro runs, raises no error, and the report is wrong in five ways
 After:  it runs on a database of any size, every row keeps its own data,
-        and the missing codes are flagged as not in catalogue
+        and the missing codes are flagged as not in catalog
 ```
 
 Worth pointing out in the review even though it is not one of the five: an empty amount cell compares as zero, so the condition `< 50000` deletes it. If the business does not want that, the condition needs an `IsEmpty` in front of it.
@@ -3169,7 +3169,7 @@ Sub FetchManager()
         v = Application.VLookup(ws.Cells(r, 3).Value, _
                                 Range("Catalogue"), 2, False)
         If IsError(v) Then
-            ws.Cells(r, 6).Value = "not in catalogue"
+            ws.Cells(r, 6).Value = "not in catalog"
         Else
             ws.Cells(r, 6).Value = v
         End If
@@ -3207,7 +3207,7 @@ Database when it finishes:
   even regions, no blank rows, no repeated refs
   sorted by region ascending and by amount descending
   Tier column written by SaleTier, usable from a cell as well
-  Manager column with the missing salesperson flagged as not in catalogue
+  Manager column with the missing salesperson flagged as not in catalog
 
 Summary sheet:
   pivot over the table Sales2026, region down the rows and amount in the data

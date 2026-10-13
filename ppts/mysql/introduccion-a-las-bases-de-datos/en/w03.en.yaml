@@ -153,14 +153,14 @@ slides:
       eyebrow: Block 02
       title: The three levels, and the floor under the third
       lede: >-
-        The same question (what is in there?) asked from four heights in one session. The
+        The same question (what is in there?) asked from four heights. The snapshots use two independent databases. The
         fourth one is no longer SQL. It is a file listing and sixty-four bytes that are
         unreadable on purpose.
       block: 2
 
   - diagram:
       eyebrow: Block 02 · Architecture
-      title: Three levels, three queries, one single session
+      title: Three levels and their queries
       blocks:
         - label: Level 01
           title: External
@@ -230,6 +230,8 @@ slides:
         417  db_backup/alumno       131072
         418  db_backup/inscripcion  131072
         419  db_backup/materia      114688
+
+      notes: "This file snapshot uses db_backup; the earlier catalog snapshot uses agente_intro01. They are independent examples. In the lab, repeat all queries on one database; do not reuse the sizes or identifiers shown here."
 
   - code_output:
       eyebrow: Measured · the floor
@@ -324,7 +326,7 @@ slides:
           title: «The log», in the singular
           desc: >-
             There are two. The redo log gives durability after a crash; the binlog gives
-            point-in-time recovery and replication. Week 17 uses both.
+            point-in-time recovery and replication. Week 17 uses the binlog.
         - label: Mistake 03
           title: Copying an EXPLAIN screenshot from 8.0
           desc: >-
@@ -335,6 +337,16 @@ slides:
           desc: >-
             In MySQL the scheduler only fires events (week 14). What orders simultaneous
             work is the InnoDB lock manager, and week 16 opens its queue row by row.
+
+  - code:
+      eyebrow: Reproducible example
+      title: The view shows the external level
+      filename: external-level.sql
+      lang: sql
+      source: |
+        SELECT matricula, nombre, correo, creditos
+        FROM v_alumno_activo;
+      notes: "Run this query in the same database as the catalog and lab variables. Output depends on its rows. The view names its columns; adding another alumno column does not change this list."
 
   - lab:
       eyebrow: Lab

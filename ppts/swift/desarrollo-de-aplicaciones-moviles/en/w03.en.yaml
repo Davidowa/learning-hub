@@ -1,0 +1,242 @@
+meta:
+  course: Mobile Application Development
+  code: SwiftUI
+  lang: en
+  language: swift
+  week: 3
+  footer: MOBILE APPLICATION DEVELOPMENT · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 03 · Inside Android and iOS
+    title: Mobile Application Development
+    subtitle: The OS owns the process
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Session
+      - 3 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: the OS owns the process
+    - title: Implementation
+      desc: SwiftUI
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Configure identity and log lifecycle transitions
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Configure identity and log lifecycle transitions.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: now
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: the OS owns the process. Your app is a signed, sandboxed bundle with a declared contract (identity, permissions, entry points), and its process can be paused or killed at any time.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Inside Android and iOS
+    lead: the OS owns the process. Your app is a signed, sandboxed bundle with a declared contract (identity, permissions, entry points), and its process can be paused or killed at any time.
+    panel:
+      label: Application
+      title: Inside Android and iOS
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Two layered stacks
+    lead: 'Two layered stacks: Linux kernel, HAL, ART and native libraries, and framework (Android); Core OS, Core Services, Media and Cocoa Touch with SwiftUI on top (iOS)'
+    panel:
+      label: Application
+      title: Two layered stacks
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: How code runs
+    lead: 'How code runs: from Dalvik to ART (and why the original item is obsolete), Swift compiled ahead of time to machine code, JS compiled to Hermes bytecode plus native modules'
+    panel:
+      label: Application
+      title: How code runs
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Identity and sandbox
+    lead: 'Identity and sandbox: package name or bundle identifier, signing, per-app storage, the permission model'
+    panel:
+      label: Application
+      title: Identity and sandbox
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: The contract with the OS
+    lead: 'The contract with the OS: AndroidManifest.xml, Info.plist and entitlements, and the config that generates them'
+    panel:
+      label: Application
+      title: The contract with the OS
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Entry points and lifecycle
+    lead: 'Entry points and lifecycle: the four Android components and their iOS counterparts; foreground, background, suspended and killed; process death'
+    panel:
+      label: Application
+      title: Entry points and lifecycle
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in SwiftUI
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Example 1
+    filename: w03-sample-1.swift
+    lang: swift
+    source: |
+      @main
+      struct BitacoraApp: App {
+          @Environment(\.scenePhase) private var phase
+
+          var body: some Scene {
+              WindowGroup { ContentView() }
+                  .onChange(of: phase) { _, newPhase in
+                      print(newPhase)
+                  }
+          }
+      }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Quick check
+    question: The OS terminates the app process. Which state is at risk?
+    options:
+    - The app identifier
+    - Every installed dependency
+    - Every server record
+    - Unsaved in-memory state
+    notes: Answer D. the OS owns the process. Your app is a signed, sandboxed bundle with a declared contract (identity, permissions, entry points), and its process can be paused or killed at any time.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.3
+    brief: Configure identity and log lifecycle transitions. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Configure identity and log lifecycle transitions. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: the OS owns the process. Your app is a signed, sandboxed bundle with a declared contract (identity, permissions, entry points), and its process can be paused or killed at any time.
+    - title: Implementation
+      desc: Configure identity and log lifecycle transitions.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Declarative UI: components and layout'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

@@ -122,8 +122,10 @@ slides:
         - ["materia", "clave, nombre, creditos", "clave"]
         - ["profesor", "nombre, departamento_id", "profesor_id"]
         - ["departamento", "nombre, ubicacion", "departamento_id"]
-        - ["inscripcion", "periodo, calificacion", "alumno_id + materia_id"]
-        - ["credencial", "folio, vigencia", "alumno_id"]
+        - ["inscripcion", "periodo, calificacion", "matricula + clave + periodo"]
+        - ["credencial", "matricula, vigencia", "folio"]
+
+      notes: "The domain uses student number and course code as natural identifiers. Later SQL examples show an alternative with alumno_id and materia_id as surrogate keys. alumno_materia names the bridge table called inscripcion in the domain; choose one convention and keep it throughout your design."
 
   - method:
       eyebrow: Block 01 · Naming
@@ -289,7 +291,7 @@ slides:
       title: What each line of the diagram turns into
       headers: [Cardinality, Example from the domain, Physical form]
       rows:
-        - ["0:1", "Alumno has Credencial", "Nullable FK plus UNIQUE"]
+        - ["0:1", "Alumno has Credencial", "Credencial.matricula NOT NULL UNIQUE + FK"]
         - ["1:1", "Profesor heads Departamento", "FK NOT NULL plus UNIQUE"]
         - ["1:N", "Profesor teaches Materia", "FK on the many side"]
         - ["N:M", "Alumno enrolls in Materia", "Table keyed on the pair"]

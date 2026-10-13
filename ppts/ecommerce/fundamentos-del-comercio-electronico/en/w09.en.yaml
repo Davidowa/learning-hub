@@ -1,0 +1,226 @@
+meta:
+  course: Fundamentals of E-commerce
+  code: E-commerce
+  lang: en
+  language: commerce
+  week: 9
+  footer: FUNDAMENTALS OF E-COMMERCE · DIGITAL COMMERCE
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 09 · Orders, inventory and risk
+    title: Fundamentals of E-commerce
+    subtitle: The order as two state machines, inventory as one number shared by every channel and fraud as a cost to manage.
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - Digital commerce
+    - - Session
+      - 9 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Order states
+      desc: Track payment and fulfillment separately
+    - title: Available inventory
+      desc: Available stock equals on-hand stock minus reservations and safety stock
+    - title: Duplicate events
+      desc: Store a stable event identifier and handle a repeated notification without repeating its business
+    - title: Application
+      desc: Case, check and submission.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain order states
+      sub: Track payment and fulfillment separately. A refunded payment and a returned parcel describe different parts of the same order.
+    - head: Explain available inventory
+      sub: Available stock equals on-hand stock minus reservations and safety stock
+    - head: Explain duplicate events
+      sub: Store a stable event identifier and handle a repeated notification without repeating its business effect
+    - head: Justify a decision with evidence
+      sub: Apply the case and state its assumptions.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–04
+      title: Model and economics
+      desc: Concept, case and evidence.
+      state: done
+    - label: 05–08
+      title: Shopping and payment
+      desc: Concept, case and evidence.
+      state: done
+    - label: 09–13
+      title: Operations and measurement
+      desc: Concept, case and evidence.
+      state: now
+    - label: 14–17
+      title: Retention and decisions
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Session model
+    lede: The order as two state machines, inventory as one number shared by every channel and fraud as a cost to manage.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Order states
+    lead: Track payment and fulfillment separately. A refunded payment and a returned parcel describe different parts of the same order.
+    panel:
+      label: Application
+      title: Order states
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Available inventory
+    lead: Available stock equals on-hand stock minus reservations and safety stock. Delayed synchronization can expose the same stock in several channels.
+    panel:
+      label: Application
+      title: Available inventory
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Duplicate events
+    lead: Store a stable event identifier and handle a repeated notification without repeating its business effect. Confirm processing before acknowledging it.
+    panel:
+      label: Application
+      title: Duplicate events
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- divider:
+    eyebrow: Block 02
+    title: The Molienda case
+    lede: Fictional data for practicing a verifiable decision.
+    block: 2
+- table:
+    eyebrow: Illustrative case
+    title: Data for a decision
+    headers:
+    - Inventory
+    - Units
+    rows:
+    - - On hand
+      - '100'
+    - - Reserved
+      - '20'
+    - - Safety stock
+      - '10'
+    - - Available
+      - '70'
+    notes: 'All numbers are synthetic teaching inputs. No vendor fees or product tax classifications are asserted. '
+- method:
+    eyebrow: Check
+    title: The decision needs an explicit basis
+    statement: State the unit, period and assumptions before comparing results.
+    points:
+    - label: Data
+      text: Distinguish records from estimates.
+    - label: Calculation
+      text: Keep denominators and units.
+    - label: Decision
+      text: State which action changes with the evidence.
+- code:
+    eyebrow: Molienda case
+    title: Structured case record
+    filename: case-w09.json
+    lang: json
+    source: |
+      {
+        "event_id": "evt-1001-paid",
+        "type": "order.paid",
+        "order_id": "1001",
+        "amount": 2068,
+        "currency": "MXN"
+      }
+    annotations:
+    - label: Identity
+      text: Keep identifiers stable.
+    - label: Contract
+      text: Define fields, units and owner.
+    notes: Synthetic teaching record. This is a generic contract, not a vendor API implementation.
+- quiz:
+    eyebrow: Quick check
+    question: The order.paid webhook for order 1001 arrives twice with the same event_id. What should happen?
+    options:
+    - Two shipments.
+    - The system recognizes the event and ignores the repeat.
+    - The order is canceled.
+    - One payment is refunded.
+    notes: |-
+      The order.paid webhook for order 1001 arrives twice with the same event_id. What should happen? A) Two shipments. B) The system recognizes the event and ignores the repeat (correct). C) The order is canceled. D) One payment is refunded.
+      Answer: B
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: 'Molienda · Order #1001'
+    brief: 'The history of order #1001: a shuffled event log with a duplicate webhook and a stock conflict between the store and Mercado Libre. Rebuild the order''s history in a trace table, find the oversell and decide what to do with three suspicious orders.'
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: 'The history of order #1001: a shuffled event log with a duplicate webhook and a stock conflict between the store and Mercado Libre. Rebuild the order''s history in a trace table, find the oversell and decide what to do with three suspicious orders.'
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: The project's order lifecycle diagram, inventory policy and five fraud rules with the estimated cost of their false positives (part of Checkpoint 2).
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: The project's order lifecycle diagram, inventory policy and five fraud rules with the estimated cost of their false positives (part of Checkpoint 2).
+- takeaways:
+    eyebrow: Summary
+    title: Concepts to retain
+    items:
+    - title: Order states
+      desc: Track payment and fulfillment separately. A refunded payment and a returned parcel describe different parts of the same order.
+    - title: Available inventory
+      desc: Available stock equals on-hand stock minus reservations and safety stock. Delayed synchronization can expose the same stock in several channels.
+    - title: Duplicate events
+      desc: Store a stable event identifier and handle a repeated notification without repeating its business effect. Confirm processing before acknowledging it.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Fulfillment and the last mile'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

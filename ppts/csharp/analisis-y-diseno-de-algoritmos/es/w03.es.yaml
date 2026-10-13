@@ -100,17 +100,16 @@ slides:
 
   - concept:
       eyebrow: Bloque 01 · Tema 2.3
-      title: C# no es compilado ni interpretado, es ambos
+      title: La ejecución JIT compila C# en dos etapas
       lead: >-
-        El compilador lee el archivo entero antes de que corra una sola línea, pero no
-        produce instrucciones del procesador. Produce un formato intermedio que el motor
-        de .NET traduce en el último momento. Por eso un error de tipo aparece antes de
+        El compilador revisa el archivo y produce lenguaje intermedio. En la ejecución JIT,
+        el motor de .NET compila ese lenguaje a instrucciones del procesador cuando las necesita. Por eso un error de tipo aparece antes de
         arrancar, y el mismo archivo compilado corre en Windows y en macOS.
       panel:
         label: Medido en esta máquina
         title: dotnet build deja cinco archivos, dos ejecutables
         note: >-
-          La carpeta bin/Debug/net10.0 queda con banco.dll, banco.exe, banco.pdb,
+          En Windows, bin/Debug/net10.0 queda con banco.dll, banco.exe, banco.pdb,
           banco.deps.json y banco.runtimeconfig.json. El .dll trae el programa; el .exe
           solo sabe arrancar el motor y entregárselo.
       steps:
@@ -172,6 +171,8 @@ slides:
 
         codigo de salida
         0
+
+      notes: "El panel conserva la medición de Windows del material original. En macOS, SDK 10.0.401 produjo una línea de 39 bytes con LF. Otros SDK pueden agregar un comentario; mide tu archivo y ajusta la línea del diagnóstico."
 
   - code:
       eyebrow: Bloque 02 · Tema 2.2

@@ -127,9 +127,9 @@ slides:
         lang: text
         code: |
           HOME axes X Y Z
-          WHILE bed < 60.0
+          WHILE bed < 60.0 AND passes < 5
               bed = bed + 12.0
-              WRITE bed
+              passes = passes + 1
           IF bed >= 60.0 THEN
               purge nozzle
           ELSE
@@ -216,66 +216,85 @@ slides:
       alt: The four flowchart symbols, hand-drawn and labeled
 
   - code:
-      eyebrow: Block 02 · Pseudocode
-      title: The startup sequence, written to be read
+      eyebrow: Block 02
+      title: Heating in the startup sequence
       filename: printer_startup.txt
       lang: text
       source: |
         START
             bed = 22.0
+            passes = 0
             WRITE "HOME axes X Y Z"
-
-            WHILE bed < 60.0
+            WHILE bed < 60.0 AND passes < 5
                 bed = bed + 12.0
+                passes = passes + 1
                 WRITE "heating bed", bed
+      annotations:
+        - label: Continuation
+          text: The two fragments form one program. The second continues after the loop with the same variables.
+      notes: The two fragments form one program. The second continues after the loop with the same variables.
 
+  - code:
+      eyebrow: Block 02
+      title: The startup decision
+      filename: printer_startup.txt
+      lang: text
+      source: |
+        Continuation after heating
             IF bed >= 60.0 THEN
                 WRITE "purging nozzle"
+                WRITE "starting print"
             ELSE
                 WRITE "ABORT"
-
-            WRITE "starting print"
         END
       annotations:
-        - label: No language
-          text: This is not C# or any other language. It is the plan, which is why a non-programmer can read it.
-        - label: The indentation
-          text: It marks which instructions fall inside the loop and which fall inside each branch.
-        - label: The three shapes
-          text: Sequence, selection and repetition. No fourth one shows up anywhere in the plan.
-        - label: Risk
-          text: If the heating step does not move the test, the WHILE never ends.
-          accent: true
+        - label: Continuation
+          text: The two fragments form one program. The second continues after the loop with the same variables.
+      notes: The two fragments form one program. The second continues after the loop with the same variables.
 
   - code_output:
-      eyebrow: Block 02 · Measured
-      title: The same plan in C#, with the three shapes
+      eyebrow: Block 02
+      title: Heating in C#
       filename: Program.cs
       lang: csharp
-      output_label: On running
       source: |
         double bed = 22.0;
-        string abort = "ABORT: the bed did not reach the setpoint";
-
+        int passes = 0;
         Console.WriteLine("HOME axes X Y Z");
-        while (bed < 60.0)
+        while (bed < 60.0 && passes < 5)
         {
             bed += 12.0;
+            passes++;
             Console.WriteLine($"heating bed: {bed:F1} C");
         }
-        if (bed >= 60.0)
-            Console.WriteLine("bed at setpoint, purging nozzle");
-        else
-            Console.WriteLine(abort);
-        Console.WriteLine("starting print");
+      output_label: On running
       output: |
         HOME axes X Y Z
         heating bed: 34.0 C
         heating bed: 46.0 C
         heating bed: 58.0 C
         heating bed: 70.0 C
+      notes: The two fragments form one program. The second continues after the loop with the same variables.
+
+  - code_output:
+      eyebrow: Block 02
+      title: Startup decision in C#
+      filename: Program.cs
+      lang: csharp
+      source: |
+        string abort = "ABORT: the bed did not reach the setpoint";
+        if (bed >= 60.0)
+        {
+            Console.WriteLine("bed at setpoint, purging nozzle");
+            Console.WriteLine("starting print");
+        }
+        else
+            Console.WriteLine(abort);
+      output_label: On running
+      output: |
         bed at setpoint, purging nozzle
         starting print
+      notes: The two fragments form one program. The second continues after the loop with the same variables.
 
   - compare:
       eyebrow: Block 02 · Unit 1.3

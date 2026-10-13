@@ -139,18 +139,18 @@ _TOKEN_RE_C = re.compile(r"""
     (?P<str>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)
   | (?P<tag>(?<=<)/?[A-Za-z][A-Za-z0-9_.]*|(?<=</)[A-Za-z][A-Za-z0-9_.]*)
   | (?P<attr>@[A-Za-z_][A-Za-z_0-9]*)
-  | (?P<num>\b\d+\.?\d*\b)
+  | (?P<num>\b(?:0[xX][0-9A-Fa-f_]+|0[bB][01_]+|\d[\d_]*(?:\.[\d_]*)?(?:[eE][+-]?\d[\d_]*)?)(?:[fFdDmMuUlL]+)?\b)
   | (?P<word>[A-Za-z_#$][A-Za-z_0-9$]*)
   | (?P<space>\s+)
-  | (?P<op>[^\sA-Za-z_0-9])
+  | (?P<op>\S)
 """, re.X)
 
 _TOKEN_RE = re.compile(r"""
     (?P<str>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|<[A-Za-z_./]+>)
-  | (?P<num>\b\d+\.?\d*\b)
+  | (?P<num>\b(?:0[xX][0-9A-Fa-f_]+|0[bB][01_]+|\d[\d_]*(?:\.[\d_]*)?(?:[eE][+-]?\d[\d_]*)?)(?:[fFdDmMuUlL]+)?\b)
   | (?P<word>[A-Za-z_#][A-Za-z_0-9]*)
   | (?P<space>\s+)
-  | (?P<op>[^\sA-Za-z_0-9])
+  | (?P<op>\S)
 """, re.X)
 
 

@@ -6,9 +6,8 @@ kit.doodle: navy line work on #F7F8FA, washes only in Python blue and Python
 yellow, the same blob character, and labels that are always spelled correctly
 because they come from a font rather than a model.
 
-    python -m kit.ct --list
-    python -m kit.ct ct-09 --lang es
-    python -m kit.ct --all
+    python -m kit.figures --list
+    python -m kit.figures ct-09 --lang es --overwrite
 """
 from __future__ import annotations
 
@@ -82,7 +81,8 @@ def ct02(t, lang):
     """Pattern recognition: a heap of mixed shapes sorted into groups."""
     p = Pen(W, H, seed=102)
     heap = [(150, 180, 'tri'), (250, 250, 'sq'), (170, 330, 'ci'), (280, 130, 'ci'),
-            (330, 350, 'tri'), (110, 260, 'sq'), (250, 400, 'ci'), (350, 220, 'sq')]
+            (330, 350, 'tri'), (110, 260, 'sq'), (250, 400, 'ci'), (350, 220, 'sq'),
+            (410, 450, 'tri')]
     for x, y, kind in heap:
         if kind == 'tri':
             p.triangle(x, y, 46)
@@ -240,6 +240,8 @@ def ct09(t, lang):
     p.ladder(840, 190, 380, w_=150, rungs=7, color=WOOD, fill=WOOD_WASH)
     p.duck(770, 105, h=160, mood='happy', wing='down', fill=YELLOW_WASH)
     p.text(880, 62, t['high'], 36)
+    p.text(1240, 125, 'Fórmulas de hoja de cálculo' if lang == 'es'
+           else 'Spreadsheet formulas', 30, MUTED)
 
     # the same bird at the foot of the ladder, in a hard hat
     p.duck(1040, 385, h=155, mood='happy', wing='down', fill=BLUE_WASH, hat=True)

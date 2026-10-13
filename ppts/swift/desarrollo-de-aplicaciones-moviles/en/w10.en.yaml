@@ -1,0 +1,243 @@
+meta:
+  course: Mobile Application Development
+  code: SwiftUI
+  lang: en
+  language: swift
+  week: 10
+  footer: MOBILE APPLICATION DEVELOPMENT · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 10 · Camera, photos and files
+    title: Mobile Application Development
+    subtitle: Device capabilities are permission-gated
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Session
+      - 10 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: device capabilities are permission-gated
+    - title: Implementation
+      desc: SwiftUI
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Attach a photo and handle denied permissions
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Attach a photo and handle denied permissions.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: now
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: device capabilities are permission-gated. Ask at the moment of need, explain why, handle denial, and prefer a system picker that needs no permission over full access (least privilege).
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Camera, photos and files
+    lead: device capabilities are permission-gated. Ask at the moment of need, explain why, handle denial, and prefer a system picker that needs no permission over full access (least privilege).
+    panel:
+      label: Application
+      title: Camera, photos and files
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: The permission model
+    lead: 'The permission model: declared purpose strings plus a runtime prompt; the states (not asked, granted, denied, limited); the denial path and a link to Settings'
+    panel:
+      label: Application
+      title: The permission model
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: System picker or custom camera, chosen by least privilege
+    lead: System picker or custom camera, chosen by least privilege
+    panel:
+      label: Application
+      title: System picker or custom camera
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: The capture pipeline
+    lead: 'The capture pipeline: preview, capture, resize and compress, store in the sandbox, reference from the database'
+    panel:
+      label: Application
+      title: The capture pipeline
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Image resources
+    lead: 'Image resources: density variants (`@2x`/`@3x`, `mdpi` to `xxxhdpi`), asset catalogs, caching'
+    panel:
+      label: Application
+      title: Image resources
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Sandbox directories
+    lead: 'Sandbox directories: documents and cache, and cleaning up a report''s files when it is deleted'
+    panel:
+      label: Application
+      title: Sandbox directories
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in SwiftUI
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Example 1
+    filename: w10-sample-1.swift
+    lang: swift
+    source: |
+      @State private var item: PhotosPickerItem?
+
+      PhotosPicker("Adjuntar foto", selection: $item,
+                   matching: .images)
+          .onChange(of: item) { _, newItem in
+              Task {
+                  guard let data = try? await newItem?
+                      .loadTransferable(type: Data.self)
+                  else { return }
+                  store.attachPhoto(data, to: report)
+              }
+          }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Quick check
+    question: Camera permission is denied. What is a usable recovery?
+    options:
+    - Explain the limitation and offer an allowed alternative
+    - Request again in an endless loop
+    - Pretend a photo was captured
+    - Crash the app
+    notes: Answer A. device capabilities are permission-gated. Ask at the moment of need, explain why, handle denial, and prefer a system picker that needs no permission over full access (least privilege).
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.10
+    brief: Attach a photo and handle denied permissions. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Attach a photo and handle denied permissions. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: device capabilities are permission-gated. Ask at the moment of need, explain why, handle denial, and prefer a system picker that needs no permission over full access (least privilege).
+    - title: Implementation
+      desc: Attach a photo and handle denied permissions.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Sensors and location'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

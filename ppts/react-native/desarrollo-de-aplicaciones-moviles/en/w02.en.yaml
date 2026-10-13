@@ -1,0 +1,314 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 2
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: 'Week 02 · The language: types, values and functions'
+    title: Mobile Application Development
+    subtitle: A type system is a contract the compiler checks for you
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 2 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: a type system is a contract the compiler checks for you
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Model reports and test pure functions. Submit an identifiable commit and evidence of the result.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Model reports and test pure functions.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: now
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: todo
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: a type system is a contract the compiler checks for you. Null safety and value semantics remove whole classes of bugs before the app runs.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: 'The language: types, values and functions'
+    lead: a type system is a contract the compiler checks for you. Null safety and value semantics remove whole classes of bugs before the app runs.
+    panel:
+      label: Application
+      title: 'The language: types, values and functions'
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: From C#, Python and C++ to TS or Swift
+    lead: 'From C#, Python and C++ to TS or Swift: declarations, inference, annotations, functions'
+    panel:
+      label: Application
+      title: From C#, Python and C++ to TS or Swift
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: The absence of a value
+    lead: 'The absence of a value: `undefined` with `?.` and `??` (TS); optionals with `if let`, `guard let` and `??` (Swift); why force-unwrapping is a smell'
+    panel:
+      label: Application
+      title: The absence of a value
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Value and reference semantics
+    lead: 'Value and reference semantics: TS objects are references, while Swift has value-type `struct`s and reference-type `class`es'
+    panel:
+      label: Application
+      title: Value and reference semantics
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Modeling with types
+    lead: 'Modeling with types: literal unions and discriminated unions (TS), enums with associated values (Swift), exhaustive `switch`'
+    panel:
+      label: Application
+      title: Modeling with types
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Closures and collection pipelines
+    lead: 'Closures and collection pipelines: `map`, `filter`, `reduce`, sorting'
+    panel:
+      label: Application
+      title: Closures and collection pipelines
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: The first automated test
+    lead: 'The first automated test: arrange, act, assert'
+    panel:
+      label: Application
+      title: The first automated test
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1 · 1/2
+    filename: w02-sample-1.ts
+    lang: ts
+    source: |
+      export type Status = 'draft' | 'pending' | 'synced';
+
+      export type Report = {
+        id: string;
+        title: string;
+        category: string;
+        status: Status;
+        note?: string;
+      };
+
+      export const pending = (rs: Report[]) =>
+        rs.filter(r => r.status === 'pending');
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 1 · 2/2
+    filename: w02-sample-1.ts
+    lang: ts
+    source: |2
+
+      export const preview = (r: Report) =>
+        r.note?.slice(0, 40) ?? '(sin nota)';
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 2
+    filename: w02-sample-2.ts
+    lang: ts
+    source: |
+      import { pending, type Report } from './report';
+
+      test('pending keeps only unsynced reports', () => {
+        const rs: Report[] = [
+          { id: '1', title: 'Fuga', category: 'facility',
+            status: 'pending' },
+          { id: '2', title: 'Lámpara', category: 'facility',
+            status: 'synced' },
+        ];
+        expect(pending(rs).map(r => r.id)).toEqual(['1']);
+      });
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 3
+    filename: w02-sample-3.ts
+    lang: ts
+    source: |
+      export const isValidTitle = (title: string) =>
+        title.trim().length >= 3;
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: A second variable is assigned the same record. What happens when it modifies the record?
+    options:
+    - TypeScript objects share references; Swift structs copy values
+    - Swift structs always share references
+    - The title cannot change
+    - Both languages always make independent copies
+    notes: Answer A. a type system is a contract the compiler checks for you. Null safety and value semantics remove whole classes of bugs before the app runs.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.2
+    brief: Model reports and test pure functions. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Model reports and test pure functions. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: a type system is a contract the compiler checks for you. Null safety and value semantics remove whole classes of bugs before the app runs.
+    - title: Implementation
+      desc: Model reports and test pure functions.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Inside Android and iOS'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

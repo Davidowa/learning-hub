@@ -318,6 +318,27 @@ slides:
         - title: Equals does not copy, it shares
           desc: Two names on one list look identical right up until one of the two writes to it
 
+  - code:
+      eyebrow: Measurement
+      title: Timing the same repeated lookup
+      filename: timing.py
+      lang: python
+      source: |
+        from time import perf_counter
+
+        start = perf_counter()
+        for _ in range(10000):
+            found = "X1" in products
+        seconds = perf_counter() - start
+        print(f"{seconds:.6f} s")
+      annotations:
+      - label: perf_counter
+        text: Measures elapsed seconds with a monotonic clock.
+      - label: Comparison
+        text: Repeat with a list and a dictionary using the same data.
+      notes: products contains the test keys as a list or dictionary. Repetition reduces the relative cost of reading the clock.
+        Report several runs, the same number of lookups, and the same computer. This code does not promise a particular duration.
+
   - homework:
       eyebrow: Homework
       title: Submission and grading criteria

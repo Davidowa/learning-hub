@@ -588,7 +588,7 @@ Type mismatch
 
 Marcar `False` para `1,000`. La coma de millares sí pasa por `IsNumeric` y `CDbl` la convierte a 1000, y el alumno que la rechaza suele estar validando de más.
 
-Nota de calificación: el renglón del símbolo de moneda depende de la configuración regional de la máquina, así que su punto se otorga con cualquiera de las dos respuestas siempre que el alumno diga en qué región la probó. `IsNumeric` acepta el símbolo de moneda de la región activa y rechaza cualquier otro. La lámina de la semana 5 dice `False` y error 13 porque se midió en un Excel con región del Reino Unido, donde el símbolo es la libra y el signo de pesos no cuenta como moneda. Medido en una máquina con región de México, que es la del aula: `IsNumeric("$780.50")` devuelve `True` y `CDbl("$780.50")` devuelve 780.5, mientras que con el símbolo de libra devuelve `False`. Lo que no se acepta es afirmar que ningún símbolo de moneda pasa nunca.
+Nota de calificación: el renglón del símbolo de moneda depende de la configuración regional de la máquina, así que su punto se otorga con cualquiera de las dos respuestas siempre que el alumno diga en qué región la probó. `IsNumeric` acepta el símbolo de moneda de la región activa y rechaza cualquier otro. La medición anterior dio `False` y error 13 porque se hizo en un Excel con región del Reino Unido, donde el símbolo es la libra y el signo de pesos no cuenta como moneda. Medido en una máquina con región de México, que es la del aula: `IsNumeric("$780.50")` devuelve `True` y `CDbl("$780.50")` devuelve 780.5, mientras que con el símbolo de libra devuelve `False`. Lo que no se acepta es afirmar que ningún símbolo de moneda pasa nunca.
 
 ### 05.2 · Aplicar
 
@@ -652,7 +652,7 @@ Teclea "15"      ->  cuadro: ¿Guardar 15 días para Ana Robles?
 
 **Error que más se ve**
 
-Comparar la respuesta contra el texto del botón, algo como `If respuesta = "Sí"`. Nunca entra al `If`, la macro no marca error y C2 se queda vacía.
+Comparar la respuesta contra el texto del botón, algo como `If respuesta = "Sí"`. La comparación produce error 13 al comparar el resultado numérico con una cadena no numérica. Compara contra `vbYes`.
 
 ### 05.3 · Integrar
 
@@ -1681,7 +1681,7 @@ Los dos renglones donde las columnas difieren son `15%` y, según la región, `$
 
 Contestar `No es número` para `15%`, copiando la tabla de la lámina de la semana 11 sin notar que ahí se mide `IsNumeric` sobre una cadena y aquí sobre `Target.Value`. Se delata en que el alumno entrega la columna del texto llenada dos veces.
 
-Nota de calificación: la lámina de la semana 11 lista `$5`, `5%` y `2026-01-01` como `False`, y eso es cierto de `IsNumeric` aplicado a esas cadenas, no de la celda ya capturada. Medido con Excel 16.0 en región de México, escribir esos tres valores en una celda deja `Target.Value` en 5, 0.15 y 46023, los tres numéricos. El renglón de `$780.50` además depende de la región en la columna del texto: `IsNumeric` acepta el símbolo de moneda de la región activa, así que en México devuelve `True` y en el Reino Unido, donde el símbolo es la libra, devuelve `False`. Se acepta la respuesta de la lámina si el alumno explica sobre qué se está preguntando.
+Nota de calificación: distingue la cadena escrita de `Target.Value`. Una celda con 5% devuelve el número 0.05. Una celda con formato de fecha puede devolver un valor Date, para el que `IsNumeric` devuelve False. Las cadenas con moneda dependen de la configuración regional. Califica el tipo de entrada y la región indicados, sin asumir un resultado universal.
 
 ### 11.2 · Aplicar
 

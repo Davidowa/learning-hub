@@ -404,37 +404,42 @@ slides:
         connection to MySQL server
         during query
 
-  - code_output:
-      eyebrow: Medido · el reintento
-      title: El handler de la semana 13, ahora atrapa el 1213
-      filename: reintento.sql
+  - code:
+      eyebrow: Ejemplo reproducible
+      title: Reintentar un intento completo
+      filename: retry.sql
       lang: sql
-      output_label: Salida
       source: |
         DECLARE v_intentos INT DEFAULT 0;
         DECLARE v_falla INT DEFAULT 0;
-        DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
-          BEGIN ROLLBACK; SET v_falla = 1; END;
-
         reintenta: LOOP
           SET v_falla = 0, v_intentos = v_intentos + 1;
-          START TRANSACTION;
-          UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = p_primera;
-          UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = p_segunda;
-          IF v_falla = 0 THEN COMMIT; LEAVE reintenta; END IF;
-        END LOOP;
-      output: |
-        sesion A
-          intentos          1
-          quedo_fallando    0
-        sesion B
-          intentos          2
-          quedo_fallando    0
+          BEGIN
+            DECLARE EXIT HANDLER FOR SQLSTATE '40001'
+            BEGIN ROLLBACK; SET v_falla = 1; END;
+            START TRANSACTION;
+            UPDATE alumno SET credito_maximo = credito_maximo + 100
+              WHERE alumno_id = p_primera;
+            UPDATE alumno SET credito_maximo = credito_maximo + 100
+              WHERE alumno_id = p_segunda;
+      notes: "Las dos tarjetas forman el cuerpo de un procedimiento con parámetros p_primera y p_segunda. EXIT abandona el bloque del intento después del deadlock: no se ejecuta la segunda escritura fuera de la transacción. El límite evita reintentos infinitos."
 
-        fila 1     15600.00
-        fila 2     12600.00
+  - code:
+      eyebrow: Ejemplo reproducible
+      title: Cerrar el intento o detener el reintento
+      filename: retry.sql
+      lang: sql
+      source: |
+        -- Continuation of the preceding card
+            COMMIT;
+          END;
+          IF v_falla = 0 THEN LEAVE reintenta; END IF;
+          IF v_intentos >= 3 THEN
+            SIGNAL SQLSTATE '45000'
+              SET MESSAGE_TEXT = 'Retry limit reached';
+          END IF;
+        END LOOP;
+      notes: "Las dos tarjetas forman el cuerpo de un procedimiento con parámetros p_primera y p_segunda. EXIT abandona el bloque del intento después del deadlock: no se ejecuta la segunda escritura fuera de la transacción. El límite evita reintentos infinitos."
 
   - pitfalls:
       eyebrow: Errores comunes

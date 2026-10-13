@@ -192,6 +192,26 @@ slides:
         - ["if-else", "Two exclusive paths", "Nesting past two levels"]
         - ["switch", "One variable, many values", "The break on each case"]
 
+  - code_output:
+      eyebrow: Selection · else if
+      title: The first true condition picks the letter
+      filename: grade.cpp
+      lang: cpp
+      source: |
+        double average = 8.5;
+        if (average >= 9.0)
+            std::cout << "A\n";
+        else if (average >= 8.0)
+            std::cout << "B\n";
+        else if (average >= 6.0)
+            std::cout << "C\n";
+        else
+            std::cout << "F\n";
+      output_label: Output
+      output: |
+        B
+      notes: Also check 9.0, 8.0 and 6.0. Each boundary belongs to the branch using >=. The chain stops at the first true condition.
+
   - quiz:
       eyebrow: Quick question
       question: What does the program print, with grade set to 5?
@@ -227,7 +247,7 @@ slides:
       items:
         - label: Error 01
           title: One equals instead of two
-          desc: It assigns rather than compares, fires on any nonzero value, and compiles with no warning
+          desc: It assigns rather than compares, fires on any nonzero value, and may compile with a warning
         - label: Error 02
           title: A semicolon after the if
           desc: The body becomes the empty statement and the block below runs every time

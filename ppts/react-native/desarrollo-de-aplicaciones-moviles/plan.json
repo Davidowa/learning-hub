@@ -1,0 +1,1262 @@
+{
+  "title_es": "Desarrollo de aplicaciones móviles",
+  "title_en": "Mobile Application Development",
+  "assessment": [
+    {
+      "name_es": "Parcial 1",
+      "name_en": "Midterm 1",
+      "week": "w08",
+      "weight": 20
+    },
+    {
+      "name_es": "Parcial 2",
+      "name_en": "Midterm 2",
+      "week": "w13",
+      "weight": 20
+    },
+    {
+      "name_es": "Proyecto",
+      "name_en": "Project",
+      "week": "w16",
+      "weight": 20
+    },
+    {
+      "name_es": "Examen final",
+      "name_en": "Final exam",
+      "week": "w17",
+      "weight": 20
+    },
+    {
+      "name_es": "Tareas y laboratorios",
+      "name_en": "Homework and labs",
+      "week": "w01-w16",
+      "weight": 20
+    }
+  ],
+  "case": "Bitácora, a fictional inspection app with reports, categories, notes and photos.",
+  "decision": "Use the practice proposal’s prerequisite order and a shared 17-session spine. Adopt five equal assessment components to match the existing courses. The SwiftUI track builds iOS; Android is studied through counterparts. React Native checks both Android and iOS.",
+  "sessions": [
+    {
+      "n": 1,
+      "topics_en": [
+        "Device classes and form factors, and what each one constrains",
+        "Mobile affordances and constraints: sensors, interruptions, battery, intermittent network, touch, privacy",
+        "Four ways to build: platform-native, cross-platform with native UI, cross-platform with its own renderer, web (PWA or WebView hybrid)",
+        "Toolchain anatomy: language, SDK, IDE, emulator or simulator, device, signing, store",
+        "How the course works: Bitácora, one repo per student, a PR and a tag per lab, and the evaluation rubric as a preview"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Show the app on a simulator and a device.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "a mobile app is a guest on a personal, constrained, sensor-rich device, and the OS is the landlord.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "import { Text, View } from 'react-native';\n\nexport default function Home() {\n  return (\n    <View style={{ flex: 1, justifyContent: 'center' }}>\n      <Text>Hola, Bitácora</Text>\n    </View>\n  );\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "import SwiftUI\n\n@main\nstruct BitacoraApp: App {\n    var body: some Scene {\n        WindowGroup { ContentView() }\n    }\n}\n\nstruct ContentView: View {\n    var body: some View { Text(\"Hola, Bitácora\") }\n}\n\n#Preview { ContentView() }\n"
+          }
+        ]
+      },
+      "model_es": "Una app funciona dentro de los límites del dispositivo y de las reglas del sistema operativo.",
+      "topics_es": [
+        "Tamaño, entrada, energía y conectividad delimitan el uso del dispositivo.",
+        "Sensores e interrupciones afectan la experiencia y el diseño.",
+        "Distingue UI nativa, renderizado propio y contenido web.",
+        "Identifica lenguaje, SDK, compilador, simulador, firma y distribución.",
+        "Define historias de usuario con criterios de aceptación."
+      ],
+      "title_es": "El dispositivo móvil como plataforma",
+      "title_en": "The mobile device as a platform",
+      "unit": 1,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Mostrar la app en un simulador y en un dispositivo.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w01",
+      "lab_es": "Mostrar la app en un simulador y en un dispositivo. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Show the app on a simulator and a device. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A report must work with intermittent connectivity. What belongs in the initial design?",
+        "question_es": "Un reporte debe funcionar con conexión intermitente. ¿Qué corresponde al diseño inicial?",
+        "options_en": [
+          "Assume a permanent connection",
+          "Define offline behavior and recovery",
+          "Hide every network error",
+          "Require the newest phone"
+        ],
+        "options_es": [
+          "Suponer conexión permanente",
+          "Definir operación sin conexión y recuperación",
+          "Ocultar todo error de red",
+          "Exigir el teléfono más reciente"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 2,
+      "topics_en": [
+        "From C#, Python and C++ to TS or Swift: declarations, inference, annotations, functions",
+        "The absence of a value: `undefined` with `?.` and `??` (TS); optionals with `if let`, `guard let` and `??` (Swift); why force-unwrapping is a smell",
+        "Value and reference semantics: TS objects are references, while Swift has value-type `struct`s and reference-type `class`es",
+        "Modeling with types: literal unions and discriminated unions (TS), enums with associated values (Swift), exhaustive `switch`",
+        "Closures and collection pipelines: `map`, `filter`, `reduce`, sorting",
+        "The first automated test: arrange, act, assert"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Model reports and test pure functions.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "a type system is a contract the compiler checks for you. Null safety and value semantics remove whole classes of bugs before the app runs.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "ts",
+            "source": "export type Status = 'draft' | 'pending' | 'synced';\n\nexport type Report = {\n  id: string;\n  title: string;\n  category: string;\n  status: Status;\n  note?: string;\n};\n\nexport const pending = (rs: Report[]) =>\n  rs.filter(r => r.status === 'pending');\n\nexport const preview = (r: Report) =>\n  r.note?.slice(0, 40) ?? '(sin nota)';\n"
+          },
+          {
+            "lang": "ts",
+            "source": "import { pending, type Report } from './report';\n\ntest('pending keeps only unsynced reports', () => {\n  const rs: Report[] = [\n    { id: '1', title: 'Fuga', category: 'facility',\n      status: 'pending' },\n    { id: '2', title: 'Lámpara', category: 'facility',\n      status: 'synced' },\n  ];\n  expect(pending(rs).map(r => r.id)).toEqual(['1']);\n});\n"
+          },
+          {
+            "lang": "ts",
+            "source": "export const isValidTitle = (title: string) =>\n  title.trim().length >= 3;\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "import Foundation\n\nenum Status: Hashable { case draft, pending, synced }\n\nstruct Report: Identifiable, Hashable {\n    let id = UUID()\n    var title: String\n    var status: Status\n    var note: String?\n    var createdAt = Date()\n}\n\nlet a = Report(title: \"Fuga\", status: .draft)\nvar b = a                 // copia: struct es valor\nb.title = \"Lámpara\"\nprint(a.title)            // Fuga\n"
+          },
+          {
+            "lang": "swift",
+            "source": "func pending(_ reports: [Report]) -> [Report] {\n    reports.filter { $0.status == .pending }\n}\n"
+          },
+          {
+            "lang": "swift",
+            "source": "import Testing\n@testable import Bitacora\n\n@Test func pendingKeepsOnlyUnsynced() {\n    let rs = [Report(title: \"Fuga\", status: .pending),\n              Report(title: \"Lámpara\", status: .synced)]\n    #expect(pending(rs).map(\\.title) == [\"Fuga\"])\n}\n"
+          },
+          {
+            "lang": "swift",
+            "source": "func isValidTitle(_ title: String) -> Bool {\n    title.trimmingCharacters(in: .whitespacesAndNewlines)\n        .count >= 3\n}\n"
+          }
+        ]
+      },
+      "model_es": "Los tipos expresan contratos. La ausencia de un valor y la copia de un objeto requieren decisiones explícitas.",
+      "topics_es": [
+        "Declara valores, tipos y funciones con contratos explícitos.",
+        "Modela la ausencia con opcionales y uniones de tipos.",
+        "Compara copiar valores con compartir referencias.",
+        "Usa un conjunto cerrado para los estados del reporte.",
+        "Aplica map, filter y reduce a colecciones.",
+        "Prueba funciones puras con entradas y salidas conocidas."
+      ],
+      "title_es": "El lenguaje: tipos, valores y funciones",
+      "title_en": "The language: types, values and functions",
+      "unit": 1,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Modelar reportes y probar funciones puras.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w02",
+      "lab_es": "Modelar reportes y probar funciones puras. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Model reports and test pure functions. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A second variable is assigned the same record. What happens when it modifies the record?",
+        "question_es": "Otra variable recibe el mismo registro mediante asignación. ¿Qué ocurre al modificarlo?",
+        "options_en": [
+          "Both languages always make independent copies",
+          "TypeScript objects share references; Swift structs copy values",
+          "Swift structs always share references",
+          "The title cannot change"
+        ],
+        "options_es": [
+          "Ambos lenguajes siempre crean copias independientes",
+          "Los objetos TypeScript comparten referencias; los structs Swift copian valores",
+          "Los structs Swift siempre comparten referencias",
+          "El título no puede cambiar"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 3,
+      "topics_en": [
+        "Two layered stacks: Linux kernel, HAL, ART and native libraries, and framework (Android); Core OS, Core Services, Media and Cocoa Touch with SwiftUI on top (iOS)",
+        "How code runs: from Dalvik to ART (and why the original item is obsolete), Swift compiled ahead of time to machine code, JS compiled to Hermes bytecode plus native modules",
+        "Identity and sandbox: package name or bundle identifier, signing, per-app storage, the permission model",
+        "The contract with the OS: AndroidManifest.xml, Info.plist and entitlements, and the config that generates them",
+        "Entry points and lifecycle: the four Android components and their iOS counterparts; foreground, background, suspended and killed; process death"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Configure identity and log lifecycle transitions.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "the OS owns the process. Your app is a signed, sandboxed bundle with a declared contract (identity, permissions, entry points), and its process can be paused or killed at any time.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "json",
+            "source": "{\n  \"expo\": {\n    \"name\": \"Bitácora\",\n    \"slug\": \"bitacora\",\n    \"ios\": { \"bundleIdentifier\": \"dev.tunombre.bitacora\" },\n    \"android\": { \"package\": \"dev.tunombre.bitacora\" }\n  }\n}\n"
+          },
+          {
+            "lang": "tsx",
+            "source": "useEffect(() => {\n  const sub = AppState.addEventListener('change', state => {\n    log(`${new Date().toISOString()} ${state}`);\n  });\n  return () => sub.remove();\n}, []);\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@main\nstruct BitacoraApp: App {\n    @Environment(\\.scenePhase) private var phase\n\n    var body: some Scene {\n        WindowGroup { ContentView() }\n            .onChange(of: phase) { _, newPhase in\n                print(newPhase)\n            }\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "El sistema operativo controla procesos, permisos y ciclo de vida. La app declara lo que necesita.",
+      "topics_es": [
+        "Compara las capas del sistema, runtime y servicios.",
+        "La app declara identidad, permisos y capacidades.",
+        "Distingue una pantalla de un punto de entrada del sistema.",
+        "Registra entradas y salidas del primer plano.",
+        "Comprueba qué estado sobrevive a la terminación del proceso."
+      ],
+      "title_es": "Android e iOS por dentro",
+      "title_en": "Inside Android and iOS",
+      "unit": 1,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Configurar identidad y registrar cambios de ciclo de vida.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w03",
+      "lab_es": "Configurar identidad y registrar cambios de ciclo de vida. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Configure identity and log lifecycle transitions. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "The OS terminates the app process. Which state is at risk?",
+        "question_es": "El sistema termina el proceso de la app. ¿Qué estado está en riesgo?",
+        "options_en": [
+          "Every server record",
+          "Unsaved in-memory state",
+          "The app identifier",
+          "Every installed dependency"
+        ],
+        "options_es": [
+          "Todos los registros del servidor",
+          "El estado en memoria que no se guardó",
+          "El identificador de la app",
+          "Todas las dependencias instaladas"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 4,
+      "topics_en": [
+        "Imperative and declarative UI: XML layouts, storyboards and fragments as the previous instance, which students read but don't build",
+        "Composition: components or views with typed inputs, reuse and previews",
+        "Layout models: flexbox (column by default) in RN; stacks, frames, `Spacer` and modifier order in SwiftUI",
+        "Core controls: text, image, icon, button, text field, toggle",
+        "Platform conventions: HIG and Material as design languages, and going from wireframe to component tree"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Compose a list and a detail view.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "UI = f(state). You describe the screen for the current data and the framework works out the changes. Screens are trees of small composable pieces.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "type Props = { title: string; category: string };\n\nexport function ReportCard({ title, category }: Props) {\n  return (\n    <View style={styles.card}>\n      <Text style={styles.title}>{title}</Text>\n      <Text style={styles.chip}>{category}</Text>\n    </View>\n  );\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "struct ReportRow: View {\n    let report: Report\n\n    var body: some View {\n        HStack(spacing: 12) {\n            Image(systemName: \"doc.text\")\n            VStack(alignment: .leading) {\n                Text(report.title).font(.headline)\n                Text(report.createdAt, style: .date)\n                    .foregroundStyle(.secondary)\n            }\n        }\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "La interfaz declarativa describe lo que aparece a partir de los datos disponibles.",
+      "topics_es": [
+        "Compón vistas pequeñas con responsabilidades visibles.",
+        "Pasa datos de entrada mediante propiedades.",
+        "El layout negocia espacio según contenido y restricciones.",
+        "Usa controles del sistema para acciones y entrada.",
+        "Compara una jerarquía de componentes con un flujo de pantallas."
+      ],
+      "title_es": "Interfaz declarativa: componentes y layout",
+      "title_en": "Declarative UI: components and layout",
+      "unit": 2,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Componer una lista y una vista de detalle.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w04",
+      "lab_es": "Componer una lista y una vista de detalle. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Compose a list and a detail view. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "What describes a declarative view?",
+        "question_es": "¿Qué describe una vista declarativa?",
+        "options_en": [
+          "A fixed screenshot",
+          "A description derived from current inputs and state",
+          "A sequence of manual drawing commands only",
+          "A database table"
+        ],
+        "options_es": [
+          "Una captura fija",
+          "Una descripción derivada de entradas y estado actuales",
+          "Solo una secuencia de dibujo manual",
+          "Una tabla de base de datos"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 5,
+      "topics_en": [
+        "State and inputs: what a component owns and what it receives",
+        "Single source of truth and one-way flow: lifting state, callbacks and bindings",
+        "Forms: controlled inputs, validation, disabled states, the keyboard",
+        "Touch: gestures, touch target size, pressed states, haptic feedback",
+        "Re-rendering: what triggers an update, and why in-place mutation does not"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Validate and save form inputs.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "state has exactly one owner. Data flows down, events flow up, and the UI re-renders from state, never from mutations it can't see.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "export function NewReport({ onSave }: Props) {\n  const [title, setTitle] = useState('');\n  const valid = isValidTitle(title);\n\n  return (\n    <View style={{ gap: 12 }}>\n      <TextInput value={title} onChangeText={setTitle}\n                 placeholder=\"¿Qué observaste?\" />\n      <Button title=\"Guardar\" disabled={!valid}\n              onPress={() => onSave(title.trim())} />\n    </View>\n  );\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "struct NewReportView: View {\n    @State private var title = \"\"\n    var onSave: (String) -> Void\n\n    var body: some View {\n        Form {\n            TextField(\"¿Qué observaste?\", text: $title)\n            Button(\"Guardar\") {\n                onSave(title.trimmingCharacters(\n                    in: .whitespacesAndNewlines))\n            }\n                .disabled(!isValidTitle(title))\n        }\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "El estado tiene un dueño. Los eventos modifican ese estado y la interfaz refleja el cambio.",
+      "topics_es": [
+        "Define qué vista es dueña del estado editable.",
+        "Pasa estado y acciones sin duplicar la fuente de verdad.",
+        "Modela campos válidos, vacíos y con error.",
+        "La validación de dominio debe funcionar fuera de la vista.",
+        "Comprueba el estado después de cada evento de usuario."
+      ],
+      "title_es": "Estado e interacción",
+      "title_en": "State and interaction",
+      "unit": 2,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Validar y guardar entradas del formulario.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w05",
+      "lab_es": "Validar y guardar entradas del formulario. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Validate and save form inputs. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "Two views show conflicting copies of the same field. What should change?",
+        "question_es": "Dos vistas muestran copias contradictorias del mismo campo. ¿Qué debe cambiar?",
+        "options_en": [
+          "Add another copy",
+          "Give the field one owner and pass updates through a contract",
+          "Refresh at random",
+          "Remove validation"
+        ],
+        "options_es": [
+          "Agregar otra copia",
+          "Asignar un dueño al campo y comunicar cambios mediante un contrato",
+          "Actualizar al azar",
+          "Quitar la validación"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 6,
+      "topics_en": [
+        "Lists at scale: virtualization, stable keys or `Identifiable`, empty states, pull to refresh",
+        "Navigation patterns: stack, tabs and modal, and when each fits",
+        "Passing data: an ID in the route, with the object looked up in state",
+        "Menus, toolbars and dialogs: confirming destructive actions, sheets",
+        "Platform differences: Android system back and predictive back, iOS swipe back; the explicit intent as the Android ancestor of \"push a screen\""
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Navigate between list and detail using stable identity.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "navigation is state, a stack of destinations plus tabs and modals that the user, the app or a URL can change. Lists recycle rows, so every row needs a stable identity.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "<FlatList\n  data={reports}\n  keyExtractor={r => r.id}\n  renderItem={({ item }) => (\n    <Link href={`/report/${item.id}`} asChild>\n      <Pressable>\n        <ReportCard title={item.title}\n                    category={item.category} />\n      </Pressable>\n    </Link>\n  )}\n/>\n// app/report/[id].tsx\nconst { id } = useLocalSearchParams<{ id: string }>();\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "NavigationStack {\n    List(reports) { report in\n        NavigationLink(value: report) {\n            ReportRow(report: report)\n        }\n    }\n    .navigationTitle(\"Reportes\")\n    .navigationDestination(for: Report.self) { report in\n        ReportDetail(report: report)\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "Una fila necesita identidad estable. La navegación guarda destinos y contexto.",
+      "topics_es": [
+        "Asigna una identidad estable a cada registro.",
+        "Carga listas sin construir todas las filas simultáneamente.",
+        "Representa los destinos de navegación y sus argumentos.",
+        "Confirma una acción destructiva y conserva contexto.",
+        "Comprueba búsqueda, edición y regreso a la lista."
+      ],
+      "title_es": "Listas y navegación",
+      "title_en": "Lists and navigation",
+      "unit": 2,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Navegar entre lista y detalle con identidad estable.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w06",
+      "lab_es": "Navegar entre lista y detalle con identidad estable. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Navigate between list and detail using stable identity. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A new row is inserted at the start of a list. Which key preserves record identity?",
+        "question_es": "Se inserta una fila al principio de una lista. ¿Qué clave conserva la identidad del registro?",
+        "options_en": [
+          "The row index",
+          "A stable unique record identifier",
+          "The current screen position",
+          "A random key on every render"
+        ],
+        "options_es": [
+          "El índice de la fila",
+          "Un identificador único y estable del registro",
+          "La posición actual en pantalla",
+          "Una clave aleatoria en cada render"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 7,
+      "topics_en": [
+        "Layers: view, state, domain and data, and the direction of dependencies",
+        "Shared state across screens without passing props through every level",
+        "Interfaces or protocols and dependency injection, with in-memory fakes for tests",
+        "Dependencies: package managers, semantic versioning, lockfiles, and the first formal use of the evaluation rubric",
+        "Code review: the PR description, small diffs, a checklist, and reviewing AI-generated code"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Separate the repository and test it with in-memory data.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "separate what changes for different reasons. Views render, a store owns app state, and a repository hides where the data lives. Boundaries make code testable and replaceable.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "ts",
+            "source": "import { create } from 'zustand';\n\ntype ReportState = {\n  reports: Report[];\n  add: (r: Report) => void;\n  remove: (id: string) => void;\n};\n\nexport const useReports = create<ReportState>()(set => ({\n  reports: [],\n  add: r => set(s => ({ reports: [...s.reports, r] })),\n  remove: id => set(s => ({\n    reports: s.reports.filter(r => r.id !== id) })),\n}));\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@Observable\nfinal class ReportStore {\n    private(set) var reports: [Report] = []\n    private let repo: ReportRepository\n\n    init(repo: ReportRepository) { self.repo = repo }\n\n    func add(_ report: Report) {\n        reports.append(report)\n        repo.save(report)\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "La vista coordina interacción. El dominio decide reglas y el repositorio abstrae los datos.",
+      "topics_es": [
+        "Separa presentación, dominio y acceso a datos.",
+        "Expresa dependencias mediante interfaces o protocolos.",
+        "Usa un repositorio en memoria para probar reglas.",
+        "Distingue estado de pantalla y estado de negocio.",
+        "Documenta una decisión arquitectónica y su costo."
+      ],
+      "title_es": "Arquitectura de la app",
+      "title_en": "App architecture",
+      "unit": 2,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Separar el repositorio y probarlo con datos en memoria.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w07",
+      "lab_es": "Separar el repositorio y probarlo con datos en memoria. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Separate the repository and test it with in-memory data. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "How can domain logic be tested without network access?",
+        "question_es": "¿Cómo puedes probar reglas de dominio sin conexión de red?",
+        "options_en": [
+          "Wait for the production server",
+          "Inject an in-memory repository with the same contract",
+          "Delete all domain checks",
+          "Put every rule inside the view"
+        ],
+        "options_es": [
+          "Esperar al servidor de producción",
+          "Inyectar un repositorio en memoria con el mismo contrato",
+          "Eliminar todas las comprobaciones",
+          "Poner cada regla en la vista"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 8,
+      "topics_en": [
+        "HTTP and REST as contracts: methods, status codes, JSON, OpenAPI as the spec",
+        "Asynchrony and the main thread: what ANR (Android) and watchdog termination (iOS) mean",
+        "Decoding and validating at the boundary",
+        "UI states with retry, and cancellation when leaving a screen",
+        "Auth headers and timeouts, and why an API key shipped in the app is public"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Represent loading, success, empty and error states.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "the network is slow, fallible and asynchronous. Every remote call has four outcomes (loading, success, empty, error) and must never block the UI thread. The API contract is a type that you validate at the boundary.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "useEffect(() => {\n  const ctrl = new AbortController();\n  setState({ kind: 'loading' });\n  fetchCategories(ctrl.signal)\n    .then(data => {\n      if (!ctrl.signal.aborted) {\n        setState(data.length ? { kind: 'ok', data }\n                             : { kind: 'empty' });\n      }\n    })\n    .catch(error => {\n      if (!ctrl.signal.aborted) {\n        setState({ kind: 'error', error });\n      }\n    });\n  return () => ctrl.abort();\n}, []);\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "struct Category: Decodable, Identifiable {\n    let id: String\n    let label: String\n}\n\nfunc fetchCategories() async throws -> [Category] {\n    let url = API.base.appending(path: \"categories\")\n    let (data, resp) = try await URLSession.shared\n        .data(from: url)\n    guard (resp as? HTTPURLResponse)?.statusCode == 200\n    else { throw URLError(.badServerResponse) }\n    return try JSONDecoder()\n        .decode([Category].self, from: data)\n}\n"
+          }
+        ]
+      },
+      "model_es": "Una solicitud remota puede tardar o fallar. La interfaz necesita estados de carga, éxito, vacío y error.",
+      "topics_es": [
+        "HTTP, códigos de estado y JSON forman un contrato.",
+        "Las operaciones asíncronas permiten atender interacción.",
+        "Valida el contenido externo antes de usarlo.",
+        "Representa carga, éxito, vacío y error con reintento.",
+        "Cancela solicitudes al abandonar su contexto."
+      ],
+      "title_es": "Red y asincronía",
+      "title_en": "Networking and asynchrony",
+      "unit": 3,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Representar carga, éxito, vacío y error de una solicitud.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w08",
+      "lab_es": "Representar carga, éxito, vacío y error de una solicitud. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Represent loading, success, empty and error states. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "The user leaves while a request is running. What protects the new screen state?",
+        "question_es": "El usuario sale mientras corre una solicitud. ¿Qué protege el estado de la nueva pantalla?",
+        "options_en": [
+          "Force success immediately",
+          "Cancel the request and ignore late results",
+          "Block navigation until it finishes",
+          "Treat every error as success"
+        ],
+        "options_es": [
+          "Forzar éxito inmediato",
+          "Cancelar la solicitud e ignorar resultados tardíos",
+          "Bloquear navegación hasta terminar",
+          "Tratar todo error como éxito"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 9,
+      "topics_en": [
+        "The storage spectrum (key-value, relational, files, secure storage), chosen by shape, size and sensitivity",
+        "Relational persistence on the device: schema, parameterized queries, or models and queries",
+        "Migrations: a versioned schema, and adding a field without losing data",
+        "Offline-first: the local database as the source of truth, a sync queue with statuses, and last-write-wins as the baseline conflict policy",
+        "The user session: token auth, secure storage, and logout clearing local data"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Preserve data across restarts and migrate the schema.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "the device is the first source of truth. Persist locally and sync opportunistically. Pick storage by the data's shape and sensitivity, and treat every schema change as a migration of real users' data.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "ts",
+            "source": "async function migrate(db: SQLiteDatabase) {\n  await db.withTransactionAsync(async () => {\n    const row = await db.getFirstAsync<{\n      user_version: number\n    }>('PRAGMA user_version');\n    let version = row?.user_version ?? 0;\n    if (version < 1) {\n      await db.execAsync(`CREATE TABLE report (\n        id TEXT PRIMARY KEY, title TEXT NOT NULL,\n        status TEXT NOT NULL)`);\n      version = 1;\n    }\n    if (version < 2) {\n      await db.execAsync(\n        'ALTER TABLE report ADD COLUMN photo TEXT');\n      version = 2;\n    }\n    await db.execAsync(`PRAGMA user_version = ${version}`);\n  });\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@Model\nfinal class Report {\n    var title: String\n    var status: String = \"pending\"\n    var createdAt: Date = Date.now\n    var photoPath: String?\n\n    init(title: String) { self.title = title }\n}\n\n@Query(sort: \\Report.createdAt, order: .reverse)\nprivate var reports: [Report]\n"
+          }
+        ]
+      },
+      "model_es": "La copia local y el servidor pueden divergir. Sincronizar requiere identificar cambios y resolver conflictos.",
+      "topics_es": [
+        "Elige almacenamiento según tamaño, estructura y sensibilidad.",
+        "Una migración debe preservar los registros existentes.",
+        "Modela altas y cambios pendientes de sincronización.",
+        "Resuelve conflictos con una política explícita.",
+        "Guarda credenciales en el almacenamiento seguro de la plataforma."
+      ],
+      "title_es": "Persistencia local y trabajo sin conexión",
+      "title_en": "Local persistence and offline work",
+      "unit": 3,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Conservar datos después de reiniciar y migrar el esquema.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w09",
+      "lab_es": "Conservar datos después de reiniciar y migrar el esquema. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Preserve data across restarts and migrate the schema. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A schema update fails halfway through. Which design preserves the old database?",
+        "question_es": "Una actualización del esquema falla a la mitad. ¿Qué diseño conserva la base anterior?",
+        "options_en": [
+          "Delete the database on startup",
+          "Apply schema changes and version update in one transaction",
+          "Raise the version before changing tables",
+          "Ignore the failure"
+        ],
+        "options_es": [
+          "Borrar la base al iniciar",
+          "Aplicar cambios de esquema y versión en una transacción",
+          "Aumentar la versión antes de cambiar tablas",
+          "Ignorar la falla"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 10,
+      "topics_en": [
+        "The permission model: declared purpose strings plus a runtime prompt; the states (not asked, granted, denied, limited); the denial path and a link to Settings",
+        "System picker or custom camera, chosen by least privilege",
+        "The capture pipeline: preview, capture, resize and compress, store in the sandbox, reference from the database",
+        "Image resources: density variants (`@2x`/`@3x`, `mdpi` to `xxxhdpi`), asset catalogs, caching",
+        "Sandbox directories: documents and cache, and cleaning up a report's files when it is deleted"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Attach a photo and handle denied permissions.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "device capabilities are permission-gated. Ask at the moment of need, explain why, handle denial, and prefer a system picker that needs no permission over full access (least privilege).",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "const [permission, requestPermission] = useCameraPermissions();\nconst camera = useRef<CameraView>(null);\n\nif (!permission) return null;          // aún cargando\nif (!permission.granted) {\n  return <Button title=\"Permitir cámara\"\n                 onPress={requestPermission} />;\n}\nreturn <CameraView ref={camera} style={{ flex: 1 }} />;\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@State private var item: PhotosPickerItem?\n\nPhotosPicker(\"Adjuntar foto\", selection: $item,\n             matching: .images)\n    .onChange(of: item) { _, newItem in\n        Task {\n            guard let data = try? await newItem?\n                .loadTransferable(type: Data.self)\n            else { return }\n            store.attachPhoto(data, to: report)\n        }\n    }\n"
+          }
+        ]
+      },
+      "model_es": "El acceso a medios depende del propósito. Un selector del sistema puede reducir permisos y exposición.",
+      "topics_es": [
+        "Distingue elegir una foto de capturar una nueva.",
+        "Solicita permisos cuando la función los necesita.",
+        "La negación debe dejar una ruta útil para el usuario.",
+        "Separa referencias a archivos de los datos del dominio.",
+        "Limpia archivos que dejan de pertenecer a un reporte."
+      ],
+      "title_es": "Cámara, fotos y archivos",
+      "title_en": "Camera, photos and files",
+      "unit": 3,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Adjuntar una foto y manejar permisos denegados.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w10",
+      "lab_es": "Adjuntar una foto y manejar permisos denegados. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Attach a photo and handle denied permissions. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "Camera permission is denied. What is a usable recovery?",
+        "question_es": "El permiso de cámara se rechaza. ¿Qué permite una recuperación útil?",
+        "options_en": [
+          "Crash the app",
+          "Explain the limitation and offer an allowed alternative",
+          "Request again in an endless loop",
+          "Pretend a photo was captured"
+        ],
+        "options_es": [
+          "Cerrar la app con una falla",
+          "Explicar el límite y ofrecer una alternativa permitida",
+          "Pedir el permiso en un ciclo infinito",
+          "Simular que se tomó una foto"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 11,
+      "topics_en": [
+        "Sensor families: motion (accelerometer, gyroscope, magnetometer), environment (barometer, light), position; units and coordinate frames",
+        "Streams: subscribe, sampling rate, cleanup, low-pass filtering",
+        "Location: accuracy against battery, foreground and background access, approximate and precise permission",
+        "Maps: markers, regions, opening the detail from a marker; geocoding as a network call",
+        "Testing with simulated data: simulated locations, recorded samples as test fixtures"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Record samples with units and cancel subscriptions.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "a sensor is a stream of noisy, timestamped samples. You trade sampling rate and accuracy against battery and privacy, filter the noise, and always unsubscribe.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "useEffect(() => {\n  Accelerometer.setUpdateInterval(100);   // ms\n  const sub = Accelerometer.addListener(({ x, y, z }) => {\n    const rad = Math.atan2(y, Math.hypot(x, z));\n    setTilt(lowPass(rad * 180 / Math.PI));\n  });\n  return () => sub.remove();\n}, []);\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": ".task {\n    do {\n        let updates = CLLocationUpdate.liveUpdates()\n        for try await update in updates {\n            guard let loc = update.location else { continue }\n            draft.coordinate = loc.coordinate\n            break        // una lectura basta para el reporte\n        }\n    } catch {\n        draft.locationError = error\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "Un sensor produce muestras con unidades, ruido y costo de energía. La precisión debe comprobarse.",
+      "topics_es": [
+        "Expresa muestras con unidades y marcos de referencia.",
+        "El intervalo de muestreo afecta ruido y energía.",
+        "Comprueba una lectura contra una referencia conocida.",
+        "Solicita ubicación con alcance proporcional a la función.",
+        "Detén la suscripción cuando la pantalla deja de usarla."
+      ],
+      "title_es": "Sensores y ubicación",
+      "title_en": "Sensors and location",
+      "unit": 3,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Registrar muestras con unidades y cancelar suscripciones.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w11",
+      "lab_es": "Registrar muestras con unidades y cancelar suscripciones. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Record samples with units and cancel subscriptions. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A sensor value fluctuates around a reference. What should be checked?",
+        "question_es": "Un sensor fluctúa alrededor de una referencia. ¿Qué debes comprobar?",
+        "options_en": [
+          "Only the color of the number",
+          "Units, sampling, noise and comparison with the reference",
+          "Only the dependency popularity",
+          "Whether the title is short"
+        ],
+        "options_es": [
+          "Solo el color del número",
+          "Unidades, muestreo, ruido y comparación con la referencia",
+          "Solo la popularidad de la dependencia",
+          "Si el título es corto"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 12,
+      "topics_en": [
+        "Notifications: local and push, permission, Android channels, routing a tap to a screen",
+        "Deep links: custom schemes and verified links (App Links, Universal Links); the implicit intent as their ancestor",
+        "Sharing: the share sheet going out, system pickers as the consumer side of content providers",
+        "System events: connectivity and app state; Android's broadcast restrictions since 8.0 and iOS observers",
+        "Background work: what each OS allows (WorkManager and foreground services, BGTaskScheduler); widgets as additional entry points",
+        "When the default setup is not enough: development builds instead of Expo Go (RN), capabilities and entitlements (SwiftUI)"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Open a report through a validated link.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "an app talks to the rest of the system through a few doors: notifications and links come in, the share sheet goes out, system events come in, and background time is granted by the OS, never taken.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "ts",
+            "source": "const Trigger = Notifications.SchedulableTriggerInputTypes;\n\nawait Notifications.scheduleNotificationAsync({\n  content: {\n    title: 'Reporte pendiente',\n    body: report.title,\n    data: { url: `bitacora://report/${report.id}` },\n  },\n  trigger: { type: Trigger.TIME_INTERVAL, seconds: 3600 },\n});\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": ".onOpenURL { url in\n    // bitacora://report/<uuid>\n    guard url.scheme == \"bitacora\",\n          url.host() == \"report\",\n          let id = UUID(uuidString: url.lastPathComponent)\n    else { return }\n    path.append(id)\n}\n"
+          }
+        ]
+      },
+      "model_es": "La app delega tareas al sistema y a otras apps mediante contratos y límites verificables.",
+      "topics_es": [
+        "Delega compartir y abrir enlaces al sistema.",
+        "Valida argumentos de enlaces antes de navegar.",
+        "Una notificación requiere contexto y control del usuario.",
+        "El trabajo en segundo plano depende de un presupuesto del sistema.",
+        "Guarda progreso para reintentos e interrupciones.",
+        "Compara contratos equivalentes en Android e iOS."
+      ],
+      "title_es": "Integración con el sistema",
+      "title_en": "System integration",
+      "unit": 3,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Abrir un reporte mediante un enlace validado.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w12",
+      "lab_es": "Abrir un reporte mediante un enlace validado. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Open a report through a validated link. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A link uses an unexpected scheme but a familiar host. What should the app do?",
+        "question_es": "Un enlace usa un esquema inesperado y un host conocido. ¿Qué debe hacer la app?",
+        "options_en": [
+          "Accept the host alone",
+          "Validate scheme and arguments before navigating",
+          "Execute every argument",
+          "Disable all navigation permanently"
+        ],
+        "options_es": [
+          "Aceptar solo por el host",
+          "Validar esquema y argumentos antes de navegar",
+          "Ejecutar todos los argumentos",
+          "Desactivar toda navegación permanentemente"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 13,
+      "topics_en": [
+        "Semantics: labels, roles or traits, grouping and focus order, tested with TalkBack and VoiceOver",
+        "Visual accessibility: text scaling, contrast, touch targets (44 pt on iOS, 48 dp on Android), reduced motion",
+        "Localization: external strings, plurals, locale formats for dates, numbers and units",
+        "Adaptive layout: safe areas, orientation, tablets and foldables, iPad windows, dark mode",
+        "Auditing: Accessibility Inspector, Android Accessibility Scanner, automated audits in UI tests"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Complete the flow with a screen reader and two languages.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "the same app must work for every user and every screen. That takes semantics for assistive technology, text that scales, strings that translate and layouts that adapt.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "<Pressable\n  onPress={confirmDelete}\n  accessibilityRole=\"button\"\n  accessibilityLabel={t('report.delete', { title: r.title })}\n  hitSlop={8}\n>\n  <Ionicons name=\"trash\" size={24} />\n</Pressable>\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@Environment(\\.horizontalSizeClass) private var size\n\nvar body: some View {\n    if size == .regular {\n        NavigationSplitView {\n            ReportList()\n        } detail: {\n            ReportDetailPlaceholder()\n        }\n    } else {\n        NavigationStack { ReportList() }\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "La interfaz debe adaptarse a necesidades de acceso, idioma y tamaño de pantalla.",
+      "topics_es": [
+        "Cada control necesita nombre, rol y estado comprensibles.",
+        "Comprueba el flujo completo con un lector de pantalla.",
+        "Permite aumentar texto sin perder acciones.",
+        "Separa mensajes traducibles de la lógica.",
+        "Prueba layout en tamaños y orientaciones diferentes."
+      ],
+      "title_es": "Accesibilidad, idiomas y pantallas",
+      "title_en": "Accessibility, languages and screens",
+      "unit": 4,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Completar el flujo con lector de pantalla y dos idiomas.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w13",
+      "lab_es": "Completar el flujo con lector de pantalla y dos idiomas. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Complete the flow with a screen reader and two languages. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "An icon-only delete button has no accessible name. What fixes the missing information?",
+        "question_es": "Un botón de borrar con solo un icono carece de nombre accesible. ¿Qué corrige esa falta?",
+        "options_en": [
+          "Add a larger shadow",
+          "Provide a meaningful accessible name and role",
+          "Change the icon color alone",
+          "Remove it from the screen-reader flow"
+        ],
+        "options_es": [
+          "Agregar una sombra mayor",
+          "Proporcionar nombre accesible significativo y rol",
+          "Cambiar solo el color del icono",
+          "Quitar el botón del flujo del lector"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 14,
+      "topics_en": [
+        "The testing pyramid and what each level catches",
+        "Test doubles: a fake repository, a mocked network, deterministic time and IDs",
+        "UI tests that query by role and label, so accessibility pays off twice",
+        "Debugging and profiling: breakpoints, logs, network inspection, render and frame profiling",
+        "Continuous integration: type check, lint and tests on every PR, with a protected main branch",
+        "Production observability: crash reports and logs with consent"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Fix a defect and add a regression test.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "tests are executable specifications at different costs: many fast unit tests, fewer component tests, a handful of end-to-end flows, and checks on a real device. CI makes \"it works on my machine\" irrelevant.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "tsx",
+            "source": "test('save is disabled until the title is valid', () => {\n  render(<NewReport onSave={jest.fn()} />);\n  const save = screen.getByRole('button', { name: 'Guardar' });\n  expect(save).toBeDisabled();\n\n  fireEvent.changeText(\n    screen.getByPlaceholderText('¿Qué observaste?'), 'Fuga');\n  expect(save).toBeEnabled();\n});\n"
+          },
+          {
+            "lang": "yaml",
+            "source": "appId: dev.tunombre.bitacora\n---\n- launchApp\n- tapOn: \"Nuevo reporte\"\n- inputText: \"Fuga en laboratorio\"\n- tapOn: \"Guardar\"\n- assertVisible: \"Fuga en laboratorio\"\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "@Test(arguments: [\"\", \"   \", \"ab\"])\nfunc shortTitlesAreInvalid(title: String) {\n    #expect(isValidTitle(title) == false)\n}\n\n"
+          },
+          {
+            "lang": "swift",
+            "source": "func testCreateReport() throws {\n    let app = XCUIApplication()\n    app.launch()\n    app.buttons[\"Nuevo reporte\"].tap()\n    let field = app.textFields[\"¿Qué observaste?\"]\n    field.tap()\n    field.typeText(\"Fuga\")\n    app.buttons[\"Guardar\"].tap()\n    XCTAssertTrue(app.staticTexts[\"Fuga\"].exists)\n}\n"
+          }
+        ]
+      },
+      "model_es": "Las pruebas aportan evidencia en distintos niveles. Una compilación verde no garantiza una experiencia correcta.",
+      "topics_es": [
+        "Prueba reglas de negocio con funciones y repositorios falsos.",
+        "Prueba componentes mediante acciones y resultados visibles.",
+        "Verifica un flujo crítico de principio a fin.",
+        "Una regresión necesita una prueba que fallaba antes de corregirla.",
+        "La integración continua debe poder partir de un clon limpio.",
+        "Mide rendimiento y accesibilidad además de compilar."
+      ],
+      "title_es": "Calidad: pruebas, depuración e integración continua",
+      "title_en": "Quality: testing, debugging and CI",
+      "unit": 4,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Corregir una falla y agregar una prueba de regresión.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w14",
+      "lab_es": "Corregir una falla y agregar una prueba de regresión. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Fix a defect and add a regression test. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "Which test demonstrates that a defect was fixed?",
+        "question_es": "¿Qué prueba demuestra que una falla se corrigió?",
+        "options_en": [
+          "One that passes before and after without checking the defect",
+          "One that fails on the defect and passes on the corrected behavior",
+          "A screenshot with no acceptance criterion",
+          "A count of source files"
+        ],
+        "options_es": [
+          "Una que pasa antes y después sin comprobar la falla",
+          "Una que falla con el defecto y pasa con el comportamiento corregido",
+          "Una captura sin criterio de aceptación",
+          "Un conteo de archivos fuente"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 15,
+      "topics_en": [
+        "Signing: the upload key and Play App Signing; certificates and provisioning profiles; what each one protects",
+        "Build variants and configuration: development, preview and production, and what ends up inside the bundle",
+        "Versioning: semantic versions for people, build numbers for stores (`versionName`/`versionCode`, `CFBundleShortVersionString`/`CFBundleVersion`)",
+        "Store requirements: privacy labels and the Data safety form, privacy manifests, permission justifications, account deletion, review guidelines",
+        "Distribution: internal testing, TestFlight, staged rollout, over-the-air updates and their limits",
+        "Security baseline: OWASP MASVS categories, TLS and App Transport Security, secure storage, no secrets in the bundle"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Prepare a signed build for test distribution.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "shipping is a pipeline of identity and signing, build variants, versioning, privacy disclosures, testers, staged release and updates. Security starts from assuming an attacker will read the binary.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "json",
+            "source": "{\n  \"build\": {\n    \"development\": { \"developmentClient\": true,\n                     \"distribution\": \"internal\" },\n    \"preview\": { \"distribution\": \"internal\",\n                 \"android\": { \"buildType\": \"apk\" } },\n    \"production\": { \"autoIncrement\": true }\n  }\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "xml",
+            "source": "<key>NSPrivacyAccessedAPITypes</key>\n<array>\n  <dict>\n    <key>NSPrivacyAccessedAPIType</key>\n    <string>NSPrivacyAccessedAPICategoryUserDefaults</string>\n    <key>NSPrivacyAccessedAPITypeReasons</key>\n    <array><string>CA92.1</string></array>\n  </dict>\n</array>\n"
+          }
+        ]
+      },
+      "model_es": "La publicación distribuye software y también compromisos de privacidad, seguridad y mantenimiento.",
+      "topics_es": [
+        "Mantén secretos fuera del código distribuido.",
+        "Recolecta solo datos necesarios para una finalidad definida.",
+        "Relaciona cada permiso con una función visible.",
+        "Distingue firma, distribución de prueba y publicación.",
+        "Documenta dependencias, versión y procedimientos de recuperación.",
+        "Prepara evidencias de privacidad y mantenimiento."
+      ],
+      "title_es": "Seguridad, privacidad y publicación",
+      "title_en": "Security, privacy and release",
+      "unit": 4,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Preparar una compilación firmada para distribución de prueba.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w15",
+      "lab_es": "Preparar una compilación firmada para distribución de prueba. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Prepare a signed build for test distribution. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A secret API key is embedded in the app bundle. What should be assumed?",
+        "question_es": "Una clave secreta está incluida en el paquete de la app. ¿Qué debes asumir?",
+        "options_en": [
+          "The filename keeps it private",
+          "A recipient can extract it; use server authorization",
+          "Minification is encryption",
+          "The app store hides it permanently"
+        ],
+        "options_es": [
+          "El nombre del archivo la mantiene privada",
+          "El receptor puede extraerla; usa autorización en el servidor",
+          "La minificación es cifrado",
+          "La tienda la oculta permanentemente"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 16,
+      "topics_en": [
+        "The evaluation rubric and the ADR (context, options, decision, consequences, review date)",
+        "Hybrid and web: WebView shells (from Cordova to Capacitor), PWAs, and when each is the right answer",
+        "The cross-platform landscape as a decision: RN, Flutter, Kotlin and Compose Multiplatform, Swift outside Apple platforms (verify status), and native",
+        "Going below the framework: native modules (RN), UIKit interop and Swift packages (SwiftUI)",
+        "Current trends run through the rubric: on-device AI, new form factors (wearables, foldables, XR), design-language shifts (Liquid Glass in iOS 26, Material 3 Expressive), passkeys"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Evaluate a tool using a reversible pilot.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "tools are instances of concepts. You evaluate any new one with a fixed rubric, a timeboxed spike and a written decision record that carries a review date.",
+      "codes": {
+        "react-native": [
+          {
+            "lang": "swift",
+            "source": "import ExpoModulesCore\n\npublic class PowerModule: Module {\n  public func definition() -> ModuleDefinition {\n    Name(\"Power\")\n    Function(\"isLowPowerMode\") {\n      ProcessInfo.processInfo.isLowPowerModeEnabled\n    }\n  }\n}\n"
+          },
+          {
+            "lang": "kotlin",
+            "source": "class PowerModule : Module() {\n  override fun definition() = ModuleDefinition {\n    Name(\"Power\")\n    Function(\"isLowPowerMode\") {\n      val ctx = appContext.reactContext\n        ?: return@Function false\n      val pm = ctx.getSystemService(Context.POWER_SERVICE)\n        as PowerManager\n      pm.isPowerSaveMode\n    }\n  }\n}\n"
+          }
+        ],
+        "swift": [
+          {
+            "lang": "swift",
+            "source": "struct ToolPilot {\n    let minimumSuccessRate: Double\n\n    func shouldStop(_ successRate: Double) -> Bool {\n        successRate < minimumSuccessRate\n    }\n}\n"
+          }
+        ]
+      },
+      "model_es": "Una herramienta se evalúa contra un problema y evidencia de una prueba con criterios definidos.",
+      "topics_es": [
+        "Define el problema antes de elegir una dependencia.",
+        "Compara funcionalidad, integración, mantenimiento y salida.",
+        "Escribe criterios y una regla de suspensión del piloto.",
+        "Prueba una función nativa pequeña sin trasladar todo el dominio.",
+        "Conserva la opción de sustituir la herramienta."
+      ],
+      "title_es": "Evaluar la siguiente herramienta",
+      "title_en": "Evaluating the next tool",
+      "unit": 4,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Evaluar una herramienta con un piloto reversible.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w16",
+      "lab_es": "Evaluar una herramienta con un piloto reversible. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Evaluate a tool using a reversible pilot. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Aplica la función de la sesión al proyecto Bitácora. Agrega una prueba o una comprobación reproducible y explica una decisión en el README.",
+      "homework_en": "Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.",
+      "quiz": {
+        "question_en": "A tool reduces handling time but exceeds the agreed error limit. What is the justified pilot decision?",
+        "question_es": "Una herramienta reduce tiempo y supera el límite de errores acordado. ¿Qué decisión corresponde al piloto?",
+        "options_en": [
+          "Adopt it because it is faster",
+          "Stop and investigate the quality failure",
+          "Hide the error metric",
+          "Change the limit after seeing the result"
+        ],
+        "options_es": [
+          "Adoptarla porque es más rápida",
+          "Detenerse e investigar la falla de calidad",
+          "Ocultar la métrica de errores",
+          "Cambiar el límite después de ver el resultado"
+        ],
+        "answer": "B"
+      }
+    },
+    {
+      "n": 17,
+      "topics_en": [
+        "The sixteen mental models, one slide each, with the instance taught for each",
+        "The final exam format and rules",
+        "A walkthrough of a sample maintenance ticket",
+        "A course retrospective: what changed in the stack during the term, and how the annex recorded it"
+      ],
+      "objectives_en": [
+        "Explain the session model using a Bitácora example.",
+        "Resolve and defend a maintenance ticket.",
+        "Compare the implementation decision on Android and iOS.",
+        "Submit reproducible evidence and explain the code used."
+      ],
+      "model_en": "the sixteen models reviewed as one map, from device constraints to the evaluation method.",
+      "codes": {
+        "react-native": [],
+        "swift": []
+      },
+      "model_es": "La evaluación final combina mantenimiento de código, explicación y transferencia a un caso nuevo.",
+      "topics_es": [
+        "Ubica el alcance acumulativo y los criterios de calificación.",
+        "Resuelve una falla mediante evidencia reproducible.",
+        "Implementa una mejora usando contratos existentes.",
+        "Defiende una decisión y sus límites."
+      ],
+      "title_es": "Examen final",
+      "title_en": "Final exam",
+      "unit": 4,
+      "objectives_es": [
+        "Explicar el modelo de la sesión con un ejemplo de Bitácora.",
+        "Resolver y defender un ticket de mantenimiento.",
+        "Comparar la decisión de implementación en Android e iOS.",
+        "Entregar evidencia reproducible y explicar el código utilizado."
+      ],
+      "label": "w17",
+      "lab_es": "Resolver y defender un ticket de mantenimiento. Entrega un commit identificable y evidencia del resultado.",
+      "lab_en": "Resolve and defend a maintenance ticket. Submit an identifiable commit and evidence of the result.",
+      "homework_es": "Cierra la entrega final con el registro de pruebas y la explicación de decisiones. No hay tarea adicional después de la evaluación final.",
+      "homework_en": "Close the final submission with the test record and decision explanations. There is no additional homework after the final assessment.",
+      "quiz": {
+        "question_en": "An unfamiliar app has a reproducible defect. What is the first useful maintenance step?",
+        "question_es": "Una app desconocida tiene una falla reproducible. ¿Cuál es el primer paso útil de mantenimiento?",
+        "options_en": [
+          "Rewrite the entire app immediately",
+          "Reproduce the defect and identify a failing check",
+          "Upgrade every dependency at once",
+          "Remove the affected feature without evidence"
+        ],
+        "options_es": [
+          "Reescribir toda la app inmediatamente",
+          "Reproducir la falla e identificar una comprobación que falla",
+          "Actualizar todas las dependencias a la vez",
+          "Quitar la función afectada sin evidencia"
+        ],
+        "answer": "B"
+      }
+    }
+  ]
+}

@@ -154,11 +154,11 @@ slides:
 
             void OnEnable() =>
                 planes.trackablesChanged.AddListener(OnChanged);
+            void OnDisable() =>
+                planes.trackablesChanged.RemoveListener(OnChanged);
 
-            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e)
-            {
+            void OnChanged(ARTrackablesChangedEventArgs<ARPlane> e) =>
                 Debug.Log($"+{e.added.Count} ~{e.updated.Count}");
-            }
         }
       annotations:
         - label: One event
@@ -175,8 +175,8 @@ slides:
             writing AddListener at all.
         - label: Risk
           text: >-
-            Add the listener in OnEnable and remove it in OnDisable, or re-enabling the
-            script adds another.
+            Without OnDisable, the manager can keep notifying a disabled
+            component.
           accent: true
 
   - code_output:
@@ -292,7 +292,7 @@ slides:
             Position and rotation arrive together, so the object lands aligned with the surface.
         - label: Risk
           text: >-
-            On a false the list keeps its old contents, so read it only after a true.
+            Read the hit list only when Raycast returns true; false means there was no valid result.
           accent: true
 
   - pitfalls:

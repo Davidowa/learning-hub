@@ -199,7 +199,7 @@ slides:
         void OnCollisionEnter(Collision hit)
         {
             float t = Time.time - start;
-            int steps = (int)(t / Time.fixedDeltaTime);
+            int steps = Mathf.RoundToInt(t / Time.fixedDeltaTime);
             Debug.Log($"drop height 2.00 m");
             Debug.Log($"first contact {t:F2} s");
             Debug.Log($"fixed steps {steps}");
@@ -391,7 +391,7 @@ slides:
         in Prefab Mode and report which instances followed.
       blocks:
         - label: Deliverable
-          text: The console output for three crates, plus the mass of each instance afterwards
+          text: The console output for three crates, plus the mass of each instance afterward
         - label: Constraint
           text: >-
             One prefab and three instances. Editing a crate directly in the Hierarchy is what

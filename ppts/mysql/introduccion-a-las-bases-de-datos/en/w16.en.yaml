@@ -404,37 +404,42 @@ slides:
         connection to MySQL server
         during query
 
-  - code_output:
-      eyebrow: Measured · the retry
-      title: The handler from week 13, set to catch the 1213
-      filename: reintento.sql
+  - code:
+      eyebrow: Reproducible example
+      title: Retry a whole attempt
+      filename: retry.sql
       lang: sql
-      output_label: Output
       source: |
         DECLARE v_intentos INT DEFAULT 0;
         DECLARE v_falla INT DEFAULT 0;
-        DECLARE CONTINUE HANDLER FOR SQLSTATE '40001'
-          BEGIN ROLLBACK; SET v_falla = 1; END;
-
         reintenta: LOOP
           SET v_falla = 0, v_intentos = v_intentos + 1;
-          START TRANSACTION;
-          UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = p_primera;
-          UPDATE alumno SET credito_maximo = credito_maximo + 100
-            WHERE alumno_id = p_segunda;
-          IF v_falla = 0 THEN COMMIT; LEAVE reintenta; END IF;
-        END LOOP;
-      output: |
-        session A
-          intentos          1
-          quedo_fallando    0
-        session B
-          intentos          2
-          quedo_fallando    0
+          BEGIN
+            DECLARE EXIT HANDLER FOR SQLSTATE '40001'
+            BEGIN ROLLBACK; SET v_falla = 1; END;
+            START TRANSACTION;
+            UPDATE alumno SET credito_maximo = credito_maximo + 100
+              WHERE alumno_id = p_primera;
+            UPDATE alumno SET credito_maximo = credito_maximo + 100
+              WHERE alumno_id = p_segunda;
+      notes: "The two cards form a procedure body with p_primera and p_segunda parameters. EXIT leaves the attempt block after a deadlock, preventing the second write from running outside the transaction. The cap prevents infinite retries."
 
-        row 1      15600.00
-        row 2      12600.00
+  - code:
+      eyebrow: Reproducible example
+      title: Finish the attempt or stop retrying
+      filename: retry.sql
+      lang: sql
+      source: |
+        -- Continuation of the preceding card
+            COMMIT;
+          END;
+          IF v_falla = 0 THEN LEAVE reintenta; END IF;
+          IF v_intentos >= 3 THEN
+            SIGNAL SQLSTATE '45000'
+              SET MESSAGE_TEXT = 'Retry limit reached';
+          END IF;
+        END LOOP;
+      notes: "The two cards form a procedure body with p_primera and p_segunda parameters. EXIT leaves the attempt block after a deadlock, preventing the second write from running outside the transaction. The cap prevents infinite retries."
 
   - pitfalls:
       eyebrow: Common errors

@@ -158,6 +158,32 @@ slides:
         - ["QGridLayout", "In rows and columns", "Boards and calculators"]
         - ["QFormLayout", "Label and field per line", "Data entry forms"]
 
+  - code:
+      eyebrow: Form and list
+      title: Labeling a field and showing records
+      filename: form.py
+      lang: python
+      source: |
+        from PyQt6.QtWidgets import QFormLayout, QListWidget
+
+        central = QWidget(self)
+        form = QFormLayout()
+        self.entry = QLineEdit()
+        form.addRow("User", self.entry)
+        self.list = QListWidget()
+        column = QVBoxLayout(central)
+        column.addLayout(form)
+        column.addWidget(self.list)
+        self.list.addItem("Ana")
+        self.setCentralWidget(central)
+      annotations:
+      - label: addRow
+        text: Pairs the label and the field in one row.
+      - label: addItem
+        text: Adds the text of a record to the list.
+      notes: This fragment belongs inside the window constructor. QWidget, QLineEdit, and QVBoxLayout continue the earlier examples.
+        Ana is demonstration data; the button slot uses the validated entry text.
+
   - divider:
       eyebrow: Block 02
       title: Integrating components

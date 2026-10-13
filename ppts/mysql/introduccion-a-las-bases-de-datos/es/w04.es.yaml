@@ -121,8 +121,10 @@ slides:
         - ["materia", "clave, nombre, creditos", "clave"]
         - ["profesor", "nombre, departamento_id", "profesor_id"]
         - ["departamento", "nombre, ubicacion", "departamento_id"]
-        - ["inscripcion", "periodo, calificacion", "alumno_id + materia_id"]
-        - ["credencial", "folio, vigencia", "alumno_id"]
+        - ["inscripcion", "periodo, calificacion", "matricula + clave + periodo"]
+        - ["credencial", "matricula, vigencia", "folio"]
+
+      notes: "El dominio conserva matrícula y clave como identificadores naturales. Los ejemplos SQL posteriores muestran una alternativa con alumno_id y materia_id como claves sustitutas. El nombre alumno_materia describe la tabla puente que el dominio llama inscripcion; elige una convención y mantenla en tu diseño."
 
   - method:
       eyebrow: Bloque 01 · Nombrar
@@ -288,7 +290,7 @@ slides:
       title: En qué se convierte cada línea del diagrama
       headers: [Cardinalidad, Ejemplo del control escolar, Forma física]
       rows:
-        - ["0:1", "Alumno tiene Credencial", "FK nullable más UNIQUE"]
+        - ["0:1", "Alumno tiene Credencial", "Credencial.matricula NOT NULL UNIQUE + FK"]
         - ["1:1", "Profesor dirige Departamento", "FK NOT NULL más UNIQUE"]
         - ["1:N", "Profesor imparte Materia", "FK del lado muchos"]
         - ["N:M", "Alumno se inscribe en Materia", "Tabla con la PK del par"]

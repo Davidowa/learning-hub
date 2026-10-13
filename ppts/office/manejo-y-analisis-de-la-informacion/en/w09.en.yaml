@@ -53,7 +53,7 @@ slides:
         - head: Remove duplicates on the right columns
           sub: Ticking all seven columns and ticking one are two different questions with two different answers
         - head: Sort on more than one level
-          sub: In the Sort dialog, where the levels stay written down for whoever reads the file afterwards
+          sub: In the Sort dialog, where the levels stay written down for whoever reads the file afterward
         - head: Filter, inspect and hand the workbook over
           sub: AutoFilter, workbook properties, the Document Inspector and the version list
 
@@ -144,7 +144,7 @@ slides:
 
   - table:
       eyebrow: Block 01 · The preview window
-      title: Three lists, and what each one decides
+      title: Import settings and loading commands
       headers: [List, What you are choosing, When it bites]
       rows:
         - ["File Origin", "The byte table the file was written with", "Accented text"]
@@ -158,6 +158,7 @@ slides:
       title: The File Origin list is not decoration
       filename: Students_data.csv
       lang: text
+      notes: "Decoding example: Windows-1252 bytes read as UTF-8 with replacement on errors. The displayed glyph depends on the import route."
       output_label: What lands in the cells
       source: |
         The ñ of España is stored as one byte, F1. That is
@@ -173,8 +174,8 @@ slides:
         Iñaki    España    Bilbao
         Björn    Suecia    Västerås
         File Origin: 65001 UTF-8
-        I?aki    Espa?a    Bilbao
-        Bj?rn    Suecia    V?ster?s
+        I�aki    Espa�a    Bilbao
+        Bj�rn    Suecia    V�ster�s
 
   - steps:
       eyebrow: Block 01 · A .txt is a different route
@@ -229,7 +230,7 @@ slides:
         - label: The key
           text: Ctrl+E fills the column by pattern from wherever the cursor sits. That single key is the whole objective.
         - label: The condition
-          text: The new column has to be immediately beside the source column, and the data needs a header row. Flash Fill does not look further away.
+          text: Put the result beside the source data and enter a clear example. Flash Fill can use more than one source column.
         - label: The tell
           text: Click a filled cell. The formula bar shows a constant. A LEFT and FIND chain would show a formula, and it answers a different objective.
 
@@ -302,7 +303,7 @@ slides:
       rows:
         - ["Sort by", "Last name", "Cell Values", "A to Z"]
         - ["Then by", "Country of origin", "Cell Values", "A to Z"]
-        - ["Then by", "Average", "Cell Values", "Ask"]
+        - ["Then by", "Average", "Cell Values", "Not specified"]
         - ["Proof", "Reopen the dialog", "Three levels", "In order"]
 
   - steps:
@@ -343,16 +344,16 @@ slides:
       lang: excel
       source: |
         Allow:   Custom
-        Formula: =B2<=A2*0.1
+        Formula: =D2<=C2*0.1
 
-        A2 is the salary, B2 is the bonus.
+        C2 is the salary, D2 is the bonus.
         Write the formula for the top left cell
         of the selection. Excel shifts it across
         the rest exactly as a copied formula shifts,
-        so B3 gets =B3<=A3*0.1 without you typing it.
+        so D3 gets =D3<=C3*0.1 without you typing it.
       annotations:
         - label: Why Custom
-          text: Allow has seven other entries. Only this one can compare against another cell.
+          text: Custom accepts a formula that returns TRUE or FALSE.
         - label: How it spreads
           text: Write it for the top left cell of the selection. Excel shifts it across the rest.
         - label: The other four
@@ -399,7 +400,7 @@ slides:
 
   - steps:
       eyebrow: Block 03 · File, Info
-      title: Three things the backstage pane knows
+      title: Workbook information and recovery
       items:
         - label: '01'
           title: Properties
@@ -439,8 +440,8 @@ slides:
         - label: Error 04
           title: Filtering and then reading the total
           desc: >-
-            A plain SUM under a filtered list still adds the hidden rows. The status bar
-            count at the bottom left is the number that respects the filter.
+            A plain SUM under a filtered list still adds the hidden rows. Select the visible numbers and read Sum
+            at the bottom right of the status bar.
 
   - quiz:
       eyebrow: Quick check
@@ -477,7 +478,7 @@ slides:
         - title: The ticked columns are the question
           desc: >-
             Remove Duplicates deletes what you defined as a duplicate. On the same 26 rows,
-            all seven columns leave 24 students and one column leaves 19
+            all seven columns leave 24 students and Country of origin alone leaves 19
         - title: A filter hides, it does not delete
           desc: >-
             The row numbers turn blue and skip. The status bar counts what survived, and
@@ -487,7 +488,7 @@ slides:
       eyebrow: Assignment
       title: Exercise 14, submission and grading
       brief: >-
-        The three sheets of Excel 14. Duplicates on the Name column, then on the whole row,
+        The three sheets of Excel 14. Duplicates on Name, then whole records whose Name repeats,
         then on names and car models together. The import and the two sorts. The five
         validation rules, including the bonus capped at a tenth of the salary.
       meta:

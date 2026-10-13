@@ -318,6 +318,28 @@ slides:
         - title: El igual no copia, comparte
           desc: Dos nombres sobre la misma lista se ven idénticos hasta que uno de los dos escribe
 
+  - code:
+      eyebrow: Medición
+      title: Medir la misma búsqueda repetida
+      filename: medir.py
+      lang: python
+      source: |
+        from time import perf_counter
+
+        inicio = perf_counter()
+        for _ in range(10000):
+            encontrado = "X1" in productos
+        segundos = perf_counter() - inicio
+        print(f"{segundos:.6f} s")
+      annotations:
+      - label: perf_counter
+        text: Mide segundos transcurridos con un reloj monotónico.
+      - label: Comparación
+        text: Repite con lista y diccionario, usando los mismos datos.
+      notes: productos contiene las claves de prueba como lista o diccionario. La medición repite la operación para reducir
+        el peso relativo del reloj. Reporta varias corridas, la misma cantidad de búsquedas y el mismo equipo. Este código no
+        promete un tiempo específico.
+
   - homework:
       eyebrow: Tarea
       title: Entrega y criterios de evaluación

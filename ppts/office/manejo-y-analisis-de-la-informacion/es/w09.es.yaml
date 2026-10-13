@@ -35,7 +35,7 @@ slides:
       title: Cuatro momentos de la sesión
       cards:
         - title: Cómo entran
-          desc: Desde Desde el texto/CSV, el asistente heredado para un .txt y Relleno rápido para la columna que llegó pegada
+          desc: Desde el texto/CSV, el asistente heredado para un .txt y Relleno rápido para la columna que llegó pegada
         - title: Comprobar que están limpios
           desc: Quitar duplicados, ordenar por niveles y la regla que impide que se escriba el valor equivocado
         - title: Encontrar las filas
@@ -147,7 +147,7 @@ slides:
 
   - table:
       eyebrow: Bloque 01 · La ventana de vista previa
-      title: Tres listas, y qué decide cada una
+      title: Opciones de importación y comandos de carga
       headers: ["Lista", "Qué estás eligiendo", "Cuándo duele"]
       rows:
         - ["Origen del archivo", "La tabla de bytes del archivo", "Texto con acentos"]
@@ -161,6 +161,7 @@ slides:
       title: La lista Origen del archivo no es adorno
       filename: Students_data.csv
       lang: text
+      notes: "Ejemplo de decodificación: bytes Windows-1252 leídos como UTF-8 con sustitución de errores. El glifo mostrado depende de la ruta de importación."
       output_label: Lo que aterriza en las celdas
       source: |
         La ñ de España se guarda como un solo byte, F1. Esa
@@ -177,8 +178,8 @@ slides:
         Iñaki    España    Bilbao
         Björn    Suecia    Västerås
         Origen del archivo: 65001 UTF-8
-        I?aki    Espa?a    Bilbao
-        Bj?rn    Suecia    V?ster?s
+        I�aki    Espa�a    Bilbao
+        Bj�rn    Suecia    V�ster�s
 
   - steps:
       eyebrow: Bloque 01 · Un .txt lleva otra ruta
@@ -248,7 +249,7 @@ slides:
         - label: La tecla
           text: Ctrl+E rellena la columna por patrón desde donde esté el cursor. Esa sola tecla es todo el objetivo.
         - label: La condición
-          text: La columna nueva tiene que estar pegada a la columna de origen, y los datos necesitan fila de encabezados. Relleno rápido no busca más lejos.
+          text: Pon el resultado junto a los datos de origen y escribe un ejemplo claro. Relleno rápido puede usar más de una columna de origen.
         - label: La señal
           text: Haz clic en una celda rellenada. La barra de fórmulas muestra una constante. Una cadena de IZQUIERDA y ENCONTRAR mostraría una fórmula, y responde a otro objetivo.
 
@@ -397,17 +398,17 @@ slides:
       lang: excel
       source: |
         Permitir:  Personalizada
-        Fórmula:   =B2<=A2*0.1
+        Fórmula:   =D2<=C2*0.1
 
-        A2 es el sueldo, B2 es el bono.
+        C2 es el sueldo, D2 es el bono.
         Escribe la fórmula para la celda superior
         izquierda de la selección. Excel la recorre
         por el resto igual que se recorre una fórmula
-        copiada, así que B3 recibe =B3<=A3*0.1 sin
+        copiada, así que D3 recibe =D3<=C3*0.1 sin
         que tú lo escribas.
       annotations:
         - label: Por qué Personalizada
-          text: Permitir tiene otras siete entradas. Solo esta puede comparar contra otra celda.
+          text: Personalizada recibe una fórmula que devuelve VERDADERO o FALSO.
         - label: Cómo se extiende
           text: Escríbela para la celda superior izquierda de la selección. Excel la recorre por el resto.
         - label: Las otras cuatro
@@ -454,7 +455,7 @@ slides:
 
   - steps:
       eyebrow: Bloque 03 · Archivo, Información
-      title: Tres cosas que sabe el panel de backstage
+      title: Información del libro y recuperación
       items:
         - label: '01'
           title: "Propiedades"
@@ -477,7 +478,7 @@ slides:
           title: "Recuperar libros no guardados"
           desc: >-
             Hasta abajo de Archivo, Abrir, Recientes, y también dentro de
-            Administrar libro. Abre la carpeta [Unsaved Files] con los borradores .xlsb.
+            Administrar libro. Abre la carpeta [UnsavedFiles] con los borradores .xlsb.
         - label: '05'
           title: Fija el intervalo
           desc: >-
@@ -509,8 +510,8 @@ slides:
           title: Filtrar y luego leer el total
           desc: >-
             Una SUMA simple debajo de una lista filtrada sigue sumando las filas
-            escondidas. La cuenta de la barra de estado, abajo a la izquierda, es el
-            número que respeta el filtro.
+            escondidas. Selecciona los números visibles y lee Suma
+            abajo a la derecha de la barra de estado.
 
   - quiz:
       eyebrow: Revisión rápida
@@ -549,7 +550,7 @@ slides:
         - title: Las columnas marcadas son la pregunta
           desc: >-
             Quitar duplicados borra lo que tú definiste como duplicado. Sobre las mismas
-            26 filas, las siete columnas dejan 24 alumnos y una sola columna deja 19
+            26 filas, las siete columnas dejan 24 alumnos y Country of origin sola deja 19
         - title: Un filtro esconde, no borra
           desc: >-
             Los números de fila se ponen azules y se saltan. La barra de estado cuenta lo
@@ -559,8 +560,7 @@ slides:
       eyebrow: Tarea
       title: Ejercicio 14, entrega y calificación
       brief: >-
-        Las tres hojas del Excel 14. Duplicados sobre la columna Name, luego sobre la fila
-        completa, luego sobre nombres y modelos de auto juntos. La importación y los dos
+        Las tres hojas del Excel 14. Duplicados sobre Name, luego filas completas cuyo Name se repite, luego sobre nombres y modelos de auto juntos. La importación y los dos
         ordenamientos. Las cinco reglas de validación, incluida la del bono topado a la
         décima parte del sueldo.
       meta:

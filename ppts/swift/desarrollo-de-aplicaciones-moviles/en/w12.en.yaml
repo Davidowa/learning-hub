@@ -1,0 +1,252 @@
+meta:
+  course: Mobile Application Development
+  code: SwiftUI
+  lang: en
+  language: swift
+  week: 12
+  footer: MOBILE APPLICATION DEVELOPMENT · SwiftUI
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 12 · System integration
+    title: Mobile Application Development
+    subtitle: An app talks to the rest of the system through a few doors
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - SwiftUI
+    - - Session
+      - 12 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: an app talks to the rest of the system through a few doors
+    - title: Implementation
+      desc: SwiftUI
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Open a report through a validated link. Submit an identifiable commit and evidence of the result.
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Open a report through a validated link.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: now
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: 'an app talks to the rest of the system through a few doors: notifications and links come in, the share sheet goes out, system events come in, and background time is granted by the OS, never taken.'
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: System integration
+    lead: 'an app talks to the rest of the system through a few doors: notifications and links come in, the share sheet goes out, system events come in, and background time is granted by the OS, never taken.'
+    panel:
+      label: Application
+      title: System integration
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: Notifications
+    lead: 'Notifications: local and push, permission, Android channels, routing a tap to a screen'
+    panel:
+      label: Application
+      title: Notifications
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Deep links
+    lead: 'Deep links: custom schemes and verified links (App Links, Universal Links); the implicit intent as their ancestor'
+    panel:
+      label: Application
+      title: Deep links
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Sharing
+    lead: 'Sharing: the share sheet going out, system pickers as the consumer side of content providers'
+    panel:
+      label: Application
+      title: Sharing
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: System events
+    lead: 'System events: connectivity and app state; Android''s broadcast restrictions since 8.0 and iOS observers'
+    panel:
+      label: Application
+      title: System events
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Background work
+    lead: 'Background work: what each OS allows (WorkManager and foreground services, BGTaskScheduler); widgets as additional entry points'
+    panel:
+      label: Application
+      title: Background work
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: When the default setup is not enough
+    lead: 'When the default setup is not enough: development builds instead of Expo Go (RN), capabilities and entitlements (SwiftUI)'
+    panel:
+      label: Application
+      title: When the default setup is not enough
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in SwiftUI
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: SwiftUI
+    title: Example 1
+    filename: w12-sample-1.swift
+    lang: swift
+    source: |
+      .onOpenURL { url in
+          // bitacora://report/<uuid>
+          guard url.scheme == "bitacora",
+                url.host() == "report",
+                let id = UUID(uuidString: url.lastPathComponent)
+          else { return }
+          path.append(id)
+      }
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: SwiftUI realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://developer.apple.com/documentation/swiftui
+- quiz:
+    eyebrow: Quick check
+    question: A link uses an unexpected scheme but a familiar host. What should the app do?
+    options:
+    - Disable all navigation permanently
+    - Accept the host alone
+    - Validate scheme and arguments before navigating
+    - Execute every argument
+    notes: 'Answer C. an app talks to the rest of the system through a few doors: notifications and links come in, the share sheet goes out, system events come in, and background time is granted by the OS, never taken.'
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.12
+    brief: Open a report through a validated link. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Open a report through a validated link. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: 'an app talks to the rest of the system through a few doors: notifications and links come in, the share sheet goes out, system events come in, and background time is granted by the OS, never taken.'
+    - title: Implementation
+      desc: Open a report through a validated link.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Accessibility, languages and screens'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

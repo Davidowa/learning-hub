@@ -31,7 +31,7 @@ slides:
         - title: Events
           desc: The switch, the timestamp that already passed, and the failure nobody reports
         - title: Your turn
-          desc: A grade audit log that survives a cascading delete without losing a row
+          desc: The gaps in a trigger-based audit log without losing a row
 
   - objectives:
       eyebrow: Learning objectives
@@ -437,7 +437,7 @@ slides:
 
   - lab:
       eyebrow: Lab
-      title: A grade audit log that survives a cascading delete
+      title: The gaps in a trigger-based audit log
       brief: >-
         Install the audit trigger on inscripciones, check that it records a normal UPDATE,
         and then delete the parent student. Count the rows in the log before and after,
@@ -447,8 +447,8 @@ slides:
           text: The script and both counts, the one before and the one after the DELETE
         - label: Constraint
           text: >-
-            The log has to come out complete. Pick the mechanism that does see the child
-            row disappear.
+            Distinguish an explicit DELETE from a cascade. Explain which one fires the
+            child-table trigger and which one leaves a gap.
         - label: The test
           text: >-
             Repeat the exercise with TRUNCATE. If your solution survives both, it was the

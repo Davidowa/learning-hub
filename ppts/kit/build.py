@@ -68,6 +68,13 @@ def main(argv=None):
                     help='where the .pptx files go (default: next to the lesson)')
     a = ap.parse_args(argv)
 
+    if os.path.abspath(a.target) == os.path.abspath('.'):
+        from pathlib import Path
+        from .mac import generate
+        if Path('img/en/mac/vbe-editor.png').is_file():
+            generated = generate()
+            print(f'Generated {len(generated)} Excel for Mac editions')
+
     if os.path.isdir(a.target):
         files = sorted(glob.glob(os.path.join(a.target, '**', '*.yaml'), recursive=True))
         if not files:

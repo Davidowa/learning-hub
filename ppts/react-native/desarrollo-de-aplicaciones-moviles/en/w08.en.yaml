@@ -1,0 +1,262 @@
+meta:
+  course: Mobile Application Development
+  code: React Native
+  lang: en
+  language: react-native
+  week: 8
+  footer: MOBILE APPLICATION DEVELOPMENT · React Native
+  blocks: 3
+slides:
+- cover:
+    kicker: Universidad Panamericana · 2026
+    unit: Week 08 · Networking and asynchrony
+    title: Mobile Application Development
+    subtitle: The network is slow, fallible and asynchronous
+    meta:
+    - - Instructor
+      - David Escobar-Castillejos
+    - - Track
+      - React Native
+    - - Session
+      - 8 of 17
+- agenda:
+    eyebrow: Agenda
+    title: Session outline
+    cards:
+    - title: Model
+      desc: the network is slow, fallible and asynchronous
+    - title: Implementation
+      desc: React Native
+    - title: Check
+      desc: States, boundary cases and evidence.
+    - title: Bitácora
+      desc: Represent loading, success, empty and error states
+- objectives:
+    eyebrow: Objectives
+    title: By the end of the session you will be able to…
+    items:
+    - head: Explain the session model using a Bitácora example.
+      sub: A verifiable result in the Bitácora case.
+    - head: Represent loading, success, empty and error states.
+      sub: A verifiable result in the Bitácora case.
+    - head: Compare the implementation decision on Android and iOS.
+      sub: A verifiable result in the Bitácora case.
+    - head: Submit reproducible evidence and explain the code used.
+      sub: A verifiable result in the Bitácora case.
+- roadmap:
+    eyebrow: Course map
+    title: Session position
+    phases:
+    - label: 01–03
+      title: Foundations
+      desc: Concept, case and evidence.
+      state: done
+    - label: 04–07
+      title: Interface and state
+      desc: Concept, case and evidence.
+      state: done
+    - label: 08–12
+      title: Data and device
+      desc: Concept, case and evidence.
+      state: now
+    - label: 13–17
+      title: Quality and release
+      desc: Concept, case and evidence.
+      state: todo
+- divider:
+    eyebrow: Block 01
+    title: Model and contracts
+    lede: the network is slow, fallible and asynchronous. Every remote call has four outcomes (loading, success, empty, error) and must never block the UI thread. The API contract is a type that you validate at the boundary.
+    block: 1
+- concept:
+    eyebrow: Concept
+    title: Networking and asynchrony
+    lead: the network is slow, fallible and asynchronous. Every remote call has four outcomes (loading, success, empty, error) and must never block the UI thread. The API contract is a type that you validate at the boundary.
+    panel:
+      label: Application
+      title: Networking and asynchrony
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: ''
+- concept:
+    eyebrow: Concept
+    title: HTTP and REST as contracts
+    lead: 'HTTP and REST as contracts: methods, status codes, JSON, OpenAPI as the spec'
+    panel:
+      label: Application
+      title: HTTP and REST as contracts
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Asynchrony and the main thread
+    lead: 'Asynchrony and the main thread: what ANR (Android) and watchdog termination (iOS) mean'
+    panel:
+      label: Application
+      title: Asynchrony and the main thread
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Decoding and validating at the boundary
+    lead: Decoding and validating at the boundary
+    panel:
+      label: Application
+      title: Decoding and validating at the boundary
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: UI states with retry, and cancellation when leaving a screen
+    lead: UI states with retry, and cancellation when leaving a screen
+    panel:
+      label: Application
+      title: UI states with retry
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- concept:
+    eyebrow: Concept
+    title: Auth headers and timeouts
+    lead: Auth headers and timeouts, and why an API key shipped in the app is public
+    panel:
+      label: Application
+      title: Auth headers and timeouts
+      note: Identify which decision changes with this concept.
+    steps:
+    - text: Define the case and its constraints
+    - text: Check the available evidence
+    - text: Explain the decision and its limit
+    notes: Shared concept in the two tracks. Teaching sequence follows the synthesized practice proposal.
+- divider:
+    eyebrow: Block 02
+    title: Implementation in React Native
+    lede: The concrete API is an instance of the model.
+    block: 2
+- code:
+    eyebrow: React Native
+    title: Example 1 · 1/2
+    filename: w08-sample-1.tsx
+    lang: tsx
+    source: |
+      useEffect(() => {
+        const ctrl = new AbortController();
+        setState({ kind: 'loading' });
+        fetchCategories(ctrl.signal)
+          .then(data => {
+            if (!ctrl.signal.aborted) {
+              setState(data.length ? { kind: 'ok', data }
+                                   : { kind: 'empty' });
+            }
+          })
+          .catch(error => {
+            if (!ctrl.signal.aborted) {
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- code:
+    eyebrow: React Native
+    title: Example 1 · 2/2
+    filename: w08-sample-1.tsx
+    lang: tsx
+    source: |2
+              setState({ kind: 'error', error });
+            }
+          });
+        return () => ctrl.abort();
+      }, []);
+    annotations:
+    - label: Context
+      text: Fragment of the sample file. Keep the types and imports supplied by its context.
+    - label: Check
+      text: Explain inputs, state and the expected result.
+    notes: |-
+      Sample source: React Native realization from the course synthesis. Continuation cards form one sample in order. This is a teaching excerpt, not a complete app. See the full source sample under labs/samples/.
+      https://reactnative.dev/docs/getting-started
+- quiz:
+    eyebrow: Quick check
+    question: The user leaves while a request is running. What protects the new screen state?
+    options:
+    - Treat every error as success
+    - Force success immediately
+    - Cancel the request and ignore late results
+    - Block navigation until it finishes
+    notes: Answer C. the network is slow, fallible and asynchronous. Every remote call has four outcomes (loading, success, empty, error) and must never block the UI thread. The API contract is a type that you validate at the boundary.
+- divider:
+    eyebrow: Block 03
+    title: Application and evidence
+    lede: The case ends in a decision that can be checked.
+    block: 3
+- lab:
+    eyebrow: Lab
+    title: Bitácora · v0.8
+    brief: Represent loading, success, empty and error states. Submit an identifiable commit and evidence of the result.
+    blocks:
+    - label: Submission
+      text: Result and evidence record.
+    - label: Constraint
+      text: Use only this session and earlier concepts.
+    - label: Check
+      text: Another person must be able to reproduce the result.
+    notes: Represent loading, success, empty and error states. Submit an identifiable commit and evidence of the result.
+- homework:
+    eyebrow: Homework
+    title: Apply to the project
+    brief: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+    meta:
+    - - Due
+      - Before the next session
+    - - Format
+      - Evidence and explanation
+    rubric:
+    - - Concept
+      - 40 %
+      - Correct use and clear assumptions
+    - - Evidence
+      - 40 %
+      - Reproducible result
+    - - Decision
+      - 20 %
+      - Rationale and limit
+    notes: Apply the session capability to the Bitácora project. Add a test or a reproducible check and explain one decision in the README.
+- takeaways:
+    eyebrow: Summary
+    title: Model, implementation and evidence
+    items:
+    - title: Model
+      desc: the network is slow, fallible and asynchronous. Every remote call has four outcomes (loading, success, empty, error) and must never block the UI thread. The API contract is a type that you validate at the boundary.
+    - title: Implementation
+      desc: Represent loading, success, empty and error states.
+    - title: Evidence
+      desc: The result and its check must be reproducible.
+- closing:
+    title: Questions
+    subtitle: 'Next session: Local persistence and offline work'
+    meta:
+    - - Contact
+      - descobarc@up.edu.mx
+    - - Course
+      - learning-hub

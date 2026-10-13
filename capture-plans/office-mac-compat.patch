@@ -1,0 +1,95 @@
+--- a/scripts/mac/office.js
++++ b/scripts/mac/office.js
+@@ -211,7 +211,7 @@
+   // list: [{id, pid, name, bounds, layer}] front to back (CGWindowListCopyWindowInfo order).
+   // Returns {window} for a window of the held pid; {wrongInstance, other} when only a window
+   // of another process carries the title (never captured); {notFound} otherwise.
+-  var layer0 = list.filter(function (w) { return w.layer === 0; });
++  var layer0 = list.filter(function (w) { return title || contains ? (w.layer === 0 || w.layer === 8) : (w.layer === 0 && w.bounds.w > 100 && w.bounds.h > 100); });
+   var mine = layer0.filter(function (w) { return w.pid === pid; });
+   if (!title && !contains) {
+     return mine.length ? { window: mine[0] } : { notFound: true };
+@@ -255,6 +255,7 @@
+   ObjC.import('Foundation');
+   ObjC.import('AppKit');
+   ObjC.import('CoreGraphics');
++  ObjC.bindFunction('CGPreflightScreenCaptureAccess', ['bool', []]);
+ }
+ 
+ function readText(p) {
+@@ -387,7 +388,7 @@
+     'end tell',
+     'return out'
+   ].join('\n');
+-  return osa(src).split(/\r?\n/).filter(Boolean).map(function (line) {
++  return osa(src).split(/[\r\n]+/).filter(Boolean).map(function (line) {
+     var f = line.split('\t');
+     return { name: f[0], subrole: f[1], sheet: f[2] === '1', sheetName: f[3] || '' };
+   });
+@@ -413,6 +414,18 @@
+     '  tell process ' + asQuote(processName),
+     '    set frontmost to true',
+     '    set win to ' + (windowName ? 'window ' + asQuote(windowName) : 'front window'),
++    '    try',
++    '      click button ' + asQuote(name) + ' of win',
++    '      return ' + asQuote(name),
++    '    end try',
++    '    try',
++    '      click radio button ' + asQuote(name) + ' of tab group 1 of win',
++    '      return ' + asQuote(name),
++    '    end try',
++    '    try',
++    '      click UI element ' + asQuote(name) + ' of tab group 1 of win',
++    '      return ' + asQuote(name),
++    '    end try',
+     '    repeat with e in (entire contents of win)',
+     '      try',
+     '        if ' + roleList + ' contains (role of e) then',
+@@ -611,19 +624,20 @@
+     var open = route.open || {};
+     if (open.menu) { taken.push('menu ' + osa(menuClickScript(proc, open.menu))); }
+     else if (open.keys) { osa(keystrokeScript(proc, open.keys)); taken.push('keys ' + open.keys); }
+-    else if (open.ribbon_tab) { taken.push('ribbon tab ' + clickNamed(proc, null, open.ribbon_tab, ['AXRadioButton', 'AXTab', 'AXButton'])); }
++    else if (open.ribbon_tab) { taken.push('ribbon tab ' + clickNamed(proc, osa('tell application \"Microsoft Excel\" to get name of active workbook').replace(/\.xlsx?$/, ''), open.ribbon_tab, ['AXRadioButton', 'AXTab', 'AXButton'])); }
+     else if (open.vbe) { taken.push('menu ' + osa(menuClickScript(proc, ['Tools', 'Macro', 'Visual Basic Editor']))); }
+ 
+     if (route.paste_code) {
+       // Code goes in through the clipboard, never typed (failure mode 3). Before the wait:
+       // the code window the vbe shot waits for exists only once the module is inserted.
+       delay(1);
+-      osa(menuClickScript(proc, ['Insert', 'Module']));
++      osa('tell application \"System Events\" to tell process ' + asQuote(proc) + ' to click menu button \"Insert Module\" of toolbar 5 of (first window whose name starts with \"Microsoft Visual Basic\")');
+       sh('/usr/bin/printf %s ' + shQuote(route.paste_code.code) + ' | /usr/bin/pbcopy');
+-      osa(keystrokeScript(proc, 'cmd+v'));
++      osa('tell application \"System Events\" to tell process ' + asQuote(proc) + ' to click button \"Paste\" of toolbar 5 of (first window whose name starts with \"Microsoft Visual Basic\")');
+       taken.push('paste_code through the clipboard');
+     }
+ 
++    if (route.tab) { taken.push('tab ' + clickNamed(proc, null, route.tab, ['AXRadioButton', 'AXTab', 'AXButton'])); }
+     var shotTitle = title;
+     var parentName = null;
+     if (target === 'dialog' || target === 'vbe') {
+@@ -633,7 +647,6 @@
+       shotTitle = found.name;
+       parentName = found.parent;
+       taken.push('waited for ' + found.role + ' ' + found.name);
+-      if (route.tab) { taken.push('tab ' + clickNamed(proc, found.parent, route.tab, ['AXRadioButton', 'AXTab'])); }
+     }
+     delay((route.wait_ms === undefined ? 600 : route.wait_ms) / 1000);
+ 
+@@ -685,6 +698,7 @@
+         }, 3000, 250);
+       } catch (e3) { /* the next shot starts from a fresh document */ }
+     }
++    if (route.tab === '+') { try { osa('tell application \"System Events\" to tell process ' + asQuote(proc) + ' to click button \"Cancel\" of window \"Manage Rules\"'); } catch (e4) {} }
+     closeDocument(app, wasRunning);
+   }
+ }
+@@ -711,6 +725,7 @@
+     resp.meta = { os: 'mac', os_version: osVersion(), app: app, app_version: version, ui_lang: lang };
+     return resp;
+   } finally {
++    if (route.tab === '+') { try { osa('tell application \"System Events\" to tell process ' + asQuote(proc) + ' to click button \"Cancel\" of window \"Manage Rules\"'); } catch (e4) {} }
+     closeDocument(app, wasRunning);
+   }
+ }
