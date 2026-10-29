@@ -1,0 +1,98 @@
+[
+  {
+    "n": 1,
+    "slug": "clases-y-estructuras",
+    "topic": "Clases y estructuras",
+    "title": "class y struct cambian los accesos predeterminados",
+    "subtitle": "C++20 · Las dos formas pueden tener métodos, constructores y herencia.",
+    "original": "Comparación Visual de Clases y Estructuras C++-2.png",
+    "body": "COMPARA LOS VALORES POR DEFECTO\nCaracterística | class | struct\nAcceso a miembros | private | public\nAcceso de herencia | private | public\nConstructores y destructores | Sí | Sí\nMétodos y funciones virtuales | Sí | Sí\nMiembros private y protected | Sí | Sí\n\nUN TIPO CON DATOS PÚBLICOS\nstruct Punto {\n    double x{};\n    double y{};\n};\nPunto p{3.0, 5.0};\n\nUN TIPO CON INTERFAZ PÚBLICA\nclass Alumno {\n    std::string nombre;\npublic:\n    explicit Alumno(std::string n)\n        : nombre(std::move(n)) {}\n    const std::string& verNombre() const {\n        return nombre;\n    }\n};\n\nELIGE SEGÚN EL DISEÑO\nstruct suele comunicar datos públicos relacionados. class suele expresar una interfaz que mantiene invariantes. Son convenciones de diseño; ambas palabras permiten controlar el acceso.\n\nEVITA ESTA CONFUSIÓN\nUsar struct no garantiza compatibilidad con C. Depende de los tipos, la disposición de memoria y la interfaz binaria.",
+    "source": "C++20: [class.access], [class.access.base]. C++ Core Guidelines C.2 y C.8.",
+    "original_path": "/Users/davidowa/Downloads/Comparación Visual de Clases y Estructuras C++-2.png",
+    "filename": "P3 - 01 - CPP - Clases y estructuras"
+  },
+  {
+    "n": 2,
+    "slug": "struct-agregados-y-constructores",
+    "topic": "Agregados y constructores",
+    "title": "Las llaves pueden inicializar un agregado o llamar un constructor",
+    "subtitle": "C++20 · La definición del tipo determina qué ocurre.",
+    "original": "Comparación entre struct y class en C++-1.png",
+    "body": "CASO 1 · INICIALIZACIÓN DE AGREGADO\nstruct Punto {\n    double x;\n    double y;\n};\nPunto p{3.0, 5.0};\n\nLos valores inicializan x y y en su orden de declaración. Este tipo es un agregado.\n\nCASO 2 · LLAMADA A UN CONSTRUCTOR\nstruct PuntoConConstructor {\n    double x;\n    double y;\n    PuntoConConstructor(double a, double b)\n        : x(a), y(b) {}\n};\nPuntoConConstructor q{3.0, 5.0};\n\nLas llaves seleccionan el constructor. Ese constructor inicializa los miembros mediante su lista.\n\n¿CUÁNDO ES UN AGREGADO?\nPara una clase en C++20: no hay constructores declarados por el usuario ni heredados; no hay datos de instancia directos private o protected; no hay funciones virtuales; las bases no son virtuales, private ni protected.\n\nUNA DISTINCIÓN ÚTIL\nQue un struct no declare constructor no basta para llamarlo agregado. Una class con miembros public también puede ser un agregado.\n\nCOMPRUÉBALO EN CÓDIGO\nstd::is_aggregate_v<Punto>                 // true\nstd::is_aggregate_v<PuntoConConstructor>   // false",
+    "source": "C++20: [dcl.init.aggr], [dcl.init.list].",
+    "original_path": "/Users/davidowa/Downloads/Comparación entre struct y class en C++-1.png",
+    "filename": "P3 - 02 - CPP - Agregados y constructores"
+  },
+  {
+    "n": 3,
+    "slug": "acceso-a-miembros-y-this",
+    "topic": "Acceso a miembros y this",
+    "title": "this apunta al objeto que ejecuta el método",
+    "subtitle": "C++20 · El acceso depende del miembro, no de escribir class o struct.",
+    "original": "Infografía de acceso a miembros en C++.png",
+    "body": "ACCESO DIRECTO A UN MIEMBRO PÚBLICO\nstruct Registro {\n    std::string nombre;\n};\nRegistro r{\"Ana\"};\nr.nombre = \"Luis\";\n\nINTERFAZ DE UNA CLASE\nclass Estudiante {\n    std::string nombre;\npublic:\n    explicit Estudiante(std::string n)\n        : nombre(std::move(n)) {}\n    void fijarNombre(std::string nombre) {\n        this->nombre = std::move(nombre);\n    }\n    const std::string& verNombre() const {\n        return nombre;\n    }\n};\n\nDESDE FUERA DEL OBJETO\nEstudiante e{\"Ana\"};\ne.fijarNombre(\"Luis\");\n// e.nombre = \"Luis\";  // Error: privado.\n\nDOS FORMAS EQUIVALENTES\nthis->nombre\n(*this).nombre\n\nLEE LA ASIGNACIÓN\nEn this->nombre = nombre, la izquierda es el miembro y la derecha es el parámetro. this-> evita el conflicto de nombres. Si no hay conflicto, normalmente es opcional.\n\nRECUERDA\nthis existe en métodos no estáticos. En un método const apunta a un objeto const. Los métodos públicos expresan operaciones del tipo; no es obligatorio crear un getter y un setter por cada dato.",
+    "source": "C++20: [class.this], [class.access].",
+    "original_path": "/Users/davidowa/Downloads/Infografía de acceso a miembros en C++.png",
+    "filename": "P3 - 03 - CPP - Acceso a miembros y this"
+  },
+  {
+    "n": 4,
+    "slug": "modificadores-de-acceso",
+    "topic": "private, protected y public",
+    "title": "El acceso cambia según el lugar desde donde se usa el miembro",
+    "subtitle": "C++20 · Ejemplo con Circle : public Shape, sin declaraciones friend.",
+    "original": "Modificadores de acceso en C++.png",
+    "body": "CLASE BASE\nclass Shape {\nprivate:\n    unsigned id{};\nprotected:\n    std::string nombre;\npublic:\n    void mostrar() const;\n};\n\nCLASE DERIVADA\nclass Circle : public Shape {\npublic:\n    void renombrar() {\n        nombre = \"Círculo\";  // Permitido.\n        // id = 1;         // Error.\n    }\n};\n\nACCESO A LOS MIEMBROS DE SHAPE\nDesde... | private: id | protected: nombre | public: mostrar()\nUn método de Shape | Sí | Sí | Sí\nUn método de Circle, sobre *this | No | Sí | Sí\nCódigo externo, como main() | No | No | Sí\n\nUNA PRECISIÓN SOBRE PROTECTED\nDentro de Circle, acceder al miembro no estático protegido exige un objeto Circle o derivado de Circle. Una referencia Shape& no permite ese acceso por sí sola.\n\nNO CONFUNDAS ACCESO CON EXISTENCIA\nLos datos privados de Shape forman parte del subobjeto base de Circle, aunque Circle no pueda nombrarlos directamente.\n\nALCANCE DE LA TABLA\nLa herencia es public. Una base private o protected cambia el acceso heredado. Los miembros y amigos autorizados tienen reglas de acceso adicionales.",
+    "source": "C++20: [class.access], [class.protected], [class.access.base].",
+    "original_path": "/Users/davidowa/Downloads/Modificadores de acceso en C++.png",
+    "filename": "P3 - 04 - CPP - private, protected y public"
+  },
+  {
+    "n": 5,
+    "slug": "inicializacion-de-miembros",
+    "topic": "Lista de inicialización",
+    "title": "Inicializa los miembros antes de ejecutar el cuerpo",
+    "subtitle": "C++20 · La lista construye subobjetos; el cuerpo opera sobre ellos.",
+    "original": "C++_ Inicialización de Circle.png",
+    "body": "DECLARACIONES RELEVANTES\nclass Circle : public Shape {\n    double radio;\nprotected:\n    double factorEscala;\npublic:\n    Circle(unsigned id, double r);\n};\n\nLISTA DE INICIALIZACIÓN\nCircle::Circle(unsigned id, double r)\n    : Shape(id, \"Círculo\"),\n      radio(r > 0.0 ? r : 1.0),\n      factorEscala(1.0) {\n    // Aquí empieza el cuerpo.\n}\n\nORDEN REAL EN ESTE EJEMPLO\n1. Shape(id, \"Círculo\")\n2. radio\n3. factorEscala\n4. Cuerpo del constructor\n\nLos miembros siguen su orden de declaración, aunque cambies el orden escrito en la lista. Las bases se construyen antes que los miembros.\n\nASIGNAR EN EL CUERPO ES DISTINTO\nCircle::Circle(unsigned id, double r)\n    : Shape(id, \"Círculo\") {\n    radio = r > 0.0 ? r : 1.0;\n    factorEscala = 1.0;\n}\n\nAquí los double sin inicializador previo reciben su valor mediante asignación. No deben leerse antes de ella. Un miembro string o vector ya habría sido construido antes de entrar al cuerpo.\n\nCUÁNDO HACE FALTA INICIALIZAR\nLas referencias deben enlazarse al construirse. Los miembros const necesitan inicialización y pueden tener un inicializador en su declaración. Para pasar argumentos al constructor de la base, usa la lista.",
+    "source": "C++20: [class.base.init], [dcl.init].",
+    "original_path": "/Users/davidowa/Downloads/C++_ Inicialización de Circle.png",
+    "filename": "P3 - 05 - CPP - Lista de inicialización"
+  },
+  {
+    "n": 6,
+    "slug": "tipos-de-herencia",
+    "topic": "Tipos de herencia",
+    "title": "Cuenta las bases directas y distingue los niveles",
+    "subtitle": "C++20 · En estos diagramas, la flecha apunta desde la derivada hacia su base.",
+    "original": "Infografía de Tipos de Herencia en C++.png",
+    "body": "SIMPLE\nUna base directa.\nDiagrama: B → A\nclass B : public A {};\n\nMÚLTIPLE\nDos o más bases directas.\nDiagrama: C → A y C → B\nclass C : public A, public B {};\n\nMULTINIVEL\nUna derivada también actúa como base.\nDiagrama: C → B → A\nclass B : public A {};\nclass C : public B {};\n\nJERÁRQUICA\nVarias derivadas comparten una base.\nDiagrama: B → A, C → A y D → A\nclass B : public A {};\nclass C : public A {};\nclass D : public A {};\n\nHÍBRIDA\nCombina patrones de herencia. Un diamante combina varios niveles y bases múltiples.\nDiagrama: D → B y C; B → A; C → A.\n\nDIAMANTE Y BASE VIRTUAL\nSin virtual, D contiene dos subobjetos A: uno por cada rama. Con virtual en las dos ramas, comparte un solo A.\nstruct A { int id{}; };\nstruct B : virtual public A {};\nstruct C : virtual public A {};\nstruct D : public B, public C {};\n\nNO SON CATEGORÍAS EXCLUYENTES\nLa forma de la jerarquía y el acceso de herencia son decisiones distintas. public, protected y private no significan simple o múltiple. La base virtual la inicializa la clase más derivada.",
+    "source": "C++20: [class.derived], [class.mi], [class.base.init].",
+    "original_path": "/Users/davidowa/Downloads/Infografía de Tipos de Herencia en C++.png",
+    "filename": "P3 - 06 - CPP - Tipos de herencia"
+  },
+  {
+    "n": 7,
+    "slug": "funciones-virtuales-y-override",
+    "topic": "Funciones virtuales y override",
+    "title": "Una llamada virtual usa el tipo real del objeto",
+    "subtitle": "C++20 · Polimorfismo a través de un puntero o una referencia a la base.",
+    "original": "C++ Virtual Functions Infographic.png",
+    "body": "UNA INTERFAZ ABSTRACTA\nclass Shape {\npublic:\n    virtual ~Shape() = default;\n    virtual double area() const = 0;\n};\n\nUNA IMPLEMENTACIÓN CONCRETA\nclass Circle : public Shape {\n    double radio;\npublic:\n    explicit Circle(double r) : radio(r) {}\n    double area() const override {\n        return std::numbers::pi * radio * radio;\n    }\n};\n\nSIGUE LA LLAMADA\nCircle c{5};\nShape* figura = &c;\nstd::cout << std::fixed\n          << std::setprecision(2)\n          << figura->area();\n\nDiagrama: Shape* figura → objeto Circle → Circle::area()\nÁrea con dos decimales: 78.54.\n\nQUÉ APORTA CADA PALABRA\nvirtual habilita el despacho dinámico. = 0 declara una función virtual pura. Shape es abstracta y no se puede instanciar. override exige que la función redefina una virtual compatible de la base.\n\nLA FIRMA IMPORTA\nSi omites const en Circle::area(), no redefinirá esa función const de Shape. Con override, el compilador detecta el error.\n\nDESTRUCCIÓN POLIMÓRFICA\nSi eliminas un objeto derivado mediante un puntero a la base, la base necesita un destructor virtual. Pasar o copiar un derivado por valor como Shape puede perder su parte derivada cuando la base es concreta: ese problema se llama slicing.",
+    "source": "C++20: [class.virtual], [class.abstract], [expr.delete].",
+    "original_path": "/Users/davidowa/Downloads/C++ Virtual Functions Infographic.png",
+    "filename": "P3 - 07 - CPP - Funciones virtuales y override"
+  },
+  {
+    "n": 8,
+    "slug": "polimorfismo-shape-circle-rectangle-square",
+    "topic": "Polimorfismo con Shape",
+    "title": "El mismo recorrido calcula áreas de objetos distintos",
+    "subtitle": "C++20 · Shape, Circle, Rectangle y Square.",
+    "original": "Infografía de funciones virtuales en C++.png",
+    "body": "LA JERARQUÍA DEL EJEMPLO\nDiagrama: Circle → Shape; Rectangle → Shape; Square → Rectangle.\nSquare tiene una base directa: Rectangle. La cadena hasta Shape es herencia multinivel, no múltiple.\n\nTODAS COMPARTEN LA OPERACIÓN\nShape declara:\nvirtual double area() const = 0;\nvirtual ~Shape() = default;\n\nCircle redefine: pi × radio × radio.\nRectangle redefine: base × altura.\nSquare redefine: lado × lado.\nLas tres implementaciones usan const override.\n\nUN SOLO RECORRIDO\nCircle c{5.0};\nRectangle r{4.0, 6.0};\nSquare s{3.0};\nShape* figuras[]{&c, &r, &s};\nfor (const Shape* figura : figuras) {\n    std::cout << figura->area() << '\n';\n}\n\nSALIDA CON DOS DECIMALES\n78.54\n24.00\n9.00\nOrden de salida: Circle, Rectangle, Square. El programa completo fija la precisión con std::fixed y std::setprecision(2).\n\nLÍMITES DEL MODELO\nEsta jerarquía es didáctica. Si Rectangle permite cambiar base y altura por separado, derivar Square puede romper ese contrato. Revisa los invariantes antes de reutilizar esta relación en otro diseño.\n\nDURANTE LA CONSTRUCCIÓN\nUna llamada virtual desde un constructor o destructor se resuelve en la clase que está construyéndose o destruyéndose; no salta a una parte derivada que todavía no está activa.",
+    "source": "C++20: [class.virtual], [class.cdtor]. C++ Core Guidelines C.120.",
+    "original_path": "/Users/davidowa/Downloads/Infografía de funciones virtuales en C++.png",
+    "filename": "P3 - 08 - CPP - Polimorfismo con Shape"
+  }
+]

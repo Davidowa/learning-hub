@@ -1,0 +1,49 @@
+Use case: infographic-diagram, style-transfer edit.
+Primary request: Completely redesign the source educational C++ infographic as a polished, accurate Spanish US LETTER PORTRAIT handout, aspect ratio 8.5:11, high resolution ideally 2550 x 3300. This is a finished single page, not a photo or mockup, no surrounding desk, no margins beyond the page.
+Style: Learning Hub C++ course visual system. Warm clean paper #F7F8FA; strong typographic hierarchy; left-aligned Georgia-like serif action title; Arial/Inter-like sans-serif body; proper monospaced code in Courier New/JetBrains Mono-like font. Main blue #00599C; ink #0F172A; navy #0B1B3A code panels with off-white text, light blue syntax; muted #5B6B84; restrained orange #E8871E on navy or dark orange #B4530A on paper used only for one warning or important detail. Thin rules, generous whitespace, clean aligned grid, no rainbow colors, gradients, shadows, glossy effects, giant centered banner, emojis, decorative icons, or crowded tiny text. Diagrams may use fine slightly hand-drawn navy lines and hollow arrowheads. Body text must remain readable on letter print, normally 10-12 pt equivalent; code 9-11 pt equivalent.
+Inputs: image 1 is the original infographic as CONTENT REFERENCE only; completely replace its old layout. Image 2 is the real Learning Hub duck logo; use it small near the footer without redrawing or changing its identity. The corrected text below overrides any mistakes or contradictions in image 1. Each ALL-CAPS section heading below becomes a short sentence-case heading, not body copy. Code must preserve every token, brace, punctuation, capitalization, const, override, * and & exactly. All required content is below; do not add invented text. Layout may reflow sections while preserving the logical reading order.
+Brand: small top eyebrow "LEARNING HUB / C++20", a small folio at top-right, topic label, large action title, one-line subtitle. Footer: duck logo small; "Learning Hub · Programación Avanzada · P3" and folio. Do not add UP shield or institutional logo. Use the small technical source note as the last line above the footer.
+No big lightbulbs or colored check/cross symbols. Tables should use light horizontal rules and typographic Sí / No, not green/red status circles. Keep 0.35-inch or larger safe margins. Prioritize technical and spelling accuracy over decoration.
+
+Folio: 04 / 08
+Topic label: private, protected y public
+ACTION TITLE (verbatim): El acceso cambia según el lugar desde donde se usa el miembro
+SUBTITLE (verbatim): C++20 · Ejemplo con Circle : public Shape, sin declaraciones friend.
+REQUIRED CONTENT (verbatim apart from changing all-caps headings to sentence case):
+CLASE BASE
+class Shape {
+private:
+    unsigned id{};
+protected:
+    std::string nombre;
+public:
+    void mostrar() const;
+};
+
+CLASE DERIVADA
+class Circle : public Shape {
+public:
+    void renombrar() {
+        nombre = "Círculo";  // Permitido.
+        // id = 1;         // Error.
+    }
+};
+
+ACCESO A LOS MIEMBROS DE SHAPE
+Desde... | private: id | protected: nombre | public: mostrar()
+Un método de Shape | Sí | Sí | Sí
+Un método de Circle, sobre *this | No | Sí | Sí
+Código externo, como main() | No | No | Sí
+
+UNA PRECISIÓN SOBRE PROTECTED
+Dentro de Circle, acceder al miembro no estático protegido exige un objeto Circle o derivado de Circle. Una referencia Shape& no permite ese acceso por sí sola.
+
+NO CONFUNDAS ACCESO CON EXISTENCIA
+Los datos privados de Shape forman parte del subobjeto base de Circle, aunque Circle no pueda nombrarlos directamente.
+
+ALCANCE DE LA TABLA
+La herencia es public. Una base private o protected cambia el acceso heredado. Los miembros y amigos autorizados tienen reglas de acceso adicionales.
+TECHNICAL SOURCE NOTE: C++20: [class.access], [class.protected], [class.access.base].
+Image 3 is the approved first redesigned page. Match its editorial family and page footer closely, while improving clarity and avoiding duplication. It is a STYLE reference only: do not copy its class/struct comparison content or its folio. This page has its own required title, content and folio above. No 3D objects, even small cuboid doodles. Use only flat diagrams with correctly directed connectors. It is acceptable to use fewer rounded containers than image 3 and more open whitespace.
+FINAL REVISION REQUIREMENTS:
+La flecha de herencia del diagrama central apunta desde Circle hacia Shape y termina en un triángulo hueco en Shape. El resto se conserva.

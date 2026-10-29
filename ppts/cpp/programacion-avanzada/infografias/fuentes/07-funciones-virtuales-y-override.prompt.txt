@@ -1,0 +1,47 @@
+Use case: infographic-diagram, style-transfer edit.
+Primary request: Completely redesign the source educational C++ infographic as a polished, accurate Spanish US LETTER PORTRAIT handout, aspect ratio 8.5:11, high resolution ideally 2550 x 3300. This is a finished single page, not a photo or mockup, no surrounding desk, no margins beyond the page.
+Style: Learning Hub C++ course visual system. Warm clean paper #F7F8FA; strong typographic hierarchy; left-aligned Georgia-like serif action title; Arial/Inter-like sans-serif body; proper monospaced code in Courier New/JetBrains Mono-like font. Main blue #00599C; ink #0F172A; navy #0B1B3A code panels with off-white text, light blue syntax; muted #5B6B84; restrained orange #E8871E on navy or dark orange #B4530A on paper used only for one warning or important detail. Thin rules, generous whitespace, clean aligned grid, no rainbow colors, gradients, shadows, glossy effects, giant centered banner, emojis, decorative icons, or crowded tiny text. Diagrams may use fine slightly hand-drawn navy lines and hollow arrowheads. Body text must remain readable on letter print, normally 10-12 pt equivalent; code 9-11 pt equivalent.
+Inputs: image 1 is the original infographic as CONTENT REFERENCE only; completely replace its old layout. Image 2 is the real Learning Hub duck logo; use it small near the footer without redrawing or changing its identity. The corrected text below overrides any mistakes or contradictions in image 1. Each ALL-CAPS section heading below becomes a short sentence-case heading, not body copy. Code must preserve every token, brace, punctuation, capitalization, const, override, * and & exactly. All required content is below; do not add invented text. Layout may reflow sections while preserving the logical reading order.
+Brand: small top eyebrow "LEARNING HUB / C++20", a small folio at top-right, topic label, large action title, one-line subtitle. Footer: duck logo small; "Learning Hub · Programación Avanzada · P3" and folio. Do not add UP shield or institutional logo. Use the small technical source note as the last line above the footer.
+No big lightbulbs or colored check/cross symbols. Tables should use light horizontal rules and typographic Sí / No, not green/red status circles. Keep 0.35-inch or larger safe margins. Prioritize technical and spelling accuracy over decoration.
+
+Folio: 07 / 08
+Topic label: Funciones virtuales y override
+ACTION TITLE (verbatim): Una llamada virtual usa el tipo real del objeto
+SUBTITLE (verbatim): C++20 · Polimorfismo a través de un puntero o una referencia a la base.
+REQUIRED CONTENT (verbatim apart from changing all-caps headings to sentence case):
+UNA INTERFAZ ABSTRACTA
+class Shape {
+public:
+    virtual ~Shape() = default;
+    virtual double area() const = 0;
+};
+
+UNA IMPLEMENTACIÓN CONCRETA
+class Circle : public Shape {
+    double radio;
+public:
+    explicit Circle(double r) : radio(r) {}
+    double area() const override {
+        return std::numbers::pi * radio * radio;
+    }
+};
+
+SIGUE LA LLAMADA
+Circle c{5.0};
+Shape* figura = &c;
+std::cout << figura->area();
+
+Diagrama: Shape* figura → objeto Circle → Circle::area()
+Área con dos decimales: 78.54.
+
+QUÉ APORTA CADA PALABRA
+virtual habilita el despacho dinámico. = 0 declara una función virtual pura. Shape es abstracta y no se puede instanciar. override exige que la función redefina una virtual compatible de la base.
+
+LA FIRMA IMPORTA
+Si omites const en Circle::area(), no redefinirá esa función const de Shape. Con override, el compilador detecta el error.
+
+DESTRUCCIÓN POLIMÓRFICA
+Si eliminas un objeto derivado mediante un puntero a la base, la base necesita un destructor virtual. Pasar o copiar un derivado por valor como Shape puede perder su parte derivada cuando la base es concreta: ese problema se llama slicing.
+TECHNICAL SOURCE NOTE: C++20: [class.virtual], [class.abstract], [expr.delete].
+Image 3 is the approved first redesigned page. Match its editorial family and page footer closely, while improving clarity and avoiding duplication. It is a STYLE reference only: do not copy its class/struct comparison content or its folio. This page has its own required title, content and folio above. No 3D objects, even small cuboid doodles. Use only flat diagrams with correctly directed connectors. It is acceptable to use fewer rounded containers than image 3 and more open whitespace.
