@@ -12,7 +12,7 @@ Import ExcelFunctionsInSub.bas into that workbook's VBA project through File > I
 
 ## Files and review
 
-The PDF contains one Letter page, 612 by 792 points. The PNG preserves the selected ImageGen output. The editable text and the final ImageGen prompt are in fuentes. The design uses the Learning Hub VBA palette from ppts/kit/tokens.py.
+The PDF contains one Letter page, 612 by 792 points. The PNG preserves the selected ImageGen output. The editable text is in fuentes. The design uses the Learning Hub VBA palette from ppts/kit/tokens.py.
 
 The code was reviewed against Microsoft documentation, and the numeric examples were checked. The VBA module was not compiled or executed in Excel during this task. The PDF was rendered and inspected for code accuracy, cell references, values, and legibility.
 

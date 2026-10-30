@@ -7,7 +7,6 @@ from pypdf import PdfReader,PdfWriter
 
 ROOT=Path(__file__).resolve().parents[1]
 items=json.loads((ROOT/'fuentes/contenido.json').read_text())
-selected={x['n']:x for x in json.loads((ROOT/'fuentes/imagenes-seleccionadas.json').read_text())}
 P3=ROOT/'P3';P3.mkdir(exist_ok=True)
 combined=PdfWriter();manifest=[]
 for item in items:
@@ -15,8 +14,6 @@ for item in items:
     filename=item['filename']
     if n==4: filename='P3 - 04 - CPP - Modificadores de acceso'
     png=ROOT/'es'/f'{stem}.png'
-    source=Path(selected[n]['path'])
-    if source.exists():shutil.copy2(source,png)
     if not png.exists():raise FileNotFoundError(png)
     named_png=P3/(filename+'.png');shutil.copy2(png,named_png)
     pdf=P3/(filename+'.pdf')

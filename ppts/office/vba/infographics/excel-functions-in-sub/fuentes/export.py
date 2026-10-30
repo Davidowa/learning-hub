@@ -21,7 +21,7 @@ assert [sum(initial),sum(initial)/len(initial),max(initial)]==[100,25,40]
 assert [sum(changed),sum(changed)/len(changed),max(changed)]==[140,35,80]
 export=Path('/Users/davidowa/Downloads/Learning Hub - Excel Functions in a Sub - EN')
 export.mkdir(exist_ok=True)
-for p in [pdf,img,root/'ExcelFunctionsInSub.bas',root/'README.en.md',root/'fuentes/content.en.md',root/'fuentes/infographic.prompt.txt']:
+for p in [pdf,img,root/'ExcelFunctionsInSub.bas',root/'README.en.md',root/'fuentes/content.en.md']:
  shutil.copy2(p,export/p.name)
 manifest={'pdf':pdf.name,'page_size_pt':[612,792],'page_count':1,'png_size':list(Image.open(img).size),'generator':'Built-in ImageGen','pdf_sha256':hashlib.sha256(pdf.read_bytes()).hexdigest(),'png_sha256':hashlib.sha256(img.read_bytes()).hexdigest(),'export_folder':str(export),'vba_runtime_execution':False,'arithmetic_validation':'100,25,40 initially; 140,35,80 after input change and macro rerun'}
 (root/'fuentes/export.json').write_text(json.dumps(manifest,indent=2))

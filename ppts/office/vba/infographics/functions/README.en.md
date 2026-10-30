@@ -2,7 +2,7 @@
 
 This English handout contains two Letter pages. The first explains the inputs and return value of a VBA Function, ByVal, the return type, and assignment to the function name. It shows how to call the function from a Sub and from a worksheet cell. The second explains WorksheetFunction, Range arguments, storing a calculated value, storing a formula, and checking a lookup result with IsError.
 
-The design follows the Learning Hub VBA palette in ppts/kit/tokens.py. The images were generated with the built-in ImageGen tool and reviewed for code accuracy and legibility. The final prompts and editable text are in fuentes. The PDF embeds the two images; the PNG files and the text notes are provided separately.
+The design follows the Learning Hub VBA palette in ppts/kit/tokens.py. The images were generated with the built-in ImageGen tool and reviewed for code accuracy and legibility. The editable text is in fuentes. The PDF embeds the two images; the PNG files and the text notes are provided separately.
 
 ## Use the examples
 
