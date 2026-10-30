@@ -1,0 +1,69 @@
+Use case: infographic-diagram, scientific-educational.
+Create ONE finished US LETTER PORTRAIT page in AMERICAN ENGLISH, 8.5:11 aspect ratio, high resolution, flat printable infographic, no mockup. Image 1 is STYLE REFERENCE ONLY, the approved Learning Hub infographic; do NOT copy its C++ content or blue palette. Image 2 is the real small Learning Hub duck logo. Match the editorial family with a LEFT-ALIGNED compact Georgia serif action title, Arial-like sans-serif explanatory prose, and exact monospaced code. Use Learning Hub's VBA/Excel palette from ppts/kit: paper #F7F8FA, ink #0F172A, forest green #107C41, dark green #185C37, deep green code backgrounds #0B2A1B, off-white code text, mint #33C481 keywords, muted #5B6B84, orange #B4530A only for one caution. All blue elements from the style reference become green. No gradients, drop shadows, 3D, rainbow boxes, decorative icons or emojis. Plenty of whitespace. Do not make the title giant. Diagram arrows only where they explain values. At least 0.35-inch safe margins. Body and code must remain readable on Letter print, generally 10-12pt equivalent; never tiny type to cram panels. Tables should use light rules and directly labeled values.
+Preserve exact code tokens, periods, commas, quotes, As Double, ByVal, underscore line continuations, parentheses, and End Function/End Sub. Use ordinary straight double quotes in code. Never use curly quotes or decimal commas. '_ ' means a VBA continuation: underscore at END of its line, with the statement continuing on the next line. Do not replace Function return assignment with a Return statement. American English sentence case headings. Footer: small original duck logo, 'Learning Hub · Excel VBA', plus folio. Small source note: 'Source: Microsoft Learn and Microsoft Support. References in the companion notes.'
+
+Page 2 of 2, folio 02 / 02. Eyebrow LEARNING HUB / EXCEL VBA. Topic: Excel worksheet functions inside VBA. Place full Summarize macro in a generous wide code block, and show the range with B2=10, B3=20, B4=30, B5=40 feeding Sum -> D2=100, clearly stating that worksheet Data must exist. Ensure ThisWorkbook.Worksheets("Data") fits without clipping. The comparative formula table can abbreviate the repetitive prefix ONLY by defining 'wf = Application.WorksheetFunction' in explanatory prose rather than pretending a VBA assignment; better retain full names in readable wide rows. Do not invent With blocks or change code. Below, contrast Value as a calculated number with Formula as a formula that recalculates; retain the Formula example exactly. Give the lookup block enough width for the 38-character Match call and keep code font at least 9.5pt equivalent. A final note separates native VBA functions from Excel worksheet functions. Keep every substantive explanation, exact code, and figures from the required content. It is acceptable to use a clean full-width sequence rather than too many side-by-side cards. If space is tight, use narrower captions and compact title, not tiny text. No fake UI screenshots. No need to render markdown backticks or language tags. Required content follows.
+# Call Excel functions directly from VBA
+
+WorksheetFunction calculates a result in your code. Range.Formula stores a formula in a cell.
+
+## Calculate a result now
+
+Use a worksheet named Data in the workbook that contains the code. Enter 10, 20, 30, and 40 in B2:B5.
+
+```vb
+Sub Summarize()
+    Dim ws As Worksheet
+    Dim data As Range
+    Dim total As Double
+    Set ws = ThisWorkbook.Worksheets("Data")
+    Set data = ws.Range("B2:B5")
+    total = Application.WorksheetFunction _
+        .Sum(data)
+    ws.Range("D2").Value = total
+End Sub
+```
+
+B2:B5 contains 10, 20, 30, and 40. Sum returns 100; D2 receives that value. Set assigns an object reference. Passing data supplies a Range object, not the text "B2:B5".
+
+## Reuse the Excel calculation
+
+| Worksheet formula | VBA expression after data is set |
+| --- | --- |
+| =SUM(B2:B5) | Application.WorksheetFunction.Sum(data) |
+| =AVERAGE(B2:B5) | Application.WorksheetFunction.Average(data) |
+| =MAX(B2:B5) | Application.WorksheetFunction.Max(data) |
+
+These examples return 100, 25, and 40, respectively. VBA uses English member names and commas between arguments. WorksheetFunction exposes many Excel functions, but not every worksheet function.
+
+## Store a formula for recalculation
+
+After ws is set:
+
+```vb
+ws.Range("D3").Formula = "=SUM(B2:B5)"
+```
+
+D3 contains a formula and updates when Excel recalculates. D2 contains the value computed when the macro ran. Formula uses English function names; FormulaLocal uses the user's language.
+
+## Handle a missing lookup
+
+Inside a Sub, after ws is set, ids refers to the lookup range. Match with 0 searches for an exact match and returns a relative position.
+
+```vb
+Dim ids As Range
+Dim hit As Variant
+Set ids = ws.Range("A2:A5")
+hit = Application.Match("P-02", ids, 0)
+If IsError(hit) Then
+    MsgBox "Not found"
+Else
+    MsgBox hit
+End If
+```
+
+Application.Match can return an Excel error value, so keep hit as Variant and check IsError. WorksheetFunction.Match raises a VBA runtime error when no match exists.
+
+## Keep the function families clear
+
+Len, Left, and CStr are native VBA functions. Call them directly. Excel worksheet functions use Application.WorksheetFunction. A VBA function and an Excel function with similar names can behave differently.
