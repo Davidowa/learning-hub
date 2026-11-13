@@ -1,0 +1,50 @@
+EXTRACTO OPERATIVO DEL CHAT - LABORATORIOS UNITY AR 03 A 06
+Fecha: 5 de noviembre de 2026. Idioma de trabajo: español.
+
+OBJETIVO DOCENTE ACTUAL
+El alumno sigue instrucciones paso a paso, configura Unity en el Editor y usa scripts proporcionados. No debe recibir solo un proyecto que se autoconfigure por código. Entregar por laboratorio una BASE incompleta para construir, una SOLUCION de referencia separada y una guía. Los objetos visibles deben ser prefabs configurables en Inspector, para cambiar cubos por modelos propios sin editar la lógica C#.
+
+ULTIMA RESTRICCION
+El usuario pidió NO compilar más APK porque estaban apagando el centro de cómputo. Necesita llevarse todos los archivos a casa. No generar APK ni exigir pruebas del celular antes de entregar. Los APK de las entregas anteriores NO corresponden a la nueva interfaz de Canvas.
+
+ENTREGA PORTATIL ACTUAL
+Laboratorios-03-a-06-Para-casa.zip contiene Lab03-Base/Solucion hasta Lab06-Base/Solucion, guía PDF y Markdown por práctica, marcadores, scripts, paquetes y configuración. No incluye Library ni intermedios de compilación. Soporte-tecnico conserva los generadores y pruebas de autoría para otro agente; no es un asistente que el alumno deba ejecutar para resolver la práctica.
+
+VERSIONES FIJADAS
+Unity 6000.3.27f1; Universal RP 17.3.0; AR Foundation y ARCore 6.3.5; XR Core Utils 2.5.1; XR Management 4.5.3; Input System 1.11.2; uGUI 2.0.0. Android: IL2CPP, ARM64, GLES3, API mínima25 y destino36. Mantener link.xml y Strip Engine Code desactivado. No actualizar URP aisladamente ni mezclar paquetes de otros editores. Revisar Graphics y overrides de Quality.
+
+ACUERDOS Y PROBLEMAS OBSERVADOS EN ESTE CHAT
+- El docente probó con Pixel 9, Android17/API37 y ARCore. Las entregas previas de lab03/04 compilaron y se instalaron.
+- Lab03 anterior: un alumno veía cubo, pero no esferas al lanzar. Se conservaron colliders/renderers y se mejoraron proyectil, confirmación y entrada táctil. El usuario confirmó esfera verde al acertar.
+- Lab04 anterior: se observó CapsuleCollider eliminado en APK y NullReference en MakePreview. Fallaba antes de terminar la inicialización. Se desactivó Strip Engine Code y añadió link.xml; el Pixel mostró figuras colocadas.
+- Un alumno tenía URP diferente/no actualizado. La nueva base fija versiones y la guía verifica paquete, pipeline activo, Graphics, Quality, renderer y materiales.
+- Los controles anteriores mezclaban OnGUI con lectura táctil manual; la nueva edición usa Canvas/Button/EventSystem/InputSystemUIInputModule. No reintroducir rutas duplicadas. Un botón también puede estar deshabilitado legítimamente por falta de objetivo, selección o rastreo. La explicación común aparece dentro de lab03 y se reproduce en las otras guías.
+- Lab06 original tenía PlacedShape apuntando por error a PlacementBootstrap.ObjectLayer; se cambió a QrPlacementBootstrap. Se quitó el requisito SessionTracking para leer QR; colocar sí requiere rastreo y plano.
+- El docente informó que lab06 leía QR pero no aparecía figura. Se explicó: leer el QR selecciona contenido, luego detectar superficie y tocarla coloca. Confirmó que funcionó. Logcat anterior registró AR:ESFERA y dos esferas colocadas.
+- Lab05 anterior compiló y pasó detección/pose sintética y simulación; cámara CPU640x480 observada en Pixel. NO se confirmó alineación física de las cuatro esquinas ni seguimiento del papel. El docente pidió dejar las pruebas del teléfono ahí.
+
+ARQUITECTURA NUEVA CON PREFABS
+- Assets/Scenes/Laboratorio.unity es la escena terminada de cada solución. Base usa Inicio.unity y requiere construir la escena.
+- LabSceneReferences conecta las cámaras, XR Origin, AR Session, mundo de simulación y managers ya colocados en escena. El controlador activa simulación en Editor o AR en Android; no fabrica otra cámara/rig por código.
+- LabContent (Create > Laboratorios > Contenido) guarda prefabs y material de selección. Assets/Configuracion/ContenidoLab.asset está configurado en las soluciones.
+- Lab04/06 instancian Content A/B normalizados a una unidad y los muestran a20cm. PlacedShape cambia todos los renderers a amarillo y restaura sus materiales. Colliders hijos están soportados bajo la raíz del objeto.
+- Lab03 usa Objetivo.prefab con CaptureTarget y referencias Visuales/SinCapturar/Capturado; Proyectil.prefab con CaptureProjectile y TrailRenderer. Reemplazar mallas conservando componentes, raíces, escala y colliders.
+- Lab05 instancia Aruco Visual, mostrado a5cm, siguiendo pose de un marcador negro de10cm. Detector C# didáctico solo DICT_4X4_50 ID23, coincidencia exacta. No es un detector OpenCV completo.
+- LabUI conecta Text y Button de Canvas. On Click apunta al controlador de la escena; esas referencias se guardan como overrides de instancia, no referencias externas dentro del asset prefab.
+- AccionesUI.asset incluye subassets UI_Point, UI_Click y navegación para InputSystemUIInputModule. Usar un solo EventSystem. GraphicRaycaster bloquea colocación a través de los botones; textos/mira decorativos no bloquean raycasts.
+- QRs exactos AR:CUBO y AR:ESFERA seleccionan ranuras A/B, aunque se cambie la malla. La lectura se pausa tras éxito; Leer otro QR reactiva. Las figuras no siguen el papel ni sobreviven al cierre de la app.
+
+VERIFICACION Y TRABAJO SIGUIENTE
+Consultar Validacion/Editor.txt dentro de cada solución: contiene resultados reales de la última prueba, incluidos fallos si los hubiera. No convertir un fallo en aprobado ni asumir que compilar scripts valida ARCore o el tacto físico. No hay APK compilado de esta edición por petición del usuario.
+Las escenas/prefabs se generaron con Unity y los scripts compilaron en Editor durante su creación. Las pruebas de entrada sintética sin ventana requieren ejecutarse dentro del PlayerLoop, no EditorApplication.update, porque éste usa otro buffer de Input System. CourseSmoke en Soporte-tecnico documenta la prueba. Sus ajustes IgnoreFocus son exclusivos de prueba, no una corrección para producción.
+En casa: abrir soluciones con la versión fijada, revisar Console/Tools > Laboratorios > Verificar escena, ejecutar Play, comprobar botones y cambio de modelo, compilar APK y probar cada flujo en Android. La interfaz nueva necesita su propia validación física.
+
+ENTORNO TECNICO DE LA PC DOCENTE
+Unity.exe: C:/Program Files/Unity/Hub/Editor/6000.3.27f1/Editor/Unity.exe
+Build Android usa JDK/SDK/NDK de esa instalación. Hub debe instalar esos módulos en casa.
+En la PC docente Java falló con TEMP8.3: Unable to establish loopback connection. LabBuild exporta Gradle y lo ejecuta con TEMP/TMP y java.io.tmpdir/jdk.net.unixdomain.tmpdir en una ruta explícita con barras normales. No asumir que ese fallo existe en otra computadora.
+El helper Tools > Laboratorio > Compilar APK Android usa las escenas habilitadas y deja APK junto a la raíz del proyecto, no en Assets. CourseConfiguration verifica sin modificar.
+
+NOTAS PARA CONTINUAR LA COLABORACION
+El docente prefiere acciones concretas y archivos listos; evitar pedir confirmaciones repetidas. No subir material a Blackboard/LMS ni enviar mensajes a alumnos: no se autorizó publicación. La prueba física quedó detenida por solicitud del usuario. Mantener separado el historial de versiones anteriores y la nueva edición con prefabs/Canvas.
+Este archivo es un resumen operativo del contenido relevante del chat, no una transcripción literal completa.
